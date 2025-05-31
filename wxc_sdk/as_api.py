@@ -403,7 +403,6 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
 
     Compliance officer: `spark-compliance:recordings_read` `spark-compliance:recordings_write`
 
-
     When the recording is paused in a call, the recording does not contain the pause. If the recording is stopped and
     restarted in a call, several recordings are created. Those recordings will be consolidated and available all at
     once.
@@ -413,173 +412,6 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
     -recording_selecting-call-recording-provider>`_.
     """
 
-    def list_gen(self, from_: Union[str, datetime] = None,
-             to_: Union[str, datetime] = None, status: RecordingStatus = None,
-             service_type: RecordingServiceType = None,
-             format_: str = None, owner_id: str = None,
-             owner_email: str = None, owner_type: RecordingOwnerType = None,
-             storage_region: RecordingStorageRegion = None,
-             location_id: str = None, topic: str = None,
-             **params) -> AsyncGenerator[ConvergedRecording, None, None]:
-        """
-        List Recordings
-
-        List recordings. You can specify a date range, and the maximum number of recordings to return.
-
-        The list returned is sorted in descending order by the date and time that the recordings were created.
-
-        Long result sets are split into `pages
-        <https://developer.webex.com/docs/basics#pagination>`_.
-
-        List recordings requires the `spark:recordings_read` scope.
-
-        :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
-            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
-            `from` cannot be after `to`. The interval between `from` and `to` must be within 30 days.
-        :type from_: Union[str, datetime]
-        :param to_: Ending date and time (exclusive) for List recordings to return, in any `ISO 8601
-            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
-            `to` cannot be before `from`. The interval between `from` and `to` must be within 30 days.
-        :type to_: Union[str, datetime]
-        :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
-            Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin.
-        :type status: RecordingStatus
-        :param service_type: Recording's service-type. If this item is specified, the API filters recordings by
-            service-type. Valid values are `calling`, or `all`.
-        :type service_type: RecordingServiceType
-        :param format_: Recording's file format. If specified, the API filters recordings by format. Valid values are
-            `MP3`.
-        :type format_: RecordingObjectFormat
-        :param owner_id: Webex user Id to fetch recordings for a particular user.
-        :type owner_id: str
-        :param owner_email: Webex email address to fetch recordings for a particular user.
-        :type owner_email: str
-        :param owner_type: Recording based on type of user.
-        :type owner_type: RecordingOwnerType
-        :param storage_region: Recording stored in certain Webex locations.
-        :type storage_region: RecordingStorageRegion
-        :param location_id: Fetch recordings for users in a particular Webex Calling location (as configured in Control
-            Hub).
-        :type location_id: str
-        :param topic: Recording's topic. If specified, the API filters recordings by topic in a case-insensitive
-            manner.
-        :type topic: str
-        :return: Generator yielding :class:`ConvergedRecording` instances
-        """
-        if from_ is not None:
-            if isinstance(from_, str):
-                from_ = isoparse(from_)
-            from_ = dt_iso_str(from_)
-            params['from'] = from_
-        if to_ is not None:
-            if isinstance(to_, str):
-                to_ = isoparse(to_)
-            to_ = dt_iso_str(to_)
-            params['to'] = to_
-        if status is not None:
-            params['status'] = enum_str(status)
-        if service_type is not None:
-            params['serviceType'] = enum_str(service_type)
-        if format_ is not None:
-            params['format'] = enum_str(format_)
-        if owner_id is not None:
-            params['ownerId'] = owner_id
-        if owner_email is not None:
-            params['ownerEmail'] = owner_email
-        if owner_type is not None:
-            params['ownerType'] = enum_str(owner_type)
-        if storage_region is not None:
-            params['storageRegion'] = enum_str(storage_region)
-        if location_id is not None:
-            params['locationId'] = location_id
-        if topic is not None:
-            params['topic'] = topic
-        url = self.ep('convergedRecordings')
-        return self.session.follow_pagination(url=url, model=ConvergedRecording, item_key='items', params=params)
-
-    async def list(self, from_: Union[str, datetime] = None,
-             to_: Union[str, datetime] = None, status: RecordingStatus = None,
-             service_type: RecordingServiceType = None,
-             format_: str = None, owner_id: str = None,
-             owner_email: str = None, owner_type: RecordingOwnerType = None,
-             storage_region: RecordingStorageRegion = None,
-             location_id: str = None, topic: str = None,
-             **params) -> List[ConvergedRecording]:
-        """
-        List Recordings
-
-        List recordings. You can specify a date range, and the maximum number of recordings to return.
-
-        The list returned is sorted in descending order by the date and time that the recordings were created.
-
-        Long result sets are split into `pages
-        <https://developer.webex.com/docs/basics#pagination>`_.
-
-        List recordings requires the `spark:recordings_read` scope.
-
-        :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
-            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
-            `from` cannot be after `to`. The interval between `from` and `to` must be within 30 days.
-        :type from_: Union[str, datetime]
-        :param to_: Ending date and time (exclusive) for List recordings to return, in any `ISO 8601
-            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
-            `to` cannot be before `from`. The interval between `from` and `to` must be within 30 days.
-        :type to_: Union[str, datetime]
-        :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
-            Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin.
-        :type status: RecordingStatus
-        :param service_type: Recording's service-type. If this item is specified, the API filters recordings by
-            service-type. Valid values are `calling`, or `all`.
-        :type service_type: RecordingServiceType
-        :param format_: Recording's file format. If specified, the API filters recordings by format. Valid values are
-            `MP3`.
-        :type format_: RecordingObjectFormat
-        :param owner_id: Webex user Id to fetch recordings for a particular user.
-        :type owner_id: str
-        :param owner_email: Webex email address to fetch recordings for a particular user.
-        :type owner_email: str
-        :param owner_type: Recording based on type of user.
-        :type owner_type: RecordingOwnerType
-        :param storage_region: Recording stored in certain Webex locations.
-        :type storage_region: RecordingStorageRegion
-        :param location_id: Fetch recordings for users in a particular Webex Calling location (as configured in Control
-            Hub).
-        :type location_id: str
-        :param topic: Recording's topic. If specified, the API filters recordings by topic in a case-insensitive
-            manner.
-        :type topic: str
-        :return: Generator yielding :class:`ConvergedRecording` instances
-        """
-        if from_ is not None:
-            if isinstance(from_, str):
-                from_ = isoparse(from_)
-            from_ = dt_iso_str(from_)
-            params['from'] = from_
-        if to_ is not None:
-            if isinstance(to_, str):
-                to_ = isoparse(to_)
-            to_ = dt_iso_str(to_)
-            params['to'] = to_
-        if status is not None:
-            params['status'] = enum_str(status)
-        if service_type is not None:
-            params['serviceType'] = enum_str(service_type)
-        if format_ is not None:
-            params['format'] = enum_str(format_)
-        if owner_id is not None:
-            params['ownerId'] = owner_id
-        if owner_email is not None:
-            params['ownerEmail'] = owner_email
-        if owner_type is not None:
-            params['ownerType'] = enum_str(owner_type)
-        if storage_region is not None:
-            params['storageRegion'] = enum_str(storage_region)
-        if location_id is not None:
-            params['locationId'] = location_id
-        if topic is not None:
-            params['topic'] = topic
-        url = self.ep('convergedRecordings')
-        return [o async for o in self.session.follow_pagination(url=url, model=ConvergedRecording, item_key='items', params=params)]
 
     def list_for_admin_or_compliance_officer_gen(self, from_: Union[str, datetime] = None,
                                                         to_: Union[str, datetime] = None, status: RecordingStatus = None,
@@ -589,6 +421,7 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
                                                         owner_type: RecordingOwnerType = None,
                                                         storage_region: RecordingStorageRegion = None,
                                                         location_id: str = None, topic: str = None,
+                                                        timezone: str = None,
                                                         **params) -> AsyncGenerator[ConvergedRecording, None, None]:
         """
         List Recordings for Admin or Compliance officer
@@ -635,6 +468,8 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         :param topic: Recording's topic. If specified, the API filters recordings by topic in a case-insensitive
             manner.
         :type topic: str
+        :param timezone: e.g. UTC
+        :type timezone: str
         :return: Generator yielding :class:`ConvergedRecording` instances
         """
         if from_ is not None:
@@ -665,6 +500,8 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
             params['locationId'] = location_id
         if topic is not None:
             params['topic'] = topic
+        if timezone is not None:
+            params['timezone'] = timezone
         url = self.ep('admin/convergedRecordings')
         return self.session.follow_pagination(url=url, model=ConvergedRecording, item_key='items', params=params)
 
@@ -676,6 +513,7 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
                                                         owner_type: RecordingOwnerType = None,
                                                         storage_region: RecordingStorageRegion = None,
                                                         location_id: str = None, topic: str = None,
+                                                        timezone: str = None,
                                                         **params) -> List[ConvergedRecording]:
         """
         List Recordings for Admin or Compliance officer
@@ -722,6 +560,8 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         :param topic: Recording's topic. If specified, the API filters recordings by topic in a case-insensitive
             manner.
         :type topic: str
+        :param timezone: e.g. UTC
+        :type timezone: str
         :return: Generator yielding :class:`ConvergedRecording` instances
         """
         if from_ is not None:
@@ -752,92 +592,245 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
             params['locationId'] = location_id
         if topic is not None:
             params['topic'] = topic
+        if timezone is not None:
+            params['timezone'] = timezone
         url = self.ep('admin/convergedRecordings')
         return [o async for o in self.session.follow_pagination(url=url, model=ConvergedRecording, item_key='items', params=params)]
 
-    async def details(self, recording_id: str) -> ConvergedRecordingWithDirectDownloadLinks:
+    def list_gen(self, from_: Union[str, datetime] = None,
+             to_: Union[str, datetime] = None, status: RecordingStatus = None,
+             service_type: RecordingServiceType = None,
+             format_: str = None, owner_id: str = None,
+             owner_email: str = None, owner_type: RecordingOwnerType = None,
+             storage_region: RecordingStorageRegion = None,
+             location_id: str = None, topic: str = None, timezone: str = None,
+             **params) -> AsyncGenerator[ConvergedRecording, None, None]:
         """
-        Get Recording Details
+        List Recordings
 
-        Retrieves details for a recording with a specified recording ID.
+        List recordings. You can specify a date range, and the maximum number of recordings to return.
 
-        Only recordings of owner with the authenticated user may be retrieved.
+        The list returned is sorted in descending order by the date and time that the recordings were created.
 
-        Get Recording Details requires the `spark-compliance:recordings_read` scope for compliance officer,
-        `spark-admin:recordings_read` scope for admin and `spark:recordings_read` scope for user.
+        Long result sets are split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
 
-        :param recording_id: A unique identifier for the recording.
-        :type recording_id: str
-        :rtype: :class:`ConvergedRecordingWithDirectDownloadLinks`
+        List recordings requires the `spark:recordings_read` scope.
+
+        :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+            `from` cannot be after `to`. The interval between `from` and `to` must be within 30 days.
+        :type from_: Union[str, datetime]
+        :param to_: Ending date and time (exclusive) for List recordings to return, in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+            `to` cannot be before `from`. The interval between `from` and `to` must be within 30 days.
+        :type to_: Union[str, datetime]
+        :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
+            Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin.
+        :type status: RecordingStatus
+        :param service_type: Recording's service-type. If this item is specified, the API filters recordings by
+            service-type. Valid values are `calling`, or `all`.
+        :type service_type: RecordingServiceType
+        :param format_: Recording's file format. If specified, the API filters recordings by format. Valid values are
+            `MP3`.
+        :type format_: RecordingObjectFormat
+        :param owner_id: Webex user Id to fetch recordings for a particular user.
+        :type owner_id: str
+        :param owner_email: Webex email address to fetch recordings for a particular user.
+        :type owner_email: str
+        :param owner_type: Recording based on type of user.
+        :type owner_type: RecordingOwnerType
+        :param storage_region: Recording stored in certain Webex locations.
+        :type storage_region: RecordingStorageRegion
+        :param location_id: Fetch recordings for users in a particular Webex Calling location (as configured in Control
+            Hub).
+        :type location_id: str
+        :param topic: Recording's topic. If specified, the API filters recordings by topic in a case-insensitive
+            manner.
+        :type topic: str
+        :param timezone: e.g. UTC
+        :type timezone: str
+        :return: Generator yielding :class:`ConvergedRecording` instances
         """
-        url = self.ep(f'convergedRecordings/{recording_id}')
-        data = await super().get(url)
-        r = ConvergedRecordingWithDirectDownloadLinks.model_validate(data)
-        return r
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        if status is not None:
+            params['status'] = enum_str(status)
+        if service_type is not None:
+            params['serviceType'] = enum_str(service_type)
+        if format_ is not None:
+            params['format'] = enum_str(format_)
+        if owner_id is not None:
+            params['ownerId'] = owner_id
+        if owner_email is not None:
+            params['ownerEmail'] = owner_email
+        if owner_type is not None:
+            params['ownerType'] = enum_str(owner_type)
+        if storage_region is not None:
+            params['storageRegion'] = enum_str(storage_region)
+        if location_id is not None:
+            params['locationId'] = location_id
+        if topic is not None:
+            params['topic'] = topic
+        if timezone is not None:
+            params['timezone'] = timezone
+        url = self.ep('convergedRecordings')
+        return self.session.follow_pagination(url=url, model=ConvergedRecording, item_key='items', params=params)
 
-    async def delete(self, recording_id: str, reason: str = None, comment: str = None):
+    async def list(self, from_: Union[str, datetime] = None,
+             to_: Union[str, datetime] = None, status: RecordingStatus = None,
+             service_type: RecordingServiceType = None,
+             format_: str = None, owner_id: str = None,
+             owner_email: str = None, owner_type: RecordingOwnerType = None,
+             storage_region: RecordingStorageRegion = None,
+             location_id: str = None, topic: str = None, timezone: str = None,
+             **params) -> List[ConvergedRecording]:
         """
-        Delete a Recording
+        List Recordings
 
-        Removes a recording with a specified recording ID. The deleted recording cannot be recovered.
+        List recordings. You can specify a date range, and the maximum number of recordings to return.
 
-        If a Compliance Officer deletes another user's recording, the recording will be inaccessible to regular users
-        (host, attendees and shared), and to Compliance officer also. This action purges the recordings from Webex.
+        The list returned is sorted in descending order by the date and time that the recordings were created.
 
-        Delete a Recording requires the `spark-compliance:recordings_write` scope.
+        Long result sets are split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
 
-        :param recording_id: A unique identifier for the recording.
-        :type recording_id: str
-        :param reason: Reason for deleting a recording. Only required when a Compliance Officer is operating on another
-            user's recording.
-        :type reason: str
-        :param comment: Compliance Officer's explanation for deleting a recording. The comment can be a maximum of 255
-            characters long.
-        :type comment: str
+        List recordings requires the `spark:recordings_read` scope.
+
+        :param from_: Starting date and time (inclusive) for recordings to return, in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+            `from` cannot be after `to`. The interval between `from` and `to` must be within 30 days.
+        :type from_: Union[str, datetime]
+        :param to_: Ending date and time (exclusive) for List recordings to return, in any `ISO 8601
+            <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
+            `to` cannot be before `from`. The interval between `from` and `to` must be within 30 days.
+        :type to_: Union[str, datetime]
+        :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
+            Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin.
+        :type status: RecordingStatus
+        :param service_type: Recording's service-type. If this item is specified, the API filters recordings by
+            service-type. Valid values are `calling`, or `all`.
+        :type service_type: RecordingServiceType
+        :param format_: Recording's file format. If specified, the API filters recordings by format. Valid values are
+            `MP3`.
+        :type format_: RecordingObjectFormat
+        :param owner_id: Webex user Id to fetch recordings for a particular user.
+        :type owner_id: str
+        :param owner_email: Webex email address to fetch recordings for a particular user.
+        :type owner_email: str
+        :param owner_type: Recording based on type of user.
+        :type owner_type: RecordingOwnerType
+        :param storage_region: Recording stored in certain Webex locations.
+        :type storage_region: RecordingStorageRegion
+        :param location_id: Fetch recordings for users in a particular Webex Calling location (as configured in Control
+            Hub).
+        :type location_id: str
+        :param topic: Recording's topic. If specified, the API filters recordings by topic in a case-insensitive
+            manner.
+        :type topic: str
+        :param timezone: e.g. UTC
+        :type timezone: str
+        :return: Generator yielding :class:`ConvergedRecording` instances
+        """
+        if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
+            from_ = dt_iso_str(from_)
+            params['from'] = from_
+        if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
+            to_ = dt_iso_str(to_)
+            params['to'] = to_
+        if status is not None:
+            params['status'] = enum_str(status)
+        if service_type is not None:
+            params['serviceType'] = enum_str(service_type)
+        if format_ is not None:
+            params['format'] = enum_str(format_)
+        if owner_id is not None:
+            params['ownerId'] = owner_id
+        if owner_email is not None:
+            params['ownerEmail'] = owner_email
+        if owner_type is not None:
+            params['ownerType'] = enum_str(owner_type)
+        if storage_region is not None:
+            params['storageRegion'] = enum_str(storage_region)
+        if location_id is not None:
+            params['locationId'] = location_id
+        if topic is not None:
+            params['topic'] = topic
+        if timezone is not None:
+            params['timezone'] = timezone
+        url = self.ep('convergedRecordings')
+        return [o async for o in self.session.follow_pagination(url=url, model=ConvergedRecording, item_key='items', params=params)]
+
+    async def purge_recordings_from_recycle_bin(self, purge_all: bool = None, owner_email: str = None,
+                                          recording_ids: List[str] = None):
+        """
+        Purge Recordings from Recycle Bin
+
+        Purge recordings from the recycle bin with recording IDs or purge all the recordings that are in the recycle
+        bin. A recording once purged cannot be restored.
+
+        Only the following two entities can use this API
+
+        * Administrator: A user or an application with the scope `spark-admin:recordings_write`.
+
+        * User: An authenticated user who does not have the scope `spark-admin:recordings_write` but has
+          `spark:recordings_write`.
+
+        As an `administrator`, you can purge a list of recordings or all recordings of a particular user within the org
+        you manage from the recycle bin.
+
+        As a `user`, you can purge a list of your own recordings or all your recordings from the recycle bin.
+
+        * If `purgeAll` is `true`:
+
+        * `recordingIds` should be empty.
+
+        * If the caller of this API is an `administrator`, `ownerEmail` should not be empty and all recordings owned
+          the `ownerEmail` will be purged from the recycle bin.
+
+        * If the caller of this API is a `user`, `ownerEmail` should be empty and all recordings owned by the caller
+          will be purged from the recycle bin.
+
+        * If `purgeAll` is `false`:
+
+        * `ownerEmail` should be empty.
+
+        * `recordingIds` should not be empty and its maximum size is `100`.
+
+        :param purge_all: If not specified or `false`, purges the recordings specified by `recordingIds` from the
+            recycle bin. If `true`, purges all recordings owned by the caller in case of `user`, and all recordings
+            owned by `ownerEmail` in case of `administrator` from the recycle bin.
+        :type purge_all: bool
+        :param owner_email: Email address for the recording owner. This parameter is only used if `purgeAll` is set to
+            `true` and the user or application calling the API has the required administrator scope
+            `spark-admin:recordings_write`. The administrator may specify the email of a user from an org they manage
+            and the API will purge all the recordings of that user from the recycle bin.
+        :type owner_email: str
+        :param recording_ids: Recording IDs for purging recordings from the recycle bin in batch.
+        :type recording_ids: list[str]
         :rtype: None
         """
         body = dict()
-        if reason is not None:
-            body['reason'] = reason
-        if comment is not None:
-            body['comment'] = comment
-        url = self.ep(f'convergedRecordings/{recording_id}')
-        await super().delete(url, json=body)
-
-    async def metadata(self, recording_id: str, show_all_types: bool = None) -> ConvergedRecordingMeta:
-        """
-        Get Recording metadata
-
-        Retrieves metadata details for a recording with a specified recording ID. The recording must be owned by the
-        authenticated user.
-
-        For information on the metadata fields, refer to `Metadata Guide
-        <https://developer.webex.com/docs/api/guides/consolidated-metadata-documentation-and-samples-guide>`_
-
-        Get Recording metadata requires the `spark-compliance:recordings_read` scope for compliance officer,
-        `spark-admin:recordings_read` for admin and `spark:recordings_read` for user.
-
-        :param recording_id: A unique identifier for the recording.
-        :type recording_id: str
-        :param show_all_types: If `showAllTypes` is `true`, all attributes will be shown. If it's `false` or not
-            specified, the following attributes of the metadata will be hidden.
-
-            * serviceData.callActivity.mediaStreams
-
-            * serviceData.callActivity.participants
-
-            * serviceData.callActivity.redirectInfo
-
-            * serviceData.callActivity.redirectedCall
-        :type show_all_types: bool
-        :rtype: None
-        """
-        params = {}
-        if show_all_types is not None:
-            params['showAllTypes'] = str(show_all_types).lower()
-        url = self.ep(f'convergedRecordings/{recording_id}/metadata')
-        data = await super().get(url, params=params)
-        return ConvergedRecordingMeta.model_validate(data)
+        if purge_all is not None:
+            body['purgeAll'] = purge_all
+        if owner_email is not None:
+            body['ownerEmail'] = owner_email
+        if recording_ids is not None:
+            body['recordingIds'] = recording_ids
+        url = self.ep('convergedRecordings/purge')
+        await super().post(url, json=body)
 
     async def reassign(self, reassign_owner_email: str, owner_email: str = None, recording_ids: List[str] = None):
         """
@@ -874,6 +867,65 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
             body['recordingIds'] = recording_ids
         body['reassignOwnerEmail'] = reassign_owner_email
         url = self.ep('convergedRecordings/reassign')
+        await super().post(url, json=body)
+
+    async def restore_recordings_from_recycle_bin(self, restore_all: bool = None, owner_email: str = None,
+                                            recording_ids: List[str] = None):
+        """
+        Restore Recordings from Recycle Bin
+
+        Restore recordings from the recycle bin with recording IDs or restore all the recordings that are in the
+        recycle bin.
+
+        Only the following two entities can use this API
+
+        * Administrator: A user or an application with the scope `spark-admin:recordings_write`.
+
+        * User: An authenticated user who does not have the scope `spark-admin:recordings_write` but has
+          `spark:recordings_write`.
+
+        As an `administrator`, you can restore a list of recordings or all recordings of a particular user within the
+        org you manage from the recycle bin.
+
+        As a `user`, you can restore a list of your own recordings or all your recordings from the recycle bin.
+
+        * If `restoreAll` is `true`:
+
+        * `recordingIds` should be empty.
+
+        * If the caller of this API is an `administrator`, `ownerEmail` should not be empty and all recordings owned by
+          the `ownerEmail` will be restored from the recycle bin.
+
+        * If the caller of this API is a `user`, `ownerEmail` should be empty and all recordings owned by the caller
+          will be restored from the recycle bin.
+
+        * If `restoreAll` is `false`:
+
+        * `ownerEmail` should be empty.
+
+        * `recordingIds` should not be empty and its maximum size is `100`.
+
+        :param restore_all: If not specified or `false`, restores the recordings specified by `recordingIds` from the
+            recycle bin. If `true`, restores all recordings owned by the caller in case of `user`, and all recordings
+            owned by `ownerEmail` in case of `administrator` from the recycle bin.
+        :type restore_all: bool
+        :param owner_email: Email address for the recording owner. This parameter is only used if `restoreAll` is set
+            to `true` and the user or application calling the API has the required administrator scope
+            `spark-admin:recordings_write`. The administrator may specify the email of a user from an org they manage
+            and the API will restore all the recordings of that user from the recycle bin.
+        :type owner_email: str
+        :param recording_ids: Recording IDs for restoring recordings from the recycle bin in batch.
+        :type recording_ids: list[str]
+        :rtype: None
+        """
+        body = dict()
+        if restore_all is not None:
+            body['restoreAll'] = restore_all
+        if owner_email is not None:
+            body['ownerEmail'] = owner_email
+        if recording_ids is not None:
+            body['recordingIds'] = recording_ids
+        url = self.ep('convergedRecordings/restore')
         await super().post(url, json=body)
 
     async def move_recordings_into_the_recycle_bin(self, trash_all: bool = None, owner_email: str = None,
@@ -940,123 +992,89 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         url = self.ep('convergedRecordings/softDelete')
         await super().post(url, json=body)
 
-    async def restore_recordings_from_recycle_bin(self, restore_all: bool = None, owner_email: str = None,
-                                            recording_ids: List[str] = None):
+    async def delete(self, recording_id: str, reason: str = None, comment: str = None):
         """
-        Restore Recordings from Recycle Bin
+        Delete a Recording
 
-        Restore recordings from the recycle bin with recording IDs or restore all the recordings that are in the
-        recycle bin.
+        Removes a recording with a specified recording ID. The deleted recording cannot be recovered.
 
-        Only the following two entities can use this API
+        If a Compliance Officer deletes another user's recording, the recording will be inaccessible to regular users
+        (host, attendees and shared), and to Compliance officer also. This action purges the recordings from Webex.
 
-        * Administrator: A user or an application with the scope `spark-admin:recordings_write`.
+        Delete a Recording requires the `spark-compliance:recordings_write` scope.
 
-        * User: An authenticated user who does not have the scope `spark-admin:recordings_write` but has
-          `spark:recordings_write`.
-
-        As an `administrator`, you can restore a list of recordings or all recordings of a particular user within the
-        org you manage from the recycle bin.
-
-        As a `user`, you can restore a list of your own recordings or all your recordings from the recycle bin.
-
-        * If `restoreAll` is `true`:
-
-        * `recordingIds` should be empty.
-
-        * If the caller of this API is an `administrator`, `ownerEmail` should not be empty and all recordings owned by
-          the `ownerEmail` will be restored from the recycle bin.
-
-        * If the caller of this API is a `user`, `ownerEmail` should be empty and all recordings owned by the caller
-          will be restored from the recycle bin.
-
-        * If `restoreAll` is `false`:
-
-        * `ownerEmail` should be empty.
-
-        * `recordingIds` should not be empty and its maximum size is `100`.
-
-        :param restore_all: If not specified or `false`, restores the recordings specified by `recordingIds` from the
-            recycle bin. If `true`, restores all recordings owned by the caller in case of `user`, and all recordings
-            owned by `ownerEmail` in case of `administrator` from the recycle bin.
-        :type restore_all: bool
-        :param owner_email: Email address for the recording owner. This parameter is only used if `restoreAll` is set
-            to `true` and the user or application calling the API has the required administrator scope
-            `spark-admin:recordings_write`. The administrator may specify the email of a user from an org they manage
-            and the API will restore all the recordings of that user from the recycle bin.
-        :type owner_email: str
-        :param recording_ids: Recording IDs for restoring recordings from the recycle bin in batch.
-        :type recording_ids: list[str]
+        :param recording_id: A unique identifier for the recording.
+        :type recording_id: str
+        :param reason: Reason for deleting a recording. Only required when a Compliance Officer is operating on another
+            user's recording.
+        :type reason: str
+        :param comment: Compliance Officer's explanation for deleting a recording. The comment can be a maximum of 255
+            characters long.
+        :type comment: str
         :rtype: None
         """
         body = dict()
-        if restore_all is not None:
-            body['restoreAll'] = restore_all
-        if owner_email is not None:
-            body['ownerEmail'] = owner_email
-        if recording_ids is not None:
-            body['recordingIds'] = recording_ids
-        url = self.ep('convergedRecordings/restore')
-        await super().post(url, json=body)
+        if reason is not None:
+            body['reason'] = reason
+        if comment is not None:
+            body['comment'] = comment
+        url = self.ep(f'convergedRecordings/{recording_id}')
+        await super().delete(url, json=body)
 
-    async def purge_recordings_from_recycle_bin(self, purge_all: bool = None, owner_email: str = None,
-                                          recording_ids: List[str] = None):
+    async def details(self, recording_id: str) -> ConvergedRecordingWithDirectDownloadLinks:
         """
-        Purge Recordings from Recycle Bin
+        Get Recording Details
 
-        Purge recordings from the recycle bin with recording IDs or purge all the recordings that are in the recycle
-        bin. A recording once purged cannot be restored.
+        Retrieves details for a recording with a specified recording ID.
 
-        Only the following two entities can use this API
+        Only recordings of owner with the authenticated user may be retrieved.
 
-        * Administrator: A user or an application with the scope `spark-admin:recordings_write`.
+        Get Recording Details requires the `spark-compliance:recordings_read` scope for compliance officer,
+        `spark-admin:recordings_read` scope for admin and `spark:recordings_read` scope for user.
 
-        * User: An authenticated user who does not have the scope `spark-admin:recordings_write` but has
-          `spark:recordings_write`.
+        :param recording_id: A unique identifier for the recording.
+        :type recording_id: str
+        :rtype: :class:`ConvergedRecordingWithDirectDownloadLinks`
+        """
+        url = self.ep(f'convergedRecordings/{recording_id}')
+        data = await super().get(url)
+        r = ConvergedRecordingWithDirectDownloadLinks.model_validate(data)
+        return r
 
-        As an `administrator`, you can purge a list of recordings or all recordings of a particular user within the org
-        you manage from the recycle bin.
+    async def metadata(self, recording_id: str, show_all_types: bool = None) -> ConvergedRecordingMeta:
+        """
+        Get Recording metadata
 
-        As a `user`, you can purge a list of your own recordings or all your recordings from the recycle bin.
+        Retrieves metadata details for a recording with a specified recording ID. The recording must be owned by the
+        authenticated user.
 
-        * If `purgeAll` is `true`:
+        For information on the metadata fields, refer to `Metadata Guide
+        <https://developer.webex.com/docs/api/guides/consolidated-metadata-documentation-and-samples-guide>`_
 
-        * `recordingIds` should be empty.
+        Get Recording metadata requires the `spark-compliance:recordings_read` scope for compliance officer,
+        `spark-admin:recordings_read` for admin and `spark:recordings_read` for user.
 
-        * If the caller of this API is an `administrator`, `ownerEmail` should not be empty and all recordings owned
-          the `ownerEmail` will be purged from the recycle bin.
+        :param recording_id: A unique identifier for the recording.
+        :type recording_id: str
+        :param show_all_types: If `showAllTypes` is `true`, all attributes will be shown. If it's `false` or not
+            specified, the following attributes of the metadata will be hidden.
 
-        * If the caller of this API is a `user`, `ownerEmail` should be empty and all recordings owned by the caller
-          will be purged from the recycle bin.
+            * serviceData.callActivity.mediaStreams
 
-        * If `purgeAll` is `false`:
+            * serviceData.callActivity.participants
 
-        * `ownerEmail` should be empty.
+            * serviceData.callActivity.redirectInfo
 
-        * `recordingIds` should not be empty and its maximum size is `100`.
-
-        :param purge_all: If not specified or `false`, purges the recordings specified by `recordingIds` from the
-            recycle bin. If `true`, purges all recordings owned by the caller in case of `user`, and all recordings
-            owned by `ownerEmail` in case of `administrator` from the recycle bin.
-        :type purge_all: bool
-        :param owner_email: Email address for the recording owner. This parameter is only used if `purgeAll` is set to
-            `true` and the user or application calling the API has the required administrator scope
-            `spark-admin:recordings_write`. The administrator may specify the email of a user from an org they manage
-            and the API will purge all the recordings of that user from the recycle bin.
-        :type owner_email: str
-        :param recording_ids: Recording IDs for purging recordings from the recycle bin in batch.
-        :type recording_ids: list[str]
+            * serviceData.callActivity.redirectedCall
+        :type show_all_types: bool
         :rtype: None
         """
-        body = dict()
-        if purge_all is not None:
-            body['purgeAll'] = purge_all
-        if owner_email is not None:
-            body['ownerEmail'] = owner_email
-        if recording_ids is not None:
-            body['recordingIds'] = recording_ids
-        url = self.ep('convergedRecordings/purge')
-        await super().post(url, json=body)
+        params = {}
+        if show_all_types is not None:
+            params['showAllTypes'] = str(show_all_types).lower()
+        url = self.ep(f'convergedRecordings/{recording_id}/metadata')
+        data = await super().get(url, params=params)
+        return ConvergedRecordingMeta.model_validate(data)
 
 
 class AsDetailedCDRApi(AsApiChild, base='devices'):
@@ -17496,24 +17514,6 @@ class AsConferenceControlsApi(AsApiChild, base='telephony/conference'):
     scope.
     """
 
-    async def start_conference(self, call_ids: list[str]):
-        """
-        Start Conference
-
-        Join the user's calls into a conference.  A minimum of two call IDs are required. Each call ID identifies an
-        existing call between the user
-        and a participant to be added to the conference.
-
-        :param call_ids: List of call identifiers of the participants to join into the conference. A minimum of two
-            call IDs are required.
-        :type call_ids: list[str]
-        :rtype: None
-        """
-        body = dict()
-        body['callIds'] = call_ids
-        url = self.ep()
-        await super().post(url, json=body)
-
     async def release_conference(self):
         """
         Release Conference
@@ -17540,6 +17540,24 @@ class AsConferenceControlsApi(AsApiChild, base='telephony/conference'):
         r = ConferenceDetails.model_validate(data)
         return r
 
+    async def start_conference(self, call_ids: list[str]):
+        """
+        Start Conference
+
+        Join the user's calls into a conference.  A minimum of two call IDs are required. Each call ID identifies an
+        existing call between the user
+        and a participant to be added to the conference.
+
+        :param call_ids: List of call identifiers of the participants to join into the conference. A minimum of two
+            call IDs are required.
+        :type call_ids: list[str]
+        :rtype: None
+        """
+        body = dict()
+        body['callIds'] = call_ids
+        url = self.ep()
+        await super().post(url, json=body)
+
     async def add_participant(self, call_id: str):
         """
         Add Participant
@@ -17554,6 +17572,33 @@ class AsConferenceControlsApi(AsApiChild, base='telephony/conference'):
         body['callId'] = call_id
         url = self.ep('addParticipant')
         await super().post(url, json=body)
+
+    async def deafen_participant(self, call_id: str):
+        """
+        Deafen Participant
+
+        Deafens a participant (i.e. media stream will not be transmitted to the participant).
+        The request body contains the call ID of the participant to deafen
+
+        :param call_id: The call identifier of the participant to deafen.
+        :type call_id: str
+        :rtype: None
+        """
+        body = dict()
+        body['callId'] = call_id
+        url = self.ep('deafen')
+        await super().post(url, json=body)
+
+    async def hold(self):
+        """
+        Hold
+
+        Hold the conference host.  There is no request body.
+
+        :rtype: None
+        """
+        url = self.ep('hold')
+        await super().post(url)
 
     async def mute(self, call_id: str = None):
         """
@@ -17574,6 +17619,33 @@ class AsConferenceControlsApi(AsApiChild, base='telephony/conference'):
         url = self.ep('mute')
         await super().post(url, json=body)
 
+    async def resume(self):
+        """
+        Resume
+
+        Resumes the held conference host.  There is no request body.
+
+        :rtype: None
+        """
+        url = self.ep('resume')
+        await super().post(url)
+
+    async def undeafen_participant(self, call_id: str):
+        """
+        Undeafen Participant
+
+        Undeafens a participant (i.e. resume transmitting the conference media stream to the participant).
+        The request body contains the call ID of the participant to undeafen.
+
+        :param call_id: The call identifier of the participant to undeafen.
+        :type call_id: str
+        :rtype: None
+        """
+        body = dict()
+        body['callId'] = call_id
+        url = self.ep('undeafen')
+        await super().post(url, json=body)
+
     async def unmute(self, call_id: str = None):
         """
         Unmute
@@ -17592,60 +17664,6 @@ class AsConferenceControlsApi(AsApiChild, base='telephony/conference'):
             body['callId'] = call_id
         url = self.ep('unmute')
         await super().post(url, json=body)
-
-    async def deafen_participant(self, call_id: str):
-        """
-        Deafen Participant
-
-        Deafens a participant (i.e. media stream will not be transmitted to the participant).
-        The request body contains the call ID of the participant to deafen
-
-        :param call_id: The call identifier of the participant to deafen.
-        :type call_id: str
-        :rtype: None
-        """
-        body = dict()
-        body['callId'] = call_id
-        url = self.ep('deafen')
-        await super().post(url, json=body)
-
-    async def undeafen_participant(self, call_id: str):
-        """
-        Undeafen Participant
-
-        Undeafens a participant (i.e. resume transmitting the conference media stream to the participant).
-        The request body contains the call ID of the participant to undeafen.
-
-        :param call_id: The call identifier of the participant to undeafen.
-        :type call_id: str
-        :rtype: None
-        """
-        body = dict()
-        body['callId'] = call_id
-        url = self.ep('undeafen')
-        await super().post(url, json=body)
-
-    async def hold(self):
-        """
-        Hold
-
-        Hold the conference host.  There is no request body.
-
-        :rtype: None
-        """
-        url = self.ep('hold')
-        await super().post(url)
-
-    async def resume(self):
-        """
-        Resume
-
-        Resumes the held conference host.  There is no request body.
-
-        :rtype: None
-        """
-        url = self.ep('resume')
-        await super().post(url)
 
 
 class AsCustomerExperienceEssentialsApi(AsApiChild, base='telephony/config/locations'):
@@ -22299,6 +22317,8 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
     def patterns_gen(self, dial_plan_id: str, org_id: str = None,
                  dial_pattern: str = None, **params) -> AsyncGenerator[str, None, None]:
         """
+        Read the List of Dial Patterns
+
         List all Dial Patterns for the organization.
 
         Dial plans route calls to on-premises destinations by use of trunks or route groups. They are configured
@@ -22329,6 +22349,8 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
     async def patterns(self, dial_plan_id: str, org_id: str = None,
                  dial_pattern: str = None, **params) -> List[str]:
         """
+        Read the List of Dial Patterns
+
         List all Dial Patterns for the organization.
 
         Dial plans route calls to on-premises destinations by use of trunks or route groups. They are configured
@@ -25515,6 +25537,8 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
     async def validate_extensions(self, location_id: str, extensions: list[str],
                             org_id: str = None) -> ValidateExtensionsResponse:
         """
+        Validate Extensions
+
         Validate extensions for a specific location.
 
         Validating extensions requires a full administrator auth token with a scope
@@ -25537,6 +25561,8 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
 
     async def details(self, location_id: str, org_id: str = None) -> TelephonyLocation:
         """
+        Get Location Webex Calling Details
+
         Shows Webex Calling details for a location, by ID.
 
         Specify the location ID in the locationId parameter in the URI.
@@ -25626,7 +25652,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
 
     async def update(self, location_id: str, settings: TelephonyLocation, org_id: str = None) -> Optional[str]:
         """
-         Update Location Webex Calling Details
+        Update Location Webex Calling Details
 
         Update Webex Calling details for a location, by ID.
 
@@ -26315,7 +26341,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         url = self.ep(f'locations/{location_id}/receptionistContacts/directories/{directory_id}')
         await super().delete(url, params=params)
 
-    async def modify_a_receptionist_contact_directory(self, location_id: str, directory_id: str, name: str,
+    async def modify_receptionist_contact_directory(self, location_id: str, directory_id: str, name: str,
                                                 contacts: List[str], org_id: str = None) -> str:
         """
         Modify a Receptionist Contact Directory
@@ -28463,6 +28489,8 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     def route_choices_gen(self, route_group_name: str = None, trunk_name: str = None, order: str = None,
                       org_id: str = None) -> AsyncGenerator[RouteIdentity, None, None]:
         """
+        Read the List of Routing Choices
+
         List all Routes for the organization.
 
         Trunk and Route Group qualify as Route. Trunks and Route Groups provide you the ability to configure Webex
@@ -28488,6 +28516,8 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     async def route_choices(self, route_group_name: str = None, trunk_name: str = None, order: str = None,
                       org_id: str = None) -> List[RouteIdentity]:
         """
+        Read the List of Routing Choices
+
         List all Routes for the organization.
 
         Trunk and Route Group qualify as Route. Trunks and Route Groups provide you the ability to configure Webex

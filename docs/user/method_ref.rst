@@ -636,7 +636,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.read_moh <wxc_sdk.telephony.TelephonyApi.read_moh>`
         Get the organization Music on Hold configuration
    * - :meth:`api.telephony.route_choices <wxc_sdk.telephony.TelephonyApi.route_choices>`
-        List all Routes for the organization
+        Read the List of Routing Choices
    * - :meth:`api.telephony.supported_devices <wxc_sdk.telephony.TelephonyApi.supported_devices>`
         Gets the list of supported devices for an organization
    * - :meth:`api.telephony.test_call_routing <wxc_sdk.telephony.TelephonyApi.test_call_routing>`
@@ -1116,7 +1116,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.location.delete_receptionist_contact_directory <wxc_sdk.telephony.location.TelephonyLocationApi.delete_receptionist_contact_directory>`
         Delete a Receptionist Contact Directory
    * - :meth:`api.telephony.location.details <wxc_sdk.telephony.location.TelephonyLocationApi.details>`
-        Shows Webex Calling details for a location, by ID
+        Get Location Webex Calling Details
    * - :meth:`api.telephony.location.device_settings <wxc_sdk.telephony.location.TelephonyLocationApi.device_settings>`
         Get device override settings for a location
    * - :meth:`api.telephony.location.ecbn_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.ecbn_available_phone_numbers>`
@@ -1129,7 +1129,7 @@ The method name is a link to the method documentation.
         List Locations Webex Calling Details
    * - :meth:`api.telephony.location.list_receptionist_contact_directories <wxc_sdk.telephony.location.TelephonyLocationApi.list_receptionist_contact_directories>`
         Read list of Receptionist Contact Directories
-   * - :meth:`api.telephony.location.modify_a_receptionist_contact_directory <wxc_sdk.telephony.location.TelephonyLocationApi.modify_a_receptionist_contact_directory>`
+   * - :meth:`api.telephony.location.modify_receptionist_contact_directory <wxc_sdk.telephony.location.TelephonyLocationApi.modify_receptionist_contact_directory>`
         Modify a Receptionist Contact Directory
    * - :meth:`api.telephony.location.phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.phone_numbers>`
         Get Available Phone Numbers for a Location with Given Criteria
@@ -1144,7 +1144,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.location.update_ecbn <wxc_sdk.telephony.location.TelephonyLocationApi.update_ecbn>`
         Update a Location Emergency callback number
    * - :meth:`api.telephony.location.validate_extensions <wxc_sdk.telephony.location.TelephonyLocationApi.validate_extensions>`
-        Validate extensions for a specific location
+        Validate Extensions
    * - :meth:`api.telephony.location.webex_go_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.webex_go_available_phone_numbers>`
         Get Webex Go Available Phone Numbers
    * - :meth:`api.telephony.location.emergency_services.read_emergency_call_notification <wxc_sdk.telephony.location.emergency_services.LocationEmergencyServicesApi.read_emergency_call_notification>`
@@ -1190,7 +1190,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.locations.delete_receptionist_contact_directory <wxc_sdk.telephony.location.TelephonyLocationApi.delete_receptionist_contact_directory>`
         Delete a Receptionist Contact Directory
    * - :meth:`api.telephony.locations.details <wxc_sdk.telephony.location.TelephonyLocationApi.details>`
-        Shows Webex Calling details for a location, by ID
+        Get Location Webex Calling Details
    * - :meth:`api.telephony.locations.device_settings <wxc_sdk.telephony.location.TelephonyLocationApi.device_settings>`
         Get device override settings for a location
    * - :meth:`api.telephony.locations.ecbn_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.ecbn_available_phone_numbers>`
@@ -1203,7 +1203,7 @@ The method name is a link to the method documentation.
         List Locations Webex Calling Details
    * - :meth:`api.telephony.locations.list_receptionist_contact_directories <wxc_sdk.telephony.location.TelephonyLocationApi.list_receptionist_contact_directories>`
         Read list of Receptionist Contact Directories
-   * - :meth:`api.telephony.locations.modify_a_receptionist_contact_directory <wxc_sdk.telephony.location.TelephonyLocationApi.modify_a_receptionist_contact_directory>`
+   * - :meth:`api.telephony.locations.modify_receptionist_contact_directory <wxc_sdk.telephony.location.TelephonyLocationApi.modify_receptionist_contact_directory>`
         Modify a Receptionist Contact Directory
    * - :meth:`api.telephony.locations.phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.phone_numbers>`
         Get Available Phone Numbers for a Location with Given Criteria
@@ -1218,7 +1218,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.locations.update_ecbn <wxc_sdk.telephony.location.TelephonyLocationApi.update_ecbn>`
         Update a Location Emergency callback number
    * - :meth:`api.telephony.locations.validate_extensions <wxc_sdk.telephony.location.TelephonyLocationApi.validate_extensions>`
-        Validate extensions for a specific location
+        Validate Extensions
    * - :meth:`api.telephony.locations.webex_go_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.webex_go_available_phone_numbers>`
         Get Webex Go Available Phone Numbers
    * - :meth:`api.telephony.locations.emergency_services.read_emergency_call_notification <wxc_sdk.telephony.location.emergency_services.LocationEmergencyServicesApi.read_emergency_call_notification>`
@@ -1368,7 +1368,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.prem_pstn.dial_plan.modify_patterns <wxc_sdk.telephony.prem_pstn.dial_plan.DialPlanApi.modify_patterns>`
         Modify dial patterns for the Dial Plan
    * - :meth:`api.telephony.prem_pstn.dial_plan.patterns <wxc_sdk.telephony.prem_pstn.dial_plan.DialPlanApi.patterns>`
-        List all Dial Patterns for the organization
+        Read the List of Dial Patterns
    * - :meth:`api.telephony.prem_pstn.dial_plan.update <wxc_sdk.telephony.prem_pstn.dial_plan.DialPlanApi.update>`
         Modify a Dial Plan for the organization
    * - :meth:`api.telephony.prem_pstn.route_group.create <wxc_sdk.telephony.prem_pstn.route_group.RouteGroupApi.create>`

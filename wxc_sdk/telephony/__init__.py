@@ -921,6 +921,8 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     def route_choices(self, route_group_name: str = None, trunk_name: str = None, order: str = None,
                       org_id: str = None) -> Generator[RouteIdentity, None, None]:
         """
+        Read the List of Routing Choices
+
         List all Routes for the organization.
 
         Trunk and Route Group qualify as Route. Trunks and Route Groups provide you the ability to configure Webex

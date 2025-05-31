@@ -92,6 +92,7 @@ class TelephonyLocation(ApiModel):
         """
         data = self.model_dump(mode='json', exclude_unset=True, by_alias=True,
                                exclude={'location_id', 'name', 'subscription_id', 'user_limit', 'default_domain',
+                                        'e911_setup_required',
                                         'use_charge_number_for_pcharge_info'})
         if not self.connection:
             data.pop('connection', None)
@@ -223,6 +224,8 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
     def validate_extensions(self, location_id: str, extensions: list[str],
                             org_id: str = None) -> ValidateExtensionsResponse:
         """
+        Validate Extensions
+
         Validate extensions for a specific location.
 
         Validating extensions requires a full administrator auth token with a scope
@@ -245,6 +248,8 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
 
     def details(self, location_id: str, org_id: str = None) -> TelephonyLocation:
         """
+        Get Location Webex Calling Details
+
         Shows Webex Calling details for a location, by ID.
 
         Specify the location ID in the locationId parameter in the URI.
@@ -310,7 +315,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
 
     def update(self, location_id: str, settings: TelephonyLocation, org_id: str = None) -> Optional[str]:
         """
-         Update Location Webex Calling Details
+        Update Location Webex Calling Details
 
         Update Webex Calling details for a location, by ID.
 
@@ -802,7 +807,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         url = self.ep(f'locations/{location_id}/receptionistContacts/directories/{directory_id}')
         super().delete(url, params=params)
 
-    def modify_a_receptionist_contact_directory(self, location_id: str, directory_id: str, name: str,
+    def modify_receptionist_contact_directory(self, location_id: str, directory_id: str, name: str,
                                                 contacts: List[str], org_id: str = None) -> str:
         """
         Modify a Receptionist Contact Directory

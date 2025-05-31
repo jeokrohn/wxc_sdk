@@ -195,6 +195,8 @@ class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
     def patterns(self, dial_plan_id: str, org_id: str = None,
                  dial_pattern: str = None, **params) -> Generator[str, None, None]:
         """
+        Read the List of Dial Patterns
+
         List all Dial Patterns for the organization.
 
         Dial plans route calls to on-premises destinations by use of trunks or route groups. They are configured
