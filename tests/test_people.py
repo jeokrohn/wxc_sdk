@@ -10,14 +10,14 @@ from unittest import skip
 
 from dotenv import load_dotenv
 
+from tests.base import TestCaseWithLog, async_test, TestWithLocations
+from tests.testutil import calling_users, create_random_calling_user
 from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import RouteType
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings.numbers import PersonNumbers
 from wxc_sdk.rest import RestError
-from tests.base import TestCaseWithLog, async_test, TestWithLocations
-from tests.testutil import calling_users, create_random_calling_user
 from wxc_sdk.telephony.location import TelephonyLocation
 
 
