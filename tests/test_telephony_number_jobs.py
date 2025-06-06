@@ -68,22 +68,12 @@ class TestMoveNumbers(TestWithLocations):
         return (LocationAndNumbers(candidates[0], numbers_by_location[candidates[0].location_id]),
                 LocationAndNumbers(candidates[1], numbers_by_location[candidates[1].location_id]))
 
-    def update_pstn(self, location: TelephonyLocation, org_id: str):
+    def update_pstn(self, location: TelephonyLocation):
         """
         Update PSTN of given location
-        :param location:
-        :param org_id:
         """
-        org_id = webex_id_to_uuid(org_id)
-        location_id = webex_id_to_uuid(location.location_id)
-        url = f'https://bifrost-r.wbx2.com/api/v2/customers/{org_id}/locations/{location_id}'
-        body = {
-            'connection': {
-                'type': location.connection.type,
-                'id': webex_id_to_uuid(location.connection.id)
-            }
-        }
-        self.api.session.rest_put(url=url, json=body)
+        self.api.telephony.pstn.configure(location_id=location.location_id, premise_route_id=location.connection.id,
+                                          premise_route_type=location.connection.type)
 
     async def delete_numbers(self, location_id: str, numbers: list[str]):
         """
@@ -99,12 +89,8 @@ class TestMoveNumbers(TestWithLocations):
     async def cleanup_numbers(self, location: TelephonyLocation, loc_ref: str, new_tns: list[str]):
         """
         Remove numbers from location and create some output
-        :param location:
-        :param loc_ref:
-        :param new_tns:
-        :return:
         """
-        # get numbers in locatipn
+        # get numbers in location
         numbers = set(n.phone_number for n in
                       self.api.telephony.phone_numbers(location_id=location.location_id,
                                                        number_type=NumberType.number))
@@ -117,23 +103,21 @@ class TestMoveNumbers(TestWithLocations):
 
     @asynccontextmanager
     async def move_number_context(self, number_count: int = 1,
-                                  number_state: NumberState = NumberState.active) -> MoveNumberContext:
-        with self.no_log():
+                                  number_state: NumberState = NumberState.active,
+                                  keep_log: bool=True) -> MoveNumberContext:
+        with self.no_log(keep_log):
             source_location, target_location = await self.pick_locations()
 
             print(f'source location "{source_location.location.name}" ({source_location.numbers[0].phone_number[2:5]})')
             print(f'target location "{target_location.location.name}" ({target_location.numbers[0].phone_number[2:5]})')
 
-            # add a single number to location; apparently we can only move a single number with each call?!
-            # get available TN in the +1-XXX-556-0XXX range
-            new_tns, me = await asyncio.gather(as_available_tns(
+            # add numbers to location
+            # get available TN in the +1-XXX-555-0XXX range
+            new_tns = await as_available_tns(
                 as_api=self.async_api,
-                tn_prefix=f'{source_location.numbers[0].phone_number[:5]}5561',
-                tns_requested=number_count),
-                self.async_api.people.me())
+                tn_prefix=f'{source_location.numbers[0].phone_number[:5]}5550',
+                tns_requested=number_count)
             new_tns: list[str]
-            me: Person
-            org_id = me.org_id
 
         # add number(s) to source location and activate. Only activated numbers can be moved
         print(f'Adding numbers to source location: {", ".join(new_tns)}')
@@ -143,10 +127,10 @@ class TestMoveNumbers(TestWithLocations):
         try:
             # to be able to move numbers both locations have to use the same premises PSTN connection
             # we temporarily update the PSTN choice to the target location
-            with self.no_log():
+            with self.no_log(keep_log):
                 old_target_pstn_connection = target_location.location.connection
                 target_location.location.connection = source_location.location.connection
-                self.update_pstn(target_location.location, org_id)
+                self.update_pstn(target_location.location)
                 print(f'temporarily updated PSTN connection of target location "{target_location.location.name}"')
 
             # now yield the context
@@ -155,14 +139,14 @@ class TestMoveNumbers(TestWithLocations):
                                         target_location=target_location,
                                         numbers=new_tns)
             finally:
-                with self.no_log():
+                with self.no_log(keep_log):
                     # restore old PSTN connection
                     target_location.location.connection = old_target_pstn_connection
-                    self.update_pstn(target_location.location, org_id)
+                    self.update_pstn(target_location.location)
                     print(f'restored PSTN connection of target location "{target_location.location.name}"')
         finally:
             # remove numbers from source and target location
-            with self.no_log():
+            with self.no_log(keep_log):
                 await asyncio.gather(
                     self.cleanup_numbers(location=source_location.location, loc_ref='source', new_tns=new_tns),
                     self.cleanup_numbers(location=target_location.location, loc_ref='target', new_tns=new_tns))
@@ -187,7 +171,7 @@ class TestMoveNumbers(TestWithLocations):
         Check whether the job completed successfully
         """
         completed = job.latest_execution_status == 'COMPLETED' and all(
-            jes.exit_code == 'COMPLETED' and all(ses.exit_code == 'COMPLETED'
+            jes.exit_code == 'COMPLETED' and all(ses.status_message == 'COMPLETED'
                                                  for ses in jes.step_execution_statuses)
             for jes in job.job_execution_status)
         if not completed:
@@ -198,12 +182,12 @@ class TestMoveNumbers(TestWithLocations):
                 print(f'{error.item}: {error.error.message[0].code} ({error.error.message[0].description})')
         return completed
 
-    @TestCaseWithLog.async_test
-    async def test_001_move_number(self):
+    async def move_number(self, number_count: int = 1,
+                          number_state: NumberState = NumberState.active):
         """
         try to move one active number from one location to another
         """
-        async with self.move_number_context(number_count=1, number_state=NumberState.active) as context:
+        async with self.move_number_context(number_count=number_count, number_state=number_state) as context:
             source_location, target_location, new_tns = context
 
             job = self.api.telephony.jobs.manage_numbers.initiate_job(
@@ -225,49 +209,24 @@ class TestMoveNumbers(TestWithLocations):
         return
 
     @TestCaseWithLog.async_test
+    async def test_001_move_number(self, number_count:int=1,
+                                   number_state:NumberState=NumberState.active):
+        """
+        try to move one active number from one location to another
+        """
+        await self.move_number()
+
+    @TestCaseWithLog.async_test
     async def test_002_move_numbers(self):
         """
         try to move multiple active numbers from one location to another
         we expect this to fail: RESTError 412, BATCH-1017031
         """
-        async with self.move_number_context(number_count=2, number_state=NumberState.active) as context:
-            source_location, target_location, new_tns = context
-
-            with self.assertRaises(expected_exception=RestError) as exc:
-                job = self.api.telephony.jobs.manage_numbers.initiate_job(
-                    operation='MOVE',
-                    target_location_id=target_location.location.location_id,
-                    number_list=[NumberItem(location_id=source_location.location.location_id,
-                                            numbers=new_tns)])
-        rest_error: RestError = exc.exception
-        self.assertEqual(412, rest_error.response.status_code)
-        detail: ManageNumberErrorItem = ManageNumberErrorItem.model_validate(loads(rest_error.detail))
-        self.assertEqual('BATCH-1017031', detail.error.message[0].code)
-        return
+        await self.move_number(number_count=20)
 
     @TestCaseWithLog.async_test
     async def test_003_move_inactive_number(self):
         """
         try to move a single inactive number
-        we expect this to fail:
         """
-        async with self.move_number_context(number_count=1, number_state=NumberState.inactive) as context:
-            source_location, target_location, new_tns = context
-
-            job = self.api.telephony.jobs.manage_numbers.initiate_job(
-                operation='MOVE',
-                target_location_id=target_location.location.location_id,
-                number_list=[NumberItem(location_id=source_location.location.location_id,
-                                        numbers=new_tns)])
-            job = self.monitor_job(job)
-
-            self.assertFalse(self.job_completed(job), 'Job not completed successfully')
-
-            # check whether any numbers actually have been moved
-            numbers_in_target_location = set(tn.phone_number for tn in self.api.telephony.phone_numbers(
-                location_id=target_location.location.location_id,
-                number_type=NumberType.number))
-            new_tns_moved = [tn for tn in new_tns
-                             if tn in numbers_in_target_location]
-            self.assertTrue(not new_tns_moved, f'TNs moved: {", ".join(new_tns_moved)}')
-        return
+        await self.move_number(number_count=1, number_state=NumberState.inactive)

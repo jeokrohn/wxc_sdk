@@ -19804,19 +19804,11 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         Starts the execution of an operation on a set of numbers. Supported operations are: `MOVE`,
         `NUMBER_USAGE_CHANGE`.
 
-        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+        Up to 1000 numbers can be given in `MOVE` operation type and `NUMBER_USAGE_CHANGE` operation type per request.
+        If another move number job request is initiated while a move job is in progress, the API call will receive a
+        `409` HTTP status code.
 
-        **Notes**
-        Although the job can internally perform the `DELETE` action, only the `MOVE` and `NUMBER_USAGE_CHANGE`
-        operations are publicly supported.
-
-        Although the `numbers` field is an array, we currently only support a single number with each request for
-        `MOVE` operation type and change of usage type of up to 1000 numbers per request.
-
-        Only one number can be moved at any given time. If a move of another number is initiated while a move job is in
-        progress the API call will receive a `409` http status code.
-
-        In order to move a number,
+        In order to move a number the following is required:
 
             * The number must be unassigned.
             * Both locations must have the same PSTN Connection Type.
@@ -19826,7 +19818,7 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         For example, you can move from Cisco Calling Plan to Cisco Calling Plan, but you cannot move from Cisco Calling
         Plan to a location with Cloud Connected PSTN.
 
-        In order to change the number usage,
+        In order to change the number usage the following is required:
 
             * The number must be unassigned.
             * Number Usage Type can be set to `NONE` if carrier has the PSTN service `GEOGRAPHIC_NUMBERS`.
@@ -19834,6 +19826,8 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
 
         For example, you can initiate a `NUMBER_USAGE_CHANGE` job to change the number type from Standard number to
         Service number, or the other way around.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
         :param operation: The kind of operation to be carried out.
         :type operation: str
@@ -26927,7 +26921,7 @@ class AsVirtualExtensionsApi(AsApiChild, base='telephony/config'):
         extension by dialing the ESN.
 
         Creating a virtual extension requires a full administrator or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write` and `Identity:contact`.
+        `spark-admin:telephony_config_write` and `identity:contacts_rw`.
 
         :param display_name: Display name of the person at the virtual extension.
         :type display_name: str
@@ -27067,7 +27061,7 @@ class AsVirtualExtensionsApi(AsApiChild, base='telephony/config'):
         extension.
 
         Deleting a Virtual Extension requires a full administrator or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write` and `Identity:contact`.
+        `spark-admin:telephony_config_write` and `identity:contacts_rw`.
 
         :param extension_id: ID of the virtual extension.
         :type extension_id: str
@@ -27122,7 +27116,7 @@ class AsVirtualExtensionsApi(AsApiChild, base='telephony/config'):
         name, and location etc.
 
         Updating a Virtual Extension requires a full administrator or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write` and `Identity:contact`.
+        `spark-admin:telephony_config_write` and `identity:contacts_rw`.
 
         :param extension_id: ID of the virtual extension.
         :type extension_id: str

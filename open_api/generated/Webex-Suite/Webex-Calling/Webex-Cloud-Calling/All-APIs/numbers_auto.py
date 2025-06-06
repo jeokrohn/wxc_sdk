@@ -12,11 +12,12 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __all__ = ['CountObject', 'ErrorMessageObject', 'ErrorObject', 'ItemObject', 'JobExecutionStatusObject',
-           'JobExecutionStatusObject1', 'JobIdResponseObject', 'Number', 'NumberItem', 'NumberObject',
+           'JobExecutionStatusObject1', 'JobExecutionStatusObjectExitCode', 'JobExecutionStatusObjectStatusMessage',
+           'JobIdResponseObject', 'JobListResponseObject', 'Number', 'NumberItem', 'NumberObject',
            'NumberObjectLocation', 'NumberObjectOwner', 'NumberObjectPhoneNumberType', 'NumberOwnerType',
            'NumberState', 'NumberStateOptions', 'NumberType', 'NumberTypeOptions', 'NumberUsageTypeOptions',
-           'NumbersApi', 'OwnerType', 'StartJobResponse', 'StartJobResponseLatestExecutionExitCode', 'Status',
-           'StepExecutionStatusesObject', 'TelephonyType', 'ValidateNumbersResponse']
+           'NumbersApi', 'OwnerType', 'StartJobResponse', 'Status', 'StepExecutionStatusesObject', 'TelephonyType',
+           'ValidateNumbersResponse']
 
 
 class NumberItem(ApiModel):
@@ -66,58 +67,22 @@ class ItemObject(ApiModel):
     error: Optional[ErrorObject] = None
 
 
-class StepExecutionStatusesObject(ApiModel):
-    #: Unique identifier that identifies each step in a job.
-    id: Optional[float] = None
-    #: Step execution start time in UTC format.
-    start_time: Optional[str] = None
-    #: Step execution end time in UTC format.
-    end_time: Optional[str] = None
-    #: Last updated time for a step in UTC format.
-    last_updated: Optional[str] = None
-    #: Displays status for a step.
-    status_message: Optional[str] = None
-    #: Exit Code for a step.
-    exit_code: Optional[str] = None
-    #: Step name.
-    name: Optional[str] = None
-    #: Time lapsed since the step execution started.
-    time_elapsed: Optional[str] = None
+class JobExecutionStatusObjectStatusMessage(str, Enum):
+    #: Job has started.
+    starting = 'STARTING'
+    #: Job is in progress.
+    started = 'STARTED'
+    #: Job has completed.
+    completed = 'COMPLETED'
+    #: Job has failed.
+    failed = 'FAILED'
+    #: Job status is unknown.
+    unknown = 'UNKNOWN'
+    #: Job has been abandoned (manually stopped).
+    abandoned = 'ABANDONED'
 
 
-class JobExecutionStatusObject(ApiModel):
-    #: Unique identifier that identifies each instance of the job.
-    id: Optional[float] = None
-    #: Last updated time (in UTC format) post one of the step execution completion.
-    last_updated: Optional[str] = None
-    #: Displays status for overall steps that are part of the job.
-    status_message: Optional[str] = None
-    #: Exit Code for a job.
-    exit_code: Optional[str] = None
-    #: Job creation time in UTC format.
-    created_time: Optional[str] = None
-    #: Time lapsed since the job execution started.
-    time_elapsed: Optional[str] = None
-    #: Status of each step within a job.
-    step_execution_statuses: Optional[list[StepExecutionStatusesObject]] = None
-
-
-class JobExecutionStatusObject1(ApiModel):
-    #: Unique identifier that identifies each instance of the job.
-    id: Optional[float] = None
-    #: Last updated time (in UTC format) post one of the step execution completion.
-    last_updated: Optional[str] = None
-    #: Displays status for overall steps that are part of the job.
-    status_message: Optional[str] = None
-    #: Exit Code for a job.
-    exit_code: Optional[str] = None
-    #: Job creation time in UTC format.
-    created_time: Optional[str] = None
-    #: Time lapsed since the job execution started.
-    time_elapsed: Optional[str] = None
-
-
-class StartJobResponseLatestExecutionExitCode(str, Enum):
+class JobExecutionStatusObjectExitCode(str, Enum):
     #: Job is in progress.
     unknown = 'UNKNOWN'
     #: Job has completed successfully.
@@ -128,11 +93,66 @@ class StartJobResponseLatestExecutionExitCode(str, Enum):
     stopped = 'STOPPED'
     #: Job has completed with errors.
     completed_with_errors = 'COMPLETED_WITH_ERRORS'
+    #: Job has completed with pending number orders.
+    completed_with_pending_orders = 'COMPLETED_WITH_PENDING_ORDERS'
 
 
-class StartJobResponse(ApiModel):
-    #: Job name.
+class StepExecutionStatusesObject(ApiModel):
+    #: Unique identifier that identifies each step in a job.
+    id: Optional[int] = None
+    #: Step execution start time in UTC format.
+    start_time: Optional[datetime] = None
+    #: Step execution end time in UTC format.
+    end_time: Optional[datetime] = None
+    #: Last updated time for a step in UTC format.
+    last_updated: Optional[datetime] = None
+    #: Displays status for a step.
+    status_message: Optional[JobExecutionStatusObjectStatusMessage] = None
+    #: Exit Code for a step.
+    exit_code: Optional[JobExecutionStatusObjectExitCode] = None
+    #: Step name.
     name: Optional[str] = None
+    #: Time lapsed since the step execution started.
+    time_elapsed: Optional[str] = None
+
+
+class JobExecutionStatusObject(ApiModel):
+    #: Unique identifier that identifies each instance of the job.
+    id: Optional[int] = None
+    #: The date and time, including seconds, the job has started in UTC format.
+    start_time: Optional[datetime] = None
+    #: The date and time, including seconds, the job has started in UTC format.
+    end_time: Optional[datetime] = None
+    #: Last updated time (in UTC format) for the step completion.
+    last_updated: Optional[datetime] = None
+    #: Displays status for overall steps that are part of the job.
+    status_message: Optional[JobExecutionStatusObjectStatusMessage] = None
+    #: Exit Code for a job.
+    exit_code: Optional[JobExecutionStatusObjectExitCode] = None
+    #: Job creation time in UTC format.
+    created_time: Optional[datetime] = None
+    #: Time elapsed since the job execution started.
+    time_elapsed: Optional[str] = None
+    #: Status of each step within a job.
+    step_execution_statuses: Optional[list[StepExecutionStatusesObject]] = None
+
+
+class JobExecutionStatusObject1(ApiModel):
+    #: Unique identifier that identifies each instance of the job.
+    id: Optional[int] = None
+    #: Last updated time (in UTC format) post one of the step execution completion.
+    last_updated: Optional[datetime] = None
+    #: Displays status for overall steps that are part of the job.
+    status_message: Optional[JobExecutionStatusObjectStatusMessage] = None
+    #: Exit Code for a job.
+    exit_code: Optional[JobExecutionStatusObjectExitCode] = None
+    #: Job creation time in UTC format.
+    created_time: Optional[datetime] = None
+    #: Time lapsed since the job execution started.
+    time_elapsed: Optional[str] = None
+
+
+class JobListResponseObject(ApiModel):
     #: Unique identifier of the job.
     id: Optional[str] = None
     #: Job type.
@@ -146,14 +166,14 @@ class StartJobResponse(ApiModel):
     #: Unique identifier to identify the customer for which the job was run.
     target_customer_id: Optional[str] = None
     #: Unique identifier to identify the instance of the job.
-    instance_id: Optional[float] = None
+    instance_id: Optional[int] = None
     #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
     #: execution of the job.
-    job_execution_status: Optional[list[JobExecutionStatusObject1]] = None
-    #: The most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
-    latest_execution_status: Optional[str] = None
+    job_execution_status: Optional[list[JobExecutionStatusObject]] = None
+    #: Most recent status of the job at the time of invocation.
+    latest_execution_status: Optional[JobExecutionStatusObjectStatusMessage] = None
     #: Most recent exit code of the job at the time of invocation.
-    latest_execution_exit_code: Optional[StartJobResponseLatestExecutionExitCode] = None
+    latest_execution_exit_code: Optional[JobExecutionStatusObjectExitCode] = None
     #: The operation type that was carried out.
     operation_type: Optional[str] = None
     #: Unique location identifier for which the job was run.
@@ -310,6 +330,40 @@ class NumberStateOptions(str, Enum):
     inactive = 'INACTIVE'
 
 
+class StartJobResponse(ApiModel):
+    #: Job name.
+    name: Optional[str] = None
+    #: Unique identifier of the job.
+    id: Optional[str] = None
+    #: Job type.
+    job_type: Optional[str] = None
+    #: Unique identifier to track the flow of HTTP requests.
+    tracking_id: Optional[str] = None
+    #: Unique identifier to identify which user has run the job.
+    source_user_id: Optional[str] = None
+    #: Unique identifier to identify the customer who has run the job.
+    source_customer_id: Optional[str] = None
+    #: Unique identifier to identify the customer for which the job was run.
+    target_customer_id: Optional[str] = None
+    #: Unique identifier to identify the instance of the job.
+    instance_id: Optional[int] = None
+    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
+    #: execution of the job.
+    job_execution_status: Optional[list[JobExecutionStatusObject1]] = None
+    #: Most recent status of the job at the time of invocation.
+    latest_execution_status: Optional[JobExecutionStatusObjectStatusMessage] = None
+    #: Most recent exit code of the job at the time of invocation.
+    latest_execution_exit_code: Optional[JobExecutionStatusObjectExitCode] = None
+    #: The operation type that was carried out.
+    operation_type: Optional[str] = None
+    #: Unique location identifier for which the job was run.
+    source_location_id: Optional[str] = None
+    #: Unique location identifier for which the numbers have been moved.
+    target_location_id: Optional[str] = None
+    #: Job statistics.
+    counts: Optional[CountObject] = None
+
+
 class Status(str, Enum):
     #: Everything is good.
     ok = 'OK'
@@ -340,24 +394,20 @@ class JobIdResponseObject(ApiModel):
     #: Unique identifier to identify the customer for which the job was run.
     target_customer_id: Optional[str] = None
     #: Unique identifier to identify the instance of the job.
-    instance_id: Optional[float] = None
+    instance_id: Optional[int] = None
     #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
     #: execution of the job.
     job_execution_status: Optional[list[JobExecutionStatusObject]] = None
-    #: The most recent status (STARTING, STARTED, COMPLETED, FAILED) of the job at the time of invocation.
-    latest_execution_status: Optional[str] = None
+    #: Most recent status of the job at the time of invocation.
+    latest_execution_status: Optional[JobExecutionStatusObjectStatusMessage] = None
     #: Most recent exit code of the job at the time of invocation.
-    latest_execution_exit_code: Optional[StartJobResponseLatestExecutionExitCode] = None
+    latest_execution_exit_code: Optional[JobExecutionStatusObjectExitCode] = None
     #: The operation type that was carried out.
     operation_type: Optional[str] = None
     #: Unique location identifier for which the job was run.
     source_location_id: Optional[str] = None
     #: Unique location identifier for which the numbers have been moved.
     target_location_id: Optional[str] = None
-    #: The location name for which the job was run.
-    source_location_name: Optional[str] = None
-    #: The location name for which the numbers have been moved.
-    target_location_name: Optional[str] = None
     #: Job statistics.
     counts: Optional[CountObject] = None
 
@@ -430,7 +480,7 @@ class NumbersApi(ApiChild, base='telephony/config'):
         r = ValidateNumbersResponse.model_validate(data)
         return r
 
-    def list_manage_numbers_jobs(self, org_id: str = None, **params) -> Generator[StartJobResponse, None, None]:
+    def list_manage_numbers_jobs(self, org_id: str = None, **params) -> Generator[JobListResponseObject, None, None]:
         """
         List Manage Numbers Jobs
 
@@ -446,12 +496,12 @@ class NumbersApi(ApiChild, base='telephony/config'):
 
         :param org_id: Retrieve list of Manage Number jobs for this organization.
         :type org_id: str
-        :return: Generator yielding :class:`StartJobResponse` instances
+        :return: Generator yielding :class:`JobListResponseObject` instances
         """
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('jobs/numbers/manageNumbers')
-        return self.session.follow_pagination(url=url, model=StartJobResponse, item_key='items', params=params)
+        return self.session.follow_pagination(url=url, model=JobListResponseObject, item_key='items', params=params)
 
     def initiate_number_jobs(self, operation: str, number_list: list[NumberItem], target_location_id: str = None,
                              number_usage_type: str = None) -> StartJobResponse:
@@ -460,23 +510,12 @@ class NumbersApi(ApiChild, base='telephony/config'):
 
         Starts the execution of an operation on a set of numbers. Supported operations are: `MOVE`,
         `NUMBER_USAGE_CHANGE`.
-        <br/>
-        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
-        <br/>
 
-        **Notes**
-        <br/>
-        Although the job can internally perform the `DELETE` & `ACTIVATE` actions, only the `MOVE` and
-        `NUMBER_USAGE_CHANGE` operations are publicly supported.
+        Up to 1000 numbers can be given in `MOVE` operation type and `NUMBER_USAGE_CHANGE` operation type per request.
+        If another move number job request is initiated while a move job is in progress, the API call will receive a
+        `409` HTTP status code.
 
-        Although the `numbers` field is an array, we currently only support a single number with each request for
-        `MOVE` operation type and change of usage type of up to 1000 numbers per request.
-        Only one number can be moved at any given time. If a move of another number is initiated while a move job is in
-        progress the API call will receive a `409` http status code.
-
-        <br/>
-        In order to move a number,
-        <br/>
+        In order to move a number the following is required:
 
         * The number must be unassigned.
 
@@ -486,16 +525,10 @@ class NumbersApi(ApiChild, base='telephony/config'):
 
         * Both locations have to be in the same country.
 
-        <br/>
-
         For example, you can move from Cisco Calling Plan to Cisco Calling Plan, but you cannot move from Cisco Calling
         Plan to a location with Cloud Connected PSTN.
 
-        <br/>
-
-        In order to change the number usage,
-
-        <br/>
+        In order to change the number usage the following is required:
 
         * The number must be unassigned.
 
@@ -503,12 +536,10 @@ class NumbersApi(ApiChild, base='telephony/config'):
 
         * Number Usage Type can be set to `SERVICE` if carrier has the PSTN service `SERVICE_NUMBERS`.
 
-        <br/>
-
         For example, you can initiate a `NUMBER_USAGE_CHANGE` job to change the number type from Standard number to
         Service number, or the other way around.
 
-        <br/>
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
         :param operation: The kind of operation to be carried out.
         :type operation: str
