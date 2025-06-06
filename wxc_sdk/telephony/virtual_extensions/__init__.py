@@ -484,7 +484,7 @@ class VirtualExtensionsApi(ApiChild, base='telephony/config'):
         extension by dialing the ESN.
 
         Creating a virtual extension requires a full administrator or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write` and `Identity:contact`.
+        `spark-admin:telephony_config_write` and `identity:contacts_rw`.
 
         :param display_name: Display name of the person at the virtual extension.
         :type display_name: str
@@ -624,7 +624,7 @@ class VirtualExtensionsApi(ApiChild, base='telephony/config'):
         extension.
 
         Deleting a Virtual Extension requires a full administrator or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write` and `Identity:contact`.
+        `spark-admin:telephony_config_write` and `identity:contacts_rw`.
 
         :param extension_id: ID of the virtual extension.
         :type extension_id: str
@@ -679,7 +679,7 @@ class VirtualExtensionsApi(ApiChild, base='telephony/config'):
         name, and location etc.
 
         Updating a Virtual Extension requires a full administrator or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write` and `Identity:contact`.
+        `spark-admin:telephony_config_write` and `identity:contacts_rw`.
 
         :param extension_id: ID of the virtual extension.
         :type extension_id: str

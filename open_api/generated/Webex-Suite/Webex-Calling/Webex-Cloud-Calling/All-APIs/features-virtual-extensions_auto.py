@@ -19,8 +19,10 @@ __all__ = ['FeaturesVirtualExtensionsApi', 'GetVirtualExtensionObject', 'GetVirt
 
 
 class GetVirtualExtensionObjectLevel(str, Enum):
-    location = 'LOCATION'
+    #: Organization level.
     organization = 'ORGANIZATION'
+    #: Location level.
+    location = 'LOCATION'
 
 
 class GetVirtualExtensionObject(ApiModel):
@@ -301,7 +303,7 @@ class FeaturesVirtualExtensionsApi(ApiChild, base='telephony/config'):
             body['patterns'] = patterns
         if range_id is not None:
             body['rangeId'] = range_id
-        url = self.ep('virtualExtensionRanges/action/validate/invoke')
+        url = self.ep('virtualExtensionRanges/actions/validate/invoke')
         data = super().post(url, params=params, json=body)
         r = ValidateVirtualExtensionRangeResponseObject.model_validate(data)
         return r
@@ -485,7 +487,7 @@ class FeaturesVirtualExtensionsApi(ApiChild, base='telephony/config'):
         extension by dialing the ESN.
 
         Creating a virtual extension requires a full administrator or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write` and `Identity:contact`.
+        `spark-admin:telephony_config_write` and `identity:contacts_rw`.
 
         :param display_name: Display name of the person at the virtual extension.
         :type display_name: str
@@ -625,7 +627,7 @@ class FeaturesVirtualExtensionsApi(ApiChild, base='telephony/config'):
         extension.
 
         Deleting a Virtual Extension requires a full administrator or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write` and `Identity:contact`.
+        `spark-admin:telephony_config_write` and `identity:contacts_rw`.
 
         :param extension_id: ID of the virtual extension.
         :type extension_id: str
@@ -680,7 +682,7 @@ class FeaturesVirtualExtensionsApi(ApiChild, base='telephony/config'):
         name, and location etc.
 
         Updating a Virtual Extension requires a full administrator or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write` and `Identity:contact`.
+        `spark-admin:telephony_config_write` and `identity:contacts_rw`.
 
         :param extension_id: ID of the virtual extension.
         :type extension_id: str
