@@ -1306,7 +1306,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.paging.primary_available_phone_numbers <wxc_sdk.telephony.paging.PagingApi.primary_available_phone_numbers>`
         Get Paging Group Primary Available Phone Numbers
    * - :meth:`api.telephony.paging.update <wxc_sdk.telephony.paging.PagingApi.update>`
-        Update the designated Paging Group
+        Update a Paging Group
    * - :meth:`api.telephony.permissions_out.configure <wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.configure>`
         Configure Outgoing Calling Permissions Settings
    * - :meth:`api.telephony.permissions_out.read <wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.read>`

@@ -161,6 +161,7 @@ class PagingApi(ApiChild, base='telephony/config'):
              org_id: str = None, **params) -> Generator[Paging, None, None]:
         """
         Read the List of Paging Groups
+
         List all Paging Groups for the organization.
 
         Group Paging allows a person to place a one-way call or group page to up to 75 people and/or workspaces by
@@ -191,6 +192,7 @@ class PagingApi(ApiChild, base='telephony/config'):
     def create(self, location_id: str, settings: Paging, org_id: str = None) -> str:
         """
         Create a new Paging Group
+
         Create a new Paging Group for the given location.
 
         Group Paging allows a person to place a one-way call or group page to up to 75 people and/or workspaces by
@@ -220,6 +222,7 @@ class PagingApi(ApiChild, base='telephony/config'):
     def delete_paging(self, location_id: str, paging_id: str, org_id: str = None):
         """
         Delete a Paging Group
+
         Delete the designated Paging Group.
 
         Group Paging allows a person to place a one-way call or group page to up to 75 people and/or workspaces by
@@ -241,6 +244,7 @@ class PagingApi(ApiChild, base='telephony/config'):
     def details(self, location_id: str, paging_id: str, org_id: str = None) -> Paging:
         """
         Get Details for a Paging Group
+
         Retrieve Paging Group details.
 
         Group Paging allows a person to place a one-way call or group page to up to 75 people and/or workspaces by
@@ -260,6 +264,8 @@ class PagingApi(ApiChild, base='telephony/config'):
 
     def update(self, location_id: str, update: Paging, paging_id: str, org_id: str = None):
         """
+        Update a Paging Group
+
         Update the designated Paging Group.
 
         Group Paging allows a person to place a one-way call or group page to up to 75 people and/or workspaces by
