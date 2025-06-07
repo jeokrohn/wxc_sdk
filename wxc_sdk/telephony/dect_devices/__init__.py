@@ -15,10 +15,14 @@ __all__ = ['DECTNetworkModel', 'DECTNetworkDetail', 'BaseStationResult', 'BaseSt
 
 
 class DECTNetworkModel(str, Enum):
-    #: Supports 1 base station and 30 line ports.
+    #: Model name supporting 1 base station and 30 line ports.
     dms_cisco_dbs110 = 'DMS Cisco DBS110'
+    #: Alternate product/display name which also specifies the model `DMS Cisco DBS110`.
+    cisco_dect_110_base = 'Cisco DECT 110 Base'
     #: Supports 250 base stations and 1000 line ports.
     dms_cisco_dbs210 = 'DMS Cisco DBS210'
+    #: Alternate product/display name which also specifies the model `DMS Cisco DBS210`.
+    cisco_dect_210_base = 'Cisco DECT 210 Base'
 
 
 class DECTNetworkDetail(ApiModel):
@@ -124,7 +128,6 @@ class Handset(ApiModel):
 
 class BaseStationDetail(ApiModel):
     #: Unique identifier of the base station.
-    # Y2lzY29zcGFyazovL3VzL1NDSU1fR1JPVVAvZjA2ZWRiOGMtMjMxNC00ZTcxLWIzNzgtZTdiMmQwNjk3OTliOjk2YWJjMmFhLTNkY2MtMTFlNS1hMTUyLWZlMzQ4MTljZGM5YQ
     id: Optional[str] = None
     #: Mac address of the DECT base station device.
     mac: Optional[str] = None
