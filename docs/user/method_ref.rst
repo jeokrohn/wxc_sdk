@@ -1265,6 +1265,8 @@ The method name is a link to the method documentation.
         Get an Organization's MS Teams Settings
    * - :meth:`api.telephony.operating_modes.available_operating_modes <wxc_sdk.telephony.operating_modes.OperatingModesApi.available_operating_modes>`
         Retrieve the List of Available Operating Modes in a Location
+   * - :meth:`api.telephony.operating_modes.call_forward_available_phone_numbers <wxc_sdk.telephony.operating_modes.OperatingModesApi.call_forward_available_phone_numbers>`
+        Get Operating Mode Call Forward Available Phone Numbers
    * - :meth:`api.telephony.operating_modes.create <wxc_sdk.telephony.operating_modes.OperatingModesApi.create>`
         Create an Operating Mode
    * - :meth:`api.telephony.operating_modes.delete <wxc_sdk.telephony.operating_modes.OperatingModesApi.delete>`

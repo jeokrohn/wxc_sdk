@@ -9,6 +9,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 from wxc_sdk.common import IdAndName
 from wxc_sdk.common.schedules import ScheduleLevel
+from wxc_sdk.person_settings.available_numbers import AvailableNumber
 from wxc_sdk.person_settings.forwarding import CallForwardingCommon
 
 __all__ = ['OperatingModesApi', 'Month',
@@ -252,7 +253,7 @@ class OperatingMode(ApiModel):
 
 class OperatingModesApi(ApiChild, base='telephony/config'):
     """
-    Schedule Based Routing with Operating Modes
+    Features: Operating Modes
 
     Features: `Operating modes` help manage calls more efficiently by routing them based on predefined settings.
     Authorized users can adjust these modes to reduce wait times for clients.
@@ -539,3 +540,49 @@ class OperatingModesApi(ApiChild, base='telephony/config'):
         data = super().get(url, params=params)
         r = TypeAdapter(list[IdAndName]).validate_python(data['operatingModes'])
         return r
+
+    def call_forward_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
+                                             owner_name: str = None, extension: str = None,
+                                             org_id: str = None,
+                                             **params) -> Generator[AvailableNumber, None, None]:
+        """
+        Get Operating Mode Call Forward Available Phone Numbers
+
+        List the service and standard PSTN numbers that are available to be assigned as a operating mode's call forward
+        number.
+
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        assigned to an owning entity.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param extension: Returns the list of PSTN phone numbers with the given `extension`.
+        :type extension: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        if extension is not None:
+            params['extension'] = extension
+        url = self.ep(f'locations/{location_id}/operatingModes/callForwarding/availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber,
+                                              item_key='phoneNumbers', params=params)
