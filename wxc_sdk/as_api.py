@@ -13687,7 +13687,19 @@ class AsForwardingApi(AsApiChild, base=''):
 
 class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
     """
-    Auto attendant API
+    Features:  Auto Attendant
+
+    Features: Auto Attendant support reading and writing of Webex Calling Auto Attendant settings for a specific
+    organization.
+
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
     """
     forwarding: AsForwardingApi
 
@@ -13722,6 +13734,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
              phone_number: str = None, **params) -> AsyncGenerator[AutoAttendant, None, None]:
         """
         Read the List of Auto Attendants
+
         List all Auto Attendants for the organization.
 
         Auto attendants play customized prompts and provide callers with menu options for routing their calls through
@@ -13751,6 +13764,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
              phone_number: str = None, **params) -> List[AutoAttendant]:
         """
         Read the List of Auto Attendants
+
         List all Auto Attendants for the organization.
 
         Auto attendants play customized prompts and provide callers with menu options for routing their calls through
@@ -13791,6 +13805,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
     async def details(self, location_id: str, auto_attendant_id: str, org_id: str = None) -> AutoAttendant:
         """
         Get Details for an Auto Attendant
+
         Retrieve an Auto Attendant details.
 
         Auto attendants play customized prompts and provide callers with menu options for routing their calls through
@@ -13815,6 +13830,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
     async def create(self, location_id: str, settings: AutoAttendant, org_id: str = None) -> str:
         """
         Create an Auto Attendant
+
         Create new Auto Attendant for the given location.
 
         Auto attendants play customized prompts and provide callers with menu options for routing their calls through
@@ -13841,6 +13857,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
     async def update(self, location_id: str, auto_attendant_id: str, settings: AutoAttendant, org_id: str = None):
         """
         Update an Auto Attendant
+
         Update the designated Auto Attendant.
 
         Auto attendants play customized prompts and provide callers with menu options for routing their calls through
