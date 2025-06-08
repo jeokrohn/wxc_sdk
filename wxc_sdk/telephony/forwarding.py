@@ -457,6 +457,9 @@ class ForwardingApi(ApiChild, base=''):
         Note that the list of existing call forward rules is available in the feature's call
         forwarding settings.
 
+        Updating a selective call forwarding rule's settings requires a full administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
         NOTE: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
 
         :param location_id: Location in which the feature exists.
