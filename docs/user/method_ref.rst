@@ -797,8 +797,6 @@ The method name is a link to the method documentation.
         Update a Call Queue
    * - :meth:`api.telephony.callqueue.update_call_queue_settings <wxc_sdk.telephony.callqueue.CallQueueApi.update_call_queue_settings>`
         Update Call Queue Settings
-   * - :meth:`api.telephony.callqueue.update_or_create <wxc_sdk.telephony.callqueue.CallQueueApi.update_or_create>`
-        Get JSON for update or create
    * - :meth:`api.telephony.callqueue.agents.details <wxc_sdk.telephony.callqueue.agents.CallQueueAgentsApi.details>`
         Get Details for a Call Queue Agent
    * - :meth:`api.telephony.callqueue.agents.list <wxc_sdk.telephony.callqueue.agents.CallQueueAgentsApi.list>`

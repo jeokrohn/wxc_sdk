@@ -14839,11 +14839,25 @@ class AsAnnouncementApi:
 
     def list_gen(self, location_id: str, queue_id: str, org_id: str = None) -> AsyncGenerator[Announcement]:
         """
+        Read the List of Call Queue Announcement Files
 
-        :param location_id:
-        :param queue_id:
-        :param org_id:
-        :return:
+        List file info for all Call Queue announcement files associated with this Call Queue.
+
+        Call Queue announcement files contain messages and music that callers hear while waiting in the queue. A call
+        queue can be configured to play whatever subset of these announcement files is desired.
+
+        Retrieving this list of files requires a full or read-only administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_read`.
+
+        Note that uploading of announcement files via API is not currently supported, but is available via Webex
+        Control Hub.
+
+        :param location_id: Location in which this call queue exists.
+        :type location_id: str
+        :param queue_id: Retrieve announcement files for the call queue with this identifier.
+        :type queue_id: str
+        :param org_id: Retrieve announcement files for a call queue from this organization.
+        :type org_id: str
         """
         url = self._endpoint(location_id=location_id, queue_id=queue_id)
         params = org_id and {'orgId': org_id} or dict()
@@ -14852,11 +14866,25 @@ class AsAnnouncementApi:
 
     async def list(self, location_id: str, queue_id: str, org_id: str = None) -> List[Announcement]:
         """
+        Read the List of Call Queue Announcement Files
 
-        :param location_id:
-        :param queue_id:
-        :param org_id:
-        :return:
+        List file info for all Call Queue announcement files associated with this Call Queue.
+
+        Call Queue announcement files contain messages and music that callers hear while waiting in the queue. A call
+        queue can be configured to play whatever subset of these announcement files is desired.
+
+        Retrieving this list of files requires a full or read-only administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_read`.
+
+        Note that uploading of announcement files via API is not currently supported, but is available via Webex
+        Control Hub.
+
+        :param location_id: Location in which this call queue exists.
+        :type location_id: str
+        :param queue_id: Retrieve announcement files for the call queue with this identifier.
+        :type queue_id: str
+        :param org_id: Retrieve announcement files for a call queue from this organization.
+        :type org_id: str
         """
         url = self._endpoint(location_id=location_id, queue_id=queue_id)
         params = org_id and {'orgId': org_id} or dict()
@@ -14865,14 +14893,24 @@ class AsAnnouncementApi:
 
     async def delete_announcement(self, location_id: str, queue_id: str, file_name: str, org_id: str = None):
         """
+        Delete a Call Queue Announcement File
 
-        :param location_id:
+        Delete an announcement file for the designated Call Queue.
+
+        Call Queue announcement files contain messages and music that callers hear while waiting in the queue. A call
+        queue can be configured to play whatever subset of these announcement files is desired.
+
+        Deleting an announcement file for a call queue requires a full administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Delete an announcement for a call queue in this location.
         :type location_id: str
-        :param queue_id:
+        :param queue_id: Delete an announcement for the call queue with this identifier.
         :type queue_id: str
-        :param file_name:
         :type file_name: str
-        :param org_id:
+        :param org_id: Delete call queue announcement from this organization.
+        :type org_id: str
+        :rtype: None
         """
         url = self._endpoint(location_id=location_id, queue_id=queue_id, path=file_name)
         params = org_id and {'orgId': org_id} or None
@@ -14890,6 +14928,8 @@ class AsCQPolicyApi:
 
     async def holiday_service_details(self, location_id: str, queue_id: str, org_id: str = None) -> HolidayService:
         """
+        Get Details for a Call Queue Holiday Service
+
         Retrieve Call Queue Holiday Service details.
 
         Configure the call queue to route calls differently during the holidays.
@@ -14913,6 +14953,8 @@ class AsCQPolicyApi:
 
     async def holiday_service_update(self, location_id: str, queue_id: str, update: HolidayService, org_id: str = None):
         """
+        Update a Call Queue Holiday Service
+
         Update the designated Call Queue Holiday Service.
 
         Configure the call queue to route calls differently during the holidays.
@@ -14936,6 +14978,8 @@ class AsCQPolicyApi:
 
     async def night_service_detail(self, location_id: str, queue_id: str, org_id: str = None) -> NightService:
         """
+        Get Details for a Call Queue Night Service
+
         Retrieve Call Queue Night service details.
 
         Configure the call queue to route calls differently during the hours when the queue is not in service. This
@@ -14960,6 +15004,8 @@ class AsCQPolicyApi:
 
     async def night_service_update(self, location_id: str, queue_id: str, update: NightService, org_id: str = None):
         """
+        Update a Call Queue Night Service
+
         Update Call Queue Night Service details.
 
         Configure the call queue to route calls differently during the hours when the queue is not in service. This
@@ -14984,6 +15030,8 @@ class AsCQPolicyApi:
 
     async def stranded_calls_details(self, location_id: str, queue_id: str, org_id: str = None) -> StrandedCalls:
         """
+        Get Details for a Call Queue Stranded Calls
+
         Allow admin to view default/configured Stranded Calls settings.
 
         Stranded-All agents logoff Policy: If the last agent staffing a queue “unjoins” the queue or signs out,
@@ -15009,6 +15057,8 @@ class AsCQPolicyApi:
 
     async def stranded_calls_update(self, location_id: str, queue_id: str, update: StrandedCalls, org_id: str = None):
         """
+        Update a Call Queue Stranded Calls service
+
         Update the designated Call Stranded Calls Service.
 
         Allow admin to modify configured Stranded Calls settings.
@@ -15031,6 +15081,8 @@ class AsCQPolicyApi:
 
     async def forced_forward_details(self, location_id: str, queue_id: str, org_id: str = None) -> ForcedForward:
         """
+        Get Details for a Call Queue Forced Forward
+
         Retrieve Call Queue policy Forced Forward details.
 
         This policy allows calls to be temporarily diverted to a configured destination.
@@ -15051,6 +15103,8 @@ class AsCQPolicyApi:
 
     async def forced_forward_update(self, location_id: str, queue_id: str, update: ForcedForward, org_id: str = None):
         """
+        Update a Call Queue Forced Forward service
+
         Update the designated Forced Forward Service.
 
         If the option is enabled, then incoming calls to the queue are forwarded to the configured destination. Calls
@@ -15312,36 +15366,6 @@ class AsCallQueueApi(AsApiChild, base=''):
             if path:
                 ep = f'{ep}/{path}'
             return ep
-
-    @staticmethod
-    def update_or_create(*, queue: CallQueue) -> str:
-        """
-        Get JSON for update or create
-
-        :meta private:
-        :param queue:
-        :return:
-        """
-        return queue.model_dump_json(
-            exclude={'id': True,
-                     'location_name': True,
-                     'location_id': True,
-                     'toll_free_number': True,
-                     'language': True,
-                     'agents':
-                         {'__all__':
-                              {'first_name': True,
-                               'last_name': True,
-                               'user_type': True,
-                               'extension': True,
-                               'phone_number': True}},
-                     'alternate_number_settings':
-                         {'alternate_numbers':
-                              {'__all__':
-                                   {'toll_free_number': True}}},
-                     'queue_settings':
-                         {'overflow':
-                              {'is_transfer_number_set': True}}})
 
     def list_gen(self, location_id: str = None, name: str = None, phone_number: str = None,
              department_id: str = None, department_name: str = None,
@@ -15940,8 +15964,8 @@ class AsCallQueueApi(AsApiChild, base=''):
         return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
 
     def available_agents_gen(self, location_id: str, name: str = None, phone_number: str = None,
-                                        order: str = None, org_id: str = None,
-                                        **params) -> AsyncGenerator[AvailableAgent, None, None]:
+                         order: str = None, org_id: str = None,
+                         **params) -> AsyncGenerator[AvailableAgent, None, None]:
         """
         Get Call Queue Available Agents
 
@@ -15984,8 +16008,8 @@ class AsCallQueueApi(AsApiChild, base=''):
         return self.session.follow_pagination(url=url, model=AvailableAgent, item_key='agents', params=params)
 
     async def available_agents(self, location_id: str, name: str = None, phone_number: str = None,
-                                        order: str = None, org_id: str = None,
-                                        **params) -> List[AvailableAgent]:
+                         order: str = None, org_id: str = None,
+                         **params) -> List[AvailableAgent]:
         """
         Get Call Queue Available Agents
 

@@ -166,6 +166,8 @@ class CQPolicyApi:
 
     def holiday_service_details(self, location_id: str, queue_id: str, org_id: str = None) -> HolidayService:
         """
+        Get Details for a Call Queue Holiday Service
+
         Retrieve Call Queue Holiday Service details.
 
         Configure the call queue to route calls differently during the holidays.
@@ -189,6 +191,8 @@ class CQPolicyApi:
 
     def holiday_service_update(self, location_id: str, queue_id: str, update: HolidayService, org_id: str = None):
         """
+        Update a Call Queue Holiday Service
+
         Update the designated Call Queue Holiday Service.
 
         Configure the call queue to route calls differently during the holidays.
@@ -212,6 +216,8 @@ class CQPolicyApi:
 
     def night_service_detail(self, location_id: str, queue_id: str, org_id: str = None) -> NightService:
         """
+        Get Details for a Call Queue Night Service
+
         Retrieve Call Queue Night service details.
 
         Configure the call queue to route calls differently during the hours when the queue is not in service. This
@@ -236,6 +242,8 @@ class CQPolicyApi:
 
     def night_service_update(self, location_id: str, queue_id: str, update: NightService, org_id: str = None):
         """
+        Update a Call Queue Night Service
+
         Update Call Queue Night Service details.
 
         Configure the call queue to route calls differently during the hours when the queue is not in service. This
@@ -260,6 +268,8 @@ class CQPolicyApi:
 
     def stranded_calls_details(self, location_id: str, queue_id: str, org_id: str = None) -> StrandedCalls:
         """
+        Get Details for a Call Queue Stranded Calls
+
         Allow admin to view default/configured Stranded Calls settings.
 
         Stranded-All agents logoff Policy: If the last agent staffing a queue “unjoins” the queue or signs out,
@@ -285,6 +295,8 @@ class CQPolicyApi:
 
     def stranded_calls_update(self, location_id: str, queue_id: str, update: StrandedCalls, org_id: str = None):
         """
+        Update a Call Queue Stranded Calls service
+
         Update the designated Call Stranded Calls Service.
 
         Allow admin to modify configured Stranded Calls settings.
@@ -307,6 +319,8 @@ class CQPolicyApi:
 
     def forced_forward_details(self, location_id: str, queue_id: str, org_id: str = None) -> ForcedForward:
         """
+        Get Details for a Call Queue Forced Forward
+
         Retrieve Call Queue policy Forced Forward details.
 
         This policy allows calls to be temporarily diverted to a configured destination.
@@ -327,6 +341,8 @@ class CQPolicyApi:
 
     def forced_forward_update(self, location_id: str, queue_id: str, update: ForcedForward, org_id: str = None):
         """
+        Update a Call Queue Forced Forward service
+
         Update the designated Forced Forward Service.
 
         If the option is enabled, then incoming calls to the queue are forwarded to the configured destination. Calls

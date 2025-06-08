@@ -467,36 +467,6 @@ class CallQueueApi(ApiChild, base=''):
                 ep = f'{ep}/{path}'
             return ep
 
-    @staticmethod
-    def update_or_create(*, queue: CallQueue) -> str:
-        """
-        Get JSON for update or create
-
-        :meta private:
-        :param queue:
-        :return:
-        """
-        return queue.model_dump_json(
-            exclude={'id': True,
-                     'location_name': True,
-                     'location_id': True,
-                     'toll_free_number': True,
-                     'language': True,
-                     'agents':
-                         {'__all__':
-                              {'first_name': True,
-                               'last_name': True,
-                               'user_type': True,
-                               'extension': True,
-                               'phone_number': True}},
-                     'alternate_number_settings':
-                         {'alternate_numbers':
-                              {'__all__':
-                                   {'toll_free_number': True}}},
-                     'queue_settings':
-                         {'overflow':
-                              {'is_transfer_number_set': True}}})
-
     def list(self, location_id: str = None, name: str = None, phone_number: str = None,
              department_id: str = None, department_name: str = None,
              has_cx_essentials: bool = None, org_id: str = None,
@@ -925,8 +895,8 @@ class CallQueueApi(ApiChild, base=''):
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
     def available_agents(self, location_id: str, name: str = None, phone_number: str = None,
-                                        order: str = None, org_id: str = None,
-                                        **params) -> Generator[AvailableAgent, None, None]:
+                         order: str = None, org_id: str = None,
+                         **params) -> Generator[AvailableAgent, None, None]:
         """
         Get Call Queue Available Agents
 
