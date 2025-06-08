@@ -255,8 +255,9 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
     DECT Devices Settings
     
     Not supported for Webex for Government (FedRAMP)
-
-
+    
+    
+    
     DECT APIs allow the admin to create a DECT network, and add base stations and handsets to the DECT network. People,
     places and virtual lines member types are supported on handset lines in the DECT network. Currently, APIs support
     Cisco DECT device models only.
