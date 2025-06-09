@@ -165,6 +165,8 @@ from wxc_sdk.telephony.calls import CallHistoryRecord, CallInfo, CallState, Call
 from wxc_sdk.telephony.conference import ConferenceDetails, ConferenceParticipant, ConferenceState, \
     ConferenceTypeEnum
 from wxc_sdk.telephony.cx_essentials import ScreenPopConfiguration
+from wxc_sdk.telephony.cx_essentials.wrapup_reasons import AvailableQueue, QueueWrapupReasonSettings, \
+    WrapUpReason, WrapUpReasonDetails, WrapupReasonQueue
 from wxc_sdk.telephony.dect_devices import BaseStationDetail, BaseStationResponse, BaseStationResult, \
     BaseStationsResponse, DECTHandsetItem, DECTHandsetLine, DECTHandsetList, DECTNetworkDetail, DECTNetworkModel, \
     DectDevice, Handset, UsageType
@@ -249,8 +251,8 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'Authorization', 'AuthorizationType', 'AutoAttendant', 'AutoAttendantAction',
            'AutoAttendantKeyConfiguration', 'AutoAttendantMenu', 'AutoRegistrationResult', 'AutoTransferNumbers',
            'AvailableAgent', 'AvailableCallerIdType', 'AvailableFeature', 'AvailableMember', 'AvailableNumber',
-           'AvailablePhoneNumberLicenseType', 'AvailableRecallHuntGroup', 'Background', 'BackgroundImage',
-           'BackgroundImageColor', 'BackgroundImages', 'BackgroundSelection', 'BacklightTimer',
+           'AvailablePhoneNumberLicenseType', 'AvailableQueue', 'AvailableRecallHuntGroup', 'Background',
+           'BackgroundImage', 'BackgroundImageColor', 'BackgroundImages', 'BackgroundSelection', 'BacklightTimer',
            'BacklightTimer68XX78XX', 'BargeSettings', 'BaseStationDetail', 'BaseStationResponse', 'BaseStationResult',
            'BaseStationsResponse', 'BehaviorType', 'BlockContiguousSequences', 'BlockPreviousPasscodes',
            'BlockRepeatedDigits', 'BluetoothMode', 'BluetoothSetting', 'BreakoutSession', 'BulkErrorResponse',
@@ -347,21 +349,21 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'PrivacyOnRedirectedCalls', 'ProductType', 'ProgrammableLineKey', 'PskObject', 'PstnNumberDestination',
            'PushToTalkAccessType', 'PushToTalkSettings', 'QAObject', 'QualityResources',
            'QueryMeetingParticipantsWithEmailBody', 'QueryStatusResponse', 'Question', 'QuestionAnswer',
-           'QuestionOption', 'QuestionType', 'QuestionWithAnswers', 'QueueSettings', 'RETRY_429_MAX_WAIT', 'RGTrunk',
-           'Recall', 'RecallHuntGroup', 'RecallType', 'ReceptionistSettings', 'Recipient', 'Record', 'Recording',
-           'RecordingFormat', 'RecordingOwnerType', 'RecordingParty', 'RecordingPartyActor', 'RecordingServiceData',
-           'RecordingServiceType', 'RecordingSession', 'RecordingState', 'RecordingStatus', 'RecordingStorageRegion',
-           'RecordingUser', 'RecordingVendor', 'RecurWeekly', 'RecurYearlyByDate', 'RecurYearlyByDay', 'Recurrence',
-           'RedirectReason', 'Redirection', 'Registration', 'RejectAction', 'RepoAnnouncement', 'Report',
-           'ReportTemplate', 'RepositoryUsage', 'ResponseError', 'ResponseStatus', 'ResponseStatusType',
-           'RingPattern', 'Room', 'RoomTab', 'RoomType', 'RouteGroup', 'RouteGroupUsage', 'RouteIdentity',
-           'RouteList', 'RouteListDestination', 'RouteListDetail', 'RouteType', 'RoutingPrefixCounts', 'SafeEnum',
-           'SameHoursDaily', 'Schedule', 'ScheduleApiBase', 'ScheduleDay', 'ScheduleLevel', 'ScheduleMonth',
-           'ScheduleType', 'ScheduleTypeOrStr', 'ScheduleWeek', 'ScheduledMeeting', 'ScheduledType',
-           'SchedulingOptions', 'ScimGroup', 'ScimGroupMember', 'ScimMeta', 'ScimPhoneNumberType', 'ScimUser',
-           'ScimValueDisplayRef', 'ScreenPopConfiguration', 'SearchGroupResponse', 'SearchUserResponse',
-           'SelectedECBN', 'SelectiveAccept', 'SelectiveAcceptCriteria', 'SelectiveCrit', 'SelectiveCriteria',
-           'SelectiveForward', 'SelectiveForwardCriteria', 'SelectiveFrom', 'SelectiveReject',
+           'QuestionOption', 'QuestionType', 'QuestionWithAnswers', 'QueueSettings', 'QueueWrapupReasonSettings',
+           'RETRY_429_MAX_WAIT', 'RGTrunk', 'Recall', 'RecallHuntGroup', 'RecallType', 'ReceptionistSettings',
+           'Recipient', 'Record', 'Recording', 'RecordingFormat', 'RecordingOwnerType', 'RecordingParty',
+           'RecordingPartyActor', 'RecordingServiceData', 'RecordingServiceType', 'RecordingSession',
+           'RecordingState', 'RecordingStatus', 'RecordingStorageRegion', 'RecordingUser', 'RecordingVendor',
+           'RecurWeekly', 'RecurYearlyByDate', 'RecurYearlyByDay', 'Recurrence', 'RedirectReason', 'Redirection',
+           'Registration', 'RejectAction', 'RepoAnnouncement', 'Report', 'ReportTemplate', 'RepositoryUsage',
+           'ResponseError', 'ResponseStatus', 'ResponseStatusType', 'RingPattern', 'Room', 'RoomTab', 'RoomType',
+           'RouteGroup', 'RouteGroupUsage', 'RouteIdentity', 'RouteList', 'RouteListDestination', 'RouteListDetail',
+           'RouteType', 'RoutingPrefixCounts', 'SafeEnum', 'SameHoursDaily', 'Schedule', 'ScheduleApiBase',
+           'ScheduleDay', 'ScheduleLevel', 'ScheduleMonth', 'ScheduleType', 'ScheduleTypeOrStr', 'ScheduleWeek',
+           'ScheduledMeeting', 'ScheduledType', 'SchedulingOptions', 'ScimGroup', 'ScimGroupMember', 'ScimMeta',
+           'ScimPhoneNumberType', 'ScimUser', 'ScimValueDisplayRef', 'ScreenPopConfiguration', 'SearchGroupResponse',
+           'SearchUserResponse', 'SelectedECBN', 'SelectiveAccept', 'SelectiveAcceptCriteria', 'SelectiveCrit',
+           'SelectiveCriteria', 'SelectiveForward', 'SelectiveForwardCriteria', 'SelectiveFrom', 'SelectiveReject',
            'SelectiveRejectCriteria', 'SelectiveScheduleLevel', 'SelectiveSource', 'Sender', 'SequentialRing',
            'SequentialRingCriteria', 'SequentialRingNumber', 'ServiceType', 'SettingsObject', 'SimRing',
            'SimRingCriteria', 'SimRingNumber', 'SimultaneousInterpretation', 'SipAddress', 'SipAddressObject',
@@ -401,5 +403,5 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'Workspace', 'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceEmail', 'WorkspaceHealth',
            'WorkspaceHealthIssue', 'WorkspaceHealthLevel', 'WorkspaceIndoorNavigation', 'WorkspaceLocation',
            'WorkspaceLocationFloor', 'WorkspaceNumbers', 'WorkspacePersonalizationTaskResponse',
-           'WorkspaceSupportedDevices', 'WorkspaceWebexCalling', '_Helper', 'dt_iso_str', 'enum_str', 'plus1',
-           'to_camel', 'webex_id_to_uuid']
+           'WorkspaceSupportedDevices', 'WorkspaceWebexCalling', 'WrapUpReason', 'WrapUpReasonDetails',
+           'WrapupReasonQueue', '_Helper', 'dt_iso_str', 'enum_str', 'plus1', 'to_camel', 'webex_id_to_uuid']

@@ -1,20 +1,27 @@
 import asyncio
 import base64
 import random
+import uuid
+from collections.abc import Generator
+from concurrent.futures.thread import ThreadPoolExecutor
 from contextlib import contextmanager
 from itertools import chain
 from typing import Optional
+from unittest import skip
 
 from tests.base import TestCaseWithLog, async_test
 from tests.testutil import calling_users, create_cxe_queue
+from wxc_sdk.as_rest import AsRestError
 from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import UserType
 from wxc_sdk.licenses import LicenseProperties, LicenseRequest, LicenseRequestOperation
 from wxc_sdk.people import Person
+from wxc_sdk.rest import RestError
 from wxc_sdk.telephony import NumberListPhoneNumberType
 from wxc_sdk.telephony.callqueue import CallQueue
 from wxc_sdk.telephony.callqueue.agents import CallQueueAgent
 from wxc_sdk.telephony.cx_essentials import ScreenPopConfiguration
+from wxc_sdk.telephony.cx_essentials.wrapup_reasons import WrapUpReason
 from wxc_sdk.telephony.hg_and_cq import Agent
 
 
@@ -358,3 +365,222 @@ class TestTelephonySupervisors(TestCaseWithLog):
             after = self.api.telephony.cx_essentials.get_screen_pop_configuration(location_id=queue.location_id,
                                                                                   queue_id=queue.id)
             self.assertEqual(settings, after)
+
+
+class TestWrapUpReason(TestCaseWithLog):
+
+    @contextmanager
+    def temp_cxe_queue(self) -> CallQueue:
+        """
+        Create a temporary queue with CX Essentials
+        """
+        queue = create_cxe_queue(api=self.api)
+        try:
+            yield queue
+        finally:
+            self.api.telephony.callqueue.delete_queue(location_id=queue.location_id, queue_id=queue.id)
+
+    @contextmanager
+    def temp_wrapup_reason(self, queues:list[str]=None) -> str:
+        """
+        Create a temporary wrap-up reason
+        """
+        new_names = self.new_wrapup_reason_names()
+        new_name = next(new_names)
+        api = self.api.telephony.cx_essentials.wrapup_reasons
+        wu_reason_id = api.create(name=new_name, description=f'desc {new_name}', queues=queues)
+        try:
+            yield wu_reason_id
+        finally:
+            api.delete(wu_reason_id)
+
+    def new_wrapup_reason_names(self) -> Generator[str, None, None]:
+        """
+        Generate unique wrap-up reason names
+        """
+        api = self.api.telephony.cx_essentials.wrapup_reasons
+        wu_reasons = list(api.list())
+        existing_names = {wu.name for wu in wu_reasons}
+        return (wu_name for i in range(1, 10000) if (wu_name := f'test_{i:04}') not in existing_names)
+
+    def test_list(self):
+        """
+        List wrap-up reasons
+        """
+        wu_codes = list(self.api.telephony.cx_essentials.wrapup_reasons.list())
+        print(f'Got {len(wu_codes)} wrap-up codes')
+
+    def test_validate_wrapup_reason(self):
+        """
+        Validate wrap-up reason name
+        """
+        api = self.api.telephony.cx_essentials.wrapup_reasons
+        api.validate(f'test {uuid.uuid4()}')
+
+    def test_validate_wrapup_reason_existing(self):
+        """
+        Validate existing wrap-up reason name
+        """
+        api = self.api.telephony.cx_essentials.wrapup_reasons
+        with self.temp_wrapup_reason() as wu_reason_id:
+            wu_reason = api.details(wu_reason_id)
+            # validation is expected to fail ...
+            with self.assertRaises(RestError) as cm:
+                api.validate(wu_reason.name)
+
+        # ... with status code 409 and error code 9289
+        re: RestError = cm.exception
+        self.assertEqual(re.response.status_code, 409)
+        self.assertEqual(re.code, 9289)
+
+    def test_create_wrapup_reason(self):
+        """
+        Create wrap-up reason
+        """
+        api = self.api.telephony.cx_essentials.wrapup_reasons
+        new_names = self.new_wrapup_reason_names()
+        new_name = next(new_names)
+        wu_reason_id = api.create(name=new_name, description=f'desc {new_name}')
+        try:
+            # verify that the wrap-up reason was created
+            wu_reason = api.details(wu_reason_id)
+            self.assertEqual(wu_reason.name, new_name)
+        finally:
+            api.delete(wu_reason_id)
+
+    def test_create_wrapup_reason_with_queue(self):
+        """
+        Create wrap-up reason and assign it to a queue
+        """
+        api = self.api.telephony.cx_essentials.wrapup_reasons
+        with self.temp_cxe_queue() as queue:
+            queue: CallQueue
+            with self.temp_wrapup_reason(queues=[queue.id]) as wu_reason_id:
+                wu_reason_details = api.details(wu_reason_id)
+                try:
+                    # the queue id should now show up in the wrap-up reason details
+                    self.assertIn(queue.id, {q.id for q in wu_reason_details.queues},
+                                  f'Queue ({queue.id})not in wrap-up reason queues')
+                finally:
+                    # verify that the wrap-up reason is in the queue settings
+                    queue_settings = api.read_queue_settings(location_id=queue.location_id, queue_id=queue.id)
+                    self.assertIn(wu_reason_id, {wur.id for wur in queue_settings.wrapup_reasons},
+                                  'Wrap-up reason should be in queue')
+
+                    # remove the wrap-up reason from the queue again, so it can be deleted
+                    queue_wu_reasons = [wur.id for wur in queue_settings.wrapup_reasons if wur.id != wu_reason_id]
+                    api.update_queue_settings(location_id=queue.location_id, queue_id=queue.id,
+                                              wrapup_reasons=queue_wu_reasons)
+
+                    # verify that the queue is not in the wrap-up reason details anymore
+                    wu_reason_details = api.details(wu_reason_id)
+                    self.assertNotIn(queue.id, {q.id for q in wu_reason_details.queues},
+                                  f'Queue ({queue.id}) should not be in wrap-up reason queues')
+
+                    # verify that the wrap-up reason is no longer in the queue settings
+                    queue_settings_after = api.read_queue_settings(location_id=queue.location_id, queue_id=queue.id)
+                    self.assertNotIn(wu_reason_id, {wur.id for wur in queue_settings_after.wrapup_reasons},
+                                     'Wrap-up reason should have been removed from queue')
+            # with
+        # with
+        return
+
+    @skip('be nice to the backend :-)')
+    @async_test
+    async def test_create_wrapup_reason_max(self):
+        """
+        Create wrap-up reasons until the maximum is reached
+        """
+        api = self.async_api.telephony.cx_essentials.wrapup_reasons
+        wu_reason_id_list = []
+        new_names = self.new_wrapup_reason_names()
+        try:
+            # try to create wrap-up reasons in batches of 100 until we get an error
+            while True:
+                tasks = [api.create(name=next(new_names)) for _ in range(100)]
+                results = await asyncio.gather(*tasks, return_exceptions=True)
+                wu_reason_id_list.extend(r for r in results if isinstance(r, str))
+                if len(wu_reason_id_list) > 5000:
+                    raise ValueError('Too many wrap-up reasons created')
+                if err:=next((r for r in results if isinstance(r, Exception)), None):
+                    print(f'Got error: {err}')
+                    if not isinstance(err, AsRestError):
+                        raise err
+                    err: AsRestError
+                    self.assertEqual(err.status, 400, 'Unexpected status')
+                    self.assertEqual(err.detail.error_code, 9290, 'Unexpected error code')
+                    break
+
+        finally:
+            try:
+                print(f'Created {len(wu_reason_id_list)} wrap-up reasons')
+                wu_reason_list = await api.list()
+                print(f'Listed {len(wu_reason_list)} wrap-up reasons')
+                self.assertEqual(1000, len(wu_reason_list), 'Maximum number of wrap-up reasons should be 1000')
+            finally:
+                tasks = [api.delete(wu_reason_id) for wu_reason_id in wu_reason_id_list]
+                await asyncio.gather(*tasks, return_exceptions=True)
+        return
+
+    def test_queue_with_two_wu_reasons_clear_default_wu_reason(self):
+        """
+        Create a queue with two wrap-up reasons and clear the default wrap-up reason
+        """
+        api = self.api.telephony.cx_essentials.wrapup_reasons
+        with self.temp_wrapup_reason() as wu_reason_id1:
+            with self.temp_wrapup_reason() as wu_reason_id2:
+                with self.temp_cxe_queue() as queue:
+                    queue: CallQueue
+                    # assign both wrap-up reasons to the queue
+                    api.update_queue_settings(location_id=queue.location_id, queue_id=queue.id,
+                                              wrapup_reasons=[wu_reason_id1, wu_reason_id2],
+                                              default_wrapup_reason_id=wu_reason_id1)
+
+                    # verify that both wrap-up reasons are in the queue settings
+                    queue_settings = api.read_queue_settings(location_id=queue.location_id, queue_id=queue.id)
+                    self.assertIn(wu_reason_id1, {wur.id for wur in queue_settings.wrapup_reasons},
+                                  'Wrap-up reason 1 should be in queue')
+                    self.assertIn(wu_reason_id2, {wur.id for wur in queue_settings.wrapup_reasons},
+                                  'Wrap-up reason 2 should be in queue')
+                    wur1_queue_settings = next(wur for wur in queue_settings.wrapup_reasons if wur.id == wu_reason_id1)
+                    self.assertTrue(wur1_queue_settings.default_enabled, 'Wrap-up reason 1 should be default')
+
+                    # set default wrap-up reason to None
+                    api.update_queue_settings(location_id=queue.location_id, queue_id=queue.id,
+                                              default_wrapup_reason_id='')
+
+                    # verify that the default wrap-up reason is None
+                    queue_settings_after = api.read_queue_settings(location_id=queue.location_id, queue_id=queue.id)
+                    self.assertTrue(all(not wur.default_enabled for wur in queue_settings_after.wrapup_reasons),
+                                    'No wrap-up reason should be default')
+                #
+            #
+        #
+        return
+
+    def test_available_queues(self):
+        """
+        List available queues for wrap-up reason
+        """
+        api = self.api.telephony.cx_essentials.wrapup_reasons
+        with self.temp_wrapup_reason() as wu_reason_id:
+            with self.temp_cxe_queue() as queue:
+                queue: CallQueue
+                available_queues = api.available_queues(wrapup_reason_id=wu_reason_id)
+
+                # temp queue should be in available queues
+                self.assertIn(queue.id, {q.id for q in available_queues},
+                              'Temp queue should be in available queues')
+
+                # assign wrap-up reason to queue
+                api.update_queue_settings(location_id=queue.location_id, queue_id=queue.id,
+                                          wrapup_reasons=[wu_reason_id])
+                available_queues_after = api.available_queues(wrapup_reason_id=wu_reason_id)
+
+                # temp queue should not be in available queues anymore
+                self.assertNotIn(queue.id, {q.id for q in available_queues_after},
+                                 'Temp queue should not be in available queues anymore')
+            # with
+        # with
+        return
+

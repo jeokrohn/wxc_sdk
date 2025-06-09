@@ -1,12 +1,15 @@
 from collections.abc import Generator
+from dataclasses import dataclass
 from typing import Optional, Any
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
+from wxc_sdk.rest import RestSession
 
 __all__ = ['CustomerExperienceEssentialsApi', 'ScreenPopConfiguration']
 
 from wxc_sdk.telephony.callqueue import AvailableAgent
+from wxc_sdk.telephony.cx_essentials.wrapup_reasons import WrapupReasonApi
 
 
 class ScreenPopConfiguration(ApiModel):
@@ -21,7 +24,9 @@ class ScreenPopConfiguration(ApiModel):
     query_params: Optional[dict[str, Any]] = None
 
 
-class CustomerExperienceEssentialsApi(ApiChild, base='telephony/config/locations'):
+
+@dataclass(init=False, repr=False)
+class CustomerExperienceEssentialsApi(ApiChild, base='telephony/config'):
     """
     Customer Experience Essentials
 
@@ -39,6 +44,11 @@ class CustomerExperienceEssentialsApi(ApiChild, base='telephony/config/locations
     Modifying the customer Experience Essentials APIs requires a full or device administrator auth token with a scope
     of `spark-admin:telephony_config_write`.
     """
+    wrapup_reasons: WrapupReasonApi
+
+    def __init__(self, session: RestSession):
+        super().__init__(session=session)
+        self.wrapup_reasons = WrapupReasonApi(session=session)
 
     def get_screen_pop_configuration(self, location_id: str = None,
                                      queue_id: str = None, org_id: str = None) -> ScreenPopConfiguration:
@@ -59,7 +69,7 @@ class CustomerExperienceEssentialsApi(ApiChild, base='telephony/config/locations
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{location_id}/queues/{queue_id}/cxEssentials/screenPop')
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/cxEssentials/screenPop')
         data = super().get(url, params=params)
         return ScreenPopConfiguration.model_validate(data)
 
@@ -85,7 +95,7 @@ class CustomerExperienceEssentialsApi(ApiChild, base='telephony/config/locations
         if org_id is not None:
             params['orgId'] = org_id
         body = settings.model_dump(mode='json', by_alias=True)
-        url = self.ep(f'{location_id}/queues/{queue_id}/cxEssentials/screenPop')
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/cxEssentials/screenPop')
         super().put(url, params=params, json=body)
 
     def available_agents(self, location_id: str,
@@ -113,6 +123,6 @@ class CustomerExperienceEssentialsApi(ApiChild, base='telephony/config/locations
             params['orgId'] = org_id
         if has_cx_essentials is not None:
             params['hasCxEssentials'] = str(has_cx_essentials).lower()
-        url = self.ep(f'{location_id}/cxEssentials/agents/availableAgents')
+        url = self.ep(f'locations/{location_id}/cxEssentials/agents/availableAgents')
         return self.session.follow_pagination(url=url, model=AvailableAgent, item_key='agents',
                                               params=params)

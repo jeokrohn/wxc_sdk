@@ -534,12 +534,18 @@ def create_cxe_queue(api: WebexSimpleApi) -> CallQueue:
 
     # new queue name
     new_name = next(name for i in range(1, 1000) if (name := f'test_{i:03}') not in queue_names)
+
+    # pick a random telephony location
     locations = list(api.telephony.locations.list())
     target_location = random.choice(locations)
+
+    # create the new queue
     extension = next(available_extensions_gen(api=api, location_id=target_location.location_id))
     settings = CallQueue.create(name=new_name, agents=[], queue_size=5, extension=extension)
     queue_id = api.telephony.callqueue.create(location_id=target_location.location_id, settings=settings,
                                               has_cx_essentials=True)
+
+    # ... and get the queue details
     queue = api.telephony.callqueue.details(location_id=target_location.location_id,
                                             queue_id=queue_id,
                                             has_cx_essentials=True)

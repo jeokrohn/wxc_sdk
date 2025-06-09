@@ -889,6 +889,24 @@ The method name is a link to the method documentation.
         Get Screen Pop configuration for a Call Queue in a Location
    * - :meth:`api.telephony.cx_essentials.modify_screen_pop_configuration <wxc_sdk.telephony.cx_essentials.CustomerExperienceEssentialsApi.modify_screen_pop_configuration>`
         Modify Screen Pop configuration for a Call Queue in a Location
+   * - :meth:`api.telephony.cx_essentials.wrapup_reasons.available_queues <wxc_sdk.telephony.cx_essentials.wrapup_reasons.WrapupReasonApi.available_queues>`
+        Read Available Queues
+   * - :meth:`api.telephony.cx_essentials.wrapup_reasons.create <wxc_sdk.telephony.cx_essentials.wrapup_reasons.WrapupReasonApi.create>`
+        Create Wrap Up Reason
+   * - :meth:`api.telephony.cx_essentials.wrapup_reasons.delete <wxc_sdk.telephony.cx_essentials.wrapup_reasons.WrapupReasonApi.delete>`
+        Delete Wrap Up Reason
+   * - :meth:`api.telephony.cx_essentials.wrapup_reasons.details <wxc_sdk.telephony.cx_essentials.wrapup_reasons.WrapupReasonApi.details>`
+        Read Wrap Up Reason
+   * - :meth:`api.telephony.cx_essentials.wrapup_reasons.list <wxc_sdk.telephony.cx_essentials.wrapup_reasons.WrapupReasonApi.list>`
+        List Wrap Up Reasons
+   * - :meth:`api.telephony.cx_essentials.wrapup_reasons.read_queue_settings <wxc_sdk.telephony.cx_essentials.wrapup_reasons.WrapupReasonApi.read_queue_settings>`
+        Read Wrap Up Reason Settings
+   * - :meth:`api.telephony.cx_essentials.wrapup_reasons.update <wxc_sdk.telephony.cx_essentials.wrapup_reasons.WrapupReasonApi.update>`
+        Update Wrap Up Reason
+   * - :meth:`api.telephony.cx_essentials.wrapup_reasons.update_queue_settings <wxc_sdk.telephony.cx_essentials.wrapup_reasons.WrapupReasonApi.update_queue_settings>`
+        Update Wrap Up Reason Settings
+   * - :meth:`api.telephony.cx_essentials.wrapup_reasons.validate <wxc_sdk.telephony.cx_essentials.wrapup_reasons.WrapupReasonApi.validate>`
+        Validate Wrap Up Reason
    * - :meth:`api.telephony.dect_devices.add_a_handset <wxc_sdk.telephony.dect_devices.DECTDevicesApi.add_a_handset>`
         Add a Handset to a DECT Network
    * - :meth:`api.telephony.dect_devices.available_members <wxc_sdk.telephony.dect_devices.DECTDevicesApi.available_members>`
