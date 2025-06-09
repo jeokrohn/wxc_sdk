@@ -33,11 +33,11 @@ class ECBNEffectiveLevel(str, Enum):
 
 
 class ECBNQuality(str, Enum):
-    #: Active number assigned to a user or workspace or virtual line.
+    #: An activated number, associated with a User or Workspace.
     recommended = 'RECOMMENDED'
-    #: Active number assigned to something that may not be an attended destination.
+    #: An activated number, associated with anything else, like Auto Attendant or Hunt Group.
     not_recommended = 'NOT_RECOMMENDED'
-    #: A number for which callbacks will not work, for instance, one without a valid caller ID.
+    #: An inactive or non-existent number.
     invalid = 'INVALID'
 
 

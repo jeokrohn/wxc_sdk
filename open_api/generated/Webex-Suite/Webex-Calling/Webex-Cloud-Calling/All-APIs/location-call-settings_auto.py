@@ -49,8 +49,11 @@ class CallBackMemberType(str, Enum):
 
 
 class CallBackQuality(str, Enum):
+    #: An activated number, associated with a User or Workspace.
     recommended = 'RECOMMENDED'
+    #: An activated number, associated with anything else, like Auto Attendant or Hunt Group.
     not_recommended = 'NOT_RECOMMENDED'
+    #: An inactive or non-existent number.
     invalid = 'INVALID'
 
 

@@ -468,7 +468,7 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
         Retrieving the list of available agents requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param location_id: Retrieve the list of available agents in this location.
+        :param location_id: Retrieve the list of avaiilable agents in this location.
         :type location_id: str
         :param has_cx_essentials: Returns only the list of available agents with Customer Experience Essentials license
             when `true`, otherwise returns the list of available agents with Customer Experience Basic license.
