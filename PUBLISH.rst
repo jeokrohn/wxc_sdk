@@ -22,6 +22,7 @@
 
 * poetry publish
 * review read the docs: especially check build logs for errors
+* readthedocs: set new default version
 * build docs for last tag on readthedocs; under "Versions"
 * review pypi
 * review GitHub
