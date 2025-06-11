@@ -2165,18 +2165,28 @@ class AsLicensesApi(AsApiChild, base='licenses'):
 
 class AsLocationsApi(AsApiChild, base='locations'):
     """
-    Location API
+    Locations
 
     Locations allow you to organize users and workspaces based on a physical location. You can configure both calling
-    and workspace management functions into the same location. You can also create and inspect locations in Webex
-    Control Hub. See Locations on Control Hub for more information.
-
+    and workspace management functions into the same location. To enable a location for Webex Calling, use the
+    `Enable a Location for Webex Calling
+    <https://developer.webex.com/docs/api/v1/location-call-settings/enable-a-location-for-webex-calling>`_ API.
+    You can also create and inspect locations in Webex Control Hub. See `Locations on Control Hub
+    <https://help.webex.com/en-us/article/ajh6iy/Locations-in-Control-Hub>`_ for more information.
     """
 
     def list_gen(self, name: str = None, location_id: str = None, org_id: str = None,
              **params) -> AsyncGenerator[Location, None, None]:
         """
+        List Locations
+
         List locations for an organization.
+
+            * Use query parameters to filter the result set by location name, ID, or organization.
+            * Long result sets will be split into `pages <https://developer.webex.com/docs/basics#pagination>`_.
+            * Searching and viewing locations in your organization requires an administrator or location administrator auth
+              token with any of the following scopes: `spark-admin:locations_read`, `spark-admin:people_read` or
+              `spark-admin:device_read`.
 
         :param name: List locations whose name contains this string (case-insensitive).
         :type name: str
@@ -2200,7 +2210,15 @@ class AsLocationsApi(AsApiChild, base='locations'):
     async def list(self, name: str = None, location_id: str = None, org_id: str = None,
              **params) -> List[Location]:
         """
+        List Locations
+
         List locations for an organization.
+
+            * Use query parameters to filter the result set by location name, ID, or organization.
+            * Long result sets will be split into `pages <https://developer.webex.com/docs/basics#pagination>`_.
+            * Searching and viewing locations in your organization requires an administrator or location administrator auth
+              token with any of the following scopes: `spark-admin:locations_read`, `spark-admin:people_read` or
+              `spark-admin:device_read`.
 
         :param name: List locations whose name contains this string (case-insensitive).
         :type name: str
@@ -2238,7 +2256,20 @@ class AsLocationsApi(AsApiChild, base='locations'):
 
     async def details(self, location_id: str, org_id: str = None) -> Location:
         """
+        Get Location Details
+
         Shows details for a location, by ID.
+
+        Specify the location ID in the `locationId` parameter in the URI.
+
+        Use query parameter `orgId` to filter the result set by organization(optional).
+
+        Searching and viewing location in your organization requires an administrator or location administrator auth
+        token with any of the following scopes:
+
+            * `spark-admin:locations_read`
+            * `spark-admin:people_read`
+            * `spark-admin:device_read`
 
         :param location_id: A unique identifier for the location.
         :type location_id: str
@@ -2256,17 +2287,24 @@ class AsLocationsApi(AsApiChild, base='locations'):
                city: str, state: str, postal_code: str, country: str, address2: str = None, latitude: str = None,
                longitude: str = None, notes: str = None, org_id: str = None) -> str:
         """
+        Create a Location
+
         Create a new Location for a given organization. Only an admin in the organization can create a new Location.
 
-        Creating a location in your organization requires an administrator auth token with
-        the spark-admin:locations_write.
+        Creating a location in your organization requires a full administrator auth token with a scope of
+        `spark-admin:locations_write`.
 
-        Partners may specify orgId query parameter to create location in managed organization.
+        Partners may specify `orgId` query parameter to create location in managed organization.
 
-        The following body parameters are required to create a new location: name, timeZone, preferredLanguage,
-        address, announcementLanguage.
+        The following body parameters are required to create a new location:
 
-        latitude, longitude and notes are optional parameters to create a new location.
+            * `name`
+            * `timeZone`
+            * `preferredLanguage`
+            * `address`
+            * `announcementLanguage`.
+
+        `latitude`, `longitude` and `notes` are optional parameters to create a new location.
 
         :param name: The name of the location.
         :type name: str
@@ -2347,7 +2385,6 @@ class AsLocationsApi(AsApiChild, base='locations'):
         """
         List Location Floors
 
-        List location floors.
         Requires an administrator auth token with the `spark-admin:locations_read` scope.
 
         :param location_id: A unique identifier for the location.

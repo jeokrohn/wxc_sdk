@@ -96,17 +96,17 @@ The method name is a link to the method documentation.
    * - :meth:`api.locations.by_name <wxc_sdk.locations.LocationsApi.by_name>`
         Get a location by name
    * - :meth:`api.locations.create <wxc_sdk.locations.LocationsApi.create>`
-        Create a new Location for a given organization
+        Create a Location
    * - :meth:`api.locations.create_floor <wxc_sdk.locations.LocationsApi.create_floor>`
         Create a Location Floor
    * - :meth:`api.locations.delete_floor <wxc_sdk.locations.LocationsApi.delete_floor>`
         Delete a Location Floor
    * - :meth:`api.locations.details <wxc_sdk.locations.LocationsApi.details>`
-        Shows details for a location, by ID
+        Get Location Details
    * - :meth:`api.locations.floor_details <wxc_sdk.locations.LocationsApi.floor_details>`
         Get Location Floor Details
    * - :meth:`api.locations.list <wxc_sdk.locations.LocationsApi.list>`
-        List locations for an organization
+        List Locations
    * - :meth:`api.locations.list_floors <wxc_sdk.locations.LocationsApi.list_floors>`
         List Location Floors
    * - :meth:`api.locations.update <wxc_sdk.locations.LocationsApi.update>`
