@@ -37,15 +37,14 @@ class LocationAccessCodesApi(ApiChild, base='telephony/config/locations'):
 
     def read(self, location_id: str, org_id: str = None) -> list[AuthCode]:
         """
-        Get Location Access Code
+        Get Outgoing Permission Location Access Code
 
         Retrieve access codes details for a customer location.
 
         Use Access Codes to bypass the set permissions for all persons/workspaces at this location.
 
-        Retrieving access codes details requires a full, user or read-only administrator auth token with a scope of
-        spark-admin:telephony_config_read.
-
+        Retrieving access codes details requires a full, user or read-only administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_read`.
 
         :param location_id: Retrieve access codes details for this location.
         :type location_id: str
@@ -60,7 +59,14 @@ class LocationAccessCodesApi(ApiChild, base='telephony/config/locations'):
 
     def create(self, location_id: str, access_codes: list[AuthCode], org_id: str = None) -> list[AuthCode]:
         """
-        Create access code in location
+        Create Outgoing Permission a new access code for a customer location
+
+        Add a new access code for the given location for a customer.
+
+        Use Access Codes to bypass the set permissions for all persons/workspaces at this location.
+
+        Creating an access code for the given location requires a full or user administrator or location administrator
+        auth token with a scope of spark-admin:telephony_config_write.
 
         :param location_id: Add new access code for this location.
         :type location_id: str

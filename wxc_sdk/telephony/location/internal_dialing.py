@@ -25,13 +25,15 @@ class InternalDialingApi(ApiChild, base='telephony/config/locations'):
 
     def read(self, location_id: str, org_id: str = None) -> InternalDialing:
         """
+        Read the Internal Dialing configuration for a location
+
         Get current configuration for routing unknown extensions to the Premises as internal calls
 
         If some users in a location are registered to a PBX, retrieve the setting to route unknown extensions (digits
         that match the extension length) to the PBX.
 
-        Retrieving the internal dialing configuration requires a full or read-only administrator auth token with a
-        scope of spark-admin:telephony_config_read.
+        Retrieving the internal dialing configuration requires a full or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param location_id: location for which internal calling configuration is being requested
         :type location_id: str
@@ -47,13 +49,15 @@ class InternalDialingApi(ApiChild, base='telephony/config/locations'):
 
     def update(self, location_id: str, update: InternalDialing, org_id: str = None):
         """
-        Modify current configuration for routing unknown extensions to the Premises as internal calls
+        Modify the Internal Dialing configuration for a location
+
+        Modify current configuration for routing unknown extensions to the premise as internal calls
 
         If some users in a location are registered to a PBX, enable the setting to route unknown extensions (digits
         that match the extension length) to the PBX.
 
-        Editing the internal dialing configuration requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+        Editing the internal dialing configuration requires a full administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
 
         :param location_id: location for which internal calling configuration is being requested
         :type location_id: str

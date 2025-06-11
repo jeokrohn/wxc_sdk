@@ -650,13 +650,13 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.validate_phone_numbers <wxc_sdk.telephony.TelephonyApi.validate_phone_numbers>`
         Validate phone numbers
    * - :meth:`api.telephony.access_codes.create <wxc_sdk.telephony.access_codes.LocationAccessCodesApi.create>`
-        Create access code in location
+        Create Outgoing Permission a new access code for a customer location
    * - :meth:`api.telephony.access_codes.delete_all <wxc_sdk.telephony.access_codes.LocationAccessCodesApi.delete_all>`
         Delete Outgoing Permission Location Access Codes
    * - :meth:`api.telephony.access_codes.delete_codes <wxc_sdk.telephony.access_codes.LocationAccessCodesApi.delete_codes>`
         Delete Access Code Location
    * - :meth:`api.telephony.access_codes.read <wxc_sdk.telephony.access_codes.LocationAccessCodesApi.read>`
-        Get Location Access Code
+        Get Outgoing Permission Location Access Code
    * - :meth:`api.telephony.announcements_repo.delete <wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.delete>`
         Delete an announcement greeting
    * - :meth:`api.telephony.announcements_repo.details <wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.details>`
@@ -1140,7 +1140,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.location.enable_for_calling <wxc_sdk.telephony.location.TelephonyLocationApi.enable_for_calling>`
         Enable a Location for Webex Calling
    * - :meth:`api.telephony.location.generate_password <wxc_sdk.telephony.location.TelephonyLocationApi.generate_password>`
-        Generates an example password using the effective password settings for the location
+        Generate example password for Location
    * - :meth:`api.telephony.location.list <wxc_sdk.telephony.location.TelephonyLocationApi.list>`
         List Locations Webex Calling Details
    * - :meth:`api.telephony.location.list_receptionist_contact_directories <wxc_sdk.telephony.location.TelephonyLocationApi.list_receptionist_contact_directories>`
@@ -1174,9 +1174,9 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.location.intercept.read <wxc_sdk.telephony.location.intercept.LocationInterceptApi.read>`
         Get Location Intercept
    * - :meth:`api.telephony.location.internal_dialing.read <wxc_sdk.telephony.location.internal_dialing.InternalDialingApi.read>`
-        Get current configuration for routing unknown extensions to the Premises as internal calls
+        Read the Internal Dialing configuration for a location
    * - :meth:`api.telephony.location.internal_dialing.update <wxc_sdk.telephony.location.internal_dialing.InternalDialingApi.update>`
-        Modify current configuration for routing unknown extensions to the Premises as internal calls
+        Modify the Internal Dialing configuration for a location
    * - :meth:`api.telephony.location.internal_dialing.url <wxc_sdk.telephony.location.internal_dialing.InternalDialingApi.url>`
         
    * - :meth:`api.telephony.location.moh.read <wxc_sdk.telephony.location.moh.LocationMoHApi.read>`
@@ -1189,6 +1189,28 @@ The method name is a link to the method documentation.
         Add Phone Numbers to a location
    * - :meth:`api.telephony.location.number.remove <wxc_sdk.telephony.location.numbers.LocationNumbersApi.remove>`
         Remove phone numbers from a location
+   * - :meth:`api.telephony.location.permissions_out.configure <wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.configure>`
+        Configure Outgoing Calling Permissions Settings
+   * - :meth:`api.telephony.location.permissions_out.read <wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.read>`
+        Retrieve Outgoing Calling Permissions Settings
+   * - :meth:`api.telephony.location.permissions_out.digit_patterns.create <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.create>`
+        Create Digit Patterns
+   * - :meth:`api.telephony.location.permissions_out.digit_patterns.delete <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.delete>`
+        Delete a Digit Pattern
+   * - :meth:`api.telephony.location.permissions_out.digit_patterns.delete_all <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.delete_all>`
+        Delete all Digit Patterns
+   * - :meth:`api.telephony.location.permissions_out.digit_patterns.details <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.details>`
+        Retrieve Digit Pattern Details
+   * - :meth:`api.telephony.location.permissions_out.digit_patterns.get_digit_patterns <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.get_digit_patterns>`
+        Retrieve Digit Patterns
+   * - :meth:`api.telephony.location.permissions_out.digit_patterns.update <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.update>`
+        Modify Digit Patterns
+   * - :meth:`api.telephony.location.permissions_out.digit_patterns.update_category_control_settings <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.update_category_control_settings>`
+        Modify the Digit Pattern Category Control Settings for the entity
+   * - :meth:`api.telephony.location.permissions_out.transfer_numbers.configure <wxc_sdk.person_settings.permissions_out.TransferNumbersApi.configure>`
+        Modify Transfer Numbers Settings for an entity
+   * - :meth:`api.telephony.location.permissions_out.transfer_numbers.read <wxc_sdk.person_settings.permissions_out.TransferNumbersApi.read>`
+        Retrieve Transfer Numbers Settings
    * - :meth:`api.telephony.location.receptionist_contacts_directory.create <wxc_sdk.telephony.location.receptionist_contacts.ReceptionistContactsDirectoryApi.create>`
         Creates a new Receptionist Contact Directory for a location
    * - :meth:`api.telephony.location.receptionist_contacts_directory.delete <wxc_sdk.telephony.location.receptionist_contacts.ReceptionistContactsDirectoryApi.delete>`
@@ -1216,7 +1238,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.locations.enable_for_calling <wxc_sdk.telephony.location.TelephonyLocationApi.enable_for_calling>`
         Enable a Location for Webex Calling
    * - :meth:`api.telephony.locations.generate_password <wxc_sdk.telephony.location.TelephonyLocationApi.generate_password>`
-        Generates an example password using the effective password settings for the location
+        Generate example password for Location
    * - :meth:`api.telephony.locations.list <wxc_sdk.telephony.location.TelephonyLocationApi.list>`
         List Locations Webex Calling Details
    * - :meth:`api.telephony.locations.list_receptionist_contact_directories <wxc_sdk.telephony.location.TelephonyLocationApi.list_receptionist_contact_directories>`
@@ -1250,9 +1272,9 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.locations.intercept.read <wxc_sdk.telephony.location.intercept.LocationInterceptApi.read>`
         Get Location Intercept
    * - :meth:`api.telephony.locations.internal_dialing.read <wxc_sdk.telephony.location.internal_dialing.InternalDialingApi.read>`
-        Get current configuration for routing unknown extensions to the Premises as internal calls
+        Read the Internal Dialing configuration for a location
    * - :meth:`api.telephony.locations.internal_dialing.update <wxc_sdk.telephony.location.internal_dialing.InternalDialingApi.update>`
-        Modify current configuration for routing unknown extensions to the Premises as internal calls
+        Modify the Internal Dialing configuration for a location
    * - :meth:`api.telephony.locations.internal_dialing.url <wxc_sdk.telephony.location.internal_dialing.InternalDialingApi.url>`
         
    * - :meth:`api.telephony.locations.moh.read <wxc_sdk.telephony.location.moh.LocationMoHApi.read>`
@@ -1265,6 +1287,28 @@ The method name is a link to the method documentation.
         Add Phone Numbers to a location
    * - :meth:`api.telephony.locations.number.remove <wxc_sdk.telephony.location.numbers.LocationNumbersApi.remove>`
         Remove phone numbers from a location
+   * - :meth:`api.telephony.locations.permissions_out.configure <wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.configure>`
+        Configure Outgoing Calling Permissions Settings
+   * - :meth:`api.telephony.locations.permissions_out.read <wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.read>`
+        Retrieve Outgoing Calling Permissions Settings
+   * - :meth:`api.telephony.locations.permissions_out.digit_patterns.create <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.create>`
+        Create Digit Patterns
+   * - :meth:`api.telephony.locations.permissions_out.digit_patterns.delete <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.delete>`
+        Delete a Digit Pattern
+   * - :meth:`api.telephony.locations.permissions_out.digit_patterns.delete_all <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.delete_all>`
+        Delete all Digit Patterns
+   * - :meth:`api.telephony.locations.permissions_out.digit_patterns.details <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.details>`
+        Retrieve Digit Pattern Details
+   * - :meth:`api.telephony.locations.permissions_out.digit_patterns.get_digit_patterns <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.get_digit_patterns>`
+        Retrieve Digit Patterns
+   * - :meth:`api.telephony.locations.permissions_out.digit_patterns.update <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.update>`
+        Modify Digit Patterns
+   * - :meth:`api.telephony.locations.permissions_out.digit_patterns.update_category_control_settings <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.update_category_control_settings>`
+        Modify the Digit Pattern Category Control Settings for the entity
+   * - :meth:`api.telephony.locations.permissions_out.transfer_numbers.configure <wxc_sdk.person_settings.permissions_out.TransferNumbersApi.configure>`
+        Modify Transfer Numbers Settings for an entity
+   * - :meth:`api.telephony.locations.permissions_out.transfer_numbers.read <wxc_sdk.person_settings.permissions_out.TransferNumbersApi.read>`
+        Retrieve Transfer Numbers Settings
    * - :meth:`api.telephony.locations.receptionist_contacts_directory.create <wxc_sdk.telephony.location.receptionist_contacts.ReceptionistContactsDirectoryApi.create>`
         Creates a new Receptionist Contact Directory for a location
    * - :meth:`api.telephony.locations.receptionist_contacts_directory.delete <wxc_sdk.telephony.location.receptionist_contacts.ReceptionistContactsDirectoryApi.delete>`

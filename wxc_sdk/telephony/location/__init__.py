@@ -17,7 +17,9 @@ from ...base import SafeEnum as Enum
 from ...common import ValidateExtensionsResponse, RouteType, DeviceCustomization, UserType, IdAndName
 from ...locations import Location
 from ...person_settings.available_numbers import AvailableNumber
+from ...person_settings.common import ApiSelector
 from ...person_settings.ecbn import ECBNEffectiveLevel, ECBNQuality
+from ...person_settings.permissions_out import OutgoingPermissionsApi
 from ...rest import RestSession
 
 __all__ = ['CallingLineId', 'PSTNConnection', 'TelephonyLocation', 'CallBackSelected', 'ContactDetails',
@@ -181,6 +183,8 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
     moh: LocationMoHApi
     #: number settings
     number: LocationNumbersApi
+    #: outgoing permissions settings
+    permissions_out: OutgoingPermissionsApi
     #: Location VM settings (only enable/disable transcription for now)
     voicemail: LocationVoicemailSettingsApi
     #: Receptionist contacts directories
@@ -193,11 +197,15 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         self.internal_dialing = InternalDialingApi(session=session)
         self.moh = LocationMoHApi(session=session)
         self.number = LocationNumbersApi(session=session)
+        self.permissions_out = OutgoingPermissionsApi(session=session, selector=ApiSelector.location)
         self.voicemail = LocationVoicemailSettingsApi(session=session)
         self.receptionist_contacts_directory = ReceptionistContactsDirectoryApi(session=session)
 
+
     def generate_password(self, location_id: str, generate: list[str] = None, org_id: str = None):
         """
+        Generate example password for Location
+
         Generates an example password using the effective password settings for the location. If you don't specify
         anything in the generate field or don't provide a request body, then you will receive a SIP password by default.
 

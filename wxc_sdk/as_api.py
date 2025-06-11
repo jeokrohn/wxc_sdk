@@ -21173,15 +21173,14 @@ class AsLocationAccessCodesApi(AsApiChild, base='telephony/config/locations'):
 
     async def read(self, location_id: str, org_id: str = None) -> list[AuthCode]:
         """
-        Get Location Access Code
+        Get Outgoing Permission Location Access Code
 
         Retrieve access codes details for a customer location.
 
         Use Access Codes to bypass the set permissions for all persons/workspaces at this location.
 
-        Retrieving access codes details requires a full, user or read-only administrator auth token with a scope of
-        spark-admin:telephony_config_read.
-
+        Retrieving access codes details requires a full, user or read-only administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_read`.
 
         :param location_id: Retrieve access codes details for this location.
         :type location_id: str
@@ -21196,7 +21195,14 @@ class AsLocationAccessCodesApi(AsApiChild, base='telephony/config/locations'):
 
     async def create(self, location_id: str, access_codes: list[AuthCode], org_id: str = None) -> list[AuthCode]:
         """
-        Create access code in location
+        Create Outgoing Permission a new access code for a customer location
+
+        Add a new access code for the given location for a customer.
+
+        Use Access Codes to bypass the set permissions for all persons/workspaces at this location.
+
+        Creating an access code for the given location requires a full or user administrator or location administrator
+        auth token with a scope of spark-admin:telephony_config_write.
 
         :param location_id: Add new access code for this location.
         :type location_id: str
@@ -25453,13 +25459,15 @@ class AsInternalDialingApi(AsApiChild, base='telephony/config/locations'):
 
     async def read(self, location_id: str, org_id: str = None) -> InternalDialing:
         """
+        Read the Internal Dialing configuration for a location
+
         Get current configuration for routing unknown extensions to the Premises as internal calls
 
         If some users in a location are registered to a PBX, retrieve the setting to route unknown extensions (digits
         that match the extension length) to the PBX.
 
-        Retrieving the internal dialing configuration requires a full or read-only administrator auth token with a
-        scope of spark-admin:telephony_config_read.
+        Retrieving the internal dialing configuration requires a full or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param location_id: location for which internal calling configuration is being requested
         :type location_id: str
@@ -25475,13 +25483,15 @@ class AsInternalDialingApi(AsApiChild, base='telephony/config/locations'):
 
     async def update(self, location_id: str, update: InternalDialing, org_id: str = None):
         """
-        Modify current configuration for routing unknown extensions to the Premises as internal calls
+        Modify the Internal Dialing configuration for a location
+
+        Modify current configuration for routing unknown extensions to the premise as internal calls
 
         If some users in a location are registered to a PBX, enable the setting to route unknown extensions (digits
         that match the extension length) to the PBX.
 
-        Editing the internal dialing configuration requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+        Editing the internal dialing configuration requires a full administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
 
         :param location_id: location for which internal calling configuration is being requested
         :type location_id: str
@@ -25955,6 +25965,8 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
     moh: AsLocationMoHApi
     #: number settings
     number: AsLocationNumbersApi
+    #: outgoing permissions settings
+    permissions_out: AsOutgoingPermissionsApi
     #: Location VM settings (only enable/disable transcription for now)
     voicemail: AsLocationVoicemailSettingsApi
     #: Receptionist contacts directories
@@ -25967,11 +25979,14 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         self.internal_dialing = AsInternalDialingApi(session=session)
         self.moh = AsLocationMoHApi(session=session)
         self.number = AsLocationNumbersApi(session=session)
+        self.permissions_out = AsOutgoingPermissionsApi(session=session, selector=ApiSelector.location)
         self.voicemail = AsLocationVoicemailSettingsApi(session=session)
         self.receptionist_contacts_directory = AsReceptionistContactsDirectoryApi(session=session)
 
     async def generate_password(self, location_id: str, generate: list[str] = None, org_id: str = None):
         """
+        Generate example password for Location
+
         Generates an example password using the effective password settings for the location. If you don't specify
         anything in the generate field or don't provide a request body, then you will receive a SIP password by default.
 
