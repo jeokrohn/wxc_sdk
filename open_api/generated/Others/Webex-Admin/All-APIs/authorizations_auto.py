@@ -107,7 +107,7 @@ class AuthorizationsApi(ApiChild, base='authorizations'):
         url = self.ep()
         super().delete(url, params=params)
 
-    def list_authorizations_for_a_user(self, person_id: str, person_email: str) -> list[Authorization]:
+    def list_authorizations_for_a_user(self, person_id: str = None, person_email: str = None) -> list[Authorization]:
         """
         List authorizations for a user
 
@@ -121,8 +121,10 @@ class AuthorizationsApi(ApiChild, base='authorizations'):
         :rtype: list[Authorization]
         """
         params = {}
-        params['personId'] = person_id
-        params['personEmail'] = person_email
+        if person_id is not None:
+            params['personId'] = person_id
+        if person_email is not None:
+            params['personEmail'] = person_email
         url = self.ep()
         data = super().get(url, params=params)
         r = TypeAdapter(list[Authorization]).validate_python(data['items'])
