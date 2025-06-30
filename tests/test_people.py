@@ -213,3 +213,75 @@ class TestCallingUser(TestWithLocations):
         print(new_user)
         print(f'created "{new_user.display_name}"')
         print(json.dumps(new_user.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
+
+
+class TestCallingLocations(TestWithLocations):
+    """
+    Test calling locations
+    """
+
+    @async_test
+    async def test_list_people_by_location(self):
+        async def list_people_in_location(location: TelephonyLocation):
+            """
+            List people in a given location
+            """
+            users = await self.async_api.people.list(location_id=location.location_id, calling_data=True)
+            err = len(users) == 1 and users[0].errors
+            if err:
+                err_key, error = next(iter(err.items()))
+                if err_key == 'peopleListLocationId' and error.reason == 'No user matching the locationId in this page':
+                    print(f'Location: {location.name} ({location.location_id}) - no users found')
+                    return
+                print(f'Location: {location.name} ({location.location_id}) - error: {err}')
+                raise ValueError(
+                    f'Error listing users in location {location.name} ({location.location_id}): {err_key}'
+                    f' - {error.reason}')
+
+            print(f'Location: {location.name} ({location.location_id}) - '
+                  f'Found {len(users)} users with calling data')
+            if not users:
+                return
+            # verify that location is set for all users
+            self.assertTrue(all(user.location_id == location.location_id for user in users),
+                            f'Not all users in location {location.name} ({location.location_id}) have the same '
+                            f'location_id')
+
+            # get details for each user to verify location info
+            details = await asyncio.gather(*[self.async_api.people.details(person_id=user.person_id,
+                                                                           calling_data=True)
+                                             for user in users],
+                                           return_exceptions=True)
+            user_err = None
+            for user, list_user in zip(details, users):
+                if isinstance(user, Exception):
+                    print(f'  Error getting details for user: {list_user.display_name}')
+                    continue
+                user: Person
+                if user.location_id != location.location_id:
+                    user_location = next((loc for loc in self.telephony_locations
+                                          if loc.location_id == user.location_id), None)
+                    if user_location is None:
+                        print(f'  User {user.display_name} has location {user.location_id} '
+                              f'but no location found in telephony locations')
+                        continue
+                    print(f'  User {user.display_name} '
+                          f'has location {user_location.name}({user.location_id}) but should be in '
+                          f'{location.name}({location.location_id})')
+                    user_err = user_err or ValueError(
+                        f'User {user.display_name} has location {user_location.name}({user.location_id}) '
+                        f'but should be in {location.name}({location.location_id})')
+            if user_err:
+                raise user_err
+            return
+
+        tasks = [list_people_in_location(location) for location in self.telephony_locations]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+        err = None
+        for result, location in zip(results, self.telephony_locations):
+            if isinstance(result, Exception):
+                err = err or result
+                print(f'{location.name}, Error: {result}')
+        if err:
+            raise err
+
