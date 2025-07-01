@@ -255,7 +255,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type call_id: str
         :param endpoint_id: The ID of the device or application to answer the call on. The `endpointId` must be one of
             the endpointIds returned by the `Get Preferred Answer Endpoint API
-            <https://developer.webex.com/docs/api/v1/user-call-settings/get-preferred-answer-endpoint>`_.
+            <https://developer.webex.com/docs/api/v1/user-call-settings-2-2/get-preferred-answer-endpoint>`_.
         :type endpoint_id: str
         :rtype: None
         """
@@ -279,7 +279,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type target: str
         :param endpoint_id: The ID of the device or application to use for the barge-in. The `endpointId` must be one
             of the endpointIds returned by the `Get Preferred Answer Endpoint API
-            <https://developer.webex.com/docs/api/v1/user-call-settings/get-preferred-answer-endpoint>`_.
+            <https://developer.webex.com/docs/api/v1/user-call-settings-2-2/get-preferred-answer-endpoint>`_.
         :type endpoint_id: str
         :rtype: :class:`BargeInResponse`
         """
@@ -307,7 +307,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type destination: str
         :param endpoint_id: The ID of the device or application to use for the call. The `endpointId` must be one of
             the endpointIds returned by the `Get Preferred Answer Endpoint API
-            <https://developer.webex.com/docs/api/v1/user-call-settings/get-preferred-answer-endpoint>`_.
+            <https://developer.webex.com/docs/api/v1/user-call-settings-2-2/get-preferred-answer-endpoint>`_.
         :type endpoint_id: str
         :rtype: :class:`BargeInResponse`
         """
@@ -474,7 +474,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type target: str
         :param endpoint_id: The ID of the device or application to use for the pickup. The `endpointId` must be one of
             the endpointIds returned by the `Get Preferred Answer Endpoint API
-            <https://developer.webex.com/docs/api/v1/user-call-settings/get-preferred-answer-endpoint>`_.
+            <https://developer.webex.com/docs/api/v1/user-call-settings-2-2/get-preferred-answer-endpoint>`_.
         :type endpoint_id: str
         :rtype: :class:`BargeInResponse`
         """
@@ -572,7 +572,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type destination: str
         :param endpoint_id: The ID of the device or application to use for the retrieval. The `endpointId` must be one
             of the endpointIds returned by the `Get Preferred Answer Endpoint API
-            <https://developer.webex.com/docs/api/v1/user-call-settings/get-preferred-answer-endpoint>`_.
+            <https://developer.webex.com/docs/api/v1/user-call-settings-2-2/get-preferred-answer-endpoint>`_.
         :type endpoint_id: str
         :rtype: :class:`BargeInResponse`
         """
