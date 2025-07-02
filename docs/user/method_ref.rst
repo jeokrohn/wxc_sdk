@@ -274,15 +274,15 @@ The method name is a link to the method documentation.
    * - :meth:`api.people.create <wxc_sdk.people.PeopleApi.create>`
         Create a Person
    * - :meth:`api.people.delete_person <wxc_sdk.people.PeopleApi.delete_person>`
-        Remove a person from the system
+        Delete a Person
    * - :meth:`api.people.details <wxc_sdk.people.PeopleApi.details>`
-        Shows details for a person, by ID
+        Get Person Details
    * - :meth:`api.people.list <wxc_sdk.people.PeopleApi.list>`
         List people in your organization
    * - :meth:`api.people.me <wxc_sdk.people.PeopleApi.me>`
         Show the profile for the authenticated user
    * - :meth:`api.people.update <wxc_sdk.people.PeopleApi.update>`
-        Update details for a person, by ID
+        Update a Person
    * - :meth:`api.person_settings.devices <wxc_sdk.person_settings.PersonSettingsApi.devices>`
         Get all devices for a person
    * - :meth:`api.person_settings.modify_hoteling_settings_primary_devices <wxc_sdk.person_settings.PersonSettingsApi.modify_hoteling_settings_primary_devices>`

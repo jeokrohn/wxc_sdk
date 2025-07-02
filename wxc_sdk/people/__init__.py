@@ -47,10 +47,15 @@ class PhoneNumberType(str, Enum):
     """
     Webex phone number type
     """
+    #: Work phone number of the person.
     work = 'work'
-    mobile = 'mobile'
-    fax = 'fax'
+    #: Work extension of the person. For the Webex Calling person, the value will have a routing prefix along with the
+    #: extension.
     work_extension = 'work_extension'
+    #: Mobile number of the person.
+    mobile = 'mobile'
+    #: FAX number of the person.
+    fax = 'fax'
     enterprise = 'enterprise'
     alternate1 = 'alternate1'
     alternate2 = 'alternate2'
@@ -69,9 +74,12 @@ class SipType(str, Enum):
     """
     SIP address type
     """
+    #: Personal room address.
+    personal_room = 'personal-room'
+    #: Enterprise address.
     enterprise = 'enterprise'
-    cloudCalling = 'cloud-calling'
-    personalRoom = 'personal-room'
+    #: Cloud calling address.
+    cloud_calling = 'cloud-calling'
     unknown = 'unknown'
 
 
@@ -79,50 +87,57 @@ class SipAddress(ApiModel):
     """
     SIP address: type, value and primary indication
     """
+    #: The type of SIP address.
     sip_type: SipType = Field(alias='type')
+    #: The SIP address.
     value: str
+    #: Primary SIP address of the person.
     primary: bool
 
 
 class PeopleStatus(str, Enum):
-    active = 'active'  #: active within the last 10 minutes
-    call = 'call'  #: the user is in a call
-    do_not_disturb = 'DoNotDisturb'  #: the user has manually set their status to "Do Not Disturb"
-    inactive = 'inactive'  #: last activity occurred more than 10 minutes ago
-    meeting = 'meeting'  #: last activity occurred more than 10 minutes ago
-    out_of_office = 'OutOfOffice'  #: the user or a Hybrid Calendar service has indicated that they are "Out of Office"
-    pending = 'pending'  #: the user has never logged in; a status cannot be determined
-    presenting = 'presenting'  #: the user is sharing content
-    unknown = 'unknown'  #: the user’s status could not be determined
+    #: Active within the last 10 minutes.
+    active = 'active'
+    #: The user is in a call.
+    call = 'call'
+    #: The user has manually set their status to "Do Not Disturb".
+    do_not_disturb = 'DoNotDisturb'
+    #: Last activity occurred more than 10 minutes ago.
+    inactive = 'inactive'
+    #: The user is in a meeting.
+    meeting = 'meeting'
+    #: The user or a Hybrid Calendar service has indicated that they are "Out of Office".
+    out_of_office = 'OutOfOffice'
+    #: The user has never logged in; a status cannot be determined.
+    pending = 'pending'
+    #: The user is sharing content.
+    presenting = 'presenting'
+    #: The user’s status could not be determined.
+    unknown = 'unknown'
 
 
 class PersonType(str, Enum):
-    #: account belongs to a person
+    #: Account belongs to a person.
     person = 'person'
-    #: account is a bot user
+    #: Account is a bot user.
     bot = 'bot'
-    #: account is a guest user
-    app_user = 'appuser'
+    #: Account is a `guest user
+    #: <https://developer.webex.com/docs/guest-issuer>`_.
+    appuser = 'appuser'
 
 
 class PersonAddress(ApiModel):
-    #: The type of address
-    #: Possible values: work
+    #: The type of address.
     type: Optional[str] = None
-    #: The user's country
-    #: Possible values: US
+    #: The user's country.
     country: Optional[str] = None
-    #: the user's locality, often city
-    #: Possible values: Milpitas
+    #: The user's locality, often city.
     locality: Optional[str] = None
-    #: the user's region, often state
-    #: Possible values: California
+    #: The user's region, often state.
     region: Optional[str] = None
-    #: the user's street
-    #: Possible values: 1099 Bird Ave.
+    #: The user's street.
     street_address: Optional[str] = None
-    #: the user's postal or zip code
-    #: Possible values: 99212
+    #: The user's postal or zip code.
     postal_code: Optional[str] = None
 
 
@@ -178,9 +193,10 @@ class Person(ApiModelWithErrors):
     #: The time zone of the person if configured. If no timezone is configured on the account, this field will not be
     #: present
     timezone: Optional[str] = None
-    #: The date and time of the person's last activity within Webex. This will only be returned for people within
-    #: your organization or an organization you manage. Presence information will not be shown if the authenticated
-    #: user has disabled status sharing.
+    #: The date and time of the person's last activity within Webex. This will only be returned for people within your
+    #: organization or an organization you manage. Presence information will not be shown if the authenticated user
+    #: has `disabled status sharing
+    #: <https://help.webex.com/nkzs6wl/>`_.
     last_activity: Optional[str] = None
     #: The users sip addresses. Read-only.
     sip_addresses: Optional[list[SipAddress]] = None
@@ -380,14 +396,17 @@ class PeopleApi(ApiChild, base='people'):
 
     def details(self, person_id: str, calling_data: bool = False) -> Person:
         """
+        Get Person Details
+
         Shows details for a person, by ID.
 
-        Response properties associated with a user's presence status, such as status or last_activity, will only be
+        Response properties associated with a user's presence status, such as `status` or `lastActivity`, will only be
         displayed for people within your organization or an organization you manage. Presence information will not be
-        shown if the authenticated user has disabled status sharing.
+        shown if the authenticated user has `disabled status sharing
+        <https://help.webex.com/nkzs6wl/>`_.
 
-        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying calling_data
-        parameter as True.
+        Admin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData`
+        parameter as `true`.
 
         :param person_id: A unique identifier for the person.
         :type person_id: str
@@ -402,6 +421,8 @@ class PeopleApi(ApiChild, base='people'):
 
     def delete_person(self, person_id: str):
         """
+        Delete a Person
+
         Remove a person from the system. Only an admin can remove a person.
 
         :param person_id: A unique identifier for the person.
@@ -413,6 +434,8 @@ class PeopleApi(ApiChild, base='people'):
     def update(self, person: Person, calling_data: bool = False, show_all_types: bool = False,
                min_response: bool = None) -> Person:
         """
+        Update a Person
+
         Update details for a person, by ID.
 
         Specify the person ID in the `personId` parameter in the URI. Only an admin can update a person details.

@@ -6771,14 +6771,17 @@ class AsPeopleApi(AsApiChild, base='people'):
 
     async def details(self, person_id: str, calling_data: bool = False) -> Person:
         """
+        Get Person Details
+
         Shows details for a person, by ID.
 
-        Response properties associated with a user's presence status, such as status or last_activity, will only be
+        Response properties associated with a user's presence status, such as `status` or `lastActivity`, will only be
         displayed for people within your organization or an organization you manage. Presence information will not be
-        shown if the authenticated user has disabled status sharing.
+        shown if the authenticated user has `disabled status sharing
+        <https://help.webex.com/nkzs6wl/>`_.
 
-        Admin users can include Webex Calling (BroadCloud) user details in the response by specifying calling_data
-        parameter as True.
+        Admin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData`
+        parameter as `true`.
 
         :param person_id: A unique identifier for the person.
         :type person_id: str
@@ -6793,6 +6796,8 @@ class AsPeopleApi(AsApiChild, base='people'):
 
     async def delete_person(self, person_id: str):
         """
+        Delete a Person
+
         Remove a person from the system. Only an admin can remove a person.
 
         :param person_id: A unique identifier for the person.
@@ -6804,6 +6809,8 @@ class AsPeopleApi(AsApiChild, base='people'):
     async def update(self, person: Person, calling_data: bool = False, show_all_types: bool = False,
                min_response: bool = None) -> Person:
         """
+        Update a Person
+
         Update details for a person, by ID.
 
         Specify the person ID in the `personId` parameter in the URI. Only an admin can update a person details.
