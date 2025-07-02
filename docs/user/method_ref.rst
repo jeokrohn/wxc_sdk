@@ -1752,7 +1752,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.webhook.details <wxc_sdk.webhook.WebhookApi.details>`
         Get Webhook Details
    * - :meth:`api.webhook.list <wxc_sdk.webhook.WebhookApi.list>`
-        List all of your webhooks
+        List Webhooks
    * - :meth:`api.webhook.update <wxc_sdk.webhook.WebhookApi.update>`
         Updates a webhook, by ID
    * - :meth:`api.webhook.webhook_delete <wxc_sdk.webhook.WebhookApi.webhook_delete>`

@@ -29498,25 +29498,37 @@ class AsWebhookApi(AsApiChild, base='webhooks'):
     API for webhook management
     """
 
-    def list_gen(self) -> AsyncGenerator[Webhook, None, None]:
+    def list_gen(self, owned_by: str = None, **params) -> AsyncGenerator[Webhook, None, None]:
         """
+        List Webhooks
+
         List all of your webhooks.
 
-        :return: yields webhooks
+        :param owned_by: Limit the result list to org wide webhooks. Only allowed value is `org`.
+        :type owned_by: str
+        :return: Generator yielding :class:`Webhook` instances
         """
+        if owned_by is not None:
+            params['ownedBy'] = owned_by
         ep = self.ep()
         # noinspection PyTypeChecker
-        return self.session.follow_pagination(url=ep, model=Webhook)
+        return self.session.follow_pagination(url=url, model=Webhook, item_key='items', params=params)
 
-    async def list(self) -> List[Webhook]:
+    async def list(self, owned_by: str = None, **params) -> List[Webhook]:
         """
+        List Webhooks
+
         List all of your webhooks.
 
-        :return: yields webhooks
+        :param owned_by: Limit the result list to org wide webhooks. Only allowed value is `org`.
+        :type owned_by: str
+        :return: Generator yielding :class:`Webhook` instances
         """
+        if owned_by is not None:
+            params['ownedBy'] = owned_by
         ep = self.ep()
         # noinspection PyTypeChecker
-        return [o async for o in self.session.follow_pagination(url=ep, model=Webhook)]
+        return [o async for o in self.session.follow_pagination(url=url, model=Webhook, item_key='items', params=params)]
 
     async def create(self, name: str, target_url: str, resource: WebhookResource, event: WebhookEventType, filter: str = None,
                secret: str = None,
@@ -29570,6 +29582,7 @@ class AsWebhookApi(AsApiChild, base='webhooks'):
     async def details(self, webhook_id: str) -> Webhook:
         """
         Get Webhook Details
+
         Shows details for a webhook, by ID.
 
         :param webhook_id: The unique identifier for the webhook.
@@ -29592,7 +29605,8 @@ class AsWebhookApi(AsApiChild, base='webhooks'):
         :return: updated :class:`Webhook` object
         """
         url = self.ep(webhook_id)
-        webhook_data = update.model_dump_json(include={'name', 'target_url', 'secret', 'owned_by', 'status'})
+        webhook_data = update.model_dump(mode='json', include={'name', 'target_url', 'secret', 'owned_by', 'status'},
+                                         exclude_unset=True)
         return Webhook.model_validate(await self.put(url, data=webhook_data))
 
     async def webhook_delete(self, webhook_id: str):
