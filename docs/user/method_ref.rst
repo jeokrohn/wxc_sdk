@@ -450,23 +450,23 @@ The method name is a link to the method documentation.
    * - :meth:`api.person_settings.receptionist.read <wxc_sdk.person_settings.receptionist.ReceptionistApi.read>`
         Read Receptionist Client Settings for a Person
    * - :meth:`api.person_settings.schedules.create <wxc_sdk.common.schedules.ScheduleApi.create>`
-        Create a Schedule
+        Create a schedule
    * - :meth:`api.person_settings.schedules.delete_schedule <wxc_sdk.common.schedules.ScheduleApi.delete_schedule>`
-        Delete a Schedule
+        Delete a schedule
    * - :meth:`api.person_settings.schedules.details <wxc_sdk.common.schedules.ScheduleApi.details>`
-        Get Details for a Schedule
+        Get details for a schedule
    * - :meth:`api.person_settings.schedules.event_create <wxc_sdk.common.schedules.ScheduleApi.event_create>`
-        Create a Schedule Event
+        Create a schedule event
    * - :meth:`api.person_settings.schedules.event_delete <wxc_sdk.common.schedules.ScheduleApi.event_delete>`
-        Delete a Schedule Event
+        Delete a schedule event
    * - :meth:`api.person_settings.schedules.event_details <wxc_sdk.common.schedules.ScheduleApi.event_details>`
-        Get Details for a Schedule Event
+        Get details for a schedule event
    * - :meth:`api.person_settings.schedules.event_update <wxc_sdk.common.schedules.ScheduleApi.event_update>`
-        Update a Schedule Event
+        Update a schedule event
    * - :meth:`api.person_settings.schedules.list <wxc_sdk.common.schedules.ScheduleApi.list>`
-        List of Schedules for a Person or location
+        List of schedules for a person or location
    * - :meth:`api.person_settings.schedules.update <wxc_sdk.common.schedules.ScheduleApi.update>`
-        Update a Schedule
+        Update a schedule
    * - :meth:`api.person_settings.selective_accept.configure <wxc_sdk.person_settings.selective_accept.SelectiveAcceptApi.configure>`
         Modify Selective Accept Settings for an entity
    * - :meth:`api.person_settings.selective_accept.configure_criteria <wxc_sdk.person_settings.selective_accept.SelectiveAcceptApi.configure_criteria>`
@@ -1516,23 +1516,23 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.pstn.read <wxc_sdk.telephony.pstn.PSTNApi.read>`
         Retrieve PSTN Connection for a Location
    * - :meth:`api.telephony.schedules.create <wxc_sdk.common.schedules.ScheduleApi.create>`
-        Create a Schedule
+        Create a schedule
    * - :meth:`api.telephony.schedules.delete_schedule <wxc_sdk.common.schedules.ScheduleApi.delete_schedule>`
-        Delete a Schedule
+        Delete a schedule
    * - :meth:`api.telephony.schedules.details <wxc_sdk.common.schedules.ScheduleApi.details>`
-        Get Details for a Schedule
+        Get details for a schedule
    * - :meth:`api.telephony.schedules.event_create <wxc_sdk.common.schedules.ScheduleApi.event_create>`
-        Create a Schedule Event
+        Create a schedule event
    * - :meth:`api.telephony.schedules.event_delete <wxc_sdk.common.schedules.ScheduleApi.event_delete>`
-        Delete a Schedule Event
+        Delete a schedule event
    * - :meth:`api.telephony.schedules.event_details <wxc_sdk.common.schedules.ScheduleApi.event_details>`
-        Get Details for a Schedule Event
+        Get details for a schedule event
    * - :meth:`api.telephony.schedules.event_update <wxc_sdk.common.schedules.ScheduleApi.event_update>`
-        Update a Schedule Event
+        Update a schedule event
    * - :meth:`api.telephony.schedules.list <wxc_sdk.common.schedules.ScheduleApi.list>`
-        List of Schedules for a Person or location
+        List of schedules for a person or location
    * - :meth:`api.telephony.schedules.update <wxc_sdk.common.schedules.ScheduleApi.update>`
-        Update a Schedule
+        Update a schedule
    * - :meth:`api.telephony.supervisors.assign_unassign_agents <wxc_sdk.telephony.supervisor.SupervisorApi.assign_unassign_agents>`
         Assign or Unassign Agents to Supervisor
    * - :meth:`api.telephony.supervisors.available_agents <wxc_sdk.telephony.supervisor.SupervisorApi.available_agents>`

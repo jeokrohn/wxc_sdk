@@ -386,7 +386,7 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
     def list(self, obj_id: str, org_id: str = None, schedule_type: ScheduleType = None,
              name: str = None, **params) -> Generator[Schedule, None, None]:
         """
-        List of Schedules for a Person or location
+        List of schedules for a person or location
 
         List schedules for a person or location in an organization.
 
@@ -421,9 +421,9 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
     def details(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
                 org_id: str = None) -> Schedule:
         """
-        Get Details for a Schedule
+        Get details for a schedule
 
-        Retrieve Schedule details.
+        Retrieve schedule details.
 
         A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
         example auto attendants, can perform a specific action.
@@ -437,7 +437,7 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
             businessHours - Business hours schedule type.
             holidays - Holidays schedule type.
         :type schedule_type: ScheduleTypeOrStr
-        :param schedule_id: Retrieve the schedule with the matching ID.
+        :param schedule_id: Retrieve the schedule with the matching id.
         :type schedule_id: str
         :param org_id: Retrieve schedule details from this organization.
         :type org_id: str
@@ -451,9 +451,9 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
 
     def create(self, obj_id: str, schedule: Schedule, org_id: str = None) -> str:
         """
-        Create a Schedule
+        Create a schedule
 
-        Create new Schedule for the given location.
+        Create new schedule for the given location or user
 
         A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
         example auto attendants, can perform a specific action.
@@ -466,7 +466,7 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         :type schedule: Schedule
         :param org_id: Create the schedule for this organization.
         :type org_id: str
-        :return: ID of the newly created schedule.
+        :return: id of the newly created schedule.
         :rtype: str
         """
         schedule_data = schedule.create_update()
@@ -479,18 +479,18 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
     def update(self, obj_id: str, schedule: Schedule, schedule_type: ScheduleTypeOrStr = None,
                schedule_id: str = None, org_id: str = None) -> str:
         """
-        Update a Schedule
+        Update a schedule
 
-        Update the designated Schedule.
+        Update the designated schedule.
 
         A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
         example auto attendants, can perform a specific action.
 
         Updating a schedule requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
 
-        NOTE: The Schedule ID will change upon modification of the Schedule name
+        NOTE: The schedule id will change upon modification of the Schedule name
 
-        :param obj_id: Location or user for  which this schedule exists
+        :param obj_id: Location or user for which this schedule exists
         :type obj_id: str
         :param schedule: data for the update
         :type schedule: Schedule
@@ -498,7 +498,7 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
             businessHours - Business hours schedule type.
             holidays - Holidays schedule type.
         :type schedule_type: ScheduleTypeOrStr
-        :param schedule_id: Update schedule with the matching ID. Default: schedule_id from schedule
+        :param schedule_id: Update schedule with the matching id. Default: schedule_id from schedule
         :type schedule_id: str
         :param org_id: Update schedule from this organization.
         :type org_id: str
@@ -515,9 +515,9 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
     def delete_schedule(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
                         org_id: str = None):
         """
-        Delete a Schedule
+        Delete a schedule
 
-        Delete the designated Schedule.
+        Delete the designated schedule.
 
         A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
         example auto attendants, can perform a specific action.
@@ -530,7 +530,7 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
             businessHours - Business hours schedule type.
             holidays - Holidays schedule type.
         :type schedule_type: ScheduleTypeOrStr
-        :param schedule_id: Delete the schedule with the matching ID.
+        :param schedule_id: Delete the schedule with the matching id.
         :type schedule_id: str
         :param org_id: Retrieve schedule details from this organization.
         :type org_id: str
@@ -543,9 +543,9 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
     def event_details(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
                       event_id: str, org_id: str = None) -> Event:
         """
-        Get Details for a Schedule Event
+        Get details for a schedule event
 
-        Retrieve Schedule Event details.
+        Retrieve schedule event details.
 
         A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
         example auto attendants, can perform a specific action.
@@ -559,9 +559,9 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
             businessHours - Business hours schedule type.
             holidays - Holidays schedule type.
         :type schedule_type: ScheduleTypeOrStr
-        :param schedule_id: Retrieve schedule event details for schedule with the matching ID.
+        :param schedule_id: Retrieve schedule event details for schedule with the matching id.
         :type schedule_id: str
-        :param event_id: Retrieve the schedule event with the matching schedule event ID.
+        :param event_id: Retrieve the schedule event with the matching schedule event id.
         :type event_id: str
         :param org_id: Retrieve schedule event details from this organization.
         :type org_id: str
@@ -577,9 +577,9 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
     def event_create(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
                      event: Event, org_id: str = None) -> str:
         """
-        Create a Schedule Event
+        Create a schedule event
 
-        Create new Event for the given location or user Schedule.
+        Create new event for the given location or user schedule.
 
         A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
         example auto attendants, can perform a specific action.
@@ -593,7 +593,7 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
             businessHours - Business hours schedule type.
             holidays - Holidays schedule type.
         :type schedule_type: ScheduleTypeOrStr
-        :param schedule_id: Create event for a given schedule ID.
+        :param schedule_id: Create event for a given schedule id.
         :type schedule_id: str
         :param event: event data
         :type event: Event
@@ -612,9 +612,9 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
     def event_update(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
                      event: Event, event_id: str = None, org_id: str = None) -> str:
         """
-        Update a Schedule Event
+        Update a schedule event
 
-        Update the designated Schedule Event.
+        Update the designated schedule event.
 
         A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
         example auto attendants, can perform a specific action.
@@ -622,7 +622,7 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         Updating a schedule event requires a full administrator auth token with a scope of
         spark-admin:telephony_config_write.
 
-        NOTE: The Schedule Event ID will change upon modification of the Schedule event name.
+        NOTE: The schedule event id will change upon modification of the schedule event name.
 
         :param obj_id: Location or user for which this schedule event exists.
         :type obj_id: str
@@ -630,11 +630,11 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
             businessHours - Business hours schedule type.
             holidays - Holidays schedule type.
         :type schedule_type: ScheduleTypeOrStr
-        :param schedule_id: Update schedule event with the matching schedule ID.
+        :param schedule_id: Update schedule event with the matching schedule id.
         :type schedule_id: str
         :param event: update settings
         :type event: Event
-        :param event_id: Update the schedule event with the matching schedule event ID. Default: event id from event
+        :param event_id: Update the schedule event with the matching schedule event id. Default: event id from event
         :type event_id: str
         :param org_id: Update schedule from this organization.
         :type org_id: str
@@ -651,9 +651,9 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
     def event_delete(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
                      event_id: str, org_id: str = None):
         """
-        Delete a Schedule Event
+        Delete a schedule event
 
-        Delete the designated Schedule Event.
+        Delete the designated schedule event.
 
         A time schedule establishes a set of times during the day or holidays in the year in which a feature, for
         example auto attendants, can perform a specific action.
@@ -667,9 +667,9 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
             businessHours - Business hours schedule type.
             holidays - Holidays schedule type.
         :type schedule_type: ScheduleTypeOrStr
-        :param schedule_id: Delete schedule event with the matching schedule ID.
+        :param schedule_id: Delete schedule event with the matching schedule id.
         :type schedule_id: str
-        :param event_id: Delete the schedule event with the matching schedule event ID. Default: event id from event
+        :param event_id: Delete the schedule event with the matching schedule event id. Default: event id from event
         :type event_id: str
         :param org_id: Delete schedule from this organization.
         :type org_id: str
