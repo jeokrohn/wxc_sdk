@@ -1171,8 +1171,6 @@ The method name is a link to the method documentation.
         Get a Location Emergency callback number
    * - :meth:`api.telephony.location.receptionist_contact_directory_details <wxc_sdk.telephony.location.TelephonyLocationApi.receptionist_contact_directory_details>`
         Get details for a Receptionist Contact Directory
-   * - :meth:`api.telephony.location.single_number_reach_primary_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.single_number_reach_primary_available_phone_numbers>`
-        Get Single Number Reach Primary Available Phone Numbers
    * - :meth:`api.telephony.location.update <wxc_sdk.telephony.location.TelephonyLocationApi.update>`
         Update Location Webex Calling Details
    * - :meth:`api.telephony.location.update_ecbn <wxc_sdk.telephony.location.TelephonyLocationApi.update_ecbn>`
@@ -1269,8 +1267,6 @@ The method name is a link to the method documentation.
         Get a Location Emergency callback number
    * - :meth:`api.telephony.locations.receptionist_contact_directory_details <wxc_sdk.telephony.location.TelephonyLocationApi.receptionist_contact_directory_details>`
         Get details for a Receptionist Contact Directory
-   * - :meth:`api.telephony.locations.single_number_reach_primary_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.single_number_reach_primary_available_phone_numbers>`
-        Get Single Number Reach Primary Available Phone Numbers
    * - :meth:`api.telephony.locations.update <wxc_sdk.telephony.location.TelephonyLocationApi.update>`
         Update Location Webex Calling Details
    * - :meth:`api.telephony.locations.update_ecbn <wxc_sdk.telephony.location.TelephonyLocationApi.update_ecbn>`
