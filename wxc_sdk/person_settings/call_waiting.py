@@ -12,7 +12,7 @@ class CallWaitingApi(PersonSettingsApiChild):
     """
     API for person's call waiting settings
 
-    Also used for virtual lines, worekspaces
+    Also used for virtual lines, workspaces
     """
 
     feature = 'callWaiting'
