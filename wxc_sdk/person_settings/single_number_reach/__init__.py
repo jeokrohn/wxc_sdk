@@ -22,7 +22,7 @@ class SingleNumberReachNumber(ApiModel):
     #: If enabled, the call recipient will be prompted to press a key before being connected.
     answer_confirmation_enabled: Optional[bool] = None
 
-    def create_update(self)->dict:
+    def create_update(self) -> dict:
         """
 
         :meta private:
@@ -31,8 +31,6 @@ class SingleNumberReachNumber(ApiModel):
                                by_alias=True,
                                exclude_unset=True,
                                exclude={'id'})
-
-
 
 
 class SingleNumberReach(ApiModel):
@@ -143,7 +141,7 @@ class SingleNumberReachApi(ApiChild, base='telephony/config'):
         url = self.ep(f'people/{person_id}/singleNumberReach')
         super().put(url, json=body)
 
-    def create_snr(self, person_id: str, settings:SingleNumberReachNumber) -> str:
+    def create_snr(self, person_id: str, settings: SingleNumberReachNumber) -> str:
         """
         Create Single Number Reach For a Person
 
@@ -195,7 +193,7 @@ class SingleNumberReachApi(ApiChild, base='telephony/config'):
         url = self.ep(f'people/{person_id}/singleNumberReach/numbers/{id}')
         super().delete(url, params=params)
 
-    def update_snr(self, person_id: str, settings: SingleNumberReachNumber)->str:
+    def update_snr(self, person_id: str, settings: SingleNumberReachNumber) -> str:
         """
         Update Single number reach settings for a number.
 
