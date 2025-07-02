@@ -1744,7 +1744,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.voiceportal.passcode_rules <wxc_sdk.telephony.voiceportal.VoicePortalApi.passcode_rules>`
         Get VoicePortal Passcode Rule
    * - :meth:`api.telephony.voiceportal.read <wxc_sdk.telephony.voiceportal.VoicePortalApi.read>`
-        :param location_id: Location to which the voice portal belongs
+        Get VoicePortal
    * - :meth:`api.telephony.voiceportal.update <wxc_sdk.telephony.voiceportal.VoicePortalApi.update>`
         Update VoicePortal
    * - :meth:`api.webhook.create <wxc_sdk.webhook.WebhookApi.create>`

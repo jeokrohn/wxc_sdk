@@ -110,14 +110,14 @@ class VoicemailGroupDetail(ApiModel):
                                     transfer_to_number=VoicemailTransferToNumber(enabled=False),
                                     email_copy_of_message=VoicemailCopyOfMessage(enabled=False))
 
-    def json_for_create(self) -> str:
-        return self.model_dump_json(exclude_none=True,
+    def for_create(self) -> dict:
+        return self.model_dump(mode='json', exclude_unset=True,
                                     include={'name', 'phone_number', 'extension', 'first_name', 'last_name', 'passcode',
                                              'language_code', 'message_storage', 'notifications', 'fax_message',
                                              'transfer_to_number', 'email_copy_of_message'})
 
-    def json_for_update(self) -> str:
-        return self.model_dump_json(exclude_none=True,
+    def for_update(self) -> dict:
+        return self.model_dump(mode='json', exclude_unset=True,
                                     include={'name', 'phone_number', 'extension', 'first_name', 'last_name', 'enabled',
                                              'passcode',
                                              'language_code', 'greeting', 'greeting_description', 'message_storage',
@@ -211,8 +211,8 @@ class VoicemailGroupsApi(ApiChild, base='telephony/config/voicemailGroups'):
         """
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id, voicemail_group_id)
-        body = settings.json_for_update()
-        self.put(url=url, data=body, params=params)
+        body = settings.for_update()
+        self.put(url=url, json=body, params=params)
 
     def create(self, location_id: str, settings: VoicemailGroupDetail, org_id: str = None) -> str:
         """
@@ -243,10 +243,10 @@ class VoicemailGroupsApi(ApiChild, base='telephony/config/voicemailGroups'):
         :return: UUID of the newly created voice mail group.
         :rtype: str
         """
-        body = settings.json_for_create()
+        body = settings.for_create()
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id)
-        data = self.post(url=url, data=body, params=params)
+        data = self.post(url=url, json=body, params=params)
         return data['id']
 
     def delete(self, location_id: str, voicemail_group_id: str, org_id: str = None):

@@ -28436,6 +28436,15 @@ class AsVoicePortalApi(AsApiChild, base='telephony/config/locations'):
 
     async def read(self, location_id: str, org_id: str = None) -> VoicePortalSettings:
         """
+        Get VoicePortal
+
+        Retrieve Voice portal information for the location.
+
+        Voice portals provide an interactive voice response (IVR)
+        system so administrators can manage auto attendant announcements.
+
+        Retrieving voice portal information for an organization requires a full read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param location_id: Location to which the voice portal belongs.
         :type location_id: str
@@ -28477,29 +28486,6 @@ class AsVoicePortalApi(AsApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id)
         await self.put(url, params=params, json=data)
-
-    async def passcode_rules(self, location_id: str, org_id: str = None) -> PasscodeRules:
-        """
-        Get VoicePortal Passcode Rule
-
-        Retrieve the voice portal passcode rule for a location.
-
-        Voice portals provide an interactive voice response (IVR) system so administrators can manage auto attendant
-        announcements
-
-        Retrieving the voice portal passcode rule requires a full read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
-
-        :param location_id: Retrieve voice portal passcode rules for this location.
-        :type location_id: str
-        :param org_id: Retrieve voice portal passcode rules for this organization.
-        :type org_id: str
-        :return: passcode rules
-        :rtype: PasscodeRules
-        """
-        params = org_id and {'orgId': org_id} or None
-        url = self._endpoint(location_id=location_id, path='passcodeRules')
-        return PasscodeRules.model_validate(await self.get(url, params=params))
 
     def available_phone_numbers_gen(self, location_id: str, phone_number: list[str] = None,
                                 org_id: str = None,
@@ -28568,6 +28554,29 @@ class AsVoicePortalApi(AsApiChild, base='telephony/config/locations'):
             params['phoneNumber'] = ','.join(phone_number)
         url = self._endpoint(location_id=location_id, path='availableNumbers')
         return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
+
+    async def passcode_rules(self, location_id: str, org_id: str = None) -> PasscodeRules:
+        """
+        Get VoicePortal Passcode Rule
+
+        Retrieve the voice portal passcode rule for a location.
+
+        Voice portals provide an interactive voice response (IVR) system so administrators can manage auto attendant
+        announcements
+
+        Retrieving the voice portal passcode rule requires a full read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param location_id: Retrieve voice portal passcode rules for this location.
+        :type location_id: str
+        :param org_id: Retrieve voice portal passcode rules for this organization.
+        :type org_id: str
+        :return: passcode rules
+        :rtype: PasscodeRules
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self._endpoint(location_id=location_id, path='passcodeRules')
+        return PasscodeRules.model_validate(await self.get(url, params=params))
 
 
 class AsVoicemailGroupsApi(AsApiChild, base='telephony/config/voicemailGroups'):
@@ -28681,8 +28690,8 @@ class AsVoicemailGroupsApi(AsApiChild, base='telephony/config/voicemailGroups'):
         """
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id, voicemail_group_id)
-        body = settings.json_for_update()
-        await self.put(url=url, data=body, params=params)
+        body = settings.for_update()
+        await self.put(url=url, json=body, params=params)
 
     async def create(self, location_id: str, settings: VoicemailGroupDetail, org_id: str = None) -> str:
         """
@@ -28713,10 +28722,10 @@ class AsVoicemailGroupsApi(AsApiChild, base='telephony/config/voicemailGroups'):
         :return: UUID of the newly created voice mail group.
         :rtype: str
         """
-        body = settings.json_for_create()
+        body = settings.for_create()
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id)
-        data = await self.post(url=url, data=body, params=params)
+        data = await self.post(url=url, json=body, params=params)
         return data['id']
 
     async def delete(self, location_id: str, voicemail_group_id: str, org_id: str = None):

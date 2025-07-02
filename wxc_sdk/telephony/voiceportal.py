@@ -98,6 +98,15 @@ class VoicePortalApi(ApiChild, base='telephony/config/locations'):
 
     def read(self, location_id: str, org_id: str = None) -> VoicePortalSettings:
         """
+        Get VoicePortal
+
+        Retrieve Voice portal information for the location.
+
+        Voice portals provide an interactive voice response (IVR)
+        system so administrators can manage auto attendant announcements.
+
+        Retrieving voice portal information for an organization requires a full read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param location_id: Location to which the voice portal belongs.
         :type location_id: str
@@ -140,29 +149,6 @@ class VoicePortalApi(ApiChild, base='telephony/config/locations'):
         url = self._endpoint(location_id=location_id)
         self.put(url, params=params, json=data)
 
-    def passcode_rules(self, location_id: str, org_id: str = None) -> PasscodeRules:
-        """
-        Get VoicePortal Passcode Rule
-
-        Retrieve the voice portal passcode rule for a location.
-
-        Voice portals provide an interactive voice response (IVR) system so administrators can manage auto attendant
-        announcements
-
-        Retrieving the voice portal passcode rule requires a full read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
-
-        :param location_id: Retrieve voice portal passcode rules for this location.
-        :type location_id: str
-        :param org_id: Retrieve voice portal passcode rules for this organization.
-        :type org_id: str
-        :return: passcode rules
-        :rtype: PasscodeRules
-        """
-        params = org_id and {'orgId': org_id} or None
-        url = self._endpoint(location_id=location_id, path='passcodeRules')
-        return PasscodeRules.model_validate(self.get(url, params=params))
-
     def available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
                                 org_id: str = None,
                                 **params) -> Generator[AvailableNumber, None, None]:
@@ -196,3 +182,26 @@ class VoicePortalApi(ApiChild, base='telephony/config/locations'):
             params['phoneNumber'] = ','.join(phone_number)
         url = self._endpoint(location_id=location_id, path='availableNumbers')
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    def passcode_rules(self, location_id: str, org_id: str = None) -> PasscodeRules:
+        """
+        Get VoicePortal Passcode Rule
+
+        Retrieve the voice portal passcode rule for a location.
+
+        Voice portals provide an interactive voice response (IVR) system so administrators can manage auto attendant
+        announcements
+
+        Retrieving the voice portal passcode rule requires a full read-only administrator auth token with a scope
+        of spark-admin:telephony_config_read.
+
+        :param location_id: Retrieve voice portal passcode rules for this location.
+        :type location_id: str
+        :param org_id: Retrieve voice portal passcode rules for this organization.
+        :type org_id: str
+        :return: passcode rules
+        :rtype: PasscodeRules
+        """
+        params = org_id and {'orgId': org_id} or None
+        url = self._endpoint(location_id=location_id, path='passcodeRules')
+        return PasscodeRules.model_validate(self.get(url, params=params))
