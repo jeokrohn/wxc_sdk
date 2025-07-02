@@ -22,6 +22,7 @@ Subpackages
    wxc_sdk.telephony.devices
    wxc_sdk.telephony.emergency_services
    wxc_sdk.telephony.guest_calling
+   wxc_sdk.telephony.hotdesk
    wxc_sdk.telephony.hotdesking_voiceportal
    wxc_sdk.telephony.jobs
    wxc_sdk.telephony.location

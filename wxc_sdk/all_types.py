@@ -184,6 +184,7 @@ from wxc_sdk.telephony.forwarding import CallForwarding, CallForwardingNumber, C
     ModeDefaultForwardToSelection, ModeForward, ModeForwardTo, ModeType
 from wxc_sdk.telephony.guest_calling import DestinationMember, GuestCallingSettings
 from wxc_sdk.telephony.hg_and_cq import Agent, AlternateNumberSettings, CallingLineIdPolicy, HGandCQ, Policy
+from wxc_sdk.telephony.hotdesk import HotDesk
 from wxc_sdk.telephony.hotdesking_voiceportal import HotDeskingVoicePortalSetting
 from wxc_sdk.telephony.huntgroup import BusinessContinuity, HGCallPolicies, HuntGroup, NoAnswer
 from wxc_sdk.telephony.jobs import ApplyLineKeyTemplateJobDetails, CallRecordingJobCounts, CallRecordingJobStatus, \
@@ -303,8 +304,8 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'GetMeetingSurveyResponse', 'GetRoomMeetingDetailsResponse', 'Greeting', 'Group', 'GroupMember',
            'GroupMemberObject', 'GroupMemberResponse', 'GroupMeta', 'Guest', 'GuestCallingSettings', 'HGCallPolicies',
            'HGandCQ', 'Handset', 'HistoryType', 'HolidayService', 'HostedFeatureDestination', 'HostedUserDestination',
-           'HotDeskingVoicePortalSetting', 'HotdeskingStatus', 'Hoteling', 'HttpProxy', 'HttpProxyMode', 'HuntGroup',
-           'IdAndAction', 'IdAndName', 'IdOnly', 'InProgressDevice', 'Incident', 'IncidentUpdate',
+           'HotDesk', 'HotDeskingVoicePortalSetting', 'HotdeskingStatus', 'Hoteling', 'HttpProxy', 'HttpProxyMode',
+           'HuntGroup', 'IdAndAction', 'IdAndName', 'IdOnly', 'InProgressDevice', 'Incident', 'IncidentUpdate',
            'IncomingPermissions', 'InitiateMoveNumberJobsBody', 'InputMode', 'InterceptAnnouncements',
            'InterceptNumber', 'InterceptSetting', 'InterceptSettingIncoming', 'InterceptSettingOutgoing',
            'InterceptTypeIncoming', 'InterceptTypeOutgoing', 'InternalDialing',

@@ -5,6 +5,7 @@ Release history
 - feat: new endpoint: :meth:`api.telephony.location.single_number_reach_primary_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.single_number_reach_primary_available_phone_numbers>`
 - feat: new API :attr:`api.telephony.cx_essentials.wrapup_reasons <wxc_sdk.telephony.cx_essentials.CustomerExperienceEssentialsApi.wrapup_reasons>`
 - feat: new API :attr:`api.person_settings.single_number_reach <wxc_sdk.person_settings.PersonSettingsApi.single_number_reach>`
+- feat: new API :attr:`api.telephony.hotdesk <wxc_sdk.telephony.TelephonyApi.hotdesk>`
 
 1.25.0
 ------

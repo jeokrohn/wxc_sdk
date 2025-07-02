@@ -1031,6 +1031,10 @@ The method name is a link to the method documentation.
         Read the Click-to-call Settings
    * - :meth:`api.telephony.guest_calling.update <wxc_sdk.telephony.guest_calling.GuestCallingApi.update>`
         Update the Click-to-call Settings
+   * - :meth:`api.telephony.hotdesk.delete_session <wxc_sdk.telephony.hotdesk.HotDeskApi.delete_session>`
+        Delete Session
+   * - :meth:`api.telephony.hotdesk.list_sessions <wxc_sdk.telephony.hotdesk.HotDeskApi.list_sessions>`
+        List Sessions
    * - :meth:`api.telephony.hotdesking_voiceportal.location_get <wxc_sdk.telephony.hotdesking_voiceportal.HotDeskingSigninViaVoicePortalApi.location_get>`
         Voice Portal Hot desking sign in details for a location
    * - :meth:`api.telephony.hotdesking_voiceportal.location_update <wxc_sdk.telephony.hotdesking_voiceportal.HotDeskingSigninViaVoicePortalApi.location_update>`

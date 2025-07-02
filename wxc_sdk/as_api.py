@@ -41,8 +41,8 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsDECTDevicesApi', 'AsDetailedCDRApi', 'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi',
            'AsDevicesApi', 'AsDialPlanApi', 'AsDigitPatternsApi', 'AsDndApi', 'AsECBNApi', 'AsEventsApi',
            'AsExecAssistantApi', 'AsFeatureSelector', 'AsForwardingApi', 'AsGroupsApi', 'AsGuestCallingApi',
-           'AsGuestManagementApi', 'AsHotDeskingSigninViaVoicePortalApi', 'AsHotelingApi', 'AsHuntGroupApi',
-           'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi',
+           'AsGuestManagementApi', 'AsHotDeskApi', 'AsHotDeskingSigninViaVoicePortalApi', 'AsHotelingApi',
+           'AsHuntGroupApi', 'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi',
            'AsLocationAccessCodesApi', 'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi',
            'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMSTeamsSettingApi',
            'AsManageNumbersJobsApi', 'AsMePersonalAssistantApi', 'AsMeSettingsApi', 'AsMeetingChatsApi',
@@ -19531,6 +19531,59 @@ class AsGuestCallingApi(AsApiChild, base='telephony/config/guestCalling'):
                                               params=params)]
 
 
+class AsHotDeskApi(AsApiChild, base='hotdesk/sessions'):
+    """
+    Hot Desk
+
+    """
+
+    async def list_sessions(self, person_id: str = None, workspace_id: str = None, org_id: str = None) -> list[HotDesk]:
+        """
+        List Sessions
+
+        List hot desk sessions.
+
+        Use query parameters to filter the response.
+        The `orgId` parameter is for use by partner administrators acting on a managed organization.
+        The `personId` and `workspaceId` parameters are optional and are used to filter the response to only include
+        sessions for a specific person or workspace.
+        When used together they are used as an AND filter.
+
+        :param person_id: List sessions for this person.
+        :type person_id: str
+        :param workspace_id: List sessions for this workspace.
+        :type workspace_id: str
+        :param org_id: List sessions in this organization. Only admin users of another organization (such as partners)
+            may use this parameter.
+        :type org_id: str
+        :rtype: list[HotDesk]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if person_id is not None:
+            params['personId'] = person_id
+        if workspace_id is not None:
+            params['workspaceId'] = workspace_id
+        url = self.ep()
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[HotDesk]).validate_python(data['items'])
+        return r
+
+    async def delete_session(self, session_id: str):
+        """
+        Delete Session
+
+        Delete a hot desk session.
+
+        :param session_id: The unique identifier for the hot desk session.
+        :type session_id: str
+        :rtype: None
+        """
+        url = self.ep(f'{session_id}')
+        await super().delete(url)
+
+
 class AsHotDeskingSigninViaVoicePortalApi(AsApiChild, base='telephony/config'):
     """
     Features: Hot Desking Sign-in via Voice Portal
@@ -28962,6 +29015,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     #: emergency services
     emergency_services: AsOrgEmergencyServicesApi
     guest_calling: AsGuestCallingApi
+    hotdesk: AsHotDeskApi
     hotdesking_voiceportal: AsHotDeskingSigninViaVoicePortalApi
     huntgroup: AsHuntGroupApi
     jobs: AsJobsApi
@@ -29010,6 +29064,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         self.devices = AsTelephonyDevicesApi(session=session)
         self.emergency_services = AsOrgEmergencyServicesApi(session=session)
         self.guest_calling = AsGuestCallingApi(session=session)
+        self.hotdesk = AsHotDeskApi(session=session)
         self.hotdesking_voiceportal = AsHotDeskingSigninViaVoicePortalApi(session=session)
         self.huntgroup = AsHuntGroupApi(session=session)
         self.jobs = AsJobsApi(session=session)
