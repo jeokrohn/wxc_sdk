@@ -246,6 +246,7 @@ class Workspace(ApiModel):
     def create(*, display_name: str) -> 'Workspace':
         """
         minimal settings for a :meth:`WorkspacesApi.create` call
+
         :return: :class:`Workspace`
         """
         return Workspace(display_name=display_name)
