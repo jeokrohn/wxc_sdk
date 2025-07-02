@@ -38,6 +38,7 @@ from .receptionist import ReceptionistApi
 from .selective_accept import SelectiveAcceptApi
 from .selective_forward import SelectiveForwardApi
 from .selective_reject import SelectiveRejectApi
+from .single_number_reach import SingleNumberReachApi
 from .voicemail import VoicemailApi
 from ..api_child import ApiChild
 from ..base import ApiModel
@@ -193,6 +194,8 @@ class PersonSettingsApi(ApiChild, base='people'):
     selective_forward: SelectiveForwardApi
     #: selective reject settings
     selective_reject: SelectiveRejectApi
+    #: single nunber reach settings
+    single_number_reach: SingleNumberReachApi
 
     #: Voicemail Settings for a Person
     voicemail: VoicemailApi
@@ -235,7 +238,7 @@ class PersonSettingsApi(ApiChild, base='people'):
         self.selective_accept = SelectiveAcceptApi(session=session, selector=ApiSelector.person)
         self.selective_forward = SelectiveForwardApi(session=session, selector=ApiSelector.person)
         self.selective_reject = SelectiveRejectApi(session=session, selector=ApiSelector.person)
-
+        self.single_number_reach = SingleNumberReachApi(session=session)
         self.voicemail = VoicemailApi(session=session)
 
     # This endpoint is also available in the voicemail API and is only kept here for backward compatibility.

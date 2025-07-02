@@ -1,55 +1,16 @@
 from collections.abc import Generator
-from datetime import datetime
-from json import loads
-from typing import Optional, Union, Any
-
-from dateutil.parser import isoparse
-from pydantic import Field, TypeAdapter
+from typing import Optional
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
-from wxc_sdk.base import SafeEnum as Enum
+from wxc_sdk.base import ApiModel
+from wxc_sdk.person_settings.available_numbers import AvailableNumber
+
+__all__ = ['SingleNumberReachApi', 'SingleNumberReach', 'SingleNumberReachNumber']
 
 
-__all__ = ['FeaturesSingleNumberReachApi', 'GetSingleNumberReachObject', 'STATE',
-           'SingleNumberReachPrimaryAvailableNumberObject', 'TelephonyType']
-
-
-class STATE(str, Enum):
-    #: Phone number is in the active state.
-    active = 'ACTIVE'
-    #: Phone number is in the inactive state.
-    inactive = 'INACTIVE'
-
-
-class TelephonyType(str, Enum):
-    #: The object is a PSTN number.
-    pstn_number = 'PSTN_NUMBER'
-
-
-class SingleNumberReachPrimaryAvailableNumberObject(ApiModel):
-    #: A unique identifier for the PSTN phone number.
-    phone_number: Optional[str] = None
-    #: Phone number's state.
-    state: Optional[STATE] = None
-    #: If `true`, the phone number is used as a location CLID.
-    is_main_number: Optional[bool] = None
-    #: If `true`, the phone number is a toll-free number.
-    toll_free_number: Optional[bool] = None
-    #: The telephony type for the number.
-    telephony_type: Optional[TelephonyType] = None
-    #: If `true`, the phone number is a service number; otherwise, it is a standard number. Service numbers are
-    #: high-utilization or high-concurrency PSTN phone numbers that are neither mobile nor toll-free.
-    is_service_number: Optional[bool] = None
-
-
-class GetSingleNumberReachObject(ApiModel):
+class SingleNumberReachNumber(ApiModel):
     #: A flag to enable or disable single Number Reach phone number.
     enabled: Optional[bool] = None
-    #: Flag to enable alerting single number reach numbers for click to dial calls.
-    alert_all_numbers_for_click_to_dial_calls_enabled: Optional[bool] = None
-    #: Array of single number reach number entries.
-    numbers: Optional[list[str]] = None
     #: ID of Single number reach.
     id: Optional[str] = None
     #: Personal phone number used as single Number Reach.
@@ -58,30 +19,51 @@ class GetSingleNumberReachObject(ApiModel):
     name: Optional[str] = None
     #: If enabled, the call forwarding settings of provided phone Number will not be applied.
     do_not_forward_calls_enabled: Optional[bool] = None
-    #: If enabled, the call recepient will be prompted to press a key before being connected.
+    #: If enabled, the call recipient will be prompted to press a key before being connected.
     answer_confirmation_enabled: Optional[bool] = None
 
+    def create_update(self)->dict:
+        """
 
-class FeaturesSingleNumberReachApi(ApiChild, base='telephony/config'):
+        :meta private:
+        """
+        return self.model_dump(mode='json',
+                               by_alias=True,
+                               exclude_unset=True,
+                               exclude={'id'})
+
+
+
+
+class SingleNumberReach(ApiModel):
+    #: A flag to enable or disable single Number Reach phone number.
+    enabled: Optional[bool] = None
+    #: Flag to enable alerting single number reach numbers for click to dial calls.
+    alert_all_numbers_for_click_to_dial_calls_enabled: Optional[bool] = None
+    #: Array of single number reach number entries.
+    numbers: Optional[list[SingleNumberReachNumber]] = None
+
+
+class SingleNumberReachApi(ApiChild, base='telephony/config'):
     """
     Features: Single Number Reach
-    
+
     Features: Single Number Reach APIs support reading and writing of Webex Calling Single Number Reach settings for a
     specific organization.
-    
+
     Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
     `spark-admin:telephony_config_read`.
-    
+
     Modifying these organization settings requires a full administrator auth token with a scope of
     `spark-admin:telephony_config_write`.
-    
+
     A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
     query parameter.
     """
 
-    def get_single_number_reach_primary_available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
-                                                                org_id: str = None,
-                                                                **params) -> Generator[SingleNumberReachPrimaryAvailableNumberObject, None, None]:
+    def available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
+                                org_id: str = None,
+                                **params) -> Generator[AvailableNumber, None, None]:
         """
         Get Single Number Reach Primary Available Phone Numbers
 
@@ -111,15 +93,16 @@ class FeaturesSingleNumberReachApi(ApiChild, base='telephony/config'):
         if phone_number is not None:
             params['phoneNumber'] = ','.join(phone_number)
         url = self.ep(f'locations/{location_id}/singleNumberReach/availableNumbers')
-        return self.session.follow_pagination(url=url, model=SingleNumberReachPrimaryAvailableNumberObject, item_key='phoneNumbers', params=params)
+        return self.session.follow_pagination(url=url, model=AvailableNumber,
+                                              item_key='phoneNumbers', params=params)
 
-    def get_single_number_reach_settings_for_a_person(self, person_id: str) -> GetSingleNumberReachObject:
+    def read(self, person_id: str) -> SingleNumberReach:
         """
         Get Single Number Reach Settings For A Person
 
         Retrieve Single Number Reach settings for the given person.
 
-        Single number reach allows you to setup your work calls ring any phone number. This means that your office
+        Single number reach allows you to set up your work calls ring any phone number. This means that your office
         phone, mobile phone, or any other designated devices can ring at the same time, ensuring you don't miss
         important calls.
 
@@ -128,19 +111,19 @@ class FeaturesSingleNumberReachApi(ApiChild, base='telephony/config'):
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :rtype: :class:`GetSingleNumberReachObject`
+        :rtype: :class:`SingleNumberReach`
         """
         url = self.ep(f'people/{person_id}/singleNumberReach')
         data = super().get(url)
-        r = GetSingleNumberReachObject.model_validate(data)
+        r = SingleNumberReach.model_validate(data)
         return r
 
-    def update_single_number_reach_settings_for_a_person(self, person_id: str,
-                                                         alert_all_numbers_for_click_to_dial_calls_enabled: bool = None):
+    def update(self, person_id: str,
+               alert_all_numbers_for_click_to_dial_calls_enabled: bool = None):
         """
         Update Single number reach settings for a person.
 
-        Single number reach allows you to setup your work calls ring any phone number. This means that your office
+        Single number reach allows you to set up your work calls ring any phone number. This means that your office
         phone, mobile phone, or any other designated devices can ring at the same time, ensuring you don't miss
         important calls.
 
@@ -160,15 +143,13 @@ class FeaturesSingleNumberReachApi(ApiChild, base='telephony/config'):
         url = self.ep(f'people/{person_id}/singleNumberReach')
         super().put(url, json=body)
 
-    def create_single_number_reach_for_a_person(self, person_id: str, phone_number: str, enabled: bool, name: str,
-                                                do_not_forward_calls_enabled: bool = None,
-                                                answer_confirmation_enabled: bool = None) -> str:
+    def create_snr(self, person_id: str, settings:SingleNumberReachNumber) -> str:
         """
         Create Single Number Reach For a Person
 
         Create a single number reach for a person in an organization.
 
-        Single number reach allows you to setup your work calls ring any phone number. This means that your office
+        Single number reach allows you to set up your work calls ring any phone number. This means that your office
         phone, mobile phone, or any other designated devices can ring at the same time, ensuring you don't miss
         important calls.
 
@@ -177,40 +158,23 @@ class FeaturesSingleNumberReachApi(ApiChild, base='telephony/config'):
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param phone_number: Personal phone number used as single Number Reach.
-        :type phone_number: str
-        :param enabled: A flag to enable or disable single Number Reach.
-        :type enabled: bool
-        :param name: Name of the single number reach phone number entry.
-        :type name: str
-        :param do_not_forward_calls_enabled: If enabled, the call forwarding settings of provided phone Number will not
-            be applied.
-        :type do_not_forward_calls_enabled: bool
-        :param answer_confirmation_enabled: If enabled, the call recepient will be prompted to press a key before being
-            connected.
-        :type answer_confirmation_enabled: bool
+        :param settings: Settings for new SNR number
+        :type settings: SingleNumberReachNumber
         :rtype: str
         """
-        body = dict()
-        body['phoneNumber'] = phone_number
-        body['enabled'] = enabled
-        body['name'] = name
-        if do_not_forward_calls_enabled is not None:
-            body['doNotForwardCallsEnabled'] = do_not_forward_calls_enabled
-        if answer_confirmation_enabled is not None:
-            body['answerConfirmationEnabled'] = answer_confirmation_enabled
+        body = settings.create_update()
         url = self.ep(f'people/{person_id}/singleNumberReach/numbers')
         data = super().post(url, json=body)
         r = data['id']
         return r
 
-    def delete_a_single_number_reach_number(self, person_id: str, id: str, org_id: str = None):
+    def delete_snr(self, person_id: str, id: str, org_id: str = None):
         """
         Delete A Single Number Reach Number
 
         Delete Single number reach number for a person.
 
-        Single number reach allows you to setup your work calls ring any phone number. This means that your office
+        Single number reach allows you to setu p your work calls ring any phone number. This means that your office
         phone, mobile phone, or any other designated devices can ring at the same time, ensuring you don't miss
         important calls.
 
@@ -231,14 +195,11 @@ class FeaturesSingleNumberReachApi(ApiChild, base='telephony/config'):
         url = self.ep(f'people/{person_id}/singleNumberReach/numbers/{id}')
         super().delete(url, params=params)
 
-    def update_single_number_reach_settings_for_a_number(self, person_id: str, id: str, phone_number: str,
-                                                         enabled: bool, name: str,
-                                                         do_not_forward_calls_enabled: bool = None,
-                                                         answer_confirmation_enabled: bool = None):
+    def update_snr(self, person_id: str, settings: SingleNumberReachNumber)->str:
         """
         Update Single number reach settings for a number.
 
-        Single number reach allows you to setup your work calls ring any phone number. This means that your office
+        Single number reach allows you to set up your work calls ring any phone number. This means that your office
         phone, mobile phone, or any other designated devices can ring at the same time, ensuring you don't miss
         important calls.
 
@@ -247,29 +208,11 @@ class FeaturesSingleNumberReachApi(ApiChild, base='telephony/config'):
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param id: Unique identifier for single number reach.
-        :type id: str
-        :param phone_number: Personal phone number used as single Number Reach.
-        :type phone_number: str
-        :param enabled: A flag to enable or disable single Number Reach phone number.
-        :type enabled: bool
-        :param name: Name of the single number reach phone number entry.
-        :type name: str
-        :param do_not_forward_calls_enabled: If enabled, the call forwarding settings of provided phone Number will not
-            be applied.
-        :type do_not_forward_calls_enabled: bool
-        :param answer_confirmation_enabled: If enabled, the call recepient will be prompted to press a key before being
-            connected.
-        :type answer_confirmation_enabled: bool
-        :rtype: None
+        :param settings: Settings for new SNR number
+        :type settings: SingleNumberReachNumber
+        :rtype: str
         """
-        body = dict()
-        body['phoneNumber'] = phone_number
-        body['enabled'] = enabled
-        body['name'] = name
-        if do_not_forward_calls_enabled is not None:
-            body['doNotForwardCallsEnabled'] = do_not_forward_calls_enabled
-        if answer_confirmation_enabled is not None:
-            body['answerConfirmationEnabled'] = answer_confirmation_enabled
-        url = self.ep(f'people/{person_id}/singleNumberReach/numbers/{id}')
-        super().put(url, json=body)
+        body = settings.create_update()
+        url = self.ep(f'people/{person_id}/singleNumberReach/numbers/{settings.id}')
+        data = super().put(url, json=body)
+        return data['id']

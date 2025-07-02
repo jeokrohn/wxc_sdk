@@ -6,6 +6,14 @@ wxc\_sdk.person\_settings package
    :undoc-members:
    :show-inheritance:
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   wxc_sdk.person_settings.single_number_reach
+
 Submodules
 ----------
 

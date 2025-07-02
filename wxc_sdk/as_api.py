@@ -59,14 +59,15 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRolesApi',
            'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2GroupsApi',
            'AsSCIM2UsersApi', 'AsScheduleApi', 'AsScimApiChild', 'AsScimV2Api', 'AsSelectiveAcceptApi',
-           'AsSelectiveForwardApi', 'AsSelectiveRejectApi', 'AsSequentialRingApi', 'AsSimRingApi', 'AsStatusAPI',
-           'AsSupervisorApi', 'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi',
-           'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTranslationPatternsApi', 'AsTrunkApi',
-           'AsUpdateRoutingPrefixJobsApi', 'AsVirtualExtensionsApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi',
-           'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi',
-           'AsWebhookApi', 'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi',
-           'AsWorkspaceNumbersApi', 'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi',
-           'AsWrapupReasonApi', 'AsXApi']
+           'AsSelectiveForwardApi', 'AsSelectiveRejectApi', 'AsSequentialRingApi', 'AsSimRingApi',
+           'AsSingleNumberReachApi', 'AsStatusAPI', 'AsSupervisorApi', 'AsTeamMembershipsApi', 'AsTeamsApi',
+           'AsTelephonyApi', 'AsTelephonyDevicesApi', 'AsTelephonyLocationApi', 'AsTransferNumbersApi',
+           'AsTranslationPatternsApi', 'AsTrunkApi', 'AsUpdateRoutingPrefixJobsApi', 'AsVirtualExtensionsApi',
+           'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi',
+           'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi',
+           'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
+           'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi', 'AsWrapupReasonApi',
+           'AsXApi']
 
 
 @dataclass(init=False, repr=False)
@@ -10926,6 +10927,215 @@ class AsSelectiveRejectApi(AsPersonSettingsApiChild):
         await super().put(url, params=params, json=body)
 
 
+class AsSingleNumberReachApi(AsApiChild, base='telephony/config'):
+    """
+    Features: Single Number Reach
+
+    Features: Single Number Reach APIs support reading and writing of Webex Calling Single Number Reach settings for a
+    specific organization.
+
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+
+    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
+    query parameter.
+    """
+
+    def available_phone_numbers_gen(self, location_id: str, phone_number: list[str] = None,
+                                org_id: str = None,
+                                **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get Single Number Reach Primary Available Phone Numbers
+
+        List the service and standard PSTN numbers that are available to be assigned as the single number reach's
+        primary phone number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`SingleNumberReachPrimaryAvailableNumberObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self.ep(f'locations/{location_id}/singleNumberReach/availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber,
+                                              item_key='phoneNumbers', params=params)
+
+    async def available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
+                                org_id: str = None,
+                                **params) -> List[AvailableNumber]:
+        """
+        Get Single Number Reach Primary Available Phone Numbers
+
+        List the service and standard PSTN numbers that are available to be assigned as the single number reach's
+        primary phone number.
+        These numbers are associated with the location specified in the request URL, can be active or inactive, and are
+        unassigned.
+
+        The available numbers APIs help identify candidate numbers and their owning entities to simplify the assignment
+        or association of these numbers to members or features.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of phone numbers for this location within the given organization. The
+            maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`SingleNumberReachPrimaryAvailableNumberObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        url = self.ep(f'locations/{location_id}/singleNumberReach/availableNumbers')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber,
+                                              item_key='phoneNumbers', params=params)]
+
+    async def read(self, person_id: str) -> SingleNumberReach:
+        """
+        Get Single Number Reach Settings For A Person
+
+        Retrieve Single Number Reach settings for the given person.
+
+        Single number reach allows you to set up your work calls ring any phone number. This means that your office
+        phone, mobile phone, or any other designated devices can ring at the same time, ensuring you don't miss
+        important calls.
+
+        Retrieving Single number reach settings requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :rtype: :class:`SingleNumberReach`
+        """
+        url = self.ep(f'people/{person_id}/singleNumberReach')
+        data = await super().get(url)
+        r = SingleNumberReach.model_validate(data)
+        return r
+
+    async def update(self, person_id: str,
+               alert_all_numbers_for_click_to_dial_calls_enabled: bool = None):
+        """
+        Update Single number reach settings for a person.
+
+        Single number reach allows you to set up your work calls ring any phone number. This means that your office
+        phone, mobile phone, or any other designated devices can ring at the same time, ensuring you don't miss
+        important calls.
+
+        Updating a single number reach settings for a person requires a full administrator or location administrator
+        auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param alert_all_numbers_for_click_to_dial_calls_enabled: Flag to enable alerting single number reach numbers
+            for click to dial calls.
+        :type alert_all_numbers_for_click_to_dial_calls_enabled: bool
+        :rtype: None
+        """
+        body = dict()
+        if alert_all_numbers_for_click_to_dial_calls_enabled is not None:
+            body['alertAllNumbersForClickToDialCallsEnabled'] = alert_all_numbers_for_click_to_dial_calls_enabled
+        url = self.ep(f'people/{person_id}/singleNumberReach')
+        await super().put(url, json=body)
+
+    async def create_snr(self, person_id: str, settings:SingleNumberReachNumber) -> str:
+        """
+        Create Single Number Reach For a Person
+
+        Create a single number reach for a person in an organization.
+
+        Single number reach allows you to set up your work calls ring any phone number. This means that your office
+        phone, mobile phone, or any other designated devices can ring at the same time, ensuring you don't miss
+        important calls.
+
+        Creating a single number reach for a person requires a full administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param settings: Settings for new SNR number
+        :type settings: SingleNumberReachNumber
+        :rtype: str
+        """
+        body = settings.create_update()
+        url = self.ep(f'people/{person_id}/singleNumberReach/numbers')
+        data = await super().post(url, json=body)
+        r = data['id']
+        return r
+
+    async def delete_snr(self, person_id: str, id: str, org_id: str = None):
+        """
+        Delete A Single Number Reach Number
+
+        Delete Single number reach number for a person.
+
+        Single number reach allows you to setu p your work calls ring any phone number. This means that your office
+        phone, mobile phone, or any other designated devices can ring at the same time, ensuring you don't miss
+        important calls.
+
+        Deleting a Single number reach number requires a full administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_write`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param id: Unique identifier for single number reach.
+        :type id: str
+        :param org_id: Unique identifier for the organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'people/{person_id}/singleNumberReach/numbers/{id}')
+        await super().delete(url, params=params)
+
+    async def update_snr(self, person_id: str, settings: SingleNumberReachNumber)->str:
+        """
+        Update Single number reach settings for a number.
+
+        Single number reach allows you to set up your work calls ring any phone number. This means that your office
+        phone, mobile phone, or any other designated devices can ring at the same time, ensuring you don't miss
+        important calls.
+
+        Updating a single number reach settings for a number requires a full administrator or location administrator
+        auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param settings: Settings for new SNR number
+        :type settings: SingleNumberReachNumber
+        :rtype: str
+        """
+        body = settings.create_update()
+        url = self.ep(f'people/{person_id}/singleNumberReach/numbers/{settings.id}')
+        data = await super().put(url, json=body)
+        return data['id']
+
+
 class AsVoicemailApi(AsPersonSettingsApiChild):
     """
     API for person's call voicemail settings. Also used for virtual lines and workspaces
@@ -11186,6 +11396,8 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
     selective_forward: AsSelectiveForwardApi
     #: selective reject settings
     selective_reject: AsSelectiveRejectApi
+    #: single nunber reach settings
+    single_number_reach: AsSingleNumberReachApi
 
     #: Voicemail Settings for a Person
     voicemail: AsVoicemailApi
@@ -11228,7 +11440,7 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
         self.selective_accept = AsSelectiveAcceptApi(session=session, selector=ApiSelector.person)
         self.selective_forward = AsSelectiveForwardApi(session=session, selector=ApiSelector.person)
         self.selective_reject = AsSelectiveRejectApi(session=session, selector=ApiSelector.person)
-
+        self.single_number_reach = AsSingleNumberReachApi(session=session)
         self.voicemail = AsVoicemailApi(session=session)
 
     # This endpoint is also available in the voicemail API and is only kept here for backward compatibility.

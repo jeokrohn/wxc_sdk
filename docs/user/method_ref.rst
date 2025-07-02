@@ -503,6 +503,18 @@ The method name is a link to the method documentation.
         Retrieve Selective Reject Settings for an entity
    * - :meth:`api.person_settings.selective_reject.read_criteria <wxc_sdk.person_settings.selective_reject.SelectiveRejectApi.read_criteria>`
         Retrieve Selective Reject Criteria for an entity
+   * - :meth:`api.person_settings.single_number_reach.available_phone_numbers <wxc_sdk.person_settings.single_number_reach.SingleNumberReachApi.available_phone_numbers>`
+        Get Single Number Reach Primary Available Phone Numbers
+   * - :meth:`api.person_settings.single_number_reach.create_snr <wxc_sdk.person_settings.single_number_reach.SingleNumberReachApi.create_snr>`
+        Create Single Number Reach For a Person
+   * - :meth:`api.person_settings.single_number_reach.delete_snr <wxc_sdk.person_settings.single_number_reach.SingleNumberReachApi.delete_snr>`
+        Delete A Single Number Reach Number
+   * - :meth:`api.person_settings.single_number_reach.read <wxc_sdk.person_settings.single_number_reach.SingleNumberReachApi.read>`
+        Get Single Number Reach Settings For A Person
+   * - :meth:`api.person_settings.single_number_reach.update <wxc_sdk.person_settings.single_number_reach.SingleNumberReachApi.update>`
+        Update Single number reach settings for a person
+   * - :meth:`api.person_settings.single_number_reach.update_snr <wxc_sdk.person_settings.single_number_reach.SingleNumberReachApi.update_snr>`
+        Update Single number reach settings for a number
    * - :meth:`api.person_settings.voicemail.configure <wxc_sdk.person_settings.voicemail.VoicemailApi.configure>`
         Configure Voicemail Settings for an entity
    * - :meth:`api.person_settings.voicemail.configure_busy_greeting <wxc_sdk.person_settings.voicemail.VoicemailApi.configure_busy_greeting>`
