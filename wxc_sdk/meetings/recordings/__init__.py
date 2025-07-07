@@ -32,6 +32,7 @@ class RecordingServiceType(str, Enum):
     #: The service type for the recording is the support meeting.
     support_center = 'SupportCenter'
     calling = 'calling'
+    customer_assist = 'customerAssist'
     all = 'all'
 
 

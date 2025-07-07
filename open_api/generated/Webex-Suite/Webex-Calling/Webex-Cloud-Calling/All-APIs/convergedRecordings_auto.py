@@ -19,10 +19,10 @@ __all__ = ['ConvergedRecordingsApi', 'GetRecordingMetadataResponse', 'GetRecordi
            'GetRecordingMetadataResponseServiceDataCallingParty',
            'GetRecordingMetadataResponseServiceDataCallingPartyActor',
            'GetRecordingMetadataResponseServiceDataRecordingActionsItem',
-           'GetRecordingMetadataResponseServiceDataSession', 'RecordingObject', 'RecordingObjectFormat',
+           'GetRecordingMetadataResponseServiceDataSession', 'OwnerType', 'RecordingObject', 'RecordingObjectFormat',
            'RecordingObjectOwnerType', 'RecordingObjectServiceData', 'RecordingObjectServiceType',
            'RecordingObjectStatus', 'RecordingObjectWithDirectDownloadLinks',
-           'RecordingObjectWithDirectDownloadLinksTemporaryDirectDownloadLinks', 'StorageRegion']
+           'RecordingObjectWithDirectDownloadLinksTemporaryDirectDownloadLinks', 'ServiceType', 'StorageRegion']
 
 
 class RecordingObjectFormat(str, Enum):
@@ -153,6 +153,18 @@ class RecordingObjectWithDirectDownloadLinks(ApiModel):
     service_data: Optional[RecordingObjectServiceData] = None
 
 
+class ServiceType(str, Enum):
+    calling = 'calling'
+    customer_assist = 'customerAssist'
+
+
+class OwnerType(str, Enum):
+    user = 'user'
+    place = 'place'
+    virtual_line = 'virtualLine'
+    call_queue = 'callQueue'
+
+
 class StorageRegion(str, Enum):
     us = 'US'
     sg = 'SG'
@@ -265,10 +277,9 @@ class ConvergedRecordingsApi(ApiChild, base=''):
 
     def list_recordings_for_admin_or_compliance_officer(self, from_: Union[str, datetime] = None, to_: Union[str,
                                                         datetime] = None, status: RecordingObjectStatus = None,
-                                                        service_type: RecordingObjectServiceType = None,
+                                                        service_type: ServiceType = None,
                                                         format_: RecordingObjectFormat = None, owner_id: str = None,
-                                                        owner_email: str = None,
-                                                        owner_type: RecordingObjectOwnerType = None,
+                                                        owner_email: str = None, owner_type: OwnerType = None,
                                                         storage_region: StorageRegion = None, location_id: str = None,
                                                         topic: str = None, timezone: str = None,
                                                         **params) -> Generator[RecordingObject, None, None]:
@@ -303,9 +314,9 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
             Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin.
         :type status: RecordingObjectStatus
-        :param service_type: Recording's service-type. If this item is specified, the API filters recordings by
-            service-type. Valid values are `calling`.
-        :type service_type: RecordingObjectServiceType
+        :param service_type: Recording's service-type. If specified, the API filters recordings by service-type. Valid
+            values are `calling` and `customerAssist`.
+        :type service_type: ServiceType
         :param format_: Recording's file format. If specified, the API filters recordings by format. Valid values are
             `MP3`.
         :type format_: RecordingObjectFormat
@@ -314,7 +325,7 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         :param owner_email: Webex email address to fetch recordings for a particular user.
         :type owner_email: str
         :param owner_type: Recording based on type of user.
-        :type owner_type: RecordingObjectOwnerType
+        :type owner_type: OwnerType
         :param storage_region: Recording stored in certain Webex locations.
         :type storage_region: StorageRegion
         :param location_id: Fetch recordings for users in a particular Webex Calling location (as configured in Control
@@ -361,8 +372,8 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         return self.session.follow_pagination(url=url, model=RecordingObject, item_key='items', params=params)
 
     def list_recordings(self, from_: Union[str, datetime] = None, to_: Union[str, datetime] = None,
-                        status: RecordingObjectStatus = None, service_type: RecordingObjectServiceType = None,
-                        format_: RecordingObjectFormat = None, owner_type: RecordingObjectOwnerType = None,
+                        status: RecordingObjectStatus = None, service_type: ServiceType = None,
+                        format_: RecordingObjectFormat = None, owner_type: OwnerType = None,
                         storage_region: StorageRegion = None, location_id: str = None, topic: str = None,
                         timezone: str = None, **params) -> Generator[RecordingObject, None, None]:
         """
@@ -397,14 +408,14 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
             Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin.
         :type status: RecordingObjectStatus
-        :param service_type: Recording's service-type. If this item is specified, the API filters recordings by
-            service-type. Valid values are `calling`.
-        :type service_type: RecordingObjectServiceType
+        :param service_type: Recording's service-type. If specified, the API filters recordings by service-type. Valid
+            values are `calling` and `customerAssist`.
+        :type service_type: ServiceType
         :param format_: Recording's file format. If specified, the API filters recordings by format. Valid values are
             `MP3`.
         :type format_: RecordingObjectFormat
         :param owner_type: Recording based on type of user.
-        :type owner_type: RecordingObjectOwnerType
+        :type owner_type: OwnerType
         :param storage_region: Recording stored in certain Webex locations.
         :type storage_region: StorageRegion
         :param location_id: Fetch recordings for users in a particular Webex Calling location (as configured in Control

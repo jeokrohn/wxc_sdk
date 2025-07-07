@@ -449,8 +449,8 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
             Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin.
         :type status: RecordingStatus
-        :param service_type: Recording's service-type. If this item is specified, the API filters recordings by
-            service-type. Valid values are `calling`.
+        :param service_type: Recording's service-type. If specified, the API filters recordings by service-type. Valid
+            values are `calling` and `customerAssist`.
         :type service_type: RecordingServiceType
         :param format_: Recording's file format. If specified, the API filters recordings by format. Valid values are
             `MP3`.
@@ -541,8 +541,8 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
             Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin.
         :type status: RecordingStatus
-        :param service_type: Recording's service-type. If this item is specified, the API filters recordings by
-            service-type. Valid values are `calling`.
+        :param service_type: Recording's service-type. If specified, the API filters recordings by service-type. Valid
+            values are `calling` and `customerAssist`.
         :type service_type: RecordingServiceType
         :param format_: Recording's file format. If specified, the API filters recordings by format. Valid values are
             `MP3`.
@@ -629,8 +629,8 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
             Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin.
         :type status: RecordingStatus
-        :param service_type: Recording's service-type. If this item is specified, the API filters recordings by
-            service-type. Valid values are `calling`, or `all`.
+        :param service_type: Recording's service-type. If specified, the API filters recordings by service-type. Valid
+            values are `calling` and `customerAssist`.
         :type service_type: RecordingServiceType
         :param format_: Recording's file format. If specified, the API filters recordings by format. Valid values are
             `MP3`.
@@ -717,8 +717,8 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
             Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin.
         :type status: RecordingStatus
-        :param service_type: Recording's service-type. If this item is specified, the API filters recordings by
-            service-type. Valid values are `calling`, or `all`.
+        :param service_type: Recording's service-type. If specified, the API filters recordings by service-type. Valid
+            values are `calling` and `customerAssist`.
         :type service_type: RecordingServiceType
         :param format_: Recording's file format. If specified, the API filters recordings by format. Valid values are
             `MP3`.
