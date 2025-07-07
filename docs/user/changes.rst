@@ -5,6 +5,7 @@ Release history
 - feat: new API :attr:`api.telephony.cx_essentials.wrapup_reasons <wxc_sdk.telephony.cx_essentials.CustomerExperienceEssentialsApi.wrapup_reasons>`
 - feat: new API :attr:`api.person_settings.single_number_reach <wxc_sdk.person_settings.PersonSettingsApi.single_number_reach>`
 - feat: new API :attr:`api.telephony.hotdesk <wxc_sdk.telephony.TelephonyApi.hotdesk>`
+- feat: new parameter carrier_id for :meth:`api.telephony.location.number.add <wxc_sdk.telephony.location.numbers.LocationNumbersApi.add>`
 
 1.25.0
 ------

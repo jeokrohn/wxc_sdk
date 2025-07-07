@@ -699,7 +699,7 @@ class NumbersApi(ApiChild, base='telephony/config'):
                                         number_type: NumberTypeOptions = None,
                                         number_usage_type: NumberUsageTypeOptions = None,
                                         state: NumberStateOptions = None, subscription_id: str = None,
-                                        org_id: str = None):
+                                        carrier_id: str = None, org_id: str = None):
         """
         Add Phone Numbers to a location
 
@@ -734,8 +734,10 @@ class NumbersApi(ApiChild, base='telephony/config'):
         :param state: The state of the number. By default, the state of a number is set to `ACTIVE` for DID and
             toll-free numbers only. Mobile numbers will be activated upon assignment to a user.
         :type state: NumberStateOptions
-        :param subscription_id: The `subscriptionId` to be used for mobile number order.
+        :param subscription_id: The `subscriptionId` to be used for the mobile number order.
         :type subscription_id: str
+        :param carrier_id: The `carrierId` to be used for the mobile number order.
+        :type carrier_id: str
         :param org_id: Organization of the Route Group.
         :type org_id: str
         :rtype: None
@@ -753,6 +755,8 @@ class NumbersApi(ApiChild, base='telephony/config'):
             body['state'] = enum_str(state)
         if subscription_id is not None:
             body['subscriptionId'] = subscription_id
+        if carrier_id is not None:
+            body['carrierId'] = carrier_id
         url = self.ep(f'locations/{location_id}/numbers')
         super().post(url, params=params, json=body)
 

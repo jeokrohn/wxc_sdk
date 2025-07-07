@@ -81,6 +81,7 @@ class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
     def add(self, location_id: str, phone_numbers: list[str], number_type: TelephoneNumberType = None,
             number_usage_type: NumberUsageType = None,
             state: NumberState = NumberState.inactive, subscription_id: str = None,
+            carrier_id: str = None,
             org_id: str = None) -> NumberAddResponse:
         """
         Add Phone Numbers to a location
@@ -112,8 +113,10 @@ class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
         :param state: Reflects the state of the number. By default, the state of a number is set to `ACTIVE` for DID
             and toll-free numbers only. Mobile numbers will be activated upon assignment to a user.
         :type state: NumberState
-        :param subscription_id: Reflects the `subscriptionId` to be used for mobile number order.
+        :param subscription_id: The `subscriptionId` to be used for the mobile number order.
         :type subscription_id: str
+        :param carrier_id: The `carrierId` to be used for the mobile number order.
+        :type carrier_id: str
         :param org_id: Organization to manage.
         :type org_id: str
         """
@@ -129,7 +132,8 @@ class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
             body['state'] = enum_str(state)
         if subscription_id is not None:
             body['subscriptionId'] = subscription_id
-
+        if carrier_id is not None:
+            body['carrierId'] = carrier_id
         r = self.post(url=url, params=params, json=body)
         if isinstance(r, list):
             return NumberAddResponse.model_validate(r[0])
