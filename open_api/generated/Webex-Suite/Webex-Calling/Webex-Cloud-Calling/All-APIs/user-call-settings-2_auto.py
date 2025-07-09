@@ -34,8 +34,8 @@ __all__ = ['AccessLevel', 'Action', 'AgentCallerIdType', 'AudioAnnouncementFileG
            'UserCallSettings22Api', 'UserDigitPatternObject', 'UserItem', 'UserListItem',
            'UserModeManagementAvailableFeaturesObject', 'UserModeManagementFeatureObject',
            'UserOutgoingPermissionDigitPatternGetListObject', 'UserOutgoingPermissionDigitPatternPostObjectAction',
-           'UserPlaceAuthorizationCodeListGet', 'UserSettingsPermissionsGetDefault', 'UserType', 'UsersListItem',
-           'VoiceMailPartyInformation', 'VoiceMessageDetails']
+           'UserPlaceAuthorizationCodeListGet', 'UserSettingsPermissionsGet', 'UserSettingsPermissionsGetDefault',
+           'UserType', 'UsersListItem', 'VoiceMailPartyInformation', 'VoiceMessageDetails']
 
 
 class Action(str, Enum):
@@ -132,7 +132,7 @@ class GetSharedLineMemberItem(ApiModel):
     #: Device port number assigned to a person or workspace.
     port: Optional[int] = None
     #: T.38 Fax Compression setting. Valid only for ATA Devices. Overrides user level compression options.
-    t38_fax_compression_enabled__true_: Optional[bool] = Field(alias='t38FaxCompressionEnabled `true`', default=None)
+    t38_fax_compression_enabled: Optional[bool] = None
     #: If `true` the person or the workspace is the owner of the device. Points to primary line/port of the device.
     primary_owner: Optional[str] = None
     #: If the line is acting as a primary line or a shared line for this device.
@@ -199,7 +199,7 @@ class PutSharedLineMemberItem(ApiModel):
     #: Device port number assigned to person or workspace.
     port: Optional[int] = None
     #: T.38 Fax Compression setting. Valid only for ATA Devices. Overrides user level compression options.
-    t38_fax_compression_enabled__true_: Optional[bool] = Field(alias='t38FaxCompressionEnabled `true`', default=None)
+    t38_fax_compression_enabled: Optional[bool] = None
     #: If `true` the person or the workspace is the owner of the device. Points to primary line/port of the device.
     primary_owner: Optional[str] = None
     #: If the line is acting as a primary line or a shared line for this device.
@@ -1192,6 +1192,12 @@ class UserSettingsPermissionsGetDefault(ApiModel):
     #: Set whether end users have access to make changes to their `Allow End User to Generate Activation Codes & Delete
     #: their Phones` feature via UserHub, or other clients (Webex, IP phone, etc.).
     generate_activation_code: Optional[AccessLevel] = None
+
+
+class UserSettingsPermissionsGet(ApiModel):
+    #: Set whether end users have organization's settings enabled for the user.
+    user_org_settings_permission_enabled: Optional[bool] = None
+    user_org_settings_permissions: Optional[UserSettingsPermissionsGetDefault] = None
 
 
 class LicenseType(str, Enum):
@@ -3942,7 +3948,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         url = self.ep(f'config/people/{person_id}/settings/msTeams')
         super().put(url, params=params, json=body)
 
-    def read_feature_access_settings_for_a_person(self, person_id: str) -> UserSettingsPermissionsGetDefault:
+    def read_feature_access_settings_for_a_person(self, person_id: str) -> UserSettingsPermissionsGet:
         """
         Read Feature Access Settings for a Person
 
@@ -3962,11 +3968,11 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
 
         :param person_id: User ID of the Organization.
         :type person_id: str
-        :rtype: :class:`UserSettingsPermissionsGetDefault`
+        :rtype: :class:`UserSettingsPermissionsGet`
         """
         url = self.ep(f'config/people/{person_id}/settings/permissions')
         data = super().get(url)
-        r = UserSettingsPermissionsGetDefault.model_validate(data)
+        r = UserSettingsPermissionsGet.model_validate(data)
         return r
 
     def update_a_person_s_feature_access_configuration(self, person_id: str,

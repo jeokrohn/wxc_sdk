@@ -1115,7 +1115,7 @@ class CallQueueQueueEssentialsSettingsObject(ApiModel):
     #: triggered.
     queue_size: Optional[int] = None
     #: Play ringing tone to callers when their call is set to an available agent.
-    call_offer_tone_enabled__true_: Optional[bool] = Field(alias='callOfferToneEnabled `true`', default=None)
+    call_offer_tone_enabled: Optional[bool] = None
     #: Reset caller statistics upon queue entry.
     reset_call_statistics_enabled: Optional[bool] = None
     #: Settings for incoming calls exceed queueSize.

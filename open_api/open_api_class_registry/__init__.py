@@ -189,6 +189,12 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         schema_description = schema.description
         attrs = []
         for prop_name, prop in schema.properties.items():
+            # prop_name might be something like 't38FaxCompressionEnabled `true`'
+            # we only want to consider the part before the space
+            actual_prop_name = prop_name.split(' ')[0]
+            if actual_prop_name != prop_name:
+                log.warning(f'Property name {prop_name} in {name} contains spaces, using {actual_prop_name} instead')
+                prop_name = actual_prop_name
             python_type, referenced_class = self._add_or_get_type_for_property(prop, name, prop_name)
             attr = Attribute(name=prop_name, python_type=python_type, docstring=prop.docstring, sample=None,
                              referenced_class=referenced_class)
