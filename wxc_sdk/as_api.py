@@ -8640,7 +8640,7 @@ class AsFeatureAccessApi(AsApiChild, base='telephony'):
     """
     End user Feature Access API
     """
-    
+
     async def read_default(self) -> FeatureAccessSettings:
         """
         Read Default Feature Access Settings for Person
@@ -11269,6 +11269,9 @@ class AsSingleNumberReachApi(AsApiChild, base='telephony/config'):
         Single number reach allows you to set up your work calls ring any phone number. This means that your office
         phone, mobile phone, or any other designated devices can ring at the same time, ensuring you don't miss
         important calls.
+
+        The response returns an ID that can change if the phoneNumber is modified, as the ID contains base64 encoded
+        phone number data.
 
         Updating a single number reach settings for a number requires a full administrator or location administrator
         auth token with a scope of `spark-admin:telephony_config_write`.

@@ -9,12 +9,13 @@ __all__ = ['SingleNumberReachApi', 'SingleNumberReach', 'SingleNumberReachNumber
 
 
 class SingleNumberReachNumber(ApiModel):
-    #: A flag to enable or disable single Number Reach phone number.
-    enabled: Optional[bool] = None
-    #: ID of Single number reach.
+    #: ID of Single number reach. Note that this ID contains base64 encoded phoneNumber data and can change if the
+    #: phone number is modified.
     id: Optional[str] = None
-    #: Personal phone number used as single Number Reach.
+    #: The phone number that will ring when a call is received. The number should be in E.164 format.
     phone_number: Optional[str] = None
+    #: A flag to enable or disable this single Number Reach phone number.
+    enabled: Optional[bool] = None
     #: Name of the single number reach phone number entry.
     name: Optional[str] = None
     #: If enabled, the call forwarding settings of provided phone Number will not be applied.
@@ -34,7 +35,7 @@ class SingleNumberReachNumber(ApiModel):
 
 
 class SingleNumberReach(ApiModel):
-    #: A flag to enable or disable single Number Reach phone number.
+    #: A flag to enable or disable single Number Reach.
     enabled: Optional[bool] = None
     #: Flag to enable alerting single number reach numbers for click to dial calls.
     alert_all_numbers_for_click_to_dial_calls_enabled: Optional[bool] = None
@@ -200,6 +201,9 @@ class SingleNumberReachApi(ApiChild, base='telephony/config'):
         Single number reach allows you to set up your work calls ring any phone number. This means that your office
         phone, mobile phone, or any other designated devices can ring at the same time, ensuring you don't miss
         important calls.
+
+        The response returns an ID that can change if the phoneNumber is modified, as the ID contains base64 encoded
+        phone number data.
 
         Updating a single number reach settings for a number requires a full administrator or location administrator
         auth token with a scope of `spark-admin:telephony_config_write`.

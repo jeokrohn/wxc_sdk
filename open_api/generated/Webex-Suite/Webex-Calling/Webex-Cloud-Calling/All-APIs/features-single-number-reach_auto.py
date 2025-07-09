@@ -11,8 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['FeaturesSingleNumberReachApi', 'GetSingleNumberReachObject', 'STATE',
-           'SingleNumberReachPrimaryAvailableNumberObject', 'TelephonyType']
+__all__ = ['FeaturesSingleNumberReachApi', 'GetSingleNumberReachObject', 'GetSingleNumberReachObjectNumbersItem',
+           'STATE', 'SingleNumberReachPrimaryAvailableNumberObject', 'TelephonyType']
 
 
 class STATE(str, Enum):
@@ -43,23 +43,29 @@ class SingleNumberReachPrimaryAvailableNumberObject(ApiModel):
     is_service_number: Optional[bool] = None
 
 
-class GetSingleNumberReachObject(ApiModel):
-    #: A flag to enable or disable single Number Reach phone number.
-    enabled: Optional[bool] = None
-    #: Flag to enable alerting single number reach numbers for click to dial calls.
-    alert_all_numbers_for_click_to_dial_calls_enabled: Optional[bool] = None
-    #: Array of single number reach number entries.
-    numbers: Optional[list[str]] = None
-    #: ID of Single number reach.
+class GetSingleNumberReachObjectNumbersItem(ApiModel):
+    #: ID of Single number reach. Note that this ID contains base64 encoded phoneNumber data and can change if the
+    #: phone number is modified.
     id: Optional[str] = None
-    #: Personal phone number used as single Number Reach.
+    #: The phone number that will ring when a call is received. The number should be in E.164 format.
     phone_number: Optional[str] = None
+    #: A flag to enable or disable this single Number Reach phone number.
+    enabled: Optional[bool] = None
     #: Name of the single number reach phone number entry.
     name: Optional[str] = None
     #: If enabled, the call forwarding settings of provided phone Number will not be applied.
     do_not_forward_calls_enabled: Optional[bool] = None
-    #: If enabled, the call recepient will be prompted to press a key before being connected.
+    #: If enabled, the call recipient will be prompted to press a key before being connected.
     answer_confirmation_enabled: Optional[bool] = None
+
+
+class GetSingleNumberReachObject(ApiModel):
+    #: A flag to enable or disable single Number Reach.
+    enabled: Optional[bool] = None
+    #: Flag to enable alerting single number reach numbers for click to dial calls.
+    alert_all_numbers_for_click_to_dial_calls_enabled: Optional[bool] = None
+    #: Array of single number reach number entries.
+    numbers: Optional[list[GetSingleNumberReachObjectNumbersItem]] = None
 
 
 class FeaturesSingleNumberReachApi(ApiChild, base='telephony/config'):
@@ -234,13 +240,16 @@ class FeaturesSingleNumberReachApi(ApiChild, base='telephony/config'):
     def update_single_number_reach_settings_for_a_number(self, person_id: str, id: str, phone_number: str,
                                                          enabled: bool, name: str,
                                                          do_not_forward_calls_enabled: bool = None,
-                                                         answer_confirmation_enabled: bool = None):
+                                                         answer_confirmation_enabled: bool = None) -> str:
         """
         Update Single number reach settings for a number.
 
         Single number reach allows you to setup your work calls ring any phone number. This means that your office
         phone, mobile phone, or any other designated devices can ring at the same time, ensuring you don't miss
         important calls.
+
+        The response returns an ID that can change if the phoneNumber is modified, as the ID contains base64 encoded
+        phone number data.
 
         Updating a single number reach settings for a number requires a full administrator or location administrator
         auth token with a scope of `spark-admin:telephony_config_write`.
@@ -261,7 +270,7 @@ class FeaturesSingleNumberReachApi(ApiChild, base='telephony/config'):
         :param answer_confirmation_enabled: If enabled, the call recepient will be prompted to press a key before being
             connected.
         :type answer_confirmation_enabled: bool
-        :rtype: None
+        :rtype: str
         """
         body = dict()
         body['phoneNumber'] = phone_number
@@ -272,4 +281,6 @@ class FeaturesSingleNumberReachApi(ApiChild, base='telephony/config'):
         if answer_confirmation_enabled is not None:
             body['answerConfirmationEnabled'] = answer_confirmation_enabled
         url = self.ep(f'people/{person_id}/singleNumberReach/numbers/{id}')
-        super().put(url, json=body)
+        data = super().put(url, json=body)
+        r = data['id']
+        return r
