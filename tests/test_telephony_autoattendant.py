@@ -13,6 +13,8 @@ from tests.testutil import available_extensions_gen, new_aa_names
 from wxc_sdk.all_types import AutoAttendant, ScheduleType
 from wxc_sdk.common.schedules import Schedule
 from wxc_sdk.locations import Location
+from wxc_sdk.telephony.autoattendant import AutoAttendantMenu, AutoAttendantKeyConfiguration, MenuKey, \
+    AutoAttendantAction
 
 
 class TestAutoAttendant(TestCaseWithLog):
@@ -75,9 +77,10 @@ class TestCreate(TestWithLocations):
                                                              schedule_type=ScheduleType.business_hours,
                                                              schedule_id=schedule_id)
 
-    def test_001_create(self):
+    @contextmanager
+    def create_aa(self):
         """
-        Create a simple AA in a random location
+        Create a new auto attendant in a random location
         """
         target_location = random.choice(self.telephony_locations)
         with self.get_schedule(location=target_location) as target_schedule:
@@ -99,13 +102,53 @@ class TestCreate(TestWithLocations):
             aa_id = ata.create(location_id=target_location.location_id,
                                settings=aa_settings)
             details = ata.details(location_id=target_location.location_id, auto_attendant_id=aa_id)
+            try:
+                yield target_location.location_id, details
+            finally:
+                # clean up, remove AA again
+                ata.delete_auto_attendant(location_id=target_location.location_id,
+                                          auto_attendant_id=aa_id)
+            return
+
+    def test_001_create(self):
+        """
+        Create a simple AA in a random location
+        """
+        with self.create_aa() as (location_id, details):
             print(json.dumps(json.loads(details.model_dump_json()), indent=2))
-            print(f'Created AA: {aa_id}')
+            print(f'Created AA: {details.location_id}')
 
-            # clean up, remove AA again
-            ata.delete_auto_attendant(location_id=target_location.location_id,
-                                      auto_attendant_id=aa_id)
+class TestUpdate(TestCreate):
+    def test_update_menu(self):
+        """
+        Add a menu key to an existing auto attendant and then remove it again
+        """
+        ata = self.api.telephony.auto_attendant
+        with self.create_aa() as (location_id, details):
+            location_id: str
+            details: AutoAttendant
+            print(f'Adding menu key to AA "{details.name}" ({details.auto_attendant_id})')
 
+            # create a new menu with a key configuration
+            new_menu = details.business_hours_menu.model_copy(deep=True)
+            new_menu: AutoAttendantMenu
+            new_menu.key_configurations = [AutoAttendantKeyConfiguration(key=MenuKey.zero,action=AutoAttendantAction.repeat_menu,
+                                                                           description='Repeat menu'),
+                                           AutoAttendantKeyConfiguration(key=MenuKey.one,
+                                                                         action=AutoAttendantAction.exit,
+                                                                         description='Exit')]
+            new_settings = details.model_copy(deep=True)
+            new_settings.business_hours_menu = new_menu
+            ata.update(location_id=location_id,auto_attendant_id=details.auto_attendant_id, settings=new_settings)
+            after = ata.details(location_id=location_id, auto_attendant_id=details.auto_attendant_id)
+            self.assertEqual(new_menu, after.business_hours_menu)
+
+            # go back to the original menu
+            ata.update(location_id=location_id,auto_attendant_id=details.auto_attendant_id, settings=details)
+            after = ata.details(location_id=location_id, auto_attendant_id=details.auto_attendant_id)
+            self.assertEqual(details.business_hours_menu, after.business_hours_menu)
+
+        return
 
 class TestDelete(TestCaseWithLog):
 
@@ -121,4 +164,3 @@ class TestDelete(TestCaseWithLog):
         target_aa = random.choice(aa_list)
         print(f'Deleting aa "{target_aa.name}" in location "{target_aa.location_name}"')
         ata.delete_auto_attendant(location_id=target_aa.location_id, auto_attendant_id=target_aa.auto_attendant_id)
-
