@@ -11,30 +11,31 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['Action', 'AgentCallerIdType', 'AudioAnnouncementFileGetObject', 'AudioAnnouncementFileGetObjectLevel',
-           'AudioAnnouncementFileGetObjectMediaFileType', 'AuthorizationCode', 'AuthorizationCodeLevel',
-           'AvailableCallerIdObject', 'AvailableSharedLineMemberItem', 'CallsFrom', 'CallsFromSelectiveAccept',
-           'CallsFromSelectiveReject', 'CountObject', 'Criteria', 'CriteriaAccept', 'CriteriaForward', 'DeviceType',
-           'EndpointInformation', 'Endpoints', 'ErrorMessageObject', 'ErrorObject', 'ErrorOrImpactItem',
-           'ExceptionTypeObject', 'GetMessageSummaryResponse', 'GetMusicOnHoldObject', 'GetMusicOnHoldObjectGreeting',
-           'GetSharedLineMemberItem', 'GetSharedLineMemberList', 'GetUserMSTeamsSettingsObject', 'ItemObject',
-           'JobDetailsResponse', 'JobDetailsResponseById', 'JobDetailsResponseLatestExecutionExitCode',
-           'JobDetailsResponseLatestExecutionStatus', 'JobExecutionStatusObject', 'LicenseType', 'LineType',
-           'Location', 'ModeManagementFeatureTypeObject', 'ModifyUserMSTeamsSettingsObjectSettingName',
-           'NumberOwnerType', 'PersonCallForwardAvailableNumberObject', 'PersonCallForwardAvailableNumberObjectOwner',
-           'PersonECBNAvailableNumberObject', 'PersonECBNAvailableNumberObjectOwner',
-           'PersonECBNAvailableNumberObjectOwnerType', 'PersonPrimaryAvailableNumberObject',
-           'PersonPrimaryAvailableNumberObjectTelephonyType', 'PersonSecondaryAvailableNumberObject',
-           'PersonalAssistantGet', 'PersonalAssistantGetAlerting', 'PersonalAssistantGetPresence', 'PhoneNumber',
-           'PutSharedLineMemberItem', 'RingPattern', 'STATE', 'ScheduleLevel', 'ScheduleType',
-           'SelectiveAcceptCallCriteriaGet', 'SelectiveAcceptCallGet', 'SelectiveForwardCallCriteriaGet',
-           'SelectiveForwardCallGet', 'SelectiveRejectCallCriteriaGet', 'SelectiveRejectCallGet', 'SettingsObject',
-           'SettingsObjectLevel', 'SettingsObjectSettingName', 'Source', 'SourceSelectiveAccept',
-           'StepExecutionStatusesObject', 'TelephonyType', 'TransferNumberGet', 'UserCallSettings22Api',
-           'UserDigitPatternObject', 'UserItem', 'UserListItem', 'UserModeManagementAvailableFeaturesObject',
-           'UserModeManagementFeatureObject', 'UserOutgoingPermissionDigitPatternGetListObject',
-           'UserOutgoingPermissionDigitPatternPostObjectAction', 'UserPlaceAuthorizationCodeListGet', 'UserType',
-           'UsersListItem', 'VoiceMailPartyInformation', 'VoiceMessageDetails']
+__all__ = ['AccessLevel', 'Action', 'AgentCallerIdType', 'AudioAnnouncementFileGetObject',
+           'AudioAnnouncementFileGetObjectLevel', 'AudioAnnouncementFileGetObjectMediaFileType', 'AuthorizationCode',
+           'AuthorizationCodeLevel', 'AvailableCallerIdObject', 'AvailableSharedLineMemberItem', 'CallsFrom',
+           'CallsFromSelectiveAccept', 'CallsFromSelectiveReject', 'CountObject', 'Criteria', 'CriteriaAccept',
+           'CriteriaForward', 'DeviceType', 'EndpointInformation', 'Endpoints', 'ErrorMessageObject', 'ErrorObject',
+           'ErrorOrImpactItem', 'ExceptionTypeObject', 'GetMessageSummaryResponse', 'GetMusicOnHoldObject',
+           'GetMusicOnHoldObjectGreeting', 'GetSharedLineMemberItem', 'GetSharedLineMemberList',
+           'GetUserMSTeamsSettingsObject', 'ItemObject', 'JobDetailsResponse', 'JobDetailsResponseById',
+           'JobDetailsResponseLatestExecutionExitCode', 'JobDetailsResponseLatestExecutionStatus',
+           'JobExecutionStatusObject', 'LicenseType', 'LineType', 'Location', 'ModeManagementFeatureTypeObject',
+           'ModifyUserMSTeamsSettingsObjectSettingName', 'NumberOwnerType', 'PersonCallForwardAvailableNumberObject',
+           'PersonCallForwardAvailableNumberObjectOwner', 'PersonECBNAvailableNumberObject',
+           'PersonECBNAvailableNumberObjectOwner', 'PersonECBNAvailableNumberObjectOwnerType',
+           'PersonPrimaryAvailableNumberObject', 'PersonPrimaryAvailableNumberObjectTelephonyType',
+           'PersonSecondaryAvailableNumberObject', 'PersonalAssistantGet', 'PersonalAssistantGetAlerting',
+           'PersonalAssistantGetPresence', 'PhoneNumber', 'PutSharedLineMemberItem', 'RingPattern', 'STATE',
+           'ScheduleLevel', 'ScheduleType', 'SelectiveAcceptCallCriteriaGet', 'SelectiveAcceptCallGet',
+           'SelectiveForwardCallCriteriaGet', 'SelectiveForwardCallGet', 'SelectiveRejectCallCriteriaGet',
+           'SelectiveRejectCallGet', 'SettingsObject', 'SettingsObjectLevel', 'SettingsObjectSettingName', 'Source',
+           'SourceSelectiveAccept', 'StepExecutionStatusesObject', 'TelephonyType', 'TransferNumberGet',
+           'UserCallSettings22Api', 'UserDigitPatternObject', 'UserItem', 'UserListItem',
+           'UserModeManagementAvailableFeaturesObject', 'UserModeManagementFeatureObject',
+           'UserOutgoingPermissionDigitPatternGetListObject', 'UserOutgoingPermissionDigitPatternPostObjectAction',
+           'UserPlaceAuthorizationCodeListGet', 'UserSettingsPermissionsGetDefault', 'UserType', 'UsersListItem',
+           'VoiceMailPartyInformation', 'VoiceMessageDetails']
 
 
 class Action(str, Enum):
@@ -1111,6 +1112,88 @@ class SelectiveForwardCallCriteriaGet(ApiModel):
     forward_enabled: Optional[bool] = None
 
 
+class AccessLevel(str, Enum):
+    #: User has full access.
+    full_access = 'FULL_ACCESS'
+    #: User does not have access.
+    no_access = 'NO_ACCESS'
+
+
+class UserSettingsPermissionsGetDefault(ApiModel):
+    #: Set whether end users have access to make changes to their `Anonymous call rejection` feature via UserHub, or
+    #: other clients (Webex, IP phone, etc.).
+    anonymous_call_rejection: Optional[AccessLevel] = None
+    #: Set whether end users have access to make changes to their `Barge In` feature via UserHub, or other clients
+    #: (Webex, IP phone, etc.).
+    barge_in: Optional[AccessLevel] = None
+    #: Set whether end users have access to make changes to their `Block caller ID` feature via UserHub, or other
+    #: clients (Webex, IP phone, etc.).
+    block_caller_id: Optional[AccessLevel] = None
+    #: Set whether end users have access to make changes to their `Call forwarding` feature via UserHub, or other
+    #: clients (Webex, IP phone, etc.).
+    call_forwarding: Optional[AccessLevel] = None
+    #: Set whether end users have access to make changes to their `Call waiting` feature via UserHub, or other clients
+    #: (Webex, IP phone, etc.).
+    call_waiting: Optional[AccessLevel] = None
+    #: Set whether end users have access to make changes to their `Call notify` feature via UserHub, or other clients
+    #: (Webex, IP phone, etc.).
+    call_notify: Optional[AccessLevel] = None
+    #: Set whether end users have access to make changes to their `Connected line identity` feature via UserHub, or
+    #: other clients (Webex, IP phone, etc.).
+    connected_line_identity: Optional[AccessLevel] = None
+    #: Set whether end users have access to make changes to their `Executive/Executive assistant` feature via UserHub,
+    #: or other clients (Webex, IP phone, etc.).
+    executive: Optional[AccessLevel] = None
+    #: Set whether end users have access to make changes to their `Hoteling` feature via UserHub, or other clients
+    #: (Webex, IP phone, etc.).
+    hoteling: Optional[AccessLevel] = None
+    #: Set whether end users have access to make changes to their `Priority alert` feature via UserHub, or other
+    #: clients (Webex, IP phone, etc.).
+    priority_alert: Optional[AccessLevel] = None
+    #: Set whether end users have access to make changes to their `Selectively accept calls` feature via UserHub, or
+    #: other clients (Webex, IP phone, etc.).
+    selectively_accept_calls: Optional[AccessLevel] = None
+    #: Set whether end users have access to make changes to their `Selectively reject calls` feature via UserHub, or
+    #: other clients (Webex, IP phone, etc.).
+    selectively_reject_calls: Optional[AccessLevel] = None
+    #: Set whether end users have access to make changes to their `Selectively forward calls` feature via UserHub, or
+    #: other clients (Webex, IP phone, etc.).
+    selectively_forward_calls: Optional[AccessLevel] = None
+    #: Set whether end users have access to make changes to their `Sequential ring` feature via UserHub, or other
+    #: clients (Webex, IP phone, etc.).
+    sequential_ring: Optional[AccessLevel] = None
+    #: Set whether end users have access to make changes to their `Simultaneous ring` feature via UserHub, or other
+    #: clients (Webex, IP phone, etc.).
+    simultaneous_ring: Optional[AccessLevel] = None
+    #: Set whether end users have access to make changes to their `Single number reach` feature via UserHub, or other
+    #: clients (Webex, IP phone, etc.).
+    single_number_reach: Optional[AccessLevel] = None
+    #: Set whether end users have access to make changes to their `Voicemail feature` feature via UserHub, or other
+    #: clients (Webex, IP phone, etc.).
+    voicemail: Optional[AccessLevel] = None
+    #: Set whether end users have access to make changes to their `Send calls to voicemail` feature via UserHub, or
+    #: other clients (Webex, IP phone, etc.).
+    send_calls_to_voicemail: Optional[AccessLevel] = None
+    #: Set whether end users have access to make changes to their `Email a copy of the voicemail message` feature via
+    #: UserHub, or other clients (Webex, IP phone, etc.).
+    voicemail_email_copy: Optional[AccessLevel] = None
+    #: Set whether end users have access to make changes to their `Fax messaging` feature via UserHub, or other clients
+    #: (Webex, IP phone, etc.).
+    voicemail_fax_messaging: Optional[AccessLevel] = None
+    #: Set whether end users have access to make changes to their `Message storage` feature via UserHub, or other
+    #: clients (Webex, IP phone, etc.).
+    voicemail_message_storage: Optional[AccessLevel] = None
+    #: Set whether end users have access to make changes to their `Notifications` feature via UserHub, or other clients
+    #: (Webex, IP phone, etc.).
+    voicemail_notifications: Optional[AccessLevel] = None
+    #: Set whether end users have access to make changes to their `Transfer on '0' to another number.` feature via
+    #: UserHub, or other clients (Webex, IP phone, etc.).
+    voicemail_transfer_number: Optional[AccessLevel] = None
+    #: Set whether end users have access to make changes to their `Allow End User to Generate Activation Codes & Delete
+    #: their Phones` feature via UserHub, or other clients (Webex, IP phone, etc.).
+    generate_activation_code: Optional[AccessLevel] = None
+
+
 class LicenseType(str, Enum):
     webex_calling_professional = 'Webex Calling Professional'
     webex_calling_standard = 'Webex Calling Standard'
@@ -1657,6 +1740,195 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
             params['licenseType'] = enum_str(license_type)
         url = self.ep('config/people/primary/availableNumbers')
         return self.session.follow_pagination(url=url, model=PersonPrimaryAvailableNumberObject, item_key='phoneNumbers', params=params)
+
+    def read_default_feature_access_settings_for_person(self) -> UserSettingsPermissionsGetDefault:
+        """
+        Read Default Feature Access Settings for Person
+
+        Read the default feature access configuration for users in the organization. It allows administrators to review
+        the baseline feature availability settings that will be applied to new users by default, ensuring consistency
+        in user experience and policy enforcement.
+
+        This API is part of the organizational-level user configuration management for feature access. It is used to
+        define the default settings that control which Webex features are enabled or disabled when users are
+        provisioned. In Control Hub, this corresponds to the "Default User Settings" under Calling or Telephony,
+        providing centralized control over user capabilities across the organization.
+
+        To call this API, an administrator must use a full, or read-only administrator auth token with the
+        `spark-admin:telephony_config_read` scope.
+
+        :rtype: :class:`UserSettingsPermissionsGetDefault`
+        """
+        url = self.ep('config/people/settings/permissions')
+        data = super().get(url)
+        r = UserSettingsPermissionsGetDefault.model_validate(data)
+        return r
+
+    def update_default_person_feature_access_configuration(self, anonymous_call_rejection: AccessLevel = None,
+                                                           barge_in: AccessLevel = None,
+                                                           block_caller_id: AccessLevel = None,
+                                                           call_forwarding: AccessLevel = None,
+                                                           call_waiting: AccessLevel = None,
+                                                           call_notify: AccessLevel = None,
+                                                           connected_line_identity: AccessLevel = None,
+                                                           executive: AccessLevel = None,
+                                                           hoteling: AccessLevel = None,
+                                                           priority_alert: AccessLevel = None,
+                                                           selectively_accept_calls: AccessLevel = None,
+                                                           selectively_reject_calls: AccessLevel = None,
+                                                           selectively_forward_calls: AccessLevel = None,
+                                                           sequential_ring: AccessLevel = None,
+                                                           simultaneous_ring: AccessLevel = None,
+                                                           single_number_reach: AccessLevel = None,
+                                                           voicemail: AccessLevel = None,
+                                                           send_calls_to_voicemail: AccessLevel = None,
+                                                           voicemail_email_copy: AccessLevel = None,
+                                                           voicemail_fax_messaging: AccessLevel = None,
+                                                           voicemail_message_storage: AccessLevel = None,
+                                                           voicemail_notifications: AccessLevel = None,
+                                                           voicemail_transfer_number: AccessLevel = None,
+                                                           generate_activation_code: AccessLevel = None):
+        """
+        Update Default Person Feature Access Configuration
+
+        Updates the default feature access configuration for users in the organization. It allows administrators to
+        modify the baseline settings that determine which Webex features are enabled or disabled for users by default,
+        ensuring new users are provisioned with consistent access controls.
+
+        This API is part of the organization-level user configuration management for feature access. It supports
+        defining and updating default settings that apply automatically to all newly onboarded users. In Control Hub,
+        this corresponds to the "Default User Settings" section for Calling or Telephony, enabling centralized and
+        scalable configuration of user capabilities.
+
+        To use this API, an administrator must authenticate with a full, or device administrator auth token. The token
+        must include the `spark-admin:telephony_config_write` scope.
+
+        :param anonymous_call_rejection: Set whether end users have access to make changes to their `Anonymous call
+            rejection` feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type anonymous_call_rejection: AccessLevel
+        :param barge_in: Set whether end users have access to make changes to their `Barge In` feature via UserHub, or
+            other clients (Webex, IP phone, etc.).
+        :type barge_in: AccessLevel
+        :param block_caller_id: Set whether end users have access to make changes to their `Block caller ID` feature
+            via UserHub, or other clients (Webex, IP phone, etc.).
+        :type block_caller_id: AccessLevel
+        :param call_forwarding: Set whether end users have access to make changes to their `Call forwarding` feature
+            via UserHub, or other clients (Webex, IP phone, etc.).
+        :type call_forwarding: AccessLevel
+        :param call_waiting: Set whether end users have access to make changes to their `Call waiting` feature via
+            UserHub, or other clients (Webex, IP phone, etc.).
+        :type call_waiting: AccessLevel
+        :param call_notify: Set whether end users have access to make changes to their `Call notify` feature via
+            UserHub, or other clients (Webex, IP phone, etc.).
+        :type call_notify: AccessLevel
+        :param connected_line_identity: Set whether end users have access to make changes to their `Connected line
+            identity` feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type connected_line_identity: AccessLevel
+        :param executive: Set whether end users have access to make changes to their `Executive/Executive assistant`
+            feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type executive: AccessLevel
+        :param hoteling: Set whether end users have access to make changes to their `Hoteling` feature via UserHub, or
+            other clients (Webex, IP phone, etc.).
+        :type hoteling: AccessLevel
+        :param priority_alert: Set whether end users have access to make changes to their `Priority alert` feature via
+            UserHub, or other clients (Webex, IP phone, etc.).
+        :type priority_alert: AccessLevel
+        :param selectively_accept_calls: Set whether end users have access to make changes to their `Selectively accept
+            calls` feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type selectively_accept_calls: AccessLevel
+        :param selectively_reject_calls: Set whether end users have access to make changes to their `Selectively reject
+            calls` feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type selectively_reject_calls: AccessLevel
+        :param selectively_forward_calls: Set whether end users have access to make changes to their `Selectively
+            forward calls` feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type selectively_forward_calls: AccessLevel
+        :param sequential_ring: Set whether end users have access to make changes to their `Sequential ring` feature
+            via UserHub, or other clients (Webex, IP phone, etc.).
+        :type sequential_ring: AccessLevel
+        :param simultaneous_ring: Set whether end users have access to make changes to their `Simultaneous ring`
+            feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type simultaneous_ring: AccessLevel
+        :param single_number_reach: Set whether end users have access to make changes to their `Single number reach`
+            feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type single_number_reach: AccessLevel
+        :param voicemail: Set whether end users have access to make changes to their `Voicemail feature` feature via
+            UserHub, or other clients (Webex, IP phone, etc.).
+        :type voicemail: AccessLevel
+        :param send_calls_to_voicemail: Set whether end users have access to make changes to their `Send calls to
+            voicemail` feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type send_calls_to_voicemail: AccessLevel
+        :param voicemail_email_copy: Set whether end users have access to make changes to their `Email a copy of the
+            voicemail message` feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type voicemail_email_copy: AccessLevel
+        :param voicemail_fax_messaging: Set whether end users have access to make changes to their `Fax messaging`
+            feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type voicemail_fax_messaging: AccessLevel
+        :param voicemail_message_storage: Set whether end users have access to make changes to their `Message storage`
+            feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type voicemail_message_storage: AccessLevel
+        :param voicemail_notifications: Set whether end users have access to make changes to their `Notifications`
+            feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type voicemail_notifications: AccessLevel
+        :param voicemail_transfer_number: Set whether end users have access to make changes to their `Transfer on '0'
+            to another number.` feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type voicemail_transfer_number: AccessLevel
+        :param generate_activation_code: Set whether end users have access to make changes to their `Allow End User to
+            Generate Activation Codes & Delete their Phones` feature via UserHub, or other clients (Webex, IP phone,
+            etc.).
+        :type generate_activation_code: AccessLevel
+        :rtype: None
+        """
+        body = dict()
+        if anonymous_call_rejection is not None:
+            body['anonymousCallRejection'] = enum_str(anonymous_call_rejection)
+        if barge_in is not None:
+            body['bargeIn'] = enum_str(barge_in)
+        if block_caller_id is not None:
+            body['blockCallerId'] = enum_str(block_caller_id)
+        if call_forwarding is not None:
+            body['callForwarding'] = enum_str(call_forwarding)
+        if call_waiting is not None:
+            body['callWaiting'] = enum_str(call_waiting)
+        if call_notify is not None:
+            body['callNotify'] = enum_str(call_notify)
+        if connected_line_identity is not None:
+            body['connectedLineIdentity'] = enum_str(connected_line_identity)
+        if executive is not None:
+            body['executive'] = enum_str(executive)
+        if hoteling is not None:
+            body['hoteling'] = enum_str(hoteling)
+        if priority_alert is not None:
+            body['priorityAlert'] = enum_str(priority_alert)
+        if selectively_accept_calls is not None:
+            body['selectivelyAcceptCalls'] = enum_str(selectively_accept_calls)
+        if selectively_reject_calls is not None:
+            body['selectivelyRejectCalls'] = enum_str(selectively_reject_calls)
+        if selectively_forward_calls is not None:
+            body['selectivelyForwardCalls'] = enum_str(selectively_forward_calls)
+        if sequential_ring is not None:
+            body['sequentialRing'] = enum_str(sequential_ring)
+        if simultaneous_ring is not None:
+            body['simultaneousRing'] = enum_str(simultaneous_ring)
+        if single_number_reach is not None:
+            body['singleNumberReach'] = enum_str(single_number_reach)
+        if voicemail is not None:
+            body['voicemail'] = enum_str(voicemail)
+        if send_calls_to_voicemail is not None:
+            body['sendCallsToVoicemail'] = enum_str(send_calls_to_voicemail)
+        if voicemail_email_copy is not None:
+            body['voicemailEmailCopy'] = enum_str(voicemail_email_copy)
+        if voicemail_fax_messaging is not None:
+            body['voicemailFaxMessaging'] = enum_str(voicemail_fax_messaging)
+        if voicemail_message_storage is not None:
+            body['voicemailMessageStorage'] = enum_str(voicemail_message_storage)
+        if voicemail_notifications is not None:
+            body['voicemailNotifications'] = enum_str(voicemail_notifications)
+        if voicemail_transfer_number is not None:
+            body['voicemailTransferNumber'] = enum_str(voicemail_transfer_number)
+        if generate_activation_code is not None:
+            body['generateActivationCode'] = enum_str(generate_activation_code)
+        url = self.ep('config/people/settings/permissions')
+        super().put(url, json=body)
 
     def retrieve_agent_s_list_of_available_caller_ids(self, person_id: str,
                                                       org_id: str = None) -> list[AvailableCallerIdObject]:
@@ -3669,6 +3941,233 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         body['value'] = value
         url = self.ep(f'config/people/{person_id}/settings/msTeams')
         super().put(url, params=params, json=body)
+
+    def read_feature_access_settings_for_a_person(self, person_id: str) -> UserSettingsPermissionsGetDefault:
+        """
+        Read Feature Access Settings for a Person
+
+        Read the feature access configuration for the current user within the organization. It allows administrators to
+        read the telephony settings, including device and location configurations, specific to that user’s role and
+        access privileges. This API is useful for managing and verifying user-specific feature access within the
+        broader telephony system.
+
+        The feature is part of the organization’s telephony configuration management. It provides insight into the
+        settings and permissions that control how telephony services are assigned and configured for individual users.
+        This functionality is available through the Control Hub and allows for the management of user access to
+        various telephony-related features.
+
+        To access this API, the user must possess a full, or read-only administrator role. The authentication token
+        used must include the `spark-admin:telephony_config_read` scope, granting the necessary permissions to read
+        the telephony configuration for the user in question.
+
+        :param person_id: User ID of the Organization.
+        :type person_id: str
+        :rtype: :class:`UserSettingsPermissionsGetDefault`
+        """
+        url = self.ep(f'config/people/{person_id}/settings/permissions')
+        data = super().get(url)
+        r = UserSettingsPermissionsGetDefault.model_validate(data)
+        return r
+
+    def update_a_person_s_feature_access_configuration(self, person_id: str,
+                                                       anonymous_call_rejection: AccessLevel = None,
+                                                       barge_in: AccessLevel = None,
+                                                       block_caller_id: AccessLevel = None,
+                                                       call_forwarding: AccessLevel = None,
+                                                       call_waiting: AccessLevel = None,
+                                                       call_notify: AccessLevel = None,
+                                                       connected_line_identity: AccessLevel = None,
+                                                       executive: AccessLevel = None, hoteling: AccessLevel = None,
+                                                       priority_alert: AccessLevel = None,
+                                                       selectively_accept_calls: AccessLevel = None,
+                                                       selectively_reject_calls: AccessLevel = None,
+                                                       selectively_forward_calls: AccessLevel = None,
+                                                       sequential_ring: AccessLevel = None,
+                                                       simultaneous_ring: AccessLevel = None,
+                                                       single_number_reach: AccessLevel = None,
+                                                       voicemail: AccessLevel = None,
+                                                       send_calls_to_voicemail: AccessLevel = None,
+                                                       voicemail_email_copy: AccessLevel = None,
+                                                       voicemail_fax_messaging: AccessLevel = None,
+                                                       voicemail_message_storage: AccessLevel = None,
+                                                       voicemail_notifications: AccessLevel = None,
+                                                       voicemail_transfer_number: AccessLevel = None,
+                                                       generate_activation_code: AccessLevel = None):
+        """
+        Update a Person’s Feature Access Configuration
+
+        Update the feature access configuration for the current user within the organization. It enables administrators
+        to modify the telephony settings, including device and location configurations, specific to the user’s role
+        and access privileges. This API is useful for making adjustments to user-specific feature access within the
+        telephony system.
+
+        The feature is part of the organization’s telephony configuration management. It provides control over the
+        settings and permissions that govern how telephony services are assigned and configured for individual users.
+        This functionality is available through the Control Hub and enables the modification of user access to various
+        telephony-related features.
+
+        To use this API, an administrator must authenticate with a full, or device administrator auth token. The
+        authentication token used must include the `spark-admin:telephony_config_write` scope, granting the necessary
+        permissions to update the telephony configuration for the user in question.
+
+        :param person_id: User ID of the Organization.
+        :type person_id: str
+        :param anonymous_call_rejection: Set whether end users have access to make changes to their `Anonymous call
+            rejection` feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type anonymous_call_rejection: AccessLevel
+        :param barge_in: Set whether end users have access to make changes to their `Barge In` feature via UserHub, or
+            other clients (Webex, IP phone, etc.).
+        :type barge_in: AccessLevel
+        :param block_caller_id: Set whether end users have access to make changes to their `Block caller ID` feature
+            via UserHub, or other clients (Webex, IP phone, etc.).
+        :type block_caller_id: AccessLevel
+        :param call_forwarding: Set whether end users have access to make changes to their `Call forwarding` feature
+            via UserHub, or other clients (Webex, IP phone, etc.).
+        :type call_forwarding: AccessLevel
+        :param call_waiting: Set whether end users have access to make changes to their `Call waiting` feature via
+            UserHub, or other clients (Webex, IP phone, etc.).
+        :type call_waiting: AccessLevel
+        :param call_notify: Set whether end users have access to make changes to their `Call notify` feature via
+            UserHub, or other clients (Webex, IP phone, etc.).
+        :type call_notify: AccessLevel
+        :param connected_line_identity: Set whether end users have access to make changes to their `Connected line
+            identity` feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type connected_line_identity: AccessLevel
+        :param executive: Set whether end users have access to make changes to their `Executive/Executive assistant`
+            feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type executive: AccessLevel
+        :param hoteling: Set whether end users have access to make changes to their `Hoteling` feature via UserHub, or
+            other clients (Webex, IP phone, etc.).
+        :type hoteling: AccessLevel
+        :param priority_alert: Set whether end users have access to make changes to their `Priority alert` feature via
+            UserHub, or other clients (Webex, IP phone, etc.).
+        :type priority_alert: AccessLevel
+        :param selectively_accept_calls: Set whether end users have access to make changes to their `Selectively accept
+            calls` feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type selectively_accept_calls: AccessLevel
+        :param selectively_reject_calls: Set whether end users have access to make changes to their `Selectively reject
+            calls` feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type selectively_reject_calls: AccessLevel
+        :param selectively_forward_calls: Set whether end users have access to make changes to their `Selectively
+            forward calls` feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type selectively_forward_calls: AccessLevel
+        :param sequential_ring: Set whether end users have access to make changes to their `Sequential ring` feature
+            via UserHub, or other clients (Webex, IP phone, etc.).
+        :type sequential_ring: AccessLevel
+        :param simultaneous_ring: Set whether end users have access to make changes to their `Simultaneous ring`
+            feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type simultaneous_ring: AccessLevel
+        :param single_number_reach: Set whether end users have access to make changes to their `Single number reach`
+            feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type single_number_reach: AccessLevel
+        :param voicemail: Set whether end users have access to make changes to their `Voicemail feature` feature via
+            UserHub, or other clients (Webex, IP phone, etc.).
+        :type voicemail: AccessLevel
+        :param send_calls_to_voicemail: Set whether end users have access to make changes to their `Send calls to
+            voicemail` feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type send_calls_to_voicemail: AccessLevel
+        :param voicemail_email_copy: Set whether end users have access to make changes to their `Email a copy of the
+            voicemail message` feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type voicemail_email_copy: AccessLevel
+        :param voicemail_fax_messaging: Set whether end users have access to make changes to their `Fax messaging`
+            feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type voicemail_fax_messaging: AccessLevel
+        :param voicemail_message_storage: Set whether end users have access to make changes to their `Message storage`
+            feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type voicemail_message_storage: AccessLevel
+        :param voicemail_notifications: Set whether end users have access to make changes to their `Notifications`
+            feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type voicemail_notifications: AccessLevel
+        :param voicemail_transfer_number: Set whether end users have access to make changes to their `Transfer on '0'
+            to another number.` feature via UserHub, or other clients (Webex, IP phone, etc.).
+        :type voicemail_transfer_number: AccessLevel
+        :param generate_activation_code: Set whether end users have access to make changes to their `Allow End User to
+            Generate Activation Codes & Delete their Phones` feature via UserHub, or other clients (Webex, IP phone,
+            etc.).
+        :type generate_activation_code: AccessLevel
+        :rtype: None
+        """
+        body = dict()
+        if anonymous_call_rejection is not None:
+            body['anonymousCallRejection'] = enum_str(anonymous_call_rejection)
+        if barge_in is not None:
+            body['bargeIn'] = enum_str(barge_in)
+        if block_caller_id is not None:
+            body['blockCallerId'] = enum_str(block_caller_id)
+        if call_forwarding is not None:
+            body['callForwarding'] = enum_str(call_forwarding)
+        if call_waiting is not None:
+            body['callWaiting'] = enum_str(call_waiting)
+        if call_notify is not None:
+            body['callNotify'] = enum_str(call_notify)
+        if connected_line_identity is not None:
+            body['connectedLineIdentity'] = enum_str(connected_line_identity)
+        if executive is not None:
+            body['executive'] = enum_str(executive)
+        if hoteling is not None:
+            body['hoteling'] = enum_str(hoteling)
+        if priority_alert is not None:
+            body['priorityAlert'] = enum_str(priority_alert)
+        if selectively_accept_calls is not None:
+            body['selectivelyAcceptCalls'] = enum_str(selectively_accept_calls)
+        if selectively_reject_calls is not None:
+            body['selectivelyRejectCalls'] = enum_str(selectively_reject_calls)
+        if selectively_forward_calls is not None:
+            body['selectivelyForwardCalls'] = enum_str(selectively_forward_calls)
+        if sequential_ring is not None:
+            body['sequentialRing'] = enum_str(sequential_ring)
+        if simultaneous_ring is not None:
+            body['simultaneousRing'] = enum_str(simultaneous_ring)
+        if single_number_reach is not None:
+            body['singleNumberReach'] = enum_str(single_number_reach)
+        if voicemail is not None:
+            body['voicemail'] = enum_str(voicemail)
+        if send_calls_to_voicemail is not None:
+            body['sendCallsToVoicemail'] = enum_str(send_calls_to_voicemail)
+        if voicemail_email_copy is not None:
+            body['voicemailEmailCopy'] = enum_str(voicemail_email_copy)
+        if voicemail_fax_messaging is not None:
+            body['voicemailFaxMessaging'] = enum_str(voicemail_fax_messaging)
+        if voicemail_message_storage is not None:
+            body['voicemailMessageStorage'] = enum_str(voicemail_message_storage)
+        if voicemail_notifications is not None:
+            body['voicemailNotifications'] = enum_str(voicemail_notifications)
+        if voicemail_transfer_number is not None:
+            body['voicemailTransferNumber'] = enum_str(voicemail_transfer_number)
+        if generate_activation_code is not None:
+            body['generateActivationCode'] = enum_str(generate_activation_code)
+        url = self.ep(f'config/people/{person_id}/settings/permissions')
+        super().put(url, json=body)
+
+    def reset_a_person_s_feature_access_configuration_to_the_organization_s_default_settings(self, person_id: str):
+        """
+        Reset a Person’s Feature Access Configuration to the Organization’s Default Settings
+
+        Reset of a user’s feature access configuration to the organization’s default settings. It ensures that any
+        specific feature configurations set by an administrator for an individual user are overridden and replaced
+        with the global configuration of the organization. This process helps to maintain consistency in feature
+        access across all users, especially when administrators want to ensure that a user is subject to the
+        organization's global settings rather than personalized settings.
+
+        The overall feature, managed through the organization's Control Hub, involves the configuration and
+        customization of feature access for users. Administrators can tailor these settings to individual users based
+        on their roles or needs, but sometimes a global reset to the default configuration is necessary. The reset API
+        simplifies this by programmatically resetting a user’s feature access, which can be crucial when managing
+        large teams or updating organizational policies that affect user privileges across multiple devices or
+        locations.
+
+        .To use this API, an administrator must authenticate with a full, or device administrator auth token. This
+        ensures the individual has the necessary privileges to make changes to user configurations. Furthermore, the
+        authentication token used must include the `spark-admin:telephony_config_write` scope, which grants the
+        required permissions to modify the telephony configuration for the user. This combination of roles and scopes
+        ensures that only authorized administrators can reset the feature access configuration.
+
+        :param person_id: User ID of the Organization.
+        :type person_id: str
+        :rtype: None
+        """
+        url = self.ep(f'config/people/{person_id}/settings/permissions/actions/reset/invoke')
+        super().post(url)
 
     def modify_a_person_s_voicemail_passcode(self, person_id: str, passcode: str, org_id: str = None):
         """

@@ -365,6 +365,16 @@ The method name is a link to the method documentation.
         Modify Executive Assistant Settings for a Person
    * - :meth:`api.person_settings.exec_assistant.read <wxc_sdk.person_settings.exec_assistant.ExecAssistantApi.read>`
         Retrieve Executive Assistant Settings for a Person
+   * - :meth:`api.person_settings.feature_access.read <wxc_sdk.person_settings.feature_access.FeatureAccessApi.read>`
+        Read Feature Access Settings for a Person
+   * - :meth:`api.person_settings.feature_access.read_default <wxc_sdk.person_settings.feature_access.FeatureAccessApi.read_default>`
+        Read Default Feature Access Settings for Person
+   * - :meth:`api.person_settings.feature_access.reset <wxc_sdk.person_settings.feature_access.FeatureAccessApi.reset>`
+        Reset a Person’s Feature Access Configuration to the Organization’s Default Settings
+   * - :meth:`api.person_settings.feature_access.update <wxc_sdk.person_settings.feature_access.FeatureAccessApi.update>`
+        Update a Person’s Feature Access Configuration
+   * - :meth:`api.person_settings.feature_access.update_default <wxc_sdk.person_settings.feature_access.FeatureAccessApi.update_default>`
+        Update Default Person Feature Access Configuration
    * - :meth:`api.person_settings.forwarding.configure <wxc_sdk.person_settings.forwarding.PersonForwardingApi.configure>`
         Configure an Entity's Call Forwarding Settings
    * - :meth:`api.person_settings.forwarding.read <wxc_sdk.person_settings.forwarding.PersonForwardingApi.read>`
