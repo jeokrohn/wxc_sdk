@@ -202,7 +202,7 @@ from wxc_sdk.telephony.location.emergency_services import LocationCallNotificati
 from wxc_sdk.telephony.location.internal_dialing import InternalDialing
 from wxc_sdk.telephony.location.moh import LocationMoHGreetingType, LocationMoHSetting
 from wxc_sdk.telephony.location.numbers import NumberAddError, NumberAddResponse, NumberUsageType, \
-    TelephoneNumberType
+    NumbersRequestAction, TelephoneNumberType
 from wxc_sdk.telephony.location.vm import LocationVoiceMailSettings
 from wxc_sdk.telephony.operating_modes import Day, DaySchedule, DifferentHoursDaily, Month, OperatingMode, \
     OperatingModeHoliday, OperatingModeRecurYearlyByDate, OperatingModeRecurYearlyByDay, OperatingModeRecurrence, \
@@ -335,11 +335,12 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationSt
            'NoiseCancellation', 'NoteType', 'Notification', 'NotificationRepeat', 'NotificationType',
            'NumberAddError', 'NumberAddResponse', 'NumberAndAction', 'NumberDetails', 'NumberItem', 'NumberJob',
            'NumberListPhoneNumber', 'NumberListPhoneNumberType', 'NumberOwner', 'NumberState', 'NumberType',
-           'NumberUsageType', 'OfficeNumber', 'OnboardingMethod', 'OperatingMode', 'OperatingModeHoliday',
-           'OperatingModeRecurYearlyByDate', 'OperatingModeRecurYearlyByDay', 'OperatingModeRecurrence',
-           'OperatingModeSchedule', 'OrgComplianceAnnouncement', 'OrgEmergencyCallNotification', 'OrgMSTeamsSettings',
-           'OrganisationVoicemailSettings', 'OrganisationVoicemailSettingsAPI', 'Organization', 'OriginatorType',
-           'OutboundProxy', 'OutgoingCallingPlanPermissionsByDigitPattern', 'OutgoingCallingPlanPermissionsByType',
+           'NumberUsageType', 'NumbersRequestAction', 'OfficeNumber', 'OnboardingMethod', 'OperatingMode',
+           'OperatingModeHoliday', 'OperatingModeRecurYearlyByDate', 'OperatingModeRecurYearlyByDay',
+           'OperatingModeRecurrence', 'OperatingModeSchedule', 'OrgComplianceAnnouncement',
+           'OrgEmergencyCallNotification', 'OrgMSTeamsSettings', 'OrganisationVoicemailSettings',
+           'OrganisationVoicemailSettingsAPI', 'Organization', 'OriginatorType', 'OutboundProxy',
+           'OutgoingCallingPlanPermissionsByDigitPattern', 'OutgoingCallingPlanPermissionsByType',
            'OutgoingPermissionCallType', 'OutgoingPermissions', 'OverflowAction', 'OverflowSetting', 'OwnerType',
            'PSTNConnection', 'PSTNConnectionOption', 'PSTNServiceType', 'PSTNType', 'PTTConnectionType', 'Paging',
            'PagingAgent', 'Participant', 'ParticipantState', 'PasscodeRules', 'PatchMeetingBody',

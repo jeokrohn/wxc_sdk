@@ -1213,6 +1213,8 @@ The method name is a link to the method documentation.
         Activate Phone Numbers in a location
    * - :meth:`api.telephony.location.number.add <wxc_sdk.telephony.location.numbers.LocationNumbersApi.add>`
         Add Phone Numbers to a location
+   * - :meth:`api.telephony.location.number.manage_number_state <wxc_sdk.telephony.location.numbers.LocationNumbersApi.manage_number_state>`
+        Manage Number State in a location
    * - :meth:`api.telephony.location.number.remove <wxc_sdk.telephony.location.numbers.LocationNumbersApi.remove>`
         Remove phone numbers from a location
    * - :meth:`api.telephony.location.permissions_out.configure <wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.configure>`
@@ -1309,6 +1311,8 @@ The method name is a link to the method documentation.
         Activate Phone Numbers in a location
    * - :meth:`api.telephony.locations.number.add <wxc_sdk.telephony.location.numbers.LocationNumbersApi.add>`
         Add Phone Numbers to a location
+   * - :meth:`api.telephony.locations.number.manage_number_state <wxc_sdk.telephony.location.numbers.LocationNumbersApi.manage_number_state>`
+        Manage Number State in a location
    * - :meth:`api.telephony.locations.number.remove <wxc_sdk.telephony.location.numbers.LocationNumbersApi.remove>`
         Remove phone numbers from a location
    * - :meth:`api.telephony.locations.permissions_out.configure <wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.configure>`
