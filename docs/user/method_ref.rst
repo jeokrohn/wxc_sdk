@@ -931,6 +931,8 @@ The method name is a link to the method documentation.
         Validate Wrap Up Reason
    * - :meth:`api.telephony.dect_devices.add_a_handset <wxc_sdk.telephony.dect_devices.DECTDevicesApi.add_a_handset>`
         Add a Handset to a DECT Network
+   * - :meth:`api.telephony.dect_devices.add_list_of_handsets <wxc_sdk.telephony.dect_devices.DECTDevicesApi.add_list_of_handsets>`
+        Add a List of Handsets to a DECT Network
    * - :meth:`api.telephony.dect_devices.available_members <wxc_sdk.telephony.dect_devices.DECTDevicesApi.available_members>`
         Search Available Members
    * - :meth:`api.telephony.dect_devices.base_station_details <wxc_sdk.telephony.dect_devices.DECTDevicesApi.base_station_details>`

@@ -11,7 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['AvailableMember', 'BaseStationDetailResponse', 'BaseStationPostResult', 'BaseStationResponse',
+__all__ = ['AddDECTHandset', 'AddDECTHandsetBulkSuccessResponse', 'AddDECTHandsetBulkSuccessResponseResult',
+           'AvailableMember', 'BaseStationDetailResponse', 'BaseStationPostResult', 'BaseStationResponse',
            'BaseStationType', 'BaseStationsResponse', 'CreateDECTNetworkModel', 'DECTDevicesSettingsApi',
            'DECTHandsetGet', 'DECTHandsetItem', 'DECTHandsetLineResponse', 'DECTHandsetList', 'DECTNetworkDetail',
            'DECTNetworkItem', 'HandsetsResponse', 'LineType', 'Lines', 'Location', 'MemberType', 'UsageType']
@@ -26,6 +27,28 @@ class CreateDECTNetworkModel(str, Enum):
     dms_cisco_dbs210 = 'DMS Cisco DBS210'
     #: Alternate product/display name which also specifies the model `DMS Cisco DBS210`.
     cisco_dect_210_base = 'Cisco DECT 210 Base'
+
+
+class AddDECTHandset(ApiModel):
+    #: ID of the member on line1 of the handset. Members can be PEOPLE or PLACE.
+    line1_member_id: Optional[str] = None
+    #: ID of the member on line2 of the handset. Members can be PEOPLE, PLACE, or VIRTUAL_LINE.
+    line2_member_id: Optional[str] = None
+    #: Custom display name on the handset. Min and max length supported for the custom display name is 1 and 16
+    #: respectively.
+    custom_display_name: Optional[str] = None
+
+
+class AddDECTHandsetBulkSuccessResponseResult(ApiModel):
+    #: The status of the add handset request.
+    status: Optional[int] = None
+
+
+class AddDECTHandsetBulkSuccessResponse(ApiModel):
+    #: The custom display name on the handset.
+    custom_display_name: Optional[str] = None
+    #: The result of the add handset request.
+    result: Optional[AddDECTHandsetBulkSuccessResponseResult] = None
 
 
 class BaseStationPostResult(ApiModel):
@@ -267,6 +290,11 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
     
     Adding and modifying these DECT settings requires a full administrator auth token with a scope of
     `spark-admin:telephony_config_write`.
+    
+    Adding or removing handsets to the DECT network in less than 90 seconds may
+    result in base station not having the latest configuration until the base
+    station is rebooted.
+    
     """
 
     def get_the_list_of_dect_networks_for_an_organization(self, name: str = None, location_id: str = None,
@@ -701,6 +729,9 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         <div><Callout type="warning">Adding a DECT handset to a person with a Webex Calling Standard license will
         disable Webex Calling across their Webex mobile, tablet, desktop, and browser applications.</Callout></div>
 
+        <div><Callout type="warning">Adding or removing handsets to the DECT network in less than 90 seconds may result
+        in base station not having the latest configuration until the base station is rebooted.</Callout></div>
+
         :param location_id: Add handset in this location.
         :type location_id: str
         :param dect_network_id: A unique identifier for the DECT network.
@@ -744,6 +775,9 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         <div><Callout type="warning">Deleting a DECT handset from a person with a Webex Calling Standard license will
         enable Webex Calling across their Webex mobile, tablet, desktop, and browser applications.</Callout></div>
 
+        <div><Callout type="warning">Adding or removing handsets to the DECT network in less than 90 seconds may result
+        in base station not having the latest configuration until the base station is rebooted.</Callout></div>
+
         :param location_id: Location containing the DECT network.
         :type location_id: str
         :param dect_network_id: Delete handset details in the specified DECT network ID.
@@ -766,6 +800,49 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/handsets')
         super().delete(url, params=params, json=body)
 
+    def add_a_list_of_handsets_to_a_dect_network(self, location_id: str, dect_network_id: str,
+                                                 items: list[AddDECTHandset],
+                                                 org_id: str = None) -> list[AddDECTHandsetBulkSuccessResponse]:
+        """
+        Add a List of Handsets to a DECT Network
+
+        Add a list of up to 50 handsets to a DECT network in a location.
+
+        A DECT network acts as a container that can support up to 1,000 lines across all handsets, with each handset
+        capable of handling up to two lines. Once the network is created, you can add bases, handsets, and assign
+        users or lines as needed.
+
+        Adding a list of handsets to a DECT network requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        <div><Callout type="warning">Adding a DECT handset to a person with a Webex Calling Standard license will
+        disable Webex Calling across their Webex mobile, tablet, desktop, and browser applications.
+
+        </Callout></div>
+
+        <div><Callout type="warning">Adding or removing handsets to the DECT network in less than 90 seconds may result
+        in base station not having the latest configuration until the base station is rebooted.</Callout></div>
+
+        :param location_id: Add handsets in this location.
+        :type location_id: str
+        :param dect_network_id: A unique identifier for the DECT network.
+        :type dect_network_id: str
+        :param items: List of handsets that are to be added to the DECT network.
+        :type items: list[AddDECTHandset]
+        :param org_id: Add handsets in this organization.
+        :type org_id: str
+        :rtype: list[AddDECTHandsetBulkSuccessResponse]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['items'] = TypeAdapter(list[AddDECTHandset]).dump_python(items, mode='json', by_alias=True, exclude_none=True)
+        url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/handsets/bulk')
+        data = super().post(url, params=params, json=body)
+        r = TypeAdapter(list[AddDECTHandsetBulkSuccessResponse]).validate_python(data['items'])
+        return r
+
     def delete_specific_dect_network_handset_details(self, location_id: str, dect_network_id: str, handset_id: str,
                                                      org_id: str = None):
         """
@@ -781,6 +858,9 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
 
         <div><Callout type="warning">Deleting a DECT handset from a person with a Webex Calling Standard license will
         enable Webex Calling across their Webex mobile, tablet, desktop, and browser applications.</Callout></div>
+
+        <div><Callout type="warning">Adding or removing handsets to the DECT network in less than 90 seconds may result
+        in base station not having the latest configuration until the base station is rebooted.</Callout></div>
 
         :param location_id: Location containing the DECT network.
         :type location_id: str
@@ -849,6 +929,9 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         will disable Webex Calling across their Webex mobile, tablet, desktop, and browser applications.
         Removing a person with a Webex Calling Standard license from the DECT handset line1 will enable Webex Calling
         across their Webex mobile, tablet, desktop, and browser applications.</Callout></div>
+
+        <div><Callout type="warning">Adding or removing handsets to the DECT network in less than 90 seconds may result
+        in base station not having the latest configuration until the base station is rebooted.</Callout></div>
 
         :param location_id: Location containing the DECT network.
         :type location_id: str

@@ -18964,6 +18964,12 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         Adding a handset to a DECT network requires a full administrator auth token with a scope
         of `spark-admin:telephony_config_write`
 
+        Adding a DECT handset to a person with a Webex Calling Standard license will
+        disable Webex Calling across their Webex mobile, tablet, desktop, and browser applications.
+
+        Adding or removing handsets to the DECT network in less than 90 seconds may result
+        in base station not having the latest configuration until the base station is rebooted.
+
         :param location_id: Add handset in this location.
         :type location_id: str
         :param dect_network_id: A unique identifier for the DECT network.
@@ -18992,6 +18998,48 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         body['customDisplayName'] = custom_display_name
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/handsets')
         await super().post(url, params=params, json=body)
+
+    async def add_list_of_handsets(self, location_id: str, dect_network_id: str,
+                             items: list[AddDECTHandset],
+                             org_id: str = None) -> list[AddDECTHandsetBulkResponse]:
+        """
+        Add a List of Handsets to a DECT Network
+
+        Add a list of up to 50 handsets to a DECT network in a location.
+
+        A DECT network acts as a container that can support up to 1,000 lines across all handsets, with each handset
+        capable of handling up to two lines. Once the network is created, you can add bases, handsets, and assign
+        users or lines as needed.
+
+        Adding a list of handsets to a DECT network requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        Adding a DECT handset to a person with a Webex Calling Standard license will
+        disable Webex Calling across their Webex mobile, tablet, desktop, and browser applications.
+
+        Adding or removing handsets to the DECT network in less than 90 seconds may result
+        in base station not having the latest configuration until the base station is rebooted.
+
+        :param location_id: Add handsets in this location.
+        :type location_id: str
+        :param dect_network_id: A unique identifier for the DECT network.
+        :type dect_network_id: str
+        :param items: List of handsets that are to be added to the DECT network.
+        :type items: list[AddDECTHandset]
+        :param org_id: Add handsets in this organization.
+        :type org_id: str
+        :rtype: list[AddDECTHandsetBulkResponse]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['items'] = TypeAdapter(list[AddDECTHandset]).dump_python(items, mode='json', by_alias=True,
+                                                                      exclude_none=True)
+        url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/handsets/bulk')
+        data = await super().post(url, params=params, json=body)
+        r = TypeAdapter(list[AddDECTHandsetBulkResponse]).validate_python(data['items'])
+        return r
 
     async def list_handsets(self, location_id: str, dect_network_id: str,
                       basestation_id: str = None, member_id: str = None,
@@ -19147,6 +19195,12 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         can be of type PEOPLE, PLACE, or VIRTUAL_LINE.
 
         This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        Deleting a DECT handset from a person with a Webex Calling Standard license will
+        enable Webex Calling across their Webex mobile, tablet, desktop, and browser applications.
+
+        Adding or removing handsets to the DECT network in less than 90 seconds may result
+        in base station not having the latest configuration until the base station is rebooted.
 
         :param location_id: Location containing the DECT network.
         :type location_id: str

@@ -170,9 +170,10 @@ from wxc_sdk.telephony.conference import ConferenceDetails, ConferenceParticipan
 from wxc_sdk.telephony.cx_essentials import ScreenPopConfiguration
 from wxc_sdk.telephony.cx_essentials.wrapup_reasons import AvailableQueue, QueueWrapupReasonSettings, \
     WrapUpReason, WrapUpReasonDetails, WrapupReasonQueue
-from wxc_sdk.telephony.dect_devices import BaseStationDetail, BaseStationResponse, BaseStationResult, \
-    BaseStationsResponse, DECTHandsetItem, DECTHandsetLine, DECTHandsetList, DECTNetworkDetail, DECTNetworkModel, \
-    DectDevice, Handset, UsageType
+from wxc_sdk.telephony.dect_devices import AddDECTHandset, AddDECTHandsetBulkError, AddDECTHandsetBulkResponse, \
+    AddDECTHandsetBulkResult, BaseStationDetail, BaseStationResponse, BaseStationResult, BaseStationsResponse, \
+    DECTHandsetItem, DECTHandsetLine, DECTHandsetList, DECTNetworkDetail, DECTNetworkModel, DectDevice, Handset, \
+    UsageType
 from wxc_sdk.telephony.devices import ActivationState, AvailableMember, BackgroundImage, BackgroundImages, \
     DeleteDeviceBackgroundImagesResponse, DeleteImageRequestObject, DeleteImageResponseSuccessObject, \
     DeleteImageResponseSuccessObjectResult, DeviceLayout, DeviceMember, DeviceMembersResponse, DeviceSettings, \
@@ -243,16 +244,17 @@ from wxc_sdk.workspaces import Calendar, CalendarType, CallingType, CapabilityMa
 from wxc_sdk.xapi import ExecuteCommandResponse, QueryStatusResponse
 
 __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationState', 'AdaptiveCard',
-           'AdaptiveCardAction', 'AdaptiveCardBody', 'AdmitParticipantsBody', 'Agent', 'AgentCallQueueSetting',
-           'AgentCallerId', 'AgentOrSupervisor', 'AlternateNumber', 'AlternateNumberSettings', 'AnnAudioFile',
-           'Announcement', 'AnnouncementLanguage', 'AnnouncementLevel', 'AnnouncementMode', 'AnswerCondition',
-           'AnswerObject', 'Answers', 'ApiModel', 'ApiModelWithErrors', 'ApiSelector', 'AppServicesSettings',
-           'AppliedService', 'AppliedServiceTranslationPattern', 'ApplyLineKeyTemplateAction',
-           'ApplyLineKeyTemplateJobDetails', 'ApprovalQuestion', 'ApprovalRule', 'AssignedDectNetwork',
-           'AtaCustomization', 'AtaDtmfMethod', 'AtaDtmfMode', 'AttachmentAction', 'AttachmentActionData',
-           'AttendeePrivileges', 'Audio', 'AudioCodecPriority', 'AudioConnectionOptions', 'AudioConnectionType',
-           'AudioSource', 'AudioType', 'AuditEvent', 'AuditEventData', 'AuthCode', 'AuthCodeLevel', 'AuthCodes',
-           'Authorization', 'AuthorizationType', 'AutoAttendant', 'AutoAttendantAction',
+           'AdaptiveCardAction', 'AdaptiveCardBody', 'AddDECTHandset', 'AddDECTHandsetBulkError',
+           'AddDECTHandsetBulkResponse', 'AddDECTHandsetBulkResult', 'AdmitParticipantsBody', 'Agent',
+           'AgentCallQueueSetting', 'AgentCallerId', 'AgentOrSupervisor', 'AlternateNumber',
+           'AlternateNumberSettings', 'AnnAudioFile', 'Announcement', 'AnnouncementLanguage', 'AnnouncementLevel',
+           'AnnouncementMode', 'AnswerCondition', 'AnswerObject', 'Answers', 'ApiModel', 'ApiModelWithErrors',
+           'ApiSelector', 'AppServicesSettings', 'AppliedService', 'AppliedServiceTranslationPattern',
+           'ApplyLineKeyTemplateAction', 'ApplyLineKeyTemplateJobDetails', 'ApprovalQuestion', 'ApprovalRule',
+           'AssignedDectNetwork', 'AtaCustomization', 'AtaDtmfMethod', 'AtaDtmfMode', 'AttachmentAction',
+           'AttachmentActionData', 'AttendeePrivileges', 'Audio', 'AudioCodecPriority', 'AudioConnectionOptions',
+           'AudioConnectionType', 'AudioSource', 'AudioType', 'AuditEvent', 'AuditEventData', 'AuthCode',
+           'AuthCodeLevel', 'AuthCodes', 'Authorization', 'AuthorizationType', 'AutoAttendant', 'AutoAttendantAction',
            'AutoAttendantKeyConfiguration', 'AutoAttendantMenu', 'AutoRegistrationResult', 'AutoTransferNumbers',
            'AvailableAgent', 'AvailableCallerIdType', 'AvailableFeature', 'AvailableMember', 'AvailableNumber',
            'AvailablePhoneNumberLicenseType', 'AvailableQueue', 'AvailableRecallHuntGroup', 'Background',
