@@ -36,8 +36,11 @@ class QueueSettingsReason(ApiModel):
 
 
 class QueueWrapupReasonSettings(ApiModel):
+    #: Denotes whether the wrap-up timer is enabled.
     wrapup_timer_enabled: Optional[bool] = None
+    #: Wrap up timer value in seconds.
     wrapup_timer: Optional[int] = None
+    #: List of wrap-up reasons.
     wrapup_reasons: Optional[list[QueueSettingsReason]] = None
 
 

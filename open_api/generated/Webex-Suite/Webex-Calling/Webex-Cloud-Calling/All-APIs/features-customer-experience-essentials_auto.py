@@ -13,8 +13,8 @@ from wxc_sdk.base import SafeEnum as Enum
 
 __all__ = ['FeaturesCustomerExperienceEssentialsApi', 'GetAvailableAgentsCallQueueObject',
            'GetAvailableAgentsCallQueueObjectPhoneNumbers', 'GetScreenPopConfigurationObject', 'QueryParamsObject',
-           'QueueObject', 'QueueObjectWithDefaultEnabled', 'QueueWrapUpReasonObject', 'UserType',
-           'WrapUpReasonDetailsObject', 'WrapUpReasonObject']
+           'QueueObject', 'QueueObjectWithDefaultEnabled', 'QueueWrapUpReasonObject',
+           'ReadWrapUpReasonSettingsResponse', 'UserType', 'WrapUpReasonDetailsObject', 'WrapUpReasonObject']
 
 
 class QueryParamsObject(ApiModel):
@@ -134,6 +134,15 @@ class QueueWrapUpReasonObject(ApiModel):
     is_default_enabled: Optional[bool] = None
 
 
+class ReadWrapUpReasonSettingsResponse(ApiModel):
+    #: Denotes whether the wrap-up timer is enabled.
+    wrapup_timer_enabled: Optional[bool] = None
+    #: Wrap up timer value in seconds.
+    wrapup_timer: Optional[int] = None
+    #: List of wrap-up reasons.
+    wrapup_reasons: Optional[list[QueueWrapUpReasonObject]] = None
+
+
 class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config'):
     """
     Features: Customer Experience Essentials
@@ -179,7 +188,7 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
     <https://help.webex.com/en-us/article/nzkg083/Webex-Customer-Experience-Basic>`_
     """
 
-    def read_wrap_up_reason_settings(self, location_id: str, queue_id: str) -> list[QueueWrapUpReasonObject]:
+    def read_wrap_up_reason_settings(self, location_id: str, queue_id: str) -> ReadWrapUpReasonSettingsResponse:
         """
         Read Wrap Up Reason Settings
 
@@ -199,11 +208,11 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
         :type location_id: str
         :param queue_id: The queue ID.
         :type queue_id: str
-        :rtype: list[QueueWrapUpReasonObject]
+        :rtype: :class:`ReadWrapUpReasonSettingsResponse`
         """
         url = self.ep(f'cxEssentials/locations/{location_id}/queues/{queue_id}/wrapup/settings')
         data = super().get(url)
-        r = TypeAdapter(list[QueueWrapUpReasonObject]).validate_python(data['wrapUpReasons'])
+        r = ReadWrapUpReasonSettingsResponse.model_validate(data)
         return r
 
     def update_wrap_up_reason_settings(self, location_id: str, queue_id: str, wrapup_reasons: list[str] = None,
@@ -269,11 +278,11 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
         """
         url = self.ep('cxEssentials/wrapup/reasons')
         data = super().get(url)
-        r = TypeAdapter(list[WrapUpReasonObject]).validate_python(data['wrapUpReasons'])
+        r = TypeAdapter(list[WrapUpReasonObject]).validate_python(data['wrapupReasons'])
         return r
 
     def create_wrap_up_reason(self, name: str, description: str = None, queues: list[str] = None,
-                              assign_all_queues_enabled: bool = None):
+                              assign_all_queues_enabled: bool = None) -> str:
         """
         Create Wrap Up Reason
 
@@ -297,7 +306,7 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
         :type queues: list[str]
         :param assign_all_queues_enabled: Denotes whether all queues are assigned to the wrap-up reason.
         :type assign_all_queues_enabled: bool
-        :rtype: None
+        :rtype: str
         """
         body = dict()
         body['name'] = name
@@ -308,7 +317,9 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
         if assign_all_queues_enabled is not None:
             body['assignAllQueuesEnabled'] = assign_all_queues_enabled
         url = self.ep('cxEssentials/wrapup/reasons')
-        super().post(url, json=body)
+        data = super().post(url, json=body)
+        r = data['id']
+        return r
 
     def validate_wrap_up_reason(self, name: str):
         """
@@ -376,11 +387,11 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
 
         :param wrapup_reason_id: Wrap-up reason ID.
         :type wrapup_reason_id: str
-        :rtype: WrapUpReasonDetailsObject
+        :rtype: :class:`WrapUpReasonDetailsObject`
         """
         url = self.ep(f'cxEssentials/wrapup/reasons/{wrapup_reason_id}')
         data = super().get(url)
-        r = WrapUpReasonDetailsObject.model_validate(data['wrapUpReason'])
+        r = WrapUpReasonDetailsObject.model_validate(data)
         return r
 
     def update_wrap_up_reason(self, wrapup_reason_id: str, name: str = None, description: str = None,
