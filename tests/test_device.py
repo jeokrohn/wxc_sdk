@@ -1,4 +1,5 @@
 import asyncio
+import base64
 import json
 import random
 import uuid
@@ -11,6 +12,7 @@ from pydantic import Field, TypeAdapter
 
 from tests.base import TestCaseWithLog, TestWithLocations, async_test
 from tests.testutil import available_mac_address, calling_users, create_workspace_with_webex_calling
+from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import DeviceType
 from wxc_sdk.devices import TagOp, Device
 from wxc_sdk.telephony import DeviceManagedBy
@@ -153,6 +155,27 @@ class TestDevice(TestCaseWithLog):
                                          for device in devices])
         print(json.dumps(TypeAdapter(list[Device]).dump_python(details, mode='json', by_alias=True), indent=2))
         print(f'Got details for {len(details)} devices')
+
+    @async_test
+    async def test_device_ids(self):
+        """
+        Get device IDs for all devices
+        """
+        devices = list(self.api.devices.list())
+        if not devices:
+            self.skipTest('No devices')
+        details_list = await asyncio.gather(*[self.async_api.devices.details(device_id=device.device_id)
+                                              for device in devices])
+        for device in details_list:
+            print(f'{device.display_name}: ')
+            fields = ['device_id', 'calling_device_id', 'webex_device_id']
+            field_len = max(map(len, fields))
+            for field in fields:
+                value = getattr(device, field, None)
+                print(f'  {field:{field_len}}: {value}')
+                if value is None:
+                    continue
+                print(f'    {webex_id_to_uuid(value)} {base64.b64decode(value).decode()}')
 
     @contextmanager
     def device_for_tag_test(self) -> Device:

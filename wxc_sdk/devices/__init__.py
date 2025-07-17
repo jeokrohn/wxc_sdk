@@ -47,6 +47,8 @@ class Lifecycle(str, Enum):
 class Device(ApiModel):
     #: A unique identifier for the device.
     device_id: str = Field(alias='id')
+    calling_device_id: Optional[str]
+    webex_device_id: Optional[str]
     #: A friendly name for the device
     display_name: str
     #: The workspace associated with the device.
@@ -113,6 +115,7 @@ class Device(ApiModel):
     #: The device platform.
     device_platform: Optional[DevicePlatform] = None
     lifecycle: Optional[Lifecycle] = None
+    planned_maintenance: Optional[str] = None
 
     @model_validator(mode='before')
     def pop_place_id(cls, values):
