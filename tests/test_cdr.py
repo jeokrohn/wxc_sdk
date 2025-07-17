@@ -13,7 +13,7 @@ from wxc_sdk.rest import RestError
 
 
 class TestCDR(TestCaseWithLog):
-    def test_001(self):
+    def test_001_get_cdrs(self):
         """
         Get CDRs
         """
