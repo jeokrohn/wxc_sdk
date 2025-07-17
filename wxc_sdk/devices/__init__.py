@@ -114,7 +114,9 @@ class Device(ApiModel):
     sip_user_name: Optional[str] = None
     #: The device platform.
     device_platform: Optional[DevicePlatform] = None
+    #: TODO: undocumented, WXCAPIBULK-719
     lifecycle: Optional[Lifecycle] = None
+    #: TODO: undocumented, WXCAPIBULK-719
     planned_maintenance: Optional[str] = None
 
     @model_validator(mode='before')
