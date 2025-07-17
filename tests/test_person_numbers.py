@@ -85,6 +85,69 @@ class TestRead(TestCaseWithUsers):
                  if n != n_true or n != n_false]
         self.assertFalse(not diffs, 'apparently prefer_e164_format does not change anything?')
 
+    def test_check_and_fix_user_extension_format(self):
+        """
+        Read users and verify extension format; try to fix if an error is found
+        """
+        # get user numbers for all locations
+        numbers = list(self.api.telephony.phone_numbers(owner_type=OwnerType.people))
+
+        err = False
+
+        # cache for available extensions in location
+        available_extension_cache: dict[str, str] = dict()
+
+        for user in self.users:
+            work_extension = next((pn for pn in user.phone_numbers
+                                   if pn.number_type == PhoneNumberType.work_extension), None)
+            if not work_extension:
+                print(f'User {user.display_name} does not have a work extension')
+                err = True
+                continue
+            user_numbers = [number for number in numbers if number.owner.owner_id == user.person_id]
+            user_number = next((num for num in user_numbers if work_extension.value.endswith(num.extension)), None)
+            if not user_number:
+                print(f'User {user.display_name} does not have a valid work extension: {work_extension}')
+                err = True
+                continue
+            if work_extension.value != user_number.esn:
+                print(f'User {user.display_name} has an invalid work extension: {work_extension.value} '
+                      f'({user_number.esn})')
+                new_extension = available_extension_cache.get(user.location_id, None)
+                if new_extension is None:
+                    # get a new extension in that location
+                    with self.no_log():
+                        new_extension = available_extensions(api=self.api, location_id=user.location_id)[0]
+                    # add it to the cache
+                    available_extension_cache[user.location_id] = new_extension
+                # set user extension to the new extension
+                old_extension = user.extension
+                user.extension = new_extension
+                self.api.people.update(person=user, calling_data=True)
+                # .. and then back to the old extension
+                user.extension = old_extension
+                after = self.api.people.update(person=user, calling_data=True)
+
+                # verify work extension after update
+                after_work_extension = next((pn for pn in after.phone_numbers
+                                             if pn.number_type == PhoneNumberType.work_extension), None)
+                if after_work_extension is None:
+                    print(f'User {user.display_name} has no work extension after update')
+                    err = True
+                else:
+                    if after_work_extension.value != user_number.esn:
+                        print(f'User {user.display_name} still has an invalid work extension: '
+                              f'{after_work_extension.value} ({user_number.esn})')
+                        err = True
+                    else:
+                        print(f'User {user.display_name} has a valid work extension after update: '
+                              f'{after_work_extension.value}')
+                    # if
+                # if
+            # if
+        # for
+        self.assertFalse(err, 'Some issues with work extensions')
+
 
 @dataclass(init=False, repr=False)
 class PhoneNumbersAndExtensions(TestCaseWithUsers, TestWithLocations):
@@ -533,6 +596,7 @@ class TestUserLocationConsistency(TestCaseWithLog):
     """
     See if location information at the user level is consistent with location info on primary numbers of users
     """
+
     @staticmethod
     def user_str(u: Person) -> str:
         return f'{u.display_name}({u.emails[0]})'

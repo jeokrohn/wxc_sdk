@@ -717,41 +717,54 @@ class TestCaseWithUsers(TestCaseWithLog):
         super().setUpClass()
         print('Getting users...')
 
-        # read users from cache
-        user_cache = cls.users_from_cache()
-        if user_cache.needs_validation or not user_cache.users or not user_cache.licenses:
-            # get licenses
-            user_cache.licenses = list(cls.api.licenses.list())
-            # getting users w/o calling data is relatively fast. Look at that list for validation
-            user_dict = {user.person_id: user for user in cls.api.people.list()}
-            user_dict: dict[str, Person]
+        USE_CACHE = False
+        if not USE_CACHE:
+            users = list(cls.api.people.list(calling_data=True))
+            licenses = list(cls.api.licenses.list())
+            calling_license_ids = set(lic.license_id
+                                      for lic in licenses
+                                      if lic.webex_calling)
 
-            # all users from cache still exist and licenses have not changed?
-            if user_cache.users and all((user := user_dict.get(cu.person_id)) and user.licenses == cu.licenses
-                                        for cu in user_cache.users):
-                pass
-            else:
-                # update cache
-                if False:
-                    # maybe getting details for all users is faster than listing...
-                    with ThreadPoolExecutor() as pool:
-                        user_cache.users = list(pool.map(lambda user: cls.api.people.details(person_id=user.person_id,
-                                                                                             calling_data=True),
-                                                         user_dict.values()))
+            # pick the calling enabled users
+            cls.users = [user
+                         for user in users
+                         if (set(user.licenses) & calling_license_ids)]
+        else:
+            # read users from cache
+            user_cache = cls.users_from_cache()
+            if user_cache.needs_validation or not user_cache.users or not user_cache.licenses:
+                # get licenses
+                user_cache.licenses = list(cls.api.licenses.list())
+                # getting users w/o calling data is relatively fast. Look at that list for validation
+                user_dict = {user.person_id: user for user in cls.api.people.list()}
+                user_dict: dict[str, Person]
+
+                # all users from cache still exist and licenses have not changed?
+                if user_cache.users and all((user := user_dict.get(cu.person_id)) and user.licenses == cu.licenses
+                                            for cu in user_cache.users):
+                    pass
                 else:
-                    # bite the bullet: list users with calling data --> slooooooowww
-                    user_cache.users = list(cls.api.people.list(calling_data=True))
-        cls.dump_users(cache=user_cache)
+                    # update cache
+                    if False:
+                        # maybe getting details for all users is faster than listing...
+                        with ThreadPoolExecutor() as pool:
+                            user_cache.users = list(pool.map(lambda user: cls.api.people.details(person_id=user.person_id,
+                                                                                                 calling_data=True),
+                                                             user_dict.values()))
+                    else:
+                        # bite the bullet: list users with calling data --> slooooooowww
+                        user_cache.users = list(cls.api.people.list(calling_data=True))
+            cls.dump_users(cache=user_cache)
 
-        # select users with a webex calling license
-        calling_license_ids = set(lic.license_id
-                                  for lic in user_cache.licenses
-                                  if lic.webex_calling)
+            # select users with a webex calling license
+            calling_license_ids = set(lic.license_id
+                                      for lic in user_cache.licenses
+                                      if lic.webex_calling)
 
-        # pick the calling enabled users
-        cls.users = [user
-                     for user in user_cache.users
-                     if any(lic_id in calling_license_ids for lic_id in user.licenses)]
+            # pick the calling enabled users
+            cls.users = [user
+                         for user in user_cache.users
+                         if any(lic_id in calling_license_ids for lic_id in user.licenses)]
         print(f'got {len(cls.users)} users')
 
     def setUp(self) -> None:
