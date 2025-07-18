@@ -419,7 +419,7 @@ async def main():
                     dpapi = as_api.person_settings.permissions_out.digit_patterns
                     response = await dpapi.get_digit_patterns(user.person_id)
                     patterns: list[DigitPattern] = response.digit_patterns
-                    patterns_to_delete: list[DigitPattern] = list(filtered(patterns))
+                    patterns_to_delete: list[DigitPattern] = list(filtered(patterns, alternate_matches='^ocp\-\+'))
                     if not patterns_to_delete:
                         return
                     print(f'Removing {len(patterns_to_delete)} patterns for user {user.display_name}')
@@ -441,7 +441,7 @@ async def main():
                     dpapi = as_api.telephony.permissions_out.digit_patterns
                     response = await dpapi.get_digit_patterns(location.location_id)
                     patterns: list[DigitPattern] = response.digit_patterns
-                    patterns_to_delete: list[DigitPattern] = list(filtered(patterns))
+                    patterns_to_delete: list[DigitPattern] = list(filtered(patterns, alternate_matches='^ocp\-\+'))
                     if not patterns_to_delete:
                         return
                     print(f'Removing {len(patterns_to_delete)} patterns for location {location.name}')
