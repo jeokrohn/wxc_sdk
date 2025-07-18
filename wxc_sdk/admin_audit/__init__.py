@@ -59,6 +59,7 @@ class AuditEventData(ApiModel):
     api_version: Optional[Any] = None
     business_text_status: Optional[Any] = None
     capacity: Optional[Any] = None
+    category: Optional[Any] = None
     change_detail_id: Optional[Any] = None
     change_set: Optional[Any] = None
     changed_attributes: Optional[Any] = None
@@ -118,6 +119,7 @@ class AuditEventData(ApiModel):
     owner_id: Optional[Any] = None
     owner_type: Optional[Any] = None
     portability_numbers: Optional[Any] = None
+    previous_group_id: Optional[Any] = None
     previous_value: Optional[Any] = None
     report_id: Optional[Any] = None
     reserved_numbers: Optional[Any] = None
@@ -125,6 +127,7 @@ class AuditEventData(ApiModel):
     role_added: Optional[Any] = None
     role_removed: Optional[Any] = None
     rule_name: Optional[Any] = None
+    rule_title: Optional[Any] = None
     service_app_scopes: Optional[Any] = None
     services: Optional[Any] = None
     setting_key: Optional[Any] = None
@@ -132,6 +135,8 @@ class AuditEventData(ApiModel):
     setting_value: Optional[Any] = None
     site_admin_roles: Optional[Any] = None
     start_date: Optional[Any] = None
+    sub_type: Optional[Any] = None
+    success: Optional[Any] = None
     tags: Optional[Any] = None
     target_email: Optional[Any] = None
     target_location_name: Optional[Any] = None
