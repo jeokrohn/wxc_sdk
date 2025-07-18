@@ -23,13 +23,21 @@ __all__ = ['PythonClass', 'Attribute', 'Endpoint', 'Parameter', 'PythonAPI']
 
 log = logging.getLogger(__name__)
 
+# add description to class sources?
+CLASSES_WITH_DESCRIPTION = False
+
 # some Python names are not allowed as parameter names
 RESERVED_PARAM_NAMES = {'from', 'to', 'max', 'format', 'global', 'none', 'in'}
 
 CLASS_TEMPLATE = """
 class {class_name}{baseclass}:
-{attributes}
+{desc}{attributes}
 """
+
+DESC_TEMPLATE = '''    """
+{docstring}
+    """
+'''
 
 
 @dataclass
@@ -720,9 +728,16 @@ class PythonClass:
             attribute_sources = chain.from_iterable(map(str.splitlines,
                                                         (f'{a.source(self.is_enum, with_example)}'
                                                          for a in self.attributes)))
-
+        if not (self.description and CLASSES_WITH_DESCRIPTION):
+            desc_source = ''
+        else:
+            # break description into lines
+            desc_source = '\n'.join(chain.from_iterable(break_line(line, prefix=' ' * 4)
+                                                        for line in self.description.splitlines()))
+            desc_source = DESC_TEMPLATE.format(docstring=desc_source)
         result = CLASS_TEMPLATE.format(class_name=self.name,
                                        baseclass=baseclass,
+                                       desc=desc_source,
                                        attributes='\n'.join(f'    {line}' for line in attribute_sources)).strip()
         return result
 
