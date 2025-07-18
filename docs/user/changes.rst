@@ -9,6 +9,7 @@ Release history
 - feat: new API :attr:`api.person_settings.feature_access <wxc_sdk.person_settings.PersonSettingsApi.feature_access>`
 - feat: new endpoint: :meth:`api.telephony.dect_devices.add_list_of_handsets <wxc_sdk.telephony.dect_devices.DECTDevicesApi.add_list_of_handsets>`
 - feat: new endpoint: :meth:`api.telephony.location.number.manage_number_state <wxc_sdk.telephony.location.numbers.LocationNumbersApi.manage_number_state>`
+- feat: new API: :attr:`api.telephony.cx_essentials.callqueue_recording <wxc_sdk.telephony.cx_essentials.CustomerExperienceEssentialsApi.callqueue_recording>`
 
 1.25.0
 ------

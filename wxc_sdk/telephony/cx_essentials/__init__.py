@@ -9,6 +9,7 @@ from wxc_sdk.rest import RestSession
 __all__ = ['CustomerExperienceEssentialsApi', 'ScreenPopConfiguration']
 
 from wxc_sdk.telephony.callqueue import AvailableAgent
+from wxc_sdk.telephony.cx_essentials.callqueue_recording import QueueCallRecordingSettingsApi
 from wxc_sdk.telephony.cx_essentials.wrapup_reasons import WrapupReasonApi
 
 
@@ -44,10 +45,12 @@ class CustomerExperienceEssentialsApi(ApiChild, base='telephony/config'):
     Modifying the customer Experience Essentials APIs requires a full or device administrator auth token with a scope
     of `spark-admin:telephony_config_write`.
     """
+    callqueue_recording: QueueCallRecordingSettingsApi
     wrapup_reasons: WrapupReasonApi
 
     def __init__(self, session: RestSession):
         super().__init__(session=session)
+        self.callqueue_recording = QueueCallRecordingSettingsApi(session=session)
         self.wrapup_reasons = WrapupReasonApi(session=session)
 
     def get_screen_pop_configuration(self, location_id: str = None,

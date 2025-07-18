@@ -16,6 +16,7 @@ from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import UserType
 from wxc_sdk.licenses import LicenseProperties, LicenseRequest, LicenseRequestOperation
 from wxc_sdk.people import Person
+from wxc_sdk.person_settings.call_recording import CallRecordingSetting
 from wxc_sdk.rest import RestError
 from wxc_sdk.telephony import NumberListPhoneNumberType
 from wxc_sdk.telephony.callqueue import CallQueue
@@ -366,21 +367,25 @@ class TestTelephonySupervisors(TestCaseWithLog):
             self.assertEqual(settings, after)
 
 
-class TestWrapUpReason(TestCaseWithLog):
-    """
-    Test wrap-up reasons
-    """
-
+class TempCxeQueueMixin(TestCaseWithLog):
     @contextmanager
-    def temp_cxe_queue(self) -> CallQueue:
+    def temp_cxe_queue(self, keep_log: bool = True) -> CallQueue:
         """
         Create a temporary queue with CX Essentials
         """
-        queue = create_cxe_queue(api=self.api)
+        with self.no_log(keep_log):
+            queue = create_cxe_queue(api=self.api)
         try:
             yield queue
         finally:
-            self.api.telephony.callqueue.delete_queue(location_id=queue.location_id, queue_id=queue.id)
+            with self.no_log(keep_log):
+                self.api.telephony.callqueue.delete_queue(location_id=queue.location_id, queue_id=queue.id)
+
+
+class TestWrapUpReason(TempCxeQueueMixin):
+    """
+    Test wrap-up reasons
+    """
 
     @contextmanager
     def temp_wrapup_reason(self, queues: list[str] = None) -> str:
@@ -660,3 +665,55 @@ class TestWrapUpReason(TestCaseWithLog):
                 # wrap-up reason should be in queue settings
                 self.assertIn(wu_reason_id, {wur.id for wur in queue_settings.wrapup_reasons},
                               'Wrap-up reason should be in queue settings')
+
+
+class TestCallQueueRecording(TempCxeQueueMixin):
+    """
+    Test call queue recording settings
+    """
+
+    def test_read_queue_recording_settings(self):
+        """
+        Read call queue recording settings
+        """
+        api = self.api.telephony.cx_essentials.callqueue_recording
+        with self.temp_cxe_queue() as queue:
+            queue: CallQueue
+            settings = api.read(location_id=queue.location_id,
+                                queue_id=queue.id)
+            print(settings)
+
+    def test_update_queue_recording_settings_toggle_enable(self):
+        """
+        Update call queue recording settings
+        """
+        api = self.api.telephony.cx_essentials.callqueue_recording
+        with self.temp_cxe_queue() as queue:
+            queue: CallQueue
+            settings = api.read(location_id=queue.location_id,
+                                queue_id=queue.id)
+            update = CallRecordingSetting(enabled=not settings.enabled)
+            api.configure(location_id=queue.location_id,
+                          queue_id=queue.id, recording=update)
+            after = api.read(location_id=queue.location_id,
+                             queue_id=queue.id)
+            self.assertEqual(update.enabled, after.enabled,
+                             'Call recording enabled should be updated')
+
+    def test_update_queue_recording_settings_full_update(self):
+        """
+        Update call queue recording settings
+        """
+        api = self.api.telephony.cx_essentials.callqueue_recording
+        with self.temp_cxe_queue() as queue:
+            queue: CallQueue
+            settings = api.read(location_id=queue.location_id,
+                                queue_id=queue.id)
+            update = settings.model_copy(deep=True)
+            update.enabled = not settings.enabled
+            api.configure(location_id=queue.location_id,
+                          queue_id=queue.id, recording=update)
+            after = api.read(location_id=queue.location_id,
+                             queue_id=queue.id)
+            self.assertEqual(update.enabled, after.enabled,
+                             'Call recording enabled should be updated')

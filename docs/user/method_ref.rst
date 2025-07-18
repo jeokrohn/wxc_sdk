@@ -911,6 +911,10 @@ The method name is a link to the method documentation.
         Get Screen Pop configuration for a Call Queue in a Location
    * - :meth:`api.telephony.cx_essentials.modify_screen_pop_configuration <wxc_sdk.telephony.cx_essentials.CustomerExperienceEssentialsApi.modify_screen_pop_configuration>`
         Modify Screen Pop configuration for a Call Queue in a Location
+   * - :meth:`api.telephony.cx_essentials.callqueue_recording.configure <wxc_sdk.telephony.cx_essentials.callqueue_recording.QueueCallRecordingSettingsApi.configure>`
+        Configure Queue Call Recording Settings for a Queue
+   * - :meth:`api.telephony.cx_essentials.callqueue_recording.read <wxc_sdk.telephony.cx_essentials.callqueue_recording.QueueCallRecordingSettingsApi.read>`
+        Read Queue Call Recording Settings for a Queue
    * - :meth:`api.telephony.cx_essentials.wrapup_reasons.available_queues <wxc_sdk.telephony.cx_essentials.wrapup_reasons.WrapupReasonApi.available_queues>`
         Read Available Queues
    * - :meth:`api.telephony.cx_essentials.wrapup_reasons.create <wxc_sdk.telephony.cx_essentials.wrapup_reasons.WrapupReasonApi.create>`

@@ -12,4 +12,5 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   wxc_sdk.telephony.cx_essentials.callqueue_recording
    wxc_sdk.telephony.cx_essentials.wrapup_reasons
