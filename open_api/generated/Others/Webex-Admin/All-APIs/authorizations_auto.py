@@ -107,7 +107,7 @@ class AuthorizationsApi(ApiChild, base='authorizations'):
         url = self.ep()
         super().delete(url, params=params)
 
-    def list_authorizations_for_a_user(self, person_id: str = None, person_email: str = None) -> list[Authorization]:
+    def list_authorizations_for_user(self, person_id: str = None, person_email: str = None) -> list[Authorization]:
         """
         List authorizations for a user
 
