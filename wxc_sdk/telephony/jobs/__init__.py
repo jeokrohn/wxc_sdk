@@ -16,12 +16,13 @@ from ...rest import RestSession
 
 __all__ = ['StepExecutionStatus', 'JobExecutionStatus', 'StartJobResponse', 'JobErrorMessage', 'JobError',
            'JobErrorItem', 'JobsApi', 'DeviceSettingsJobsApi', 'NumberItem', 'MoveNumberCounts', 'NumberJob',
-           'ErrorMessageObject', 'ErrorObject', 'ManageNumberErrorItem', 'ManageNumbersJobsApi',
+           'ManageNumbersJobsApi',
            'InitiateMoveNumberJobsBody', 'ApplyLineKeyTemplatesJobsApi', 'LineKeyTemplateAdvisoryTypes',
            'ApplyLineKeyTemplateJobDetails', 'RebuildPhonesJobsApi', 'UpdateRoutingPrefixJobsApi',
            'RoutingPrefixCounts', 'MoveCounts', 'MoveUser', 'MoveUsersList',
            'MoveUserJobDetails', 'MoveUsersJobsApi', 'StartMoveUsersJobResponse', 'CallRecordingJobCounts',
-           'CallRecordingJobStatus', 'CallRecordingJobsApi']
+           'CallRecordingJobStatus', 'CallRecordingJobsApi', 'SendActivationEmailApi', 'ActivationEmailCounts',
+           'ActivationEmailJobDetail']
 
 
 class StepExecutionStatus(ApiModel):
@@ -312,30 +313,6 @@ class NumberJob(ApiModel):
     counts: Optional[MoveNumberCounts] = None
 
 
-class ErrorMessageObject(ApiModel):
-    code: Optional[str] = None
-    description: Optional[str] = None
-    #: Error messages describing the location id in which the error occurs. For a move operation this is the target
-    # location ID.
-    location_id: Optional[str] = None
-
-
-class ErrorObject(ApiModel):
-    #: HTTP error code.
-    key: Optional[str] = None
-    message: Optional[list[ErrorMessageObject]] = None
-
-
-class ManageNumberErrorItem(ApiModel):
-    #: Phone number
-    item: Optional[str] = None
-    #: Index of error number.
-    item_number: Optional[int] = None
-    #: Unique identifier to track the HTTP requests.
-    tracking_id: Optional[str] = None
-    error: Optional[ErrorObject] = None
-
-
 class InitiateMoveNumberJobsBody(ApiModel):
     #: The kind of operation to be carried out.
     operation: Optional[str] = None
@@ -503,7 +480,7 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
         return
 
     def errors(self, job_id: str = None, org_id: str = None,
-               **params) -> Generator[ManageNumberErrorItem, None, None]:
+               **params) -> Generator[JobErrorItem, None, None]:
         """
         List Manage Numbers Job errors
 
@@ -536,7 +513,7 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'manageNumbers/{job_id}/errors')
-        return self.session.follow_pagination(url=url, model=ManageNumberErrorItem, params=params)
+        return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
 
 
 class LineKeyTemplateAdvisoryTypes(ApiModel):
@@ -1568,11 +1545,98 @@ class MoveUsersJobsApi(ApiChild, base='telephony/config/jobs/person/moveLocation
         return self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)
 
 
+# noinspection DuplicatedCode
+class ActivationEmailCounts(ApiModel):
+    #: Count of users sent an invitation.
+    user_resend_invite_sent: Optional[int] = None
+    #: Count of users who failed to receive an invitation.
+    user_resend_invite_failed: Optional[int] = None
+    #: Count of users who were skipped.
+    user_resend_invite_skipped: Optional[int] = None
+    #: Total count of users processed.
+    total_users: Optional[int] = None
+
+
+class ActivationEmailJobDetail(StartJobResponse):
+    #: Indicates if the org allows admin invite emails to be sent.
+    allow_admin_invite_emails: Optional[bool] = None
+    #: Summary of statuses.
+    counts: Optional[ActivationEmailCounts] = None
+
+
+class SendActivationEmailApi(ApiChild, base='identity/organizations'):
+    """
+    Send Activation Email
+
+    APIs allowing an admin to send activation emails to users.
+    """
+
+    def start(self, org_id: str) -> ActivationEmailJobDetail:
+        """
+        Initiate Bulk Activation Email Resend Job
+
+        Initiate a bulk activation email resend job that sends an activation email to all eligible users in an
+        organization. Only a single instance of the job can be running for an organization.
+
+        Requires a full or user administrator auth token with a scope of `spark-admin:people_write`.
+
+        :param org_id: Initiate job for this organization.
+        :type org_id: str
+        :rtype: :class:`ActivationEmailJobDetail`
+        """
+        url = self.ep(f'{org_id}/jobs/sendActivationEmails')
+        data = super().post(url)
+        r = ActivationEmailJobDetail.model_validate(data)
+        return r
+
+    def errors(self, org_id: str, job_id: str,
+               **params) -> Generator[JobErrorItem, None, None]:
+        """
+        Get Bulk Activation Email Resend Job Errors
+
+        Get errors of an activation email resend job by its job ID.
+
+        Requires a full or user administrator auth token with a scope of `spark-admin:people_write` or read-only
+        administrator auth token with a scope of `spark-admin:people_read`.
+
+        :param org_id: Check job status for this organization.
+        :type org_id: str
+        :param job_id: Retrieve job status for this `jobId`.
+        :type job_id: str
+        :return: Generator yielding :class:`JobErrorItem` instances
+        """
+        url = self.ep(f'{org_id}/jobs/sendActivationEmails/{job_id}/errors')
+        return self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)
+
+    def status(self, org_id: str,
+               job_id: str) -> ActivationEmailJobDetail:
+        """
+        Get Bulk Activation Email Resend Job Status
+
+        Get the details of an activation email resend job by its job ID.
+
+        Requires a full or user administrator auth token with a scope of `spark-admin:people_write` or read-only
+        administrator auth token with a scope of `spark-admin:people_read`.
+
+        :param org_id: Check job status for this organization.
+        :type org_id: str
+        :param job_id: Retrieve job status for this `jobId`.
+        :type job_id: str
+        :rtype: :class:`ActivationEmailJobDetail`
+        """
+        url = self.ep(f'{org_id}/jobs/sendActivationEmails/{job_id}/status')
+        data = super().get(url)
+        r = ActivationEmailJobDetail.model_validate(data)
+        return r
+
+
 @dataclass(init=False, repr=False)
 class JobsApi(ApiChild, base='telephony/config/jobs'):
     """
     Jobs API
     """
+    #: API to send activation emails
+    activation_emails: SendActivationEmailApi
     #: API for apply line key template jobs
     apply_line_key_templates: ApplyLineKeyTemplatesJobsApi
     #: call recording jobs
@@ -1590,6 +1654,7 @@ class JobsApi(ApiChild, base='telephony/config/jobs'):
 
     def __init__(self, *, session: RestSession):
         super().__init__(session=session)
+        self.activation_emails = SendActivationEmailApi(session=session)
         self.apply_line_key_templates = ApplyLineKeyTemplatesJobsApi(session=session)
         self.call_recording = CallRecordingJobsApi(session=session)
         self.device_settings = DeviceSettingsJobsApi(session=session)

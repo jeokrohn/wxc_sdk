@@ -3,6 +3,7 @@ Simple SDK for Webex APIs with focus on Webex Calling specific endpoints
 """
 import logging
 import os
+from dataclasses import dataclass
 from typing import Union
 
 from .admin_audit import AdminAuditEventsApi
@@ -35,19 +36,18 @@ from .status import StatusAPI
 from .team_memberships import TeamMembershipsApi
 from .teams import TeamsApi
 from .telephony import TelephonyApi
+from .telephony.jobs import JobsApi
 from .tokens import Tokens
 from .webhook import WebhookApi
 from .workspace_locations import WorkspaceLocationApi
 from .workspace_personalization import WorkspacePersonalizationApi
-from .workspaces import WorkspacesApi
 from .workspace_settings import WorkspaceSettingsApi
-from dataclasses import dataclass
+from .workspaces import WorkspacesApi
+from .xapi import XApi
 
 __all__ = ['WebexSimpleApi']
 
 __version__ = '1.25.0'
-
-from .xapi import XApi
 
 log = logging.getLogger(__name__)
 
@@ -79,6 +79,8 @@ class WebexSimpleApi:
     groups: GroupsApi
     #: guests API :class:`guests.GuestManagementApi`
     guests: GuestManagementApi
+    #: jobs API: :class:`telephony.jobs.JobsApi`
+    jobs: JobsApi
     #: Licenses API :class:`licenses.LicensesApi`
     licenses: LicensesApi
     #: Location API :class:`locations.LocationsApi`
@@ -166,6 +168,7 @@ class WebexSimpleApi:
         self.events = EventsApi(session=session)
         self.groups = GroupsApi(session=session)
         self.guests = GuestManagementApi(session=session)
+        self.jobs = JobsApi(session=session)
         self.licenses = LicensesApi(session=session)
         self.locations = LocationsApi(session=session)
         self.me = MeSettingsApi(session=session)

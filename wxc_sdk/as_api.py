@@ -60,14 +60,14 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsReportsApi', 'AsRestSession', 'AsRolesApi', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi',
            'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2GroupsApi', 'AsSCIM2UsersApi', 'AsScheduleApi',
            'AsScimApiChild', 'AsScimV2Api', 'AsSelectiveAcceptApi', 'AsSelectiveForwardApi', 'AsSelectiveRejectApi',
-           'AsSequentialRingApi', 'AsSimRingApi', 'AsSingleNumberReachApi', 'AsStatusAPI', 'AsSupervisorApi',
-           'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi', 'AsTelephonyLocationApi',
-           'AsTransferNumbersApi', 'AsTranslationPatternsApi', 'AsTrunkApi', 'AsUpdateRoutingPrefixJobsApi',
-           'AsVirtualExtensionsApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi',
-           'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi',
-           'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
-           'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi', 'AsWrapupReasonApi',
-           'AsXApi']
+           'AsSendActivationEmailApi', 'AsSequentialRingApi', 'AsSimRingApi', 'AsSingleNumberReachApi', 'AsStatusAPI',
+           'AsSupervisorApi', 'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi',
+           'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTranslationPatternsApi', 'AsTrunkApi',
+           'AsUpdateRoutingPrefixJobsApi', 'AsVirtualExtensionsApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi',
+           'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi',
+           'AsWebhookApi', 'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi',
+           'AsWorkspaceNumbersApi', 'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi',
+           'AsWrapupReasonApi', 'AsXApi']
 
 
 @dataclass(init=False, repr=False)
@@ -2017,6 +2017,1443 @@ class AsGuestManagementApi(AsApiChild, base='guests'):
         url = self.ep('count')
         data = await super().get(url)
         return data
+
+
+class AsApplyLineKeyTemplatesJobsApi(AsApiChild, base='telephony/config/jobs/devices/applyLineKeyTemplate'):
+    async def apply(self, action: ApplyLineKeyTemplateAction, template_id: str = None,
+              location_ids: list[str] = None, exclude_devices_with_custom_layout: bool = None,
+              include_device_tags: list[str] = None, exclude_device_tags: list[str] = None,
+              advisory_types: LineKeyTemplateAdvisoryTypes = None,
+              org_id: str = None) -> ApplyLineKeyTemplateJobDetails:
+        """
+        Apply a Line key Template
+
+        Apply a Line Key Template or reset devices to their factory Line Key settings.
+
+        Line Keys, also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        display.
+
+        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
+        device model.
+
+        This API allows users to apply a line key template or apply factory default Line Key settings to devices in a
+        set of locations or across all locations in the organization.
+
+        Applying a Line Key Template or resetting devices to their default Line Key configuration requires a full
+        administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param action: Line key Template action to perform.
+        :type action: PostApplyLineKeyTemplateRequestAction
+        :param template_id: `templateId` is required for `APPLY_TEMPLATE` action.
+        :type template_id: str
+        :param location_ids: Used to search for devices only in the given locations.
+        :type location_ids: list[str]
+        :param exclude_devices_with_custom_layout: Indicates whether to exclude devices with custom layout.
+        :type exclude_devices_with_custom_layout: bool
+        :param include_device_tags: Include devices only with these tags.
+        :type include_device_tags: list[str]
+        :param exclude_device_tags: Exclude devices with these tags.
+        :type exclude_device_tags: list[str]
+        :param advisory_types: Refine search with advisories.
+        :type advisory_types: LineKeyTemplateAdvisoryTypes
+        :param org_id: Apply Line Key Template for this organization.
+        :type org_id: str
+        :rtype: :class:`ApplyLineKeyTemplateJobDetails`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['action'] = enum_str(action)
+        if template_id is not None:
+            body['templateId'] = template_id
+        if location_ids is not None:
+            body['locationIds'] = location_ids
+        if exclude_devices_with_custom_layout is not None:
+            body['excludeDevicesWithCustomLayout'] = exclude_devices_with_custom_layout
+        if include_device_tags is not None:
+            body['includeDeviceTags'] = include_device_tags
+        if exclude_device_tags is not None:
+            body['excludeDeviceTags'] = exclude_device_tags
+        if advisory_types is not None:
+            body['advisoryTypes'] = advisory_types.model_dump(mode='json', by_alias=True, exclude_none=True)
+        url = self.ep()
+        data = await super().post(url, params=params, json=body)
+        r = ApplyLineKeyTemplateJobDetails.model_validate(data)
+        return r
+
+    async def list(self, org_id: str = None) -> list[ApplyLineKeyTemplateJobDetails]:
+        """
+        Get List of Apply Line Key Template jobs
+
+        Get the list of all apply line key templates jobs in an organization.
+
+        Line Keys, also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        display.
+        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
+        device model.
+        This API allows users to retrieve all the apply line key templates jobs in an organization.
+
+        Retrieving the list of apply line key templates jobs in an organization requires a full, user or read-only
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve list of line key templates jobs in this organization.
+        :type org_id: str
+        :rtype: list[ApplyLineKeyTemplateJobDetails]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep()
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[ApplyLineKeyTemplateJobDetails]).validate_python(data['items'])
+        return r
+
+    async def status(self, job_id: str, org_id: str = None) -> ApplyLineKeyTemplateJobDetails:
+        """
+        Get the job status of an Apply Line Key Template job
+
+        Get the status of an apply line key template job by its job ID.
+
+        Line Keys, also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        display.
+        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
+        device model.
+        This API allows users to check the status of an apply line key templates job by job ID in an organization.
+
+        Checking the the status of an apply line key templates job in an organization requires a full, user or
+        read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job status for this `jobId`.
+        :type job_id: str
+        :param org_id: Check a line key template job status in this organization.
+        :type org_id: str
+        :rtype: :class:`ApplyLineKeyTemplateJobDetails`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(job_id)
+        data = await super().get(url, params=params)
+        r = ApplyLineKeyTemplateJobDetails.model_validate(data)
+        return r
+
+    def errors_gen(self, job_id: str, org_id: str = None) -> AsyncGenerator[JobErrorItem, None, None]:
+        """
+        Get job errors for an Apply Line Key Template job
+
+        GET job errors for an apply Line Key Template job in an organization.
+
+        Line Keys, also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        display.
+        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
+        device model.
+        This API allows users to retrieve all the errors of an apply line key templates job by job ID in an
+        organization.
+
+        Retrieving all the errors of an apply line key templates job in an organization requires a full, user or
+        read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job errors for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve list of errors for an apply line key template job in this organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/errors')
+        return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
+
+    async def errors(self, job_id: str, org_id: str = None) -> List[JobErrorItem]:
+        """
+        Get job errors for an Apply Line Key Template job
+
+        GET job errors for an apply Line Key Template job in an organization.
+
+        Line Keys, also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
+        display.
+        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
+        device model.
+        This API allows users to retrieve all the errors of an apply line key templates job by job ID in an
+        organization.
+
+        Retrieving all the errors of an apply line key templates job in an organization requires a full, user or
+        read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job errors for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve list of errors for an apply line key template job in this organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/errors')
+        return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, params=params)]
+
+
+class AsCallRecordingJobsApi(AsApiChild, base='telephony/config/jobs/callRecording'):
+    def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[CallRecordingJobStatus, None, None]:
+        """
+        List Call Recording Jobs
+
+        Get the list of all call recording jobs in an organization.
+
+        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
+        manage call recordings. An organization is configured with an overall provider, but locations can be
+        configured to use a different vendor than the overall organization default.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: List call recording jobs in this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`CallRecordingJobStatus` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('jobs/callRecording')
+        return self.session.follow_pagination(url=url, model=CallRecordingJobStatus, item_key='items', params=params)
+
+    async def list(self, org_id: str = None, **params) -> List[CallRecordingJobStatus]:
+        """
+        List Call Recording Jobs
+
+        Get the list of all call recording jobs in an organization.
+
+        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
+        manage call recordings. An organization is configured with an overall provider, but locations can be
+        configured to use a different vendor than the overall organization default.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: List call recording jobs in this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`CallRecordingJobStatus` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('jobs/callRecording')
+        return [o async for o in self.session.follow_pagination(url=url, model=CallRecordingJobStatus, item_key='items', params=params)]
+
+    async def status(self, job_id: str, org_id: str = None) -> CallRecordingJobStatus:
+        """
+        Get the Job Status of a Call Recording Job
+
+        Get the details of a call recording job by its job ID.
+
+        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
+        manage call recordings. An organization is configured with an overall provider, but locations can be
+        configured to use a different vendor than the overall organization default.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job status for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve job status in this organization.
+        :type org_id: str
+        :rtype: :class:`CallRecordingJobStatus`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(job_id)
+        data = await super().get(url, params=params)
+        r = CallRecordingJobStatus.model_validate(data)
+        return r
+
+    def errors_gen(self, job_id: str, org_id: str = None,
+               **params) -> AsyncGenerator[JobErrorItem, None, None]:
+        """
+        Get Job Errors for a Call Recording Job
+
+        Get errors for a call recording job in an organization.
+
+        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
+        manage call recordings. An organization is configured with an overall provider, but locations can be
+        configured to use a different vendor than the overall organization default.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job errors for this job.
+        :type job_id: str
+        :param org_id: Retrieve job errors for a call recording job in this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`ItemObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/errors')
+        return self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)
+
+    async def errors(self, job_id: str, org_id: str = None,
+               **params) -> List[JobErrorItem]:
+        """
+        Get Job Errors for a Call Recording Job
+
+        Get errors for a call recording job in an organization.
+
+        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
+        manage call recordings. An organization is configured with an overall provider, but locations can be
+        configured to use a different vendor than the overall organization default.
+
+        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job errors for this job.
+        :type job_id: str
+        :param org_id: Retrieve job errors for a call recording job in this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`ItemObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/errors')
+        return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)]
+
+
+class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
+    """
+    API for jobs to manage numbers
+    """
+
+    def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[NumberJob, None, None]:
+        """
+        List Manage Numbers Jobs
+
+        Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one irrespective
+        of its status.
+
+        The public API only supports initiating jobs which move numbers between locations.
+
+        Via Control Hub they can initiate both the move and delete, so this listing can show both.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve list of Manage Number jobs for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`NumberJob` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('manageNumbers')
+        return self.session.follow_pagination(url=url, model=NumberJob, params=params)
+
+    async def list(self, org_id: str = None, **params) -> List[NumberJob]:
+        """
+        List Manage Numbers Jobs
+
+        Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one irrespective
+        of its status.
+
+        The public API only supports initiating jobs which move numbers between locations.
+
+        Via Control Hub they can initiate both the move and delete, so this listing can show both.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve list of Manage Number jobs for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`NumberJob` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('manageNumbers')
+        return [o async for o in self.session.follow_pagination(url=url, model=NumberJob, params=params)]
+
+    async def initiate_job(self, operation: str, number_list: List[NumberItem], target_location_id: str = None,
+                     number_usage_type: str = None) -> NumberJob:
+        """
+        Initiate Number Jobs
+
+        Starts the execution of an operation on a set of numbers. Supported operations are: `MOVE`,
+        `NUMBER_USAGE_CHANGE`.
+
+        Up to 1000 numbers can be given in `MOVE` operation type and `NUMBER_USAGE_CHANGE` operation type per request.
+        If another move number job request is initiated while a move job is in progress, the API call will receive a
+        `409` HTTP status code.
+
+        In order to move a number the following is required:
+
+            * The number must be unassigned.
+            * Both locations must have the same PSTN Connection Type.
+            * Both locations must have the same PSTN Provider.
+            * Both locations have to be in the same country.
+
+        For example, you can move from Cisco Calling Plan to Cisco Calling Plan, but you cannot move from Cisco Calling
+        Plan to a location with Cloud Connected PSTN.
+
+        In order to change the number usage the following is required:
+
+            * The number must be unassigned.
+            * Number Usage Type can be set to `NONE` if carrier has the PSTN service `GEOGRAPHIC_NUMBERS`.
+            * Number Usage Type can be set to `SERVICE` if carrier has the PSTN service `SERVICE_NUMBERS`.
+
+        For example, you can initiate a `NUMBER_USAGE_CHANGE` job to change the number type from Standard number to
+        Service number, or the other way around.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param operation: The kind of operation to be carried out.
+        :type operation: str
+        :param number_list: Numbers on which to execute the operation.
+        :type number_list: list[NumberItem]
+        :param target_location_id: Mandatory for a `MOVE` operation. The target location within organization where the
+            unassigned numbers will be moved from the source location.
+        :type target_location_id: str
+        :param number_usage_type: Mandatory for `NUMBER_USAGE_CHANGE` operation. Indicates the number usage type.
+        :type number_usage_type: str
+        :rtype: :class:`NumberJob`
+        """
+        body = dict()
+        body['operation'] = operation
+        if target_location_id is not None:
+            body['targetLocationId'] = target_location_id
+        if number_usage_type is not None:
+            body['numberUsageType'] = number_usage_type
+        body['numberList'] = TypeAdapter(list[NumberItem]).dump_python(number_list, mode='json', by_alias=True,
+                                                                       exclude_none=True)
+        url = self.ep('manageNumbers')
+        data = await super().post(url=url, json=body)
+        return NumberJob.model_validate(data)
+
+    async def status(self, job_id: str = None) -> NumberJob:
+        """
+        Get Manage Numbers Job Status
+
+        Returns the status and other details of the job.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
+
+        :param job_id: Retrieve job details for this jobId.
+        :type job_id: str
+        """
+        url = self.ep(f'manageNumbers/{job_id}')
+        data = await super().get(url=url)
+        return NumberJob.model_validate(data)
+
+    async def pause(self, job_id: str = None, org_id: str = None):
+        """
+        Pause the Manage Numbers Job
+
+        Pause the running Manage Numbers Job. A paused job can be resumed or abandoned.
+
+        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+
+        :param job_id: Pause the Manage Numbers job for this jobId.
+        :type job_id: str
+        :param org_id: Pause the Manage Numbers job for this organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'manageNumbers/{job_id}/actions/pause/invoke')
+        await super().post(url=url, params=params)
+        return
+
+    async def resume(self, job_id: str = None, org_id: str = None):
+        """
+        Resume the Manage Numbers Job
+
+        Resume the paused Manage Numbers Job. A paused job can be resumed or abandoned.
+
+        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+
+        :param job_id: Resume the Manage Numbers job for this jobId.
+        :type job_id: str
+        :param org_id: Resume the Manage Numbers job for this organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'manageNumbers/{job_id}/actions/resume/invoke')
+        await super().post(url=url, params=params)
+        return
+
+    async def abandon(self, job_id: str = None, org_id: str = None):
+        """
+        Abandon the Manage Numbers Job.
+        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
+
+        :param job_id: Abandon the Manage Numbers job for this jobId.
+        :type job_id: str
+        :param org_id: Abandon the Manage Numbers job for this organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'manageNumbers/{job_id}/actions/abandon/invoke')
+        await super().post(url=url, params=params)
+        return
+
+    def errors_gen(self, job_id: str = None, org_id: str = None,
+               **params) -> AsyncGenerator[JobErrorItem, None, None]:
+        """
+        List Manage Numbers Job errors
+
+        Lists all error details of Manage Numbers job. This will not list any errors if exitCode is COMPLETED. If the
+        status is COMPLETED_WITH_ERRORS then this lists the cause of failures.
+
+        List of possible Errors:
+
+            * BATCH-1017021 - Failed to move because it is an inactive number.
+
+            * BATCH-1017022 - Failed to move because the source location and target location have different CCP
+            providers.
+
+            * BATCH-1017023 - Failed because it is not an unassigned number.
+
+            * BATCH-1017024 - Failed because it is a main number.
+
+            * BATCH-1017027 - Manage Numbers Move Operation is not supported.
+
+            * BATCH-1017031 - Hydra request is supported only for single number move job.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
+
+        :param job_id: Retrieve the error details for this jobId.
+        :type job_id: str
+        :param org_id: Retrieve list of jobs for this organization.
+        :type org_id: str
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'manageNumbers/{job_id}/errors')
+        return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
+
+    async def errors(self, job_id: str = None, org_id: str = None,
+               **params) -> List[JobErrorItem]:
+        """
+        List Manage Numbers Job errors
+
+        Lists all error details of Manage Numbers job. This will not list any errors if exitCode is COMPLETED. If the
+        status is COMPLETED_WITH_ERRORS then this lists the cause of failures.
+
+        List of possible Errors:
+
+            * BATCH-1017021 - Failed to move because it is an inactive number.
+
+            * BATCH-1017022 - Failed to move because the source location and target location have different CCP
+            providers.
+
+            * BATCH-1017023 - Failed because it is not an unassigned number.
+
+            * BATCH-1017024 - Failed because it is a main number.
+
+            * BATCH-1017027 - Manage Numbers Move Operation is not supported.
+
+            * BATCH-1017031 - Hydra request is supported only for single number move job.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read.
+
+        :param job_id: Retrieve the error details for this jobId.
+        :type job_id: str
+        :param org_id: Retrieve list of jobs for this organization.
+        :type org_id: str
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'manageNumbers/{job_id}/errors')
+        return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, params=params)]
+
+
+class AsMoveUsersJobsApi(AsApiChild, base='telephony/config/jobs/person/moveLocation'):
+    async def validate_or_initiate(self, users_list: list[MoveUsersList],
+                             org_id: str = None) -> StartMoveUsersJobResponse:
+        """
+        Validate or Initiate Move Users Job
+
+        This API allows the user to perform any one of the following operations:
+
+            * When the `validate` attribute is true, this validates the user move from one location to another location.
+
+            * When the `validate` attribute is false, this performs the user move from one location to another location.
+
+        In order to validate or move a user,
+
+            * Maximum of one calling user can be moved at a time.
+
+            * The target location must be a calling location.
+
+            * Only one new extension can be moved to the target location, which is optional. An empty value will
+            remove the
+              already configured extension. If not provided, the existing extension will be retained to the user.
+
+            * Only one new phone number belonging to the target location can be assigned to the user, which is optional.
+              Phone number must follow E.164 format. An empty value will remove the already configured phone number.
+              If not
+              provided, the existing phone number of the user will be moved to the target location.
+
+        Any errors that occur during initial API request validation will be captured directly in error response with
+        appropriate HTTP status code.
+
+        List of possible Errors:
+
+            + 1026005 - Request is supported only for single user.
+
+            + 1026006 - Attribute 'Location ID' is required.
+
+            + 1026006 - Attribute 'User ID' is required.
+
+            + 1026006 - Attribute 'Validate' is required.
+
+            + 1026010 - User is not a valid Calling User.
+
+            + 1026011 - Users list should not be empty.
+
+            + 1026012 - Users should not be empty.
+
+            + 1026013 - The source and the target location cannot be the same.
+
+            + 1026014 - Error occurred while processing the move users request.
+
+            + 1026015 - Error occurred while moving user number to target location.
+
+            + 1026016 - User should have either phone number or extension.
+
+            + 1026017 - Phone number is not in e164 format.
+
+        When the `validate` is set to be true, the errors and impacts associated with the user move will be identified
+        and returned in the response.
+
+        List of possible Errors:
+
+            + 4003 - `User Not Found`
+
+            + 4007 - `User Not Found`
+
+            + 4152 - `Location Not Found`
+
+            + 5620 - `Location Not Found`
+
+            + 4202 - `The extension is not available. It is already assigned to a user : {0}`
+
+            + 8264 - `Routing profile is different with new group: {0}`
+
+            + 19600 - `User has to be within an enterprise to be moved.`
+
+            + 19601 - `User can only be moved to a different group within the same enterprise.`
+
+            + 19602 - `Only regular end user can be moved. Service instance virtual user cannot be moved.`
+
+            + 19603 - `New group already reaches maximum number of user limits.`
+
+            + 19604 - `The {0} number of the user is the same as the calling line ID of the group.`
+
+            + 19605 - `User is assigned services not authorized to the new group: {0}.`
+
+            + 19606 - `User is in an active hoteling/flexible seating association.`
+
+            + 19607 - `User is pilot user of a trunk group.`
+
+            + 19608 - `User is using group level device profiles which is used by other users in current group.
+            Following
+              are the device profiles shared with other users: {0}.`
+
+            + 19609 - `Following device profiles cannot be moved to the new group because there are already devices with
+              the same name defined in the new group: {0}.`
+
+            + 19610 - `The extension of the user is used as transfer to operator number for following Auto Attendent :
+              {0}.`
+
+            + 19611 - `Fail to move announcement file from {0} to {1}.`
+
+            + 19612 - `Fail to move device management file from {0} to {1}.`
+
+            + 19613 - `User is assigned service packs not authorized to the new group: {0}.`
+
+            + 25008 - `Missing Mandatory field name: {0}`
+
+            + 25110 - `{fieldName} cannot be less than {0} or greater than {1} characters.`
+
+            + 25378 - `Target location is same as user's current location.`
+
+            + 25379 - `Error Occurred while Fetching User's Current Location Id.`
+
+            + 25381 - `Error Occurred while rolling back to Old Location Call recording Settings`
+
+            + 25382 - `Error Occurred while Disabling Call Recording for user which is required Before User can be
+            Moved`
+
+            + 25383 - `OCI Error while moving user`
+
+            + 25384 - `Error Occurred while checking for Possible Call Recording Impact.`
+
+            + 25385 - `Error Occurred while getting Call Recording Settings`
+
+            + 27559 - `The groupExternalId search criteria contains groups with different calling zone.`
+
+            + 27960 - `Parameter isWebexCalling, newPhoneNumber, or newExtension can only be set in Webex Calling
+              deployment mode.`
+
+            + 27961 - `Parameter isWebexCalling shall be set if newPhoneNumber or newExtension is set.`
+
+            + 27962 - `Work space cannot be moved.`
+
+            + 27963 - `Virtual profile user cannot be moved.`
+
+            + 27965 - `The user's phone number: {0}, is same as the current group charge number.`
+
+            + 27966 - `The phone number, {0}, is not available in the new group.`
+
+            + 27967 - `User is configured as the ECBN user for another user in the current group.`
+
+            + 27968 - `User is configured as the ECBN user for the current group.`
+
+            + 27969 - `User is associated with DECT handset(s): {0}`
+
+            + 27970 - `User is using a customer managed device: {0}`
+
+            + 27971 - `User is using an ATA device: {0}`
+
+            + 27972 - `User is in an active hotdesking association.`
+
+            + 27975 - `Need to unassign CLID number from group before moving the number to the new group. Phone number:
+              {0}`
+
+            + 27976 - `Local Gateway configuration is different with new group. Phone number: {0}`
+
+            + 1026015 - `Error occurred while moving user number to target location`
+
+            + 10010000 - `Total numbers exceeded maximum limit allowed`
+
+            + 10010001 - `to-location and from-location cannot be same`
+
+            + 10010002 - `to-location and from-location should belong to same customer`
+
+            + 10010003 - `to-location must have a carrier`
+
+            + 10010004 - `from-location must have a carrier`
+
+            + 10010005 - `Different Carrier move is not supported for non-Cisco PSTN carriers.`
+
+            + 10010006 - `Number move not supported for WEBEX_DIRECT carriers.`
+
+            + 10010007 - `Numbers out of sync, missing on CPAPI`
+
+            + 10010008 - `from-location not found or pstn connection missing in CPAPI`
+
+            + 10010010 - `from-location is in transition`
+
+            + 10010009 - `to-location not found or pstn connection missing in CPAPI`
+
+            + 10010011 - `to-location is in transition`
+
+            + 10010012 - `Numbers don't have a carrier Id`
+
+            + 10010013 - `Location less numbers don't have a carrier Id`
+
+            + 10010014 - `Different Carrier move is not supported for numbers with different country or region.`
+
+            + 10010015 - `Numbers contain mobile and non-mobile types.`
+
+            + 10010016 - `To/From location carriers must be same for mobile numbers.`
+
+            + 10010017 - `Move request for location less number not supported`
+
+            + 10010200 - `Move request for more than one block number is not supported`
+
+            + 10010201 - `Cannot move block number as few numbers not from the block starting %s to %s`
+
+            + 10010202 - `Cannot move block number as few numbers failed VERIFICATION from the block %s to %s`
+
+            + 10010203 - `Cannot move block number as few numbers missing from the block %s to %s`
+
+            + 10010204 - `Cannot move number as it is NOT a part of the block %s to %s`
+
+            + 10010205 - `Move request for Cisco PSTN block order not supported.`
+
+            + 10010299 - `Move order couldn't be created as no valid number to move`
+
+            + 10030000 - `Number not found`
+
+            + 10030001 - `Number does not belong to from-location`
+
+            + 10030002 - `Number is not present in CPAPI`
+
+            + 10030003 - `Number assigned to an user or device`
+
+            + 10030004 - `Number not in Active status`
+
+            + 10030005 - `Number is set as main number of the location`
+
+            + 10030006 - `Number has pending order associated with it`
+
+            + 10030007 - `Number belongs to a location but a from-location was not set`
+
+            + 10030008 - `Numbers from multiple carrier ids are not supported`
+
+            + 10030009 - `Location less number belongs to a location. from-location value is set to null or no
+            location id`
+
+            + 10030010 - `One or more numbers are not portable.`
+
+            + 10030011 - `Mobile number carrier was not set`
+
+            + 10030012 - `Number must be assigned for assigned move`
+
+            + 10050000 - `Failed to update customer reference for phone numbers on carrier`
+
+            + 10050001 - `Failed to update customer reference`
+
+            + 10050002 - `Order is not of operation type MOVE`
+
+            + 10050003 - `CPAPI delete call failed`
+
+            + 10050004 - `Not found in database`
+
+            + 10050005 - `Error sending notification to WxcBillingService`
+
+            + 10050006 - `CPAPI provision number as active call failed with status %s ,reason %s`
+
+            + 10050007 - `Failed to update E911 Service`
+
+            + 10050008 - `Target location does not have Inbound Toll Free license`
+
+            + 10050009 - `Source location or Target location subscription found cancelled or suspended`
+
+            + 10050010 - `Moving On Premises or Non Integrated CCP numbers from one location to another is not
+            supported.`
+
+            + 10099999 - `{Error Code} - {Error Message}`
+
+        List of possible Impacts:
+
+            + 19701 - `The identity/device profile the user is using is moved to the new group: {0}.`
+
+            + 19702 - `The user level customized incoming digit string setting is removed from the user. User is set
+            to use
+              the new group setting.`
+
+            + 19703 - `The user level customized outgoing digit plan setting is removed from the user. User is set to
+            use
+              the new group setting.`
+
+            + 19704 - `The user level customized enhanced outgoing calling plan setting is removed from the user.
+            User is
+              set to use the new group setting.`
+
+            + 19705 - `User is removed from following group services: {0}.`
+
+            + 19706 - `The current group schedule used in any criteria is removed from the service settings.`
+
+            + 19707 - `User is removed from the department of the old group.`
+
+            + 19708 - `User is changed to use the default communication barring profile of the new group.`
+
+            + 19709 - `The communication barring profile of the user is assigned to the new group: {0}.`
+
+            + 19710 - `The charge number for the user is removed.`
+
+            + 19711 - `The disabled FACs for the user are removed because they are not available in the new group.`
+
+            + 19712 - `User is removed from trunk group.`
+
+            + 19713 - `The extension of the user is reset to empty due to either the length is out of bounds of the new
+              group, or the extension is already taken in new group.`
+
+            + 19714 - `The extension of the following alternate number is reset to empty due to either the length out of
+              bounds of the new group or the extension is already taken in new group: {0}.`
+
+            + 19715 - `The collaborate room using current group default collaborate bridge is moved to the default
+              collaborate bridge of the new group.`
+
+            + 19716 - `Previously stored voice messages of the user are no longer available. The new voice message
+              will be stored on the mail server of the new group.`
+
+            + 19717 - `The primary number, alternate numbers or fax messaging number of the user are assigned to the new
+              group: {0}.`
+
+            + 19718 - `Following domains are assigned to the new group: {0}.`
+
+            + 19719 - `The NCOS of the user is assigned to the new group: {0}.`
+
+            + 19720 - `The office zone of the user is assigned to the new group: {0}.`
+
+            + 19721 - `The announcement media files are relocated to the new group directory.`
+
+            + 19722 - `User CLID number is set to use the new group CLID number: {0}.`
+
+            + 19723 - `New group CLID number is not configured.`
+
+            + 19724 - `The group level announcement file(s) are removed from the user's music on hold settings.`
+
+            + 25388 - `Target Location Does not Have Vendor Configured. Call Recording for user will be disabled`
+
+            + 25389 - `Call Recording Vendor for user will be changed from:{0} to:{1}`
+
+            + 25390 - `Dub point of user is moved to new external group`
+
+            + 25391 - `Error Occurred while moving Call recording Settings to new location`
+
+            + 25392 - `Error Occurred while checking for Possible Call Recording Impact.`
+
+            + 25393 - `Sending Billing Notification Failed`
+
+        This API requires a full administrator auth token with a scope
+        of `spark-admin:telephony_config_write`, `spark-admin:people_write` and `identity:groups_rw`.
+
+        :param users_list: The user to be moved from the source location.
+        :type users_list: list[MoveUsersList]
+        :param org_id: Create Move Users job for this organization.
+        :type org_id: str
+        :rtype: StartJobResponse
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['usersList'] = TypeAdapter(list[MoveUsersList]).dump_python(users_list, mode='json', by_alias=True,
+                                                                         exclude_none=True)
+        url = self.ep()
+        data = await super().post(url, params=params, json=body)
+        r = StartMoveUsersJobResponse.model_validate(data['response'])
+        return r
+
+    def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[MoveUserJobDetails, None, None]:
+        """
+        List Move Users Jobs
+
+        Lists all the Move Users jobs for the given organization in order of most recent job to oldest job irrespective
+        of its status.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve list of Move Users jobs for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`JobDetailsResponse` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('')
+        return self.session.follow_pagination(url=url, model=MoveUserJobDetails, item_key='items', params=params)
+
+    async def list(self, org_id: str = None, **params) -> List[MoveUserJobDetails]:
+        """
+        List Move Users Jobs
+
+        Lists all the Move Users jobs for the given organization in order of most recent job to oldest job irrespective
+        of its status.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve list of Move Users jobs for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`JobDetailsResponse` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('')
+        return [o async for o in self.session.follow_pagination(url=url, model=MoveUserJobDetails, item_key='items', params=params)]
+
+    async def status(self, job_id: str, org_id: str = None) -> MoveUserJobDetails:
+        """
+        Get Move Users Job Status
+
+        Returns the status and other details of the job.
+
+        This API requires a full or read-only administrator auth token with a scope
+        of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job details for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve job details for this organization.
+        :type org_id: str
+        :rtype: :class:`MoveUserJobDetails`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(job_id)
+        data = await super().get(url, params=params)
+        r = MoveUserJobDetails.model_validate(data)
+        return r
+
+    async def abandon(self, job_id: str, org_id: str = None):
+        """
+        Abandon the Move Users Job.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param job_id: Abandon the Move Users job for this `jobId`.
+        :type job_id: str
+        :param org_id: Abandon the Move Users job for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/actions/abandon/invoke')
+        await super().post(url, params=params)
+
+    async def pause(self, job_id: str, org_id: str = None):
+        """
+        Pause the Move Users Job
+
+        Pause the running Move Users Job. A paused job can be resumed or abandoned.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param job_id: Pause the Move Users job for this `jobId`.
+        :type job_id: str
+        :param org_id: Pause the Move Users job for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/actions/pause/invoke')
+        await super().post(url, params=params)
+
+    async def resume(self, job_id: str, org_id: str = None):
+        """
+        Resume the Move Users Job
+
+        Resume the paused Move Users Job that is in paused status.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param job_id: Resume the Move Users job for this `jobId`.
+        :type job_id: str
+        :param org_id: Resume the Move Users job for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/actions/resume/invoke')
+        await super().post(url, params=params)
+
+    def errors_gen(self, job_id: str, org_id: str = None,
+               **params) -> AsyncGenerator[JobErrorItem, None, None]:
+        """
+        List Move Users Job errors
+
+        Lists all error details of Move Users job. This will not list any errors if `exitCode` is `COMPLETED`. If the
+        status is `COMPLETED_WITH_ERRORS` then this lists the cause of failures.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve the error details for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve list of jobs for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`JobErrorItem` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/errors')
+        return self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)
+
+
+# noinspection DuplicatedCode
+
+    async def errors(self, job_id: str, org_id: str = None,
+               **params) -> List[JobErrorItem]:
+        """
+        List Move Users Job errors
+
+        Lists all error details of Move Users job. This will not list any errors if `exitCode` is `COMPLETED`. If the
+        status is `COMPLETED_WITH_ERRORS` then this lists the cause of failures.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve the error details for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve list of jobs for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`JobErrorItem` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/errors')
+        return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)]
+
+
+# noinspection DuplicatedCode
+
+
+class AsRebuildPhonesJobsApi(AsApiChild, base='telephony/config/jobs/devices/rebuildPhones'):
+    async def rebuild_phones_configuration(self, location_id: str, org_id: str = None) -> StartJobResponse:
+        """
+        Rebuild Phones Configuration
+
+        Not supported for Webex for Government (FedRAMP)
+
+        Rebuild all phone configurations for the specified location.
+
+        Rebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e.
+        a change in the network configuration of devices in a location from public to private and vice-versa.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Unique identifier of the location.
+        :type location_id: str
+        :param org_id: Rebuild phones for this organization.
+        :type org_id: str
+        :rtype: :class:`RebuildPhonesJob`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['locationId'] = location_id
+        url = self.ep()
+        data = await super().post(url, params=params, json=body)
+        r = StartJobResponse.model_validate(data)
+        return r
+
+    async def list(self, org_id: str = None) -> list[StartJobResponse]:
+        """
+        List Rebuild Phones Jobs
+
+        Not supported for Webex for Government (FedRAMP)
+
+        Get the list of all Rebuild Phones jobs in an organization.
+
+        Rebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e.
+        a change in the network configuration of devices in a location from public to private and vice-versa.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: List of rebuild phones jobs in this organization.
+        :type org_id: str
+        :rtype: list[RebuildPhonesJob]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep()
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[StartJobResponse]).validate_python(data['items'])
+        return r
+
+    async def status(self, job_id: str, org_id: str = None) -> StartJobResponse:
+        """
+        Get the Job Status of a Rebuild Phones Job
+
+        Not supported for Webex for Government (FedRAMP)
+
+        Get the details of a rebuild phones job by its job ID.
+
+        Rebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e.
+        a change in the network configuration of devices in a location from public to private and vice-versa.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job status for this `jobId`.
+        :type job_id: str
+        :param org_id: Check a rebuild phones job status in this organization.
+        :type org_id: str
+        :rtype: :class:`RebuildPhonesJob`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}')
+        data = await super().get(url, params=params)
+        r = StartJobResponse.model_validate(data)
+        return r
+
+    def errors_gen(self, job_id: str, org_id: str = None) -> AsyncGenerator[JobErrorItem, None, None]:
+        """
+        Get Job Errors for a Rebuild Phones Job
+
+        Not supported for Webex for Government (FedRAMP)
+
+        Get errors for a rebuild phones job in an organization.
+
+        Rebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e.
+        a change in the network configuration of devices in a location from public to private and vice-versa.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job errors for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve list of errors for a rebuild phones job in this organization.
+        :type org_id: str
+        :rtype: list[ItemObject]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/errors')
+        return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
+
+    async def errors(self, job_id: str, org_id: str = None) -> List[JobErrorItem]:
+        """
+        Get Job Errors for a Rebuild Phones Job
+
+        Not supported for Webex for Government (FedRAMP)
+
+        Get errors for a rebuild phones job in an organization.
+
+        Rebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e.
+        a change in the network configuration of devices in a location from public to private and vice-versa.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job errors for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve list of errors for a rebuild phones job in this organization.
+        :type org_id: str
+        :rtype: list[ItemObject]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/errors')
+        return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, params=params)]
+
+
+class AsSendActivationEmailApi(AsApiChild, base='identity/organizations'):
+    """
+    Send Activation Email
+
+    APIs allowing an admin to send activation emails to users.
+    """
+
+    async def start(self, org_id: str) -> ActivationEmailJobDetail:
+        """
+        Initiate Bulk Activation Email Resend Job
+
+        Initiate a bulk activation email resend job that sends an activation email to all eligible users in an
+        organization. Only a single instance of the job can be running for an organization.
+
+        Requires a full or user administrator auth token with a scope of `spark-admin:people_write`.
+
+        :param org_id: Initiate job for this organization.
+        :type org_id: str
+        :rtype: :class:`ActivationEmailJobDetail`
+        """
+        url = self.ep(f'{org_id}/jobs/sendActivationEmails')
+        data = await super().post(url)
+        r = ActivationEmailJobDetail.model_validate(data)
+        return r
+
+    def errors_gen(self, org_id: str, job_id: str,
+               **params) -> AsyncGenerator[JobErrorItem, None, None]:
+        """
+        Get Bulk Activation Email Resend Job Errors
+
+        Get errors of an activation email resend job by its job ID.
+
+        Requires a full or user administrator auth token with a scope of `spark-admin:people_write` or read-only
+        administrator auth token with a scope of `spark-admin:people_read`.
+
+        :param org_id: Check job status for this organization.
+        :type org_id: str
+        :param job_id: Retrieve job status for this `jobId`.
+        :type job_id: str
+        :return: Generator yielding :class:`JobErrorItem` instances
+        """
+        url = self.ep(f'{org_id}/jobs/sendActivationEmails/{job_id}/errors')
+        return self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)
+
+    async def errors(self, org_id: str, job_id: str,
+               **params) -> List[JobErrorItem]:
+        """
+        Get Bulk Activation Email Resend Job Errors
+
+        Get errors of an activation email resend job by its job ID.
+
+        Requires a full or user administrator auth token with a scope of `spark-admin:people_write` or read-only
+        administrator auth token with a scope of `spark-admin:people_read`.
+
+        :param org_id: Check job status for this organization.
+        :type org_id: str
+        :param job_id: Retrieve job status for this `jobId`.
+        :type job_id: str
+        :return: Generator yielding :class:`JobErrorItem` instances
+        """
+        url = self.ep(f'{org_id}/jobs/sendActivationEmails/{job_id}/errors')
+        return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)]
+
+    async def status(self, org_id: str,
+               job_id: str) -> ActivationEmailJobDetail:
+        """
+        Get Bulk Activation Email Resend Job Status
+
+        Get the details of an activation email resend job by its job ID.
+
+        Requires a full or user administrator auth token with a scope of `spark-admin:people_write` or read-only
+        administrator auth token with a scope of `spark-admin:people_read`.
+
+        :param org_id: Check job status for this organization.
+        :type org_id: str
+        :param job_id: Retrieve job status for this `jobId`.
+        :type job_id: str
+        :rtype: :class:`ActivationEmailJobDetail`
+        """
+        url = self.ep(f'{org_id}/jobs/sendActivationEmails/{job_id}/status')
+        data = await super().get(url)
+        r = ActivationEmailJobDetail.model_validate(data)
+        return r
+
+
+class AsUpdateRoutingPrefixJobsApi(AsApiChild, base='telephony/config/jobs/updateRoutingPrefix'):
+    def list_gen(self, org_id: str = None) -> AsyncGenerator[StartJobResponse, None, None]:
+        """
+        Get a List of Update Routing Prefix jobs
+
+        Get the list of all update routing prefix jobs in an organization.
+
+        The routing prefix is associated with a location and is used to route calls belonging to that location.
+        This API allows users to retrieve all the update routing prefix jobs in an organization.
+
+        Retrieving the list of update routing prefix jobs in an organization requires a full, user, or read-only
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve list of update routing prefix jobs in this organization.
+        :type org_id: str
+        :rtype: list[StartJobResponse]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep()
+        return self.session.follow_pagination(url=url, model=StartJobResponse, params=params, item_key='items')
+
+    async def list(self, org_id: str = None) -> List[StartJobResponse]:
+        """
+        Get a List of Update Routing Prefix jobs
+
+        Get the list of all update routing prefix jobs in an organization.
+
+        The routing prefix is associated with a location and is used to route calls belonging to that location.
+        This API allows users to retrieve all the update routing prefix jobs in an organization.
+
+        Retrieving the list of update routing prefix jobs in an organization requires a full, user, or read-only
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve list of update routing prefix jobs in this organization.
+        :type org_id: str
+        :rtype: list[StartJobResponse]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep()
+        return [o async for o in self.session.follow_pagination(url=url, model=StartJobResponse, params=params, item_key='items')]
+
+    async def status(self, job_id: str, org_id: str = None) -> StartJobResponse:
+        """
+        Get the job status of Update Routing Prefix job
+
+        Get the status of the update routing prefix job by its job ID.
+
+        The routing prefix is associated with a location and is used to route calls belonging to that location.
+        This API allows users to check the status of update routing prefix job by job ID in an organization.
+
+        Checking the status of the update routing prefix job in an organization requires a full, user, or read-only
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job status for this `jobId`.
+        :type job_id: str
+        :param org_id: Check update routing prefix job status in this organization.
+        :type org_id: str
+        :rtype: :class:`StartJobResponse`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(job_id)
+        data = await super().get(url, params=params)
+        r = StartJobResponse.model_validate(data)
+        return r
+
+    def errors_gen(self, job_id: str, org_id: str = None) -> AsyncGenerator[JobErrorItem, None, None]:
+        """
+        Get job errors for update routing prefix job
+
+        GET job errors for the update routing prefix job in an organization.
+
+        The routing prefix is associated with a location and is used to route calls belonging to that location.
+        This API allows users to retrieve all the errors of the update routing prefix job by job ID in an organization.
+
+        Retrieving all the errors of the update routing prefix job in an organization requires a full, user, or
+        read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job errors for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve list of errors for update routing prefix job in this organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/errors')
+        return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
+
+    async def errors(self, job_id: str, org_id: str = None) -> List[JobErrorItem]:
+        """
+        Get job errors for update routing prefix job
+
+        GET job errors for the update routing prefix job in an organization.
+
+        The routing prefix is associated with a location and is used to route calls belonging to that location.
+        This API allows users to retrieve all the errors of the update routing prefix job by job ID in an organization.
+
+        Retrieving all the errors of the update routing prefix job in an organization requires a full, user, or
+        read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job errors for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve list of errors for update routing prefix job in this organization.
+        :type org_id: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{job_id}/errors')
+        return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, params=params)]
+
+
+class AsJobsApi(AsApiChild, base='telephony/config/jobs'):
+    """
+    Jobs API
+    """
+    #: API to send activation emails
+    activation_emails: AsSendActivationEmailApi
+    #: API for apply line key template jobs
+    apply_line_key_templates: AsApplyLineKeyTemplatesJobsApi
+    #: call recording jobs
+    call_recording: AsCallRecordingJobsApi
+    #: API for device settings jobs
+    device_settings: AsDeviceSettingsJobsApi
+    #: API for manage numbers jobs
+    manage_numbers: AsManageNumbersJobsApi
+    # ; API for move users jobs
+    move_users: AsMoveUsersJobsApi
+    #: API for rebuild phone jobs
+    rebuild_phones: AsRebuildPhonesJobsApi
+    #: API for update routing prefix jobs
+    update_routing_prefix: AsUpdateRoutingPrefixJobsApi
+
+    def __init__(self, *, session: AsRestSession):
+        super().__init__(session=session)
+        self.activation_emails = AsSendActivationEmailApi(session=session)
+        self.apply_line_key_templates = AsApplyLineKeyTemplatesJobsApi(session=session)
+        self.call_recording = AsCallRecordingJobsApi(session=session)
+        self.device_settings = AsDeviceSettingsJobsApi(session=session)
+        self.manage_numbers = AsManageNumbersJobsApi(session=session)
+        self.move_users = AsMoveUsersJobsApi(session=session)
+        self.rebuild_phones = AsRebuildPhonesJobsApi(session=session)
+        self.update_routing_prefix = AsUpdateRoutingPrefixJobsApi(session=session)
 
 
 class AsLicensesApi(AsApiChild, base='licenses'):
@@ -20411,1349 +21848,6 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
         return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
 
 
-class AsApplyLineKeyTemplatesJobsApi(AsApiChild, base='telephony/config/jobs/devices/applyLineKeyTemplate'):
-    async def apply(self, action: ApplyLineKeyTemplateAction, template_id: str = None,
-              location_ids: list[str] = None, exclude_devices_with_custom_layout: bool = None,
-              include_device_tags: list[str] = None, exclude_device_tags: list[str] = None,
-              advisory_types: LineKeyTemplateAdvisoryTypes = None,
-              org_id: str = None) -> ApplyLineKeyTemplateJobDetails:
-        """
-        Apply a Line key Template
-
-        Apply a Line Key Template or reset devices to their factory Line Key settings.
-
-        Line Keys, also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
-        display.
-
-        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
-        device model.
-
-        This API allows users to apply a line key template or apply factory default Line Key settings to devices in a
-        set of locations or across all locations in the organization.
-
-        Applying a Line Key Template or resetting devices to their default Line Key configuration requires a full
-        administrator auth token with a scope of `spark-admin:telephony_config_write`.
-
-        :param action: Line key Template action to perform.
-        :type action: PostApplyLineKeyTemplateRequestAction
-        :param template_id: `templateId` is required for `APPLY_TEMPLATE` action.
-        :type template_id: str
-        :param location_ids: Used to search for devices only in the given locations.
-        :type location_ids: list[str]
-        :param exclude_devices_with_custom_layout: Indicates whether to exclude devices with custom layout.
-        :type exclude_devices_with_custom_layout: bool
-        :param include_device_tags: Include devices only with these tags.
-        :type include_device_tags: list[str]
-        :param exclude_device_tags: Exclude devices with these tags.
-        :type exclude_device_tags: list[str]
-        :param advisory_types: Refine search with advisories.
-        :type advisory_types: LineKeyTemplateAdvisoryTypes
-        :param org_id: Apply Line Key Template for this organization.
-        :type org_id: str
-        :rtype: :class:`ApplyLineKeyTemplateJobDetails`
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        body = dict()
-        body['action'] = enum_str(action)
-        if template_id is not None:
-            body['templateId'] = template_id
-        if location_ids is not None:
-            body['locationIds'] = location_ids
-        if exclude_devices_with_custom_layout is not None:
-            body['excludeDevicesWithCustomLayout'] = exclude_devices_with_custom_layout
-        if include_device_tags is not None:
-            body['includeDeviceTags'] = include_device_tags
-        if exclude_device_tags is not None:
-            body['excludeDeviceTags'] = exclude_device_tags
-        if advisory_types is not None:
-            body['advisoryTypes'] = advisory_types.model_dump(mode='json', by_alias=True, exclude_none=True)
-        url = self.ep()
-        data = await super().post(url, params=params, json=body)
-        r = ApplyLineKeyTemplateJobDetails.model_validate(data)
-        return r
-
-    async def list(self, org_id: str = None) -> list[ApplyLineKeyTemplateJobDetails]:
-        """
-        Get List of Apply Line Key Template jobs
-
-        Get the list of all apply line key templates jobs in an organization.
-
-        Line Keys, also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
-        display.
-        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
-        device model.
-        This API allows users to retrieve all the apply line key templates jobs in an organization.
-
-        Retrieving the list of apply line key templates jobs in an organization requires a full, user or read-only
-        administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param org_id: Retrieve list of line key templates jobs in this organization.
-        :type org_id: str
-        :rtype: list[ApplyLineKeyTemplateJobDetails]
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep()
-        data = await super().get(url, params=params)
-        r = TypeAdapter(list[ApplyLineKeyTemplateJobDetails]).validate_python(data['items'])
-        return r
-
-    async def status(self, job_id: str, org_id: str = None) -> ApplyLineKeyTemplateJobDetails:
-        """
-        Get the job status of an Apply Line Key Template job
-
-        Get the status of an apply line key template job by its job ID.
-
-        Line Keys, also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
-        display.
-        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
-        device model.
-        This API allows users to check the status of an apply line key templates job by job ID in an organization.
-
-        Checking the the status of an apply line key templates job in an organization requires a full, user or
-        read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param job_id: Retrieve job status for this `jobId`.
-        :type job_id: str
-        :param org_id: Check a line key template job status in this organization.
-        :type org_id: str
-        :rtype: :class:`ApplyLineKeyTemplateJobDetails`
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(job_id)
-        data = await super().get(url, params=params)
-        r = ApplyLineKeyTemplateJobDetails.model_validate(data)
-        return r
-
-    def errors_gen(self, job_id: str, org_id: str = None) -> AsyncGenerator[JobErrorItem, None, None]:
-        """
-        Get job errors for an Apply Line Key Template job
-
-        GET job errors for an apply Line Key Template job in an organization.
-
-        Line Keys, also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
-        display.
-        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
-        device model.
-        This API allows users to retrieve all the errors of an apply line key templates job by job ID in an
-        organization.
-
-        Retrieving all the errors of an apply line key templates job in an organization requires a full, user or
-        read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param job_id: Retrieve job errors for this `jobId`.
-        :type job_id: str
-        :param org_id: Retrieve list of errors for an apply line key template job in this organization.
-        :type org_id: str
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'{job_id}/errors')
-        return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
-
-    async def errors(self, job_id: str, org_id: str = None) -> List[JobErrorItem]:
-        """
-        Get job errors for an Apply Line Key Template job
-
-        GET job errors for an apply Line Key Template job in an organization.
-
-        Line Keys, also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
-        display.
-        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
-        device model.
-        This API allows users to retrieve all the errors of an apply line key templates job by job ID in an
-        organization.
-
-        Retrieving all the errors of an apply line key templates job in an organization requires a full, user or
-        read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param job_id: Retrieve job errors for this `jobId`.
-        :type job_id: str
-        :param org_id: Retrieve list of errors for an apply line key template job in this organization.
-        :type org_id: str
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'{job_id}/errors')
-        return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, params=params)]
-
-
-class AsCallRecordingJobsApi(AsApiChild, base='telephony/config/jobs/callRecording'):
-    def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[CallRecordingJobStatus, None, None]:
-        """
-        List Call Recording Jobs
-
-        Get the list of all call recording jobs in an organization.
-
-        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
-        manage call recordings. An organization is configured with an overall provider, but locations can be
-        configured to use a different vendor than the overall organization default.
-
-        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param org_id: List call recording jobs in this organization.
-        :type org_id: str
-        :return: Generator yielding :class:`CallRecordingJobStatus` instances
-        """
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep('jobs/callRecording')
-        return self.session.follow_pagination(url=url, model=CallRecordingJobStatus, item_key='items', params=params)
-
-    async def list(self, org_id: str = None, **params) -> List[CallRecordingJobStatus]:
-        """
-        List Call Recording Jobs
-
-        Get the list of all call recording jobs in an organization.
-
-        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
-        manage call recordings. An organization is configured with an overall provider, but locations can be
-        configured to use a different vendor than the overall organization default.
-
-        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param org_id: List call recording jobs in this organization.
-        :type org_id: str
-        :return: Generator yielding :class:`CallRecordingJobStatus` instances
-        """
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep('jobs/callRecording')
-        return [o async for o in self.session.follow_pagination(url=url, model=CallRecordingJobStatus, item_key='items', params=params)]
-
-    async def status(self, job_id: str, org_id: str = None) -> CallRecordingJobStatus:
-        """
-        Get the Job Status of a Call Recording Job
-
-        Get the details of a call recording job by its job ID.
-
-        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
-        manage call recordings. An organization is configured with an overall provider, but locations can be
-        configured to use a different vendor than the overall organization default.
-
-        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param job_id: Retrieve job status for this `jobId`.
-        :type job_id: str
-        :param org_id: Retrieve job status in this organization.
-        :type org_id: str
-        :rtype: :class:`CallRecordingJobStatus`
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(job_id)
-        data = await super().get(url, params=params)
-        r = CallRecordingJobStatus.model_validate(data)
-        return r
-
-    def errors_gen(self, job_id: str, org_id: str = None,
-               **params) -> AsyncGenerator[JobErrorItem, None, None]:
-        """
-        Get Job Errors for a Call Recording Job
-
-        Get errors for a call recording job in an organization.
-
-        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
-        manage call recordings. An organization is configured with an overall provider, but locations can be
-        configured to use a different vendor than the overall organization default.
-
-        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param job_id: Retrieve job errors for this job.
-        :type job_id: str
-        :param org_id: Retrieve job errors for a call recording job in this organization.
-        :type org_id: str
-        :return: Generator yielding :class:`ItemObject` instances
-        """
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'{job_id}/errors')
-        return self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)
-
-    async def errors(self, job_id: str, org_id: str = None,
-               **params) -> List[JobErrorItem]:
-        """
-        Get Job Errors for a Call Recording Job
-
-        Get errors for a call recording job in an organization.
-
-        The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
-        manage call recordings. An organization is configured with an overall provider, but locations can be
-        configured to use a different vendor than the overall organization default.
-
-        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param job_id: Retrieve job errors for this job.
-        :type job_id: str
-        :param org_id: Retrieve job errors for a call recording job in this organization.
-        :type org_id: str
-        :return: Generator yielding :class:`ItemObject` instances
-        """
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'{job_id}/errors')
-        return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)]
-
-
-class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
-    """
-    API for jobs to manage numbers
-    """
-
-    def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[NumberJob, None, None]:
-        """
-        List Manage Numbers Jobs
-
-        Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one irrespective
-        of its status.
-
-        The public API only supports initiating jobs which move numbers between locations.
-
-        Via Control Hub they can initiate both the move and delete, so this listing can show both.
-
-        This API requires a full or read-only administrator auth token with a scope of
-        `spark-admin:telephony_config_read`.
-
-        :param org_id: Retrieve list of Manage Number jobs for this organization.
-        :type org_id: str
-        :return: Generator yielding :class:`NumberJob` instances
-        """
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep('manageNumbers')
-        return self.session.follow_pagination(url=url, model=NumberJob, params=params)
-
-    async def list(self, org_id: str = None, **params) -> List[NumberJob]:
-        """
-        List Manage Numbers Jobs
-
-        Lists all Manage Numbers jobs for the given organization in order of most recent one to oldest one irrespective
-        of its status.
-
-        The public API only supports initiating jobs which move numbers between locations.
-
-        Via Control Hub they can initiate both the move and delete, so this listing can show both.
-
-        This API requires a full or read-only administrator auth token with a scope of
-        `spark-admin:telephony_config_read`.
-
-        :param org_id: Retrieve list of Manage Number jobs for this organization.
-        :type org_id: str
-        :return: Generator yielding :class:`NumberJob` instances
-        """
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep('manageNumbers')
-        return [o async for o in self.session.follow_pagination(url=url, model=NumberJob, params=params)]
-
-    async def initiate_job(self, operation: str, number_list: List[NumberItem], target_location_id: str = None,
-                     number_usage_type: str = None) -> NumberJob:
-        """
-        Initiate Number Jobs
-
-        Starts the execution of an operation on a set of numbers. Supported operations are: `MOVE`,
-        `NUMBER_USAGE_CHANGE`.
-
-        Up to 1000 numbers can be given in `MOVE` operation type and `NUMBER_USAGE_CHANGE` operation type per request.
-        If another move number job request is initiated while a move job is in progress, the API call will receive a
-        `409` HTTP status code.
-
-        In order to move a number the following is required:
-
-            * The number must be unassigned.
-            * Both locations must have the same PSTN Connection Type.
-            * Both locations must have the same PSTN Provider.
-            * Both locations have to be in the same country.
-
-        For example, you can move from Cisco Calling Plan to Cisco Calling Plan, but you cannot move from Cisco Calling
-        Plan to a location with Cloud Connected PSTN.
-
-        In order to change the number usage the following is required:
-
-            * The number must be unassigned.
-            * Number Usage Type can be set to `NONE` if carrier has the PSTN service `GEOGRAPHIC_NUMBERS`.
-            * Number Usage Type can be set to `SERVICE` if carrier has the PSTN service `SERVICE_NUMBERS`.
-
-        For example, you can initiate a `NUMBER_USAGE_CHANGE` job to change the number type from Standard number to
-        Service number, or the other way around.
-
-        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
-
-        :param operation: The kind of operation to be carried out.
-        :type operation: str
-        :param number_list: Numbers on which to execute the operation.
-        :type number_list: list[NumberItem]
-        :param target_location_id: Mandatory for a `MOVE` operation. The target location within organization where the
-            unassigned numbers will be moved from the source location.
-        :type target_location_id: str
-        :param number_usage_type: Mandatory for `NUMBER_USAGE_CHANGE` operation. Indicates the number usage type.
-        :type number_usage_type: str
-        :rtype: :class:`NumberJob`
-        """
-        body = dict()
-        body['operation'] = operation
-        if target_location_id is not None:
-            body['targetLocationId'] = target_location_id
-        if number_usage_type is not None:
-            body['numberUsageType'] = number_usage_type
-        body['numberList'] = TypeAdapter(list[NumberItem]).dump_python(number_list, mode='json', by_alias=True,
-                                                                       exclude_none=True)
-        url = self.ep('manageNumbers')
-        data = await super().post(url=url, json=body)
-        return NumberJob.model_validate(data)
-
-    async def status(self, job_id: str = None) -> NumberJob:
-        """
-        Get Manage Numbers Job Status
-
-        Returns the status and other details of the job.
-
-        This API requires a full or read-only administrator auth token with a scope of
-        spark-admin:telephony_config_read.
-
-        :param job_id: Retrieve job details for this jobId.
-        :type job_id: str
-        """
-        url = self.ep(f'manageNumbers/{job_id}')
-        data = await super().get(url=url)
-        return NumberJob.model_validate(data)
-
-    async def pause(self, job_id: str = None, org_id: str = None):
-        """
-        Pause the Manage Numbers Job
-
-        Pause the running Manage Numbers Job. A paused job can be resumed or abandoned.
-
-        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
-
-        :param job_id: Pause the Manage Numbers job for this jobId.
-        :type job_id: str
-        :param org_id: Pause the Manage Numbers job for this organization.
-        :type org_id: str
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'manageNumbers/{job_id}/actions/pause/invoke')
-        await super().post(url=url, params=params)
-        return
-
-    async def resume(self, job_id: str = None, org_id: str = None):
-        """
-        Resume the Manage Numbers Job
-
-        Resume the paused Manage Numbers Job. A paused job can be resumed or abandoned.
-
-        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
-
-        :param job_id: Resume the Manage Numbers job for this jobId.
-        :type job_id: str
-        :param org_id: Resume the Manage Numbers job for this organization.
-        :type org_id: str
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'manageNumbers/{job_id}/actions/resume/invoke')
-        await super().post(url=url, params=params)
-        return
-
-    async def abandon(self, job_id: str = None, org_id: str = None):
-        """
-        Abandon the Manage Numbers Job.
-        This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
-
-        :param job_id: Abandon the Manage Numbers job for this jobId.
-        :type job_id: str
-        :param org_id: Abandon the Manage Numbers job for this organization.
-        :type org_id: str
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'manageNumbers/{job_id}/actions/abandon/invoke')
-        await super().post(url=url, params=params)
-        return
-
-    def errors_gen(self, job_id: str = None, org_id: str = None,
-               **params) -> AsyncGenerator[ManageNumberErrorItem, None, None]:
-        """
-        List Manage Numbers Job errors
-
-        Lists all error details of Manage Numbers job. This will not list any errors if exitCode is COMPLETED. If the
-        status is COMPLETED_WITH_ERRORS then this lists the cause of failures.
-
-        List of possible Errors:
-
-            * BATCH-1017021 - Failed to move because it is an inactive number.
-
-            * BATCH-1017022 - Failed to move because the source location and target location have different CCP
-            providers.
-
-            * BATCH-1017023 - Failed because it is not an unassigned number.
-
-            * BATCH-1017024 - Failed because it is a main number.
-
-            * BATCH-1017027 - Manage Numbers Move Operation is not supported.
-
-            * BATCH-1017031 - Hydra request is supported only for single number move job.
-
-        This API requires a full or read-only administrator auth token with a scope of
-        spark-admin:telephony_config_read.
-
-        :param job_id: Retrieve the error details for this jobId.
-        :type job_id: str
-        :param org_id: Retrieve list of jobs for this organization.
-        :type org_id: str
-        """
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'manageNumbers/{job_id}/errors')
-        return self.session.follow_pagination(url=url, model=ManageNumberErrorItem, params=params)
-
-    async def errors(self, job_id: str = None, org_id: str = None,
-               **params) -> List[ManageNumberErrorItem]:
-        """
-        List Manage Numbers Job errors
-
-        Lists all error details of Manage Numbers job. This will not list any errors if exitCode is COMPLETED. If the
-        status is COMPLETED_WITH_ERRORS then this lists the cause of failures.
-
-        List of possible Errors:
-
-            * BATCH-1017021 - Failed to move because it is an inactive number.
-
-            * BATCH-1017022 - Failed to move because the source location and target location have different CCP
-            providers.
-
-            * BATCH-1017023 - Failed because it is not an unassigned number.
-
-            * BATCH-1017024 - Failed because it is a main number.
-
-            * BATCH-1017027 - Manage Numbers Move Operation is not supported.
-
-            * BATCH-1017031 - Hydra request is supported only for single number move job.
-
-        This API requires a full or read-only administrator auth token with a scope of
-        spark-admin:telephony_config_read.
-
-        :param job_id: Retrieve the error details for this jobId.
-        :type job_id: str
-        :param org_id: Retrieve list of jobs for this organization.
-        :type org_id: str
-        """
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'manageNumbers/{job_id}/errors')
-        return [o async for o in self.session.follow_pagination(url=url, model=ManageNumberErrorItem, params=params)]
-
-
-class AsMoveUsersJobsApi(AsApiChild, base='telephony/config/jobs/person/moveLocation'):
-    async def validate_or_initiate(self, users_list: list[MoveUsersList],
-                             org_id: str = None) -> StartMoveUsersJobResponse:
-        """
-        Validate or Initiate Move Users Job
-
-        This API allows the user to perform any one of the following operations:
-
-            * When the `validate` attribute is true, this validates the user move from one location to another location.
-
-            * When the `validate` attribute is false, this performs the user move from one location to another location.
-
-        In order to validate or move a user,
-
-            * Maximum of one calling user can be moved at a time.
-
-            * The target location must be a calling location.
-
-            * Only one new extension can be moved to the target location, which is optional. An empty value will
-            remove the
-              already configured extension. If not provided, the existing extension will be retained to the user.
-
-            * Only one new phone number belonging to the target location can be assigned to the user, which is optional.
-              Phone number must follow E.164 format. An empty value will remove the already configured phone number.
-              If not
-              provided, the existing phone number of the user will be moved to the target location.
-
-        Any errors that occur during initial API request validation will be captured directly in error response with
-        appropriate HTTP status code.
-
-        List of possible Errors:
-
-            + 1026005 - Request is supported only for single user.
-
-            + 1026006 - Attribute 'Location ID' is required.
-
-            + 1026006 - Attribute 'User ID' is required.
-
-            + 1026006 - Attribute 'Validate' is required.
-
-            + 1026010 - User is not a valid Calling User.
-
-            + 1026011 - Users list should not be empty.
-
-            + 1026012 - Users should not be empty.
-
-            + 1026013 - The source and the target location cannot be the same.
-
-            + 1026014 - Error occurred while processing the move users request.
-
-            + 1026015 - Error occurred while moving user number to target location.
-
-            + 1026016 - User should have either phone number or extension.
-
-            + 1026017 - Phone number is not in e164 format.
-
-        When the `validate` is set to be true, the errors and impacts associated with the user move will be identified
-        and returned in the response.
-
-        List of possible Errors:
-
-            + 4003 - `User Not Found`
-
-            + 4007 - `User Not Found`
-
-            + 4152 - `Location Not Found`
-
-            + 5620 - `Location Not Found`
-
-            + 4202 - `The extension is not available. It is already assigned to a user : {0}`
-
-            + 8264 - `Routing profile is different with new group: {0}`
-
-            + 19600 - `User has to be within an enterprise to be moved.`
-
-            + 19601 - `User can only be moved to a different group within the same enterprise.`
-
-            + 19602 - `Only regular end user can be moved. Service instance virtual user cannot be moved.`
-
-            + 19603 - `New group already reaches maximum number of user limits.`
-
-            + 19604 - `The {0} number of the user is the same as the calling line ID of the group.`
-
-            + 19605 - `User is assigned services not authorized to the new group: {0}.`
-
-            + 19606 - `User is in an active hoteling/flexible seating association.`
-
-            + 19607 - `User is pilot user of a trunk group.`
-
-            + 19608 - `User is using group level device profiles which is used by other users in current group.
-            Following
-              are the device profiles shared with other users: {0}.`
-
-            + 19609 - `Following device profiles cannot be moved to the new group because there are already devices with
-              the same name defined in the new group: {0}.`
-
-            + 19610 - `The extension of the user is used as transfer to operator number for following Auto Attendent :
-              {0}.`
-
-            + 19611 - `Fail to move announcement file from {0} to {1}.`
-
-            + 19612 - `Fail to move device management file from {0} to {1}.`
-
-            + 19613 - `User is assigned service packs not authorized to the new group: {0}.`
-
-            + 25008 - `Missing Mandatory field name: {0}`
-
-            + 25110 - `{fieldName} cannot be less than {0} or greater than {1} characters.`
-
-            + 25378 - `Target location is same as user's current location.`
-
-            + 25379 - `Error Occurred while Fetching User's Current Location Id.`
-
-            + 25381 - `Error Occurred while rolling back to Old Location Call recording Settings`
-
-            + 25382 - `Error Occurred while Disabling Call Recording for user which is required Before User can be
-            Moved`
-
-            + 25383 - `OCI Error while moving user`
-
-            + 25384 - `Error Occurred while checking for Possible Call Recording Impact.`
-
-            + 25385 - `Error Occurred while getting Call Recording Settings`
-
-            + 27559 - `The groupExternalId search criteria contains groups with different calling zone.`
-
-            + 27960 - `Parameter isWebexCalling, newPhoneNumber, or newExtension can only be set in Webex Calling
-              deployment mode.`
-
-            + 27961 - `Parameter isWebexCalling shall be set if newPhoneNumber or newExtension is set.`
-
-            + 27962 - `Work space cannot be moved.`
-
-            + 27963 - `Virtual profile user cannot be moved.`
-
-            + 27965 - `The user's phone number: {0}, is same as the current group charge number.`
-
-            + 27966 - `The phone number, {0}, is not available in the new group.`
-
-            + 27967 - `User is configured as the ECBN user for another user in the current group.`
-
-            + 27968 - `User is configured as the ECBN user for the current group.`
-
-            + 27969 - `User is associated with DECT handset(s): {0}`
-
-            + 27970 - `User is using a customer managed device: {0}`
-
-            + 27971 - `User is using an ATA device: {0}`
-
-            + 27972 - `User is in an active hotdesking association.`
-
-            + 27975 - `Need to unassign CLID number from group before moving the number to the new group. Phone number:
-              {0}`
-
-            + 27976 - `Local Gateway configuration is different with new group. Phone number: {0}`
-
-            + 1026015 - `Error occurred while moving user number to target location`
-
-            + 10010000 - `Total numbers exceeded maximum limit allowed`
-
-            + 10010001 - `to-location and from-location cannot be same`
-
-            + 10010002 - `to-location and from-location should belong to same customer`
-
-            + 10010003 - `to-location must have a carrier`
-
-            + 10010004 - `from-location must have a carrier`
-
-            + 10010005 - `Different Carrier move is not supported for non-Cisco PSTN carriers.`
-
-            + 10010006 - `Number move not supported for WEBEX_DIRECT carriers.`
-
-            + 10010007 - `Numbers out of sync, missing on CPAPI`
-
-            + 10010008 - `from-location not found or pstn connection missing in CPAPI`
-
-            + 10010010 - `from-location is in transition`
-
-            + 10010009 - `to-location not found or pstn connection missing in CPAPI`
-
-            + 10010011 - `to-location is in transition`
-
-            + 10010012 - `Numbers don't have a carrier Id`
-
-            + 10010013 - `Location less numbers don't have a carrier Id`
-
-            + 10010014 - `Different Carrier move is not supported for numbers with different country or region.`
-
-            + 10010015 - `Numbers contain mobile and non-mobile types.`
-
-            + 10010016 - `To/From location carriers must be same for mobile numbers.`
-
-            + 10010017 - `Move request for location less number not supported`
-
-            + 10010200 - `Move request for more than one block number is not supported`
-
-            + 10010201 - `Cannot move block number as few numbers not from the block starting %s to %s`
-
-            + 10010202 - `Cannot move block number as few numbers failed VERIFICATION from the block %s to %s`
-
-            + 10010203 - `Cannot move block number as few numbers missing from the block %s to %s`
-
-            + 10010204 - `Cannot move number as it is NOT a part of the block %s to %s`
-
-            + 10010205 - `Move request for Cisco PSTN block order not supported.`
-
-            + 10010299 - `Move order couldn't be created as no valid number to move`
-
-            + 10030000 - `Number not found`
-
-            + 10030001 - `Number does not belong to from-location`
-
-            + 10030002 - `Number is not present in CPAPI`
-
-            + 10030003 - `Number assigned to an user or device`
-
-            + 10030004 - `Number not in Active status`
-
-            + 10030005 - `Number is set as main number of the location`
-
-            + 10030006 - `Number has pending order associated with it`
-
-            + 10030007 - `Number belongs to a location but a from-location was not set`
-
-            + 10030008 - `Numbers from multiple carrier ids are not supported`
-
-            + 10030009 - `Location less number belongs to a location. from-location value is set to null or no
-            location id`
-
-            + 10030010 - `One or more numbers are not portable.`
-
-            + 10030011 - `Mobile number carrier was not set`
-
-            + 10030012 - `Number must be assigned for assigned move`
-
-            + 10050000 - `Failed to update customer reference for phone numbers on carrier`
-
-            + 10050001 - `Failed to update customer reference`
-
-            + 10050002 - `Order is not of operation type MOVE`
-
-            + 10050003 - `CPAPI delete call failed`
-
-            + 10050004 - `Not found in database`
-
-            + 10050005 - `Error sending notification to WxcBillingService`
-
-            + 10050006 - `CPAPI provision number as active call failed with status %s ,reason %s`
-
-            + 10050007 - `Failed to update E911 Service`
-
-            + 10050008 - `Target location does not have Inbound Toll Free license`
-
-            + 10050009 - `Source location or Target location subscription found cancelled or suspended`
-
-            + 10050010 - `Moving On Premises or Non Integrated CCP numbers from one location to another is not
-            supported.`
-
-            + 10099999 - `{Error Code} - {Error Message}`
-
-        List of possible Impacts:
-
-            + 19701 - `The identity/device profile the user is using is moved to the new group: {0}.`
-
-            + 19702 - `The user level customized incoming digit string setting is removed from the user. User is set
-            to use
-              the new group setting.`
-
-            + 19703 - `The user level customized outgoing digit plan setting is removed from the user. User is set to
-            use
-              the new group setting.`
-
-            + 19704 - `The user level customized enhanced outgoing calling plan setting is removed from the user.
-            User is
-              set to use the new group setting.`
-
-            + 19705 - `User is removed from following group services: {0}.`
-
-            + 19706 - `The current group schedule used in any criteria is removed from the service settings.`
-
-            + 19707 - `User is removed from the department of the old group.`
-
-            + 19708 - `User is changed to use the default communication barring profile of the new group.`
-
-            + 19709 - `The communication barring profile of the user is assigned to the new group: {0}.`
-
-            + 19710 - `The charge number for the user is removed.`
-
-            + 19711 - `The disabled FACs for the user are removed because they are not available in the new group.`
-
-            + 19712 - `User is removed from trunk group.`
-
-            + 19713 - `The extension of the user is reset to empty due to either the length is out of bounds of the new
-              group, or the extension is already taken in new group.`
-
-            + 19714 - `The extension of the following alternate number is reset to empty due to either the length out of
-              bounds of the new group or the extension is already taken in new group: {0}.`
-
-            + 19715 - `The collaborate room using current group default collaborate bridge is moved to the default
-              collaborate bridge of the new group.`
-
-            + 19716 - `Previously stored voice messages of the user are no longer available. The new voice message
-              will be stored on the mail server of the new group.`
-
-            + 19717 - `The primary number, alternate numbers or fax messaging number of the user are assigned to the new
-              group: {0}.`
-
-            + 19718 - `Following domains are assigned to the new group: {0}.`
-
-            + 19719 - `The NCOS of the user is assigned to the new group: {0}.`
-
-            + 19720 - `The office zone of the user is assigned to the new group: {0}.`
-
-            + 19721 - `The announcement media files are relocated to the new group directory.`
-
-            + 19722 - `User CLID number is set to use the new group CLID number: {0}.`
-
-            + 19723 - `New group CLID number is not configured.`
-
-            + 19724 - `The group level announcement file(s) are removed from the user's music on hold settings.`
-
-            + 25388 - `Target Location Does not Have Vendor Configured. Call Recording for user will be disabled`
-
-            + 25389 - `Call Recording Vendor for user will be changed from:{0} to:{1}`
-
-            + 25390 - `Dub point of user is moved to new external group`
-
-            + 25391 - `Error Occurred while moving Call recording Settings to new location`
-
-            + 25392 - `Error Occurred while checking for Possible Call Recording Impact.`
-
-            + 25393 - `Sending Billing Notification Failed`
-
-        This API requires a full administrator auth token with a scope
-        of `spark-admin:telephony_config_write`, `spark-admin:people_write` and `identity:groups_rw`.
-
-        :param users_list: The user to be moved from the source location.
-        :type users_list: list[MoveUsersList]
-        :param org_id: Create Move Users job for this organization.
-        :type org_id: str
-        :rtype: StartJobResponse
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        body = dict()
-        body['usersList'] = TypeAdapter(list[MoveUsersList]).dump_python(users_list, mode='json', by_alias=True,
-                                                                         exclude_none=True)
-        url = self.ep()
-        data = await super().post(url, params=params, json=body)
-        r = StartMoveUsersJobResponse.model_validate(data['response'])
-        return r
-
-    def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[MoveUserJobDetails, None, None]:
-        """
-        List Move Users Jobs
-
-        Lists all the Move Users jobs for the given organization in order of most recent job to oldest job irrespective
-        of its status.
-
-        This API requires a full or read-only administrator auth token with a scope of
-        `spark-admin:telephony_config_read`.
-
-        :param org_id: Retrieve list of Move Users jobs for this organization.
-        :type org_id: str
-        :return: Generator yielding :class:`JobDetailsResponse` instances
-        """
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep('')
-        return self.session.follow_pagination(url=url, model=MoveUserJobDetails, item_key='items', params=params)
-
-    async def list(self, org_id: str = None, **params) -> List[MoveUserJobDetails]:
-        """
-        List Move Users Jobs
-
-        Lists all the Move Users jobs for the given organization in order of most recent job to oldest job irrespective
-        of its status.
-
-        This API requires a full or read-only administrator auth token with a scope of
-        `spark-admin:telephony_config_read`.
-
-        :param org_id: Retrieve list of Move Users jobs for this organization.
-        :type org_id: str
-        :return: Generator yielding :class:`JobDetailsResponse` instances
-        """
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep('')
-        return [o async for o in self.session.follow_pagination(url=url, model=MoveUserJobDetails, item_key='items', params=params)]
-
-    async def status(self, job_id: str, org_id: str = None) -> MoveUserJobDetails:
-        """
-        Get Move Users Job Status
-
-        Returns the status and other details of the job.
-
-        This API requires a full or read-only administrator auth token with a scope
-        of `spark-admin:telephony_config_read`.
-
-        :param job_id: Retrieve job details for this `jobId`.
-        :type job_id: str
-        :param org_id: Retrieve job details for this organization.
-        :type org_id: str
-        :rtype: :class:`MoveUserJobDetails`
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(job_id)
-        data = await super().get(url, params=params)
-        r = MoveUserJobDetails.model_validate(data)
-        return r
-
-    async def abandon(self, job_id: str, org_id: str = None):
-        """
-        Abandon the Move Users Job.
-
-        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
-
-        :param job_id: Abandon the Move Users job for this `jobId`.
-        :type job_id: str
-        :param org_id: Abandon the Move Users job for this organization.
-        :type org_id: str
-        :rtype: None
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'{job_id}/actions/abandon/invoke')
-        await super().post(url, params=params)
-
-    async def pause(self, job_id: str, org_id: str = None):
-        """
-        Pause the Move Users Job
-
-        Pause the running Move Users Job. A paused job can be resumed or abandoned.
-
-        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
-
-        :param job_id: Pause the Move Users job for this `jobId`.
-        :type job_id: str
-        :param org_id: Pause the Move Users job for this organization.
-        :type org_id: str
-        :rtype: None
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'{job_id}/actions/pause/invoke')
-        await super().post(url, params=params)
-
-    async def resume(self, job_id: str, org_id: str = None):
-        """
-        Resume the Move Users Job
-
-        Resume the paused Move Users Job that is in paused status.
-
-        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
-
-        :param job_id: Resume the Move Users job for this `jobId`.
-        :type job_id: str
-        :param org_id: Resume the Move Users job for this organization.
-        :type org_id: str
-        :rtype: None
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'{job_id}/actions/resume/invoke')
-        await super().post(url, params=params)
-
-    def errors_gen(self, job_id: str, org_id: str = None,
-               **params) -> AsyncGenerator[JobErrorItem, None, None]:
-        """
-        List Move Users Job errors
-
-        Lists all error details of Move Users job. This will not list any errors if `exitCode` is `COMPLETED`. If the
-        status is `COMPLETED_WITH_ERRORS` then this lists the cause of failures.
-
-        This API requires a full or read-only administrator auth token with a scope of
-        `spark-admin:telephony_config_read`.
-
-        :param job_id: Retrieve the error details for this `jobId`.
-        :type job_id: str
-        :param org_id: Retrieve list of jobs for this organization.
-        :type org_id: str
-        :return: Generator yielding :class:`JobErrorItem` instances
-        """
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'{job_id}/errors')
-        return self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)
-
-    async def errors(self, job_id: str, org_id: str = None,
-               **params) -> List[JobErrorItem]:
-        """
-        List Move Users Job errors
-
-        Lists all error details of Move Users job. This will not list any errors if `exitCode` is `COMPLETED`. If the
-        status is `COMPLETED_WITH_ERRORS` then this lists the cause of failures.
-
-        This API requires a full or read-only administrator auth token with a scope of
-        `spark-admin:telephony_config_read`.
-
-        :param job_id: Retrieve the error details for this `jobId`.
-        :type job_id: str
-        :param org_id: Retrieve list of jobs for this organization.
-        :type org_id: str
-        :return: Generator yielding :class:`JobErrorItem` instances
-        """
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'{job_id}/errors')
-        return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)]
-
-
-class AsRebuildPhonesJobsApi(AsApiChild, base='telephony/config/jobs/devices/rebuildPhones'):
-    async def rebuild_phones_configuration(self, location_id: str, org_id: str = None) -> StartJobResponse:
-        """
-        Rebuild Phones Configuration
-
-        Not supported for Webex for Government (FedRAMP)
-
-        Rebuild all phone configurations for the specified location.
-
-        Rebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e.
-        a change in the network configuration of devices in a location from public to private and vice-versa.
-
-        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
-
-        :param location_id: Unique identifier of the location.
-        :type location_id: str
-        :param org_id: Rebuild phones for this organization.
-        :type org_id: str
-        :rtype: :class:`RebuildPhonesJob`
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        body = dict()
-        body['locationId'] = location_id
-        url = self.ep()
-        data = await super().post(url, params=params, json=body)
-        r = StartJobResponse.model_validate(data)
-        return r
-
-    async def list(self, org_id: str = None) -> list[StartJobResponse]:
-        """
-        List Rebuild Phones Jobs
-
-        Not supported for Webex for Government (FedRAMP)
-
-        Get the list of all Rebuild Phones jobs in an organization.
-
-        Rebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e.
-        a change in the network configuration of devices in a location from public to private and vice-versa.
-
-        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param org_id: List of rebuild phones jobs in this organization.
-        :type org_id: str
-        :rtype: list[RebuildPhonesJob]
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep()
-        data = await super().get(url, params=params)
-        r = TypeAdapter(list[StartJobResponse]).validate_python(data['items'])
-        return r
-
-    async def status(self, job_id: str, org_id: str = None) -> StartJobResponse:
-        """
-        Get the Job Status of a Rebuild Phones Job
-
-        Not supported for Webex for Government (FedRAMP)
-
-        Get the details of a rebuild phones job by its job ID.
-
-        Rebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e.
-        a change in the network configuration of devices in a location from public to private and vice-versa.
-
-        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param job_id: Retrieve job status for this `jobId`.
-        :type job_id: str
-        :param org_id: Check a rebuild phones job status in this organization.
-        :type org_id: str
-        :rtype: :class:`RebuildPhonesJob`
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'{job_id}')
-        data = await super().get(url, params=params)
-        r = StartJobResponse.model_validate(data)
-        return r
-
-    def errors_gen(self, job_id: str, org_id: str = None) -> AsyncGenerator[JobErrorItem, None, None]:
-        """
-        Get Job Errors for a Rebuild Phones Job
-
-        Not supported for Webex for Government (FedRAMP)
-
-        Get errors for a rebuild phones job in an organization.
-
-        Rebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e.
-        a change in the network configuration of devices in a location from public to private and vice-versa.
-
-        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param job_id: Retrieve job errors for this `jobId`.
-        :type job_id: str
-        :param org_id: Retrieve list of errors for a rebuild phones job in this organization.
-        :type org_id: str
-        :rtype: list[ItemObject]
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'{job_id}/errors')
-        return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
-
-    async def errors(self, job_id: str, org_id: str = None) -> List[JobErrorItem]:
-        """
-        Get Job Errors for a Rebuild Phones Job
-
-        Not supported for Webex for Government (FedRAMP)
-
-        Get errors for a rebuild phones job in an organization.
-
-        Rebuild phones jobs are used when there is a change in the network configuration of phones in a location, i.e.
-        a change in the network configuration of devices in a location from public to private and vice-versa.
-
-        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param job_id: Retrieve job errors for this `jobId`.
-        :type job_id: str
-        :param org_id: Retrieve list of errors for a rebuild phones job in this organization.
-        :type org_id: str
-        :rtype: list[ItemObject]
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'{job_id}/errors')
-        return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, params=params)]
-
-
-class AsUpdateRoutingPrefixJobsApi(AsApiChild, base='telephony/config/jobs/updateRoutingPrefix'):
-    def list_gen(self, org_id: str = None) -> AsyncGenerator[StartJobResponse, None, None]:
-        """
-        Get a List of Update Routing Prefix jobs
-
-        Get the list of all update routing prefix jobs in an organization.
-
-        The routing prefix is associated with a location and is used to route calls belonging to that location.
-        This API allows users to retrieve all the update routing prefix jobs in an organization.
-
-        Retrieving the list of update routing prefix jobs in an organization requires a full, user, or read-only
-        administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param org_id: Retrieve list of update routing prefix jobs in this organization.
-        :type org_id: str
-        :rtype: list[StartJobResponse]
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep()
-        return self.session.follow_pagination(url=url, model=StartJobResponse, params=params, item_key='items')
-
-    async def list(self, org_id: str = None) -> List[StartJobResponse]:
-        """
-        Get a List of Update Routing Prefix jobs
-
-        Get the list of all update routing prefix jobs in an organization.
-
-        The routing prefix is associated with a location and is used to route calls belonging to that location.
-        This API allows users to retrieve all the update routing prefix jobs in an organization.
-
-        Retrieving the list of update routing prefix jobs in an organization requires a full, user, or read-only
-        administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param org_id: Retrieve list of update routing prefix jobs in this organization.
-        :type org_id: str
-        :rtype: list[StartJobResponse]
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep()
-        return [o async for o in self.session.follow_pagination(url=url, model=StartJobResponse, params=params, item_key='items')]
-
-    async def status(self, job_id: str, org_id: str = None) -> StartJobResponse:
-        """
-        Get the job status of Update Routing Prefix job
-
-        Get the status of the update routing prefix job by its job ID.
-
-        The routing prefix is associated with a location and is used to route calls belonging to that location.
-        This API allows users to check the status of update routing prefix job by job ID in an organization.
-
-        Checking the status of the update routing prefix job in an organization requires a full, user, or read-only
-        administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param job_id: Retrieve job status for this `jobId`.
-        :type job_id: str
-        :param org_id: Check update routing prefix job status in this organization.
-        :type org_id: str
-        :rtype: :class:`StartJobResponse`
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(job_id)
-        data = await super().get(url, params=params)
-        r = StartJobResponse.model_validate(data)
-        return r
-
-    def errors_gen(self, job_id: str, org_id: str = None) -> AsyncGenerator[JobErrorItem, None, None]:
-        """
-        Get job errors for update routing prefix job
-
-        GET job errors for the update routing prefix job in an organization.
-
-        The routing prefix is associated with a location and is used to route calls belonging to that location.
-        This API allows users to retrieve all the errors of the update routing prefix job by job ID in an organization.
-
-        Retrieving all the errors of the update routing prefix job in an organization requires a full, user, or
-        read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param job_id: Retrieve job errors for this `jobId`.
-        :type job_id: str
-        :param org_id: Retrieve list of errors for update routing prefix job in this organization.
-        :type org_id: str
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'{job_id}/errors')
-        return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
-
-    async def errors(self, job_id: str, org_id: str = None) -> List[JobErrorItem]:
-        """
-        Get job errors for update routing prefix job
-
-        GET job errors for the update routing prefix job in an organization.
-
-        The routing prefix is associated with a location and is used to route calls belonging to that location.
-        This API allows users to retrieve all the errors of the update routing prefix job by job ID in an organization.
-
-        Retrieving all the errors of the update routing prefix job in an organization requires a full, user, or
-        read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param job_id: Retrieve job errors for this `jobId`.
-        :type job_id: str
-        :param org_id: Retrieve list of errors for update routing prefix job in this organization.
-        :type org_id: str
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'{job_id}/errors')
-        return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, params=params)]
-
-
-class AsJobsApi(AsApiChild, base='telephony/config/jobs'):
-    """
-    Jobs API
-    """
-    #: API for apply line key template jobs
-    apply_line_key_templates: AsApplyLineKeyTemplatesJobsApi
-    #: call recording jobs
-    call_recording: AsCallRecordingJobsApi
-    #: API for device settings jobs
-    device_settings: AsDeviceSettingsJobsApi
-    #: API for manage numbers jobs
-    manage_numbers: AsManageNumbersJobsApi
-    # ; API for move users jobs
-    move_users: AsMoveUsersJobsApi
-    #: API for rebuild phone jobs
-    rebuild_phones: AsRebuildPhonesJobsApi
-    #: API for update routing prefix jobs
-    update_routing_prefix: AsUpdateRoutingPrefixJobsApi
-
-    def __init__(self, *, session: AsRestSession):
-        super().__init__(session=session)
-        self.apply_line_key_templates = AsApplyLineKeyTemplatesJobsApi(session=session)
-        self.call_recording = AsCallRecordingJobsApi(session=session)
-        self.device_settings = AsDeviceSettingsJobsApi(session=session)
-        self.manage_numbers = AsManageNumbersJobsApi(session=session)
-        self.move_users = AsMoveUsersJobsApi(session=session)
-        self.rebuild_phones = AsRebuildPhonesJobsApi(session=session)
-        self.update_routing_prefix = AsUpdateRoutingPrefixJobsApi(session=session)
-
-
 class AsLocationAccessCodesApi(AsApiChild, base='telephony/config/locations'):
     """
     Access codes API
@@ -31685,6 +31779,8 @@ class AsWebexSimpleApi:
     groups: AsGroupsApi
     #: guests API :class:`AsGuestManagementApi`
     guests: AsGuestManagementApi
+    #: jobs API: :class:`AsJobsApi`
+    jobs: AsJobsApi
     #: Licenses API :class:`AsLicensesApi`
     licenses: AsLicensesApi
     #: Location API :class:`AsLocationsApi`
@@ -31772,6 +31868,7 @@ class AsWebexSimpleApi:
         self.events = AsEventsApi(session=session)
         self.groups = AsGroupsApi(session=session)
         self.guests = AsGuestManagementApi(session=session)
+        self.jobs = AsJobsApi(session=session)
         self.licenses = AsLicensesApi(session=session)
         self.locations = AsLocationsApi(session=session)
         self.me = AsMeSettingsApi(session=session)

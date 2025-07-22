@@ -85,6 +85,76 @@ The method name is a link to the method documentation.
         Create a Guest
    * - :meth:`api.guests.guest_count <wxc_sdk.guests.GuestManagementApi.guest_count>`
         Get Guest Count
+   * - :meth:`api.jobs.activation_emails.errors <wxc_sdk.telephony.jobs.SendActivationEmailApi.errors>`
+        Get Bulk Activation Email Resend Job Errors
+   * - :meth:`api.jobs.activation_emails.start <wxc_sdk.telephony.jobs.SendActivationEmailApi.start>`
+        Initiate Bulk Activation Email Resend Job
+   * - :meth:`api.jobs.activation_emails.status <wxc_sdk.telephony.jobs.SendActivationEmailApi.status>`
+        Get Bulk Activation Email Resend Job Status
+   * - :meth:`api.jobs.apply_line_key_templates.apply <wxc_sdk.telephony.jobs.ApplyLineKeyTemplatesJobsApi.apply>`
+        Apply a Line key Template
+   * - :meth:`api.jobs.apply_line_key_templates.errors <wxc_sdk.telephony.jobs.ApplyLineKeyTemplatesJobsApi.errors>`
+        Get job errors for an Apply Line Key Template job
+   * - :meth:`api.jobs.apply_line_key_templates.list <wxc_sdk.telephony.jobs.ApplyLineKeyTemplatesJobsApi.list>`
+        Get List of Apply Line Key Template jobs
+   * - :meth:`api.jobs.apply_line_key_templates.status <wxc_sdk.telephony.jobs.ApplyLineKeyTemplatesJobsApi.status>`
+        Get the job status of an Apply Line Key Template job
+   * - :meth:`api.jobs.call_recording.errors <wxc_sdk.telephony.jobs.CallRecordingJobsApi.errors>`
+        Get Job Errors for a Call Recording Job
+   * - :meth:`api.jobs.call_recording.list <wxc_sdk.telephony.jobs.CallRecordingJobsApi.list>`
+        List Call Recording Jobs
+   * - :meth:`api.jobs.call_recording.status <wxc_sdk.telephony.jobs.CallRecordingJobsApi.status>`
+        Get the Job Status of a Call Recording Job
+   * - :meth:`api.jobs.device_settings.change <wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.change>`
+        Change device settings across organization or locations jobs
+   * - :meth:`api.jobs.device_settings.errors <wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.errors>`
+        List change device settings job errors
+   * - :meth:`api.jobs.device_settings.list <wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.list>`
+        List change device settings jobs
+   * - :meth:`api.jobs.device_settings.status <wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.status>`
+        Get change device settings job status
+   * - :meth:`api.jobs.manage_numbers.abandon <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.abandon>`
+        Abandon the Manage Numbers Job
+   * - :meth:`api.jobs.manage_numbers.errors <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.errors>`
+        List Manage Numbers Job errors
+   * - :meth:`api.jobs.manage_numbers.initiate_job <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.initiate_job>`
+        Initiate Number Jobs
+   * - :meth:`api.jobs.manage_numbers.list <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.list>`
+        List Manage Numbers Jobs
+   * - :meth:`api.jobs.manage_numbers.pause <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.pause>`
+        Pause the Manage Numbers Job
+   * - :meth:`api.jobs.manage_numbers.resume <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.resume>`
+        Resume the Manage Numbers Job
+   * - :meth:`api.jobs.manage_numbers.status <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.status>`
+        Get Manage Numbers Job Status
+   * - :meth:`api.jobs.move_users.abandon <wxc_sdk.telephony.jobs.MoveUsersJobsApi.abandon>`
+        Abandon the Move Users Job
+   * - :meth:`api.jobs.move_users.errors <wxc_sdk.telephony.jobs.MoveUsersJobsApi.errors>`
+        List Move Users Job errors
+   * - :meth:`api.jobs.move_users.list <wxc_sdk.telephony.jobs.MoveUsersJobsApi.list>`
+        List Move Users Jobs
+   * - :meth:`api.jobs.move_users.pause <wxc_sdk.telephony.jobs.MoveUsersJobsApi.pause>`
+        Pause the Move Users Job
+   * - :meth:`api.jobs.move_users.resume <wxc_sdk.telephony.jobs.MoveUsersJobsApi.resume>`
+        Resume the Move Users Job
+   * - :meth:`api.jobs.move_users.status <wxc_sdk.telephony.jobs.MoveUsersJobsApi.status>`
+        Get Move Users Job Status
+   * - :meth:`api.jobs.move_users.validate_or_initiate <wxc_sdk.telephony.jobs.MoveUsersJobsApi.validate_or_initiate>`
+        Validate or Initiate Move Users Job
+   * - :meth:`api.jobs.rebuild_phones.errors <wxc_sdk.telephony.jobs.RebuildPhonesJobsApi.errors>`
+        Get Job Errors for a Rebuild Phones Job
+   * - :meth:`api.jobs.rebuild_phones.list <wxc_sdk.telephony.jobs.RebuildPhonesJobsApi.list>`
+        List Rebuild Phones Jobs
+   * - :meth:`api.jobs.rebuild_phones.rebuild_phones_configuration <wxc_sdk.telephony.jobs.RebuildPhonesJobsApi.rebuild_phones_configuration>`
+        Rebuild Phones Configuration
+   * - :meth:`api.jobs.rebuild_phones.status <wxc_sdk.telephony.jobs.RebuildPhonesJobsApi.status>`
+        Get the Job Status of a Rebuild Phones Job
+   * - :meth:`api.jobs.update_routing_prefix.errors <wxc_sdk.telephony.jobs.UpdateRoutingPrefixJobsApi.errors>`
+        Get job errors for update routing prefix job
+   * - :meth:`api.jobs.update_routing_prefix.list <wxc_sdk.telephony.jobs.UpdateRoutingPrefixJobsApi.list>`
+        Get a List of Update Routing Prefix jobs
+   * - :meth:`api.jobs.update_routing_prefix.status <wxc_sdk.telephony.jobs.UpdateRoutingPrefixJobsApi.status>`
+        Get the job status of Update Routing Prefix job
    * - :meth:`api.licenses.assign_licenses_to_users <wxc_sdk.licenses.LicensesApi.assign_licenses_to_users>`
         Assign Licenses to Users
    * - :meth:`api.licenses.assigned_users <wxc_sdk.licenses.LicensesApi.assigned_users>`
@@ -1091,6 +1161,12 @@ The method name is a link to the method documentation.
         Update Call Forwarding Settings for a feature
    * - :meth:`api.telephony.huntgroup.forwarding.update_call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.update_call_forwarding_rule>`
         Update a Selective Call Forwarding Rule's settings for the designated feature
+   * - :meth:`api.telephony.jobs.activation_emails.errors <wxc_sdk.telephony.jobs.SendActivationEmailApi.errors>`
+        Get Bulk Activation Email Resend Job Errors
+   * - :meth:`api.telephony.jobs.activation_emails.start <wxc_sdk.telephony.jobs.SendActivationEmailApi.start>`
+        Initiate Bulk Activation Email Resend Job
+   * - :meth:`api.telephony.jobs.activation_emails.status <wxc_sdk.telephony.jobs.SendActivationEmailApi.status>`
+        Get Bulk Activation Email Resend Job Status
    * - :meth:`api.telephony.jobs.apply_line_key_templates.apply <wxc_sdk.telephony.jobs.ApplyLineKeyTemplatesJobsApi.apply>`
         Apply a Line key Template
    * - :meth:`api.telephony.jobs.apply_line_key_templates.errors <wxc_sdk.telephony.jobs.ApplyLineKeyTemplatesJobsApi.errors>`

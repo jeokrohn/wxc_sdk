@@ -10,6 +10,8 @@ Release history
 - feat: new endpoint: :meth:`api.telephony.dect_devices.add_list_of_handsets <wxc_sdk.telephony.dect_devices.DECTDevicesApi.add_list_of_handsets>`
 - feat: new endpoint: :meth:`api.telephony.location.number.manage_number_state <wxc_sdk.telephony.location.numbers.LocationNumbersApi.manage_number_state>`
 - feat: new API: :attr:`api.telephony.cx_essentials.callqueue_recording <wxc_sdk.telephony.cx_essentials.CustomerExperienceEssentialsApi.callqueue_recording>`
+- feat: new API: :attr:`api.telephony.jobs.activation_emails <wxc_sdk.telephony.jobs.JobsApi.activation_emails>`
+- feat: also expose jobs API under :attr:`api.telephony.jobs <wxc_sdk.telephony.TelephonyApi.jobs>`
 
 1.25.0
 ------
