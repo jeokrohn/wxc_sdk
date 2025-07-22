@@ -902,15 +902,15 @@ class TelephonyApi(ApiChild, base='telephony/config'):
 
         List all calling UC Manager Profiles for the organization.
 
-        UC Manager Profiles are applicable if your organization uses Jabber in Team Messaging mode or Calling in
-        Webex Teams (Unified CM).
+        UC Manager Profiles are applicable if your organization uses Jabber in Team Messaging mode or Calling in Webex
+        (Unified CM).
 
         The UC Manager Profile has an organization-wide default and may be overridden for individual persons, although
         currently only setting at a user level is supported by Webex APIs.
 
         Retrieving this list requires a full or read-only administrator auth token with a scope
-        of spark-admin:people_read as this API is designed to be used in conjunction with calling behavior at the
-        user level.
+        of `spark-admin:people_read` as this API is designed to be used in conjunction with calling behavior at the user
+        level.
 
         :param org_id: List manager profiles in this organization.
         :type org_id: str
