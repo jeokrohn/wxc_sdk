@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['Webhook', 'WebhookEvent', 'WebhookResource', 'WebhookStatus', 'WebhooksApi']
+__all__ = ['Status', 'Webhook', 'WebhookEvent', 'WebhookResource', 'WebhookStatus', 'WebhooksApi']
 
 
 class WebhookResource(str, Enum):
@@ -110,6 +110,10 @@ class Webhook(ApiModel):
     #: see `inline file DLP
     #: <https://developer.webex.com/docs/api/guides/webex-real-time-file-dlp-basics>`_) resources.
     owned_by: Optional[str] = None
+
+
+class Status(str, Enum):
+    active = 'active'
 
 
 class WebhooksApi(ApiChild, base='webhooks'):
@@ -233,7 +237,7 @@ class WebhooksApi(ApiChild, base='webhooks'):
         return r
 
     def update_a_webhook(self, webhook_id: str, name: str, target_url: str, secret: str = None, owned_by: str = None,
-                         status: WebhookStatus = None) -> Webhook:
+                         status: Status = None) -> Webhook:
         """
         Update a Webhook
 
@@ -259,7 +263,7 @@ class WebhooksApi(ApiChild, base='webhooks'):
             <https://developer.webex.com/docs/api/guides/webex-real-time-file-dlp-basics>`_) resources.
         :type owned_by: str
         :param status: Status of the webhook. Use "active" to reactivate a disabled webhook.
-        :type status: WebhookStatus
+        :type status: Status
         :rtype: :class:`Webhook`
         """
         body = dict()
