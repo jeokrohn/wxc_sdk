@@ -33,13 +33,14 @@ def class_name_from_ref(ref: str) -> str:
         raise ValueError(f'Invalid ref {ref}')
     return class_name_from_schema_name(ref_match.group(1))
 
+
 def is_datetime(value: str) -> bool:
     """
     Check if value is a datetime
     """
     if not isinstance(value, str):
         return False
-    value=value.strip("'").strip('"')
+    value = value.strip("'").strip('"')
 
     # value has to have some minimum  length to qualify as a date
     if len(value) < 10:
@@ -58,6 +59,7 @@ def is_datetime(value: str) -> bool:
     except ValueError:
         return True
     return False
+
 
 class OpenApiPythonClassRegistry(PythonClassRegistry):
     """
@@ -126,12 +128,12 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             if referenced_class:
                 referenced_class = self.qualified_class_name(referenced_class)
             return python_type, referenced_class
-        elif self._is_simple_type(prop_type:=prop.type):
+        elif self._is_simple_type(prop_type := prop.type):
             example = prop.example or parent_example
             if prop_type == 'number' and isinstance(example, int):
                 # 'number' actually should be 'integer' if the example is an integer
                 msg = (f'Changing type "number" to "integer" for {name.split("%")[-1]}.{prop_name} '
-                         f'based on example "{example}"')
+                       f'based on example "{example}"')
                 log.info(msg)
                 prop_type = 'integer'
             elif prop_type == 'string' and isinstance(example, str) and is_datetime(example):
@@ -213,18 +215,35 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         """
         Add schema to registry
         """
-        # create PythonClass instance
-        # we need
-        # * name
-        # * attributes
-        # * description
-        # * is_enum
-        # * baseclass (None)
-        self._add_or_get_type_for_property(schema, sanitize_class_name(schema_name))
+        python_type, referenced_class = self._add_or_get_type_for_property(schema, sanitize_class_name(schema_name))
+        """
+            For a schema like:
+                "LocationListResponse": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "id",
+                        "name"
+                      ]
+            _add_schema returns:
+                * 'list[None%LocationListResponseItem]'
+                * 'None%LocationListResponseItem'
+    
+            we probably need to create a dummy for LocationListResponse
+        """
+        if (unqualified_ref := referenced_class.split('%')[-1]) != schema_name and unqualified_ref.endswith('Item'):
+            # this is a list of items, we need to create a dummy class for the list
+            # so that we can use it as a type
+            alias_attribute = Attribute(name='alias', python_type=python_type, referenced_class=referenced_class)
+            dummy_class_name = self.qualified_class_name(snake_case(schema_name))
+            dummy_class = PythonClass(name=dummy_class_name, alias=alias_attribute)
+            self._add_class(dummy_class)
+        return
 
     def _parameter_from_schema_property(self, *, prop_name: str, prop: OASchemaProperty,
                                         param_required: Optional[set[str]] = None,
-                                        url_parameter:bool=False) -> Parameter:
+                                        url_parameter: bool = False) -> Parameter:
         """
         Create parameter from schema property
         """

@@ -46,7 +46,7 @@ class PythonClassRegistry:
             return class_name
         return f'{self._context}%{sanitize_class_name(class_name)}'
 
-    def _add_api(self, *, python_api: PythonAPI, apib_key: str=None):
+    def _add_api(self, *, python_api: PythonAPI, apib_key: str = None):
         if apib_key is None:
             apib_key = self._context
         if apib_key in self._apis:
@@ -474,6 +474,24 @@ class PythonClassRegistry:
             # for
         # for
 
+    def fix_alias_classes(self):
+        """
+        check for classes that are actually aliases and fix references to these classes
+        """
+        alias_classes:dict[str:PythonClass] = {ident:pc for ident, pc in self._classes.items() if pc.alias}
+        # get all attributes that reference an alias class
+        for pc in self._classes.values():
+            # go though all attributes and alias (if any) ...
+            for attr in pc.attributes or []:
+                if attr.referenced_class in alias_classes:
+                    # this is an alias class; update the referenced class to the aliased class
+                    alias_class = alias_classes[attr.referenced_class]
+                    alias_attr = alias_class.alias
+                    attr.python_type = alias_attr.python_type
+                    attr.referenced_class = alias_attr.referenced_class
+                    log.info(f'fixing reference to alias class {attr.referenced_class} -> {alias_attr.python_type}')
+        return
+
     def normalize(self):
         """
         Eliminate redundancies and then transform all class names to Python class names
@@ -490,12 +508,23 @@ class PythonClassRegistry:
                   * python_type in PythonClass
                   * ... in Endpoint
             * after normalization updated PythonClass and Attribute instances can be used for code creation
+            * check for classes that are actually aliases and fix references to these classes
         """
         self.eliminate_redundancies()
 
         # mapping qualidents to Python class names
         qualident_to_python_name: dict[str, str] = dict()
         python_names = set()
+
+        def python_class_attributes_and_alias(pc: PythonClass) -> Generator[Attribute, None, None]:
+            """
+            Generator for all attributes and alias of a Python class
+            """
+            if pc.attributes:
+                yield from pc.attributes
+            if pc.alias:
+                yield pc.alias
+            return
 
         # create the mappings
         for qualident, pc in self._classes.items():
@@ -512,23 +541,23 @@ class PythonClassRegistry:
             pc = self._classes.pop(qualident)
             pc.name = python_name
             pc.baseclass = pc.baseclass and qualident_to_python_name[pc.baseclass]
-            if pc.attributes:
-                for attr in pc.attributes:
-                    if attr.referenced_class:
-                        new_class_name = qualident_to_python_name[attr.referenced_class]
-                        attr.python_type = attr.python_type.replace(attr.referenced_class, new_class_name)
-                        attr.referenced_class = new_class_name
+            # go though all attributes and alias (if any) ...
+            for attr in python_class_attributes_and_alias(pc):
+                if attr.referenced_class:
+                    new_class_name = qualident_to_python_name[attr.referenced_class]
+                    attr.python_type = attr.python_type.replace(attr.referenced_class, new_class_name)
+                    attr.referenced_class = new_class_name
             self._classes[python_name] = pc
 
         # now go through all classes and attributes again and updated to dereferences classes
         for pc in self._classes.values():
-            if pc.attributes:
-                for attr in pc.attributes:
-                    if attr.referenced_class:
-                        new_class_name = self._dereferenced_class_name(attr.referenced_class)
-                        if new_class_name != attr.referenced_class:
-                            attr.python_type = attr.python_type.replace(attr.referenced_class, new_class_name)
-                            attr.referenced_class = new_class_name
+            # go though all attributes and alias (if any) ...
+            for attr in python_class_attributes_and_alias(pc):
+                if attr.referenced_class:
+                    new_class_name = self._dereferenced_class_name(attr.referenced_class)
+                    if new_class_name != attr.referenced_class:
+                        attr.python_type = attr.python_type.replace(attr.referenced_class, new_class_name)
+                        attr.referenced_class = new_class_name
 
         # update class references in endpoints
         for key, endpoint in self.endpoints():
@@ -546,7 +575,7 @@ class PythonClassRegistry:
                     python_name = qualident_to_python_name[endpoint.result_referenced_class]
                 except KeyError:
                     err_txt = (f'"{endpoint.result_referenced_class}" not found in qualident_to_python_name '
-                              f'endpoint: {endpoint.name}')
+                               f'endpoint: {endpoint.name}')
                     log.error(err_txt)
                     raise KeyError(err_txt)
 
@@ -561,6 +590,7 @@ class PythonClassRegistry:
                 endpoint.body_class_name = python_name
 
         self._context = '-'
+        self.fix_alias_classes()
 
     def baseclasses_for_common_attribute_sets(self):
         """

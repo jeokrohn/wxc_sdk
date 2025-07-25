@@ -696,16 +696,20 @@ class PythonClass:
     Information about a Python class
     """
     name: str
-    attributes: Optional[list[Attribute]] = field(default=None)
+    attributes: Optional[list[Attribute]] = field(default_factory=list)
     description: Optional[str] = None
     is_enum: bool = field(default=None)
     baseclass: Optional[str] = None
+    # used for the case where a class is basically something like list[SomeOtherClass]
+    alias: Optional[Attribute] = None
 
     def __post_init__(self):
+        if not self.attributes and not self.alias:
+            raise ValueError(f'class {self.name} has no attributes nor alias')
+        if not self.attributes:
+            return
         # attribute names need to be unique
         names = Counter(attr.name for attr in self.attributes)
-        if not self.attributes:
-            raise ValueError(f'class {self.name} has no attributes')
 
         not_unique = [name for name, c in names.items() if c > 1]
         if not_unique:
@@ -716,6 +720,8 @@ class PythonClass:
         Source code for this class or None
         """
         if self.baseclass and not self.attributes:
+            return None
+        if self.alias:
             return None
         if self.is_enum:
             baseclass = 'str, Enum'
