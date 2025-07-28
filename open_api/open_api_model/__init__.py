@@ -308,7 +308,7 @@ class OASpecSchema(OABaseModel):
 
 
 class OAComponents(OABaseModel):
-    schemas: dict[str, OASchemaProperty]
+    schemas: dict[str, OASchemaProperty] = Field(default_factory=dict)
     request_bodies: Optional[dict[str, OARequestBody]] = None
     security_schemes: Optional[dict[str, Any]] = None
     responses: Optional[dict[str, OAResponse]] = None
