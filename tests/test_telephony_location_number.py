@@ -102,19 +102,21 @@ class TestAddAndActivate(NumberTest):
         with self.add_context():
             pass
 
-    def test_003_activate_some(self):
+    @async_test
+    async def test_003_activate_some(self):
         """
         Add some numbers to target location and try to activate them
         """
         with self.add_context():
             # try to activate the numbers
-            self.api.telephony.location.number.activate(location_id=self.target_location_info.location.location_id,
-                                                        phone_numbers=self.new_numbers)
+            await self.async_api.telephony.location.number.activate(
+                location_id=self.target_location_info.location.location_id,
+                phone_numbers=self.new_numbers)
             numbers_after = list(
                 self.api.telephony.phone_numbers(location_id=self.target_location_info.location.location_id,
                                                  number_type=NumberType.number,
                                                  available=True))
-            # all new numbers now should be activatedd
+            # all new numbers now should be activated
             issues = [number for number in self.new_numbers
                       if (pn := next((n for n in numbers_after
                                       if n.phone_number == number), None)) is None

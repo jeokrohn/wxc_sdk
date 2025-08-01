@@ -185,7 +185,7 @@ class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
         :type org_id: str
         """
         return self.manage_number_state(location_id, phone_numbers,
-                                        action=NumbersRequestAction.ACTIVATE, org_id=org_id)
+                                        action=NumbersRequestAction.activate, org_id=org_id)
 
     def manage_number_state(self, location_id: str, phone_numbers: list[str],
                             action: NumbersRequestAction = None, org_id: str = None):

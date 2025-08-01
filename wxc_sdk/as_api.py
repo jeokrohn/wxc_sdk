@@ -8045,7 +8045,7 @@ class AsPeopleApi(AsApiChild, base='people'):
     """
 
     def list_gen(self, email: str = None, display_name: str = None, id_list: list[str] = None, org_id: str = None,
-             roles: str = None, calling_data: bool = None, location_id: str = None,
+             roles: str = None, calling_data: bool = None, location_id: str = None, exclude_status: bool = None,
              **params) -> AsyncGenerator[Person, None, None]:
         """
         List people in your organization. For most users, either the email or displayName parameter is required. Admin
@@ -8083,6 +8083,8 @@ class AsPeopleApi(AsApiChild, base='people'):
         :type calling_data: bool
         :param location_id: List people present in this location.
         :type location_id: str
+        :param exclude_status: Omit people status/availability to enhance query performance.
+        :type exclude_status: bool
         :return: yield :class:`Person` instances
         """
         params.update((to_camel(k), v)
@@ -8101,7 +8103,7 @@ class AsPeopleApi(AsApiChild, base='people'):
         return self.session.follow_pagination(url=ep, model=Person, params=params)
 
     async def list(self, email: str = None, display_name: str = None, id_list: list[str] = None, org_id: str = None,
-             roles: str = None, calling_data: bool = None, location_id: str = None,
+             roles: str = None, calling_data: bool = None, location_id: str = None, exclude_status: bool = None,
              **params) -> List[Person]:
         """
         List people in your organization. For most users, either the email or displayName parameter is required. Admin
@@ -8139,6 +8141,8 @@ class AsPeopleApi(AsApiChild, base='people'):
         :type calling_data: bool
         :param location_id: List people present in this location.
         :type location_id: str
+        :param exclude_status: Omit people status/availability to enhance query performance.
+        :type exclude_status: bool
         :return: yield :class:`Person` instances
         """
         params.update((to_camel(k), v)
@@ -8278,6 +8282,10 @@ class AsPeopleApi(AsApiChild, base='people'):
           in the response payload of `List People
           <https://developer.webex.com/docs/api/v1/people/list-people>`_ or `Get Person Details
           extension for a person.
+
+        * When updating a user with multiple email addresses using a PUT request, ensure that the primary email address
+          is listed first in the array. Note that the order of email addresses returned by a GET request is not
+          guaranteed..
 
         * The People API is a combination of several microservices, each responsible for specific attributes of a
           person. As a result, a PUT request that returns an error response code may still have altered some values of
@@ -26463,7 +26471,7 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
             return NumberAddResponse.model_validate(r[0])
         return NumberAddResponse.model_validate({})
 
-    async def activate(self, location_id: str, phone_numbers: list[str], org_id: str = None):
+    def activate(self, location_id: str, phone_numbers: list[str], org_id: str = None):
         """
         Activate Phone Numbers in a location
 
@@ -26488,10 +26496,8 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
         :param org_id: Organization to manage
         :type org_id: str
         """
-        url = self._url(location_id)
-        params = org_id and {'orgId': org_id} or None
-        body = {'phoneNumbers': phone_numbers}
-        await super().post(url, params=params, json=body)
+        return self.manage_number_state(location_id, phone_numbers,
+                                        action=NumbersRequestAction.activate, org_id=org_id)
 
     async def manage_number_state(self, location_id: str, phone_numbers: list[str],
                             action: NumbersRequestAction = None, org_id: str = None):

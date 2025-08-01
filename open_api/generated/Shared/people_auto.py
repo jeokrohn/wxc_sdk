@@ -223,8 +223,8 @@ class PeopleApi(ApiChild, base='people'):
     """
 
     def list_people(self, email: str = None, display_name: str = None, id: str = None, roles: str = None,
-                    calling_data: bool = None, location_id: str = None, org_id: str = None,
-                    **params) -> Generator[Person, None, None]:
+                    calling_data: bool = None, location_id: str = None, exclude_status: bool = None,
+                    org_id: str = None, **params) -> Generator[Person, None, None]:
         """
         List People
 
@@ -268,6 +268,8 @@ class PeopleApi(ApiChild, base='people'):
         :type calling_data: bool
         :param location_id: List people present in this location.
         :type location_id: str
+        :param exclude_status: Omit people status/availability to enhance query performance.
+        :type exclude_status: bool
         :param org_id: List people in this organization. Only admin users of another organization (such as partners)
             may use this parameter.
         :type org_id: str
@@ -287,6 +289,8 @@ class PeopleApi(ApiChild, base='people'):
             params['callingData'] = str(calling_data).lower()
         if location_id is not None:
             params['locationId'] = location_id
+        if exclude_status is not None:
+            params['excludeStatus'] = str(exclude_status).lower()
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Person, item_key='items', params=params)
 
@@ -522,6 +526,10 @@ class PeopleApi(ApiChild, base='people'):
         in the response payload of `List People
         <https://developer.webex.com/docs/api/v1/people/list-people>`_ or `Get Person Details
         extension for a person.
+
+        * When updating a user with multiple email addresses using a PUT request, ensure that the primary email address
+        is listed first in the array. Note that the order of email addresses returned by a GET request is not
+        guaranteed..
 
         * The People API is a combination of several microservices, each responsible for specific attributes of a
         person. As a result, a PUT request that returns an error response code may still have altered some values of

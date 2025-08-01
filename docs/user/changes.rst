@@ -12,6 +12,7 @@ Release history
 - feat: new API: :attr:`api.telephony.cx_essentials.callqueue_recording <wxc_sdk.telephony.cx_essentials.CustomerExperienceEssentialsApi.callqueue_recording>`
 - feat: new API: :attr:`api.telephony.jobs.activation_emails <wxc_sdk.telephony.jobs.JobsApi.activation_emails>`
 - feat: also expose jobs API under :attr:`api.telephony.jobs <wxc_sdk.telephony.TelephonyApi.jobs>`
+- feat: new parameter exclude_status for :meth:`api.people.list <wxc_sdk.people.PeopleApi.list>`
 
 1.25.0
 ------
