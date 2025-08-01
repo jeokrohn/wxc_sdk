@@ -184,10 +184,8 @@ class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
         :param org_id: Organization to manage
         :type org_id: str
         """
-        url = self._url(location_id)
-        params = org_id and {'orgId': org_id} or None
-        body = {'phoneNumbers': phone_numbers}
-        super().post(url, params=params, json=body)
+        return self.manage_number_state(location_id, phone_numbers,
+                                        action=NumbersRequestAction.ACTIVATE, org_id=org_id)
 
     def manage_number_state(self, location_id: str, phone_numbers: list[str],
                             action: NumbersRequestAction = None, org_id: str = None):

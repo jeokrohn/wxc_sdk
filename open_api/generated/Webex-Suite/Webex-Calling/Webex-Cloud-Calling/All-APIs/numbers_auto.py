@@ -16,8 +16,8 @@ __all__ = ['CountObject', 'ErrorMessageObject', 'ErrorObject', 'ItemObject', 'Jo
            'JobIdResponseObject', 'JobListResponseObject', 'Number', 'NumberItem', 'NumberObject',
            'NumberObjectLocation', 'NumberObjectOwner', 'NumberObjectPhoneNumberType', 'NumberOwnerType',
            'NumberState', 'NumberStateOptions', 'NumberType', 'NumberTypeOptions', 'NumberUsageTypeOptions',
-           'NumbersApi', 'OwnerType', 'StartJobResponse', 'Status', 'StepExecutionStatusesObject', 'TelephonyType',
-           'ValidateNumbersResponse']
+           'NumbersApi', 'NumbersRequestAction', 'OwnerType', 'StartJobResponse', 'Status',
+           'StepExecutionStatusesObject', 'TelephonyType', 'ValidateNumbersResponse']
 
 
 class NumberItem(ApiModel):
@@ -328,6 +328,11 @@ class NumberStateOptions(str, Enum):
     active = 'ACTIVE'
     #: A number is not yet activated and has no calling capability.
     inactive = 'INACTIVE'
+
+
+class NumbersRequestAction(str, Enum):
+    activate = 'ACTIVATE'
+    deactivate = 'DEACTIVATE'
 
 
 class StartJobResponse(ApiModel):
@@ -760,30 +765,39 @@ class NumbersApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/numbers')
         super().post(url, params=params, json=body)
 
-    def activate_phone_numbers_in_a_location(self, location_id: str, phone_numbers: list[str], org_id: str = None):
+    def manage_number_state_in_a_location(self, location_id: str, phone_numbers: list[str],
+                                          action: NumbersRequestAction = None, org_id: str = None):
         """
-        Activate Phone Numbers in a location
+        Manage Number State in a location
 
-        Activate the specified set of phone numbers in a location for an organization.
+        Activate or deactivate the specified set of phone numbers in a location for an organization.
 
         Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
-        must follow the E.164 format. Active phone numbers are in service.
+        must follow the E.164 format.
 
-        A mobile number is activated when assigned to a user. This API will not activate mobile numbers.
+        Active phone numbers are in service. A mobile number is activated when assigned to a user. This API will not
+        activate or deactivate mobile numbers.
 
-        Activating a phone number in a location requires a full administrator auth token with a scope of
+        Managing phone number state in a location requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
         <br/>
 
         <div><Callout type="warning">This API is only supported for non-integrated PSTN connection types of Local
-        Gateway (LGW) and Non-integrated CPP. It should never be used for locations with integrated PSTN connection
-        types like Cisco Calling Plans or Integrated CCP because backend data issues may occur.</Callout></div>
+        Gateway (LGW) and Non-integrated CCP.</Callout></div>
 
         :param location_id: `LocationId` to which numbers should be added.
         :type location_id: str
-        :param phone_numbers: List of phone numbers that need to be added.
+        :param phone_numbers: List of phone numbers whose activation state will be modified according to the specified
+            action.
         :type phone_numbers: list[str]
+        :param action: Specifies the action to execute on the provided phone numbers. If no action is specified, the
+            default is set to ACTIVATE.
+        For DEACTIVATE action here are few limitations: 1) a maximum of 500 phone numbers can be processed, 2) the
+        numbers must be unassigned, 3) the numbers cannot serve as ECBN (Emergency Callback Number), 4) the numbers
+        must not be mobile numbers, and 5) this action is only applicable to non-integrated PSTN connection types,
+        specifically Local Gateway (LGW) and Non-integrated CCP
+        :type action: NumbersRequestAction
         :param org_id: Organization of the Route Group.
         :type org_id: str
         :rtype: None
@@ -793,6 +807,8 @@ class NumbersApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['phoneNumbers'] = phone_numbers
+        if action is not None:
+            body['action'] = enum_str(action)
         url = self.ep(f'locations/{location_id}/numbers')
         super().put(url, params=params, json=body)
 
