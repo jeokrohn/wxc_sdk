@@ -4,7 +4,6 @@ Pydantic models to deserialize OpenAPI specs
 import logging
 import re
 from collections.abc import Generator
-from email.policy import default
 from typing import List, Optional, Any, Union, Tuple
 
 from pydantic import BaseModel, Field, field_validator, model_validator
@@ -313,6 +312,11 @@ class OAComponents(OABaseModel):
     security_schemes: Optional[dict[str, Any]] = None
     responses: Optional[dict[str, OAResponse]] = None
 
+class NameAndDescription(OABaseModel):
+    name: str
+    description: Optional[str] = None
+
+Tag = Union[str, NameAndDescription]
 
 class OASpec(OABaseModel):
     openapi: str
@@ -320,7 +324,7 @@ class OASpec(OABaseModel):
     servers: Optional[List[OAServer]] = None
     paths: dict[str, dict[str, OAOperation]]
     components: OAComponents
-    tags: Optional[List[str]] = None
+    tags: Optional[list[Tag]] = None
     security: Optional[List[Any]] = None
 
     def operations(self) -> Generator[tuple[str, str, OAOperation], None, None]:
