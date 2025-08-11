@@ -7,17 +7,19 @@ from dataclasses import dataclass
 from itertools import chain
 from operator import attrgetter
 from re import match
-from typing import ClassVar, Callable, Any
+from typing import ClassVar
+
+from pydantic import TypeAdapter
 
 from tests.base import TestCaseWithLog, async_test, TestWithLocations, TestCaseWithUsers
 from tests.testutil import available_extensions_gen, get_or_create_holiday_schedule, get_or_create_business_schedule, \
     create_simple_call_queue
 from wxc_sdk.all_types import *
-from wxc_sdk.person_settings import MonitoringApi
+from wxc_sdk.as_api import AsWebexSimpleApi
+from wxc_sdk.rest import RestError
 from wxc_sdk.telephony.callqueue import CQRoutingType, CallQueueSettings
 from wxc_sdk.telephony.callqueue.policies import HolidayService, CPActionType, ScheduleLevel, NightService, \
     StrandedCalls, StrandedCallsAction, ForcedForward
-from wxc_sdk.telephony.forwarding import ForwardingApi
 from wxc_sdk.telephony.hg_and_cq import CallingLineIdPolicy
 
 # number of call queues to create by create many test
@@ -826,3 +828,122 @@ class TestOrgSettings(TestCaseWithLog):
             self.api.telephony.callqueue.update_call_queue_settings(settings=before)
             after = self.api.telephony.callqueue.get_call_queue_settings()
             self.assertEqual(before, after)
+
+
+@dataclass(init=False, repr=False)
+class TestAgentDetails(TestCaseWithUsers):
+    """
+    Test agent details for call queues
+    """
+    agent: ClassVar[Person]
+    queue_id_list: ClassVar[list[str]]
+
+    @classmethod
+    async def assert_queues_with_agent(cls, agent: Person, queues: int) -> list[CallQueue]:
+        async with AsWebexSimpleApi(tokens=cls.tokens) as api:
+            # get queues in location
+            existing_queues = await api.telephony.callqueue.list(location_id=agent.location_id)
+            existing_names = {q.name for q in existing_queues}
+            # get generator for new queue names
+            queue_names = (f'cq_{i:03}' for i in range(1000)
+                           if f'cq_{i:03}' not in existing_names)
+            # get generator for available extensions in location
+            extensions = available_extensions_gen(api=cls.api, location_id=agent.location_id)
+            # create tasks to create queues with agent
+            tasks = [api.telephony.callqueue.create(
+                location_id=agent.location_id,
+                settings=CallQueue(name=new_name,
+                                   extension=extension,
+                                   calling_line_id_policy=CallingLineIdPolicy.location_number,
+                                   call_policies=CallQueueCallPolicies.default(),
+                                   queue_settings=QueueSettings.default(queue_size=10),
+                                   phone_number_for_outgoing_calls_enabled=True,
+                                   agents=[Agent(id=agent.person_id)]))
+                for _, new_name, extension in zip(range(queues), queue_names, extensions)]
+            # run all tasks
+            results = await asyncio.gather(*tasks, return_exceptions=True)
+            cls.queue_id_list = [q_id for q_id in results if isinstance(q_id, str)]
+        return
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        # pick a random agent from the users
+        cls.agent = random.choice(cls.users)
+        # create a bunch of queues with this agent
+        asyncio.run(cls.assert_queues_with_agent(agent=cls.agent, queues=20))
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        def delete_one(queue_id: str):
+            try:
+                cls.api.telephony.callqueue.delete_queue(location_id=cls.agent.location_id, queue_id=queue_id)
+            except Exception as e:
+                print(f'Error deleting queue {queue_id}: {e}')
+
+        # delete all created queues
+        with ThreadPoolExecutor() as pool:
+            list(pool.map(delete_one, cls.queue_id_list))
+        super().tearDownClass()
+
+    @async_test
+    async def test_001_agent_details(self):
+        """
+        Get agents details for all calling users
+        """
+        agent_api = self.async_api.telephony.callqueue.agents
+        tasks = [agent_api.details(id=user.person_id, has_cx_essentials=f)
+                 for f in (True, False)
+                 for user in self.users]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+        err = None
+        for user, result in zip(self.users, results):
+            if isinstance(result, Exception):
+                err = err or result
+                print(f'Error getting agent details for {user.person_id}: {result}')
+            else:
+                result: CallQueueAgentDetail = result
+                print(f'Agent details for {user.person_id}: {result.model_dump_json(indent=2)}')
+        if err:
+            raise err
+        return
+
+    def test_details_for_agent_w_lots_of_queues(self):
+        """
+        Get agent details for an agent with a lot of queues
+        """
+        agent_details = self.api.telephony.callqueue.agents.details(id=self.agent.person_id,
+                                                                    has_cx_essentials=False,
+                                                                    max_=1000)
+
+    def test_details_pagination(self):
+        """
+        Get agent details for an agent with a lot of queues
+
+        Lessons learned:
+        * the API des not return the total number of queues the user is agent in
+        * one has to paginate through until hitting a 404 error
+        """
+        start = 0
+        agent_queues:list[CallQueueAgentQueue] = []
+        while True:
+            try:
+                agent_details = self.api.telephony.callqueue.agents.details(id=self.agent.person_id,
+                                                                            has_cx_essentials=False,
+                                                                            start =start,
+                                                                            max_=10)
+            except RestError as e:
+                if e.response.status_code == 404:
+                    print('got 404, breaking queue')
+                    break
+                raise
+            if not agent_details.queues:
+                break
+            agent_queues.extend(agent_details.queues)
+            start += len(agent_details.queues)
+        print(f'Agent {self.agent.display_name} is agent in {len(agent_queues)} queues')
+        print(TypeAdapter(list[CallQueueAgentQueue]).dump_json(agent_queues, indent=2).decode())
+
+        # make sure we got all queues we created
+        agent_queue_id_set = {q.id for q in agent_queues}
+        self.assertFalse(set(self.queue_id_list) - agent_queue_id_set)

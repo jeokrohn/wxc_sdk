@@ -13,6 +13,7 @@ Release history
 - feat: new API: :attr:`api.telephony.jobs.activation_emails <wxc_sdk.telephony.jobs.JobsApi.activation_emails>`
 - feat: also expose jobs API under :attr:`api.telephony.jobs <wxc_sdk.telephony.TelephonyApi.jobs>`
 - feat: new parameter exclude_status for :meth:`api.people.list <wxc_sdk.people.PeopleApi.list>`
+- fix: missing parameters max\_, start in :meth:`api.telephony.call_queues.agents.details <wxc_sdk.telephony.callqueue.agents.CallQueueAgentsApi.details>`
 
 1.25.0
 ------

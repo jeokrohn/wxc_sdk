@@ -17097,7 +17097,7 @@ class AsCallQueueAgentsApi(AsApiChild, base='telephony/config/queues/agents'):
         return [o async for o in self.session.follow_pagination(url=url, model=CallQueueAgent, item_key='agents', params=params)]
 
     async def details(self, id: str, has_cx_essentials: bool = None,
-                org_id: str = None) -> CallQueueAgentDetail:
+                max_: int = 50, start:int=0, org_id: str = None) -> CallQueueAgentDetail:
         """
         Get Details for a Call Queue Agent
 
@@ -17116,21 +17116,27 @@ class AsCallQueueAgentsApi(AsApiChild, base='telephony/config/queues/agents'):
 
         :param id: Retrieve call queue agents with this identifier.
         :type id: str
+        :param max_: Limits the number of objects returned to this maximum count.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects.
+        :type start: int
         :param has_cx_essentials: Must be set to `true` to view the details of an agent with Customer Experience
             Essentials license. This can otherwise be ommited or set to `false`.
         :type has_cx_essentials: bool
         :param org_id: Retrieve call queue agents from this organization.
         :type org_id: str
-        :rtype: :class:`CallQueueAgent`
+        :rtype: :class:`CallQueueAgentDetail`
         """
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
         if has_cx_essentials is not None:
             params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        params['max'] = max_
+        params['start'] = start
         url = self.ep(f'{id}')
         data = await super().get(url, params=params)
-        r = CallQueueAgent.model_validate(data)
+        r = CallQueueAgentDetail.model_validate(data)
         return r
 
     async def update_call_queue_settings(self, id: str, settings: List[AgentCallQueueSetting],
