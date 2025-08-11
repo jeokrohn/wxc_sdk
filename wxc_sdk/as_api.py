@@ -17097,7 +17097,7 @@ class AsCallQueueAgentsApi(AsApiChild, base='telephony/config/queues/agents'):
         return [o async for o in self.session.follow_pagination(url=url, model=CallQueueAgent, item_key='agents', params=params)]
 
     async def details(self, id: str, has_cx_essentials: bool = None,
-                max_: int = 50, start:int=0, org_id: str = None) -> CallQueueAgentDetail:
+                max_: int = 50, start: int = 0, org_id: str = None) -> CallQueueAgentDetail:
         """
         Get Details for a Call Queue Agent
 
@@ -22798,7 +22798,8 @@ class AsPSTNApi(AsApiChild, base='telephony/pstn/locations'):
     """
 
     async def list(self, location_id: str,
-             org_id: str = None) -> list[PSTNConnectionOption]:
+                service_types: list[PSTNServiceType] = None,
+                org_id: str = None) -> list[PSTNConnectionOption]:
         """
         Retrieve PSTN Connection Options for a Location
 
@@ -22811,6 +22812,10 @@ class AsPSTNApi(AsApiChild, base='telephony/pstn/locations'):
 
         :param location_id: Return the list of List PSTN location connection options for this location.
         :type location_id: str
+        :param service_types: Use the `serviceTypes` parameter to fetch connections for the following services
+
+            * `MOBILE_NUMBERS`
+        :type service_types: list[PSTNServiceType]
         :param org_id: List PSTN location connection options for this organization.
         :type org_id: str
         :rtype: list[PSTNConnectionOption]
@@ -22818,6 +22823,8 @@ class AsPSTNApi(AsApiChild, base='telephony/pstn/locations'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        if service_types is not None:
+            params['serviceTypes'] = [enum_str(st) for st in service_types]
         url = self.ep(f'{location_id}/connectionOptions')
         data = await super().get(url, params=params)
         r = TypeAdapter(list[PSTNConnectionOption]).validate_python(data['items'])

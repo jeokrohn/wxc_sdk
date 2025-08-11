@@ -3,7 +3,7 @@ from typing import Optional
 from pydantic import TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 __all__ = ['PSTNServiceType', 'PSTNConnectionOption', 'PSTNType', 'PSTNApi']
@@ -75,7 +75,8 @@ class PSTNApi(ApiChild, base='telephony/pstn/locations'):
     """
 
     def list(self, location_id: str,
-             org_id: str = None) -> list[PSTNConnectionOption]:
+                service_types: list[PSTNServiceType] = None,
+                org_id: str = None) -> list[PSTNConnectionOption]:
         """
         Retrieve PSTN Connection Options for a Location
 
@@ -88,6 +89,10 @@ class PSTNApi(ApiChild, base='telephony/pstn/locations'):
 
         :param location_id: Return the list of List PSTN location connection options for this location.
         :type location_id: str
+        :param service_types: Use the `serviceTypes` parameter to fetch connections for the following services
+
+            * `MOBILE_NUMBERS`
+        :type service_types: list[PSTNServiceType]
         :param org_id: List PSTN location connection options for this organization.
         :type org_id: str
         :rtype: list[PSTNConnectionOption]
@@ -95,6 +100,8 @@ class PSTNApi(ApiChild, base='telephony/pstn/locations'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        if service_types is not None:
+            params['serviceTypes'] = [enum_str(st) for st in service_types]
         url = self.ep(f'{location_id}/connectionOptions')
         data = super().get(url, params=params)
         r = TypeAdapter(list[PSTNConnectionOption]).validate_python(data['items'])

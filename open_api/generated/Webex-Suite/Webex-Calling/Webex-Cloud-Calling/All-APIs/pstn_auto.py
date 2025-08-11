@@ -11,8 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['ConnectionOptionsResponse', 'ConnectionResponse', 'PSTNApi', 'PSTNServiceType', 'PSTNType',
-           'PremiseRouteType']
+__all__ = ['AllowedServiceTypesFromHydra', 'ConnectionOptionsResponse', 'ConnectionResponse', 'PSTNApi',
+           'PSTNServiceType', 'PSTNType', 'PremiseRouteType']
 
 
 class PSTNServiceType(str, Enum):
@@ -75,6 +75,11 @@ class ConnectionResponse(ApiModel):
     #: Premise route ID. This refers to either a Trunk ID or a Route Group ID. This field is optional but required if
     #: the connection type is LOCAL_GATEWAY.
     route_id: Optional[str] = None
+
+
+class AllowedServiceTypesFromHydra(str, Enum):
+    #: PSTN service type for mobile numbers.
+    mobile_numbers = 'MOBILE_NUMBERS'
 
 
 class PSTNApi(ApiChild, base='telephony/pstn/locations'):
@@ -159,6 +164,7 @@ class PSTNApi(ApiChild, base='telephony/pstn/locations'):
         super().put(url, params=params, json=body)
 
     def retrieve_pstn_connection_options_for_a_location(self, location_id: str,
+                                                        service_types: list[AllowedServiceTypesFromHydra] = None,
                                                         org_id: str = None) -> list[ConnectionOptionsResponse]:
         """
         Retrieve PSTN Connection Options for a Location
@@ -172,6 +178,9 @@ class PSTNApi(ApiChild, base='telephony/pstn/locations'):
 
         :param location_id: Return the list of List PSTN location connection options for this location.
         :type location_id: str
+        :param service_types: Use the `serviceTypes` parameter to fetch connections for the following services
+        * `MOBILE_NUMBERS`
+        :type service_types: list[AllowedServiceTypesFromHydra]
         :param org_id: List PSTN location connection options for this organization.
         :type org_id: str
         :rtype: list[ConnectionOptionsResponse]
@@ -179,6 +188,8 @@ class PSTNApi(ApiChild, base='telephony/pstn/locations'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        if service_types is not None:
+            params['serviceTypes'] = service_types
         url = self.ep(f'{location_id}/connectionOptions')
         data = super().get(url, params=params)
         r = TypeAdapter(list[ConnectionOptionsResponse]).validate_python(data['items'])

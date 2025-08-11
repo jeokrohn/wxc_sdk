@@ -14,6 +14,7 @@ Release history
 - feat: also expose jobs API under :attr:`api.telephony.jobs <wxc_sdk.telephony.TelephonyApi.jobs>`
 - feat: new parameter exclude_status for :meth:`api.people.list <wxc_sdk.people.PeopleApi.list>`
 - fix: missing parameters max\_, start in :meth:`api.telephony.call_queues.agents.details <wxc_sdk.telephony.callqueue.agents.CallQueueAgentsApi.details>`
+- feat: new parameter service_types for :meth:`api.telephony.pstn.list <wxc_sdk.telephony.pstn.PSTNApi.list>`
 
 1.25.0
 ------
