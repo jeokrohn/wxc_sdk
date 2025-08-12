@@ -213,6 +213,8 @@ class Workspace(ApiModel):
     device_platform: Optional[DevicePlatform] = None
     #: Indoor navigation configuration.
     indoor_navigation: Optional[WorkspaceIndoorNavigation] = None
+    #: TODO: undocumented: WXCAPIBULK-720
+    planned_maintenance: Optional[dict]
     #: The health of the workspace.
     health: Optional[WorkspaceHealth] = None
     #: A list of devices associated with the workspace.

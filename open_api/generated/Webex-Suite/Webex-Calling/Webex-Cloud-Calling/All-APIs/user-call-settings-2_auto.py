@@ -11,7 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['AccessLevel', 'Action', 'AgentCallerIdType', 'AudioAnnouncementFileGetObject',
+__all__ = ['AccessLevel', 'Action', 'AgentCallerIdType', 'ApplicationAvailableSharedLineMemberItem',
+           'ApplicationPutSharedLineMemberItem', 'ApplicationsSetting', 'AudioAnnouncementFileGetObject',
            'AudioAnnouncementFileGetObjectLevel', 'AudioAnnouncementFileGetObjectMediaFileType', 'AuthorizationCode',
            'AuthorizationCodeLevel', 'AvailableCallerIdObject', 'AvailableSharedLineMemberItem', 'CallsFrom',
            'CallsFromSelectiveAccept', 'CallsFromSelectiveReject', 'CountObject', 'Criteria', 'CriteriaAccept',
@@ -280,7 +281,9 @@ class CountObject(ApiModel):
     #: Total number of user moves that were completed with failures.
     failed: Optional[int] = None
     #: Total number of user moves that were pending with number orders.
-    pending: Optional[float] = None
+    pending: Optional[int] = None
+    #: Total number of user moves that were skipped.
+    skipped: Optional[int] = None
 
 
 class ErrorMessageObject(ApiModel):
@@ -1200,6 +1203,69 @@ class UserSettingsPermissionsGet(ApiModel):
     user_org_settings_permissions: Optional[UserSettingsPermissionsGetDefault] = None
 
 
+class ApplicationAvailableSharedLineMemberItem(ApiModel):
+    #: A unique member identifier.
+    id: Optional[str] = None
+    #: First name of member.
+    first_name: Optional[str] = None
+    #: Last name of member.
+    last_name: Optional[str] = None
+    #: Phone number of member. Currently, E.164 format is not supported.
+    phone_number: Optional[str] = None
+    #: Phone extension of member.
+    extension: Optional[str] = None
+    #: Indicates if the line is acting as a primary line or a shared line for this device.
+    line_type: Optional[LineType] = None
+    #: Location object having a unique identifier for the location and its name.
+    location: Optional[Location] = None
+
+
+class ApplicationPutSharedLineMemberItem(ApiModel):
+    #: Unique identifier for the person or workspace.
+    id: Optional[str] = None
+    #: Device port number assigned to person or workspace.
+    port: Optional[int] = None
+    #: If `true` the person or the workspace is the owner of the device. Points to primary line/port of the device.
+    primary_owner: Optional[str] = None
+    #: Indicates if the line is acting as a primary line or a shared line for this device.
+    line_type: Optional[LineType] = None
+    #: Number of lines that have been configured for the person on the device.
+    line_weight: Optional[int] = None
+    #: Set how a device behaves when a call is declined. When set to `true`, a call decline request is extended to all
+    #: the endpoints on the device. When set to `false`, a call decline request is only declined at the current
+    #: endpoint.
+    allow_call_decline_enabled: Optional[bool] = None
+    #: Device line label.
+    line_label: Optional[str] = None
+
+
+class ApplicationsSetting(ApiModel):
+    #: When `true`, indicates to ring devices for outbound Click to Dial calls.
+    ring_devices_for_click_to_dial_calls_enabled: Optional[bool] = None
+    #: When `true`, indicates to ring devices for inbound Group Pages.
+    ring_devices_for_group_page_enabled: Optional[bool] = None
+    #: When `true`, indicates to ring devices for Call Park recalled.
+    ring_devices_for_call_park_enabled: Optional[bool] = None
+    #: Indicates that the browser Webex Calling application is enabled for use.
+    browser_client_enabled: Optional[bool] = None
+    #: Device ID of WebRTC client. Returns only if `browserClientEnabled` is true.
+    browser_client_id: Optional[str] = None
+    #: Indicates that the desktop Webex Calling application is enabled for use.
+    desktop_client_enabled: Optional[bool] = None
+    #: Device ID of Desktop client. Returns only if `desktopClientEnabled` is true.
+    desktop_client_id: Optional[str] = None
+    #: Indicates that the tablet Webex Calling application is enabled for use.
+    tablet_client_enabled: Optional[bool] = None
+    #: Device ID of Tablet client. Returns only if `tabletClientEnabled` is true.
+    tablet_client_id: Optional[str] = None
+    #: Indicates that the mobile Webex Calling application is enabled for use.
+    mobile_client_enabled: Optional[bool] = None
+    #: Device ID of Mobile client. Returns only if `mobileClientEnabled` is true.
+    mobile_client_id: Optional[str] = None
+    #: Number of available device licenses for assigning devices/apps.
+    available_line_count: Optional[int] = None
+
+
 class LicenseType(str, Enum):
     webex_calling_professional = 'Webex Calling Professional'
     webex_calling_standard = 'Webex Calling Standard'
@@ -1216,7 +1282,7 @@ class GetMessageSummaryResponse(ApiModel):
     old_urgent_messages: Optional[int] = None
 
 
-class UserCallSettings22Api(ApiChild, base='telephony'):
+class UserCallSettings22Api(ApiChild, base=''):
     """
     User Call Settings (2/2)
     
@@ -1237,6 +1303,35 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
     <https://help.webex.com/en-us/article/n1qbbp7/Features-available-by-license-type-for-Webex-Calling>`_.
     """
 
+    def retrieve_a_persons_application_services_settings_new(self, person_id: str,
+                                                             org_id: str = None) -> ApplicationsSetting:
+        """
+        Retrieve a person's Application Services Settings New
+
+        Gets mobile and PC applications settings for a user.
+
+        Application services let you determine the ringing behavior for calls made to people in certain scenarios. You
+        can also specify which devices can download the Webex Calling app.
+
+        Requires a full, user, or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: :class:`ApplicationsSetting`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'people/{person_id}/features/applications')
+        data = super().get(url, params=params)
+        r = ApplicationsSetting.model_validate(data)
+        return r
+
     def list_move_users_jobs(self, org_id: str = None, **params) -> Generator[JobDetailsResponse, None, None]:
         """
         List Move Users Jobs
@@ -1253,7 +1348,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         """
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep('config/jobs/person/moveLocation')
+        url = self.ep('telephony/config/jobs/person/moveLocation')
         return self.session.follow_pagination(url=url, model=JobDetailsResponse, item_key='items', params=params)
 
     def validate_or_initiate_move_users_job(self, users_list: list[UsersListItem],
@@ -1287,13 +1382,13 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         Below is a list of possible error `code` values and their associated `message`, which can be found in the
         `errors` array during initial API request validation, regardless of the `validate` attribute value:
 
-        * BATCH-400 - Attribute 'User ID' is required.
+        * 400 - Attribute 'User ID' is required.
 
-        * BATCH-400 - Users list should not be empty.
+        * 400 - Users list should not be empty.
 
-        * BATCH-400 - Users should not be empty.
+        * 400 - Users should not be empty.
 
-        * 1026006 - Attribute 'Validate' is required.
+        * 400 - Attribute 'Validate' is required.
 
         * 1026010 - User is not a valid Calling User.
 
@@ -1321,7 +1416,9 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
 
         * 1026022 - Validate 'true' is supported for calling users only.
 
-        * 102602` - Extension and phone number is supported for calling users only.
+        * 1026023 - Extension and phone number is supported for calling users only.
+
+        * 2150012 - User was not found
 
         <br/>
 
@@ -1615,7 +1712,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
             params['orgId'] = org_id
         body = dict()
         body['usersList'] = TypeAdapter(list[UsersListItem]).dump_python(users_list, mode='json', by_alias=True, exclude_none=True)
-        url = self.ep('config/jobs/person/moveLocation')
+        url = self.ep('telephony/config/jobs/person/moveLocation')
         data = super().post(url, params=params, json=body)
         r = TypeAdapter(list[UserListItem]).validate_python(data['response'])
         return r
@@ -1638,7 +1735,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/jobs/person/moveLocation/{job_id}')
+        url = self.ep(f'telephony/config/jobs/person/moveLocation/{job_id}')
         data = super().get(url, params=params)
         r = JobDetailsResponseById.model_validate(data)
         return r
@@ -1660,7 +1757,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/jobs/person/moveLocation/{job_id}/actions/pause/invoke')
+        url = self.ep(f'telephony/config/jobs/person/moveLocation/{job_id}/actions/pause/invoke')
         super().post(url, params=params)
 
     def resume_the_move_users_job(self, job_id: str, org_id: str = None):
@@ -1680,7 +1777,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/jobs/person/moveLocation/{job_id}/actions/resume/invoke')
+        url = self.ep(f'telephony/config/jobs/person/moveLocation/{job_id}/actions/resume/invoke')
         super().post(url, params=params)
 
     def list_move_users_job_errors(self, job_id: str, org_id: str = None,
@@ -1702,7 +1799,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         """
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/jobs/person/moveLocation/{job_id}/errors')
+        url = self.ep(f'telephony/config/jobs/person/moveLocation/{job_id}/errors')
         return self.session.follow_pagination(url=url, model=ItemObject, item_key='items', params=params)
 
     def get_person_primary_available_phone_numbers(self, location_id: str = None, phone_number: list[str] = None,
@@ -1744,7 +1841,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
             params['phoneNumber'] = ','.join(phone_number)
         if license_type is not None:
             params['licenseType'] = enum_str(license_type)
-        url = self.ep('config/people/primary/availableNumbers')
+        url = self.ep('telephony/config/people/primary/availableNumbers')
         return self.session.follow_pagination(url=url, model=PersonPrimaryAvailableNumberObject, item_key='phoneNumbers', params=params)
 
     def read_default_feature_access_settings_for_person(self) -> UserSettingsPermissionsGetDefault:
@@ -1765,7 +1862,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
 
         :rtype: :class:`UserSettingsPermissionsGetDefault`
         """
-        url = self.ep('config/people/settings/permissions')
+        url = self.ep('telephony/config/people/settings/permissions')
         data = super().get(url)
         r = UserSettingsPermissionsGetDefault.model_validate(data)
         return r
@@ -1933,7 +2030,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
             body['voicemailTransferNumber'] = enum_str(voicemail_transfer_number)
         if generate_activation_code is not None:
             body['generateActivationCode'] = enum_str(generate_activation_code)
-        url = self.ep('config/people/settings/permissions')
+        url = self.ep('telephony/config/people/settings/permissions')
         super().put(url, json=body)
 
     def retrieve_agent_s_list_of_available_caller_ids(self, person_id: str,
@@ -1957,7 +2054,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/people/{person_id}/agent/availableCallerIds')
+        url = self.ep(f'telephony/config/people/{person_id}/agent/availableCallerIds')
         data = super().get(url, params=params)
         r = TypeAdapter(list[AvailableCallerIdObject]).validate_python(data['availableCallerIds'])
         return r
@@ -1978,7 +2075,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         :type person_id: str
         :rtype: AvailableCallerIdObject
         """
-        url = self.ep(f'config/people/{person_id}/agent/callerId')
+        url = self.ep(f'telephony/config/people/{person_id}/agent/callerId')
         data = super().get(url)
         r = AvailableCallerIdObject.model_validate(data['selectedCallerId'])
         return r
@@ -2002,7 +2099,94 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         """
         body = dict()
         body['selectedCallerId'] = selected_caller_id
-        url = self.ep(f'config/people/{person_id}/agent/callerId')
+        url = self.ep(f'telephony/config/people/{person_id}/agent/callerId')
+        super().put(url, json=body)
+
+    def search_shared_line_appearance_members_new(self, person_id: str, order: str = None, location: str = None,
+                                                  name: str = None, phone_number: str = None, extension: str = None,
+                                                  **params) -> Generator[ApplicationAvailableSharedLineMemberItem, None, None]:
+        """
+        Search Shared-Line Appearance Members New
+
+        Get members available for shared-line assignment to a Webex Calling Apps.
+
+        Like most hardware devices, applications support assigning additional shared lines which can monitored and
+        utilized by the application.
+
+        This API requires a full, user, or location administrator auth token with the
+        `spark-admin:telephony_config_read` scope.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param order: Order the Route Lists according to number, ascending or descending.
+        :type order: str
+        :param location: Location ID for the user.
+        :type location: str
+        :param name: Search for users with names that match the query.
+        :type name: str
+        :param phone_number: Search for users with numbers that match the query.
+        :type phone_number: str
+        :param extension: Search for users with extensions that match the query.
+        :type extension: str
+        :return: Generator yielding :class:`ApplicationAvailableSharedLineMemberItem` instances
+        """
+        if order is not None:
+            params['order'] = order
+        if location is not None:
+            params['location'] = location
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if extension is not None:
+            params['extension'] = extension
+        url = self.ep(f'telephony/config/people/{person_id}/applications/availableMembers')
+        return self.session.follow_pagination(url=url, model=ApplicationAvailableSharedLineMemberItem, item_key='members', params=params)
+
+    def get_shared_line_appearance_members_new(self, person_id: str) -> GetSharedLineMemberList:
+        """
+        Get Shared-Line Appearance Members New
+
+        Get primary and secondary members assigned to a shared line on a Webex Calling Apps.
+
+        Like most hardware devices, applications support assigning additional shared lines which can monitored and
+        utilized by the application.
+
+        This API requires a full, user, or location administrator auth token with the
+        `spark-admin:telephony_config_read` scope.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :rtype: :class:`GetSharedLineMemberList`
+        """
+        url = self.ep(f'telephony/config/people/{person_id}/applications/members')
+        data = super().get(url)
+        r = GetSharedLineMemberList.model_validate(data)
+        return r
+
+    def put_shared_line_appearance_members_new(self, person_id: str,
+                                               members: list[ApplicationPutSharedLineMemberItem] = None):
+        """
+        Put Shared-Line Appearance Members New
+
+        Add or modify primary and secondary users assigned to shared-lines on a Webex Calling Apps.
+
+        Like most hardware devices, applications support assigning additional shared lines which can monitored and
+        utilized by the application.
+
+        This API requires a full, user, or location administrator auth token with the
+        `spark-admin:telephony_config_write` scope.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param members: List of members to be added or modified for shared-line assignment to a Webex Calling Apps.
+        :type members: list[ApplicationPutSharedLineMemberItem]
+        :rtype: None
+        """
+        body = dict()
+        if members is not None:
+            body['members'] = TypeAdapter(list[ApplicationPutSharedLineMemberItem]).dump_python(members, mode='json', by_alias=True, exclude_none=True)
+        url = self.ep(f'telephony/config/people/{person_id}/applications/members')
         super().put(url, json=body)
 
     def search_shared_line_appearance_members(self, person_id: str, application_id: str, location: str = None,
@@ -2043,7 +2227,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
             params['order'] = order
         if extension is not None:
             params['extension'] = extension
-        url = self.ep(f'config/people/{person_id}/applications/{application_id}/availableMembers')
+        url = self.ep(f'telephony/config/people/{person_id}/applications/{application_id}/availableMembers')
         return self.session.follow_pagination(url=url, model=AvailableSharedLineMemberItem, item_key='members', params=params)
 
     def get_shared_line_appearance_members(self, person_id: str, application_id: str) -> GetSharedLineMemberList:
@@ -2061,7 +2245,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         :type application_id: str
         :rtype: :class:`GetSharedLineMemberList`
         """
-        url = self.ep(f'config/people/{person_id}/applications/{application_id}/members')
+        url = self.ep(f'telephony/config/people/{person_id}/applications/{application_id}/members')
         data = super().get(url)
         r = GetSharedLineMemberList.model_validate(data)
         return r
@@ -2086,7 +2270,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         body = dict()
         if members is not None:
             body['members'] = TypeAdapter(list[PutSharedLineMemberItem]).dump_python(members, mode='json', by_alias=True, exclude_none=True)
-        url = self.ep(f'config/people/{person_id}/applications/{application_id}/members')
+        url = self.ep(f'telephony/config/people/{person_id}/applications/{application_id}/members')
         super().put(url, json=body)
 
     def get_person_call_forward_available_phone_numbers(self, person_id: str, phone_number: list[str] = None,
@@ -2128,7 +2312,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
             params['ownerName'] = owner_name
         if extension is not None:
             params['extension'] = extension
-        url = self.ep(f'config/people/{person_id}/callForwarding/availableNumbers')
+        url = self.ep(f'telephony/config/people/{person_id}/callForwarding/availableNumbers')
         return self.session.follow_pagination(url=url, model=PersonCallForwardAvailableNumberObject, item_key='phoneNumbers', params=params)
 
     def get_person_call_intercept_available_phone_numbers(self, person_id: str, phone_number: list[str] = None,
@@ -2171,7 +2355,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
             params['ownerName'] = owner_name
         if extension is not None:
             params['extension'] = extension
-        url = self.ep(f'config/people/{person_id}/callIntercept/availableNumbers')
+        url = self.ep(f'telephony/config/people/{person_id}/callIntercept/availableNumbers')
         return self.session.follow_pagination(url=url, model=PersonCallForwardAvailableNumberObject, item_key='phoneNumbers', params=params)
 
     def get_person_ecbn_available_phone_numbers(self, person_id: str, phone_number: list[str] = None,
@@ -2208,7 +2392,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
             params['phoneNumber'] = ','.join(phone_number)
         if owner_name is not None:
             params['ownerName'] = owner_name
-        url = self.ep(f'config/people/{person_id}/emergencyCallbackNumber/availableNumbers')
+        url = self.ep(f'telephony/config/people/{person_id}/emergencyCallbackNumber/availableNumbers')
         return self.session.follow_pagination(url=url, model=PersonECBNAvailableNumberObject, item_key='phoneNumbers', params=params)
 
     def get_person_fax_message_available_phone_numbers(self, person_id: str, phone_number: list[str] = None,
@@ -2240,7 +2424,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
             params['orgId'] = org_id
         if phone_number is not None:
             params['phoneNumber'] = ','.join(phone_number)
-        url = self.ep(f'config/people/{person_id}/faxMessage/availableNumbers')
+        url = self.ep(f'telephony/config/people/{person_id}/faxMessage/availableNumbers')
         return self.session.follow_pagination(url=url, model=PersonSecondaryAvailableNumberObject, item_key='phoneNumbers', params=params)
 
     def read_call_bridge_settings_for_a_person(self, person_id: str, org_id: str = None) -> bool:
@@ -2263,7 +2447,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/people/{person_id}/features/callBridge')
+        url = self.ep(f'telephony/config/people/{person_id}/features/callBridge')
         data = super().get(url, params=params)
         r = data['warningToneEnabled']
         return r
@@ -2295,7 +2479,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         body = dict()
         if warning_tone_enabled is not None:
             body['warningToneEnabled'] = warning_tone_enabled
-        url = self.ep(f'config/people/{person_id}/features/callBridge')
+        url = self.ep(f'telephony/config/people/{person_id}/features/callBridge')
         super().put(url, params=params, json=body)
 
     def get_personal_assistant(self, person_id: str, org_id: str = None) -> PersonalAssistantGet:
@@ -2318,7 +2502,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/people/{person_id}/features/personalAssistant')
+        url = self.ep(f'telephony/config/people/{person_id}/features/personalAssistant')
         data = super().get(url, params=params)
         r = PersonalAssistantGet.model_validate(data)
         return r
@@ -2376,7 +2560,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
             body['alerting'] = enum_str(alerting)
         if alert_me_first_number_of_rings is not None:
             body['alertMeFirstNumberOfRings'] = alert_me_first_number_of_rings
-        url = self.ep(f'config/people/{person_id}/features/personalAssistant')
+        url = self.ep(f'telephony/config/people/{person_id}/features/personalAssistant')
         super().put(url, params=params, json=body)
 
     def retrieve_the_list_of_available_features_(self, person_id: str, name: str = None, phone_number: str = None,
@@ -2418,7 +2602,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
             params['order'] = order
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/people/{person_id}/modeManagement/availableFeatures')
+        url = self.ep(f'telephony/config/people/{person_id}/modeManagement/availableFeatures')
         return self.session.follow_pagination(url=url, model=UserModeManagementAvailableFeaturesObject, item_key='features', params=params)
 
     def retrieve_the_list_of_features_assigned_to_a_user_for_mode_management_(self, person_id: str,
@@ -2444,7 +2628,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/people/{person_id}/modeManagement/features')
+        url = self.ep(f'telephony/config/people/{person_id}/modeManagement/features')
         data = super().get(url, params=params)
         r = TypeAdapter(list[UserModeManagementFeatureObject]).validate_python(data['features'])
         return r
@@ -2474,7 +2658,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
             params['orgId'] = org_id
         body = dict()
         body['featureIds'] = feature_ids
-        url = self.ep(f'config/people/{person_id}/modeManagement/features')
+        url = self.ep(f'telephony/config/people/{person_id}/modeManagement/features')
         super().put(url, params=params, json=body)
 
     def retrieve_music_on_hold_settings_for_a_person(self, person_id: str, org_id: str = None) -> GetMusicOnHoldObject:
@@ -2499,7 +2683,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/people/{person_id}/musicOnHold')
+        url = self.ep(f'telephony/config/people/{person_id}/musicOnHold')
         data = super().get(url, params=params)
         r = GetMusicOnHoldObject.model_validate(data)
         return r
@@ -2544,7 +2728,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
             body['greeting'] = enum_str(greeting)
         if audio_announcement_file is not None:
             body['audioAnnouncementFile'] = audio_announcement_file.model_dump(mode='json', by_alias=True, exclude_none=True)
-        url = self.ep(f'config/people/{person_id}/musicOnHold')
+        url = self.ep(f'telephony/config/people/{person_id}/musicOnHold')
         super().put(url, params=params, json=body)
 
     def assign_or_unassign_numbers_to_a_person(self, person_id: str, phone_numbers: list[PhoneNumber],
@@ -2578,7 +2762,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         if enable_distinctive_ring_pattern is not None:
             body['enableDistinctiveRingPattern'] = enable_distinctive_ring_pattern
         body['phoneNumbers'] = TypeAdapter(list[PhoneNumber]).dump_python(phone_numbers, mode='json', by_alias=True, exclude_none=True)
-        url = self.ep(f'config/people/{person_id}/numbers')
+        url = self.ep(f'telephony/config/people/{person_id}/numbers')
         super().put(url, params=params, json=body)
 
     def delete_access_codes_for_a_person(self, person_id: str, org_id: str = None):
@@ -2603,7 +2787,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/people/{person_id}/outgoingPermission/accessCodes')
+        url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/accessCodes')
         super().delete(url, params=params)
 
     def retrieve_access_codes_for_a_person(self, person_id: str,
@@ -2629,7 +2813,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/people/{person_id}/outgoingPermission/accessCodes')
+        url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/accessCodes')
         data = super().get(url, params=params)
         r = UserPlaceAuthorizationCodeListGet.model_validate(data)
         return r
@@ -2663,7 +2847,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         body = dict()
         body['code'] = code
         body['description'] = description
-        url = self.ep(f'config/people/{person_id}/outgoingPermission/accessCodes')
+        url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/accessCodes')
         super().post(url, params=params, json=body)
 
     def modify_access_codes_for_a_person(self, person_id: str, use_custom_access_codes: bool = None,
@@ -2699,7 +2883,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
             body['useCustomAccessCodes'] = use_custom_access_codes
         if delete_codes is not None:
             body['deleteCodes'] = delete_codes
-        url = self.ep(f'config/people/{person_id}/outgoingPermission/accessCodes')
+        url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/accessCodes')
         super().put(url, params=params, json=body)
 
     def retrieve_transfer_numbers_for_a_person(self, person_id: str, org_id: str = None) -> TransferNumberGet:
@@ -2726,7 +2910,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/people/{person_id}/outgoingPermission/autoTransferNumbers')
+        url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/autoTransferNumbers')
         data = super().get(url, params=params)
         r = TransferNumberGet.model_validate(data)
         return r
@@ -2780,7 +2964,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
             body['autoTransferNumber2'] = auto_transfer_number2
         if auto_transfer_number3 is not None:
             body['autoTransferNumber3'] = auto_transfer_number3
-        url = self.ep(f'config/people/{person_id}/outgoingPermission/autoTransferNumbers')
+        url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/autoTransferNumbers')
         super().put(url, params=params, json=body)
 
     def delete_all_digit_patterns_for_a_person(self, person_id: str, org_id: str = None):
@@ -2803,7 +2987,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/people/{person_id}/outgoingPermission/digitPatterns')
+        url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/digitPatterns')
         super().delete(url, params=params)
 
     def retrieve_digit_patterns_for_a_person(self, person_id: str,
@@ -2829,7 +3013,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/people/{person_id}/outgoingPermission/digitPatterns')
+        url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/digitPatterns')
         data = super().get(url, params=params)
         r = UserOutgoingPermissionDigitPatternGetListObject.model_validate(data)
         return r
@@ -2870,7 +3054,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         body['pattern'] = pattern
         body['action'] = enum_str(action)
         body['transferEnabled'] = transfer_enabled
-        url = self.ep(f'config/people/{person_id}/outgoingPermission/digitPatterns')
+        url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/digitPatterns')
         data = super().post(url, params=params, json=body)
         r = data['id']
         return r
@@ -2903,7 +3087,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         body = dict()
         if use_custom_digit_patterns is not None:
             body['useCustomDigitPatterns'] = use_custom_digit_patterns
-        url = self.ep(f'config/people/{person_id}/outgoingPermission/digitPatterns')
+        url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/digitPatterns')
         super().put(url, params=params, json=body)
 
     def delete_a_digit_pattern_for_a_person(self, person_id: str, digit_pattern_id: str, org_id: str = None):
@@ -2928,7 +3112,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/people/{person_id}/outgoingPermission/digitPatterns/{digit_pattern_id}')
+        url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/digitPatterns/{digit_pattern_id}')
         super().delete(url, params=params)
 
     def retrieve_digit_pattern_details_for_a_person(self, person_id: str, digit_pattern_id: str,
@@ -2956,7 +3140,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/people/{person_id}/outgoingPermission/digitPatterns/{digit_pattern_id}')
+        url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/digitPatterns/{digit_pattern_id}')
         data = super().get(url, params=params)
         r = UserDigitPatternObject.model_validate(data)
         return r
@@ -3002,7 +3186,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
             body['action'] = enum_str(action)
         if transfer_enabled is not None:
             body['transferEnabled'] = transfer_enabled
-        url = self.ep(f'config/people/{person_id}/outgoingPermission/digitPatterns/{digit_pattern_id}')
+        url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/digitPatterns/{digit_pattern_id}')
         super().put(url, params=params, json=body)
 
     def get_preferred_answer_endpoint(self, person_id: str, org_id: str = None) -> EndpointInformation:
@@ -3042,7 +3226,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/people/{person_id}/preferredAnswerEndpoint')
+        url = self.ep(f'telephony/config/people/{person_id}/preferredAnswerEndpoint')
         data = super().get(url, params=params)
         r = EndpointInformation.model_validate(data)
         return r
@@ -3070,7 +3254,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
             params['orgId'] = org_id
         body = dict()
         body['preferredAnswerEndpointId'] = preferred_answer_endpoint_id
-        url = self.ep(f'config/people/{person_id}/preferredAnswerEndpoint')
+        url = self.ep(f'telephony/config/people/{person_id}/preferredAnswerEndpoint')
         super().put(url, params=params, json=body)
 
     def get_person_secondary_available_phone_numbers(self, person_id: str, phone_number: list[str] = None,
@@ -3102,7 +3286,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
             params['orgId'] = org_id
         if phone_number is not None:
             params['phoneNumber'] = ','.join(phone_number)
-        url = self.ep(f'config/people/{person_id}/secondary/availableNumbers')
+        url = self.ep(f'telephony/config/people/{person_id}/secondary/availableNumbers')
         return self.session.follow_pagination(url=url, model=PersonSecondaryAvailableNumberObject, item_key='phoneNumbers', params=params)
 
     def get_the_user_s_selective_call_accept_criteria_list(self, person_id: str,
@@ -3127,7 +3311,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/people/{person_id}/selectiveAccept')
+        url = self.ep(f'telephony/config/people/{person_id}/selectiveAccept')
         data = super().get(url, params=params)
         r = SelectiveAcceptCallGet.model_validate(data)
         return r
@@ -3157,7 +3341,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
             params['orgId'] = org_id
         body = dict()
         body['enabled'] = enabled
-        url = self.ep(f'config/people/{person_id}/selectiveAccept')
+        url = self.ep(f'telephony/config/people/{person_id}/selectiveAccept')
         super().put(url, params=params, json=body)
 
     def create_a_criteria_to_the_user_s_selective_call_accept_service(self, person_id: str,
@@ -3223,7 +3407,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         if phone_numbers is not None:
             body['phoneNumbers'] = phone_numbers
         body['acceptEnabled'] = accept_enabled
-        url = self.ep(f'config/people/{person_id}/selectiveAccept/criteria')
+        url = self.ep(f'telephony/config/people/{person_id}/selectiveAccept/criteria')
         data = super().post(url, params=params, json=body)
         r = data['id']
         return r
@@ -3252,7 +3436,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/people/{person_id}/selectiveAccept/criteria/{id}')
+        url = self.ep(f'telephony/config/people/{person_id}/selectiveAccept/criteria/{id}')
         super().delete(url, params=params)
 
     def get_a_criteria_for_the_user_s_selective_call_accept_service(self, person_id: str, id: str,
@@ -3279,7 +3463,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/people/{person_id}/selectiveAccept/criteria/{id}')
+        url = self.ep(f'telephony/config/people/{person_id}/selectiveAccept/criteria/{id}')
         data = super().get(url, params=params)
         r = SelectiveAcceptCallCriteriaGet.model_validate(data)
         return r
@@ -3350,7 +3534,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         if phone_numbers is not None:
             body['phoneNumbers'] = phone_numbers
         body['acceptEnabled'] = accept_enabled
-        url = self.ep(f'config/people/{person_id}/selectiveAccept/criteria/{id}')
+        url = self.ep(f'telephony/config/people/{person_id}/selectiveAccept/criteria/{id}')
         super().put(url, params=params, json=body)
 
     def get_the_user_s_selective_call_forwarding(self, person_id: str, org_id: str = None) -> SelectiveForwardCallGet:
@@ -3374,7 +3558,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/people/{person_id}/selectiveForward')
+        url = self.ep(f'telephony/config/people/{person_id}/selectiveForward')
         data = super().get(url, params=params)
         r = SelectiveForwardCallGet.model_validate(data)
         return r
@@ -3421,7 +3605,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
             body['ringReminderEnabled'] = ring_reminder_enabled
         if send_to_voicemail_enabled is not None:
             body['sendToVoicemailEnabled'] = send_to_voicemail_enabled
-        url = self.ep(f'config/people/{person_id}/selectiveForward')
+        url = self.ep(f'telephony/config/people/{person_id}/selectiveForward')
         super().put(url, params=params, json=body)
 
     def create_a_criteria_to_the_user_s_selective_call_forwarding_service(self, person_id: str,
@@ -3495,7 +3679,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
             body['phoneNumbers'] = phone_numbers
         if forward_enabled is not None:
             body['forwardEnabled'] = forward_enabled
-        url = self.ep(f'config/people/{person_id}/selectiveForward/criteria')
+        url = self.ep(f'telephony/config/people/{person_id}/selectiveForward/criteria')
         data = super().post(url, params=params, json=body)
         r = data['id']
         return r
@@ -3524,7 +3708,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/people/{person_id}/selectiveForward/criteria/{id}')
+        url = self.ep(f'telephony/config/people/{person_id}/selectiveForward/criteria/{id}')
         super().delete(url, params=params)
 
     def get_a_criteria_for_the_user_s_selective_call_forwarding_service(self, person_id: str, id: str,
@@ -3551,7 +3735,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/people/{person_id}/selectiveForward/criteria/{id}')
+        url = self.ep(f'telephony/config/people/{person_id}/selectiveForward/criteria/{id}')
         data = super().get(url, params=params)
         r = SelectiveForwardCallCriteriaGet.model_validate(data)
         return r
@@ -3631,7 +3815,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
             body['phoneNumbers'] = phone_numbers
         if forward_enabled is not None:
             body['forwardEnabled'] = forward_enabled
-        url = self.ep(f'config/people/{person_id}/selectiveForward/criteria/{id}')
+        url = self.ep(f'telephony/config/people/{person_id}/selectiveForward/criteria/{id}')
         super().put(url, params=params, json=body)
 
     def get_the_user_s_selective_call_rejection_criteria_listing(self, person_id: str,
@@ -3656,7 +3840,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/people/{person_id}/selectiveReject')
+        url = self.ep(f'telephony/config/people/{person_id}/selectiveReject')
         data = super().get(url, params=params)
         r = SelectiveRejectCallGet.model_validate(data)
         return r
@@ -3686,7 +3870,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
             params['orgId'] = org_id
         body = dict()
         body['enabled'] = enabled
-        url = self.ep(f'config/people/{person_id}/selectiveReject')
+        url = self.ep(f'telephony/config/people/{person_id}/selectiveReject')
         super().put(url, params=params, json=body)
 
     def create_a_criteria_to_the_user_s_selective_call_rejection_service(self, person_id: str, calls_from: CallsFrom,
@@ -3752,7 +3936,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         if phone_numbers is not None:
             body['phoneNumbers'] = phone_numbers
         body['rejectEnabled'] = reject_enabled
-        url = self.ep(f'config/people/{person_id}/selectiveReject/criteria')
+        url = self.ep(f'telephony/config/people/{person_id}/selectiveReject/criteria')
         data = super().post(url, params=params, json=body)
         r = data['id']
         return r
@@ -3781,7 +3965,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/people/{person_id}/selectiveReject/criteria/{id}')
+        url = self.ep(f'telephony/config/people/{person_id}/selectiveReject/criteria/{id}')
         super().delete(url, params=params)
 
     def get_a_criteria_for_the_user_s_selective_call_rejection_service(self, person_id: str, id: str,
@@ -3808,7 +3992,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/people/{person_id}/selectiveReject/criteria/{id}')
+        url = self.ep(f'telephony/config/people/{person_id}/selectiveReject/criteria/{id}')
         data = super().get(url, params=params)
         r = SelectiveRejectCallCriteriaGet.model_validate(data)
         return r
@@ -3878,7 +4062,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         if phone_numbers is not None:
             body['phoneNumbers'] = phone_numbers
         body['rejectEnabled'] = reject_enabled
-        url = self.ep(f'config/people/{person_id}/selectiveReject/criteria/{id}')
+        url = self.ep(f'telephony/config/people/{person_id}/selectiveReject/criteria/{id}')
         super().put(url, params=params, json=body)
 
     def retrieve_a_person_s_ms_teams_settings(self, person_id: str,
@@ -3907,7 +4091,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'config/people/{person_id}/settings/msTeams')
+        url = self.ep(f'telephony/config/people/{person_id}/settings/msTeams')
         data = super().get(url, params=params)
         r = GetUserMSTeamsSettingsObject.model_validate(data)
         return r
@@ -3945,7 +4129,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         body = dict()
         body['settingName'] = enum_str(setting_name)
         body['value'] = value
-        url = self.ep(f'config/people/{person_id}/settings/msTeams')
+        url = self.ep(f'telephony/config/people/{person_id}/settings/msTeams')
         super().put(url, params=params, json=body)
 
     def read_feature_access_settings_for_a_person(self, person_id: str) -> UserSettingsPermissionsGet:
@@ -3970,7 +4154,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         :type person_id: str
         :rtype: :class:`UserSettingsPermissionsGet`
         """
-        url = self.ep(f'config/people/{person_id}/settings/permissions')
+        url = self.ep(f'telephony/config/people/{person_id}/settings/permissions')
         data = super().get(url)
         r = UserSettingsPermissionsGet.model_validate(data)
         return r
@@ -4142,7 +4326,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
             body['voicemailTransferNumber'] = enum_str(voicemail_transfer_number)
         if generate_activation_code is not None:
             body['generateActivationCode'] = enum_str(generate_activation_code)
-        url = self.ep(f'config/people/{person_id}/settings/permissions')
+        url = self.ep(f'telephony/config/people/{person_id}/settings/permissions')
         super().put(url, json=body)
 
     def reset_a_person_s_feature_access_configuration_to_the_organization_s_default_settings(self, person_id: str):
@@ -4172,7 +4356,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         :type person_id: str
         :rtype: None
         """
-        url = self.ep(f'config/people/{person_id}/settings/permissions/actions/reset/invoke')
+        url = self.ep(f'telephony/config/people/{person_id}/settings/permissions/actions/reset/invoke')
         super().post(url)
 
     def modify_a_person_s_voicemail_passcode(self, person_id: str, passcode: str, org_id: str = None):
@@ -4196,7 +4380,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
             params['orgId'] = org_id
         body = dict()
         body['passcode'] = passcode
-        url = self.ep(f'config/people/{person_id}/voicemail/passcode')
+        url = self.ep(f'telephony/config/people/{person_id}/voicemail/passcode')
         super().put(url, params=params, json=body)
 
     def list_messages(self) -> list[VoiceMessageDetails]:
@@ -4207,7 +4391,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
 
         :rtype: list[VoiceMessageDetails]
         """
-        url = self.ep('voiceMessages')
+        url = self.ep('telephony/voiceMessages')
         data = super().get(url)
         r = TypeAdapter(list[VoiceMessageDetails]).validate_python(data['items'])
         return r
@@ -4229,7 +4413,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         body = dict()
         if message_id is not None:
             body['messageId'] = message_id
-        url = self.ep('voiceMessages/markAsRead')
+        url = self.ep('telephony/voiceMessages/markAsRead')
         super().post(url, json=body)
 
     def mark_as_unread(self, message_id: str = None):
@@ -4249,7 +4433,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         body = dict()
         if message_id is not None:
             body['messageId'] = message_id
-        url = self.ep('voiceMessages/markAsUnread')
+        url = self.ep('telephony/voiceMessages/markAsUnread')
         super().post(url, json=body)
 
     def get_message_summary(self) -> GetMessageSummaryResponse:
@@ -4260,7 +4444,7 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
 
         :rtype: :class:`GetMessageSummaryResponse`
         """
-        url = self.ep('voiceMessages/summary')
+        url = self.ep('telephony/voiceMessages/summary')
         data = super().get(url)
         r = GetMessageSummaryResponse.model_validate(data)
         return r
@@ -4275,5 +4459,5 @@ class UserCallSettings22Api(ApiChild, base='telephony'):
         :type message_id: str
         :rtype: None
         """
-        url = self.ep(f'voiceMessages/{message_id}')
+        url = self.ep(f'telephony/voiceMessages/{message_id}')
         super().delete(url)

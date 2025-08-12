@@ -72,7 +72,7 @@ class TelephonyDeviceDetails(ApiModel):
 
 class MemberCommon(ApiModel):
     #: Unique identifier for the member.
-    member_id: str = Field(alias='id')
+    member_id: str = Field(alias='id', default=None)
     member_type: UserType = Field(default=UserType.people)
     #: First name of a person or workspace.
     first_name: Optional[str] = None
@@ -479,7 +479,7 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         data = self.get(url=url, params=params)
         return DeviceMembersResponse.model_validate(data)
 
-    def update_members(self, device_id: str, members: Optional[list[Union[DeviceMember, AvailableMember]]],
+    def update_members(self, device_id: str, members: list[Union[DeviceMember, AvailableMember]]=None,
                        org_id: str = None):
         """
         Modify member details on the device.
@@ -499,7 +499,7 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         :type org_id: str
         """
         members_for_update = []
-        for member in members:
+        for member in members or []:
             if isinstance(member, AvailableMember):
                 member = DeviceMember.from_available(member)
             else:

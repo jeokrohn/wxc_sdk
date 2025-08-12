@@ -15,6 +15,9 @@ Release history
 - feat: new parameter exclude_status for :meth:`api.people.list <wxc_sdk.people.PeopleApi.list>`
 - fix: missing parameters max\_, start in :meth:`api.telephony.call_queues.agents.details <wxc_sdk.telephony.callqueue.agents.CallQueueAgentsApi.details>`
 - feat: new parameter service_types for :meth:`api.telephony.pstn.list <wxc_sdk.telephony.pstn.PSTNApi.list>`
+- break: signature of :meth:`api.person_settings.app_shared_line.update_members <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.update_members>` changed: parameter application_id removed
+- break: signature of :meth:`api.person_settings.app_shared_line.get_members <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.get_members>` changed: parameter application_id removed.
+- break: signature of :meth:`api.person_settings.app_shared_line.search_members <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.search_members>` changed: parameter application_id removed. For now :meth:`api.person_settings.app_shared_line.search_members_old <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.search_members_old>` can still be used while new method does not return member ids
 
 1.25.0
 ------

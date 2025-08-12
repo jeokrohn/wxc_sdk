@@ -369,12 +369,22 @@ The method name is a link to the method documentation.
         Get Shared-Line Appearance Members
    * - :meth:`api.person_settings.app_shared_line.search_members <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.search_members>`
         Search Shared-Line Appearance Members
+   * - :meth:`api.person_settings.app_shared_line.search_members_old <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.search_members_old>`
+        Search Shared-Line Appearance Members
    * - :meth:`api.person_settings.app_shared_line.update_members <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.update_members>`
-        Put Shared-Line Appearance Members
+        Put Shared-Line Appearance Members New
    * - :meth:`api.person_settings.appservices.configure <wxc_sdk.person_settings.appservices.AppServicesApi.configure>`
-        Modify a Person's Application Services Settings
+        Modify a person's Application Services Settings
    * - :meth:`api.person_settings.appservices.read <wxc_sdk.person_settings.appservices.AppServicesApi.read>`
-        Retrieve a Person's Application Services Settings
+        Retrieve a person's Application Services Settings New
+   * - :meth:`api.person_settings.appservices.shared_line.get_members <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.get_members>`
+        Get Shared-Line Appearance Members
+   * - :meth:`api.person_settings.appservices.shared_line.search_members <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.search_members>`
+        Search Shared-Line Appearance Members
+   * - :meth:`api.person_settings.appservices.shared_line.search_members_old <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.search_members_old>`
+        Search Shared-Line Appearance Members
+   * - :meth:`api.person_settings.appservices.shared_line.update_members <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.update_members>`
+        Put Shared-Line Appearance Members New
    * - :meth:`api.person_settings.available_numbers.available <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.available>`
         Get Available Phone Numbers
    * - :meth:`api.person_settings.available_numbers.call_forward <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.call_forward>`

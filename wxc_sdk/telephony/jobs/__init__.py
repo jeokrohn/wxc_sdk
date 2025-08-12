@@ -79,6 +79,10 @@ class MoveCounts(ApiModel):
     moved: Optional[int] = None
     #: The total number of user moves that failed.
     failed: Optional[int] = None
+    #: Total number of user moves that were pending with number orders.
+    pending: Optional[int] = None
+    #: Total number of user moves that were skipped.
+    skipped: Optional[int] = None
 
 
 class StartJobResponse(ApiModel):

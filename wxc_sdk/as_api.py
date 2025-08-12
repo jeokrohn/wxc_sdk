@@ -8505,64 +8505,6 @@ class AsAgentCallerIdApi(AsPersonSettingsApiChild):
         await super().put(url, json=body)
 
 
-class AsAppServicesApi(AsPersonSettingsApiChild):
-    """
-    API for person's app services settings
-    """
-
-    feature = 'applications'
-
-    async def read(self, person_id: str, org_id: str = None) -> AppServicesSettings:
-        """
-        Retrieve a Person's Application Services Settings
-
-        Application services let you determine the ringing behavior for calls made to people in certain scenarios.
-        You can also specify which devices can download the Webex Calling app.
-
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
-
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
-            may use this parameter as the default is the same organization as the token used to access API.
-        :type org_id: str
-        :return: privacy settings
-        :rtype: :class:`Privacy`
-        """
-        ep = self.f_ep(person_id=person_id)
-        params = org_id and {'orgId': org_id} or None
-        data = await self.get(ep, params=params)
-        return AppServicesSettings.model_validate(data)
-
-    async def configure(self, person_id: str, settings: AppServicesSettings, org_id: str = None):
-        """
-        Modify a Person's Application Services Settings
-
-        Application services let you determine the ringing behavior for calls made to users in certain scenarios. You
-        can also specify which devices users can download the Webex Calling app on.
-
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope.
-
-        :param person_id: Unique identifier for the person.
-        :type person_id: str
-        :param settings: settings for update
-        :type settings: :class:`AppServicesSettings`
-        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
-            may use this parameter as the default is the same organization as the token used to access API.
-        :type org_id: str
-        """
-        ep = self.f_ep(person_id=person_id)
-        params = org_id and {'orgId': org_id} or None
-        data = settings.model_dump_json(include={'ring_devices_for_click_to_dial_calls_enabled': True,
-                                                 'ring_devices_for_group_page_enabled': True,
-                                                 'ring_devices_for_call_park_enabled': True,
-                                                 'desktop_client_enabled': True,
-                                                 'tablet_client_enabled': True,
-                                                 'mobile_client_enabled': True,
-                                                 'browser_client_enabled': True})
-        await self.put(ep, params=params, data=data)
-
-
 class AsAppSharedLineApi(AsApiChild, base='telephony/config/people'):
     """
     Webex app shared line API
@@ -8575,14 +8517,101 @@ class AsAppSharedLineApi(AsApiChild, base='telephony/config/people'):
         """
         return super().ep(f'{person_id}/applications/{application_id}/{path}')
 
-    def search_members_gen(self, person_id: str, application_id: str, max_: str = None,
-                       start: str = None, location: str = None, name: str = None,
-                       number: str = None, order: str = None,
-                       extension: str = None, **params) -> AsyncGenerator[MemberCommon, None, None]:
+    def search_members_gen(self, person_id: str, order: str = None, location: str = None,
+                       name: str = None, phone_number: str = None, extension: str = None,
+                       **params) -> AsyncGenerator[AvailableMember, None, None]:
+        """
+        Search Shared-Line Appearance Members
+
+        Get members available for shared-line assignment to a Webex Calling Apps.
+
+        Like most hardware devices, applications support assigning additional shared lines which can monitored and
+        utilized by the application.
+
+        This API requires a full, user, or location administrator auth token with the
+        `spark-admin:telephony_config_read` scope.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param order: Order the Route Lists according to number, ascending or descending.
+        :type order: str
+        :param location: Location ID for the user.
+        :type location: str
+        :param name: Search for users with names that match the query.
+        :type name: str
+        :param phone_number: Search for users with numbers that match the query.
+        :type phone_number: str
+        :param extension: Search for users with extensions that match the query.
+        :type extension: str
+        :return: Generator yielding :class:`AvailableSharedLineMember` instances
+        """
+        if order is not None:
+            params['order'] = order
+        if location is not None:
+            params['location'] = location
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if extension is not None:
+            params['extension'] = extension
+        url = self.ep(f'{person_id}/applications/availableMembers')
+        return self.session.follow_pagination(url=url, model=AvailableMember,
+                                              item_key='members', params=params)
+
+    async def search_members(self, person_id: str, order: str = None, location: str = None,
+                       name: str = None, phone_number: str = None, extension: str = None,
+                       **params) -> List[AvailableMember]:
+        """
+        Search Shared-Line Appearance Members
+
+        Get members available for shared-line assignment to a Webex Calling Apps.
+
+        Like most hardware devices, applications support assigning additional shared lines which can monitored and
+        utilized by the application.
+
+        This API requires a full, user, or location administrator auth token with the
+        `spark-admin:telephony_config_read` scope.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param order: Order the Route Lists according to number, ascending or descending.
+        :type order: str
+        :param location: Location ID for the user.
+        :type location: str
+        :param name: Search for users with names that match the query.
+        :type name: str
+        :param phone_number: Search for users with numbers that match the query.
+        :type phone_number: str
+        :param extension: Search for users with extensions that match the query.
+        :type extension: str
+        :return: Generator yielding :class:`AvailableSharedLineMember` instances
+        """
+        if order is not None:
+            params['order'] = order
+        if location is not None:
+            params['location'] = location
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if extension is not None:
+            params['extension'] = extension
+        url = self.ep(f'{person_id}/applications/availableMembers')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableMember,
+                                              item_key='members', params=params)]
+
+    def search_members_old_gen(self, person_id: str, application_id: str, max_: str = None,
+                           start: str = None, location: str = None, name: str = None,
+                           number: str = None, order: str = None,
+                           extension: str = None, **params) -> AsyncGenerator[AvailableMember, None, None]:
         """
         Search Shared-Line Appearance Members
 
         Get members available for shared-line assignment to a Webex Calling Apps Desktop device.
+
+        Deprecated: This operation has been marked as deprecated, which means it could be removed at some point in the
+        future.
 
         This API requires a full or user administrator or location administrator auth token with
         the `spark-admin:people_read` scope.
@@ -8605,7 +8634,7 @@ class AsAppSharedLineApi(AsApiChild, base='telephony/config/people'):
         :type order: str
         :param extension: Search for users with extensions that match the query.
         :type extension: str
-        :return: Generator yielding :class:`MemberCommon` instances
+        :return: Generator yielding :class:`AvailableMember` instances
         """
         if max_ is not None:
             params['max'] = max_
@@ -8622,16 +8651,19 @@ class AsAppSharedLineApi(AsApiChild, base='telephony/config/people'):
         if extension is not None:
             params['extension'] = extension
         url = self.f_ep(person_id=person_id, application_id=application_id, path='availableMembers')
-        return self.session.follow_pagination(url, model=MemberCommon, params=params, item_key='members')
+        return self.session.follow_pagination(url, model=AvailableMember, params=params, item_key='members')
 
-    async def search_members(self, person_id: str, application_id: str, max_: str = None,
-                       start: str = None, location: str = None, name: str = None,
-                       number: str = None, order: str = None,
-                       extension: str = None, **params) -> List[MemberCommon]:
+    async def search_members_old(self, person_id: str, application_id: str, max_: str = None,
+                           start: str = None, location: str = None, name: str = None,
+                           number: str = None, order: str = None,
+                           extension: str = None, **params) -> List[AvailableMember]:
         """
         Search Shared-Line Appearance Members
 
         Get members available for shared-line assignment to a Webex Calling Apps Desktop device.
+
+        Deprecated: This operation has been marked as deprecated, which means it could be removed at some point in the
+        future.
 
         This API requires a full or user administrator or location administrator auth token with
         the `spark-admin:people_read` scope.
@@ -8654,7 +8686,7 @@ class AsAppSharedLineApi(AsApiChild, base='telephony/config/people'):
         :type order: str
         :param extension: Search for users with extensions that match the query.
         :type extension: str
-        :return: Generator yielding :class:`MemberCommon` instances
+        :return: Generator yielding :class:`AvailableMember` instances
         """
         if max_ is not None:
             params['max'] = max_
@@ -8671,51 +8703,148 @@ class AsAppSharedLineApi(AsApiChild, base='telephony/config/people'):
         if extension is not None:
             params['extension'] = extension
         url = self.f_ep(person_id=person_id, application_id=application_id, path='availableMembers')
-        return [o async for o in self.session.follow_pagination(url, model=MemberCommon, params=params, item_key='members')]
+        return [o async for o in self.session.follow_pagination(url, model=AvailableMember, params=params, item_key='members')]
 
-    async def get_members(self, person_id: str, application_id: str) -> DeviceMembersResponse:
+    async def get_members(self, person_id: str) -> DeviceMembersResponse:
         """
         Get Shared-Line Appearance Members
 
-        Get primary and secondary members assigned to a shared line on a Webex Calling Apps Desktop device.
+        Get primary and secondary members assigned to a shared line on a Webex Calling Apps.
 
-        This API requires a full or user administrator or location administrator auth token with
-        the `spark-admin:people_read` scope.
+        Like most hardware devices, applications support assigning additional shared lines which can monitored and
+        utilized by the application.
+
+        This API requires a full, user, or location administrator auth token with the
+        `spark-admin:telephony_config_read` scope.
 
         :param person_id: A unique identifier for the person.
         :type person_id: str
-        :param application_id: A unique identifier for the application.
-        :type application_id: str
-        :rtype: :class:`GetSharedLineMemberList`
+        :rtype: :class:`DeviceMembersResponse`
         """
-        url = self.f_ep(person_id=person_id, application_id=application_id, path='members')
+        url = self.ep(f'{person_id}/applications/members')
         data = await super().get(url)
         r = DeviceMembersResponse.model_validate(data)
         return r
 
-    async def update_members(self, person_id: str, application_id: str,
-                       members: list[DeviceMember] = None):
+    async def update_members(self, person_id: str,
+                       members: list[Union[DeviceMember, AvailableMember]] = None):
         """
-        Put Shared-Line Appearance Members
+        Put Shared-Line Appearance Members New
 
-        Add or modify primary and secondary users assigned to shared-lines on a Webex Calling Apps Desktop device.
+        Add or modify primary and secondary users assigned to shared-lines on a Webex Calling Apps.
 
-        This API requires a full or user administrator or location administrator auth token with the
-        `spark-admin:people_write` scope.
+        Like most hardware devices, applications support assigning additional shared lines which can monitored and
+        utilized by the application.
+
+        This API requires a full, user, or location administrator auth token with the
+        `spark-admin:telephony_config_write` scope.
 
         :param person_id: A unique identifier for the person.
         :type person_id: str
-        :param application_id: A unique identifier for the application.
-        :type application_id: str
-        :type members: list[DeviceMember]
+        :param members: List of members to be added or modified for shared-line assignment to a Webex Calling Apps.
+        :type members: list[Union[DeviceMember, AvailableMember]]
         :rtype: None
         """
-        body = dict()
-        if members is not None:
-            body['members'] = TypeAdapter(list[DeviceMember]).dump_python(members, mode='json', by_alias=True,
-                                                                          exclude_none=True)
-        url = self.f_ep(person_id=person_id, application_id=application_id, path='members')
+        members_for_update = []
+        for member in members or []:
+            if isinstance(member, AvailableMember):
+                member = DeviceMember.from_available(member)
+            else:
+                member = member.model_copy(deep=True)
+            members_for_update.append(member)
+
+        if members_for_update:
+            # now assign port indices
+            port = 1
+            for member in members_for_update:
+                member.port = port
+                port += member.line_weight
+
+        # create body
+        if members_for_update:
+            members = [m.model_dump(mode='json', exclude_none=True, by_alias=True,
+                                    include={'member_id', 'port',
+                                             'primary_owner', 'line_type', 'line_weight', 'line_label',
+                                             'allow_call_decline_enabled'})
+                       for m in members_for_update]
+            body = {'members': members}
+        else:
+            body = None
+
+        url = self.ep(f'{person_id}/applications/members')
         await super().put(url, json=body)
+
+
+class AsAppServicesApi(AsApiChild, base=''):
+    """
+    API for person's app services settings
+    """
+
+    shared_line: AsAppSharedLineApi
+
+    def __init__(self, *, session: AsRestSession):
+        """
+
+        :meta private:
+        """
+        super().__init__(session=session)
+        self.shared_line = AsAppSharedLineApi(session=session)
+
+    def f_ep(self, person_id:str):
+        """
+
+        :meta private:
+        """
+        return self.ep(f'people/{person_id}/features/applications')
+
+    async def read(self, person_id: str, org_id: str = None) -> AppServicesSettings:
+        """
+        Retrieve a person's Application Services Settings New
+
+        Gets mobile and PC applications settings for a user.
+
+        Application services let you determine the ringing behavior for calls made to people in certain
+        scenarios. You
+        can also specify which devices can download the Webex Calling app.
+
+        Requires a full, user, or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: :class:`AppServicesSettings`
+        """
+        ep = self.f_ep(person_id=person_id)
+        params = org_id and {'orgId': org_id} or None
+        data = await self.get(ep, params=params)
+        return AppServicesSettings.model_validate(data)
+
+    async def configure(self, person_id: str, settings: AppServicesSettings, org_id: str = None):
+        """
+        Modify a person's Application Services Settings
+
+        Application services let you determine the ringing behavior for calls made to users in certain scenarios. You
+        can also specify which devices users can download the Webex Calling app on.
+
+        This API requires a full or user administrator or location administrator auth token with the
+        spark-admin:people_write scope.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param settings: settings for update
+        :type settings: :class:`AppServicesSettings`
+        :param org_id: Person is in this organization. Only admin users of another organization (such as partners)
+            may use this parameter as the default is the same organization as the token used to access API.
+        :type org_id: str
+        """
+        ep = self.f_ep(person_id=person_id)
+        params = org_id and {'orgId': org_id} or None
+        data = settings.update()
+        await self.put(ep, params=params, json=data)
 
 
 class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
@@ -25452,7 +25581,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         data = await self.get(url=url, params=params)
         return DeviceMembersResponse.model_validate(data)
 
-    async def update_members(self, device_id: str, members: Optional[list[Union[DeviceMember, AvailableMember]]],
+    async def update_members(self, device_id: str, members: list[Union[DeviceMember, AvailableMember]]=None,
                        org_id: str = None):
         """
         Modify member details on the device.
@@ -25472,7 +25601,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         :type org_id: str
         """
         members_for_update = []
-        for member in members:
+        for member in members or []:
             if isinstance(member, AvailableMember):
                 member = DeviceMember.from_available(member)
             else:
