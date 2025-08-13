@@ -75,8 +75,8 @@ class PSTNApi(ApiChild, base='telephony/pstn/locations'):
     """
 
     def list(self, location_id: str,
-                service_types: list[PSTNServiceType] = None,
-                org_id: str = None) -> list[PSTNConnectionOption]:
+             service_types: list[PSTNServiceType] = None,
+             org_id: str = None) -> list[PSTNConnectionOption]:
         """
         Retrieve PSTN Connection Options for a Location
 

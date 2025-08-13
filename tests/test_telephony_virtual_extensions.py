@@ -167,7 +167,8 @@ class TestVirtualExtensions(TestVirtualExtensionsBase):
         with self.dummy_virtual_extensions(1):
             vapi = self.api.telephony.virtual_extensions
             ve = list(vapi.list_extensions())[0]
-            vapi.update_extension(extension_id=ve.id, first_name='new first name', last_name='new last name', display_name='new display name')
+            vapi.update_extension(extension_id=ve.id, first_name='new first name', last_name='new last name',
+                                  display_name='new display name')
             details = vapi.details_extension(extension_id=ve.id)
         self.assertEqual('new first name', details.first_name)
         self.assertEqual('new last name', details.last_name)
@@ -351,7 +352,7 @@ class TestVirtualExtensions(TestVirtualExtensionsBase):
         range_name = next(self.available_range_names)
         patterns = [next(self.available_patterns) for _ in range(30)]
         range_id = vapi.create_range(name=range_name, prefix='+496100773',
-                                   patterns=patterns)
+                                     patterns=patterns)
         print(f'created virtual extension range: {range_id}')
         try:
             # add patterns to the virtual extension range
@@ -372,7 +373,7 @@ class TestVirtualExtensions(TestVirtualExtensionsBase):
         range_name = next(self.available_range_names)
         patterns = [next(self.available_patterns) for _ in range(30)]
         range_id = vapi.create_range(name=range_name, prefix='+496100773',
-                                   patterns=patterns)
+                                     patterns=patterns)
         print(f'created virtual extension range: {range_id}')
         try:
             # add patterns to the virtual extension range
@@ -380,13 +381,12 @@ class TestVirtualExtensions(TestVirtualExtensionsBase):
             with self.assertRaises(RestError) as exc:
                 vapi.modify_range(extension_range_id=range_id, patterns=add_patterns,
                                   action=VirtualExtensionRangeAction.add)
-            re:RestError = exc.exception
+            re: RestError = exc.exception
             self.assertEqual(400, re.response.status_code)
             self.assertEqual(27854, re.code)
         finally:
             vapi.delete_range(range_id)
             print(f'deleted virtual extension range: {range_id}')
-
 
     @async_test
     async def test_range_zzz_delete(self):

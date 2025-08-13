@@ -1,10 +1,7 @@
 """
 unit tests for reports
 """
-import csv
-import io
 import json
-import zipfile
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date, timedelta
 
@@ -112,4 +109,3 @@ class TestReports(TestCaseWithLog):
                   f'created {details.created.isoformat()}')
             print(f'{len(cdrs)} records, 1st call {min(r.start_time for r in cdrs).isoformat()}, '
                   f'last call {max(r.start_time for r in cdrs).isoformat()}')
-

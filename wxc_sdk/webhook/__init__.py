@@ -247,7 +247,7 @@ class WebhookApi(ApiChild, base='webhooks'):
         """
         if owned_by is not None:
             params['ownedBy'] = owned_by
-        ep = self.ep()
+        url = self.ep()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Webhook, item_key='items', params=params)
 

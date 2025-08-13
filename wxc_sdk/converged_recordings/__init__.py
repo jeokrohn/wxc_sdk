@@ -195,17 +195,16 @@ class ConvergedRecordingsApi(ApiChild, base=''):
     -recording_selecting-call-recording-provider>`_.
     """
 
-
     def list_for_admin_or_compliance_officer(self, from_: Union[str, datetime] = None,
-                                                        to_: Union[str, datetime] = None, status: RecordingStatus = None,
-                                                        service_type: RecordingServiceType = None,
-                                                        format_: str = None, owner_id: str = None,
-                                                        owner_email: str = None,
-                                                        owner_type: RecordingOwnerType = None,
-                                                        storage_region: RecordingStorageRegion = None,
-                                                        location_id: str = None, topic: str = None,
-                                                        timezone: str = None,
-                                                        **params) -> Generator[ConvergedRecording, None, None]:
+                                             to_: Union[str, datetime] = None, status: RecordingStatus = None,
+                                             service_type: RecordingServiceType = None,
+                                             format_: str = None, owner_id: str = None,
+                                             owner_email: str = None,
+                                             owner_type: RecordingOwnerType = None,
+                                             storage_region: RecordingStorageRegion = None,
+                                             location_id: str = None, topic: str = None,
+                                             timezone: str = None,
+                                             **params) -> Generator[ConvergedRecording, None, None]:
         """
         List Recordings for Admin or Compliance officer
 
@@ -434,6 +433,7 @@ class ConvergedRecordingsApi(ApiChild, base=''):
             body['recordingIds'] = recording_ids
         url = self.ep('convergedRecordings/purge')
         super().post(url, json=body)
+
     def reassign(self, reassign_owner_email: str, owner_email: str = None, recording_ids: List[str] = None):
         """
         Reassign Recordings
@@ -550,9 +550,11 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         As a `user`, you can move a list of your own recordings or all your recordings to the recycle bin.
 
         Recordings in the recycle bin can be recovered by `Restore Recordings from Recycle Bin
-        <https://developer.webex.com/docs/api/v1/converged-recordings/restore-recordings-from-recycle-bin>`_ API. If you'd like to
+        <https://developer.webex.com/docs/api/v1/converged-recordings/restore-recordings-from-recycle-bin>`_ API. If
+        you'd like to
         empty recordings from the recycle bin, you can use `Purge Recordings from Recycle Bin
-        <https://developer.webex.com/docs/api/v1/converged-recordings/purge-recordings-from-recycle-bin>`_ API to purge all or some
+        <https://developer.webex.com/docs/api/v1/converged-recordings/purge-recordings-from-recycle-bin>`_ API to
+        purge all or some
         of them.
 
         * If `trashAll` is `true`:
@@ -623,8 +625,6 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         url = self.ep(f'convergedRecordings/{recording_id}')
         super().delete(url, json=body)
 
-
-
     def details(self, recording_id: str) -> ConvergedRecordingWithDirectDownloadLinks:
         """
         Get Recording Details
@@ -644,8 +644,6 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         data = super().get(url)
         r = ConvergedRecordingWithDirectDownloadLinks.model_validate(data)
         return r
-
-
 
     def metadata(self, recording_id: str, show_all_types: bool = None) -> ConvergedRecordingMeta:
         """
@@ -681,7 +679,3 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         url = self.ep(f'convergedRecordings/{recording_id}/metadata')
         data = super().get(url, params=params)
         return ConvergedRecordingMeta.model_validate(data)
-
-
-
-

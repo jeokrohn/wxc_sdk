@@ -447,7 +447,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
 
         Specify the workspace ID in the `workspaceId` parameter in the URI. Include all details for the workspace that
         are present in a `GET request for the workspace details
-        <https://developer.webex.com/docs/api/v1/workspaces/get-workspace-details>`_. Not including the optional `capacity`, `type` or
+        <https://developer.webex.com/docs/api/v1/workspaces/get-workspace-details>`_. Not including the optional
+        `capacity`, `type` or
         `notes` fields will result in the fields no longer being defined for the workspace. A `locationId` must be
         provided when the `floorId` is set. The `locationId`, `workspaceLocationId`, `floorId`, `supportedDevices`,
         `calendar` and `calling` fields do not change when omitted from the update request.

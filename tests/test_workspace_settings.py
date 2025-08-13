@@ -1090,7 +1090,7 @@ class SelectiveAcceptTestWorkspace(TestWithProfessionalWorkspace, SelectiveAccep
         super().setUpClass()
         cls.tapi = cls.api.workspace_settings.selective_accept
         cls.target_id = cls.workspace.workspace_id
-        
+
 
 @dataclass(init=False, repr=False)
 class PriorityAlertTest(TestWithProfessionalWorkspace):

@@ -5,7 +5,6 @@ import asyncio
 import json
 # TODO: additional tests
 import random
-from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 
 from tests.base import TestCaseWithLog, TestWithLocations, async_test
@@ -118,6 +117,7 @@ class TestCreate(TestWithLocations):
             print(json.dumps(json.loads(details.model_dump_json()), indent=2))
             print(f'Created AA: {details.location_id}')
 
+
 class TestUpdate(TestCreate):
     def test_update_menu(self):
         """
@@ -132,23 +132,25 @@ class TestUpdate(TestCreate):
             # create a new menu with a key configuration
             new_menu = details.business_hours_menu.model_copy(deep=True)
             new_menu: AutoAttendantMenu
-            new_menu.key_configurations = [AutoAttendantKeyConfiguration(key=MenuKey.zero,action=AutoAttendantAction.repeat_menu,
-                                                                           description='Repeat menu'),
-                                           AutoAttendantKeyConfiguration(key=MenuKey.one,
-                                                                         action=AutoAttendantAction.exit,
-                                                                         description='Exit')]
+            new_menu.key_configurations = [
+                AutoAttendantKeyConfiguration(key=MenuKey.zero, action=AutoAttendantAction.repeat_menu,
+                                              description='Repeat menu'),
+                AutoAttendantKeyConfiguration(key=MenuKey.one,
+                                              action=AutoAttendantAction.exit,
+                                              description='Exit')]
             new_settings = details.model_copy(deep=True)
             new_settings.business_hours_menu = new_menu
-            ata.update(location_id=location_id,auto_attendant_id=details.auto_attendant_id, settings=new_settings)
+            ata.update(location_id=location_id, auto_attendant_id=details.auto_attendant_id, settings=new_settings)
             after = ata.details(location_id=location_id, auto_attendant_id=details.auto_attendant_id)
             self.assertEqual(new_menu, after.business_hours_menu)
 
             # go back to the original menu
-            ata.update(location_id=location_id,auto_attendant_id=details.auto_attendant_id, settings=details)
+            ata.update(location_id=location_id, auto_attendant_id=details.auto_attendant_id, settings=details)
             after = ata.details(location_id=location_id, auto_attendant_id=details.auto_attendant_id)
             self.assertEqual(details.business_hours_menu, after.business_hours_menu)
 
         return
+
 
 class TestDelete(TestCaseWithLog):
 

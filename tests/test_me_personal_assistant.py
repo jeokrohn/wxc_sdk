@@ -33,7 +33,7 @@ class TestMePersonalAssistant(UserTokens, TestCaseWithUsers):
         """
         user = self.random_user()
         with self.user_api(user) as api:
-            api:WebexSimpleApi
+            api: WebexSimpleApi
             me_pa_settings = api.me.personal_assistant.get()
         pa_settings = self.api.person_settings.personal_assistant.get(person_id=user.person_id)
         self.assertEqual(me_pa_settings, pa_settings)

@@ -413,17 +413,16 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
     -recording_selecting-call-recording-provider>`_.
     """
 
-
     def list_for_admin_or_compliance_officer_gen(self, from_: Union[str, datetime] = None,
-                                                        to_: Union[str, datetime] = None, status: RecordingStatus = None,
-                                                        service_type: RecordingServiceType = None,
-                                                        format_: str = None, owner_id: str = None,
-                                                        owner_email: str = None,
-                                                        owner_type: RecordingOwnerType = None,
-                                                        storage_region: RecordingStorageRegion = None,
-                                                        location_id: str = None, topic: str = None,
-                                                        timezone: str = None,
-                                                        **params) -> AsyncGenerator[ConvergedRecording, None, None]:
+                                             to_: Union[str, datetime] = None, status: RecordingStatus = None,
+                                             service_type: RecordingServiceType = None,
+                                             format_: str = None, owner_id: str = None,
+                                             owner_email: str = None,
+                                             owner_type: RecordingOwnerType = None,
+                                             storage_region: RecordingStorageRegion = None,
+                                             location_id: str = None, topic: str = None,
+                                             timezone: str = None,
+                                             **params) -> AsyncGenerator[ConvergedRecording, None, None]:
         """
         List Recordings for Admin or Compliance officer
 
@@ -507,15 +506,15 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         return self.session.follow_pagination(url=url, model=ConvergedRecording, item_key='items', params=params)
 
     async def list_for_admin_or_compliance_officer(self, from_: Union[str, datetime] = None,
-                                                        to_: Union[str, datetime] = None, status: RecordingStatus = None,
-                                                        service_type: RecordingServiceType = None,
-                                                        format_: str = None, owner_id: str = None,
-                                                        owner_email: str = None,
-                                                        owner_type: RecordingOwnerType = None,
-                                                        storage_region: RecordingStorageRegion = None,
-                                                        location_id: str = None, topic: str = None,
-                                                        timezone: str = None,
-                                                        **params) -> List[ConvergedRecording]:
+                                             to_: Union[str, datetime] = None, status: RecordingStatus = None,
+                                             service_type: RecordingServiceType = None,
+                                             format_: str = None, owner_id: str = None,
+                                             owner_email: str = None,
+                                             owner_type: RecordingOwnerType = None,
+                                             storage_region: RecordingStorageRegion = None,
+                                             location_id: str = None, topic: str = None,
+                                             timezone: str = None,
+                                             **params) -> List[ConvergedRecording]:
         """
         List Recordings for Admin or Compliance officer
 
@@ -949,9 +948,11 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         As a `user`, you can move a list of your own recordings or all your recordings to the recycle bin.
 
         Recordings in the recycle bin can be recovered by `Restore Recordings from Recycle Bin
-        <https://developer.webex.com/docs/api/v1/converged-recordings/restore-recordings-from-recycle-bin>`_ API. If you'd like to
+        <https://developer.webex.com/docs/api/v1/converged-recordings/restore-recordings-from-recycle-bin>`_ API. If
+        you'd like to
         empty recordings from the recycle bin, you can use `Purge Recordings from Recycle Bin
-        <https://developer.webex.com/docs/api/v1/converged-recordings/purge-recordings-from-recycle-bin>`_ API to purge all or some
+        <https://developer.webex.com/docs/api/v1/converged-recordings/purge-recordings-from-recycle-bin>`_ API to
+        purge all or some
         of them.
 
         * If `trashAll` is `true`:
@@ -22927,8 +22928,8 @@ class AsPSTNApi(AsApiChild, base='telephony/pstn/locations'):
     """
 
     async def list(self, location_id: str,
-                service_types: list[PSTNServiceType] = None,
-                org_id: str = None) -> list[PSTNConnectionOption]:
+             service_types: list[PSTNServiceType] = None,
+             org_id: str = None) -> list[PSTNConnectionOption]:
         """
         Retrieve PSTN Connection Options for a Location
 
@@ -25581,7 +25582,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         data = await self.get(url=url, params=params)
         return DeviceMembersResponse.model_validate(data)
 
-    async def update_members(self, device_id: str, members: list[Union[DeviceMember, AvailableMember]]=None,
+    async def update_members(self, device_id: str, members: list[Union[DeviceMember, AvailableMember]] = None,
                        org_id: str = None):
         """
         Modify member details on the device.
@@ -30110,7 +30111,7 @@ class AsWebhookApi(AsApiChild, base='webhooks'):
         """
         if owned_by is not None:
             params['ownedBy'] = owned_by
-        ep = self.ep()
+        url = self.ep()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Webhook, item_key='items', params=params)
 
@@ -30126,7 +30127,7 @@ class AsWebhookApi(AsApiChild, base='webhooks'):
         """
         if owned_by is not None:
             params['ownedBy'] = owned_by
-        ep = self.ep()
+        url = self.ep()
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=Webhook, item_key='items', params=params)]
 
@@ -31739,7 +31740,8 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
 
         Specify the workspace ID in the `workspaceId` parameter in the URI. Include all details for the workspace that
         are present in a `GET request for the workspace details
-        <https://developer.webex.com/docs/api/v1/workspaces/get-workspace-details>`_. Not including the optional `capacity`, `type` or
+        <https://developer.webex.com/docs/api/v1/workspaces/get-workspace-details>`_. Not including the optional
+        `capacity`, `type` or
         `notes` fields will result in the fields no longer being defined for the workspace. A `locationId` must be
         provided when the `floorId` is set. The `locationId`, `workspaceLocationId`, `floorId`, `supportedDevices`,
         `calendar` and `calling` fields do not change when omitted from the update request.

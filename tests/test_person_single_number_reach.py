@@ -8,13 +8,15 @@ from tests.base import TestWithLocations, async_test, TestCaseWithUsers
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings.single_number_reach import SingleNumberReachNumber
 
+
 def decoded_snr_number_id(snr_number_id: str):
     """
     decode SNR number id
     """
-    decoded = base64.b64decode(snr_number_id+'==').decode()
+    decoded = base64.b64decode(snr_number_id + '==').decode()
     decoded_id = base64.b64decode(decoded.split('/')[-1]).decode()
     return f'{decoded}({decoded_id})'
+
 
 class TestSingleNumberReach(TestWithLocations, TestCaseWithUsers):
 
@@ -191,5 +193,6 @@ class TestSingleNumberReach(TestWithLocations, TestCaseWithUsers):
             self.assertEqual(after.numbers[0].phone_number, snr_number.phone_number)
             self.assertEqual(after.numbers[0].id, new_id)
             # verify that the id has the encoded phone number
-            self.assertEqual(decoded_snr_number_id(after.numbers[0].id).split('(')[-1].strip(')'), snr_number.phone_number)
+            self.assertEqual(decoded_snr_number_id(after.numbers[0].id).split('(')[-1].strip(')'),
+                             snr_number.phone_number)
         return

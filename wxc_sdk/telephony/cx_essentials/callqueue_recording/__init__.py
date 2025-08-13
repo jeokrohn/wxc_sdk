@@ -4,7 +4,6 @@ from wxc_sdk.person_settings.call_recording import CallRecordingSetting
 __all__ = ['QueueCallRecordingSettingsApi']
 
 
-
 class QueueCallRecordingSettingsApi(ApiChild, base='telephony/config/locations'):
     """
     Queue Call Recording Settings

@@ -19,6 +19,7 @@ from wxc_sdk.tokens import Tokens
 
 SERVICE_APP_ENVS = ('SERVICE_APP_REFRESH_TOKEN', 'SERVICE_APP_CLIENT_ID', 'SERVICE_APP_CLIENT_SECRET')
 
+
 def yml_path(*, client_id: str) -> str:
     """
     Get filename for YML file to cache access and refresh token
@@ -35,7 +36,6 @@ def env_path() -> str:
     file_name = inspect.getframeinfo(frame).filename
     env_name = f'{os.path.splitext(os.path.basename(file_name))[0]}.env'
     return env_name
-
 
 
 def read_tokens_from_file(*, client_id: str) -> Optional[Tokens]:

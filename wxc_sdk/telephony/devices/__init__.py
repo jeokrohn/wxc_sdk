@@ -479,7 +479,7 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         data = self.get(url=url, params=params)
         return DeviceMembersResponse.model_validate(data)
 
-    def update_members(self, device_id: str, members: list[Union[DeviceMember, AvailableMember]]=None,
+    def update_members(self, device_id: str, members: list[Union[DeviceMember, AvailableMember]] = None,
                        org_id: str = None):
         """
         Modify member details on the device.
