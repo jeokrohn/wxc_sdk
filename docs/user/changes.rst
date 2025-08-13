@@ -1,6 +1,8 @@
 Release history
 ===============
 
+1.26.0
+------
 - feat: new API :attr:`api.telephony.hotdesking_voiceportal <wxc_sdk.telephony.TelephonyApi.hotdesking_voiceportal>`
 - feat: new API :attr:`api.telephony.cx_essentials.wrapup_reasons <wxc_sdk.telephony.cx_essentials.CustomerExperienceEssentialsApi.wrapup_reasons>`
 - feat: new API :attr:`api.person_settings.single_number_reach <wxc_sdk.person_settings.PersonSettingsApi.single_number_reach>`
