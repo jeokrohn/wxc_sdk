@@ -98,6 +98,7 @@ class FeatureAccessSettings(ApiModel):
 
 
 class UserFeatureAccessSettings(ApiModel):
+    #: Set whether end users have organization's settings enabled for the user.
     user_org_settings_permission_enabled: Optional[bool] = None
     user_settings_permissions: Optional[FeatureAccessSettings] = None
 
