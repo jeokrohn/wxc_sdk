@@ -168,7 +168,7 @@ class TestCaseWithTokens(TestCase):
     tokens: ClassVar[Tokens]
     async_api: AsWebexSimpleApi = field(default=None)
 
-    # use proxy for all requests; only works for sync API calls
+    # use proxy for all requests
     proxy: ClassVar[bool] = False
     proxy_url: ClassVar[str] = 'http://localhost:9090'
 
