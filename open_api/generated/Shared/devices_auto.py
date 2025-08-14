@@ -59,6 +59,10 @@ class DevicePlatform(str, Enum):
 class Device(ApiModel):
     #: A unique identifier for the device.
     id: Optional[str] = None
+    #: A unique identifier for the device specifically for use with Webex Calling APIs.
+    calling_device_id: Optional[str] = None
+    #: A unique identifier for the device specifically for use with Webex Devices APIs.
+    webex_device_id: Optional[str] = None
     #: A friendly name for the device.
     display_name: Optional[str] = None
     #: The placeId field has been deprecated. Please use workspaceId instead.
