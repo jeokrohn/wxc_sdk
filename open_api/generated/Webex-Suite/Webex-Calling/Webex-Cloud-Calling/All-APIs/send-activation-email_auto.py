@@ -48,7 +48,7 @@ class ExecutionStatus(str, Enum):
 
 class StepExecutionStatus(ApiModel):
     #: Unique identifier of the step
-    id: Optional[float] = None
+    id: Optional[int] = None
     #: Step execution start time in UTC format.
     start_time: Optional[str] = None
     #: Step execution end time in UTC format.
@@ -67,13 +67,13 @@ class StepExecutionStatus(ApiModel):
 
 class BulkActivationEmailResendJobCounts(ApiModel):
     #: Count of users sent an invitation.
-    user_resend_invite_sent: Optional[float] = None
+    user_resend_invite_sent: Optional[int] = None
     #: Count of users who failed to receive an invitation.
-    user_resend_invite_failed: Optional[float] = None
+    user_resend_invite_failed: Optional[int] = None
     #: Count of users who were skipped.
-    user_resend_invite_skipped: Optional[float] = None
+    user_resend_invite_skipped: Optional[int] = None
     #: Total count of users processed.
-    total_users: Optional[float] = None
+    total_users: Optional[int] = None
 
 
 class BulkActivationEmailResendJobDetails(ApiModel):
@@ -90,7 +90,7 @@ class BulkActivationEmailResendJobDetails(ApiModel):
     #: Unique identifier to identify the customer for which the job was run.
     target_customer_id: Optional[str] = None
     #: Unique identifier to identify the instance of the job.
-    instance_id: Optional[float] = None
+    instance_id: Optional[int] = None
     #: Contains the execution statuses of all the steps involved in the execution of the job.
     job_execution_status: Optional[list[StepExecutionStatus]] = None
     #: Indicates the most recent status of the job at the time of invocation.
@@ -121,7 +121,7 @@ class ErrorObject(ApiModel):
 
 class ItemObject(ApiModel):
     #: Index of error.
-    item_number: Optional[float] = None
+    item_number: Optional[int] = None
     #: Unique identifier to track the HTTP request.
     tracking_id: Optional[str] = None
     #: Error details.

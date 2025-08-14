@@ -314,7 +314,7 @@ class ItemObject(ApiModel):
     #: Phone number
     item: Optional[str] = None
     #: Index of error number.
-    item_number: Optional[float] = None
+    item_number: Optional[int] = None
     #: Unique identifier to track the HTTP requests.
     tracking_id: Optional[str] = None
     error: Optional[ErrorObject] = None
@@ -1277,7 +1277,7 @@ class GetMessageSummaryResponse(ApiModel):
     #: The number of old (read) voicemail messages.
     old_messages: Optional[int] = None
     #: The number of new (unread) urgent voicemail messages.
-    new_urgent_messages: Optional[float] = None
+    new_urgent_messages: Optional[int] = None
     #: The number of old (read) urgent voicemail messages.
     old_urgent_messages: Optional[int] = None
 

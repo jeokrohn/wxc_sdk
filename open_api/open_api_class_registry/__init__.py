@@ -175,7 +175,7 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
 
     @staticmethod
     def _schema_type_to_python_type(schema_type: str) -> str:
-        mapping = {'string': 'str', 'integer': 'int', 'number': 'float', 'boolean': 'bool', 'datetime': 'datetime'}
+        mapping = {'string': 'str', 'integer': 'int', 'number': 'int', 'boolean': 'bool', 'datetime': 'datetime'}
         python_type = mapping.get(schema_type)
         return python_type or schema_type
 

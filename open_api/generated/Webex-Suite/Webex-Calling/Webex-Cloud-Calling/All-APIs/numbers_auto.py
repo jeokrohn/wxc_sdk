@@ -29,15 +29,15 @@ class NumberItem(ApiModel):
 
 class CountObject(ApiModel):
     #: The total number of phone numbers requested to be moved.
-    total_numbers: Optional[float] = None
+    total_numbers: Optional[int] = None
     #: The total number of phone numbers successfully deleted.
-    numbers_deleted: Optional[float] = None
+    numbers_deleted: Optional[int] = None
     #: The total number of phone numbers successfully moved.
-    numbers_moved: Optional[float] = None
+    numbers_moved: Optional[int] = None
     #: The total number of phone numbers failed.
-    numbers_failed: Optional[float] = None
+    numbers_failed: Optional[int] = None
     #: Count of phone numbers for which usage changed.
-    numbers_usage_changed: Optional[float] = None
+    numbers_usage_changed: Optional[int] = None
 
 
 class ErrorMessageObject(ApiModel):
@@ -61,7 +61,7 @@ class ItemObject(ApiModel):
     #: Phone number
     item: Optional[str] = None
     #: Index of error number.
-    item_number: Optional[float] = None
+    item_number: Optional[int] = None
     #: Unique identifier to track the HTTP requests.
     tracking_id: Optional[str] = None
     error: Optional[ErrorObject] = None

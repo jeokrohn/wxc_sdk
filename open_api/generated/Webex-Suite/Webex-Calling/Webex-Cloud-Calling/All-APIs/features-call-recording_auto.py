@@ -234,11 +234,11 @@ class LatestExecutionStatus(str, Enum):
 
 class CountObject(ApiModel):
     #: Total number of locations.
-    total_number_of_locations: Optional[float] = None
+    total_number_of_locations: Optional[int] = None
     #: Total number of users.
     total_number_of_users: Optional[int] = None
     #: Failed number of users.
-    failed_users: Optional[float] = None
+    failed_users: Optional[int] = None
     #: Updated number of users.
     updated_users: Optional[int] = None
 
@@ -289,7 +289,7 @@ class ErrorObject(ApiModel):
 
 class ItemObject(ApiModel):
     #: Index of error number.
-    item_number: Optional[float] = None
+    item_number: Optional[int] = None
     #: Unique identifier (UUID) of the error.
     item: Optional[str] = None
     #: Contains error details.
@@ -522,7 +522,7 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         r = data['jobId']
         return r
 
-    def get_call_recording_vendor_users(self, max_: float = None, start: float = None, standard_user_only: bool = None,
+    def get_call_recording_vendor_users(self, max_: int = None, start: int = None, standard_user_only: bool = None,
                                         org_id: str = None) -> CallRecordingVendorUsersResponse:
         """
         Get Call Recording Vendor Users
@@ -537,9 +537,9 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param max_: Limit the number of vendor users returned to this maximum count. The default is 2000.
-        :type max_: float
+        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects. The default is 0.
-        :type start: float
+        :type start: int
         :param standard_user_only: If true, results only include Webex Calling standard users.
         :type standard_user_only: bool
         :param org_id: Retrieve call recording vendor users for this organization.
@@ -848,7 +848,7 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         r = data['jobId']
         return r
 
-    def get_call_recording_vendor_users_for_a_location(self, location_id: str, max_: float = None, start: float = None,
+    def get_call_recording_vendor_users_for_a_location(self, location_id: str, max_: int = None, start: int = None,
                                                        standard_user_only: bool = None,
                                                        org_id: str = None) -> CallRecordingVendorUsersResponse:
         """
@@ -866,9 +866,9 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :param location_id: Retrieve vendor users for this location.
         :type location_id: str
         :param max_: Limit the number of vendor users returned to this maximum count. The default is 2000.
-        :type max_: float
+        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects. The default is 0.
-        :type start: float
+        :type start: int
         :param standard_user_only: If true, results only include Webex Calling standard users.
         :type standard_user_only: bool
         :param org_id: Retrieve vendor users for this organization.

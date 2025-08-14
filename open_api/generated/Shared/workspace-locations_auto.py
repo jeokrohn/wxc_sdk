@@ -29,9 +29,9 @@ class Location(ApiModel):
     #: The location city name.
     city_name: Optional[str] = None
     #: The location latitude.
-    latitude: Optional[float] = None
+    latitude: Optional[int] = None
     #: The location longitude.
-    longitude: Optional[float] = None
+    longitude: Optional[int] = None
     #: Notes associated with the location.
     notes: Optional[str] = None
 
@@ -116,8 +116,8 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         r = TypeAdapter(list[Location]).validate_python(data['items'])
         return r
 
-    def create_a_workspace_location(self, display_name: str, address: str, country_code: str, latitude: float,
-                                    longitude: float, city_name: str = None, notes: str = None) -> Location:
+    def create_a_workspace_location(self, display_name: str, address: str, country_code: str, latitude: int,
+                                    longitude: int, city_name: str = None, notes: str = None) -> Location:
         """
         Create a Workspace Location
 
@@ -137,9 +137,9 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :param country_code: The location country code (ISO 3166-1).
         :type country_code: str
         :param latitude: The location latitude.
-        :type latitude: float
+        :type latitude: int
         :param longitude: The location longitude.
-        :type longitude: float
+        :type longitude: int
         :param city_name: The location city name.
         :type city_name: str
         :param notes: Notes associated with the location.
@@ -203,7 +203,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         return r
 
     def update_a_workspace_location(self, location_id: str, display_name: str, address: str, country_code: str,
-                                    latitude: float, longitude: float, id: str = None, city_name: str = None,
+                                    latitude: int, longitude: int, id: str = None, city_name: str = None,
                                     notes: str = None) -> Location:
         """
         Update a Workspace Location
@@ -229,9 +229,9 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :param country_code: The location country code (ISO 3166-1).
         :type country_code: str
         :param latitude: The location latitude.
-        :type latitude: float
+        :type latitude: int
         :param longitude: The location longitude.
-        :type longitude: float
+        :type longitude: int
         :param id: Unique identifier for the location.
         :type id: str
         :param city_name: The location city name.

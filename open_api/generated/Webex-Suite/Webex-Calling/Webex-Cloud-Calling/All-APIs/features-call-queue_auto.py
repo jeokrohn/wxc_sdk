@@ -1002,7 +1002,7 @@ class ListCallQueueAgentObject(ApiModel):
     #: Denotes the join count for call queue agent.
     join_count: Optional[int] = None
     #: Denotes unjoin count for call queue agent.
-    unjoin_count: Optional[float] = None
+    unjoin_count: Optional[int] = None
     #: The location information.
     location: Optional[LocationObject] = None
     #: The type of the call queue agent.
@@ -2489,8 +2489,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep('queues/agents/availableAgents')
         return self.session.follow_pagination(url=url, model=AvailableAgentObject, item_key='agents', params=params)
 
-    def get_details_for_a_call_queue_agent_with_customer_experience_essentials(self, id: str, max_: float,
-                                                                               start: float,
+    def get_details_for_a_call_queue_agent_with_customer_experience_essentials(self, id: str, max_: int, start: int,
                                                                                has_cx_essentials: bool = None,
                                                                                org_id: str = None) -> GetCallQueueAgentObject:
         """
@@ -2512,9 +2511,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :param id: Retrieve call queue agents with this identifier.
         :type id: str
         :param max_: Limit the number of objects returned to this maximum count.
-        :type max_: float
+        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: float
+        :type start: int
         :param has_cx_essentials: Must be set to `true` to view the details of an agent with Customer Experience
             Essentials license. This can otherwise be ommited or set to `false`.
         :type has_cx_essentials: bool
@@ -2781,8 +2780,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep(f'supervisors/{supervisor_id}')
         super().delete(url, params=params)
 
-    def get_supervisor_detail_with_customer_experience_essentials(self, supervisor_id: str, max_: float = None,
-                                                                  start: float = None, name: str = None,
+    def get_supervisor_detail_with_customer_experience_essentials(self, supervisor_id: str, max_: int = None,
+                                                                  start: int = None, name: str = None,
                                                                   phone_number: str = None, order: str = None,
                                                                   has_cx_essentials: bool = None,
                                                                   org_id: str = None) -> GetSupervisorDetailWithCustomerExperienceEssentialsResponse:
@@ -2801,9 +2800,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :param supervisor_id: List the agents assigned to this supervisor.
         :type supervisor_id: str
         :param max_: Limit the number of objects returned to this maximum count.
-        :type max_: float
+        :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
-        :type start: float
+        :type start: int
         :param name: Only return the agents that match the given name.
         :type name: str
         :param phone_number: Only return agents that match the given phone number, extension, or ESN.
