@@ -19,7 +19,7 @@ __all__ = ['ActionOnRouteList', 'AppliedServices', 'CallDestinationType', 'CallI
            'HostedAgentType', 'HostedFeature', 'LocalGatewayUsageCount', 'LocalGateways',
            'LocationTranslationPatternGet', 'NumberStatus', 'OriginatorType',
            'OutgoingCallingPlanPermissionsByDigitPattern', 'OutgoingCallingPlanPermissionsByType',
-           'OutgoingCallingPlanPermissionsByTypeCallType', 'PbxUser', 'PstnNumber',
+           'OutgoingCallingPlanPermissionsByTypeCallType', 'PChargeInfoSupportPolicyType', 'PbxUser', 'PstnNumber',
            'ReadTheUsageOfARoutingGroupResponse', 'ResponseStatus', 'ResponseStatusType', 'RouteGroup',
            'RouteGroupGet', 'RouteGroupUsageRouteListGet', 'RouteGroupUsageRouteListItem', 'RouteList',
            'RouteListGet', 'RouteListNumberPatch', 'RouteListNumberPatchResponse', 'RouteType', 'ServiceType',
@@ -748,6 +748,19 @@ class Trunk(ApiModel):
     is_restricted_to_dedicated_instance: Optional[bool] = None
 
 
+class PChargeInfoSupportPolicyType(str, Enum):
+    #: The P-Charge-Info header support policy is disabled.
+    disabled = 'DISABLED'
+    #: The P-Charge-Info header is always included in outbound PSTN calls using Webex Calling primary number or
+    #: location’s main number.
+    asserted_identity = 'ASSERTED_IDENTITY'
+    #: The P-Charge-Info header is included in outbound PSTN calls using the originating or redirecting Webex Calling
+    #: entity's location charge number if set, else the entity's primary number if set and not toll-free, else the
+    #: main number of the entity's location if set and not toll-free. If none of these are set or not toll-free, it
+    #: uses the same number as the ASSERTED_IDENTITY option.
+    configurable_charge_number = 'CONFIGURABLE_CHARGE_NUMBER'
+
+
 class TrunkGet(ApiModel):
     #: A unique name for the trunk.
     name: Optional[str] = None
@@ -790,6 +803,7 @@ class TrunkGet(ApiModel):
     max_concurrent_calls: Optional[int] = None
     #: Flag to indicate if the trunk is restricted to a dedicated instance.
     is_restricted_to_dedicated_instance: Optional[bool] = None
+    p_charge_info_support_policy: Optional[PChargeInfoSupportPolicyType] = None
 
 
 class TrunkTypeWithDeviceType(ApiModel):
@@ -2001,7 +2015,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
     def create_a_trunk(self, name: str, location_id: str, password: str, trunk_type: TrunkType,
                        dual_identity_support_enabled: bool = None, device_type: str = None, address: str = None,
                        domain: str = None, port: int = None, max_concurrent_calls: int = None,
-                       org_id: str = None) -> str:
+                       p_charge_info_support_policy: PChargeInfoSupportPolicyType = None, org_id: str = None) -> str:
         """
         Create a Trunk
 
@@ -2035,7 +2049,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type port: int
         :param max_concurrent_calls: Max Concurrent call. Required to create a static certificate based trunk.
         :type max_concurrent_calls: int
-        :param org_id: Organization to which trunk belongs.
+        :type p_charge_info_support_policy: PChargeInfoSupportPolicyType
+        :param org_id: Organization to which the trunk belongs.
         :type org_id: str
         :rtype: str
         """
@@ -2059,6 +2074,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
             body['port'] = port
         if max_concurrent_calls is not None:
             body['maxConcurrentCalls'] = max_concurrent_calls
+        if p_charge_info_support_policy is not None:
+            body['pChargeInfoSupportPolicy'] = enum_str(p_charge_info_support_policy)
         url = self.ep('premisePstn/trunks')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -2183,7 +2200,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         return r
 
     def modify_a_trunk(self, trunk_id: str, name: str, password: str, dual_identity_support_enabled: bool = None,
-                       max_concurrent_calls: int = None, org_id: str = None):
+                       max_concurrent_calls: int = None,
+                       p_charge_info_support_policy: PChargeInfoSupportPolicyType = None, org_id: str = None):
         """
         Modify a Trunk
 
@@ -2207,6 +2225,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type dual_identity_support_enabled: bool
         :param max_concurrent_calls: Max Concurrent call. Required to create a static certificate-based trunk.
         :type max_concurrent_calls: int
+        :type p_charge_info_support_policy: PChargeInfoSupportPolicyType
         :param org_id: Organization to which trunk belongs.
         :type org_id: str
         :rtype: None
@@ -2221,6 +2240,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
             body['dualIdentitySupportEnabled'] = dual_identity_support_enabled
         if max_concurrent_calls is not None:
             body['maxConcurrentCalls'] = max_concurrent_calls
+        if p_charge_info_support_policy is not None:
+            body['pChargeInfoSupportPolicy'] = enum_str(p_charge_info_support_policy)
         url = self.ep(f'premisePstn/trunks/{trunk_id}')
         super().put(url, params=params, json=body)
 

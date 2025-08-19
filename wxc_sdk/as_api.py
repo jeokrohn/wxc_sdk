@@ -24493,7 +24493,8 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
 
     async def create(self, name: str, location_id: str, password: str, trunk_type: TrunkType = TrunkType.registering,
                dual_identity_support_enabled: bool = None, device_type: TrunkDeviceType = None, address: str = None,
-               domain: str = None, port: int = None, max_concurrent_calls: int = None, org_id: str = None) -> str:
+               domain: str = None, port: int = None, max_concurrent_calls: int = None,
+               p_charge_info_support_policy: PChargeInfoSupportPolicy = None, org_id: str = None) -> str:
         """
         Create a Trunk for the organization.
 
@@ -24524,14 +24525,33 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         :type port: int
         :param max_concurrent_calls: Max Concurrent call. Required to create a static certificate based trunk.
         :type max_concurrent_calls: int
+        :param p_charge_info_support_policy: P-Charge Info Support policy.
+        :type p_charge_info_support_policy: PChargeInfoSupportPolicy
         :param org_id: Organization to which trunk belongs.
         :type org_id: str
         :return: id of new trunk
         :rtype: str
         """
-        body = {to_camel(p): v for p, v in locals().items()
-                if p not in {'self', 'org_id'} and v is not None}
         params = org_id and {'orgId': org_id} or None
+        body = dict()
+        body['name'] = name
+        body['locationId'] = location_id
+        body['password'] = password
+        if dual_identity_support_enabled is not None:
+            body['dualIdentitySupportEnabled'] = dual_identity_support_enabled
+        body['trunkType'] = enum_str(trunk_type)
+        if device_type is not None:
+            body['deviceType'] = device_type
+        if address is not None:
+            body['address'] = address
+        if domain is not None:
+            body['domain'] = domain
+        if port is not None:
+            body['port'] = port
+        if max_concurrent_calls is not None:
+            body['maxConcurrentCalls'] = max_concurrent_calls
+        if p_charge_info_support_policy is not None:
+            body['pChargeInfoSupportPolicy'] = enum_str(p_charge_info_support_policy)
         url = self.ep()
         data = await self.post(url=url, params=params, json=body)
         return data['id']
@@ -24560,7 +24580,8 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         return TrunkDetail.model_validate(data)
 
     async def update(self, trunk_id: str, name: str, password: str, dual_identity_support_enabled: bool = None,
-               max_concurrent_calls: int = None, org_id: str = None):
+               max_concurrent_calls: int = None, p_charge_info_support_policy: PChargeInfoSupportPolicy = None,
+               org_id: str = None):
         """
         Modify a Trunk for the organization.
 
@@ -24579,6 +24600,8 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         :type dual_identity_support_enabled: bool
         :param max_concurrent_calls: Max Concurrent call. Required to create a static certificate based trunk.
         :type max_concurrent_calls: int
+        :param p_charge_info_support_policy: P-Charge Info Support policy.
+        :type p_charge_info_support_policy: PChargeInfoSupportPolicy
         :param org_id: Organization to which trunk belongs.
         :type org_id: str:return:
         """
@@ -24592,6 +24615,8 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
             body['dualIdentitySupportEnabled'] = dual_identity_support_enabled
         if max_concurrent_calls is not None:
             body['maxConcurrentCalls'] = max_concurrent_calls
+        if p_charge_info_support_policy is not None:
+            body['pChargeInfoSupportPolicy'] = enum_str(p_charge_info_support_policy)
         url = self.ep(trunk_id)
         await self.put(url=url, params=params, json=body)
 
