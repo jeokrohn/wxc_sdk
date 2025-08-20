@@ -64,7 +64,7 @@ class PersonalAssistantGet(ApiModel):
     alert_me_first_number_of_rings: Optional[int] = None
 
 
-class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me/settings/personalAssistant'):
+class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me/settings'):
     """
     Call Settings For Me
     
@@ -87,7 +87,7 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me/settings/p
 
         :rtype: :class:`PersonalAssistantGet`
         """
-        url = self.ep()
+        url = self.ep('personalAssistant')
         data = super().get(url)
         r = PersonalAssistantGet.model_validate(data)
         return r
@@ -136,5 +136,50 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me/settings/p
             body['alerting'] = enum_str(alerting)
         if alert_me_first_number_of_rings is not None:
             body['alertMeFirstNumberOfRings'] = alert_me_first_number_of_rings
-        url = self.ep()
+        url = self.ep('personalAssistant')
+        super().put(url, json=body)
+
+    def get_my_webex_go_override_settings(self) -> bool:
+        """
+        Get My WebexGoOverride Settings
+
+        Retrieve "Mobile User Aware" override setting for Do Not Disturb feature.
+
+        When enabled, a mobile device will still ring even if Do Not Disturb, Quiet Hours, or Presenting Status are
+        enabled.
+
+        When disabled, a mobile device will return busy for all incoming calls if Do Not Disturb, Quiet Hours, or
+        Presenting Status are enabled.
+
+        It requires a user auth token with `spark:telephony_config_read` scope.
+
+        :rtype: bool
+        """
+        url = self.ep('webexGoOverride')
+        data = super().get(url)
+        r = data['enabled']
+        return r
+
+    def update_my_webex_go_override_settings(self, enabled: bool = None):
+        """
+        Update My WebexGoOverride Settings
+
+        Update "Mobile User Aware" override setting for Do Not Disturb feature.
+
+        When enabled, a mobile device will still ring even if Do Not Disturb, Quiet Hours, or Presenting Status are
+        enabled.
+
+        When disabled, a mobile device will return busy for all incoming calls if Do Not Disturb, Quiet Hours, or
+        Presenting Status are enabled.
+
+        It requires a user auth token with the `spark:telephony_config_write` scope.
+
+        :param enabled: True if the "Mobile User Aware" override setting for Do Not Disturb feature is enabled.
+        :type enabled: bool
+        :rtype: None
+        """
+        body = dict()
+        if enabled is not None:
+            body['enabled'] = enabled
+        url = self.ep('webexGoOverride')
         super().put(url, json=body)

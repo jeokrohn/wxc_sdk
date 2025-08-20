@@ -1,32 +1,12 @@
 """
 Test Personal Assistant settings for me APIs
 """
-from contextlib import contextmanager
-from random import choice
 
-from tests.base import UserTokens, TestCaseWithUsers
+from tests.base import TestWithRandomUserApi
 from wxc_sdk import WebexSimpleApi
-from wxc_sdk.all_types import *
 
 
-class TestMePersonalAssistant(UserTokens, TestCaseWithUsers):
-    def random_user(self) -> Person:
-        """
-        Get a random user except admin
-        """
-        candidates = [user for user in self.users if not user.emails[0].startswith('admin')]
-        return choice(candidates)
-
-    @contextmanager
-    def user_api(self, user: Person):
-        """
-        get user api and set HAR writer
-        """
-        tokens = self.get_user_tokens(user.person_id)
-        with WebexSimpleApi(tokens=tokens) as api:
-            self.har_writer.register_webex_api(api)
-            yield api
-
+class TestMePersonalAssistant(TestWithRandomUserApi):
     def test_get(self):
         """
         Test get personal assistant settings

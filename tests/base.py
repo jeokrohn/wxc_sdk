@@ -62,7 +62,8 @@ log = logging.getLogger(__name__)
 
 __all__ = ['TestCaseWithTokens', 'TestCaseWithLog', 'gather', 'TestWithLocations', 'TestCaseWithUsers', 'get_tokens',
            'async_test', 'LoggedRequest', 'TestCaseWithUsersAndSpaces', 'WithIntegrationTokens',
-           'TestLocationsUsersWorkspacesVirtualLines', 'TestWithTarget', 'TestWithProfessionalWorkspace', 'UserTokens']
+           'TestLocationsUsersWorkspacesVirtualLines', 'TestWithTarget', 'TestWithProfessionalWorkspace', 'UserTokens',
+           'TestWithRandomUserApi']
 
 SKIP_TESTS_WITH_EXISTING_LOGS = False
 
@@ -1158,3 +1159,23 @@ class UserTokens(TestCaseWithLog):
             log.error('Failed to obtain tokens')
             return None
         return new_tokens
+
+class TestWithRandomUserApi(UserTokens, TestCaseWithUsers):
+    def random_user(self) -> Person:
+        """
+        Get a random user except admin
+        """
+        candidates = [user for user in self.users if not user.emails[0].startswith('admin')]
+        user: Person = random.choice(candidates)
+        print(f'Using user {user.display_name} for testing')
+        return user
+
+    @contextmanager
+    def user_api(self, user: Person):
+        """
+        get user api and set HAR writer
+        """
+        tokens = self.get_user_tokens(user.person_id)
+        with WebexSimpleApi(tokens=tokens) as api:
+            self.har_writer.register_webex_api(api)
+            yield api

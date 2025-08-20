@@ -183,6 +183,10 @@ The method name is a link to the method documentation.
         Update details for a location, by ID
    * - :meth:`api.locations.update_floor <wxc_sdk.locations.LocationsApi.update_floor>`
         Update a Location Floor
+   * - :meth:`api.me.go_override.get <wxc_sdk.me.go_override.GoOverrideApi.get>`
+        Get My WebexGoOverride Settings
+   * - :meth:`api.me.go_override.update <wxc_sdk.me.go_override.GoOverrideApi.update>`
+        Update My WebexGoOverride Settings
    * - :meth:`api.me.personal_assistant.get <wxc_sdk.me.personal_assistant.MePersonalAssistantApi.get>`
         Get My Personal Assistant
    * - :meth:`api.me.personal_assistant.update <wxc_sdk.me.personal_assistant.MePersonalAssistantApi.update>`

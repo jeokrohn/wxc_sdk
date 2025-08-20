@@ -40,21 +40,21 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsConferenceControlsApi', 'AsConvergedRecordingsApi', 'AsCustomerExperienceEssentialsApi',
            'AsDECTDevicesApi', 'AsDetailedCDRApi', 'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi',
            'AsDevicesApi', 'AsDialPlanApi', 'AsDigitPatternsApi', 'AsDndApi', 'AsECBNApi', 'AsEventsApi',
-           'AsExecAssistantApi', 'AsFeatureAccessApi', 'AsFeatureSelector', 'AsForwardingApi', 'AsGroupsApi',
-           'AsGuestCallingApi', 'AsGuestManagementApi', 'AsHotDeskApi', 'AsHotDeskingSigninViaVoicePortalApi',
-           'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi',
-           'AsLicensesApi', 'AsLocationAccessCodesApi', 'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi',
-           'AsLocationMoHApi', 'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi',
-           'AsMSTeamsSettingApi', 'AsManageNumbersJobsApi', 'AsMePersonalAssistantApi', 'AsMeSettingsApi',
-           'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
-           'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi',
-           'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsModeManagementApi', 'AsMonitoringApi',
-           'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOperatingModesApi',
-           'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi', 'AsOrganisationAccessCodesApi',
-           'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOrganizationContactsApi',
-           'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi',
-           'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPersonalAssistantApi', 'AsPlayListApi',
-           'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
+           'AsExecAssistantApi', 'AsFeatureAccessApi', 'AsFeatureSelector', 'AsForwardingApi', 'AsGoOverrideApi',
+           'AsGroupsApi', 'AsGuestCallingApi', 'AsGuestManagementApi', 'AsHotDeskApi',
+           'AsHotDeskingSigninViaVoicePortalApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi',
+           'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationAccessCodesApi',
+           'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi', 'AsLocationNumbersApi',
+           'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMSTeamsSettingApi', 'AsManageNumbersJobsApi',
+           'AsMePersonalAssistantApi', 'AsMeSettingsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi',
+           'AsMeetingInviteesApi', 'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi',
+           'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi',
+           'AsModeManagementApi', 'AsMonitoringApi', 'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi',
+           'AsOperatingModesApi', 'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi',
+           'AsOrganisationAccessCodesApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi',
+           'AsOrganizationContactsApi', 'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi',
+           'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPersonalAssistantApi',
+           'AsPlayListApi', 'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
            'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsQueueCallRecordingSettingsApi',
            'AsRebuildPhonesJobsApi', 'AsReceptionistApi', 'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi',
            'AsReportsApi', 'AsRestSession', 'AsRolesApi', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi',
@@ -3914,6 +3914,54 @@ class AsLocationsApi(AsApiChild, base='locations'):
         await super().delete(url)
 
 
+class AsGoOverrideApi(AsApiChild, base='telephony/config/people/me/settings/webexGoOverride'):
+
+    async def get(self) -> bool:
+        """
+        Get My WebexGoOverride Settings
+
+        Retrieve "Mobile User Aware" override setting for Do Not Disturb feature.
+
+        When enabled, a mobile device will still ring even if Do Not Disturb, Quiet Hours, or Presenting Status are
+        enabled.
+
+        When disabled, a mobile device will return busy for all incoming calls if Do Not Disturb, Quiet Hours, or
+        Presenting Status are enabled.
+
+        It requires a user auth token with `spark:telephony_config_read` scope.
+
+        :rtype: bool
+        """
+        url = self.ep()
+        data = await super().get(url)
+        r = data['enabled']
+        return r
+
+    async def update(self, enabled: bool = None):
+        """
+        Update My WebexGoOverride Settings
+
+        Update "Mobile User Aware" override setting for Do Not Disturb feature.
+
+        When enabled, a mobile device will still ring even if Do Not Disturb, Quiet Hours, or Presenting Status are
+        enabled.
+
+        When disabled, a mobile device will return busy for all incoming calls if Do Not Disturb, Quiet Hours, or
+        Presenting Status are enabled.
+
+        It requires a user auth token with the `spark:telephony_config_write` scope.
+
+        :param enabled: True if the "Mobile User Aware" override setting for Do Not Disturb feature is enabled.
+        :type enabled: bool
+        :rtype: None
+        """
+        body = dict()
+        if enabled is not None:
+            body['enabled'] = enabled
+        url = self.ep()
+        await super().put(url, json=body)
+
+
 class AsMePersonalAssistantApi(AsApiChild, base='telephony/config/people/me/settings/personalAssistant'):
     """
     Personal Assistant Settings For Me
@@ -3973,6 +4021,7 @@ class AsMeSettingsApi(AsApiChild, base='people'):
     """
 
     personal_assistant: AsMePersonalAssistantApi
+    go_override: AsGoOverrideApi
 
     def __init__(self, session: AsRestSession):
         """
@@ -3980,6 +4029,7 @@ class AsMeSettingsApi(AsApiChild, base='people'):
         :meta private:
         """
         super().__init__(session=session)
+        self.go_override = AsGoOverrideApi(session=session)
         self.personal_assistant = AsMePersonalAssistantApi(session=session)
 
 

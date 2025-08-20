@@ -12,4 +12,5 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   wxc_sdk.me.go_override
    wxc_sdk.me.personal_assistant

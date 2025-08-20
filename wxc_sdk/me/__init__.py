@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from wxc_sdk.me.go_override import GoOverrideApi
 from wxc_sdk.rest import RestSession
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.me.personal_assistant import MePersonalAssistantApi
@@ -18,6 +19,7 @@ class MeSettingsApi(ApiChild, base='people'):
     """
 
     personal_assistant: MePersonalAssistantApi
+    go_override: GoOverrideApi
 
     def __init__(self, session: RestSession):
         """
@@ -25,4 +27,5 @@ class MeSettingsApi(ApiChild, base='people'):
         :meta private:
         """
         super().__init__(session=session)
+        self.go_override = GoOverrideApi(session=session)
         self.personal_assistant = MePersonalAssistantApi(session=session)
