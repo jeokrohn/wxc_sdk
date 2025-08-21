@@ -12,7 +12,8 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __all__ = ['ActivationCode', 'Device', 'DeviceCapabilities', 'DeviceConnectionStatus', 'DevicePermissions',
-           'DevicePlatform', 'DevicesApi', 'ManagedBy', 'NetworkConnectivityType', 'Op', 'Product', 'Type']
+           'DevicePlatform', 'DevicesApi', 'MaintenanceMode', 'ManagedBy', 'NetworkConnectivityType', 'Op', 'Product',
+           'Type']
 
 
 class ActivationCode(ApiModel):
@@ -54,6 +55,12 @@ class ManagedBy(str, Enum):
 class DevicePlatform(str, Enum):
     cisco = 'cisco'
     microsoft_teams_room = 'microsoftTeamsRoom'
+
+
+class MaintenanceMode(str, Enum):
+    off = 'off'
+    on = 'on'
+    upcoming = 'upcoming'
 
 
 class Device(ApiModel):
@@ -118,6 +125,7 @@ class Device(ApiModel):
     managed_by: Optional[ManagedBy] = None
     #: The device platform.
     device_platform: Optional[DevicePlatform] = None
+    planned_maintenance: Optional[MaintenanceMode] = None
 
 
 class Product(str, Enum):
@@ -176,7 +184,8 @@ class DevicesApi(ApiChild, base='devices'):
                      tag: str = None, software: str = None, upgrade_channel: str = None, error_code: str = None,
                      capability: DeviceCapabilities = None, permission: str = None, location_id: str = None,
                      workspace_location_id: str = None, mac: str = None, device_platform: DevicePlatform = None,
-                     org_id: str = None, **params) -> Generator[Device, None, None]:
+                     planned_maintenance: MaintenanceMode = None, org_id: str = None,
+                     **params) -> Generator[Device, None, None]:
         """
         List Devices
 
@@ -236,6 +245,9 @@ class DevicesApi(ApiChild, base='devices'):
         :param device_platform:
         List devices with this device platform.
         :type device_platform: DevicePlatform
+        :param planned_maintenance:
+        List devices with this planned maintenance.
+        :type planned_maintenance: MaintenanceMode
         :param org_id:
         List devices in this organization. Only admin users of another organization (such as partners) may use this
         parameter.
@@ -278,6 +290,8 @@ class DevicesApi(ApiChild, base='devices'):
             params['mac'] = mac
         if device_platform is not None:
             params['devicePlatform'] = enum_str(device_platform)
+        if planned_maintenance is not None:
+            params['plannedMaintenance'] = enum_str(planned_maintenance)
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Device, item_key='items', params=params)
 

@@ -1418,7 +1418,7 @@ class AsDevicesApi(AsApiChild, base='devices'):
              product_type: ProductType = None, tag: str = None, connection_status: ConnectionStatus = None,
              serial: str = None, software: str = None, upgrade_channel: str = None, error_code: str = None,
              capability: str = None, permission: str = None, mac: str = None, device_platform: DevicePlatform = None,
-             org_id: str = None, **params) -> AsyncGenerator[Device, None, None]:
+             planned_maintenance: MaintenanceMode = None, org_id: str = None, **params) -> AsyncGenerator[Device, None, None]:
         """
         List Devices
 
@@ -1462,15 +1462,50 @@ class AsDevicesApi(AsApiChild, base='devices'):
         :type device_platform: DevicePlatform
         :param org_id: List devices in this organization. Only admin users of another organization (such as partners)
             may use this parameter.
+        :param planned_maintenance:
+        List devices with this planned maintenance.
+        :type planned_maintenance: MaintenanceMode
         :type org_id: str
         :return: Generator yielding :class:`Device` instances
         """
-        params.update((to_camel(p), enum_str(v))
-                      for p, v in locals().items()
-                      if p not in {'self', 'params'} and v is not None)
-        pt = params.pop('productType', None)
-        if pt is not None:
-            params['type'] = pt
+        if display_name is not None:
+            params['displayName'] = display_name
+        if person_id is not None:
+            params['personId'] = person_id
+        if workspace_id is not None:
+            params['workspaceId'] = workspace_id
+        if org_id is not None:
+            params['orgId'] = org_id
+        if connection_status is not None:
+            params['connectionStatus'] = connection_status
+        if product is not None:
+            params['product'] = enum_str(product)
+        if product_type is not None:
+            params['type'] = enum_str(product_type)
+        if serial is not None:
+            params['serial'] = serial
+        if tag is not None:
+            params['tag'] = tag
+        if software is not None:
+            params['software'] = software
+        if upgrade_channel is not None:
+            params['upgradeChannel'] = upgrade_channel
+        if error_code is not None:
+            params['errorCode'] = error_code
+        if capability is not None:
+            params['capability'] = enum_str(capability)
+        if permission is not None:
+            params['permission'] = permission
+        if location_id is not None:
+            params['locationId'] = location_id
+        if workspace_location_id is not None:
+            params['workspaceLocationId'] = workspace_location_id
+        if mac is not None:
+            params['mac'] = mac
+        if device_platform is not None:
+            params['devicePlatform'] = enum_str(device_platform)
+        if planned_maintenance is not None:
+            params['plannedMaintenance'] = enum_str(planned_maintenance)
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Device, params=params, item_key='items')
 
@@ -1479,7 +1514,7 @@ class AsDevicesApi(AsApiChild, base='devices'):
              product_type: ProductType = None, tag: str = None, connection_status: ConnectionStatus = None,
              serial: str = None, software: str = None, upgrade_channel: str = None, error_code: str = None,
              capability: str = None, permission: str = None, mac: str = None, device_platform: DevicePlatform = None,
-             org_id: str = None, **params) -> List[Device]:
+             planned_maintenance: MaintenanceMode = None, org_id: str = None, **params) -> List[Device]:
         """
         List Devices
 
@@ -1523,15 +1558,50 @@ class AsDevicesApi(AsApiChild, base='devices'):
         :type device_platform: DevicePlatform
         :param org_id: List devices in this organization. Only admin users of another organization (such as partners)
             may use this parameter.
+        :param planned_maintenance:
+        List devices with this planned maintenance.
+        :type planned_maintenance: MaintenanceMode
         :type org_id: str
         :return: Generator yielding :class:`Device` instances
         """
-        params.update((to_camel(p), enum_str(v))
-                      for p, v in locals().items()
-                      if p not in {'self', 'params'} and v is not None)
-        pt = params.pop('productType', None)
-        if pt is not None:
-            params['type'] = pt
+        if display_name is not None:
+            params['displayName'] = display_name
+        if person_id is not None:
+            params['personId'] = person_id
+        if workspace_id is not None:
+            params['workspaceId'] = workspace_id
+        if org_id is not None:
+            params['orgId'] = org_id
+        if connection_status is not None:
+            params['connectionStatus'] = connection_status
+        if product is not None:
+            params['product'] = enum_str(product)
+        if product_type is not None:
+            params['type'] = enum_str(product_type)
+        if serial is not None:
+            params['serial'] = serial
+        if tag is not None:
+            params['tag'] = tag
+        if software is not None:
+            params['software'] = software
+        if upgrade_channel is not None:
+            params['upgradeChannel'] = upgrade_channel
+        if error_code is not None:
+            params['errorCode'] = error_code
+        if capability is not None:
+            params['capability'] = enum_str(capability)
+        if permission is not None:
+            params['permission'] = permission
+        if location_id is not None:
+            params['locationId'] = location_id
+        if workspace_location_id is not None:
+            params['workspaceLocationId'] = workspace_location_id
+        if mac is not None:
+            params['mac'] = mac
+        if device_platform is not None:
+            params['devicePlatform'] = enum_str(device_platform)
+        if planned_maintenance is not None:
+            params['plannedMaintenance'] = enum_str(planned_maintenance)
         url = self.ep()
         return [o async for o in self.session.follow_pagination(url=url, model=Device, params=params, item_key='items')]
 
