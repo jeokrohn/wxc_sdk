@@ -13,10 +13,10 @@ from wxc_sdk.common import AcdCustomization, AlternateNumber, AnnAudioFile, Anno
     DeviceCustomization, DeviceCustomizations, DevicePlatform, DeviceType, DialPatternStatus, DialPatternValidate, \
     DirectoryMethod, DisplayCallqueueAgentSoftkey, DisplayNameSelection, EnabledAndValue, EnhancedMulticast, \
     Greeting, HttpProxy, HttpProxyMode, IdAndName, IdOnly, LineKeyLabelSelection, LineKeyLedPattern, LinkRelation, \
-    LoggingLevel, MediaFileType, MonitoredMember, MppCustomization, MppVlanDevice, Multicast, NoiseCancellation, \
-    NumberOwner, NumberState, OwnerType, PatternAction, PersonPlaceAgent, PhoneLanguage, PrimaryOrShared, \
-    PskObject, RingPattern, RoomType, RouteIdentity, RouteType, SoftKeyLayout, SoftKeyMenu, StorageType, \
-    UsbPortsObject, UserBase, UserLicenseType, UserNumber, UserType, ValidateExtensionStatus, \
+    LoggingLevel, MaintenanceMode, MediaFileType, MonitoredMember, MppCustomization, MppVlanDevice, Multicast, \
+    NoiseCancellation, NumberOwner, NumberState, OwnerType, PatternAction, PersonPlaceAgent, PhoneLanguage, \
+    PrimaryOrShared, PskObject, RingPattern, RoomType, RouteIdentity, RouteType, SoftKeyLayout, SoftKeyMenu, \
+    StorageType, UsbPortsObject, UserBase, UserLicenseType, UserNumber, UserType, ValidateExtensionStatus, \
     ValidateExtensionStatusState, ValidateExtensionsResponse, ValidatePhoneNumberStatus, \
     ValidatePhoneNumberStatusState, ValidatePhoneNumbersResponse, ValidationStatus, VlanSetting, \
     VoicemailCopyOfMessage, VoicemailEnabled, VoicemailFax, VoicemailMessageStorage, VoicemailNotifications, \
@@ -324,14 +324,14 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationEm
            'LocationCallParkSettings', 'LocationComplianceAnnouncement', 'LocationECBN', 'LocationECBNLocation',
            'LocationECBNLocationMember', 'LocationEmergencyCallNotification', 'LocationMoHGreetingType',
            'LocationMoHSetting', 'LocationVoiceMailSettings', 'LoggingLevel', 'MACState', 'MACStatus',
-           'MACValidationResponse', 'MSTeamsSettings', 'ManagedBy', 'ManagedGroup', 'ManagedOrg', 'ManagerObject',
-           'MediaFileType', 'MediaSessionQuality', 'Meeting', 'MeetingCallType', 'MeetingDevice', 'MeetingOptions',
-           'MeetingPreferenceDetails', 'MeetingService', 'MeetingState', 'MeetingTelephony', 'MeetingType',
-           'MeetingsSite', 'MemberCommon', 'Membership', 'MembershipsData', 'MenuKey', 'Message', 'MessageAttachment',
-           'MessageSummary', 'MessagesData', 'Meta', 'MetaObjectResourceType', 'MoHConfig', 'MoHTheme',
-           'ModeDefaultForwardToSelection', 'ModeForward', 'ModeForwardTo', 'ModeManagementFeature', 'ModeType',
-           'MohMessageSetting', 'MonitoredElement', 'MonitoredElementMember', 'MonitoredMember', 'Monitoring',
-           'Month', 'MoveCounts', 'MoveNumberCounts', 'MoveUser', 'MoveUserJobDetails', 'MoveUsersList',
+           'MACValidationResponse', 'MSTeamsSettings', 'MaintenanceMode', 'ManagedBy', 'ManagedGroup', 'ManagedOrg',
+           'ManagerObject', 'MediaFileType', 'MediaSessionQuality', 'Meeting', 'MeetingCallType', 'MeetingDevice',
+           'MeetingOptions', 'MeetingPreferenceDetails', 'MeetingService', 'MeetingState', 'MeetingTelephony',
+           'MeetingType', 'MeetingsSite', 'MemberCommon', 'Membership', 'MembershipsData', 'MenuKey', 'Message',
+           'MessageAttachment', 'MessageSummary', 'MessagesData', 'Meta', 'MetaObjectResourceType', 'MoHConfig',
+           'MoHTheme', 'ModeDefaultForwardToSelection', 'ModeForward', 'ModeForwardTo', 'ModeManagementFeature',
+           'ModeType', 'MohMessageSetting', 'MonitoredElement', 'MonitoredElementMember', 'MonitoredMember',
+           'Monitoring', 'Month', 'MoveCounts', 'MoveNumberCounts', 'MoveUser', 'MoveUserJobDetails', 'MoveUsersList',
            'MppCustomization', 'MppVlanDevice', 'Multicast', 'MusicOnHold', 'NameObject', 'NetworkConnectionType',
            'NetworkType', 'NightService', 'NoAnswer', 'NoiseCancellation', 'NoteType', 'Notification',
            'NotificationRepeat', 'NotificationType', 'NumberAddError', 'NumberAddResponse', 'NumberAndAction',

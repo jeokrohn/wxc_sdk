@@ -27,7 +27,7 @@ __all__ = ['WorkSpaceType', 'CallingType', 'CalendarType', 'WorkspaceEmail', 'Ca
            'HotdeskingStatus', 'WorkspaceIndoorNavigation', 'WorkspaceHealthLevel', 'WorkspaceHealthIssue',
            'WorkspaceHealth', 'Workspace', 'SupportAndConfiguredInfo', 'CapabilityMap', 'WorkspacesApi']
 
-from ..common import DevicePlatform
+from ..common import DevicePlatform, MaintenanceMode
 from ..devices import Device
 
 
@@ -171,87 +171,13 @@ class WorkspaceHealth(ApiModel):
     issues: Optional[list[WorkspaceHealthIssue]] = None
 
 
-class Workspace(ApiModel):
-    """
-    Workspace details
-    """
-    #: Unique identifier for the Workspace.
-    workspace_id: Optional[str] = Field(alias='id', default=None)
-    #: OrgId associate with the workspace.
-    org_id: Optional[str] = None
-    #: Location associated with the workspace.
-    workspace_location_id: Optional[str] = None
-    #: Location associated with the workspace (ID to use for the `/locations API
-    #: <https://developer.webex.com/docs/api/v1/locations>`_).
-    location_id: Optional[str] = None
-    #: Floor associated with the workspace.
-    floor_id: Optional[str] = None
-    #: A friendly name for the workspace.
-    display_name: Optional[str] = None
-    #: How many people the workspace is suitable for.
-    capacity: Optional[int] = None
-    #: The workspace type.
-    workspace_type: Optional[WorkSpaceType] = Field(alias='type', default=None)
-    #: SipUrl to call all the devices associated with the workspace.
-    sip_address: Optional[str] = None
-    #: The date and time that the workspace was registered
-    created: Optional[datetime.datetime] = None
-    #: Calling type.
-    calling: Optional[WorkspaceCalling] = None
-    #: The hybridCalling object only applies when calling type is hybridCalling.
-    hybrid_calling: Optional[WorkspaceEmail] = None
-    #: Calendar type. Calendar of type none does not include an emailAddress field.
-    calendar: Optional[Calendar] = None
-    #: Notes associated to the workspace.
-    notes: Optional[str] = None
-    #: Hot desking status of the workspace.
-    hotdesking_status: Optional[HotdeskingStatus] = None
-    device_hosted_meetings: Optional[DeviceHostedMeetings] = None
-    #: The supported devices for the workspace.
-    supported_devices: Optional[WorkspaceSupportedDevices] = None
-    #: The device platform.
-    device_platform: Optional[DevicePlatform] = None
-    #: Indoor navigation configuration.
-    indoor_navigation: Optional[WorkspaceIndoorNavigation] = None
-    #: TODO: undocumented: WXCAPIBULK-720
-    planned_maintenance: Optional[dict]
-    #: The health of the workspace.
-    health: Optional[WorkspaceHealth] = None
-    #: A list of devices associated with the workspace.
-    devices: Optional[list[Device]] = None
-
-    def update_or_create(self, for_update: bool = False) -> dict:
-        """
-        JSON for update or create
-
-        :meta private:
-        """
-        # supported device cannot be changed later
-        return self.model_dump(mode='json',
-                               exclude_unset=True,
-                               exclude_none=True,
-                               by_alias=True,
-                               exclude={'workspace_id': True,
-                                        'org_id': True,
-                                        'sip_address': True,
-                                        'created': True,
-                                        'hybrid_calling': True,
-                                        'health': True,
-                                        'devices': True,
-                                        # only include workspace_location_id if no location_id is given
-                                        # location_id is the preferred/new way of setting the location
-                                        'workspace_location_id': not (self.workspace_location_id and
-                                                                      not self.location_id),
-                                        'supported_devices': for_update})
-
-    @staticmethod
-    def create(*, display_name: str) -> 'Workspace':
-        """
-        minimal settings for a :meth:`WorkspacesApi.create` call
-
-        :return: :class:`Workspace`
-        """
-        return Workspace(display_name=display_name)
+class WorkspacePlannedMaintenance(ApiModel):
+    #: The planned maintenance mode for the workspace
+    mode: Optional[MaintenanceMode] = None
+    #: The start of the planned maintenance period.
+    start_time: Optional[datetime.datetime] = None
+    #: The end of the planned maintenance period.
+    end_time: Optional[datetime.datetime] = None
 
 
 class SupportAndConfiguredInfo(ApiModel):
@@ -276,6 +202,97 @@ class CapabilityMap(ApiModel):
     air_quality: Optional[SupportAndConfiguredInfo] = None
     #: Relative humidity.
     relative_humidity: Optional[SupportAndConfiguredInfo] = None
+    hot_desking: Optional[SupportAndConfiguredInfo] = None
+    check_in: Optional[SupportAndConfiguredInfo] = None
+    adhoc_booking: Optional[SupportAndConfiguredInfo] = None
+
+
+class Workspace(ApiModel):
+    """
+    Workspace details
+    """
+    #: Unique identifier for the Workspace.
+    workspace_id: Optional[str] = Field(alias='id', default=None)
+    #: OrgId associate with the workspace.
+    org_id: Optional[str] = None
+    #: Location associated with the workspace (ID to use for the `/locations API
+    #: <https://developer.webex.com/docs/api/v1/locations>`_).
+    location_id: Optional[str] = None
+    #: Legacy workspace location ID associated with the workspace. Prefer `locationId`.
+    workspace_location_id: Optional[str] = None
+    #: Floor associated with the workspace.
+    floor_id: Optional[str] = None
+    #: A friendly name for the workspace.
+    display_name: Optional[str] = None
+    #: How many people the workspace is suitable for.
+    capacity: Optional[int] = None
+    #: The workspace type.
+    workspace_type: Optional[WorkSpaceType] = Field(alias='type', default=None)
+    #: SipUrl to call all the devices associated with the workspace.
+    sip_address: Optional[str] = None
+    #: The date and time that the workspace was registered
+    created: Optional[datetime.datetime] = None
+    #: Calling type.
+    calling: Optional[WorkspaceCalling] = None
+    #: The hybridCalling object only applies when calling type is hybridCalling.
+    hybrid_calling: Optional[WorkspaceEmail] = None
+    #: Calendar type. Calendar of type none does not include an emailAddress field.
+    calendar: Optional[Calendar] = None
+    #: Notes associated to the workspace.
+    notes: Optional[str] = None
+    #: Hot desking status of the workspace.
+    hotdesking_status: Optional[HotdeskingStatus] = None
+    #: The supported devices for the workspace.
+    supported_devices: Optional[WorkspaceSupportedDevices] = None
+    #: Device hosted meetings configuration.
+    device_hosted_meetings: Optional[DeviceHostedMeetings] = None
+    #: The device platform.
+    device_platform: Optional[DevicePlatform] = None
+    #: Indoor navigation configuration.
+    indoor_navigation: Optional[WorkspaceIndoorNavigation] = None
+    #: The health of the workspace.
+    health: Optional[WorkspaceHealth] = None
+    #: A list of devices associated with the workspace.
+    devices: Optional[list[Device]] = None
+    #: The map of workspace capabilities.
+    capabilities: Optional[CapabilityMap] = None
+    #: The planned maintenance for the workspace.
+    planned_maintenance: Optional[WorkspacePlannedMaintenance] = None
+
+    def update_or_create(self, for_update: bool = False) -> dict:
+        """
+        JSON for update or create
+
+        :meta private:
+        """
+        # supported device cannot be changed later
+        return self.model_dump(mode='json',
+                               exclude_unset=True,
+                               exclude_none=True,
+                               by_alias=True,
+                               exclude={'workspace_id': True,
+                                        'org_id': True,
+                                        'sip_address': True,
+                                        'created': True,
+                                        'hybrid_calling': True,
+                                        'health': True,
+                                        'devices': True,
+                                        # only include workspace_location_id if no location_id is given
+                                        # location_id is the preferred/new way of setting the location
+                                        'workspace_location_id': not (self.workspace_location_id and
+                                                                      not self.location_id),
+                                        'supported_devices': for_update,
+                                        'planned_maintenance': True
+                                        })
+
+    @staticmethod
+    def create(*, display_name: str) -> 'Workspace':
+        """
+        minimal settings for a :meth:`WorkspacesApi.create` call
+
+        :return: :class:`Workspace`
+        """
+        return Workspace(display_name=display_name)
 
 
 class WorkspacesApi(ApiChild, base='workspaces'):
@@ -297,7 +314,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
              calling: CallingType = None, supported_devices: WorkspaceSupportedDevices = None,
              calendar: CalendarType = None, device_hosted_meetings_enabled: bool = None,
              device_platform: DevicePlatform = None, health_level: WorkspaceHealthLevel = None,
-             include_devices: bool = None, org_id: str = None,
+             include_devices: bool = None, include_capabilities: bool = None,
+             planned_maintenance: MaintenanceMode = None, org_id: str = None,
              **params) -> Generator[Workspace, None, None]:
         """
         List Workspaces
@@ -341,6 +359,10 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :param include_devices: Flag identifying whether to include the devices associated with the workspace in the
             response.
         :type include_devices: bool
+        :param include_capabilities: Flag identifying whether to include the workspace capabilities in the response.
+        :type include_capabilities: bool
+        :param planned_maintenance: List workspaces with given maintenance mode.
+        :type planned_maintenance: WorkspacePlannedMaintenanceMode
         :param org_id: List workspaces in this organization. Only admin users of another organization
             (such as partners) may use this parameter.
         :type org_id: str
@@ -374,6 +396,10 @@ class WorkspacesApi(ApiChild, base='workspaces'):
             params['healthLevel'] = enum_str(health_level)
         if include_devices is not None:
             params['includeDevices'] = str(include_devices).lower()
+        if include_capabilities is not None:
+            params['includeCapabilities'] = str(include_capabilities).lower()
+        if planned_maintenance is not None:
+            params['plannedMaintenance'] = enum_str(planned_maintenance)
         ep = self.ep()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=ep, model=Workspace, params=params)

@@ -31579,7 +31579,8 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
              calling: CallingType = None, supported_devices: WorkspaceSupportedDevices = None,
              calendar: CalendarType = None, device_hosted_meetings_enabled: bool = None,
              device_platform: DevicePlatform = None, health_level: WorkspaceHealthLevel = None,
-             include_devices: bool = None, org_id: str = None,
+             include_devices: bool = None, include_capabilities: bool = None,
+             planned_maintenance: MaintenanceMode = None, org_id: str = None,
              **params) -> AsyncGenerator[Workspace, None, None]:
         """
         List Workspaces
@@ -31623,6 +31624,10 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         :param include_devices: Flag identifying whether to include the devices associated with the workspace in the
             response.
         :type include_devices: bool
+        :param include_capabilities: Flag identifying whether to include the workspace capabilities in the response.
+        :type include_capabilities: bool
+        :param planned_maintenance: List workspaces with given maintenance mode.
+        :type planned_maintenance: WorkspacePlannedMaintenanceMode
         :param org_id: List workspaces in this organization. Only admin users of another organization
             (such as partners) may use this parameter.
         :type org_id: str
@@ -31656,6 +31661,10 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
             params['healthLevel'] = enum_str(health_level)
         if include_devices is not None:
             params['includeDevices'] = str(include_devices).lower()
+        if include_capabilities is not None:
+            params['includeCapabilities'] = str(include_capabilities).lower()
+        if planned_maintenance is not None:
+            params['plannedMaintenance'] = enum_str(planned_maintenance)
         ep = self.ep()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=ep, model=Workspace, params=params)
@@ -31665,7 +31674,8 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
              calling: CallingType = None, supported_devices: WorkspaceSupportedDevices = None,
              calendar: CalendarType = None, device_hosted_meetings_enabled: bool = None,
              device_platform: DevicePlatform = None, health_level: WorkspaceHealthLevel = None,
-             include_devices: bool = None, org_id: str = None,
+             include_devices: bool = None, include_capabilities: bool = None,
+             planned_maintenance: MaintenanceMode = None, org_id: str = None,
              **params) -> List[Workspace]:
         """
         List Workspaces
@@ -31709,6 +31719,10 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         :param include_devices: Flag identifying whether to include the devices associated with the workspace in the
             response.
         :type include_devices: bool
+        :param include_capabilities: Flag identifying whether to include the workspace capabilities in the response.
+        :type include_capabilities: bool
+        :param planned_maintenance: List workspaces with given maintenance mode.
+        :type planned_maintenance: WorkspacePlannedMaintenanceMode
         :param org_id: List workspaces in this organization. Only admin users of another organization
             (such as partners) may use this parameter.
         :type org_id: str
@@ -31742,6 +31756,10 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
             params['healthLevel'] = enum_str(health_level)
         if include_devices is not None:
             params['includeDevices'] = str(include_devices).lower()
+        if include_capabilities is not None:
+            params['includeCapabilities'] = str(include_capabilities).lower()
+        if planned_maintenance is not None:
+            params['plannedMaintenance'] = enum_str(planned_maintenance)
         ep = self.ep()
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=ep, model=Workspace, params=params)]

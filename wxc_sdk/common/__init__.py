@@ -27,7 +27,8 @@ __all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting',
            'VolumeSettings', 'CallForwardExpandedSoftKey', 'HttpProxy', 'HttpProxyMode', 'BluetoothMode',
            'BluetoothSetting', 'NoiseCancellation', 'SoftKeyLayout', 'SoftKeyMenu', 'PskObject', 'BackgroundImageColor',
            'BacklightTimer68XX78XX', 'DectCustomization', 'OwnerType', 'NumberOwner', 'ApplyLineKeyTemplateAction',
-           'AssignedDectNetwork', 'DevicePlatform', 'Multicast', 'EnhancedMulticast', 'DeviceType', 'UserLicenseType']
+           'AssignedDectNetwork', 'DevicePlatform', 'Multicast', 'EnhancedMulticast', 'DeviceType', 'UserLicenseType',
+           'MaintenanceMode']
 
 
 class IdOnly(ApiModel):
@@ -1181,3 +1182,9 @@ class AssignedDectNetwork(ApiModel):
 class DevicePlatform(str, Enum):
     cisco = 'cisco'
     microsoft_teams_room = 'microsoftTeamsRoom'
+
+
+class MaintenanceMode(str, Enum):
+    off = 'off'
+    on = 'on'
+    upcoming = 'upcoming'

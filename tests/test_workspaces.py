@@ -44,6 +44,12 @@ class TestList(TestCaseWithLog):
         print(json.dumps(TypeAdapter(list[Workspace]).dump_python(workspaces, mode='json', exclude_unset=True),
                          indent=2))
 
+    def test_list_with_capabilities(self):
+        workspaces = list(self.api.workspaces.list(include_capabilities=True))
+        print(f'got {len(workspaces)} workspaces')
+        print(json.dumps(TypeAdapter(list[Workspace]).dump_python(workspaces, mode='json', exclude_unset=True),
+                         indent=2))
+
 
 class TestDetails(TestCaseWithLog):
     @async_test

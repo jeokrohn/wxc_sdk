@@ -11,28 +11,14 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['CapabilityMap', 'Device', 'DeviceCapabilities', 'DeviceConnectionStatus', 'DevicePermissions', 'ManagedBy',
-           'NetworkConnectivityType', 'SupportAndConfiguredInfo', 'Workspace', 'WorkspaceCalendar',
-           'WorkspaceCalendarType', 'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceCallingType',
-           'WorkspaceCallingWebexCalling', 'WorkspaceDeviceHostedMeetings', 'WorkspaceDevicePlatform',
-           'WorkspaceHealth', 'WorkspaceHealthLevel', 'WorkspaceHotdeskingStatus', 'WorkspaceIndoorNavigation',
-           'WorkspaceIssue', 'WorkspaceIssueLevel', 'WorkspaceIssueLevelMembers', 'WorkspaceSupportedDevices',
-           'WorkspaceType', 'WorkspaceType1', 'WorkspacesApi']
-
-
-class WorkspaceType(str, Enum):
-    #: High concentration.
-    focus = 'focus'
-    #: Brainstorm/collaboration.
-    huddle = 'huddle'
-    #: Dedicated meeting space.
-    meeting_room = 'meetingRoom'
-    #: Unstructured agile.
-    open = 'open'
-    #: Individual.
-    desk = 'desk'
-    #: Unspecified.
-    other = 'other'
+__all__ = ['CapabilityMap', 'Device', 'DeviceCapabilities', 'DeviceConnectionStatus', 'DevicePermissions',
+           'DevicePlannedMaintenance', 'ManagedBy', 'NetworkConnectivityType', 'SupportAndConfiguredInfo',
+           'Workspace', 'WorkspaceCalendar', 'WorkspaceCalendarType', 'WorkspaceCalling',
+           'WorkspaceCallingHybridCalling', 'WorkspaceCallingType', 'WorkspaceCallingWebexCalling',
+           'WorkspaceDeviceHostedMeetings', 'WorkspaceDevicePlatform', 'WorkspaceHealth', 'WorkspaceHealthLevel',
+           'WorkspaceHotdeskingStatus', 'WorkspaceIndoorNavigation', 'WorkspaceIssue', 'WorkspaceIssueLevel',
+           'WorkspaceIssueLevelMembers', 'WorkspacePlannedMaintenance', 'WorkspacePlannedMaintenanceMode',
+           'WorkspaceSupportedDevices', 'WorkspaceType', 'WorkspacesApi']
 
 
 class WorkspaceIssueLevelMembers(str, Enum):
@@ -60,7 +46,7 @@ class WorkspaceIssue(ApiModel):
     level: Optional[WorkspaceIssueLevel] = None
 
 
-class WorkspaceType1(str, Enum):
+class WorkspaceType(str, Enum):
     #: No workspace type set.
     not_set = 'notSet'
     #: High concentration.
@@ -174,6 +160,21 @@ class WorkspaceHealth(ApiModel):
     issues: Optional[list[WorkspaceIssue]] = None
 
 
+class WorkspacePlannedMaintenanceMode(str, Enum):
+    off = 'off'
+    on = 'on'
+    upcoming = 'upcoming'
+
+
+class WorkspacePlannedMaintenance(ApiModel):
+    #: The planned maintenance mode for the workspace
+    mode: Optional[WorkspacePlannedMaintenanceMode] = None
+    #: The start of the planned maintenance period.
+    start_time: Optional[datetime] = None
+    #: The end of the planned maintenance period.
+    end_time: Optional[datetime] = None
+
+
 class DeviceCapabilities(str, Enum):
     xapi = 'xapi'
 
@@ -203,6 +204,11 @@ class ManagedBy(str, Enum):
     partner = 'PARTNER'
 
 
+class DevicePlannedMaintenance(ApiModel):
+    #: The planned maintenance mode for the device
+    mode: Optional[WorkspacePlannedMaintenanceMode] = None
+
+
 class Device(ApiModel):
     #: A unique identifier for the device.
     id: Optional[str] = None
@@ -221,7 +227,6 @@ class Device(ApiModel):
     #: The permissions the user has for this device. For example, `xapi` means this user is entitled to using the
     #: `xapi` against this device.
     permissions: Optional[list[DevicePermissions]] = None
-    #: The connection status of the device.
     connection_status: Optional[DeviceConnectionStatus] = None
     #: The product name. A display friendly version of the device's `model`.
     product: Optional[str] = None
@@ -231,7 +236,6 @@ class Device(ApiModel):
     tags: Optional[list[str]] = None
     #: The current IP address of the device.
     ip: Optional[str] = None
-    #: The current network connectivity for the device.
     active_interface: Optional[NetworkConnectivityType] = None
     #: The unique address for the network adapter.
     mac: Optional[str] = None
@@ -257,10 +261,27 @@ class Device(ApiModel):
     first_seen: Optional[datetime] = None
     #: Timestamp of the last time device sent a status post.
     last_seen: Optional[datetime] = None
-    #: Entity managing the device configuration.
     managed_by: Optional[ManagedBy] = None
-    #: The device platform.
     device_platform: Optional[WorkspaceDevicePlatform] = None
+    #: The planned maintenance for the device.
+    planned_maintenance: Optional[DevicePlannedMaintenance] = None
+
+
+class SupportAndConfiguredInfo(ApiModel):
+    #: Is the workspace capability supported or not.
+    supported: Optional[bool] = None
+    #: Is the workspace capability configured or not.
+    configured: Optional[bool] = None
+
+
+class CapabilityMap(ApiModel):
+    occupancy_detection: Optional[SupportAndConfiguredInfo] = None
+    presence_detection: Optional[SupportAndConfiguredInfo] = None
+    ambient_noise: Optional[SupportAndConfiguredInfo] = None
+    sound_level: Optional[SupportAndConfiguredInfo] = None
+    temperature: Optional[SupportAndConfiguredInfo] = None
+    air_quality: Optional[SupportAndConfiguredInfo] = None
+    relative_humidity: Optional[SupportAndConfiguredInfo] = None
 
 
 class Workspace(ApiModel):
@@ -305,30 +326,10 @@ class Workspace(ApiModel):
     health: Optional[WorkspaceHealth] = None
     #: A list of devices associated with the workspace.
     devices: Optional[list[Device]] = None
-
-
-class SupportAndConfiguredInfo(ApiModel):
-    #: Is the workspace capability supported or not.
-    supported: Optional[bool] = None
-    #: Is the workspace capability configured or not.
-    configured: Optional[bool] = None
-
-
-class CapabilityMap(ApiModel):
-    #: Occupancy detection.
-    occupancy_detection: Optional[SupportAndConfiguredInfo] = None
-    #: Presence detection.
-    presence_detection: Optional[SupportAndConfiguredInfo] = None
-    #: Ambient noise.
-    ambient_noise: Optional[SupportAndConfiguredInfo] = None
-    #: Sound level.
-    sound_level: Optional[SupportAndConfiguredInfo] = None
-    #: Temperature.
-    temperature: Optional[SupportAndConfiguredInfo] = None
-    #: Air quality.
-    air_quality: Optional[SupportAndConfiguredInfo] = None
-    #: Relative humidity.
-    relative_humidity: Optional[SupportAndConfiguredInfo] = None
+    #: The map of workspace capabilities.
+    capabilities: Optional[list[CapabilityMap]] = None
+    #: The planned maintenance for the workspace.
+    planned_maintenance: Optional[WorkspacePlannedMaintenance] = None
 
 
 class WorkspacesApi(ApiChild, base='workspaces'):
@@ -349,11 +350,12 @@ class WorkspacesApi(ApiChild, base='workspaces'):
     """
 
     def list_workspaces(self, location_id: str = None, workspace_location_id: str = None, floor_id: str = None,
-                        display_name: str = None, capacity: float = None, type: WorkspaceType1 = None,
+                        display_name: str = None, capacity: int = None, type: WorkspaceType = None,
                         calling: WorkspaceCallingType = None, supported_devices: WorkspaceSupportedDevices = None,
                         calendar: WorkspaceCalendarType = None, device_hosted_meetings_enabled: bool = None,
                         device_platform: WorkspaceDevicePlatform = None, health_level: WorkspaceHealthLevel = None,
-                        include_devices: bool = None, org_id: str = None,
+                        include_devices: bool = None, include_capabilities: bool = None,
+                        planned_maintenance: WorkspacePlannedMaintenanceMode = None, org_id: str = None,
                         **params) -> Generator[Workspace, None, None]:
         """
         List workspaces.
@@ -377,9 +379,9 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type display_name: str
         :param capacity: List workspaces with the given capacity. Must be -1 or higher. A value of -1 lists workspaces
             with no capacity set.
-        :type capacity: float
+        :type capacity: int
         :param type: List workspaces by type.
-        :type type: WorkspaceType1
+        :type type: WorkspaceType
         :param calling: List workspaces by calling type.
         :type calling: WorkspaceCallingType
         :param supported_devices: List workspaces by supported devices.
@@ -395,6 +397,10 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :param include_devices: Flag identifying whether to include the devices associated with the workspace in the
             response.
         :type include_devices: bool
+        :param include_capabilities: Flag identifying whether to include the workspace capabilities in the response.
+        :type include_capabilities: bool
+        :param planned_maintenance: List workspaces with given maintenance mode.
+        :type planned_maintenance: WorkspacePlannedMaintenanceMode
         :param org_id: List workspaces in this organization. Only admin users of another organization (such as
             partners) may use this parameter.
         :type org_id: str
@@ -428,17 +434,21 @@ class WorkspacesApi(ApiChild, base='workspaces'):
             params['healthLevel'] = enum_str(health_level)
         if include_devices is not None:
             params['includeDevices'] = str(include_devices).lower()
+        if include_capabilities is not None:
+            params['includeCapabilities'] = str(include_capabilities).lower()
+        if planned_maintenance is not None:
+            params['plannedMaintenance'] = enum_str(planned_maintenance)
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Workspace, item_key='items', params=params)
 
-    def create_a_workspace(self, display_name: str, location_id: str = None, workspace_location_id: str = None,
-                           floor_id: str = None, capacity: int = None, type: WorkspaceType1 = None,
-                           sip_address: str = None, calling: WorkspaceCallingType = None,
-                           calendar: WorkspaceCalendarType = None, notes: str = None,
-                           hotdesking_status: WorkspaceHotdeskingStatus = None,
-                           device_hosted_meetings: WorkspaceDeviceHostedMeetings = None,
-                           supported_devices: WorkspaceSupportedDevices = None,
-                           indoor_navigation: WorkspaceIndoorNavigation = None, org_id: str = None) -> Workspace:
+    def create_workspace(self, display_name: str, location_id: str = None, workspace_location_id: str = None,
+                         floor_id: str = None, capacity: int = None, type: WorkspaceType = None,
+                         sip_address: str = None, calling: WorkspaceCallingType = None,
+                         calendar: WorkspaceCalendarType = None, notes: str = None,
+                         hotdesking_status: WorkspaceHotdeskingStatus = None,
+                         device_hosted_meetings: WorkspaceDeviceHostedMeetings = None,
+                         supported_devices: WorkspaceSupportedDevices = None,
+                         indoor_navigation: WorkspaceIndoorNavigation = None, org_id: str = None) -> Workspace:
         """
         Create a workspace.
 
@@ -474,7 +484,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :param capacity: How many people the workspace is suitable for. If set, must be 0 or higher.
         :type capacity: int
         :param type: The type that best describes the workspace.
-        :type type: WorkspaceType1
+        :type type: WorkspaceType
         :param sip_address: The `sipAddress` field can only be provided when calling type is `thirdPartySipCalling`.
         :type sip_address: str
         :param calling: Calling.
@@ -533,7 +543,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         r = Workspace.model_validate(data)
         return r
 
-    def delete_a_workspace(self, workspace_id: str):
+    def delete_workspace(self, workspace_id: str):
         """
         Delete a Workspace
 
@@ -549,13 +559,43 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         url = self.ep(f'{workspace_id}')
         super().delete(url)
 
-    def update_a_workspace(self, workspace_id: str, display_name: str = None, location_id: str = None,
-                           workspace_location_id: str = None, floor_id: str = None, capacity: int = None,
-                           type: WorkspaceType1 = None, calendar: WorkspaceCalendarType = None,
-                           sip_address: str = None, calling: WorkspaceCallingType = None, notes: str = None,
-                           hotdesking_status: WorkspaceHotdeskingStatus = None,
-                           device_hosted_meetings: WorkspaceDeviceHostedMeetings = None,
-                           indoor_navigation: WorkspaceIndoorNavigation = None) -> Workspace:
+    def get_workspace_details(self, workspace_id: str, include_devices: bool = None,
+                              include_capabilities: bool = None) -> Workspace:
+        """
+        Get Workspace Details
+
+        Shows details for a workspace, by ID.
+
+        The `locationId`, `workspaceLocationId`, `floorId`, `indoorNavigation`, `capacity`, `type` and `notes` fields
+        will only be present if they have been set for the workspace. Specify the workspace ID in the `workspaceId`
+        parameter in the URI.
+
+        :param workspace_id: A unique identifier for the workspace.
+        :type workspace_id: str
+        :param include_devices: Flag identifying whether to include the devices associated with the workspace in the
+            response.
+        :type include_devices: bool
+        :param include_capabilities: Flag identifying whether to include the workspace capabilities in the response.
+        :type include_capabilities: bool
+        :rtype: :class:`Workspace`
+        """
+        params = {}
+        if include_devices is not None:
+            params['includeDevices'] = str(include_devices).lower()
+        if include_capabilities is not None:
+            params['includeCapabilities'] = str(include_capabilities).lower()
+        url = self.ep(f'{workspace_id}')
+        data = super().get(url, params=params)
+        r = Workspace.model_validate(data)
+        return r
+
+    def update_workspace(self, workspace_id: str, display_name: str = None, location_id: str = None,
+                         workspace_location_id: str = None, floor_id: str = None, capacity: int = None,
+                         type: WorkspaceType = None, calendar: WorkspaceCalendarType = None, sip_address: str = None,
+                         calling: WorkspaceCallingType = None, notes: str = None,
+                         hotdesking_status: WorkspaceHotdeskingStatus = None,
+                         device_hosted_meetings: WorkspaceDeviceHostedMeetings = None,
+                         indoor_navigation: WorkspaceIndoorNavigation = None) -> Workspace:
         """
         Update a Workspace
 
@@ -604,7 +644,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :param capacity: How many people the workspace is suitable for. If set, must be 0 or higher.
         :type capacity: int
         :param type: The type that best describes the workspace.
-        :type type: WorkspaceType1
+        :type type: WorkspaceType
         :param calendar: An empty or null `calendar` field will not cause any changes. Provide a `type` (`microsoft`,
             `google`, or `none`), an `emailAddress`, and a `resourceGroupId`. To remove a calendar, set the `type` to
             `none`; this does not require an `emailAddress` or `resourceGroupId`.
@@ -654,31 +694,6 @@ class WorkspacesApi(ApiChild, base='workspaces'):
             body['indoorNavigation'] = indoor_navigation.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{workspace_id}')
         data = super().put(url, json=body)
-        r = Workspace.model_validate(data)
-        return r
-
-    def get_workspace_details(self, workspace_id: str, include_devices: bool = None) -> Workspace:
-        """
-        Get Workspace Details
-
-        Shows details for a workspace, by ID.
-
-        The `locationId`, `workspaceLocationId`, `floorId`, `indoorNavigation`, `capacity`, `type` and `notes` fields
-        will only be present if they have been set for the workspace. Specify the workspace ID in the `workspaceId`
-        parameter in the URI.
-
-        :param workspace_id: A unique identifier for the workspace.
-        :type workspace_id: str
-        :param include_devices: Flag identifying whether to include the devices associated with the workspace in the
-            response.
-        :type include_devices: bool
-        :rtype: :class:`Workspace`
-        """
-        params = {}
-        if include_devices is not None:
-            params['includeDevices'] = str(include_devices).lower()
-        url = self.ep(f'{workspace_id}')
-        data = super().get(url, params=params)
         r = Workspace.model_validate(data)
         return r
 
