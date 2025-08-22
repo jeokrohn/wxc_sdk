@@ -28,7 +28,7 @@ __all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting',
            'BluetoothSetting', 'NoiseCancellation', 'SoftKeyLayout', 'SoftKeyMenu', 'PskObject', 'BackgroundImageColor',
            'BacklightTimer68XX78XX', 'DectCustomization', 'OwnerType', 'NumberOwner', 'ApplyLineKeyTemplateAction',
            'AssignedDectNetwork', 'DevicePlatform', 'Multicast', 'EnhancedMulticast', 'DeviceType', 'UserLicenseType',
-           'MaintenanceMode']
+           'MaintenanceMode', 'SetOrClear']
 
 
 class IdOnly(ApiModel):
@@ -1188,3 +1188,8 @@ class MaintenanceMode(str, Enum):
     off = 'off'
     on = 'on'
     upcoming = 'upcoming'
+
+
+class SetOrClear(str, Enum):
+    set = 'SET'
+    clear = 'CLEAR'

@@ -11,7 +11,7 @@ from pydantic import Field, TypeAdapter
 
 from ...api_child import ApiChild
 from ...base import ApiModel, enum_str
-from ...common import DeviceCustomization, ApplyLineKeyTemplateAction
+from ...common import DeviceCustomization, ApplyLineKeyTemplateAction, SetOrClear
 from ...rest import RestSession
 
 __all__ = ['StepExecutionStatus', 'JobExecutionStatus', 'StartJobResponse', 'JobErrorMessage', 'JobError',
@@ -22,7 +22,7 @@ __all__ = ['StepExecutionStatus', 'JobExecutionStatus', 'StartJobResponse', 'Job
            'RoutingPrefixCounts', 'MoveCounts', 'MoveUser', 'MoveUsersList',
            'MoveUserJobDetails', 'MoveUsersJobsApi', 'StartMoveUsersJobResponse', 'CallRecordingJobCounts',
            'CallRecordingJobStatus', 'CallRecordingJobsApi', 'SendActivationEmailApi', 'ActivationEmailCounts',
-           'ActivationEmailJobDetail']
+           'ActivationEmailJobDetail', 'DynamicSettingsUpdateJobItem', 'UpdateDynamicDeviceSettingsJobsApi']
 
 
 class StepExecutionStatus(ApiModel):
@@ -1634,6 +1634,129 @@ class SendActivationEmailApi(ApiChild, base='identity/organizations'):
         return r
 
 
+class DynamicSettingsUpdateJobItem(ApiModel):
+    #: The `familyOrModelDisplayName` of the device to which the tag applies. This value must exist in the validation
+    #: schema.
+    family_or_model_display_name: Optional[str] = None
+    #: The unique identifier for the setting to be updated.
+    tag: Optional[str] = None
+    action: Optional[SetOrClear] = None
+    #: The new value to set for the setting. This field is required when `action` is `SET` and ignored otherwise.
+    value: Optional[str] = None
+
+
+class UpdateDynamicDeviceSettingsJobsApi(ApiChild, base='telephony/config'):
+    def list(self, org_id: str = None,
+             **params) -> Generator[StartJobResponse, None, None]:
+        """
+        List dynamic device settings jobs.
+
+        Lists all the jobs for job type `dynamicdevicesettings` for the given organization in order of most recent one
+        to oldest one irrespective of its status.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve list of dynamic device settings jobs for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`StartJobResponse` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('jobs/devices/dynamicDeviceSettings')
+        return self.session.follow_pagination(url=url, model=StartJobResponse, item_key='items',
+                                              params=params)
+
+    def update_across_org_or_location(self,
+                                      tags: List[DynamicSettingsUpdateJobItem],
+                                      location_id: str = None,
+                                      org_id: str = None) -> StartJobResponse:
+        """
+        Updates dynamic Device Settings Across Organization Or Location
+
+        Creates a job to update device settings at location or organization level.
+
+        The job runs asynchronously and persistently, applying the requested settings in bulk to all relevant devices,
+        which may belong to multiple families as specified in the request. If a `locationId` is provided, only devices
+        in that location are affected.
+
+        A unique job ID is returned to track status and errors.
+
+        Only one job can run per customer per organization at a time. Additionally, this job cannot run in parallel
+        with other device jobs such as `Call device settings
+        <https://developer.webex.com/docs/api/v1/device-call-settings/change-device-settings-across-organization-or
+        -location-job>`_ and `Rebuild Phones
+
+        Running a job requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param tags: Array of tag identifiers for settings to be updated. Each setting is identified by a
+            `familyOrModelDisplayName` and `tag`. Supports updating multiple settings across different device families
+            in a single request.
+        :type tags: list[DynamicSettingsUpdateJobItem]
+        :param location_id: If present, the requested settings will be updated to devices under this location.
+        :type location_id: str
+        :param org_id: Apply update dynamic device settings for all the devices under this organization.
+        :type org_id: str
+        :rtype: :class:`StartJobResponse`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if location_id is not None:
+            body['locationId'] = location_id
+        body['tags'] = TypeAdapter(list[DynamicSettingsUpdateJobItem]).dump_python(tags, mode='json',
+                                                                                   by_alias=True,
+                                                                                   exclude_none=True)
+        url = self.ep('jobs/devices/dynamicDeviceSettings')
+        data = super().post(url, params=params, json=body)
+        r = StartJobResponse.model_validate(data)
+        return r
+
+    def status(self, job_id: str) -> StartJobResponse:
+        """
+        Get Device Dynamic Settings Job Status
+
+        Get dynamic device settings job status.
+
+        Provides details of the job with `jobId` of `jobType` `dynamicdevicesettings`.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job details for this `jobId`.
+        :type job_id: str
+        :rtype: :class:`StartJobResponse`
+        """
+        url = self.ep(f'jobs/devices/dynamicDeviceSettings/{job_id}')
+        data = super().get(url)
+        r = StartJobResponse.model_validate(data)
+        return r
+
+    def errors(self, job_id: str, org_id: str = None,
+               **params) -> Generator[JobErrorItem, None, None]:
+        """
+        List Dynamic Device Settings Job Errors
+
+        List Update dynamic device settings job errors.
+
+        Lists all error details of the job with `jobId` of `jobType` `dynamicdevicesettings`.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job details for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve the status of job for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`JobErrorItem` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'jobs/devices/dynamicDeviceSettings/{job_id}/errors')
+        return self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)
+
+
 @dataclass(init=False, repr=False)
 class JobsApi(ApiChild, base='telephony/config/jobs'):
     """
@@ -1647,6 +1770,8 @@ class JobsApi(ApiChild, base='telephony/config/jobs'):
     call_recording: CallRecordingJobsApi
     #: API for device settings jobs
     device_settings: DeviceSettingsJobsApi
+    #: API for dynamic device settings jobs
+    dynamic_device_settings: UpdateDynamicDeviceSettingsJobsApi
     #: API for manage numbers jobs
     manage_numbers: ManageNumbersJobsApi
     # ; API for move users jobs
@@ -1662,6 +1787,7 @@ class JobsApi(ApiChild, base='telephony/config/jobs'):
         self.apply_line_key_templates = ApplyLineKeyTemplatesJobsApi(session=session)
         self.call_recording = CallRecordingJobsApi(session=session)
         self.device_settings = DeviceSettingsJobsApi(session=session)
+        self.dynamic_device_settings = UpdateDynamicDeviceSettingsJobsApi(session=session)
         self.manage_numbers = ManageNumbersJobsApi(session=session)
         self.move_users = MoveUsersJobsApi(session=session)
         self.rebuild_phones = RebuildPhonesJobsApi(session=session)

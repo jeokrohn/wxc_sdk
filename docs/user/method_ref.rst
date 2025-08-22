@@ -113,6 +113,14 @@ The method name is a link to the method documentation.
         List change device settings jobs
    * - :meth:`api.jobs.device_settings.status <wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.status>`
         Get change device settings job status
+   * - :meth:`api.jobs.dynamic_device_settings.errors <wxc_sdk.telephony.jobs.UpdateDynamicDeviceSettingsJobsApi.errors>`
+        List Dynamic Device Settings Job Errors
+   * - :meth:`api.jobs.dynamic_device_settings.list <wxc_sdk.telephony.jobs.UpdateDynamicDeviceSettingsJobsApi.list>`
+        List dynamic device settings jobs
+   * - :meth:`api.jobs.dynamic_device_settings.status <wxc_sdk.telephony.jobs.UpdateDynamicDeviceSettingsJobsApi.status>`
+        Get Device Dynamic Settings Job Status
+   * - :meth:`api.jobs.dynamic_device_settings.update_across_org_or_location <wxc_sdk.telephony.jobs.UpdateDynamicDeviceSettingsJobsApi.update_across_org_or_location>`
+        Updates dynamic Device Settings Across Organization Or Location
    * - :meth:`api.jobs.manage_numbers.abandon <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.abandon>`
         Abandon the Manage Numbers Job
    * - :meth:`api.jobs.manage_numbers.errors <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.errors>`
@@ -744,7 +752,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.route_choices <wxc_sdk.telephony.TelephonyApi.route_choices>`
         Read the List of Routing Choices
    * - :meth:`api.telephony.supported_devices <wxc_sdk.telephony.TelephonyApi.supported_devices>`
-        Gets the list of supported devices for an organization
+        Read the List of Supported Devices
    * - :meth:`api.telephony.test_call_routing <wxc_sdk.telephony.TelephonyApi.test_call_routing>`
         Test Call Routing
    * - :meth:`api.telephony.ucm_profiles <wxc_sdk.telephony.TelephonyApi.ucm_profiles>`
@@ -1103,6 +1111,8 @@ The method name is a link to the method documentation.
         Modify a Line Key Template
    * - :meth:`api.telephony.devices.preview_apply_line_key_template <wxc_sdk.telephony.devices.TelephonyDevicesApi.preview_apply_line_key_template>`
         Preview Apply Line Key Template
+   * - :meth:`api.telephony.devices.supported_devices <wxc_sdk.telephony.devices.TelephonyDevicesApi.supported_devices>`
+        Read the List of Supported Devices
    * - :meth:`api.telephony.devices.update_device_settings <wxc_sdk.telephony.devices.TelephonyDevicesApi.update_device_settings>`
         Modify override settings for a device
    * - :meth:`api.telephony.devices.update_members <wxc_sdk.telephony.devices.TelephonyDevicesApi.update_members>`
@@ -1119,6 +1129,18 @@ The method name is a link to the method documentation.
         Get User Devices Count
    * - :meth:`api.telephony.devices.validate_macs <wxc_sdk.telephony.devices.TelephonyDevicesApi.validate_macs>`
         Validate a list of MAC addresses
+   * - :meth:`api.telephony.devices.dynamic_settings.get_customer_device_settings <wxc_sdk.telephony.devices.dynamic_settings.DevicesDynamicSettingsApi.get_customer_device_settings>`
+        Get Customer Device Dynamic Settings
+   * - :meth:`api.telephony.devices.dynamic_settings.get_device_settings <wxc_sdk.telephony.devices.dynamic_settings.DevicesDynamicSettingsApi.get_device_settings>`
+        Get Device Dynamic Settings
+   * - :meth:`api.telephony.devices.dynamic_settings.get_location_device_settings <wxc_sdk.telephony.devices.dynamic_settings.DevicesDynamicSettingsApi.get_location_device_settings>`
+        Get Location Device Dynamic Settings
+   * - :meth:`api.telephony.devices.dynamic_settings.get_settings_groups <wxc_sdk.telephony.devices.dynamic_settings.DevicesDynamicSettingsApi.get_settings_groups>`
+        Get Settings Groups
+   * - :meth:`api.telephony.devices.dynamic_settings.get_validation_schema <wxc_sdk.telephony.devices.dynamic_settings.DevicesDynamicSettingsApi.get_validation_schema>`
+        Get Validation Schema
+   * - :meth:`api.telephony.devices.dynamic_settings.update_specified_settings_for_the_device <wxc_sdk.telephony.devices.dynamic_settings.DevicesDynamicSettingsApi.update_specified_settings_for_the_device>`
+        Update specified settings for the device
    * - :meth:`api.telephony.emergency_services.read_emergency_call_notification <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.read_emergency_call_notification>`
         Get an Organization Emergency Call Notification
    * - :meth:`api.telephony.emergency_services.update_emergency_call_notification <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.update_emergency_call_notification>`
@@ -1203,6 +1225,14 @@ The method name is a link to the method documentation.
         List change device settings jobs
    * - :meth:`api.telephony.jobs.device_settings.status <wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.status>`
         Get change device settings job status
+   * - :meth:`api.telephony.jobs.dynamic_device_settings.errors <wxc_sdk.telephony.jobs.UpdateDynamicDeviceSettingsJobsApi.errors>`
+        List Dynamic Device Settings Job Errors
+   * - :meth:`api.telephony.jobs.dynamic_device_settings.list <wxc_sdk.telephony.jobs.UpdateDynamicDeviceSettingsJobsApi.list>`
+        List dynamic device settings jobs
+   * - :meth:`api.telephony.jobs.dynamic_device_settings.status <wxc_sdk.telephony.jobs.UpdateDynamicDeviceSettingsJobsApi.status>`
+        Get Device Dynamic Settings Job Status
+   * - :meth:`api.telephony.jobs.dynamic_device_settings.update_across_org_or_location <wxc_sdk.telephony.jobs.UpdateDynamicDeviceSettingsJobsApi.update_across_org_or_location>`
+        Updates dynamic Device Settings Across Organization Or Location
    * - :meth:`api.telephony.jobs.manage_numbers.abandon <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.abandon>`
         Abandon the Manage Numbers Job
    * - :meth:`api.telephony.jobs.manage_numbers.errors <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.errors>`

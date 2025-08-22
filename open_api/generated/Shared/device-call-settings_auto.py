@@ -11,34 +11,40 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['AcdObject', 'ActivationStates', 'ApplyLineKeyTemplateJobDetails', 'ApplyLineKeyTemplateJobErrors',
-           'AtaDtmfMethodObject', 'AtaDtmfModeObject', 'AtaObject', 'AudioCodecPriorityObject',
-           'AuthenticationMethodObject', 'BackgroundImage', 'BackgroundImageColor', 'BacklightTimer68XX',
-           'BacklightTimerObject', 'BluetoothObject', 'BluetoothObjectDevice', 'BluetoothObjectDeviceMode',
-           'BluetoothObjectMode', 'CallForwardExpandedSoftKey', 'CallHistoryMethod', 'CommSecurityType',
-           'Compression', 'CountObject', 'CustomizationDeviceLevelObject', 'CustomizationDeviceLevelObjectDevice',
+__all__ = ['AcdObject', 'Action', 'ActivationStates', 'ApplyLineKeyTemplateJobDetails',
+           'ApplyLineKeyTemplateJobErrors', 'AtaDtmfMethodObject', 'AtaDtmfModeObject', 'AtaObject',
+           'AudioCodecPriorityObject', 'AuthenticationMethodObject', 'BackgroundImage', 'BackgroundImageColor',
+           'BacklightTimer68XX', 'BacklightTimerObject', 'BluetoothObject', 'BluetoothObjectDevice',
+           'BluetoothObjectDeviceMode', 'BluetoothObjectMode', 'CallForwardExpandedSoftKey', 'CallHistoryMethod',
+           'CommSecurityType', 'Compression', 'CountObject', 'CustomerDeviceDynamicSettingsListPostResponse',
+           'CustomerDevicePostTag', 'CustomizationDeviceLevelObject', 'CustomizationDeviceLevelObjectDevice',
            'CustomizationObject', 'DectDeviceList', 'DectObject', 'DectVlanObject', 'DefaultLoggingLevelObject',
            'DeleteDeviceBackgroundImagesResponse', 'DeleteImageRequestObject', 'DeleteImageResponseSuccessObject',
            'DeleteImageResponseSuccessObjectResult', 'DeviceActivationStates', 'DeviceCallSettingsApi',
-           'DeviceLayout', 'DeviceLineType', 'DeviceList', 'DeviceObject', 'DeviceOwner',
-           'DeviceSettingsConfigurationObject', 'DeviceSettingsObject', 'DeviceSettingsObjectForDeviceLevel',
-           'DeviceType', 'Devices', 'DirectoryMethod', 'DisplayCallqueueAgentSoftkeysObject', 'DisplayNameSelection',
+           'DeviceDynamicSettingsListPostResponse', 'DeviceDynamicSettingsSettingsGroupsGet', 'DeviceLayout',
+           'DeviceLineType', 'DeviceList', 'DeviceObject', 'DeviceOwner', 'DevicePutItem',
+           'DeviceSettingsConfigurationObject', 'DeviceSettingsGroup', 'DeviceSettingsGroupTag',
+           'DeviceSettingsObject', 'DeviceSettingsObjectForDeviceLevel', 'DeviceTag', 'DeviceType', 'Devices',
+           'DirectoryMethod', 'DisplayCallqueueAgentSoftkeysObject', 'DisplayNameSelection',
+           'DynamicDeviceSettingsCustomerParentLevel', 'DynamicSettingsUpdateJobDevicePostItem',
            'EnhancedMulticastObject', 'ErrorMessageObject', 'ErrorObject', 'GetLineKeyTemplateResponse',
            'GetMemberResponse', 'GetThirdPartyDeviceObject', 'GetThirdPartyDeviceObjectOwner',
-           'GetThirdPartyDeviceObjectProxy', 'Hoteling', 'HttpProxyObject', 'HttpProxyObjectMode', 'ItemObject',
-           'JobExecutionStatusObject', 'JobExecutionStatusObject1', 'JobIdResponseObject', 'KEMKeys', 'KemModuleType',
-           'LatestExecutionStatus', 'LayoutMode', 'LdapObject', 'LineKeyLEDPattern', 'LineKeyLabelSelection',
-           'LineKeyTemplateAdvisoryTypes', 'LineKeyTemplatesResponse', 'LineKeyType', 'LineType',
-           'ListBackgroundImagesObject', 'ListDeviceSettingsObject', 'Location', 'MACAddressResponse',
-           'MACAddressResponseStatus', 'MacStatusObject', 'MacStatusObjectState', 'ManagedByObject',
-           'ManufacturerObject', 'MemberObject', 'MemberType', 'MppAudioCodecPriorityObject', 'MppObject',
-           'MppObjectDevice', 'MppVlanObject', 'MulticastObject', 'NoiseCancellationObject', 'OnboardingMethodObject',
-           'PhoneLanguage', 'PlaceDeviceList', 'PlaceDevices', 'PoeMode', 'PostApplyLineKeyTemplateRequestAction',
+           'GetThirdPartyDeviceObjectProxy', 'Hoteling', 'HttpProxyObject', 'HttpProxyObjectMode',
+           'IncludeSettingsType', 'ItemObject', 'JobExecutionStatusObject', 'JobExecutionStatusObject1',
+           'JobIdResponseObject', 'KEMKeys', 'KemModuleType', 'LatestExecutionStatus', 'LayoutMode', 'LdapObject',
+           'LineKeyLEDPattern', 'LineKeyLabelSelection', 'LineKeyTemplateAdvisoryTypes', 'LineKeyTemplatesResponse',
+           'LineKeyType', 'LineType', 'ListBackgroundImagesObject', 'ListDeviceSettingsObject', 'Location',
+           'LocationDeviceDynamicSettingsListPostResponse', 'LocationDevicePostResponseTag', 'LocationParentLevel',
+           'MACAddressResponse', 'MACAddressResponseStatus', 'MacStatusObject', 'MacStatusObjectState',
+           'ManagedByObject', 'ManufacturerObject', 'MemberObject', 'MemberType', 'MppAudioCodecPriorityObject',
+           'MppObject', 'MppObjectBackground', 'MppObjectDevice', 'MppVlanObject', 'MulticastObject',
+           'NoiseCancellationObject', 'OnboardingMethodObject', 'PhoneLanguage', 'PlaceDeviceList', 'PlaceDevices',
+           'PoeMode', 'PostDynamicDeviceSettingsJobResponse', 'PostDynamicDeviceSettingsJobResponseTarget',
            'ProgrammableLineKeys', 'PskObject', 'PutMemberObject', 'ReadTheListOfBackgroundImagesResponse',
-           'RebuildPhonesJob', 'ScreenTimeoutObject', 'SearchMemberObject', 'SelectionType', 'SnmpObject',
-           'SoftKeyLayoutObject', 'SoftKeyMenuObject', 'StartJobResponse', 'StartJobResponseLatestExecutionExitCode',
+           'RebuildPhonesJob', 'SearchMemberObject', 'SelectionType', 'SnmpObject', 'SoftKeyLayoutObject',
+           'SoftKeyMenuObject', 'StartJobResponse', 'StartJobResponseLatestExecutionExitCode',
            'StepExecutionStatusesObject', 'SupportedForObject', 'SupportsLogCollectionObject', 'TypeObject',
-           'UploadADeviceBackgroundImageResponse', 'UsageType', 'UsbPortsObject', 'UserDeviceCount',
+           'UploadAdeviceBackgroundImageResponse', 'UsageType', 'UsbPortsObject', 'UserDeviceCount', 'ValidationRule',
            'VolumeSettingsObject', 'WebAccessObject', 'WifiNetworkObject', 'WifiObject', 'WifiObjectDevice']
 
 
@@ -97,10 +103,10 @@ class AtaDtmfMethodObject(str, Enum):
     auto = 'AUTO'
 
 
-class ScreenTimeoutObject(ApiModel):
-    #: Indicates whether the Screen Time object is enabled.
+class DectVlanObject(ApiModel):
+    #: Denotes whether the VLAN object of DECT is enabled.
     enabled: Optional[bool] = None
-    #: Indicates the value of screen timeout.
+    #: Value of the VLAN Object of DECT.
     value: Optional[int] = None
 
 
@@ -132,20 +138,13 @@ class AtaObject(ApiModel):
     #: Enable/disable quality of service tagging of packets from the local device to the Webex Calling platform.
     qos_enabled: Optional[bool] = None
     #: Specify a numeric Virtual LAN ID for devices.
-    vlan: Optional[ScreenTimeoutObject] = None
+    vlan: Optional[DectVlanObject] = None
     #: Enable/disable user level web access to the local device.
     web_access_enabled: Optional[bool] = None
     #: Enable/disable the automatic nightly configuration resync of the MPP device.
     nightly_resync_enabled: Optional[bool] = None
     #: Specify values needed to enable use of the SNMP service from the phone.
     snmp: Optional[SnmpObject] = None
-
-
-class DectVlanObject(ApiModel):
-    #: Denotes whether the VLAN object of DECT is enabled.
-    enabled: Optional[bool] = None
-    #: Value of the VLAN Object of DECT.
-    value: Optional[float] = None
 
 
 class DectObject(ApiModel):
@@ -202,10 +201,14 @@ class BackgroundImage(str, Enum):
     #: Indicates that Cisco Webex dark blue background image will be set for the devices.
     webex_dark_blue = 'WEBEX_DARK_BLUE'
     #: Indicates that a custom background image will be set for the devices.
+    #: * `customUrl` - When this option is selected, a field 'Custom Background URL' needs to be added with the image
+    #: url. URLs provided must link directly to an image file and be in HTTP, HTTPS, or filepath format.
     custom_background = 'CUSTOM_BACKGROUND'
-    #: When this option is selected, a field 'Custom Background URL' needs to be added with the image url. URLs
-    #: provided must link directly to an image file and be in HTTP, HTTPS, or filepath format.
-    custom_url = 'customUrl'
+
+
+class MppObjectBackground(ApiModel):
+    image: Optional[BackgroundImage] = None
+    custom_url: Optional[str] = None
 
 
 class DisplayNameSelection(str, Enum):
@@ -532,8 +535,7 @@ class MppObject(ApiModel):
     audio_codec_priority: Optional[MppAudioCodecPriorityObject] = None
     #: Choose the length of time (in minutes) for the phone's backlight to remain on.
     backlight_timer: Optional[BacklightTimerObject] = None
-    #: Holds the background object of MPP Object.
-    background: Optional[BackgroundImage] = None
+    background: Optional[MppObjectBackground] = None
     #: The display name that appears on the phone screen.
     display_name_format: Optional[DisplayNameSelection] = None
     #: Allows you to enable/disable CDP for local devices.
@@ -571,7 +573,7 @@ class MppObject(ApiModel):
     #: Allows you to enable/disable tagging of packets from the local device to the Webex Calling platform.
     qos_enabled: Optional[bool] = None
     #: Specify the amount of inactive time needed (in seconds) before the phone's screen saver activates.
-    screen_timeout: Optional[ScreenTimeoutObject] = None
+    screen_timeout: Optional[DectVlanObject] = None
     #: Enable/disable the use of the USB ports on Multi-Platform phones.
     usb_ports_enabled: Optional[bool] = None
     #: Specify a numeric Virtual LAN ID for devices.
@@ -706,13 +708,13 @@ class Compression(str, Enum):
 
 class CountObject(ApiModel):
     #: Indicates the total number of phone numbers requested to be moved.
-    total_numbers: Optional[float] = None
+    total_numbers: Optional[int] = None
     #: Indicates the total number of phone numbers successfully deleted.
-    numbers_deleted: Optional[float] = None
+    numbers_deleted: Optional[int] = None
     #: Indicates the total number of phone numbers successfully moved.
-    numbers_moved: Optional[float] = None
+    numbers_moved: Optional[int] = None
     #: Indicates the total number of phone numbers failed.
-    numbers_failed: Optional[float] = None
+    numbers_failed: Optional[int] = None
 
 
 class CustomizationDeviceLevelObject(ApiModel):
@@ -740,8 +742,7 @@ class MppObjectDevice(ApiModel):
     audio_codec_priority: Optional[AudioCodecPriorityObject] = None
     #: Choose the length of time (in minutes) for the phone's backlight to remain on.
     backlight_timer: Optional[BacklightTimerObject] = None
-    #: Holds the background object of MPP Object.
-    background: Optional[BackgroundImage] = None
+    background: Optional[MppObjectBackground] = None
     #: The display name that appears on the phone screen.
     display_name_format: Optional[DisplayNameSelection] = None
     #: Allows you to enable/disable CDP for local devices.
@@ -779,7 +780,7 @@ class MppObjectDevice(ApiModel):
     #: Allows you to enable/disable tagging of packets from the local device to the Webex Calling platform.
     qos_enabled: Optional[bool] = None
     #: Specify the amount of inactive time needed (in seconds) before the phone's screen saver activates.
-    screen_timeout: Optional[ScreenTimeoutObject] = None
+    screen_timeout: Optional[DectVlanObject] = None
     #: Enable/disable the use of the USB ports on Multi-Platform phones.
     usb_ports_enabled: Optional[bool] = None
     #: By default the Side USB port is enabled to support KEMs and other peripheral devices. Use the option to disable
@@ -878,146 +879,6 @@ class DeviceActivationStates(str, Enum):
     deactivated = 'DEACTIVATED'
 
 
-class TypeObject(str, Enum):
-    #: Cisco Multiplatform Phone
-    mpp = 'MPP'
-    #: Analog Telephone Adapters
-    ata = 'ATA'
-    #: GENERIC Session Initiation Protocol
-    generic_sip = 'GENERIC_SIP'
-    #: Esim Supported Webex Go
-    esim = 'ESIM'
-    #: Desk Phone
-    desk_phone = 'DESK_PHONE'
-
-
-class ManufacturerObject(str, Enum):
-    #: Devices manufactured by Cisco.
-    cisco = 'CISCO'
-    #: Devices manufactured by a third-party that are approved by a Cisco account manager to be enabled for
-    #: provisioning in the control hub.
-    third_party = 'THIRD_PARTY'
-
-
-class ManagedByObject(str, Enum):
-    #: Devices managed by Cisco.
-    cisco = 'CISCO'
-    #: Devices managed by a customer that are approved by a Cisco account manager to be enabled for provisioning in the
-    #: control hub.
-    customer = 'CUSTOMER'
-
-
-class SupportedForObject(str, Enum):
-    people = 'PEOPLE'
-    place = 'PLACE'
-
-
-class OnboardingMethodObject(str, Enum):
-    mac_address = 'MAC_ADDRESS'
-    activation_code = 'ACTIVATION_CODE'
-    none_ = 'NONE'
-
-
-class KemModuleType(str, Enum):
-    #: Extension module has 14 line keys that can be configured.
-    kem_14_keys = 'KEM_14_KEYS'
-    #: Extension module has 18 line keys that can be configured.
-    kem_18_keys = 'KEM_18_KEYS'
-    #: Extension module has 20 line keys that can be configured.
-    kem_20_keys = 'KEM_20_KEYS'
-
-
-class DeviceSettingsConfigurationObject(str, Enum):
-    #: Devices which supports Webex Calling Device Settings Configuration.
-    webex_calling_device_configuration = 'WEBEX_CALLING_DEVICE_CONFIGURATION'
-    #: Devices which supports Webex Device Settings Configuration.
-    webex_device_configuration = 'WEBEX_DEVICE_CONFIGURATION'
-    #: Devices does not support any configuration.
-    none_ = 'NONE'
-
-
-class SupportsLogCollectionObject(str, Enum):
-    #: Devices which does not support log collection.
-    none_ = 'NONE'
-    #: Devices which supports Cisco PRT log collection.
-    cisco_prt = 'CISCO_PRT'
-    #: Devices which supports Cisco RoomOS log collection.
-    cisco_roomos = 'CISCO_ROOMOS'
-
-
-class DeviceObject(ApiModel):
-    #: Model name of the device.
-    model: Optional[str] = None
-    #: Display name of the device.
-    display_name: Optional[str] = None
-    #: Type of the device.
-    type: Optional[TypeObject] = None
-    #: Manufacturer of the device.
-    manufacturer: Optional[ManufacturerObject] = None
-    #: Users who manage the device.
-    managed_by: Optional[ManagedByObject] = None
-    #: List of places the device is supported for.
-    supported_for: Optional[list[SupportedForObject]] = None
-    #: Onboarding method.
-    onboarding_method: Optional[list[OnboardingMethodObject]] = None
-    #: Enables / Disables layout configuration for devices.
-    allow_configure_layout_enabled: Optional[bool] = None
-    #: Number of port lines.
-    number_of_line_ports: Optional[float] = None
-    #: If `true`, KEM is supported.
-    kem_support_enabled: Optional[bool] = None
-    #: Module count.
-    kem_module_count: Optional[float] = None
-    #: Enables / disables Kem lines support.
-    kem_lines_support_enabled: Optional[bool] = None
-    #: Key expansion module type of the device.
-    kem_module_type: Optional[list[KemModuleType]] = None
-    #: Enables / Disables the upgrade channel.
-    upgrade_channel_enabled: Optional[bool] = None
-    #: The default upgrade channel.
-    default_upgrade_channel: Optional[str] = None
-    #: Enables / disables the additional primary line appearances.
-    additional_primary_line_appearances_enabled: Optional[bool] = None
-    #: Enables / disables the additional shared line appearances.
-    additional_secondary_line_appearances_enabled: Optional[bool] = None
-    #: Enables / disables Basic emergency nomadic.
-    basic_emergency_nomadic_enabled: Optional[bool] = None
-    #: Enables / disables customized behavior support on devices.
-    customized_behaviors_enabled: Optional[bool] = None
-    #: Enables / disables configuring port support on device.
-    allow_configure_ports_enabled: Optional[bool] = None
-    #: Enables / disables customizable line label.
-    customizable_line_label_enabled: Optional[bool] = None
-    #: Enables / disables support line port reordering.
-    supports_line_port_reordering_enabled: Optional[bool] = None
-    #: Enables / disables port number support.
-    port_number_support_enabled: Optional[bool] = None
-    #: Enables / disables T.38.
-    t38_enabled: Optional[bool] = None
-    #: Enables / disables call declined.
-    call_declined_enabled: Optional[bool] = None
-    #: Supports touch screen on device.
-    touch_screen_phone: Optional[bool] = None
-    #: Number of line key buttons for a device.
-    number_of_line_key_buttons: Optional[float] = None
-    #: Device settings configuration.
-    device_settings_configuration: Optional[DeviceSettingsConfigurationObject] = None
-    #: Enables / disables hoteling host.
-    allow_hoteling_host_enabled: Optional[bool] = None
-    #: Device log collection configuration.
-    supports_log_collection: Optional[SupportsLogCollectionObject] = None
-    #: Enables / disables apply changes.
-    supports_apply_changes_enabled: Optional[bool] = None
-    #: Enables / disables configure lines.
-    allow_configure_lines_enabled: Optional[bool] = None
-    #: Enables / disables configure phone settings.
-    allow_configure_phone_settings_enabled: Optional[bool] = None
-    #: Enables / disables hotline support.
-    supports_hotline_enabled: Optional[bool] = None
-    #: Supports hot desk only.
-    supports_hot_desk_only: Optional[bool] = None
-
-
 class DeviceSettingsObject(ApiModel):
     #: Indicates the customization object of the device settings.
     customizations: Optional[CustomizationDeviceLevelObject] = None
@@ -1046,33 +907,6 @@ class DeviceSettingsObjectForDeviceLevel(ApiModel):
     device_count: Optional[int] = None
     #: Indicates the last updated time.
     last_update_time: Optional[int] = None
-
-
-class ErrorMessageObject(ApiModel):
-    #: Error message.
-    description: Optional[str] = None
-    #: Internal error code.
-    code: Optional[str] = None
-    #: Error messages describing the location id in which the error occurs. For a move operation this is the target
-    #: location ID.
-    location_id: Optional[str] = None
-
-
-class ErrorObject(ApiModel):
-    #: HTTP error code.
-    key: Optional[str] = None
-    #: Message string with further error information.
-    message: Optional[list[ErrorMessageObject]] = None
-
-
-class ItemObject(ApiModel):
-    #: Phone number
-    item: Optional[str] = None
-    #: Index of error number.
-    item_number: Optional[float] = None
-    #: Unique identifier to track the HTTP requests.
-    tracking_id: Optional[str] = None
-    error: Optional[ErrorObject] = None
 
 
 class LineType(str, Enum):
@@ -1169,52 +1003,12 @@ class Hoteling(ApiModel):
     #: Enable limiting the time a guest can use the device. The time limit is configured via `guestHoursLimit`.
     limit_guest_use: Optional[bool] = None
     #: Time Limit in hours until hoteling is enabled. Mandatory if `limitGuestUse` is enabled.
-    guest_hours_limit: Optional[float] = None
-
-
-class StepExecutionStatusesObject(ApiModel):
-    #: Unique identifier that identifies each step in a job.
-    id: Optional[int] = None
-    #: Step execution start time in UTC format.
-    start_time: Optional[datetime] = None
-    #: Step execution end time in UTC format.
-    end_time: Optional[datetime] = None
-    #: Last updated time for a step in UTC format.
-    last_updated: Optional[datetime] = None
-    #: Displays the status of a step.
-    status_message: Optional[str] = None
-    #: Exit Code for a step.
-    exit_code: Optional[str] = None
-    #: Name of different steps the job goes through.
-    name: Optional[str] = None
-    #: Time lapsed since the step execution started.
-    time_elapsed: Optional[str] = None
-
-
-class JobExecutionStatusObject(ApiModel):
-    #: Unique identifier that identifies each instance of the job.
-    id: Optional[int] = None
-    #: Step execution start time in UTC format.
-    start_time: Optional[datetime] = None
-    #: Step execution end time in UTC format.
-    end_time: Optional[datetime] = None
-    #: Last updated time (in UTC format) post one of the step execution completion.
-    last_updated: Optional[datetime] = None
-    #: Displays status for overall steps that are part of the job.
-    status_message: Optional[str] = None
-    #: Exit Code for a job.
-    exit_code: Optional[str] = None
-    #: Job creation time in UTC format.
-    created_time: Optional[datetime] = None
-    #: Time lapsed since the job execution started.
-    time_elapsed: Optional[str] = None
-    #: Status of each step within a job.
-    step_execution_statuses: Optional[list[StepExecutionStatusesObject]] = None
+    guest_hours_limit: Optional[int] = None
 
 
 class JobExecutionStatusObject1(ApiModel):
     #: Unique identifier that identifies each instance of the job.
-    id: Optional[float] = None
+    id: Optional[int] = None
     #: Last updated time (in UTC format) post one of the step execution completion.
     last_updated: Optional[str] = None
     #: Displays status for overall steps that are part of the job.
@@ -1256,7 +1050,7 @@ class StartJobResponse(ApiModel):
     #: Unique identifier to identify the customer for which the job was run.
     target_customer_id: Optional[str] = None
     #: Unique identifier to identify the instance of the job.
-    instance_id: Optional[float] = None
+    instance_id: Optional[int] = None
     #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
     #: execution of the job.
     job_execution_status: Optional[list[JobExecutionStatusObject1]] = None
@@ -1441,7 +1235,47 @@ class DeviceList(ApiModel):
     #: Array of devices available to person.
     devices: Optional[list[Devices]] = None
     #: Maximum number of devices a person can be assigned to.
-    max_device_count: Optional[float] = None
+    max_device_count: Optional[int] = None
+
+
+class StepExecutionStatusesObject(ApiModel):
+    #: Unique identifier that identifies each step in a job.
+    id: Optional[int] = None
+    #: Step execution start time in UTC format.
+    start_time: Optional[datetime] = None
+    #: Step execution end time in UTC format.
+    end_time: Optional[datetime] = None
+    #: Last updated time for a step in UTC format.
+    last_updated: Optional[datetime] = None
+    #: Displays the status of a step.
+    status_message: Optional[str] = None
+    #: Exit Code for a step.
+    exit_code: Optional[str] = None
+    #: Name of different steps the job goes through.
+    name: Optional[str] = None
+    #: Time lapsed since the step execution started.
+    time_elapsed: Optional[str] = None
+
+
+class JobExecutionStatusObject(ApiModel):
+    #: Unique identifier that identifies each instance of the job.
+    id: Optional[int] = None
+    #: Step execution start time in UTC format.
+    start_time: Optional[datetime] = None
+    #: Step execution end time in UTC format.
+    end_time: Optional[datetime] = None
+    #: Last updated time (in UTC format) post one of the step execution completion.
+    last_updated: Optional[datetime] = None
+    #: Displays status for overall steps that are part of the job.
+    status_message: Optional[str] = None
+    #: Exit Code for a job.
+    exit_code: Optional[str] = None
+    #: Job creation time in UTC format.
+    created_time: Optional[datetime] = None
+    #: Time lapsed since the job execution started.
+    time_elapsed: Optional[str] = None
+    #: Status of each step within a job.
+    step_execution_statuses: Optional[list[StepExecutionStatusesObject]] = None
 
 
 class JobIdResponseObject(ApiModel):
@@ -1460,7 +1294,7 @@ class JobIdResponseObject(ApiModel):
     #: Unique identifier to identify the customer for which the job was run.
     target_customer_id: Optional[str] = None
     #: Unique identifier to identify the instance of the job.
-    instance_id: Optional[float] = None
+    instance_id: Optional[int] = None
     #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
     #: execution of the job.
     job_execution_status: Optional[list[JobExecutionStatusObject]] = None
@@ -1510,7 +1344,7 @@ class PlaceDeviceList(ApiModel):
     #: Array of devices associated with a workspace.
     devices: Optional[list[PlaceDevices]] = None
     #: Maximum number of devices a workspace can be assigned to.
-    max_device_count: Optional[float] = None
+    max_device_count: Optional[int] = None
 
 
 class LineKeyType(str, Enum):
@@ -1580,7 +1414,7 @@ class ApplyLineKeyTemplateJobDetails(ApiModel):
     #: Unique identifier to identify the customer for which the job was run.
     target_customer_id: Optional[str] = None
     #: Unique identifier to identify the instance of the job.
-    instance_id: Optional[float] = None
+    instance_id: Optional[int] = None
     #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
     #: execution of the job.
     job_execution_status: Optional[list[JobExecutionStatusObject]] = None
@@ -1590,11 +1424,20 @@ class ApplyLineKeyTemplateJobDetails(ApiModel):
     #: Most recent exit code of the job at the time of invocation.
     latest_execution_exit_code: Optional[StartJobResponseLatestExecutionExitCode] = None
     #: Indicates the progress of the job.
-    percentage_complete: Optional[str] = None
+    percentage_complete: Optional[int] = None
     #: Number of job steps completed.
-    updated_count: Optional[str] = None
+    updated_count: Optional[int] = None
     #: Number of job steps completed with advisories.
-    advisory_count: Optional[str] = None
+    advisory_count: Optional[int] = None
+
+
+class ErrorMessageObject(ApiModel):
+    #: Error message.
+    description: Optional[str] = None
+    #: Internal error code.
+    code: Optional[str] = None
+    #: Error messages describing the location ID in which the error occurs.
+    location_id: Optional[str] = None
 
 
 class ApplyLineKeyTemplateJobErrors(ApiModel):
@@ -1620,13 +1463,6 @@ class LineKeyTemplateAdvisoryTypes(ApiModel):
     #: Refine search to apply changes to devices that contain the warning "More mode management lines configured for
     #: the device". The default value is false.
     more_mode_management_appearances_enabled: Optional[bool] = None
-
-
-class PostApplyLineKeyTemplateRequestAction(str, Enum):
-    #: Used to apply LinekeyTemplate to devices.
-    apply_template = 'APPLY_TEMPLATE'
-    #: Used to reset devices to its default Linekey Template configurations.
-    apply_default_templates = 'APPLY_DEFAULT_TEMPLATES'
 
 
 class LineKeyTemplatesResponse(ApiModel):
@@ -1681,6 +1517,15 @@ class LayoutMode(str, Enum):
     default = 'DEFAULT'
     #: Enables a device to have its custom layout.
     custom = 'CUSTOM'
+
+
+class KemModuleType(str, Enum):
+    #: Extension module has 14 line keys that can be configured.
+    kem_14_keys = 'KEM_14_KEYS'
+    #: Extension module has 18 line keys that can be configured.
+    kem_18_keys = 'KEM_18_KEYS'
+    #: Extension module has 20 line keys that can be configured.
+    kem_20_keys = 'KEM_20_KEYS'
 
 
 class KEMKeys(ApiModel):
@@ -1755,7 +1600,7 @@ class RebuildPhonesJob(ApiModel):
     #: Unique identifier of a location.
     location_id: Optional[str] = None
     #: Indicates the progress of the job.
-    percentage_complete: Optional[str] = None
+    percentage_complete: Optional[int] = None
     #: Count of number of devices rebuilt.
     device_count: Optional[int] = None
 
@@ -1801,6 +1646,337 @@ class UserDeviceCount(ApiModel):
     applications_count: Optional[int] = None
 
 
+class ValidationRule(ApiModel):
+    #: The data type of the setting. Possible values are `string`, `integer`, `boolean`, `enum` , `password` or
+    #: `network`.
+    type: Optional[str] = None
+    #: Possible values for `enum` or `boolean` types.
+    values: Optional[list[str]] = None
+    #: Minimum value for numeric types.
+    min: Optional[int] = None
+    #: Maximum value for numeric types.
+    max_: Optional[int] = None
+    #: Increment value for numeric types.
+    increment: Optional[int] = None
+    #: Regular expression pattern for string validation.
+    regex: Optional[str] = None
+    #: Maximum length for string values.
+    max_length: Optional[int] = None
+    #: Hint to display to users about validation requirements.
+    validation_hint: Optional[str] = None
+
+
+class DeviceTag(ApiModel):
+    #: The family or model name of the device to which these settings apply.
+    family_or_model_display_name: Optional[str] = None
+    #: The unique identifier for the setting.
+    tag: Optional[str] = None
+    #: A user-friendly name for the setting. It helps to correlate the tag with the UI in settings groups.
+    friendly_name: Optional[str] = None
+    #: Explanatory text for the setting.
+    tooltip: Optional[str] = None
+    #: Alert message related to this setting, if applicable.
+    alert: Optional[str] = None
+    #: The levels at which this setting can be configured. When fetching tags or updating tags, the tag should be
+    #: allowed at the level the request is made for.
+    level: Optional[list[str]] = None
+    validation_rule: Optional[ValidationRule] = None
+
+
+class DeviceSettingsGroupTag(ApiModel):
+    #: Array of tags associated with the settings group.
+    tag_block: Optional[list[str]] = None
+
+
+class DeviceSettingsGroup(ApiModel):
+    #: Path of the settings group. Creates an easily navigable settings hierarchy.
+    path: Optional[str] = None
+    #: Friendly name of the settings group.
+    friendly_name: Optional[str] = None
+    #: Tab name associated with the settings group.
+    tab: Optional[str] = None
+    #: Family or model display name associated with the settings group.
+    family_or_model_display_name: Optional[str] = None
+    #: List of `tagBlock` objects associated with the settings group.
+    tags: Optional[list[DeviceSettingsGroupTag]] = None
+
+
+class DeviceDynamicSettingsSettingsGroupsGet(ApiModel):
+    #: Array of settings groups defining structure and association of tags.
+    settings_groups: Optional[list[DeviceSettingsGroup]] = None
+    #: Array of settings tabs names. Can be filtered using the `includeSettingsType` parameter.
+    settings_tabs: Optional[list[str]] = None
+
+
+class DynamicDeviceSettingsCustomerParentLevel(str, Enum):
+    system_default = 'SYSTEM_DEFAULT'
+    regional_default = 'REGIONAL_DEFAULT'
+    organization = 'ORGANIZATION'
+
+
+class CustomerDevicePostTag(ApiModel):
+    #: The `familyOrModelDisplayName` of the device.
+    family_or_model_display_name: Optional[str] = None
+    #: The unique identifier for the setting.
+    tag: Optional[str] = None
+    #: The current value of the setting at `ORGANIZATION` level. If the tag value is not set at the `ORGANIZATION`
+    #: level, this field will not be included in the response.
+    value: Optional[str] = None
+    #: The value inherited from the immediate parent level above `ORGANIZATION`. It can be `SYSTEM_DEFAULT`,
+    #: `REGIONAL_DEFAULT`, or `ORGANIZATION`, depending on which level the setting is actually configured at. If there
+    #: is no parent level for this tag, this field will not be included in the response.
+    parent_value: Optional[str] = None
+    parent_level: Optional[DynamicDeviceSettingsCustomerParentLevel] = None
+
+
+class CustomerDeviceDynamicSettingsListPostResponse(ApiModel):
+    #: Array of device setting values matching the requested tags.
+    tags: Optional[list[CustomerDevicePostTag]] = None
+    #: Timestamp of the last update to these settings.
+    last_update_time: Optional[int] = None
+    #: Flag indicating if an update to these settings is currently in progress.
+    update_in_progress: Optional[bool] = None
+
+
+class LocationParentLevel(str, Enum):
+    system_default = 'SYSTEM_DEFAULT'
+    regional_default = 'REGIONAL_DEFAULT'
+    organization = 'ORGANIZATION'
+    location = 'LOCATION'
+
+
+class LocationDevicePostResponseTag(ApiModel):
+    #: The `familyOrModelDisplayName` of the device.
+    family_or_model_display_name: Optional[str] = None
+    #: The unique identifier for the setting.
+    tag: Optional[str] = None
+    #: The current value of the setting at `LOCATION` level. If the tag value is not set at the `LOCATION` level, this
+    #: field will not be included in the response.
+    value: Optional[str] = None
+    #: The value inherited from the immediate parent level above `LOCATION`. It can be `SYSTEM_DEFAULT`,
+    #: `REGIONAL_DEFAULT`, `ORGANIZATION`, or `LOCATION`, depending on which level the setting is actually configured
+    #: at. If there is no parent level for this tag, this field will not be included in the response.
+    parent_value: Optional[str] = None
+    parent_level: Optional[LocationParentLevel] = None
+
+
+class LocationDeviceDynamicSettingsListPostResponse(ApiModel):
+    #: Array of device setting values matching the requested tags.
+    tags: Optional[list[LocationDevicePostResponseTag]] = None
+    #: Timestamp of the last update to these settings.
+    last_update_time: Optional[int] = None
+    #: Flag indicating if an update to these settings is currently in progress.
+    update_in_progress: Optional[bool] = None
+
+
+class DeviceDynamicSettingsListPostResponse(ApiModel):
+    #: Array of device setting values matching the requested tags.
+    tags: Optional[list[LocationDevicePostResponseTag]] = None
+    #: Timestamp of the last update to these settings.
+    last_update_time: Optional[int] = None
+
+
+class Action(str, Enum):
+    set = 'SET'
+    clear = 'CLEAR'
+
+
+class DevicePutItem(ApiModel):
+    #: The unique identifier for the setting to be updated.
+    tag: Optional[str] = None
+    action: Optional[Action] = None
+    #: The new value to set for the setting. This field is required when `action` is `SET` and ignored otherwise.
+    value: Optional[str] = None
+
+
+class PostDynamicDeviceSettingsJobResponseTarget(str, Enum):
+    customer = 'CUSTOMER'
+    location = 'LOCATION'
+
+
+class PostDynamicDeviceSettingsJobResponse(ApiModel):
+    #: Name of the job which in this case, is `dynamicdevicesettings`.
+    name: Optional[str] = None
+    #: Unique identifier of the job.
+    id: Optional[str] = None
+    #: Unique identifier to track the flow of HTTP requests.
+    tracking_id: Optional[str] = None
+    #: Unique identifier of the user who has run the job.
+    source_user_id: Optional[str] = None
+    #: Unique identifier of the customer who has run the job.
+    source_customer_id: Optional[str] = None
+    #: Unique identifier of the customer for which the job was run.
+    target_customer_id: Optional[str] = None
+    #: Unique identifier to identify the instance of the job.
+    instance_id: Optional[int] = None
+    #: Displays the most recent step's execution status. Contains execution statuses of all the steps involved in the
+    #: execution of the job.
+    job_execution_status: Optional[list[JobExecutionStatusObject]] = None
+    latest_execution_status: Optional[LatestExecutionStatus] = None
+    #: Most recent exit code of the job at the time of invocation.
+    latest_execution_exit_code: Optional[StartJobResponseLatestExecutionExitCode] = None
+    #: Indicates the target entity.
+    target: Optional[PostDynamicDeviceSettingsJobResponseTarget] = None
+    #: Unique identifier of a location.
+    location_id: Optional[str] = None
+    #: Name of the location. Included only when `target` is `LOCATION`.
+    location_name: Optional[str] = None
+    #: Indicates the progress of the job.
+    percentage_complete: Optional[int] = None
+
+
+class DynamicSettingsUpdateJobDevicePostItem(ApiModel):
+    #: The `familyOrModelDisplayName` of the device to which the tag applies. This value must exist in the validation
+    #: schema.
+    family_or_model_display_name: Optional[str] = None
+    #: The unique identifier for the setting to be updated.
+    tag: Optional[str] = None
+    action: Optional[Action] = None
+    #: The new value to set for the setting. This field is required when `action` is `SET` and ignored otherwise.
+    value: Optional[str] = None
+
+
+class ErrorObject(ApiModel):
+    #: HTTP error code.
+    key: Optional[str] = None
+    #: Message string with further error information.
+    message: Optional[list[ErrorMessageObject]] = None
+
+
+class ItemObject(ApiModel):
+    #: Index of error number.
+    item_number: Optional[int] = None
+    #: Unique identifier to track the HTTP requests.
+    tracking_id: Optional[str] = None
+    error: Optional[ErrorObject] = None
+
+
+class TypeObject(str, Enum):
+    #: Cisco Multiplatform Phone
+    mpp = 'MPP'
+    #: Analog Telephone Adapters
+    ata = 'ATA'
+    #: GENERIC Session Initiation Protocol
+    generic_sip = 'GENERIC_SIP'
+    #: Esim Supported Webex Go
+    esim = 'ESIM'
+    #: Desk Phone
+    desk_phone = 'DESK_PHONE'
+
+
+class ManufacturerObject(str, Enum):
+    #: Devices manufactured by Cisco.
+    cisco = 'CISCO'
+    #: Devices manufactured by a third-party that are approved by a Cisco account manager to be enabled for
+    #: provisioning in the control hub.
+    third_party = 'THIRD_PARTY'
+
+
+class ManagedByObject(str, Enum):
+    #: Devices managed by Cisco.
+    cisco = 'CISCO'
+    #: Devices managed by a customer that are approved by a Cisco account manager to be enabled for provisioning in the
+    #: control hub.
+    customer = 'CUSTOMER'
+
+
+class SupportedForObject(str, Enum):
+    people = 'PEOPLE'
+    place = 'PLACE'
+
+
+class OnboardingMethodObject(str, Enum):
+    mac_address = 'MAC_ADDRESS'
+    activation_code = 'ACTIVATION_CODE'
+    none_ = 'NONE'
+
+
+class DeviceSettingsConfigurationObject(str, Enum):
+    #: Devices which supports Webex Calling Device Settings Configuration.
+    webex_calling_device_configuration = 'WEBEX_CALLING_DEVICE_CONFIGURATION'
+    #: Devices which supports Webex Device Settings Configuration.
+    webex_device_configuration = 'WEBEX_DEVICE_CONFIGURATION'
+    #: Devices which supports Webex Calling dynamic Settings Configuration.
+    webex_calling_dynamic_device_configuration = 'WEBEX_CALLING_DYNAMIC_DEVICE_CONFIGURATION'
+    #: Devices does not support any configuration.
+    none_ = 'NONE'
+
+
+class SupportsLogCollectionObject(str, Enum):
+    #: Devices which does not support log collection.
+    none_ = 'NONE'
+    #: Devices which supports Cisco PRT log collection.
+    cisco_prt = 'CISCO_PRT'
+    #: Devices which supports Cisco RoomOS log collection.
+    cisco_roomos = 'CISCO_ROOMOS'
+
+
+class DeviceObject(ApiModel):
+    #: Model name of the device.
+    model: Optional[str] = None
+    #: Display name of the device.
+    display_name: Optional[str] = None
+    #: The display name of the device family.
+    family_display_name: Optional[str] = None
+    type: Optional[TypeObject] = None
+    manufacturer: Optional[ManufacturerObject] = None
+    managed_by: Optional[ManagedByObject] = None
+    #: List of places the device is supported for.
+    supported_for: Optional[list[SupportedForObject]] = None
+    #: Onboarding method.
+    onboarding_method: Optional[list[OnboardingMethodObject]] = None
+    #: Enables / Disables layout configuration for devices.
+    allow_configure_layout_enabled: Optional[bool] = None
+    #: Number of port lines.
+    number_of_line_ports: Optional[int] = None
+    #: Indicates whether Kem support is enabled or not.
+    kem_support_enabled: Optional[bool] = None
+    #: Module count.
+    kem_module_count: Optional[int] = None
+    #: Enables / disables Kem lines support.
+    kem_lines_support_enabled: Optional[bool] = None
+    #: Key expansion module type of the device.
+    kem_module_type: Optional[list[KemModuleType]] = None
+    #: Enables / Disables the upgrade channel.
+    upgrade_channel_enabled: Optional[bool] = None
+    #: The default upgrade channel.
+    default_upgrade_channel: Optional[str] = None
+    #: Enables / disables the additional primary line appearances.
+    additional_primary_line_appearances_enabled: Optional[bool] = None
+    #: Enables / disables Basic emergency nomadic.
+    basic_emergency_nomadic_enabled: Optional[bool] = None
+    #: Enables / disables customized behavior support on devices.
+    customized_behaviors_enabled: Optional[bool] = None
+    #: Enables / disables configuring port support on device.
+    allow_configure_ports_enabled: Optional[bool] = None
+    #: Enables / disables customizable line label.
+    customizable_line_label_enabled: Optional[bool] = None
+    #: Enables / disables support line port reordering.
+    supports_line_port_reordering_enabled: Optional[bool] = None
+    #: Enables / disables port number support.
+    port_number_support_enabled: Optional[bool] = None
+    #: Enables / disables T.38.
+    t38_enabled: Optional[bool] = None
+    #: Enables / disables call declined.
+    call_declined_enabled: Optional[bool] = None
+    #: Supports touch screen on device.
+    touch_screen_phone: Optional[bool] = None
+    #: Number of line key buttons for a device.
+    number_of_line_key_buttons: Optional[int] = None
+    device_settings_configuration: Optional[DeviceSettingsConfigurationObject] = None
+    #: Enables / disables hoteling host.
+    allow_hoteling_host_enabled: Optional[bool] = None
+    supports_log_collection: Optional[SupportsLogCollectionObject] = None
+    #: Enables / disables apply changes.
+    supports_apply_changes_enabled: Optional[bool] = None
+    #: Enables / disables configure lines.
+    allow_configure_lines_enabled: Optional[bool] = None
+    #: Enables / disables configure phone settings.
+    allow_configure_phone_settings_enabled: Optional[bool] = None
+    #: Enables / disables hotline support.
+    supports_hotline_enabled: Optional[bool] = None
+
+
 class DeleteDeviceBackgroundImagesResponse(ApiModel):
     #: Array of deleted images.
     items: Optional[list[DeleteImageResponseSuccessObject]] = None
@@ -1815,7 +1991,13 @@ class ReadTheListOfBackgroundImagesResponse(ApiModel):
     count: Optional[str] = None
 
 
-class UploadADeviceBackgroundImageResponse(ApiModel):
+class IncludeSettingsType(str, Enum):
+    tabs = 'TABS'
+    groups = 'GROUPS'
+    all = 'ALL'
+
+
+class UploadAdeviceBackgroundImageResponse(ApiModel):
     #: The name of the uploaded image file.
     filename: Optional[str] = None
     #: The URL of the uploaded image file.
@@ -1844,12 +2026,11 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
     `spark-admin:telephony_config_write`.
     """
 
-    def preview_apply_line_key_template(self, action: PostApplyLineKeyTemplateRequestAction, template_id: str,
-                                        location_ids: list[str] = None,
+    def preview_apply_line_key_template(self, action: Action, template_id: str, location_ids: list[str] = None,
                                         exclude_devices_with_custom_layout: bool = None,
                                         include_device_tags: list[str] = None, exclude_device_tags: list[str] = None,
                                         advisory_types: LineKeyTemplateAdvisoryTypes = None,
-                                        org_id: str = None) -> float:
+                                        org_id: str = None) -> int:
         """
         Preview Apply Line Key Template
 
@@ -1867,7 +2048,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         `spark-admin:telephony_config_write`.
 
         :param action: Line key Template action to perform.
-        :type action: PostApplyLineKeyTemplateRequestAction
+        :type action: Action
         :param template_id: `templateId` is required for `APPLY_TEMPLATE` action.
         :type template_id: str
         :param location_ids: Used to search for devices only in the given locations.
@@ -1882,7 +2063,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type advisory_types: LineKeyTemplateAdvisoryTypes
         :param org_id: Preview Line Key Template for this organization.
         :type org_id: str
-        :rtype: float
+        :rtype: int
         """
         params = {}
         if org_id is not None:
@@ -1905,7 +2086,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = data['deviceCount']
         return r
 
-    def validate_a_list_of_mac_address(self, macs: list[str], org_id: str = None) -> MACAddressResponse:
+    def validate_alist_of_macaddress(self, macs: list[str], org_id: str = None) -> MACAddressResponse:
         """
         Validate a list of MAC address
 
@@ -2002,7 +2183,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[DectDeviceList]).validate_python(data['devices'])
         return r
 
-    def read_the_dect_device_type_list___deprecated(self, org_id: str = None) -> list[DectDeviceList]:
+    def read_the_dect_device_type_list_deprecated(self, org_id: str = None) -> list[DectDeviceList]:
         """
         Read the DECT device type list - Deprecated
 
@@ -2028,7 +2209,65 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[DectDeviceList]).validate_python(data['devices'])
         return r
 
-    def read_the_list_of_line_key_templates(self, org_id: str = None) -> list[LineKeyTemplatesResponse]:
+    def get_settings_groups(self, family_or_model_display_name: str = None,
+                            include_settings_type: IncludeSettingsType = None,
+                            org_id: str = None) -> DeviceDynamicSettingsSettingsGroupsGet:
+        """
+        Get Settings Groups
+
+        This API returns the `settingsGroups` that define the structure and association of tags for dynamic device
+        settings.
+
+        The `settingsGroups` are used to organize the tags into logical groups, making it easier to manage and
+        configure dynamic device settings.
+
+        :param family_or_model_display_name: Device family or model display name to filter the `settingsGroups`.
+        :type family_or_model_display_name: str
+        :param include_settings_type: To show groups or tabs or both. Query param is case insensitive. Default is
+            `ALL`.
+        :type include_settings_type: IncludeSettingsType
+        :param org_id: Settings groups for devices in this organization.
+        :type org_id: str
+        :rtype: :class:`DeviceDynamicSettingsSettingsGroupsGet`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if family_or_model_display_name is not None:
+            params['familyOrModelDisplayName'] = family_or_model_display_name
+        if include_settings_type is not None:
+            params['includeSettingsType'] = enum_str(include_settings_type)
+        url = self.ep('devices/dynamicSettings/settingsGroups')
+        data = super().get(url, params=params)
+        r = DeviceDynamicSettingsSettingsGroupsGet.model_validate(data)
+        return r
+
+    def get_validation_schema(self, family_or_model_display_name: str = None, org_id: str = None) -> list[DeviceTag]:
+        """
+        Get Validation Schema
+
+        This API returns the validation schema for `tags` of all or specific `familyOrModelDisplayName`.
+
+        The schema is used to validate the `tag` for devices in the `Webex Calling` platform. The schema includes
+        information about the required fields, data types, and validation rules for each setting.
+
+        :param family_or_model_display_name: Device family or model display name to filter the schema.
+        :type family_or_model_display_name: str
+        :param org_id: Validation schema for devices in this organization.
+        :type org_id: str
+        :rtype: list[DeviceTag]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if family_or_model_display_name is not None:
+            params['familyOrModelDisplayName'] = family_or_model_display_name
+        url = self.ep('devices/dynamicSettings/validationSchema')
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[DeviceTag]).validate_python(data['tags'])
+        return r
+
+    def read_list_of_line_key_templates(self, org_id: str = None) -> list[LineKeyTemplatesResponse]:
         """
         Read the list of Line Key Templates
 
@@ -2055,8 +2294,8 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[LineKeyTemplatesResponse]).validate_python(data['lineKeyTemplates'])
         return r
 
-    def create_a_line_key_template(self, template_name: str, device_model: str, line_keys: list[ProgrammableLineKeys],
-                                   user_reorder_enabled: bool = None, org_id: str = None) -> str:
+    def create_line_key_template(self, template_name: str, device_model: str, line_keys: list[ProgrammableLineKeys],
+                                 user_reorder_enabled: bool = None, org_id: str = None) -> str:
         """
         Create a Line Key Template
 
@@ -2098,7 +2337,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = data['id']
         return r
 
-    def delete_a_line_key_template(self, template_id: str, org_id: str = None):
+    def delete_line_key_template(self, template_id: str, org_id: str = None):
         """
         Delete a Line Key Template
 
@@ -2125,7 +2364,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'devices/lineKeyTemplates/{template_id}')
         super().delete(url, params=params)
 
-    def get_details_of_a_line_key_template(self, template_id: str, org_id: str = None) -> GetLineKeyTemplateResponse:
+    def get_details_of_line_key_template(self, template_id: str, org_id: str = None) -> GetLineKeyTemplateResponse:
         """
         Get details of a Line Key Template
 
@@ -2154,8 +2393,8 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = GetLineKeyTemplateResponse.model_validate(data)
         return r
 
-    def modify_a_line_key_template(self, template_id: str, line_keys: list[ProgrammableLineKeys],
-                                   user_reorder_enabled: bool = None, org_id: str = None):
+    def modify_line_key_template(self, template_id: str, line_keys: list[ProgrammableLineKeys],
+                                 user_reorder_enabled: bool = None, org_id: str = None):
         """
         Modify a Line Key Template
 
@@ -2190,7 +2429,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'devices/lineKeyTemplates/{template_id}')
         super().put(url, params=params, json=body)
 
-    def read_the_device_override_settings_for_a_organization(self, org_id: str = None) -> ListDeviceSettingsObject:
+    def read_device_override_settings_for_organization(self, org_id: str = None) -> ListDeviceSettingsObject:
         """
         Read the device override settings for a organization
 
@@ -2268,7 +2507,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'devices/{device_id}')
         super().put(url, params=params, json=body)
 
-    def apply_changes_for_a_specific_device(self, device_id: str, org_id: str = None):
+    def apply_changes_for_aspecific_device(self, device_id: str, org_id: str = None):
         """
         Apply Changes for a specific device
 
@@ -2289,8 +2528,8 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'devices/{device_id}/actions/applyChanges/invoke')
         super().post(url, params=params)
 
-    def upload_a_device_background_image(self, device_id: str,
-                                         org_id: str = None) -> UploadADeviceBackgroundImageResponse:
+    def upload_adevice_background_image(self, device_id: str,
+                                        org_id: str = None) -> UploadAdeviceBackgroundImageResponse:
         """
         Upload a Device Background Image
 
@@ -2313,14 +2552,14 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type device_id: str
         :param org_id: Uploads the image in this organization.
         :type org_id: str
-        :rtype: :class:`UploadADeviceBackgroundImageResponse`
+        :rtype: :class:`UploadAdeviceBackgroundImageResponse`
         """
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'devices/{device_id}/actions/backgroundImageUpload/invoke')
         data = super().post(url, params=params)
-        r = UploadADeviceBackgroundImageResponse.model_validate(data)
+        r = UploadAdeviceBackgroundImageResponse.model_validate(data)
         return r
 
     def search_members(self, device_id: str, location_id: str, member_name: str = None, phone_number: str = None,
@@ -2371,6 +2610,37 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
             params['order'] = order
         url = self.ep(f'devices/{device_id}/availableMembers')
         return self.session.follow_pagination(url=url, model=SearchMemberObject, item_key='members', params=params)
+
+    def update_specified_settings_for_the_device(self, device_id: str, tags: list[DevicePutItem] = None,
+                                                 org_id: str = None):
+        """
+        Update specified settings for the device.
+
+        Modify dynamic settings for a specified device.
+
+        This API updates device settings based on the specified `tags`. If the `tags` field is empty, the request has
+        no effect.
+
+        This requires a full, device, or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param device_id: Device for which to update settings.
+        :type device_id: str
+        :param tags: Optional array of `tag` identifiers representing specific settings to update. If omitted or
+            provided as an empty array, the request will have no effect.
+        :type tags: list[DevicePutItem]
+        :param org_id: Organization to which the device belongs.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if tags is not None:
+            body['tags'] = TypeAdapter(list[DevicePutItem]).dump_python(tags, mode='json', by_alias=True, exclude_none=True)
+        url = self.ep(f'devices/{device_id}/dynamicSettings')
+        super().put(url, params=params, json=body)
 
     def get_device_layout_by_device_id(self, device_id: str, org_id: str = None) -> DeviceLayout:
         """
@@ -2472,7 +2742,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = GetMemberResponse.model_validate(data)
         return r
 
-    def update_members_on_the_device(self, device_id: str, members: list[PutMemberObject] = None, org_id: str = None):
+    def update_members_on_device(self, device_id: str, members: list[PutMemberObject] = None, org_id: str = None):
         """
         Update Members on the device
 
@@ -2571,7 +2841,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'devices/{device_id}/settings')
         super().put(url, params=params, json=body)
 
-    def get_list_of_apply_line_key_template_jobs(self, org_id: str = None) -> list[ApplyLineKeyTemplateJobDetails]:
+    def get_list_of_apply_line_key_templates_jobs(self, org_id: str = None) -> list[ApplyLineKeyTemplateJobDetails]:
         """
         Get List of Apply Line Key Template jobs
 
@@ -2598,11 +2868,11 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[ApplyLineKeyTemplateJobDetails]).validate_python(data['items'])
         return r
 
-    def apply_a_line_key_template(self, action: PostApplyLineKeyTemplateRequestAction, template_id: str,
-                                  location_ids: list[str] = None, exclude_devices_with_custom_layout: bool = None,
-                                  include_device_tags: list[str] = None, exclude_device_tags: list[str] = None,
-                                  advisory_types: LineKeyTemplateAdvisoryTypes = None,
-                                  org_id: str = None) -> ApplyLineKeyTemplateJobDetails:
+    def apply_line_key_template(self, action: Action, template_id: str, location_ids: list[str] = None,
+                                exclude_devices_with_custom_layout: bool = None,
+                                include_device_tags: list[str] = None, exclude_device_tags: list[str] = None,
+                                advisory_types: LineKeyTemplateAdvisoryTypes = None,
+                                org_id: str = None) -> ApplyLineKeyTemplateJobDetails:
         """
         Apply a Line Key Template
 
@@ -2619,7 +2889,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
         :param action: Line key Template action to perform.
-        :type action: PostApplyLineKeyTemplateRequestAction
+        :type action: Action
         :param template_id: `templateId` is required for `APPLY_TEMPLATE` action.
         :type template_id: str
         :param location_ids: Used to search for devices only in the given locations.
@@ -2687,8 +2957,8 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = ApplyLineKeyTemplateJobDetails.model_validate(data)
         return r
 
-    def get_job_errors_for_an_apply_line_key_template_job(self, job_id: str,
-                                                          org_id: str = None) -> ApplyLineKeyTemplateJobErrors:
+    def get_job_errors_for_apply_line_key_template_job(self, job_id: str,
+                                                       org_id: str = None) -> ApplyLineKeyTemplateJobErrors:
         """
         Get job errors for an Apply Line Key Template job
 
@@ -2828,6 +3098,112 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'jobs/devices/callDeviceSettings/{job_id}/errors')
         return self.session.follow_pagination(url=url, model=ItemObject, item_key='items', params=params)
 
+    def list_dynamic_device_settings_jobs(self, org_id: str = None,
+                                          **params) -> Generator[PostDynamicDeviceSettingsJobResponse, None, None]:
+        """
+        List dynamic device settings jobs.
+
+        Lists all the jobs for job type `dynamicdevicesettings` for the given organization in order of most recent one
+        to oldest one irrespective of its status.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve list of dynamic device settings jobs for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`PostDynamicDeviceSettingsJobResponse` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('jobs/devices/dynamicDeviceSettings')
+        return self.session.follow_pagination(url=url, model=PostDynamicDeviceSettingsJobResponse, item_key='items', params=params)
+
+    def updates_dynamic_device_settings_across_organization_or_location(self,
+                                                                        tags: list[DynamicSettingsUpdateJobDevicePostItem],
+                                                                        location_id: str = None,
+                                                                        org_id: str = None) -> PostDynamicDeviceSettingsJobResponse:
+        """
+        Updates dynamic Device Settings Across Organization Or Location
+
+        Creates a job to update device settings at location or organization level.
+
+        The job runs asynchronously and persistently, applying the requested settings in bulk to all relevant devices,
+        which may belong to multiple families as specified in the request. If a `locationId` is provided, only devices
+        in that location are affected.
+
+        A unique job ID is returned to track status and errors.
+
+        Only one job can run per customer per organization at a time. Additionally, this job cannot run in parallel
+        with other device jobs such as `Call device settings
+        <https://developer.webex.com/docs/api/v1/device-call-settings/change-device-settings-across-organization-or-location-job>`_ and `Rebuild Phones
+
+        Running a job requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param tags: Array of tag identifiers for settings to be updated. Each setting is identified by a
+            `familyOrModelDisplayName` and `tag`. Supports updating multiple settings across different device families
+            in a single request.
+        :type tags: list[DynamicSettingsUpdateJobDevicePostItem]
+        :param location_id: If present, the requested settings will be updated to devices under this location.
+        :type location_id: str
+        :param org_id: Apply update dynamic device settings for all the devices under this organization.
+        :type org_id: str
+        :rtype: :class:`PostDynamicDeviceSettingsJobResponse`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if location_id is not None:
+            body['locationId'] = location_id
+        body['tags'] = TypeAdapter(list[DynamicSettingsUpdateJobDevicePostItem]).dump_python(tags, mode='json', by_alias=True, exclude_none=True)
+        url = self.ep('jobs/devices/dynamicDeviceSettings')
+        data = super().post(url, params=params, json=body)
+        r = PostDynamicDeviceSettingsJobResponse.model_validate(data)
+        return r
+
+    def get_device_dynamic_settings_job_status(self, job_id: str) -> PostDynamicDeviceSettingsJobResponse:
+        """
+        Get Device Dynamic Settings Job Status
+
+        Get dynamic device settings job status.
+
+        Provides details of the job with `jobId` of `jobType` `dynamicdevicesettings`.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job details for this `jobId`.
+        :type job_id: str
+        :rtype: :class:`PostDynamicDeviceSettingsJobResponse`
+        """
+        url = self.ep(f'jobs/devices/dynamicDeviceSettings/{job_id}')
+        data = super().get(url)
+        r = PostDynamicDeviceSettingsJobResponse.model_validate(data)
+        return r
+
+    def list_dynamic_device_settings_job_errors(self, job_id: str, org_id: str = None,
+                                                **params) -> Generator[ItemObject, None, None]:
+        """
+        List Dynamic Device Settings Job Errors
+
+        List Update dynamic device settings job errors.
+
+        Lists all error details of the job with `jobId` of `jobType` `dynamicdevicesettings`.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job details for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve the status of job for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`ItemObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'jobs/devices/dynamicDeviceSettings/{job_id}/errors')
+        return self.session.follow_pagination(url=url, model=ItemObject, item_key='items', params=params)
+
     def list_rebuild_phones_jobs(self, org_id: str = None) -> list[RebuildPhonesJob]:
         """
         List Rebuild Phones Jobs
@@ -2882,7 +3258,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = RebuildPhonesJob.model_validate(data)
         return r
 
-    def get_the_job_status_of_a_rebuild_phones_job(self, job_id: str, org_id: str = None) -> RebuildPhonesJob:
+    def get_the_job_status_of_arebuild_phones_job(self, job_id: str, org_id: str = None) -> RebuildPhonesJob:
         """
         Get the Job Status of a Rebuild Phones Job
 
@@ -2909,7 +3285,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = RebuildPhonesJob.model_validate(data)
         return r
 
-    def get_job_errors_for_a_rebuild_phones_job(self, job_id: str, org_id: str = None) -> list[ItemObject]:
+    def get_job_errors_for_arebuild_phones_job(self, job_id: str, org_id: str = None) -> list[ItemObject]:
         """
         Get Job Errors for a Rebuild Phones Job
 
@@ -2934,6 +3310,114 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'jobs/devices/rebuildPhones/{job_id}/errors')
         data = super().get(url, params=params)
         r = TypeAdapter(list[ItemObject]).validate_python(data['items'])
+        return r
+
+    def get_customer_device_dynamic_settings(self, family_or_model_display_name: str, tags: list[str] = None,
+                                             org_id: str = None) -> CustomerDeviceDynamicSettingsListPostResponse:
+        """
+        Get Customer Device Dynamic Settings
+
+        Retrieve dynamic settings for specific device tags at customer level, allowing filters by
+        `familyOrModelDisplayName` and `tag` identifier.
+
+        This API lets you request the values of multiple `Device Settings` at once by specifying a list of
+        `familyOrModelDisplayName` and tag combinations.
+
+        This requires a full, device, or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param family_or_model_display_name: The family or model name for the device. If no tag is specified, all tags
+            related to `familyOrModelDisplayName` are returned.
+        :type family_or_model_display_name: str
+        :param tags: Optional array of device tag identifiers to request settings for. Each identifier must have a
+            length between 1 and 64 characters.
+        :type tags: list[str]
+        :param org_id: List of device dynamic settings in this organization.
+        :type org_id: str
+        :rtype: :class:`CustomerDeviceDynamicSettingsListPostResponse`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        params['familyOrModelDisplayName'] = family_or_model_display_name
+        body = dict()
+        if tags is not None:
+            body['tags'] = tags
+        url = self.ep('lists/devices/dynamicSettings/actions/getSettings/invoke')
+        data = super().post(url, params=params, json=body)
+        r = CustomerDeviceDynamicSettingsListPostResponse.model_validate(data)
+        return r
+
+    def get_device_dynamic_settings(self, device_id: str, tags: list[str] = None,
+                                    org_id: str = None) -> DeviceDynamicSettingsListPostResponse:
+        """
+        Get Device Dynamic Settings
+
+        Retrieve settings for a specified device.
+
+        This API retrieves device settings based on the specified `tags`; if the `tags` field is empty or missing, all
+        settings for the device are returned.
+
+        This requires a full, device, or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param device_id: Device for which to retrieve settings.
+        :type device_id: str
+        :param tags: Optional array of tag identifiers representing specific settings to fetch. If omitted or provided
+            as an empty array, all settings for the device will be returned.
+        :type tags: list[str]
+        :param org_id: Organization to which the `device` belongs.
+        :type org_id: str
+        :rtype: :class:`DeviceDynamicSettingsListPostResponse`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if tags is not None:
+            body['tags'] = tags
+        url = self.ep(f'lists/devices/{device_id}/dynamicSettings/actions/getSettings/invoke')
+        data = super().post(url, params=params, json=body)
+        r = DeviceDynamicSettingsListPostResponse.model_validate(data)
+        return r
+
+    def get_location_device_dynamic_settings(self, location_id: str, family_or_model_display_name: str,
+                                             tags: list[str] = None,
+                                             org_id: str = None) -> LocationDeviceDynamicSettingsListPostResponse:
+        """
+        Get Location Device Dynamic Settings
+
+        Retrieve dynamic settings for specific device tags at the specified location level, allowing filters by
+        `familyOrModelDisplayName` and `tag` identifier.
+
+        This API lets you request the values of multiple `Device Settings` at once by specifying a list of
+        `familyOrModelDisplayName` and tag combinations for a specific location.
+
+        This requires a full, device, or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Unique identifier for the `location`.
+        :type location_id: str
+        :param family_or_model_display_name: The family or model name for the device. If no tag is specified, all tags
+            related to `familyOrModelDisplayName` are returned.
+        :type family_or_model_display_name: str
+        :param tags: Optional array of device tag identifiers to request settings for. Each identifier must have a
+            length between 1 and 64 characters.
+        :type tags: list[str]
+        :param org_id: Unique identifier for the `organization` to which this location belongs.
+        :type org_id: str
+        :rtype: :class:`LocationDeviceDynamicSettingsListPostResponse`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        params['familyOrModelDisplayName'] = family_or_model_display_name
+        body = dict()
+        if tags is not None:
+            body['tags'] = tags
+        url = self.ep(f'lists/locations/{location_id}/devices/dynamicSettings/actions/getSettings/invoke')
+        data = super().post(url, params=params, json=body)
+        r = LocationDeviceDynamicSettingsListPostResponse.model_validate(data)
         return r
 
     def get_location_device_settings(self, location_id: str, org_id: str = None) -> DeviceSettingsObject:
@@ -3007,7 +3491,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = UserDeviceCount.model_validate(data)
         return r
 
-    def get_device_settings_for_a_person(self, person_id: str, org_id: str = None) -> Compression:
+    def get_device_settings_for_aperson(self, person_id: str, org_id: str = None) -> Compression:
         """
         Get Device Settings for a Person
 
@@ -3033,7 +3517,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = Compression.model_validate(data['compression'])
         return r
 
-    def update_device_settings_for_a_person(self, person_id: str, compression: Compression, org_id: str = None):
+    def update_device_settings_for_aperson(self, person_id: str, compression: Compression, org_id: str = None):
         """
         Update Device Settings for a Person
 
@@ -3061,8 +3545,8 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'people/{person_id}/devices/settings')
         super().put(url, params=params, json=body)
 
-    def modify_hoteling_settings_for_a_person_s_primary_devices(self, person_id: str, hoteling: Hoteling,
-                                                                org_id: str = None):
+    def modefy_hoteling_settings_for_persons_primary_devices(self, person_id: str, hoteling: Hoteling,
+                                                             org_id: str = None):
         """
         Modify Hoteling Settings for a Person's Primary Devices
 
@@ -3144,7 +3628,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def modify_workspace_devices(self, workspace_id: str, enabled: bool, limit_guest_use: bool = None,
-                                 guest_hours_limit: float = None, org_id: str = None):
+                                 guest_hours_limit: int = None, org_id: str = None):
         """
         Modify Workspace Devices
 
@@ -3166,7 +3650,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type limit_guest_use: bool
         :param guest_hours_limit: Time Limit in hours until hoteling is enabled. Mandatory if `limitGuestUse` is
             enabled.
-        :type guest_hours_limit: float
+        :type guest_hours_limit: int
         :param org_id: Organization to which the workspace belongs.
         :type org_id: str
         :rtype: None
@@ -3183,7 +3667,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'workspaces/{workspace_id}/devices')
         super().put(url, params=params, json=body)
 
-    def get_device_settings_for_a_workspace(self, workspace_id: str, org_id: str = None) -> Compression:
+    def get_device_settings_for_aworkspace(self, workspace_id: str, org_id: str = None) -> Compression:
         """
         Get Device Settings for a Workspace
 
@@ -3209,7 +3693,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = Compression.model_validate(data['compression'])
         return r
 
-    def update_device_settings_for_a_workspace(self, workspace_id: str, compression: Compression, org_id: str = None):
+    def update_device_settings_for_aworkspace(self, workspace_id: str, compression: Compression, org_id: str = None):
         """
         Update Device Settings for a Workspace
 

@@ -20,7 +20,7 @@ from .calls import CallsApi
 from .conference import ConferenceControlsApi
 from .cx_essentials import CustomerExperienceEssentialsApi
 from .dect_devices import DECTDevicesApi
-from .devices import TelephonyDevicesApi
+from .devices import TelephonyDevicesApi, SupportedDevices
 from .emergency_services import OrgEmergencyServicesApi
 from .guest_calling import GuestCallingApi
 from .hotdesk import HotDeskApi
@@ -48,7 +48,7 @@ from ..api_child import ApiChild
 from ..base import ApiModel, to_camel, plus1, enum_str
 from ..base import SafeEnum as Enum
 from ..common import UserType, RouteIdentity, NumberState, ValidateExtensionsResponse, ValidatePhoneNumbersResponse, \
-    DeviceCustomization, IdAndName, OwnerType, NumberOwner, DeviceType
+    DeviceCustomization, IdAndName, OwnerType, NumberOwner
 from ..common.schedules import ScheduleApi, ScheduleApiBase
 from ..person_settings.common import ApiSelector
 from ..person_settings.msteams import OrgMSTeamsSettingApi
@@ -65,8 +65,7 @@ __all__ = ['NumberListPhoneNumberType', 'TelephonyType',
            'TranslationPatternConfigurationLevel', 'AppliedServiceTranslationPattern', 'ConfigurationLevel',
            'CallInterceptDetailsPermission', 'CallInterceptDetails', 'CallingPlanReason',
            'OutgoingCallingPlanPermissionsByType', 'OutgoingCallingPlanPermissionsByDigitPattern', 'AppliedService',
-           'DeviceManufacturer', 'DeviceManagedBy', 'OnboardingMethod', 'DeviceSettingsConfiguration',
-           'SupportedDevice', 'AnnouncementLanguage', 'SupportedDevices', 'TelephonyApi', 'SupportsLogCollection',
+           'AnnouncementLanguage', 'TelephonyApi',
            'MoHTheme', 'MoHConfig']
 
 
@@ -510,125 +509,11 @@ class TestCallRoutingResult(ApiModel):
     applied_services: Optional[list[AppliedService]] = None
 
 
-class DeviceManufacturer(str, Enum):
-    cisco = 'CISCO'
-    third_party = 'THIRD_PARTY'
-
-
-class DeviceManagedBy(str, Enum):
-    cisco = 'CISCO'
-    customer = 'CUSTOMER'
-    partner = 'PARTNER'
-
-
-class OnboardingMethod(str, Enum):
-    mac_address = 'MAC_ADDRESS'
-    activation_code = 'ACTIVATION_CODE'
-    no_method = 'NONE'
-
-
-class DeviceSettingsConfiguration(str, Enum):
-    #: Devices which supports Webex Calling Device Settings Configuration.
-    webex_calling_device_configuration = 'WEBEX_CALLING_DEVICE_CONFIGURATION'
-    #: Devices which supports Webex Device Settings Configuration.
-    webex_device_configuration = 'WEBEX_DEVICE_CONFIGURATION'
-    #: Devices does not support any configuration.
-    none_ = 'NONE'
-
-
-class SupportsLogCollection(str, Enum):
-    #: Devices which does not support log collection.
-    none_ = 'NONE'
-    #: Devices which supports Cisco PRT log collection.
-    cisco_prt = 'CISCO_PRT'
-    #: Devices which supports Cisco RoomOS log collection.
-    cisco_roomos = 'CISCO_ROOMOS'
-
-
-class SupportedDevice(ApiModel):
-    #: Model name of the device.
-    model: str
-    #: Display name of the device.
-    display_name: str
-    #: Type of the device.
-    device_type: DeviceType = Field(alias='type')
-    #: Manufacturer of the device.
-    manufacturer: DeviceManufacturer
-    #: Users who manage the device.
-    managed_by: DeviceManagedBy
-    #: List of places the device is supported for.
-    supported_for: list[UserType]
-    #: Onboarding method.
-    onboarding_method: list[OnboardingMethod]
-    #: Enables / Disables layout configuration for devices.
-    allow_configure_layout_enabled: bool
-    #: Number of port lines.
-    number_of_line_ports: int
-    #: Indicates whether Kem support is enabled or not.
-    kem_support_enabled: bool
-    #: Module count.
-    kem_module_count: Optional[int] = None
-    #: Enables / disables Kem lines support.
-    kem_lines_support_enabled: Optional[bool] = None
-    #: Key expansion module type of the device.
-    kem_module_type: Optional[list[str]] = None
-    #: Enables / Disables the upgrade channel.
-    upgrade_channel_enabled: Optional[bool] = None
-    #: The default upgrade channel.
-    default_upgrade_channel: Optional[str] = None
-    #: Enables / disables the additional primary line appearances.
-    additional_primary_line_appearances_enabled: Optional[bool] = None
-    #: Enables / disables the additional shared line appearances.
-    additional_secondary_line_appearances_enabled: Optional[bool] = None
-    #: Enables / disables Basic emergency nomadic.
-    basic_emergency_nomadic_enabled: Optional[bool] = None
-    #: Enables / disables customized behavior support on devices
-    customized_behaviors_enabled: Optional[bool] = None
-    #: Enables / disables configuring port support on device.
-    allow_configure_ports_enabled: Optional[bool] = None
-    #: Enables / disables customizable line label.
-    customizable_line_label_enabled: Optional[bool] = None
-    #: Enables / disables support line port reordering.
-    supports_line_port_reordering_enabled: Optional[bool] = None
-    #: Enables / disables port number support.
-    port_number_support_enabled: Optional[bool] = None
-    #: Enables / disables T.38.
-    t38_enabled: Optional[bool] = None
-    #: Enables / disables call declined.
-    call_declined_enabled: Optional[bool] = None
-    #: Supports touch screen on device.
-    touch_screen_phone: Optional[bool] = None
-    #: Number of line key buttons for a device.
-    number_of_line_key_buttons: Optional[int] = None
-    #: Device settings configuration.
-    device_settings_configuration: Optional[DeviceSettingsConfiguration] = None
-    number_of_primary_display_configured_lines: Optional[int] = None
-    #: Enables / disables hoteling host.
-    allow_hoteling_host_enabled: Optional[bool] = None
-    #: Device log collection configuration.
-    supports_log_collection: Optional[SupportsLogCollection] = None
-    #: Enables / disables apply changes.
-    supports_apply_changes_enabled: Optional[bool] = None
-    #: Enables / disables configure lines.
-    allow_configure_lines_enabled: Optional[bool] = None
-    #: Enables / disables configure phone settings.
-    allow_configure_phone_settings_enabled: Optional[bool] = None
-    #: Enables / disables hotline support.
-    supports_hotline_enabled: Optional[bool] = None
-    #: Supports hot desk only.
-    supports_hot_desk_only: Optional[bool] = None
-
-
 class AnnouncementLanguage(ApiModel):
     #: Language name.
     name: Optional[str] = None
     #: Language Code
     code: Optional[str] = None
-
-
-class SupportedDevices(ApiModel):
-    upgrade_channel_list: Optional[list[str]] = None
-    devices: Optional[list[SupportedDevice]] = None
 
 
 class MoHTheme(str, Enum):
@@ -996,17 +881,32 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         data = self.post(url=url, params=params, json=body)
         return TestCallRoutingResult.model_validate(data)
 
-    def supported_devices(self, org_id: str = None) -> SupportedDevices:
+    def supported_devices(self, allow_configure_layout_enabled: bool = None, type_: str = None,
+                          org_id: str = None) -> SupportedDevices:
         """
+        Read the List of Supported Devices
+
         Gets the list of supported devices for an organization.
 
         Retrieving this list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param org_id: List supported devices for an organization
-        :return: List of supported devices
+        :param allow_configure_layout_enabled: List supported devices that allow the user to configure the layout.
+        :type allow_configure_layout_enabled: bool
+        :param type_: List supported devices of a specific type. To excluded device types from a request or query, add
+            `type=not:DEVICE_TYPE`. For example, `type=not:MPP`.
+        :type type_: str
+        :param org_id: List supported devices for an organization.
+        :type org_id: str
+        :rtype: SupportedDevices
         """
-        params = org_id and {'orgId': org_id} or None
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if allow_configure_layout_enabled is not None:
+            params['allowConfigureLayoutEnabled'] = str(allow_configure_layout_enabled).lower()
+        if type is not None:
+            params['type'] = type_
         url = self.ep('supportedDevices')
         data = self.get(url=url, params=params)
         return SupportedDevices.model_validate(data)

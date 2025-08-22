@@ -3,26 +3,149 @@ Telephony devices
 """
 import os
 from collections.abc import Generator
+from dataclasses import dataclass
 from io import BufferedReader
 from typing import Optional, Union, Any
 
 from pydantic import TypeAdapter, Field, field_validator, field_serializer
 from requests_toolbelt import MultipartEncoder
 
+from .dynamic_settings import DevicesDynamicSettingsApi
 from ..jobs import LineKeyTemplateAdvisoryTypes
+from ...rest import RestSession
 from ...api_child import ApiChild
 from ...base import ApiModel, plus1, to_camel, enum_str
 from ...base import SafeEnum as Enum
 from ...common import PrimaryOrShared, UserType, ValidationStatus, DeviceCustomization, IdAndName, \
-    ApplyLineKeyTemplateAction, UserLicenseType
+    ApplyLineKeyTemplateAction, UserLicenseType, DeviceType
 
-__all__ = ['MemberCommon', 'DeviceMember', 'DeviceMembersResponse', 'AvailableMember', 'MACState',
+__all__ = ['DeviceManufacturer', 'DeviceManagedBy', 'OnboardingMethod', 'DeviceSettingsConfiguration',
+           'SupportsLogCollection', 'SupportedDevice', 'SupportedDevices', 'MemberCommon', 'DeviceMember',
+           'DeviceMembersResponse', 'AvailableMember', 'MACState',
            'MACStatus', 'MACValidationResponse', 'TelephonyDevicesApi', 'LineKeyType', 'ProgrammableLineKey',
            'LineKeyTemplate', 'TelephonyDeviceDetails', 'ActivationState', 'TelephonyDeviceOwner',
            'TelephonyDeviceProxy', 'LayoutMode', 'KemModuleType', 'KemKey', 'DeviceLayout', 'DeviceSettings',
            'BackgroundImage', 'BackgroundImages', 'DeleteImageRequestObject',
            'DeleteImageResponseSuccessObjectResult', 'DeleteImageResponseSuccessObject',
            'DeleteDeviceBackgroundImagesResponse', 'UserDeviceCount']
+
+
+class DeviceManufacturer(str, Enum):
+    cisco = 'CISCO'
+    third_party = 'THIRD_PARTY'
+
+
+class DeviceManagedBy(str, Enum):
+    cisco = 'CISCO'
+    customer = 'CUSTOMER'
+    partner = 'PARTNER'
+
+
+class OnboardingMethod(str, Enum):
+    mac_address = 'MAC_ADDRESS'
+    activation_code = 'ACTIVATION_CODE'
+    no_method = 'NONE'
+
+
+class DeviceSettingsConfiguration(str, Enum):
+    #: Devices which supports Webex Calling Device Settings Configuration.
+    webex_calling_device_configuration = 'WEBEX_CALLING_DEVICE_CONFIGURATION'
+    #: Devices which supports Webex Device Settings Configuration.
+    webex_device_configuration = 'WEBEX_DEVICE_CONFIGURATION'
+    #: Devices which supports Webex Calling dynamic Settings Configuration.
+    webex_calling_dynamic_device_configuration = 'WEBEX_CALLING_DYNAMIC_DEVICE_CONFIGURATION'
+    #: Devices does not support any configuration.
+    none_ = 'NONE'
+
+
+class SupportsLogCollection(str, Enum):
+    #: Devices which does not support log collection.
+    none_ = 'NONE'
+    #: Devices which supports Cisco PRT log collection.
+    cisco_prt = 'CISCO_PRT'
+    #: Devices which supports Cisco RoomOS log collection.
+    cisco_roomos = 'CISCO_ROOMOS'
+
+
+class SupportedDevice(ApiModel):
+    #: Model name of the device.
+    model: str
+    #: Display name of the device.
+    display_name: str
+    #: The display name of the device family.
+    family_display_name: Optional[str] = None
+    #: Type of the device.
+    device_type: DeviceType = Field(alias='type')
+    #: Manufacturer of the device.
+    manufacturer: DeviceManufacturer
+    #: Users who manage the device.
+    managed_by: DeviceManagedBy
+    #: List of places the device is supported for.
+    supported_for: list[UserType]
+    #: Onboarding method.
+    onboarding_method: list[OnboardingMethod]
+    #: Enables / Disables layout configuration for devices.
+    allow_configure_layout_enabled: bool
+    #: Number of port lines.
+    number_of_line_ports: int
+    #: Indicates whether Kem support is enabled or not.
+    kem_support_enabled: bool
+    #: Module count.
+    kem_module_count: Optional[int] = None
+    #: Enables / disables Kem lines support.
+    kem_lines_support_enabled: Optional[bool] = None
+    #: Key expansion module type of the device.
+    kem_module_type: Optional[list[str]] = None
+    #: Enables / Disables the upgrade channel.
+    upgrade_channel_enabled: Optional[bool] = None
+    #: The default upgrade channel.
+    default_upgrade_channel: Optional[str] = None
+    #: Enables / disables the additional primary line appearances.
+    additional_primary_line_appearances_enabled: Optional[bool] = None
+    #: Enables / disables the additional shared line appearances.
+    additional_secondary_line_appearances_enabled: Optional[bool] = None
+    #: Enables / disables Basic emergency nomadic.
+    basic_emergency_nomadic_enabled: Optional[bool] = None
+    #: Enables / disables customized behavior support on devices
+    customized_behaviors_enabled: Optional[bool] = None
+    #: Enables / disables configuring port support on device.
+    allow_configure_ports_enabled: Optional[bool] = None
+    #: Enables / disables customizable line label.
+    customizable_line_label_enabled: Optional[bool] = None
+    #: Enables / disables support line port reordering.
+    supports_line_port_reordering_enabled: Optional[bool] = None
+    #: Enables / disables port number support.
+    port_number_support_enabled: Optional[bool] = None
+    #: Enables / disables T.38.
+    t38_enabled: Optional[bool] = None
+    #: Enables / disables call declined.
+    call_declined_enabled: Optional[bool] = None
+    #: Supports touch screen on device.
+    touch_screen_phone: Optional[bool] = None
+    #: Number of line key buttons for a device.
+    number_of_line_key_buttons: Optional[int] = None
+    #: Device settings configuration.
+    device_settings_configuration: Optional[DeviceSettingsConfiguration] = None
+    number_of_primary_display_configured_lines: Optional[int] = None
+    #: Enables / disables hoteling host.
+    allow_hoteling_host_enabled: Optional[bool] = None
+    #: Device log collection configuration.
+    supports_log_collection: Optional[SupportsLogCollection] = None
+    #: Enables / disables apply changes.
+    supports_apply_changes_enabled: Optional[bool] = None
+    #: Enables / disables configure lines.
+    allow_configure_lines_enabled: Optional[bool] = None
+    #: Enables / disables configure phone settings.
+    allow_configure_phone_settings_enabled: Optional[bool] = None
+    #: Enables / disables hotline support.
+    supports_hotline_enabled: Optional[bool] = None
+    #: Supports hot desk only.
+    supports_hot_desk_only: Optional[bool] = None
+
+
+class SupportedDevices(ApiModel):
+    upgrade_channel_list: Optional[list[str]] = None
+    devices: Optional[list[SupportedDevice]] = None
 
 
 class ActivationState(str, Enum):
@@ -393,10 +516,46 @@ class UserDeviceCount(ApiModel):
     applications_count: Optional[int] = None
 
 
+@dataclass(init=False, repr=False)
 class TelephonyDevicesApi(ApiChild, base='telephony/config'):
     """
     Telephony devices API
     """
+    dynamic_settings: DevicesDynamicSettingsApi
+
+    def __init__(self, session: RestSession):
+        super().__init__(session=session)
+        self.dynamic_settings = DevicesDynamicSettingsApi(session=session)
+
+    def supported_devices(self, allow_configure_layout_enabled: bool = None, type_: str = None,
+                          org_id: str = None) -> SupportedDevices:
+        """
+        Read the List of Supported Devices
+
+        Gets the list of supported devices for an organization.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param allow_configure_layout_enabled: List supported devices that allow the user to configure the layout.
+        :type allow_configure_layout_enabled: bool
+        :param type_: List supported devices of a specific type. To excluded device types from a request or query, add
+            `type=not:DEVICE_TYPE`. For example, `type=not:MPP`.
+        :type type_: str
+        :param org_id: List supported devices for an organization.
+        :type org_id: str
+        :rtype: SupportedDevices
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if allow_configure_layout_enabled is not None:
+            params['allowConfigureLayoutEnabled'] = str(allow_configure_layout_enabled).lower()
+        if type is not None:
+            params['type'] = type_
+        url = self.ep('supportedDevices')
+        data = self.get(url=url, params=params)
+        return SupportedDevices.model_validate(data)
 
     def details(self, device_id: str, org_id: str = None) -> TelephonyDeviceDetails:
         """

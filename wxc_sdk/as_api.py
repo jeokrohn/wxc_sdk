@@ -39,22 +39,23 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsCallWaitingApi', 'AsCallerIdApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi',
            'AsConferenceControlsApi', 'AsConvergedRecordingsApi', 'AsCustomerExperienceEssentialsApi',
            'AsDECTDevicesApi', 'AsDetailedCDRApi', 'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi',
-           'AsDevicesApi', 'AsDialPlanApi', 'AsDigitPatternsApi', 'AsDndApi', 'AsECBNApi', 'AsEventsApi',
-           'AsExecAssistantApi', 'AsFeatureAccessApi', 'AsFeatureSelector', 'AsForwardingApi', 'AsGoOverrideApi',
-           'AsGroupsApi', 'AsGuestCallingApi', 'AsGuestManagementApi', 'AsHotDeskApi',
-           'AsHotDeskingSigninViaVoicePortalApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi',
-           'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationAccessCodesApi',
-           'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi', 'AsLocationNumbersApi',
-           'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMSTeamsSettingApi', 'AsManageNumbersJobsApi',
-           'AsMePersonalAssistantApi', 'AsMeSettingsApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi',
-           'AsMeetingInviteesApi', 'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi',
-           'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi',
-           'AsModeManagementApi', 'AsMonitoringApi', 'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi',
-           'AsOperatingModesApi', 'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi',
-           'AsOrganisationAccessCodesApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi',
-           'AsOrganizationContactsApi', 'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi',
-           'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPersonalAssistantApi',
-           'AsPlayListApi', 'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
+           'AsDevicesApi', 'AsDevicesDynamicSettingsApi', 'AsDialPlanApi', 'AsDigitPatternsApi', 'AsDndApi',
+           'AsECBNApi', 'AsEventsApi', 'AsExecAssistantApi', 'AsFeatureAccessApi', 'AsFeatureSelector',
+           'AsForwardingApi', 'AsGoOverrideApi', 'AsGroupsApi', 'AsGuestCallingApi', 'AsGuestManagementApi',
+           'AsHotDeskApi', 'AsHotDeskingSigninViaVoicePortalApi', 'AsHotelingApi', 'AsHuntGroupApi',
+           'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi',
+           'AsLocationAccessCodesApi', 'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi',
+           'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMSTeamsSettingApi',
+           'AsManageNumbersJobsApi', 'AsMePersonalAssistantApi', 'AsMeSettingsApi', 'AsMeetingChatsApi',
+           'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
+           'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi',
+           'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsModeManagementApi', 'AsMonitoringApi',
+           'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOperatingModesApi',
+           'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi', 'AsOrganisationAccessCodesApi',
+           'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOrganizationContactsApi',
+           'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi',
+           'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPersonalAssistantApi', 'AsPlayListApi',
+           'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
            'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsQueueCallRecordingSettingsApi',
            'AsRebuildPhonesJobsApi', 'AsReceptionistApi', 'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi',
            'AsReportsApi', 'AsRestSession', 'AsRolesApi', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi',
@@ -63,11 +64,12 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsSendActivationEmailApi', 'AsSequentialRingApi', 'AsSimRingApi', 'AsSingleNumberReachApi', 'AsStatusAPI',
            'AsSupervisorApi', 'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi',
            'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTranslationPatternsApi', 'AsTrunkApi',
-           'AsUpdateRoutingPrefixJobsApi', 'AsVirtualExtensionsApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi',
-           'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi',
-           'AsWebhookApi', 'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi',
-           'AsWorkspaceNumbersApi', 'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi',
-           'AsWrapupReasonApi', 'AsXApi']
+           'AsUpdateDynamicDeviceSettingsJobsApi', 'AsUpdateRoutingPrefixJobsApi', 'AsVirtualExtensionsApi',
+           'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi',
+           'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi',
+           'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
+           'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi', 'AsWrapupReasonApi',
+           'AsXApi']
 
 
 @dataclass(init=False, repr=False)
@@ -3376,6 +3378,162 @@ class AsSendActivationEmailApi(AsApiChild, base='identity/organizations'):
         return r
 
 
+class AsUpdateDynamicDeviceSettingsJobsApi(AsApiChild, base='telephony/config'):
+    def list_gen(self, org_id: str = None,
+             **params) -> AsyncGenerator[StartJobResponse, None, None]:
+        """
+        List dynamic device settings jobs.
+
+        Lists all the jobs for job type `dynamicdevicesettings` for the given organization in order of most recent one
+        to oldest one irrespective of its status.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve list of dynamic device settings jobs for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`StartJobResponse` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('jobs/devices/dynamicDeviceSettings')
+        return self.session.follow_pagination(url=url, model=StartJobResponse, item_key='items',
+                                              params=params)
+
+    async def list(self, org_id: str = None,
+             **params) -> List[StartJobResponse]:
+        """
+        List dynamic device settings jobs.
+
+        Lists all the jobs for job type `dynamicdevicesettings` for the given organization in order of most recent one
+        to oldest one irrespective of its status.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve list of dynamic device settings jobs for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`StartJobResponse` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('jobs/devices/dynamicDeviceSettings')
+        return [o async for o in self.session.follow_pagination(url=url, model=StartJobResponse, item_key='items',
+                                              params=params)]
+
+    async def update_across_org_or_location(self,
+                                      tags: List[DynamicSettingsUpdateJobItem],
+                                      location_id: str = None,
+                                      org_id: str = None) -> StartJobResponse:
+        """
+        Updates dynamic Device Settings Across Organization Or Location
+
+        Creates a job to update device settings at location or organization level.
+
+        The job runs asynchronously and persistently, applying the requested settings in bulk to all relevant devices,
+        which may belong to multiple families as specified in the request. If a `locationId` is provided, only devices
+        in that location are affected.
+
+        A unique job ID is returned to track status and errors.
+
+        Only one job can run per customer per organization at a time. Additionally, this job cannot run in parallel
+        with other device jobs such as `Call device settings
+        <https://developer.webex.com/docs/api/v1/device-call-settings/change-device-settings-across-organization-or
+        -location-job>`_ and `Rebuild Phones
+
+        Running a job requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param tags: Array of tag identifiers for settings to be updated. Each setting is identified by a
+            `familyOrModelDisplayName` and `tag`. Supports updating multiple settings across different device families
+            in a single request.
+        :type tags: list[DynamicSettingsUpdateJobItem]
+        :param location_id: If present, the requested settings will be updated to devices under this location.
+        :type location_id: str
+        :param org_id: Apply update dynamic device settings for all the devices under this organization.
+        :type org_id: str
+        :rtype: :class:`StartJobResponse`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if location_id is not None:
+            body['locationId'] = location_id
+        body['tags'] = TypeAdapter(list[DynamicSettingsUpdateJobItem]).dump_python(tags, mode='json',
+                                                                                   by_alias=True,
+                                                                                   exclude_none=True)
+        url = self.ep('jobs/devices/dynamicDeviceSettings')
+        data = await super().post(url, params=params, json=body)
+        r = StartJobResponse.model_validate(data)
+        return r
+
+    async def status(self, job_id: str) -> StartJobResponse:
+        """
+        Get Device Dynamic Settings Job Status
+
+        Get dynamic device settings job status.
+
+        Provides details of the job with `jobId` of `jobType` `dynamicdevicesettings`.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job details for this `jobId`.
+        :type job_id: str
+        :rtype: :class:`StartJobResponse`
+        """
+        url = self.ep(f'jobs/devices/dynamicDeviceSettings/{job_id}')
+        data = await super().get(url)
+        r = StartJobResponse.model_validate(data)
+        return r
+
+    def errors_gen(self, job_id: str, org_id: str = None,
+               **params) -> AsyncGenerator[JobErrorItem, None, None]:
+        """
+        List Dynamic Device Settings Job Errors
+
+        List Update dynamic device settings job errors.
+
+        Lists all error details of the job with `jobId` of `jobType` `dynamicdevicesettings`.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job details for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve the status of job for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`JobErrorItem` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'jobs/devices/dynamicDeviceSettings/{job_id}/errors')
+        return self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)
+
+    async def errors(self, job_id: str, org_id: str = None,
+               **params) -> List[JobErrorItem]:
+        """
+        List Dynamic Device Settings Job Errors
+
+        List Update dynamic device settings job errors.
+
+        Lists all error details of the job with `jobId` of `jobType` `dynamicdevicesettings`.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param job_id: Retrieve job details for this `jobId`.
+        :type job_id: str
+        :param org_id: Retrieve the status of job for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`JobErrorItem` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'jobs/devices/dynamicDeviceSettings/{job_id}/errors')
+        return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)]
+
+
 class AsUpdateRoutingPrefixJobsApi(AsApiChild, base='telephony/config/jobs/updateRoutingPrefix'):
     def list_gen(self, org_id: str = None) -> AsyncGenerator[StartJobResponse, None, None]:
         """
@@ -3506,6 +3664,8 @@ class AsJobsApi(AsApiChild, base='telephony/config/jobs'):
     call_recording: AsCallRecordingJobsApi
     #: API for device settings jobs
     device_settings: AsDeviceSettingsJobsApi
+    #: API for dynamic device settings jobs
+    dynamic_device_settings: AsUpdateDynamicDeviceSettingsJobsApi
     #: API for manage numbers jobs
     manage_numbers: AsManageNumbersJobsApi
     # ; API for move users jobs
@@ -3521,6 +3681,7 @@ class AsJobsApi(AsApiChild, base='telephony/config/jobs'):
         self.apply_line_key_templates = AsApplyLineKeyTemplatesJobsApi(session=session)
         self.call_recording = AsCallRecordingJobsApi(session=session)
         self.device_settings = AsDeviceSettingsJobsApi(session=session)
+        self.dynamic_device_settings = AsUpdateDynamicDeviceSettingsJobsApi(session=session)
         self.manage_numbers = AsManageNumbersJobsApi(session=session)
         self.move_users = AsMoveUsersJobsApi(session=session)
         self.rebuild_phones = AsRebuildPhonesJobsApi(session=session)
@@ -4042,6 +4203,7 @@ class AsMePersonalAssistantApi(AsApiChild, base='telephony/config/people/me/sett
 
     Configuring settings requires a user auth token with a scope of `spark:telephony_config_write`.
     """
+
     async def get(self) -> PersonalAssistant:
         """
         Get My Personal Assistant
@@ -25641,10 +25803,249 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
                                               params=params)]
 
 
+class AsDevicesDynamicSettingsApi(AsApiChild, base='telephony/config'):
+    """
+    Telephony devices API
+    """
+
+    async def get_settings_groups(self, family_or_model_display_name: str = None,
+                            include_settings_type: SettingsType = None,
+                            org_id: str = None) -> DynamicSettingsGroups:
+        """
+        Get Settings Groups
+
+        This API returns the `settingsGroups` that define the structure and association of tags for dynamic device
+        settings.
+
+        The `settingsGroups` are used to organize the tags into logical groups, making it easier to manage and
+        configure dynamic device settings.
+
+        :param family_or_model_display_name: Device family or model display name to filter the `settingsGroups`.
+        :type family_or_model_display_name: str
+        :param include_settings_type: To show groups or tabs or both. Query param is case insensitive. Default is
+            `ALL`.
+        :type include_settings_type: SettingsType
+        :param org_id: Settings groups for devices in this organization.
+        :type org_id: str
+        :rtype: :class:`DynamicSettingsGroups`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if family_or_model_display_name is not None:
+            params['familyOrModelDisplayName'] = family_or_model_display_name
+        if include_settings_type is not None:
+            params['includeSettingsType'] = enum_str(include_settings_type)
+        url = self.ep('devices/dynamicSettings/settingsGroups')
+        data = await super().get(url, params=params)
+        r = DynamicSettingsGroups.model_validate(data)
+        return r
+
+    async def get_validation_schema(self, family_or_model_display_name: str = None, org_id: str = None) -> list[DeviceTag]:
+        """
+        Get Validation Schema
+
+        This API returns the validation schema for `tags` of all or specific `familyOrModelDisplayName`.
+
+        The schema is used to validate the `tag` for devices in the `Webex Calling` platform. The schema includes
+        information about the required fields, data types, and validation rules for each setting.
+
+        :param family_or_model_display_name: Device family or model display name to filter the schema.
+        :type family_or_model_display_name: str
+        :param org_id: Validation schema for devices in this organization.
+        :type org_id: str
+        :rtype: list[DeviceTag]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if family_or_model_display_name is not None:
+            params['familyOrModelDisplayName'] = family_or_model_display_name
+        url = self.ep('devices/dynamicSettings/validationSchema')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[DeviceTag]).validate_python(data['tags'])
+        return r
+
+    async def update_specified_settings_for_the_device(self, device_id: str, tags: list[DevicePutItem] = None,
+                                                 org_id: str = None):
+        """
+        Update specified settings for the device.
+
+        Modify dynamic settings for a specified device.
+
+        This API updates device settings based on the specified `tags`. If the `tags` field is empty, the request has
+        no effect.
+
+        This requires a full, device, or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param device_id: Device for which to update settings.
+        :type device_id: str
+        :param tags: Optional array of `tag` identifiers representing specific settings to update. If omitted or
+            provided as an empty array, the request will have no effect.
+        :type tags: list[DevicePutItem]
+        :param org_id: Organization to which the device belongs.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if tags is not None:
+            body['tags'] = TypeAdapter(list[DevicePutItem]).dump_python(tags, mode='json', by_alias=True,
+                                                                        exclude_none=True)
+        url = self.ep(f'devices/{device_id}/dynamicSettings')
+        await super().put(url, params=params, json=body)
+
+    async def get_customer_device_settings(self, family_or_model_display_name: str, tags: list[str] = None,
+                                     org_id: str = None) -> DeviceDynamicSettings:
+        """
+        Get Customer Device Dynamic Settings
+
+        Retrieve dynamic settings for specific device tags at customer level, allowing filters by
+        `familyOrModelDisplayName` and `tag` identifier.
+
+        This API lets you request the values of multiple `Device Settings` at once by specifying a list of
+        `familyOrModelDisplayName` and tag combinations.
+
+        This requires a full, device, or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param family_or_model_display_name: The family or model name for the device. If no tag is specified, all tags
+            related to `familyOrModelDisplayName` are returned.
+        :type family_or_model_display_name: str
+        :param tags: Optional array of device tag identifiers to request settings for. Each identifier must have a
+            length between 1 and 64 characters.
+        :type tags: list[str]
+        :param org_id: List of device dynamic settings in this organization.
+        :type org_id: str
+        :rtype: :class:`CustomerDeviceDynamicSettings`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        params['familyOrModelDisplayName'] = family_or_model_display_name
+        body = dict()
+        if tags is not None:
+            body['tags'] = tags
+        url = self.ep('lists/devices/dynamicSettings/actions/getSettings/invoke')
+        data = await super().post(url, params=params, json=body)
+        r = DeviceDynamicSettings.model_validate(data)
+        return r
+
+    async def get_device_settings(self, device_id: str, tags: list[str] = None,
+                            org_id: str = None) -> DeviceDynamicSettings:
+        """
+        Get Device Dynamic Settings
+
+        Retrieve settings for a specified device.
+
+        This API retrieves device settings based on the specified `tags`; if the `tags` field is empty or missing, all
+        settings for the device are returned.
+
+        This requires a full, device, or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param device_id: Device for which to retrieve settings.
+        :type device_id: str
+        :param tags: Optional array of tag identifiers representing specific settings to fetch. If omitted or provided
+            as an empty array, all settings for the device will be returned.
+        :type tags: list[str]
+        :param org_id: Organization to which the `device` belongs.
+        :type org_id: str
+        :rtype: :class:`DeviceDynamicSettings`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if tags is not None:
+            body['tags'] = tags
+        url = self.ep(f'lists/devices/{device_id}/dynamicSettings/actions/getSettings/invoke')
+        data = await super().post(url, params=params, json=body)
+        r = DeviceDynamicSettings.model_validate(data)
+        return r
+
+    async def get_location_device_settings(self, location_id: str, family_or_model_display_name: str,
+                                     tags: list[str] = None,
+                                     org_id: str = None) -> DeviceDynamicSettings:
+        """
+        Get Location Device Dynamic Settings
+
+        Retrieve dynamic settings for specific device tags at the specified location level, allowing filters by
+        `familyOrModelDisplayName` and `tag` identifier.
+
+        This API lets you request the values of multiple `Device Settings` at once by specifying a list of
+        `familyOrModelDisplayName` and tag combinations for a specific location.
+
+        This requires a full, device, or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Unique identifier for the `location`.
+        :type location_id: str
+        :param family_or_model_display_name: The family or model name for the device. If no tag is specified, all tags
+            related to `familyOrModelDisplayName` are returned.
+        :type family_or_model_display_name: str
+        :param tags: Optional array of device tag identifiers to request settings for. Each identifier must have a
+            length between 1 and 64 characters.
+        :type tags: list[str]
+        :param org_id: Unique identifier for the `organization` to which this location belongs.
+        :type org_id: str
+        :rtype: :class:`DeviceDynamicSettings`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        params['familyOrModelDisplayName'] = family_or_model_display_name
+        body = dict()
+        if tags is not None:
+            body['tags'] = tags
+        url = self.ep(f'lists/locations/{location_id}/devices/dynamicSettings/actions/getSettings/invoke')
+        data = await super().post(url, params=params, json=body)
+        r = DeviceDynamicSettings.model_validate(data)
+        return r
+
+
 class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
     """
     Telephony devices API
     """
+    dynamic_settings: AsDevicesDynamicSettingsApi
+
+    def __init__(self, session: AsRestSession):
+        super().__init__(session=session)
+        self.dynamic_settings = AsDevicesDynamicSettingsApi(session=session)
+
+    async def supported_devices(self, allow_configure_layout_enabled: bool = None, type_: str = None,
+                          org_id: str = None) -> SupportedDevices:
+        """
+        Read the List of Supported Devices
+
+        Gets the list of supported devices for an organization.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param allow_configure_layout_enabled: List supported devices that allow the user to configure the layout.
+        :type allow_configure_layout_enabled: bool
+        :param type_: List supported devices of a specific type. To excluded device types from a request or query, add
+            `type=not:DEVICE_TYPE`. For example, `type=not:MPP`.
+        :type type_: str
+        :param org_id: List supported devices for an organization.
+        :type org_id: str
+        :rtype: SupportedDevices
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if allow_configure_layout_enabled is not None:
+            params['allowConfigureLayoutEnabled'] = str(allow_configure_layout_enabled).lower()
+        if type is not None:
+            params['type'] = type_
+        url = self.ep('supportedDevices')
+        data = await self.get(url=url, params=params)
+        return SupportedDevices.model_validate(data)
 
     async def details(self, device_id: str, org_id: str = None) -> TelephonyDeviceDetails:
         """
@@ -30129,17 +30530,32 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         data = await self.post(url=url, params=params, json=body)
         return TestCallRoutingResult.model_validate(data)
 
-    async def supported_devices(self, org_id: str = None) -> SupportedDevices:
+    async def supported_devices(self, allow_configure_layout_enabled: bool = None, type_: str = None,
+                          org_id: str = None) -> SupportedDevices:
         """
+        Read the List of Supported Devices
+
         Gets the list of supported devices for an organization.
 
         Retrieving this list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param org_id: List supported devices for an organization
-        :return: List of supported devices
+        :param allow_configure_layout_enabled: List supported devices that allow the user to configure the layout.
+        :type allow_configure_layout_enabled: bool
+        :param type_: List supported devices of a specific type. To excluded device types from a request or query, add
+            `type=not:DEVICE_TYPE`. For example, `type=not:MPP`.
+        :type type_: str
+        :param org_id: List supported devices for an organization.
+        :type org_id: str
+        :rtype: SupportedDevices
         """
-        params = org_id and {'orgId': org_id} or None
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if allow_configure_layout_enabled is not None:
+            params['allowConfigureLayoutEnabled'] = str(allow_configure_layout_enabled).lower()
+        if type is not None:
+            params['type'] = type_
         url = self.ep('supportedDevices')
         data = await self.get(url=url, params=params)
         return SupportedDevices.model_validate(data)

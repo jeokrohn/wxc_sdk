@@ -3,6 +3,8 @@ Release history
 
 - feat: support for pChargeInfoSupportPolicy on :class:`trunk details <wxc_sdk.telephony.prem_pstn.trunk.TrunkDetail>` and in :meth:`api.telephony.prem_pstn.trunk.create <wxc_sdk.telephony.prem_pstn.trunk.TrunkApi.create>` and :meth:`api.telephony.prem_pstn.trunk.update <wxc_sdk.telephony.prem_pstn.trunk.TrunkApi.update>`
 - feat: new API :attr:`api.me.go_override <wxc_sdk.me.MeSettingsApi.go_override>`
+- feat: new API :attr:`api.telephony.jobs.dynamic_device_settings <wxc_sdk.telephony.jobs.JobsApi.dynamic_device_settings>`
+- feat: new API :attr:`api.telephony.devices.dynamic_settings <wxc_sdk.telephony.devices.TelephonyDevicesApi.dynamic_settings>`
 
 1.26.0
 ------

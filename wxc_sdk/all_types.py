@@ -15,9 +15,9 @@ from wxc_sdk.common import AcdCustomization, AlternateNumber, AnnAudioFile, Anno
     Greeting, HttpProxy, HttpProxyMode, IdAndName, IdOnly, LineKeyLabelSelection, LineKeyLedPattern, LinkRelation, \
     LoggingLevel, MaintenanceMode, MediaFileType, MonitoredMember, MppCustomization, MppVlanDevice, Multicast, \
     NoiseCancellation, NumberOwner, NumberState, OwnerType, PatternAction, PersonPlaceAgent, PhoneLanguage, \
-    PrimaryOrShared, PskObject, RingPattern, RoomType, RouteIdentity, RouteType, SoftKeyLayout, SoftKeyMenu, \
-    StorageType, UsbPortsObject, UserBase, UserLicenseType, UserNumber, UserType, ValidateExtensionStatus, \
-    ValidateExtensionStatusState, ValidateExtensionsResponse, ValidatePhoneNumberStatus, \
+    PrimaryOrShared, PskObject, RingPattern, RoomType, RouteIdentity, RouteType, SetOrClear, SoftKeyLayout, \
+    SoftKeyMenu, StorageType, UsbPortsObject, UserBase, UserLicenseType, UserNumber, UserType, \
+    ValidateExtensionStatus, ValidateExtensionStatusState, ValidateExtensionsResponse, ValidatePhoneNumberStatus, \
     ValidatePhoneNumberStatusState, ValidatePhoneNumbersResponse, ValidationStatus, VlanSetting, \
     VoicemailCopyOfMessage, VoicemailEnabled, VoicemailFax, VoicemailMessageStorage, VoicemailNotifications, \
     VoicemailTransferToNumber, VolumeSettings, WifiAuthenticationMethod, WifiCustomization, WifiNetwork
@@ -136,12 +136,11 @@ from wxc_sdk.team_memberships import TeamMembership
 from wxc_sdk.teams import Team
 from wxc_sdk.telephony import AnnouncementLanguage, AppliedService, AppliedServiceTranslationPattern, \
     CallInterceptDetails, CallInterceptDetailsPermission, CallSourceInfo, CallSourceType, CallingPlanReason, \
-    ConfigurationLevel, DestinationType, DeviceManagedBy, DeviceManufacturer, DeviceSettingsConfiguration, \
-    EmergencyDestination, FeatureAccessCodeDestination, HostedFeatureDestination, HostedUserDestination, \
-    LocationAndNumbers, MoHConfig, MoHTheme, NumberDetails, NumberListPhoneNumber, NumberListPhoneNumberType, \
-    NumberType, OnboardingMethod, OriginatorType, OutgoingCallingPlanPermissionsByDigitPattern, \
-    OutgoingCallingPlanPermissionsByType, PbxUserDestination, PstnNumberDestination, RouteListDestination, \
-    ServiceType, SupportedDevice, SupportedDevices, SupportsLogCollection, TelephonyType, TestCallRoutingResult, \
+    ConfigurationLevel, DestinationType, EmergencyDestination, FeatureAccessCodeDestination, \
+    HostedFeatureDestination, HostedUserDestination, LocationAndNumbers, MoHConfig, MoHTheme, NumberDetails, \
+    NumberListPhoneNumber, NumberListPhoneNumberType, NumberType, OriginatorType, \
+    OutgoingCallingPlanPermissionsByDigitPattern, OutgoingCallingPlanPermissionsByType, PbxUserDestination, \
+    PstnNumberDestination, RouteListDestination, ServiceType, TelephonyType, TestCallRoutingResult, \
     TranslationPatternConfigurationLevel, TrunkDestination, UCMProfile, VirtualExtensionDestination
 from wxc_sdk.telephony.announcements_repo import FeatureReference, RepoAnnouncement, RepositoryUsage
 from wxc_sdk.telephony.autoattendant import AutoAttendant, AutoAttendantAction, AutoAttendantKeyConfiguration, \
@@ -176,10 +175,14 @@ from wxc_sdk.telephony.dect_devices import AddDECTHandset, AddDECTHandsetBulkErr
     UsageType
 from wxc_sdk.telephony.devices import ActivationState, AvailableMember, BackgroundImage, BackgroundImages, \
     DeleteDeviceBackgroundImagesResponse, DeleteImageRequestObject, DeleteImageResponseSuccessObject, \
-    DeleteImageResponseSuccessObjectResult, DeviceLayout, DeviceMember, DeviceMembersResponse, DeviceSettings, \
-    KemKey, KemModuleType, LayoutMode, LineKeyTemplate, LineKeyType, MACState, MACStatus, MACValidationResponse, \
-    MemberCommon, ProgrammableLineKey, TelephonyDeviceDetails, TelephonyDeviceOwner, TelephonyDeviceProxy, \
-    UserDeviceCount
+    DeleteImageResponseSuccessObjectResult, DeviceLayout, DeviceManagedBy, DeviceManufacturer, DeviceMember, \
+    DeviceMembersResponse, DeviceSettings, DeviceSettingsConfiguration, KemKey, KemModuleType, LayoutMode, \
+    LineKeyTemplate, LineKeyType, MACState, MACStatus, MACValidationResponse, MemberCommon, OnboardingMethod, \
+    ProgrammableLineKey, SupportedDevice, SupportedDevices, SupportsLogCollection, TelephonyDeviceDetails, \
+    TelephonyDeviceOwner, TelephonyDeviceProxy, UserDeviceCount
+from wxc_sdk.telephony.devices.dynamic_settings import DeviceDynamicSettings, DeviceDynamicTag, DevicePutItem, \
+    DeviceSettingsGroupTag, DeviceTag, DynamicSettingsGroups, ParentLevel, SettingsGroup, SettingsType, \
+    ValidationRule
 from wxc_sdk.telephony.emergency_services import OrgEmergencyCallNotification
 from wxc_sdk.telephony.forwarding import CallForwarding, CallForwardingNumber, CallsFrom, CustomNumbers, \
     FeatureSelector, ForwardCallsTo, ForwardFromSelection, ForwardOperatingModes, ForwardOperatingModesException, \
@@ -191,10 +194,10 @@ from wxc_sdk.telephony.hotdesk import HotDesk
 from wxc_sdk.telephony.hotdesking_voiceportal import HotDeskingVoicePortalSetting
 from wxc_sdk.telephony.huntgroup import BusinessContinuity, HGCallPolicies, HuntGroup, NoAnswer
 from wxc_sdk.telephony.jobs import ActivationEmailCounts, ActivationEmailJobDetail, \
-    ApplyLineKeyTemplateJobDetails, CallRecordingJobCounts, CallRecordingJobStatus, InitiateMoveNumberJobsBody, \
-    JobError, JobErrorItem, JobErrorMessage, JobExecutionStatus, LineKeyTemplateAdvisoryTypes, MoveCounts, \
-    MoveNumberCounts, MoveUser, MoveUserJobDetails, MoveUsersList, NumberItem, NumberJob, RoutingPrefixCounts, \
-    StartJobResponse, StartMoveUsersJobResponse, StepExecutionStatus
+    ApplyLineKeyTemplateJobDetails, CallRecordingJobCounts, CallRecordingJobStatus, DynamicSettingsUpdateJobItem, \
+    InitiateMoveNumberJobsBody, JobError, JobErrorItem, JobErrorMessage, JobExecutionStatus, \
+    LineKeyTemplateAdvisoryTypes, MoveCounts, MoveNumberCounts, MoveUser, MoveUserJobDetails, MoveUsersList, \
+    NumberItem, NumberJob, RoutingPrefixCounts, StartJobResponse, StartMoveUsersJobResponse, StepExecutionStatus
 from wxc_sdk.telephony.location import CallBackSelected, CallingLineId, ContactDetails, LocationECBN, \
     LocationECBNLocation, LocationECBNLocationMember, PSTNConnection, TelephonyLocation
 from wxc_sdk.telephony.location.emergency_services import LocationCallNotificationOrganization, \
@@ -292,26 +295,28 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationEm
            'DeleteTranscriptBody', 'DestinationMember', 'DestinationType', 'Device', 'DeviceActivationState',
            'DeviceConfiguration', 'DeviceConfigurationOperation', 'DeviceConfigurationResponse',
            'DeviceConfigurationSource', 'DeviceConfigurationSourceEditability', 'DeviceConfigurationSources',
-           'DeviceCustomization', 'DeviceCustomizations', 'DeviceHostedMeetings', 'DeviceLayout', 'DeviceList',
-           'DeviceManagedBy', 'DeviceManufacturer', 'DeviceMember', 'DeviceMembersResponse', 'DeviceOwner',
-           'DevicePlatform', 'DeviceSettings', 'DeviceSettingsConfiguration', 'DeviceStatus', 'DeviceType',
-           'DialPatternStatus', 'DialPatternValidate', 'DialPatternValidationResult', 'DialPlan', 'DialResponse',
-           'Dialing', 'DifferentHoursDaily', 'DigitPattern', 'DigitPatterns', 'DirectoryMethod',
-           'DisplayCallqueueAgentSoftkey', 'DisplayNameSelection', 'DistinctiveRing', 'ECBNDefault',
-           'ECBNDependencies', 'ECBNEffectiveLevel', 'ECBNLocationEffectiveLevel', 'ECBNLocationMember',
-           'ECBNQuality', 'ECBNSelection', 'EmailObject', 'EmailObjectType', 'EmailType', 'EmergencyDestination',
-           'EnabledAndNumberOfDays', 'EnabledAndValue', 'EnhancedMulticast', 'EnterpriseUser', 'EntryAndExitTone',
-           'Event', 'EventData', 'EventResource', 'EventType', 'ExceptionType', 'ExecAssistantType',
-           'ExecuteCommandResponse', 'ExpirePasscode', 'ExternalCallerIdNamePolicy', 'ExternalTransfer',
-           'FailedAttempts', 'FailureBehavior', 'FeatureAccessCodeDestination', 'FeatureAccessLevel',
-           'FeatureAccessSettings', 'FeatureReference', 'FeatureSelector', 'FeatureType', 'Floor', 'ForcedForward',
-           'ForwardCallsTo', 'ForwardFromSelection', 'ForwardOperatingModes', 'ForwardOperatingModesException',
-           'ForwardTo', 'ForwardToSelection', 'ForwardingRule', 'ForwardingRuleDetails', 'ForwardingSetting',
-           'GetMeetingSurveyResponse', 'GetRoomMeetingDetailsResponse', 'Greeting', 'Group', 'GroupMember',
-           'GroupMemberObject', 'GroupMemberResponse', 'GroupMeta', 'Guest', 'GuestCallingSettings', 'HGCallPolicies',
-           'HGandCQ', 'Handset', 'HistoryType', 'HolidayService', 'HostedFeatureDestination', 'HostedUserDestination',
-           'HotDesk', 'HotDeskingVoicePortalSetting', 'HotdeskingStatus', 'Hoteling', 'HttpProxy', 'HttpProxyMode',
-           'HuntGroup', 'IdAndAction', 'IdAndName', 'IdOnly', 'InProgressDevice', 'Incident', 'IncidentUpdate',
+           'DeviceCustomization', 'DeviceCustomizations', 'DeviceDynamicSettings', 'DeviceDynamicTag',
+           'DeviceHostedMeetings', 'DeviceLayout', 'DeviceList', 'DeviceManagedBy', 'DeviceManufacturer',
+           'DeviceMember', 'DeviceMembersResponse', 'DeviceOwner', 'DevicePlatform', 'DevicePutItem',
+           'DeviceSettings', 'DeviceSettingsConfiguration', 'DeviceSettingsGroupTag', 'DeviceStatus', 'DeviceTag',
+           'DeviceType', 'DialPatternStatus', 'DialPatternValidate', 'DialPatternValidationResult', 'DialPlan',
+           'DialResponse', 'Dialing', 'DifferentHoursDaily', 'DigitPattern', 'DigitPatterns', 'DirectoryMethod',
+           'DisplayCallqueueAgentSoftkey', 'DisplayNameSelection', 'DistinctiveRing', 'DynamicSettingsGroups',
+           'DynamicSettingsUpdateJobItem', 'ECBNDefault', 'ECBNDependencies', 'ECBNEffectiveLevel',
+           'ECBNLocationEffectiveLevel', 'ECBNLocationMember', 'ECBNQuality', 'ECBNSelection', 'EmailObject',
+           'EmailObjectType', 'EmailType', 'EmergencyDestination', 'EnabledAndNumberOfDays', 'EnabledAndValue',
+           'EnhancedMulticast', 'EnterpriseUser', 'EntryAndExitTone', 'Event', 'EventData', 'EventResource',
+           'EventType', 'ExceptionType', 'ExecAssistantType', 'ExecuteCommandResponse', 'ExpirePasscode',
+           'ExternalCallerIdNamePolicy', 'ExternalTransfer', 'FailedAttempts', 'FailureBehavior',
+           'FeatureAccessCodeDestination', 'FeatureAccessLevel', 'FeatureAccessSettings', 'FeatureReference',
+           'FeatureSelector', 'FeatureType', 'Floor', 'ForcedForward', 'ForwardCallsTo', 'ForwardFromSelection',
+           'ForwardOperatingModes', 'ForwardOperatingModesException', 'ForwardTo', 'ForwardToSelection',
+           'ForwardingRule', 'ForwardingRuleDetails', 'ForwardingSetting', 'GetMeetingSurveyResponse',
+           'GetRoomMeetingDetailsResponse', 'Greeting', 'Group', 'GroupMember', 'GroupMemberObject',
+           'GroupMemberResponse', 'GroupMeta', 'Guest', 'GuestCallingSettings', 'HGCallPolicies', 'HGandCQ',
+           'Handset', 'HistoryType', 'HolidayService', 'HostedFeatureDestination', 'HostedUserDestination', 'HotDesk',
+           'HotDeskingVoicePortalSetting', 'HotdeskingStatus', 'Hoteling', 'HttpProxy', 'HttpProxyMode', 'HuntGroup',
+           'IdAndAction', 'IdAndName', 'IdOnly', 'InProgressDevice', 'Incident', 'IncidentUpdate',
            'IncomingPermissions', 'InitiateMoveNumberJobsBody', 'InputMode', 'InterceptAnnouncements',
            'InterceptNumber', 'InterceptSetting', 'InterceptSettingIncoming', 'InterceptSettingOutgoing',
            'InterceptTypeIncoming', 'InterceptTypeOutgoing', 'InternalDialing',
@@ -344,10 +349,10 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationEm
            'OutboundProxy', 'OutgoingCallingPlanPermissionsByDigitPattern', 'OutgoingCallingPlanPermissionsByType',
            'OutgoingPermissionCallType', 'OutgoingPermissions', 'OverflowAction', 'OverflowSetting', 'OwnerType',
            'PChargeInfoSupportPolicy', 'PSTNConnection', 'PSTNConnectionOption', 'PSTNServiceType', 'PSTNType',
-           'PTTConnectionType', 'Paging', 'PagingAgent', 'Participant', 'ParticipantState', 'PasscodeRules',
-           'PatchMeetingBody', 'PatchMeetingResponse', 'PatchUserOperation', 'PatchUserOperationOp', 'PatternAction',
-           'PatternAndAction', 'PbxUserDestination', 'PeopleStatus', 'Person', 'PersonAddress', 'PersonECBN',
-           'PersonECBNDirectLine', 'PersonForwardingSetting', 'PersonNumbers', 'PersonPhoneNumber',
+           'PTTConnectionType', 'Paging', 'PagingAgent', 'ParentLevel', 'Participant', 'ParticipantState',
+           'PasscodeRules', 'PatchMeetingBody', 'PatchMeetingResponse', 'PatchUserOperation', 'PatchUserOperationOp',
+           'PatternAction', 'PatternAndAction', 'PbxUserDestination', 'PeopleStatus', 'Person', 'PersonAddress',
+           'PersonECBN', 'PersonECBNDirectLine', 'PersonForwardingSetting', 'PersonNumbers', 'PersonPhoneNumber',
            'PersonPlaceAgent', 'PersonSettingsApiChild', 'PersonType', 'PersonalAssistant',
            'PersonalAssistantAlerting', 'PersonalAssistantPresence', 'PersonalMeetingRoom',
            'PersonalMeetingRoomOptions', 'Personality', 'PhoneLanguage', 'PhoneNumber', 'PhoneNumberStatus',
@@ -374,44 +379,45 @@ __all__ = ['AcdCustomization', 'Action', 'ActivationCodeResponse', 'ActivationEm
            'SelectedECBN', 'SelectiveAccept', 'SelectiveAcceptCriteria', 'SelectiveCrit', 'SelectiveCriteria',
            'SelectiveForward', 'SelectiveForwardCriteria', 'SelectiveFrom', 'SelectiveReject',
            'SelectiveRejectCriteria', 'SelectiveScheduleLevel', 'SelectiveSource', 'Sender', 'SequentialRing',
-           'SequentialRingCriteria', 'SequentialRingNumber', 'ServiceType', 'SettingsObject', 'SimRing',
-           'SimRingCriteria', 'SimRingNumber', 'SimultaneousInterpretation', 'SingleNumberReach',
-           'SingleNumberReachNumber', 'SipAddress', 'SipAddressObject', 'SipType', 'SiteAccountType', 'SiteResponse',
-           'SiteType', 'SiteUrlsRequest', 'SoftKeyLayout', 'SoftKeyMenu', 'StandardRegistrationApproveRule',
-           'StartJobResponse', 'StartMoveUsersJobResponse', 'StartStopAnnouncement', 'StatusAPI', 'StatusSummary',
-           'StepExecutionStatus', 'StorageType', 'StrOrDict', 'StrandedCalls', 'StrandedCallsAction',
-           'SupervisorAgentStatus', 'SupportAndConfiguredInfo', 'SupportedDevice', 'SupportedDevices',
-           'SupportsLogCollection', 'SurveyResult', 'TagOp', 'Team', 'TeamMembership', 'TelephoneNumberType',
-           'Telephony', 'TelephonyCall', 'TelephonyDevice', 'TelephonyDeviceDetails', 'TelephonyDeviceOwner',
-           'TelephonyDeviceProxy', 'TelephonyEvent', 'TelephonyEventData', 'TelephonyLocation', 'TelephonyParty',
-           'TelephonyType', 'TemporaryDirectDownloadLink', 'TestCallRoutingResult', 'Tokens', 'TrackingCode',
-           'TrackingCodeItem', 'TrackingCodeOption', 'TrackingCodeType', 'Transcript', 'TranscriptSnippet',
-           'TranscriptStatus', 'TranslationPattern', 'TranslationPatternConfigurationLevel',
-           'TranslationPatternLevel', 'TransportType', 'Trunk', 'TrunkDestination', 'TrunkDetail', 'TrunkDeviceType',
-           'TrunkType', 'TrunkTypeWithDeviceType', 'TrunkUsage', 'Type', 'UCMProfile', 'UnansweredCalls',
-           'UnlockedMeetingJoinSecurity', 'UpdateContactPhoneNumbers', 'UpdateDefaultSiteBody',
-           'UpdateMeetingInviteeBody', 'UpdateNumbersResponse', 'UpdateParticipantBody', 'UpdateParticipantResponse',
-           'UpdatePersonNumbers', 'UpdatePersonPhoneNumber', 'UpdatePersonalMeetingRoomOptionsBody',
-           'UpdateTranscriptSnippetBody', 'UpdateWorkspacePhoneNumber', 'UsageRouteLists', 'UsageType',
-           'UsbPortsObject', 'UserAddress', 'UserBase', 'UserDeviceCount', 'UserFeatureAccessSettings',
-           'UserLicenseType', 'UserLicensesResponse', 'UserManager', 'UserNumber', 'UserPhoneNumber', 'UserType',
-           'UserTypeObject', 'ValidateExtensionStatus', 'ValidateExtensionStatusState', 'ValidateExtensionsResponse',
-           'ValidatePhoneNumber', 'ValidatePhoneNumberStatus', 'ValidatePhoneNumberStatusState',
-           'ValidatePhoneNumbersResponse', 'ValidateVirtualExtensionRange', 'ValidateVirtualExtensionStatus',
-           'ValidationRules', 'ValidationStatus', 'Video', 'VideoDevice', 'VideoIn', 'VideoOptions', 'VideoState',
-           'VirtualExtension', 'VirtualExtensionDestination', 'VirtualExtensionLevel', 'VirtualExtensionMode',
-           'VirtualExtensionRange', 'VirtualExtensionRangeAction', 'VirtualExtensionRangeValidationResult',
-           'VirtualExtensionValidationStatus', 'VirtualLine', 'VirtualLineDevices', 'VirtualLineLocation',
-           'VirtualLineNumberPhoneNumber', 'VlanSetting', 'VoiceMailPartyInformation', 'VoiceMailRules',
-           'VoiceMessageDetails', 'VoicePortalSettings', 'VoicemailCopyOfMessage', 'VoicemailEnabled',
-           'VoicemailEnabledWithGreeting', 'VoicemailFax', 'VoicemailGroup', 'VoicemailGroupDetail',
-           'VoicemailMessageStorage', 'VoicemailNotifications', 'VoicemailSettings', 'VoicemailTransferToNumber',
-           'VolumeSettings', 'WaitMessageSetting', 'WaitMode', 'WebexGroup', 'WebexGroupMeta', 'WebexGroupOwner',
-           'WebexStatus', 'WebexUser', 'WebexUserMeta', 'Webhook', 'WebhookCreate', 'WebhookEvent',
-           'WebhookEventData', 'WebhookEventType', 'WebhookResource', 'WebhookStatus', 'Week',
-           'WelcomeMessageSetting', 'WifiAuthenticationMethod', 'WifiCustomization', 'WifiNetwork', 'WorkSpaceType',
-           'Workspace', 'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceEmail', 'WorkspaceHealth',
-           'WorkspaceHealthIssue', 'WorkspaceHealthLevel', 'WorkspaceIndoorNavigation', 'WorkspaceLocation',
-           'WorkspaceLocationFloor', 'WorkspaceNumbers', 'WorkspacePersonalizationTaskResponse',
-           'WorkspaceSupportedDevices', 'WorkspaceWebexCalling', 'WrapUpReason', 'WrapUpReasonDetails',
-           'WrapupReasonQueue', '_Helper', 'dt_iso_str', 'enum_str', 'plus1', 'to_camel', 'webex_id_to_uuid']
+           'SequentialRingCriteria', 'SequentialRingNumber', 'ServiceType', 'SetOrClear', 'SettingsGroup',
+           'SettingsObject', 'SettingsType', 'SimRing', 'SimRingCriteria', 'SimRingNumber',
+           'SimultaneousInterpretation', 'SingleNumberReach', 'SingleNumberReachNumber', 'SipAddress',
+           'SipAddressObject', 'SipType', 'SiteAccountType', 'SiteResponse', 'SiteType', 'SiteUrlsRequest',
+           'SoftKeyLayout', 'SoftKeyMenu', 'StandardRegistrationApproveRule', 'StartJobResponse',
+           'StartMoveUsersJobResponse', 'StartStopAnnouncement', 'StatusAPI', 'StatusSummary', 'StepExecutionStatus',
+           'StorageType', 'StrOrDict', 'StrandedCalls', 'StrandedCallsAction', 'SupervisorAgentStatus',
+           'SupportAndConfiguredInfo', 'SupportedDevice', 'SupportedDevices', 'SupportsLogCollection', 'SurveyResult',
+           'TagOp', 'Team', 'TeamMembership', 'TelephoneNumberType', 'Telephony', 'TelephonyCall', 'TelephonyDevice',
+           'TelephonyDeviceDetails', 'TelephonyDeviceOwner', 'TelephonyDeviceProxy', 'TelephonyEvent',
+           'TelephonyEventData', 'TelephonyLocation', 'TelephonyParty', 'TelephonyType',
+           'TemporaryDirectDownloadLink', 'TestCallRoutingResult', 'Tokens', 'TrackingCode', 'TrackingCodeItem',
+           'TrackingCodeOption', 'TrackingCodeType', 'Transcript', 'TranscriptSnippet', 'TranscriptStatus',
+           'TranslationPattern', 'TranslationPatternConfigurationLevel', 'TranslationPatternLevel', 'TransportType',
+           'Trunk', 'TrunkDestination', 'TrunkDetail', 'TrunkDeviceType', 'TrunkType', 'TrunkTypeWithDeviceType',
+           'TrunkUsage', 'Type', 'UCMProfile', 'UnansweredCalls', 'UnlockedMeetingJoinSecurity',
+           'UpdateContactPhoneNumbers', 'UpdateDefaultSiteBody', 'UpdateMeetingInviteeBody', 'UpdateNumbersResponse',
+           'UpdateParticipantBody', 'UpdateParticipantResponse', 'UpdatePersonNumbers', 'UpdatePersonPhoneNumber',
+           'UpdatePersonalMeetingRoomOptionsBody', 'UpdateTranscriptSnippetBody', 'UpdateWorkspacePhoneNumber',
+           'UsageRouteLists', 'UsageType', 'UsbPortsObject', 'UserAddress', 'UserBase', 'UserDeviceCount',
+           'UserFeatureAccessSettings', 'UserLicenseType', 'UserLicensesResponse', 'UserManager', 'UserNumber',
+           'UserPhoneNumber', 'UserType', 'UserTypeObject', 'ValidateExtensionStatus', 'ValidateExtensionStatusState',
+           'ValidateExtensionsResponse', 'ValidatePhoneNumber', 'ValidatePhoneNumberStatus',
+           'ValidatePhoneNumberStatusState', 'ValidatePhoneNumbersResponse', 'ValidateVirtualExtensionRange',
+           'ValidateVirtualExtensionStatus', 'ValidationRule', 'ValidationRules', 'ValidationStatus', 'Video',
+           'VideoDevice', 'VideoIn', 'VideoOptions', 'VideoState', 'VirtualExtension', 'VirtualExtensionDestination',
+           'VirtualExtensionLevel', 'VirtualExtensionMode', 'VirtualExtensionRange', 'VirtualExtensionRangeAction',
+           'VirtualExtensionRangeValidationResult', 'VirtualExtensionValidationStatus', 'VirtualLine',
+           'VirtualLineDevices', 'VirtualLineLocation', 'VirtualLineNumberPhoneNumber', 'VlanSetting',
+           'VoiceMailPartyInformation', 'VoiceMailRules', 'VoiceMessageDetails', 'VoicePortalSettings',
+           'VoicemailCopyOfMessage', 'VoicemailEnabled', 'VoicemailEnabledWithGreeting', 'VoicemailFax',
+           'VoicemailGroup', 'VoicemailGroupDetail', 'VoicemailMessageStorage', 'VoicemailNotifications',
+           'VoicemailSettings', 'VoicemailTransferToNumber', 'VolumeSettings', 'WaitMessageSetting', 'WaitMode',
+           'WebexGroup', 'WebexGroupMeta', 'WebexGroupOwner', 'WebexStatus', 'WebexUser', 'WebexUserMeta', 'Webhook',
+           'WebhookCreate', 'WebhookEvent', 'WebhookEventData', 'WebhookEventType', 'WebhookResource',
+           'WebhookStatus', 'Week', 'WelcomeMessageSetting', 'WifiAuthenticationMethod', 'WifiCustomization',
+           'WifiNetwork', 'WorkSpaceType', 'Workspace', 'WorkspaceCalling', 'WorkspaceCallingHybridCalling',
+           'WorkspaceEmail', 'WorkspaceHealth', 'WorkspaceHealthIssue', 'WorkspaceHealthLevel',
+           'WorkspaceIndoorNavigation', 'WorkspaceLocation', 'WorkspaceLocationFloor', 'WorkspaceNumbers',
+           'WorkspacePersonalizationTaskResponse', 'WorkspaceSupportedDevices', 'WorkspaceWebexCalling',
+           'WrapUpReason', 'WrapUpReasonDetails', 'WrapupReasonQueue', '_Helper', 'dt_iso_str', 'enum_str', 'plus1',
+           'to_camel', 'webex_id_to_uuid']
