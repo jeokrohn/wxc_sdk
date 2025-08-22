@@ -92,6 +92,7 @@ class Parameter:
             class_names.add(self.referenced_class)
         return arg
 
+    # noinspection PyUnresolvedReferences
     def source_for_docstring(self) -> Generator[str, None, None]:
         """
         Lines for docstring something like:

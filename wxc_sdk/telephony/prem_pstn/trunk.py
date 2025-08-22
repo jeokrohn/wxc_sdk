@@ -87,6 +87,7 @@ class OutboundProxy(ApiModel):
     cname_records: Optional[list[CnameRecord]] = None
     attachment_updated: bool
 
+
 class PChargeInfoSupportPolicy(str, Enum):
     #: The P-Charge-Info header support policy is disabled.
     disabled = 'DISABLED'

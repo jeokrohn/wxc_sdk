@@ -9,11 +9,11 @@ from typing import Optional, Any, List
 from pydantic import Field, model_validator, field_validator
 
 from ..api_child import ApiChild
+from ..base import ApiModel
 from ..base import SafeEnum as Enum, enum_str
-from ..base import to_camel, ApiModel
 from ..common import DevicePlatform, MaintenanceMode
 from ..rest import RestSession
-from ..telephony import DeviceManagedBy
+from ..telephony.devices import DeviceManagedBy
 from ..telephony.jobs import DeviceSettingsJobsApi
 
 __all__ = ['DevicesApi', 'Device', 'TagOp', 'ActivationCodeResponse', 'ProductType', 'ConnectionStatus', 'Lifecycle']

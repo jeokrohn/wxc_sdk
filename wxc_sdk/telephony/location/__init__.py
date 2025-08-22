@@ -201,7 +201,6 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         self.voicemail = LocationVoicemailSettingsApi(session=session)
         self.receptionist_contacts_directory = ReceptionistContactsDirectoryApi(session=session)
 
-
     def generate_password(self, location_id: str, generate: list[str] = None, org_id: str = None):
         """
         Generate example password for Location

@@ -15,12 +15,9 @@ from dateutil import tz
 
 from tests.base import TestCaseWithLog, TestWithLocations
 from tests.testutil import as_available_tns
-from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import NumberState
-from wxc_sdk.people import Person
-from wxc_sdk.rest import RestError
 from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
-from wxc_sdk.telephony.jobs import NumberItem, NumberJob, ManageNumberErrorItem
+from wxc_sdk.telephony.jobs import NumberItem, NumberJob
 from wxc_sdk.telephony.location import TelephonyLocation
 
 

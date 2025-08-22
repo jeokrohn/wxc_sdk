@@ -22,9 +22,8 @@ from wxc_sdk.devices import Device, ProductType
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings import DeviceList, TelephonyDevice
-from wxc_sdk.telephony import DeviceManagedBy
 from wxc_sdk.telephony.devices import MACState, DeviceMembersResponse, AvailableMember, DeviceMember, \
-    MACValidationResponse, DeviceLayout, LayoutMode, ProgrammableLineKey, LineKeyType, UserDeviceCount
+    MACValidationResponse, DeviceLayout, LayoutMode, ProgrammableLineKey, LineKeyType, UserDeviceCount, DeviceManagedBy
 from wxc_sdk.telephony.jobs import StartJobResponse
 from wxc_sdk.workspaces import Workspace, CallingType
 

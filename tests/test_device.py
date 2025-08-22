@@ -15,7 +15,6 @@ from tests.testutil import available_mac_address, calling_users, create_workspac
 from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import DeviceType
 from wxc_sdk.devices import TagOp, Device
-from wxc_sdk.telephony import DeviceManagedBy
 from wxc_sdk.workspaces import Workspace, CallingType, WorkspaceSupportedDevices
 
 

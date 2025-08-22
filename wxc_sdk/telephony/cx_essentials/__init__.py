@@ -25,7 +25,6 @@ class ScreenPopConfiguration(ApiModel):
     query_params: Optional[dict[str, Any]] = None
 
 
-
 @dataclass(init=False, repr=False)
 class CustomerExperienceEssentialsApi(ApiChild, base='telephony/config'):
     """

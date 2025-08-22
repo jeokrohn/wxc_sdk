@@ -12,6 +12,7 @@ class MePersonalAssistantApi(ApiChild, base='telephony/config/people/me/settings
 
     Configuring settings requires a user auth token with a scope of `spark:telephony_config_write`.
     """
+
     def get(self) -> PersonalAssistant:
         """
         Get My Personal Assistant

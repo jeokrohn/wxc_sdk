@@ -1,7 +1,6 @@
 from collections.abc import Generator
 
 from ..api_child import ApiChild
-from ..base import to_camel
 from ..common import CallParkExtension
 
 __all__ = ['CallparkExtensionApi']
