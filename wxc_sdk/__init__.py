@@ -133,9 +133,11 @@ class WebexSimpleApi:
     xapi: XApi
     #: :class:`rest.RestSession` used for all API requests
     session: RestSession
+    #: whether the session used for all requests must be closed when :meth:`close` is called
+    _must_close_session: bool
 
     def __init__(self, *, tokens: Union[str, Tokens] = None, concurrent_requests: int = 10, retry_429: bool = True,
-                 **kwargs):
+                 session: RestSession = None, **kwargs):
         """
 
         :param tokens: token to be used by the API. Can be a :class:`tokens.Tokens` instance, a string or None. If
@@ -144,6 +146,9 @@ class WebexSimpleApi:
         :type concurrent_requests: int
         :param retry_429: automatically retry for 429 throttling response
         :type retry_429: bool
+        :param session: if given, this :class:`rest.RestSession` instance will be used for all requests instead of
+            creating a new one
+        :type session: RestSession
         :param kwargs: additional arguments to be passed to the constructor of the :attr:`session` object to be used
             for all requests
         """
@@ -156,8 +161,14 @@ class WebexSimpleApi:
                                  'WEBEX_ACCESS_TOKEN environment variable')
             tokens = Tokens(access_token=tokens)
 
-        session = RestSession(tokens=tokens, concurrent_requests=concurrent_requests, retry_429=retry_429,
-                              **kwargs)
+        if session is None:
+            session = RestSession(tokens=tokens, concurrent_requests=concurrent_requests, retry_429=retry_429,
+                                  **kwargs)
+            self._must_close_session = True
+        else:
+            self._must_close_session = False
+        self.session = session
+
         self.admin_audit = AdminAuditEventsApi(session=session)
         self.attachment_actions = AttachmentActionsApi(session=session)
         self.authorizations = AuthorizationsApi(session=session)
@@ -194,7 +205,6 @@ class WebexSimpleApi:
         self.workspace_personalization = WorkspacePersonalizationApi(session=session)
         self.workspace_settings = WorkspaceSettingsApi(session=session)
         self.xapi = XApi(session=session)
-        self.session = session
 
     @property
     def access_token(self) -> str:
@@ -207,7 +217,8 @@ class WebexSimpleApi:
         return self.session.access_token
 
     def close(self):
-        self.session.close()
+        if self._must_close_session:
+            self.session.close()
 
     def __enter__(self):
         return self
