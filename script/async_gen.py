@@ -441,7 +441,15 @@ def class_sources(*, target: type) -> Generator[str, None, None]:
         else:
             attributes = []
 
-        depends_on_class_names = set(attribute.type.__name__ for attribute in attributes)
+        # determine classes we depend on by looking at the types of the attributes
+        # make sure to ignore built-in types
+        depends_on_class_names = set()
+        for attribute in attributes:
+            type_name = attribute.type.__name__
+            if type_name in {'int', 'str', 'bool'}:
+                continue
+            depends_on_class_names.add(type_name)
+
         # check base classes
         bases = class_def.base_classes
         logger(f'base classes: {", ".join(sorted(bases)) or "None"}')
