@@ -19,7 +19,7 @@ import uuid
 from collections import Counter
 from collections.abc import Iterable, Generator
 from concurrent.futures import ThreadPoolExecutor
-from contextlib import contextmanager
+from contextlib import contextmanager, asynccontextmanager
 from dataclasses import dataclass, field
 from datetime import datetime
 from functools import wraps
@@ -230,7 +230,6 @@ class TestCaseWithTokens(TestCase):
         self.assertTrue(self.tokens and self.api, 'Failed to obtain tokens')
         self.assertEqual(ApiModel.Config.extra, 'forbid', 'API_MODEL_ALLOW_EXTRA must be set to "forbid"')
         random.seed()
-
 
 async_test = TestCaseWithTokens.async_test
 
@@ -623,6 +622,51 @@ class TestCaseWithLog(TestCaseWithTokens):
 
         for url_and_method in sorted(url_counters, key=lambda k: url_counters[k]):
             print(f'{url_and_method}: {url_counters[url_and_method]} requests')
+
+    @contextmanager
+    def webex_api(self, tokens: Union[str, Tokens])-> WebexSimpleApi:
+        """
+        Context manager to get a WebexSimpleApi instance. With equivalent proxy settings and HAR writer as the test case
+        :return: WebexSimpleApi instance
+        """
+        if self.proxy:
+            proxy_url = self.proxy_url
+            verify = False
+        else:
+            proxy_url = None
+            verify = None
+        with WebexSimpleApi(tokens=tokens, proxy_url=proxy_url, verify=verify) as api:
+            if self.with_har:
+                har_id = self.har_writer.register_webex_api(api)
+            else:
+                har_id = None
+            try:
+                yield api
+            finally:
+                if har_id:
+                    self.har_writer.unregister_api(har_id)
+
+    @asynccontextmanager
+    async def as_webex_api(self, tokens: Union[str, Tokens]) -> AsWebexSimpleApi:
+        """
+        Async context manager to get an AsWebexSimpleApi instance. With equivalent proxy settings and HAR writer as
+        the test case
+        :return: AsWebexSimpleApi instance
+        """
+        if self.proxy:
+            proxy_url = self.proxy_url
+        else:
+            proxy_url = None
+        async with AsWebexSimpleApi(tokens=tokens, proxy=proxy_url, ssl=False) as api:
+            if self.with_har:
+                har_id = self.har_writer.register_as_webex_api(api)
+            else:
+                har_id = None
+            try:
+                yield api
+            finally:
+                if har_id:
+                    self.har_writer.unregister_api(har_id)
 
 
 @dataclass(init=False, repr=False)
@@ -1160,13 +1204,21 @@ class UserTokens(TestCaseWithLog):
             return None
         return new_tokens
 
+@dataclass(init=False, repr=False)
 class TestWithRandomUserApi(UserTokens, TestCaseWithUsers):
+    fixed_user_display_name: ClassVar[str] = None
+
     def random_user(self) -> Person:
         """
         Get a random user except admin
         """
         candidates = [user for user in self.users if not user.emails[0].startswith('admin')]
-        user: Person = random.choice(candidates)
+        if self.fixed_user_display_name:
+            user = next((user for user in candidates if user.display_name == self.fixed_user_display_name), None)
+            if user is None:
+                self.skipTest(f'No user with display name {self.fixed_user_display_name}')
+        else:
+            user: Person = random.choice(candidates)
         print(f'Using user {user.display_name} for testing')
         return user
 
@@ -1176,6 +1228,5 @@ class TestWithRandomUserApi(UserTokens, TestCaseWithUsers):
         get user api and set HAR writer
         """
         tokens = self.get_user_tokens(user.person_id)
-        with WebexSimpleApi(tokens=tokens) as api:
-            self.har_writer.register_webex_api(api)
+        with self.webex_api(tokens=tokens) as api:
             yield api

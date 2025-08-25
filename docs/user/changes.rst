@@ -5,6 +5,7 @@ Release history
 - feat: new API :attr:`api.me.go_override <wxc_sdk.me.MeSettingsApi.go_override>`
 - feat: new API :attr:`api.telephony.jobs.dynamic_device_settings <wxc_sdk.telephony.jobs.JobsApi.dynamic_device_settings>`
 - feat: new API :attr:`api.telephony.devices.dynamic_settings <wxc_sdk.telephony.devices.TelephonyDevicesApi.dynamic_settings>`
+- feat: allow instantiation of WebexSimpleApi/AsWebexSimpleApi instances with existing session object
 
 1.26.0
 ------
