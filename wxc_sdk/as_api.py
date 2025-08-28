@@ -29254,6 +29254,78 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         url = self.ep(f'{location_id}/emergencyCallbackNumber/availableNumbers')
         return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
 
+    def charge_number_available_phone_numbers_gen(self, location_id: str, phone_number: List[str] = None,
+                                              owner_name: str = None, org_id: str = None,
+                                              **params) -> AsyncGenerator[AvailableNumber, None, None]:
+        """
+        Get Available Charge Numbers for a Location with Given Criteria
+
+        List the numbers that are available to be assigned as the location's charge number.
+
+        These numbers are non-toll-free and non-mobile numbers assigned to the location specified in the request URL.
+
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of available charge numbers for this location within the given
+            organization. The maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        url = self.ep(f'{location_id}/chargeNumber/availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber,
+                                              item_key='phoneNumbers', params=params)
+
+    async def charge_number_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
+                                              owner_name: str = None, org_id: str = None,
+                                              **params) -> List[AvailableNumber]:
+        """
+        Get Available Charge Numbers for a Location with Given Criteria
+
+        List the numbers that are available to be assigned as the location's charge number.
+
+        These numbers are non-toll-free and non-mobile numbers assigned to the location specified in the request URL.
+
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of available charge numbers for this location within the given
+            organization. The maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        url = self.ep(f'{location_id}/chargeNumber/availableNumbers')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber,
+                                              item_key='phoneNumbers', params=params)]
+
     def call_intercept_available_phone_numbers_gen(self, location_id: str, phone_number: List[str] = None,
                                                owner_name: str = None, org_id: str = None,
                                                **params) -> AsyncGenerator[AvailableNumber, None, None]:

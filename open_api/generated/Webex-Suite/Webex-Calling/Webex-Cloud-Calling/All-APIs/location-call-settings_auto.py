@@ -20,12 +20,79 @@ __all__ = ['AudioAnnouncementFileGetObject', 'AudioAnnouncementFileGetObjectLeve
            'GetMusicOnHoldObject', 'GetMusicOnHoldObjectGreeting',
            'GetPrivateNetworkConnectObjectNetworkConnectionType', 'GetTelephonyLocationObject',
            'GetTelephonyLocationObjectCallingLineId', 'GetTelephonyLocationObjectConnection', 'JobExecutionStatus',
-           'ListLocationObject', 'LocationAvailableNumberObject', 'LocationCallInterceptAvailableNumberObject',
-           'LocationCallSettingsApi', 'LocationECBNAvailableNumberObject', 'LocationECBNAvailableNumberObjectOwner',
-           'LocationObject', 'LocationPUTResponse', 'NumberObject', 'NumberObjectOwner', 'NumberOwnerType',
-           'PersonId', 'PostLocationCallingRequestAddress', 'PostValidateExtensionResponse',
-           'PostValidateExtensionResponseStatus', 'RouteIdentity', 'RouteType', 'State', 'StepExecutionStatuses',
-           'TelephonyType', 'WebexGoAvailableNumberObject']
+           'ListLocationObject', 'LocationAvailableChargeNumberObject', 'LocationAvailableChargeNumberObjectOwner',
+           'LocationAvailableNumberObject', 'LocationCallInterceptAvailableNumberObject', 'LocationCallSettingsApi',
+           'LocationECBNAvailableNumberObject', 'LocationECBNAvailableNumberObjectOwner', 'LocationObject',
+           'LocationPUTResponse', 'NumberObject', 'NumberOwnerType', 'PersonId', 'PostLocationCallingRequestAddress',
+           'PostValidateExtensionResponse', 'PostValidateExtensionResponseStatus', 'RouteIdentity', 'RouteType',
+           'State', 'StepExecutionStatuses', 'TelephonyType', 'WebexGoAvailableNumberObject']
+
+
+class State(str, Enum):
+    #: The number is active.
+    active = 'ACTIVE'
+    #: The number is inactive.
+    inactive = 'INACTIVE'
+
+
+class NumberOwnerType(str, Enum):
+    #: PSTN phone number's owner is a workspace.
+    place = 'PLACE'
+    #: PSTN phone number's owner is a person.
+    people = 'PEOPLE'
+    #: PSTN phone number's owner is a Virtual Profile.
+    virtual_line = 'VIRTUAL_LINE'
+    #: PSTN phone number's owner is an auto-attendant.
+    auto_attendant = 'AUTO_ATTENDANT'
+    #: PSTN phone number's owner is a call queue.
+    call_queue = 'CALL_QUEUE'
+    #: PSTN phone number's owner is a group paging.
+    group_paging = 'GROUP_PAGING'
+    #: PSTN phone number's owner is a hunt group.
+    hunt_group = 'HUNT_GROUP'
+    #: PSTN phone number's owner is a voice portal.
+    voice_messaging = 'VOICE_MESSAGING'
+    #: PSTN phone number's owner is a Single Number Reach.
+    office_anywhere = 'OFFICE_ANYWHERE'
+    #: PSTN phone number's owner is a Contact Center link.
+    contact_center_link = 'CONTACT_CENTER_LINK'
+    #: PSTN phone number's owner is a Contact Center adapter.
+    contact_center_adapter = 'CONTACT_CENTER_ADAPTER'
+    #: PSTN phone number's owner is a route list.
+    route_list = 'ROUTE_LIST'
+    #: PSTN phone number's owner is a voice mail group.
+    voicemail_group = 'VOICEMAIL_GROUP'
+    #: PSTN phone number's owner is a collaborate bridge.
+    collaborate_bridge = 'COLLABORATE_BRIDGE'
+
+
+class LocationAvailableChargeNumberObjectOwner(ApiModel):
+    #: ID of the owner to which PSTN Phone number is assigned.
+    id: Optional[str] = None
+    type: Optional[NumberOwnerType] = None
+    #: First name of the PSTN phone number's owner and will only be returned when the owner `type` is `PEOPLE` or
+    #: `VIRTUAL_LINE`.
+    first_name: Optional[str] = None
+    #: Last name of the PSTN phone number's owner and will only be returned when the owner `type` is `PEOPLE` or
+    #: `VIRTUAL_LINE`.
+    last_name: Optional[str] = None
+    #: Display name of the PSTN phone number's owner. This field will be present except when the owner `type` is
+    #: `PEOPLE` or `VIRTUAL_LINE`.
+    display_name: Optional[str] = None
+
+
+class LocationAvailableChargeNumberObject(ApiModel):
+    #: A unique identifier for the PSTN phone number.
+    phone_number: Optional[str] = None
+    state: Optional[State] = None
+    #: If `true`, the phone number is used as a location CLID.
+    is_main_number: Optional[bool] = None
+    #: If `true`, the phone number is a toll-free number.
+    toll_free_number: Optional[bool] = None
+    #: If `true`, the phone number is a service number; otherwise, it is a standard number. Service numbers are
+    #: high-utilization or high-concurrency PSTN phone numbers that are neither mobile nor toll-free.
+    is_service_number: Optional[bool] = None
+    owner: Optional[LocationAvailableChargeNumberObjectOwner] = None
 
 
 class CallBackEffectiveLevel(str, Enum):
@@ -241,9 +308,14 @@ class GetTelephonyLocationObject(ApiModel):
     routing_prefix: Optional[str] = None
     #: IP Address, hostname, or domain. Read-Only.
     default_domain: Optional[str] = None
-    #: Chargeable number for the line placing the call. When this is set, all calls placed from this location will
-    #: include a P-Charge-Info header with the selected number in the SIP INVITE.
+    #: Chargeable number for the line placing the call. When set and useChargeNumberForPChargeInfo is true, all PSTN
+    #: calls placed from this location will include a P-Charge-Info header with this specified number in the SIP
+    #: INVITE.
     charge_number: Optional[str] = None
+    #: Indicates whether the location's chargeNumber (if set) is enabled for use as the P-Charge-Info header in the SIP
+    #: INVITE for all PSTN calls placed from this location. The field is returned as true if the location's PSTN
+    #: allows use of the chargeNumber.
+    use_charge_number_for_pcharge_info: Optional[bool] = Field(alias='useChargeNumberForPChargeInfo', default=None)
 
 
 class ListLocationObject(ApiModel):
@@ -417,60 +489,6 @@ class BatchJobError(ApiModel):
     error: Optional[Error] = None
 
 
-class State(str, Enum):
-    #: The number is active.
-    active = 'ACTIVE'
-    #: The number is inactive.
-    inactive = 'INACTIVE'
-
-
-class NumberOwnerType(str, Enum):
-    #: PSTN phone number's owner is a workspace.
-    place = 'PLACE'
-    #: PSTN phone number's owner is a person.
-    people = 'PEOPLE'
-    #: PSTN phone number's owner is a Virtual Profile.
-    virtual_line = 'VIRTUAL_LINE'
-    #: PSTN phone number's owner is an auto-attendant.
-    auto_attendant = 'AUTO_ATTENDANT'
-    #: PSTN phone number's owner is a call queue.
-    call_queue = 'CALL_QUEUE'
-    #: PSTN phone number's owner is a group paging.
-    group_paging = 'GROUP_PAGING'
-    #: PSTN phone number's owner is a hunt group.
-    hunt_group = 'HUNT_GROUP'
-    #: PSTN phone number's owner is a voice portal.
-    voice_messaging = 'VOICE_MESSAGING'
-    #: PSTN phone number's owner is a Single Number Reach.
-    office_anywhere = 'OFFICE_ANYWHERE'
-    #: PSTN phone number's owner is a Contact Center link.
-    contact_center_link = 'CONTACT_CENTER_LINK'
-    #: PSTN phone number's owner is a Contact Center adapter.
-    contact_center_adapter = 'CONTACT_CENTER_ADAPTER'
-    #: PSTN phone number's owner is a route list.
-    route_list = 'ROUTE_LIST'
-    #: PSTN phone number's owner is a voice mail group.
-    voicemail_group = 'VOICEMAIL_GROUP'
-    #: PSTN phone number's owner is a collaborate bridge.
-    collaborate_bridge = 'COLLABORATE_BRIDGE'
-
-
-class NumberObjectOwner(ApiModel):
-    #: ID of the owner to which the number is assigned.
-    id: Optional[str] = None
-    #: Type of the PSTN phone number's owner.
-    type: Optional[NumberOwnerType] = None
-    #: First name of the PSTN phone number's owner and will only be returned when the owner type is PEOPLE or PLACE or
-    #: VIRTUAL_PROFILE.
-    first_name: Optional[str] = None
-    #: Last name of the PSTN phone number's owner and will only be returned when the owner type is PEOPLE or PLACE or
-    #: VIRTUAL_PROFILE.
-    last_name: Optional[str] = None
-    #: Display name of the PSTN phone number's owner. This field will be present except when the owner `type` is
-    #: `PEOPLE` or `VIRTUAL_LINE`.
-    display_name: Optional[str] = None
-
-
 class NumberObject(ApiModel):
     #: A unique identifier for the PSTN phone number.
     phone_number: Optional[str] = None
@@ -485,7 +503,7 @@ class NumberObject(ApiModel):
     is_service_number: Optional[bool] = None
     #: The details of this number's location.
     location: Optional[LocationObject] = None
-    owner: Optional[NumberObjectOwner] = None
+    owner: Optional[LocationAvailableChargeNumberObjectOwner] = None
 
 
 class TelephonyType(str, Enum):
@@ -507,7 +525,7 @@ class LocationAvailableNumberObject(ApiModel):
     #: If `true`, the phone number is a service number; otherwise, it is a standard number. Service numbers are
     #: high-utilization or high-concurrency PSTN phone numbers that are neither mobile nor toll-free.
     is_service_number: Optional[bool] = None
-    owner: Optional[NumberObjectOwner] = None
+    owner: Optional[LocationAvailableChargeNumberObjectOwner] = None
 
 
 class WebexGoAvailableNumberObject(ApiModel):
@@ -603,7 +621,7 @@ class LocationCallInterceptAvailableNumberObject(ApiModel):
     #: If `true`, the phone number is a service number; otherwise, it is a standard number. Service numbers are
     #: high-utilization or high-concurrency PSTN phone numbers that are neither mobile nor toll-free.
     is_service_number: Optional[bool] = None
-    owner: Optional[NumberObjectOwner] = None
+    owner: Optional[LocationAvailableChargeNumberObjectOwner] = None
 
 
 class LocationCallSettingsApi(ApiChild, base='telephony/config'):
@@ -870,8 +888,10 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         :param routing_prefix: Must dial a prefix when calling between locations having same extension within same
             location, should be numeric.
         :type routing_prefix: str
-        :param charge_number: Chargeable number for the line placing the call. When this is set, all calls placed from
-            this location will include a P-Charge-Info header with the selected number in the SIP INVITE.
+        :param charge_number: Set the chargeable number for the line placing the call.  When set and
+            `useChargeNumberForPChargeInfo field (GET location)
+            <https://developer.webex.com/docs/api/v1/beta-location-call-settings-with-p-charge-info-support/get-location-webex-calling-details>`_ is true for the location, all PSTN calls placed from
+            this location will include a P-Charge-Info header with this specified number in the SIP INVITE.
         :type charge_number: str
         :param org_id: Updating Webex Calling location attributes for this organization.
         :type org_id: str
@@ -1052,6 +1072,41 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
             params['extension'] = extension
         url = self.ep(f'locations/{location_id}/callIntercept/availableNumbers')
         return self.session.follow_pagination(url=url, model=LocationCallInterceptAvailableNumberObject, item_key='phoneNumbers', params=params)
+
+    def get_available_charge_numbers_list(self, location_id: str, phone_number: list[str] = None,
+                                          owner_name: str = None, org_id: str = None,
+                                          **params) -> Generator[LocationAvailableChargeNumberObject, None, None]:
+        """
+        Get Available Charge Numbers for a Location with Given Criteria
+
+        List the numbers that are available to be assigned as the location's charge number.
+
+        These numbers are non-toll-free and non-mobile numbers assigned to the location specified in the request URL.
+
+        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Return the list of available charge numbers for this location within the given
+            organization. The maximum length is 36.
+        :type location_id: str
+        :param phone_number: Filter phone numbers based on the comma-separated list provided in the `phoneNumber`
+            array.
+        :type phone_number: list[str]
+        :param owner_name: Return the list of phone numbers that are owned by the given `ownerName`. Maximum length is
+            255.
+        :type owner_name: str
+        :param org_id: List numbers for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`LocationAvailableChargeNumberObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if owner_name is not None:
+            params['ownerName'] = owner_name
+        url = self.ep(f'locations/{location_id}/chargeNumber/availableNumbers')
+        return self.session.follow_pagination(url=url, model=LocationAvailableChargeNumberObject, item_key='phoneNumbers', params=params)
 
     def get_location_ecbn_available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
                                                   owner_name: str = None, org_id: str = None,

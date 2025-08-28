@@ -1391,6 +1391,8 @@ The method name is a link to the method documentation.
         Get Location Call Intercept Available Phone Numbers
    * - :meth:`api.telephony.location.change_announcement_language <wxc_sdk.telephony.location.TelephonyLocationApi.change_announcement_language>`
         Change Announcement Language
+   * - :meth:`api.telephony.location.charge_number_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.charge_number_available_phone_numbers>`
+        Get Available Charge Numbers for a Location with Given Criteria
    * - :meth:`api.telephony.location.create_receptionist_contact_directory <wxc_sdk.telephony.location.TelephonyLocationApi.create_receptionist_contact_directory>`
         Create a Receptionist Contact Directory
    * - :meth:`api.telephony.location.delete_receptionist_contact_directory <wxc_sdk.telephony.location.TelephonyLocationApi.delete_receptionist_contact_directory>`
@@ -1489,6 +1491,8 @@ The method name is a link to the method documentation.
         Get Location Call Intercept Available Phone Numbers
    * - :meth:`api.telephony.locations.change_announcement_language <wxc_sdk.telephony.location.TelephonyLocationApi.change_announcement_language>`
         Change Announcement Language
+   * - :meth:`api.telephony.locations.charge_number_available_phone_numbers <wxc_sdk.telephony.location.TelephonyLocationApi.charge_number_available_phone_numbers>`
+        Get Available Charge Numbers for a Location with Given Criteria
    * - :meth:`api.telephony.locations.create_receptionist_contact_directory <wxc_sdk.telephony.location.TelephonyLocationApi.create_receptionist_contact_directory>`
         Create a Receptionist Contact Directory
    * - :meth:`api.telephony.locations.delete_receptionist_contact_directory <wxc_sdk.telephony.location.TelephonyLocationApi.delete_receptionist_contact_directory>`

@@ -161,6 +161,8 @@ class TestAddExisting(NumberTest):
 
 @dataclass(init=False, repr=False)
 class TestAvailable(TestWithLocations):
+    proxy = True
+
     validated_owners: ClassVar[set[str]]
 
     @classmethod
@@ -182,6 +184,8 @@ class TestAvailable(TestWithLocations):
                       'PAGING_GROUP': functools.partial(self.async_api.telephony.paging.details, location_id),
                       'HUNT_GROUP': functools.partial(self.async_api.telephony.huntgroup.details, location_id),
                       'PLACE': self.async_api.workspaces.details,
+                      'VOICEMAIL_GROUP': functools.partial(self.async_api.telephony.voicemail_groups.details,
+                                                           location_id),
                       }
 
         async def validate_owner(number: AvailableNumber):
@@ -265,7 +269,8 @@ class TestAvailable(TestWithLocations):
                    lapi.phone_numbers,
                    lapi.webex_go_available_phone_numbers,
                    lapi.ecbn_available_phone_numbers,
-                   lapi.call_intercept_available_phone_numbers]
+                   lapi.call_intercept_available_phone_numbers,
+                   lapi.charge_number_available_phone_numbers]
         results = await asyncio.gather(*[self.for_all_locations(method, raise_error=True) for method in methods],
                                        return_exceptions=True)
         err = next((r for r in results if isinstance(r, Exception)), None)

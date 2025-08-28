@@ -14,15 +14,16 @@ __all__ = ['Record', 'NotificationType', 'NotificationRepeat', 'Notification', '
 
 
 class Record(str, Enum):
-    #: Incoming and outgoing calls will be recorded with no control to start, stop, pause, or resume.
+    #: Call recording is always enabled.
     always = 'Always'
-    #: Calls will not be recorded.
+    #: Call recording is never enabled.
     never = 'Never'
-    #: Calls are always recorded, but user can pause or resume the recording. Stop recording is not supported.
-    always_w_pause_resume = 'Always with Pause/Resume'
-    #: Records only the portion of the call after the recording start (\*44) has been entered. Pause, resume, and
-    #: stop controls are supported.
-    on_demand = 'On Demand with User Initiated Start'
+    #: Call recording is started and stopped manually by the user.
+    on_demand = 'On Demand'
+    #: Call recording is always enabled with the ability to pause and resume.
+    always_with_pause_resume = 'Always with Pause/Resume'
+    #: Call recording is started manually by the user.
+    on_demand_with_user_initiated_start = 'On Demand with User Initiated Start'
 
 
 class NotificationType(str, Enum):
