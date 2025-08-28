@@ -2215,11 +2215,11 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         """
         Get Settings Groups
 
-        This API returns the `settingsGroups` that define the structure and association of tags for dynamic device
+        This API returns the `settingsGroups` that define the structure and association of tags for device dynamic
         settings.
 
         The `settingsGroups` are used to organize the tags into logical groups, making it easier to manage and
-        configure dynamic device settings.
+        configure device dynamic settings.
 
         :param family_or_model_display_name: Device family or model display name to filter the `settingsGroups`.
         :type family_or_model_display_name: str
@@ -2614,7 +2614,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
     def update_specified_settings_for_the_device(self, device_id: str, tags: list[DevicePutItem] = None,
                                                  org_id: str = None):
         """
-        Update specified settings for the device.
+        Update Device Dynamic Settings
 
         Modify dynamic settings for a specified device.
 
@@ -3101,7 +3101,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
     def list_dynamic_device_settings_jobs(self, org_id: str = None,
                                           **params) -> Generator[PostDynamicDeviceSettingsJobResponse, None, None]:
         """
-        List dynamic device settings jobs.
+        List device dynamic settings jobs.
 
         Lists all the jobs for job type `dynamicdevicesettings` for the given organization in order of most recent one
         to oldest one irrespective of its status.
@@ -3109,7 +3109,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         This API requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param org_id: Retrieve list of dynamic device settings jobs for this organization.
+        :param org_id: Retrieve list of device dynamic settings jobs for this organization.
         :type org_id: str
         :return: Generator yielding :class:`PostDynamicDeviceSettingsJobResponse` instances
         """
@@ -3123,7 +3123,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
                                                                         location_id: str = None,
                                                                         org_id: str = None) -> PostDynamicDeviceSettingsJobResponse:
         """
-        Updates dynamic Device Settings Across Organization Or Location
+        Update Device Dynamic Settings Across Organization or Location
 
         Creates a job to update device settings at location or organization level.
 
@@ -3145,7 +3145,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type tags: list[DynamicSettingsUpdateJobDevicePostItem]
         :param location_id: If present, the requested settings will be updated to devices under this location.
         :type location_id: str
-        :param org_id: Apply update dynamic device settings for all the devices under this organization.
+        :param org_id: Apply update device dynamic settings for all the devices under this organization.
         :type org_id: str
         :rtype: :class:`PostDynamicDeviceSettingsJobResponse`
         """
@@ -3163,9 +3163,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
 
     def get_device_dynamic_settings_job_status(self, job_id: str) -> PostDynamicDeviceSettingsJobResponse:
         """
-        Get Device Dynamic Settings Job Status
-
-        Get dynamic device settings job status.
+        Get device dynamic settings job status.
 
         Provides details of the job with `jobId` of `jobType` `dynamicdevicesettings`.
 
@@ -3184,9 +3182,9 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
     def list_dynamic_device_settings_job_errors(self, job_id: str, org_id: str = None,
                                                 **params) -> Generator[ItemObject, None, None]:
         """
-        List Dynamic Device Settings Job Errors
+        List Device Dynamic Settings Job Errors
 
-        List Update dynamic device settings job errors.
+        List Update device dynamic settings job errors.
 
         Lists all error details of the job with `jobId` of `jobType` `dynamicdevicesettings`.
 
