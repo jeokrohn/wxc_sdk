@@ -6,6 +6,7 @@ Release history
 - feat: new API :attr:`api.telephony.jobs.dynamic_device_settings <wxc_sdk.telephony.jobs.JobsApi.dynamic_device_settings>`
 - feat: new API :attr:`api.telephony.devices.dynamic_settings <wxc_sdk.telephony.devices.TelephonyDevicesApi.dynamic_settings>`
 - feat: allow instantiation of WebexSimpleApi/AsWebexSimpleApi instances with existing session object
+- feat: significant enhancements :class:`api.me.MeSettingsApi <wxc_sdk.me.MeSettingsApi>`
 
 1.26.0
 ------

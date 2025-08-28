@@ -94,8 +94,7 @@ class TelephonyLocation(ApiModel):
         """
         data = self.model_dump(mode='json', exclude_unset=True, by_alias=True,
                                exclude={'location_id', 'name', 'subscription_id', 'user_limit', 'default_domain',
-                                        'e911_setup_required',
-                                        'use_charge_number_for_pcharge_info'})
+                                        'e911_setup_required'})
         if not self.connection:
             data.pop('connection', None)
         return data

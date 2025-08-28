@@ -66,7 +66,7 @@ __all__ = ['NumberListPhoneNumberType', 'TelephonyType',
            'CallInterceptDetailsPermission', 'CallInterceptDetails', 'CallingPlanReason',
            'OutgoingCallingPlanPermissionsByType', 'OutgoingCallingPlanPermissionsByDigitPattern', 'AppliedService',
            'AnnouncementLanguage', 'TelephonyApi',
-           'MoHTheme', 'MoHConfig']
+           'MoHTheme', 'MoHConfig', 'NameAndCode']
 
 
 class NumberListPhoneNumberType(str, Enum):
@@ -515,6 +515,7 @@ class AnnouncementLanguage(ApiModel):
     #: Language Code
     code: Optional[str] = None
 
+NameAndCode = AnnouncementLanguage
 
 class MoHTheme(str, Enum):
     #: Legacy MoH Theme

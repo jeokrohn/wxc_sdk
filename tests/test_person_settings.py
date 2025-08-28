@@ -11,6 +11,7 @@ from functools import reduce
 from itertools import chain
 from operator import attrgetter
 from typing import Callable
+from unittest import skip
 
 from tests.base import TestCaseWithUsers, gather, async_test
 from wxc_sdk.base import to_camel
@@ -391,6 +392,9 @@ class TestConfigure(TestCaseWithUsers):
 
     @async_test
     async def test_recording_001_enable_for_all_users(self):
+        """
+        enable call recording for all users
+        """
         setting = CallRecordingSetting(enabled=True,
                                        record=Record.always,
                                        record_voicemail_enabled=True,
@@ -401,7 +405,17 @@ class TestConfigure(TestCaseWithUsers):
             *[self.async_api.person_settings.call_recording.configure(user.person_id,
                                                                      setting)
               for user in self.users])
+        err = None
+        for user, result in zip(self.users, results):
+            if isinstance(result, Exception):
+                err = err or result
+                print(f'Failed to enable call recording for {user.display_name}: {result}')
+            else:
+                print(f'Call recording enabled for {user.display_name}')
+        if err:
+            raise err
 
+    @skip('We want to keep recording enabled after test')
     @async_test
     async def test_recording_002_disable_for_all_users(self):
         setting = CallRecordingSetting(enabled=False)
@@ -409,6 +423,15 @@ class TestConfigure(TestCaseWithUsers):
             *[self.async_api.person_settings.call_recording.configure(user.person_id,
                                                                       setting)
               for user in self.users])
+        err = None
+        for user, result in zip(self.users, results):
+            if isinstance(result, Exception):
+                err = err or result
+                print(f'Failed to disable call recording for {user.display_name}: {result}')
+            else:
+                print(f'Call recording disabled for {user.display_name}')
+        if err:
+            raise err
 
 
 class TestCallerIdConfigure(TestCaseWithUsers):

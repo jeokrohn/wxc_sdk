@@ -92,7 +92,7 @@ class PersonForwardingSetting(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json', exclude_none=True, by_alias=True,
+        return self.model_dump(mode='json', exclude_unset=True, by_alias=True,
                                exclude={'call_forwarding': {'no_answer': {'system_max_number_of_rings': True}}})
 
 
@@ -176,7 +176,7 @@ class PersonForwardingApi(PersonSettingsApiChild):
                     destination_voicemail_enabled=True,
                     ring_reminder_enabled=True)
                 forwarding.call_forwarding.always = always
-                api.configure(entity_id=self.target.id, forwarding=update)
+                api.configure(entity_id=self.target.id, forwarding=forwarding)
 
         """
         ep = self.f_ep(person_id=entity_id)

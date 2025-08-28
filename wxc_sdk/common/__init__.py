@@ -28,7 +28,7 @@ __all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting',
            'BluetoothSetting', 'NoiseCancellation', 'SoftKeyLayout', 'SoftKeyMenu', 'PskObject', 'BackgroundImageColor',
            'BacklightTimer68XX78XX', 'DectCustomization', 'OwnerType', 'NumberOwner', 'ApplyLineKeyTemplateAction',
            'AssignedDectNetwork', 'DevicePlatform', 'Multicast', 'EnhancedMulticast', 'DeviceType', 'UserLicenseType',
-           'MaintenanceMode', 'SetOrClear']
+           'MaintenanceMode', 'SetOrClear', 'MeGroupSettings', 'MeGroupMember', 'PrimaryOrSecondary']
 
 
 class IdOnly(ApiModel):
@@ -1193,3 +1193,30 @@ class MaintenanceMode(str, Enum):
 class SetOrClear(str, Enum):
     set = 'SET'
     clear = 'CLEAR'
+
+
+class MeGroupMember(ApiModel):
+    #: Unique identifier of the member.
+    id: Optional[str] = None
+    type: Optional[UserType] = None
+    #: First name of the member.
+    first_name: Optional[str] = None
+    #: Last name of the member.
+    last_name: Optional[str] = None
+    #: Display name of the member.
+    display_name: Optional[str] = None
+    #: Department name of the member.
+    department_name: Optional[str] = None
+
+
+class MeGroupSettings(ApiModel):
+    #: Unique name for the call park. The maximum length is 80..
+    group_name: Optional[str] = None
+    #: List of members in the call park group.
+    member_list: Optional[list[MeGroupMember]] = None
+
+class PrimaryOrSecondary(str, Enum):
+    #: Primary number to call.
+    primary = 'PRIMARY'
+    #: Secondary number to call, if available.
+    secondary = 'SECONDARY'

@@ -19,6 +19,10 @@ class SelectiveFrom(str, Enum):
     any_phone_number = 'ANY_PHONE_NUMBER'
     #: Criteria applies only for specific incoming numbers.
     select_phone_numbers = 'SELECT_PHONE_NUMBERS'
+    #: The criteria applies to any internal number.
+    any_internal = 'ANY_INTERNAL'
+    #: The criteria applies to any external number.
+    any_external = 'ANY_EXTERNAL'
 
 
 class SelectiveCriteria(ApiModel):

@@ -191,6 +191,102 @@ The method name is a link to the method documentation.
         Update details for a location, by ID
    * - :meth:`api.locations.update_floor <wxc_sdk.locations.LocationsApi.update_floor>`
         Update a Location Floor
+   * - :meth:`api.me.announcement_languages <wxc_sdk.me.MeSettingsApi.announcement_languages>`
+        Retrieve announcement languages for the authenticated user
+   * - :meth:`api.me.calling_services_list <wxc_sdk.me.MeSettingsApi.calling_services_list>`
+        Get My Calling Services List
+   * - :meth:`api.me.country_telephony_config_requirements <wxc_sdk.me.MeSettingsApi.country_telephony_config_requirements>`
+        Retrieve country-specific telephony configuration requirements
+   * - :meth:`api.me.details <wxc_sdk.me.MeSettingsApi.details>`
+        Get My Own Details
+   * - :meth:`api.me.feature_access_codes <wxc_sdk.me.MeSettingsApi.feature_access_codes>`
+        Get My Feature Access Codes
+   * - :meth:`api.me.monitoring_settings <wxc_sdk.me.MeSettingsApi.monitoring_settings>`
+        Get My Monitoring Settings
+   * - :meth:`api.me.barge.configure <wxc_sdk.me.barge.MeBargeApi.configure>`
+        Configure Barge-In Settings
+   * - :meth:`api.me.barge.get <wxc_sdk.me.barge.MeBargeApi.get>`
+        Retrieve Barge-In Settings
+   * - :meth:`api.me.call_block.add_number <wxc_sdk.me.callblock.MeCallBlockApi.add_number>`
+        Add a phone number to user's Call Block List
+   * - :meth:`api.me.call_block.delete_number <wxc_sdk.me.callblock.MeCallBlockApi.delete_number>`
+        Delete User Call Block Number
+   * - :meth:`api.me.call_block.settings <wxc_sdk.me.callblock.MeCallBlockApi.settings>`
+        Get My Call Block Settings
+   * - :meth:`api.me.call_block.state_for_number <wxc_sdk.me.callblock.MeCallBlockApi.state_for_number>`
+        Get My Call Block State For Specific Number
+   * - :meth:`api.me.call_center.modify <wxc_sdk.me.callcenter.MeCallCenterApi.modify>`
+        Modify My Call Center Settings
+   * - :meth:`api.me.call_center.settings <wxc_sdk.me.callcenter.MeCallCenterApi.settings>`
+        Get My Call Center Settings
+   * - :meth:`api.me.call_park.settings <wxc_sdk.me.callpark.MeCallParkApi.settings>`
+        Get My Call Park Settings
+   * - :meth:`api.me.call_pickup.settings <wxc_sdk.me.callpickup.MeCallPickupApi.settings>`
+        Get My Call Pickup Group Settings
+   * - :meth:`api.me.call_policies.settings <wxc_sdk.me.callpolicy.MeCallPoliciesApi.settings>`
+        Get Call Policies Settings for User
+   * - :meth:`api.me.call_policies.update <wxc_sdk.me.callpolicy.MeCallPoliciesApi.update>`
+        Modify Call Policies Settings for User
+   * - :meth:`api.me.caller_id.available_caller_id_list <wxc_sdk.me.callerid.MeCallerIdApi.available_caller_id_list>`
+        Get My Available Caller ID List
+   * - :meth:`api.me.caller_id.get_selected_caller_id_settings <wxc_sdk.me.callerid.MeCallerIdApi.get_selected_caller_id_settings>`
+        Read My Selected Caller ID Settings
+   * - :meth:`api.me.caller_id.modify_selected_caller_id_settings <wxc_sdk.me.callerid.MeCallerIdApi.modify_selected_caller_id_settings>`
+        Configure My Selected Caller ID Settings
+   * - :meth:`api.me.caller_id.settings <wxc_sdk.me.callerid.MeCallerIdApi.settings>`
+        Get My Caller ID Settings
+   * - :meth:`api.me.caller_id.update <wxc_sdk.me.callerid.MeCallerIdApi.update>`
+        Update My Caller ID Settings
+   * - :meth:`api.me.dnd.configure <wxc_sdk.me.dnd.MeDNDApi.configure>`
+        Update Do Not Disturb Settings for User
+   * - :meth:`api.me.dnd.settings <wxc_sdk.me.dnd.MeDNDApi.settings>`
+        Get Do Not Disturb Settings for User
+   * - :meth:`api.me.endpoints.available_preferred_answer_endpoints <wxc_sdk.me.endpoints.MeEndpointsApi.available_preferred_answer_endpoints>`
+        Get List Available Preferred Answer Endpoints
+   * - :meth:`api.me.endpoints.details <wxc_sdk.me.endpoints.MeEndpointsApi.details>`
+        Get My Endpoints Details
+   * - :meth:`api.me.endpoints.get_preferred_answer_endpoint <wxc_sdk.me.endpoints.MeEndpointsApi.get_preferred_answer_endpoint>`
+        Get Preferred Answer Endpoint
+   * - :meth:`api.me.endpoints.list <wxc_sdk.me.endpoints.MeEndpointsApi.list>`
+        Read the List of My Endpoints
+   * - :meth:`api.me.endpoints.modify_preferred_answer_endpoint <wxc_sdk.me.endpoints.MeEndpointsApi.modify_preferred_answer_endpoint>`
+        Modify Preferred Answer Endpoint
+   * - :meth:`api.me.endpoints.update <wxc_sdk.me.endpoints.MeEndpointsApi.update>`
+        Update My Endpoints Details
+   * - :meth:`api.me.executive.alert_settings <wxc_sdk.me.executive.MeExecutiveApi.alert_settings>`
+        Get User Executive Alert Settings
+   * - :meth:`api.me.executive.assigned_assistants <wxc_sdk.me.executive.MeExecutiveApi.assigned_assistants>`
+        Get My Executive Assigned Assistants
+   * - :meth:`api.me.executive.call_filtering_criteria <wxc_sdk.me.executive.MeExecutiveApi.call_filtering_criteria>`
+        Get User Executive Call Filtering Criteria Settings
+   * - :meth:`api.me.executive.create_call_filtering_criteria <wxc_sdk.me.executive.MeExecutiveApi.create_call_filtering_criteria>`
+        Create User Executive Call Filtering Criteria
+   * - :meth:`api.me.executive.delete_call_filtering_criteria <wxc_sdk.me.executive.MeExecutiveApi.delete_call_filtering_criteria>`
+        Delete User Executive Call Filtering Criteria
+   * - :meth:`api.me.executive.executive_assistant_settings <wxc_sdk.me.executive.MeExecutiveApi.executive_assistant_settings>`
+        Get My Executive Assistant Settings
+   * - :meth:`api.me.executive.executive_available_assistants <wxc_sdk.me.executive.MeExecutiveApi.executive_available_assistants>`
+        Get My Executive Available Assistants
+   * - :meth:`api.me.executive.executive_call_filtering_settings <wxc_sdk.me.executive.MeExecutiveApi.executive_call_filtering_settings>`
+        Get User Executive Call Filtering Settings
+   * - :meth:`api.me.executive.screening_settings <wxc_sdk.me.executive.MeExecutiveApi.screening_settings>`
+        Get User Executive Screening Settings
+   * - :meth:`api.me.executive.update_alert_settings <wxc_sdk.me.executive.MeExecutiveApi.update_alert_settings>`
+        Modify User Executive Alert Settings
+   * - :meth:`api.me.executive.update_assigned_assistants <wxc_sdk.me.executive.MeExecutiveApi.update_assigned_assistants>`
+        Update My Executive Assigned Assistants
+   * - :meth:`api.me.executive.update_call_filtering_criteria <wxc_sdk.me.executive.MeExecutiveApi.update_call_filtering_criteria>`
+        Update User Executive Call Filtering Criteria Settings
+   * - :meth:`api.me.executive.update_executive_assistant_settings <wxc_sdk.me.executive.MeExecutiveApi.update_executive_assistant_settings>`
+        Update My Executive Assistant Settings
+   * - :meth:`api.me.executive.update_executive_call_filtering_settings <wxc_sdk.me.executive.MeExecutiveApi.update_executive_call_filtering_settings>`
+        Update User Executive Call Filtering Settings
+   * - :meth:`api.me.executive.update_screening_settings <wxc_sdk.me.executive.MeExecutiveApi.update_screening_settings>`
+        Modify User Executive Screening Settings
+   * - :meth:`api.me.forwarding.configure <wxc_sdk.me.forwarding.MeForwardingApi.configure>`
+        Configure My Call Forwarding Settings
+   * - :meth:`api.me.forwarding.settings <wxc_sdk.me.forwarding.MeForwardingApi.settings>`
+        Read My Call Forwarding Settings
    * - :meth:`api.me.go_override.get <wxc_sdk.me.go_override.GoOverrideApi.get>`
         Get My WebexGoOverride Settings
    * - :meth:`api.me.go_override.update <wxc_sdk.me.go_override.GoOverrideApi.update>`
@@ -199,6 +295,22 @@ The method name is a link to the method documentation.
         Get My Personal Assistant
    * - :meth:`api.me.personal_assistant.update <wxc_sdk.me.personal_assistant.MePersonalAssistantApi.update>`
         Update My Personal Assistant
+   * - :meth:`api.me.recording.settings <wxc_sdk.me.recording.MeRecordingApi.settings>`
+        Get My Call Recording Settings
+   * - :meth:`api.me.snr.create_snr <wxc_sdk.me.snr.MeSNRApi.create_snr>`
+        Add phone number as User's Single Number Reach
+   * - :meth:`api.me.snr.delete_snr <wxc_sdk.me.snr.MeSNRApi.delete_snr>`
+        Delete User's Single Number Reach Contact Settings
+   * - :meth:`api.me.snr.settings <wxc_sdk.me.snr.MeSNRApi.settings>`
+        Get User's Single Number Reach Settings
+   * - :meth:`api.me.snr.update <wxc_sdk.me.snr.MeSNRApi.update>`
+        Update User's Single Number Reach Settings
+   * - :meth:`api.me.snr.update_snr <wxc_sdk.me.snr.MeSNRApi.update_snr>`
+        Modify User's Single Number Reach Contact Settings
+   * - :meth:`api.me.voicemail.configure <wxc_sdk.me.voicemail.MeVoicemailApi.configure>`
+        Configure Voicemail Settings for a Person
+   * - :meth:`api.me.voicemail.settings <wxc_sdk.me.voicemail.MeVoicemailApi.settings>`
+        Read Voicemail Settings for a Person
    * - :meth:`api.meetings.create <wxc_sdk.meetings.MeetingsApi.create>`
         Creates a new meeting
    * - :meth:`api.meetings.delete <wxc_sdk.meetings.MeetingsApi.delete>`

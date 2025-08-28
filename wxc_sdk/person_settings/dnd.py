@@ -14,9 +14,9 @@ class DND(ApiModel):
     DND settings
     """
     #: forwarding.py
-    enabled: bool
+    enabled: Optional[bool] = None
     #: Enables a Ring Reminder to play a brief tone on your desktop phone when you receive incoming calls.
-    ring_splash_enabled: bool
+    ring_splash_enabled: Optional[bool] = None
     #: `true` if a mobile device will still ring even if Do Not Disturb is enabled.
     webex_go_override_enabled: Optional[bool] = None
 
@@ -31,6 +31,7 @@ class DndApi(PersonSettingsApiChild):
     def read(self, entity_id: str, org_id: str = None) -> DND:
         """
         Read Do Not Disturb Settings for an entity
+
         Retrieve an entity's Do Not Disturb Settings
 
         When enabled, this feature will give all incoming calls the busy treatment. Optionally, you can enable a Ring
@@ -50,6 +51,7 @@ class DndApi(PersonSettingsApiChild):
     def configure(self, entity_id: str, dnd_settings: DND, org_id: str = None):
         """
         Configure Do Not Disturb Settings for an entity
+
         Configure an entity's Do Not Disturb Settings
 
         When enabled, this feature will give all incoming calls the busy treatment. Optionally, you can enable a Ring
@@ -67,4 +69,4 @@ class DndApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(entity_id)
         params = org_id and {'orgId': org_id} or None
-        self.put(ep, params=params, data=dnd_settings.model_dump_json())
+        self.put(ep, params=params, json=dnd_settings.model_dump(mode='json', by_alias=True, exclude_unset=True))

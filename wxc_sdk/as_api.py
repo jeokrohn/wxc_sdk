@@ -46,16 +46,18 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi',
            'AsLocationAccessCodesApi', 'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi',
            'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMSTeamsSettingApi',
-           'AsManageNumbersJobsApi', 'AsMePersonalAssistantApi', 'AsMeSettingsApi', 'AsMeetingChatsApi',
-           'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
-           'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi',
-           'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsModeManagementApi', 'AsMonitoringApi',
-           'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOperatingModesApi',
-           'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi', 'AsOrganisationAccessCodesApi',
-           'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOrganizationContactsApi',
-           'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi',
-           'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPersonalAssistantApi', 'AsPlayListApi',
-           'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
+           'AsManageNumbersJobsApi', 'AsMeBargeApi', 'AsMeCallBlockApi', 'AsMeCallCenterApi', 'AsMeCallParkApi',
+           'AsMeCallPickupApi', 'AsMeCallPoliciesApi', 'AsMeCallerIdApi', 'AsMeDNDApi', 'AsMeEndpointsApi',
+           'AsMeExecutiveApi', 'AsMeForwardingApi', 'AsMePersonalAssistantApi', 'AsMeRecordingApi', 'AsMeSNRApi',
+           'AsMeSettingsApi', 'AsMeVoicemailApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi',
+           'AsMeetingInviteesApi', 'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi',
+           'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi',
+           'AsModeManagementApi', 'AsMonitoringApi', 'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi',
+           'AsOperatingModesApi', 'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi',
+           'AsOrganisationAccessCodesApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi',
+           'AsOrganizationContactsApi', 'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi',
+           'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPersonalAssistantApi',
+           'AsPlayListApi', 'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
            'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsQueueCallRecordingSettingsApi',
            'AsRebuildPhonesJobsApi', 'AsReceptionistApi', 'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi',
            'AsReportsApi', 'AsRestSession', 'AsRolesApi', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi',
@@ -4193,6 +4195,900 @@ class AsGoOverrideApi(AsApiChild, base='telephony/config/people/me/settings/webe
         await super().put(url, json=body)
 
 
+class AsMeBargeApi(AsApiChild, base='telephony/config/people/me'):
+    async def get(self) -> BargeSettings:
+        """
+        Retrieve Barge-In Settings
+
+        Retrieve Barge-In settings of the user.
+
+        The Barge-In feature enables you to use a Feature Access Code (FAC) to answer a call that was directed to
+        another subscriber, or barge-in on the call if it was already answered. Barge-In can be used across locations.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`BargeInInfo`
+        """
+        url = self.ep('settings/bargeIn')
+        data = await super().get(url)
+        r = BargeSettings.model_validate(data)
+        return r
+
+    async def configure(self, settings: BargeSettings):
+        """
+        Configure Barge-In Settings
+
+        Configure person's Barge-In settings.
+
+        The Barge-In feature enables you to use a Feature Access Code (FAC) to answer a call that was directed to
+        another subscriber, or barge-in on the call if it was already answered. Barge-In can be used across locations.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param settings: Barge-In settings
+        :type settings: :class:`BargeSettings`
+        """
+        body = settings.model_dump(mode='json', by_alias=True, exclude_unset=True)
+        url = self.ep('settings/bargeIn')
+        await super().put(url, json=body)
+
+
+class AsMeCallBlockApi(AsApiChild, base='telephony/config/people/me'):
+    async def settings(self) -> list[CallBlockNumber]:
+        """
+        Get My Call Block Settings
+
+        Get details of call block settings associated with the authenticated user.
+
+        Call block settings allow you to get the User Call Block Number List.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: list[CallBlockNumber]
+        """
+        url = self.ep('settings/callBlock')
+        data = await super().get(url)
+        r = TypeAdapter(list[CallBlockNumber]).validate_python(data['numbers'])
+        return r
+
+    async def add_number(self, phone_number: str) -> str:
+        """
+        Add a phone number to user's Call Block List
+
+        Add a phone number to the call block list for the authenticated user.
+
+        Call block settings allow you to get the User Call Block Number List.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param phone_number: Phone number which is blocked by user.
+        :type phone_number: str
+        :rtype: str
+        """
+        body = dict()
+        body['phoneNumber'] = phone_number
+        url = self.ep('settings/callBlock/numbers')
+        data = await super().post(url, json=body)
+        r = data['id']
+        return r
+
+    async def delete_number(self, phone_number_id: str):
+        """
+        Delete User Call Block Number
+
+        Delete call block number settings associated with the authenticated user.
+
+        Call block settings allow you to delete a number from the User Call Block Number List.
+
+        This API requires a user auth token with a scope of `spark-admin:people_write`.
+
+        :param phone_number_id: Unique identifier of the phone number.
+        :type phone_number_id: str
+        :rtype: None
+        """
+        url = self.ep(f'settings/callBlock/numbers/{phone_number_id}')
+        await super().delete(url)
+
+    async def state_for_number(self, phone_number_id: str) -> bool:
+        """
+        Get My Call Block State For Specific Number
+
+        Get call block state details for a specific number associated with the authenticated user.
+
+        Call block settings allow you to get the User Call Block Number List.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param phone_number_id: Unique identifier of the phone number.
+        :type phone_number_id: str
+        :rtype: bool
+        """
+        url = self.ep(f'settings/callBlock/numbers/{urllib.parse.quote(phone_number_id)}')
+        data = await super().get(url)
+        r = data['blockCallsEnabled']
+        return r
+
+
+class AsMeCallCenterApi(AsApiChild, base='telephony/config/people/me'):
+    async def settings(self) -> MeCallCenterSettings:
+        """
+        Get My Call Center Settings
+
+        Retrieves the call center settings and list of all call centers the logged in user belongs to.
+
+        Calls from the Call Centers are routed to agents based on configuration. An agent can be assigned to one or
+        more call queues and can be managed by supervisors.
+        The user must have the call center service assigned.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`MeCallCenterSettings`
+        """
+        url = self.ep('settings/queues')
+        data = await super().get(url)
+        r = MeCallCenterSettings.model_validate(data)
+        return r
+
+    async def modify(self, settings: MeCallCenterSettings):
+        """
+        Modify My Call Center Settings
+
+        Modify the call center settings and availability for an agent in one or more call centers to which the logged
+        in user belongs.
+
+        Calls from the Call Centers are routed to agents based on configuration. An agent can be assigned to one or
+        more call queues and can be managed by supervisors.
+        Contains a list specifying the desired availability status of one or more call centers.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param settings: settings
+        :type settings: :class:`MeCallCenterSettings`
+        """
+        body = settings.update()
+        url = self.ep('settings/queues')
+        await super().put(url, json=body)
+
+
+class AsMeCallParkApi(AsApiChild, base='telephony/config/people/me'):
+    async def settings(self) -> MeGroupSettings:
+        """
+        Get My Call Park Settings
+
+        Get details of call park settings associated with the authenticated user.
+
+        Call Park allows call recipients to place a call on hold so that it can be retrieved from another device.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`MeGroupSettings`
+        """
+        url = self.ep('settings/callPark')
+        data = await super().get(url)
+        r = MeGroupSettings.model_validate(data)
+        return r
+
+
+class AsMeCallPickupApi(AsApiChild, base='telephony/config/people/me'):
+    async def settings(self) -> MeGroupSettings:
+        """
+        Get My Call Pickup Group Settings
+
+        Get Call Pickup Group Settings for the authenticated user.
+
+        Call pickup group enables a user to answer any ringing line within their pickup group. A call pickup group is
+        an administrator-defined set of users within a location, to which the call pickup feature applies.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`MeGroupSettings`
+        """
+        url = self.ep('settings/callPickupGroup')
+        data = await super().get(url)
+        r = MeGroupSettings.model_validate(data)
+        return r
+
+
+class AsMeCallPoliciesApi(AsApiChild, base='telephony/config/people/me'):
+
+    async def settings(self) -> PrivacyOnRedirectedCalls:
+        """
+        Get Call Policies Settings for User
+
+        Get call policies settings for the authenticated user.
+
+        Call Policies in Webex allow you to manage how your call information is displayed and handled. You can view
+        privacy settings for your connected line ID on redirected calls and review other call-related preferences.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: UserCallPoliciesGetConnectedLineIdPrivacyOnRedirectedCalls
+        """
+        url = self.ep('settings/callPolicies')
+        data = await super().get(url)
+        r = TypeAdapter(PrivacyOnRedirectedCalls).validate_python(data['connectedLineIdPrivacyOnRedirectedCalls'])
+        return r
+
+    async def update(self, connected_line_id_privacy_on_redirected_calls: PrivacyOnRedirectedCalls = None):
+        """
+        Modify Call Policies Settings for User
+
+        Update call policies settings for the authenticated user.
+
+        Call Policies in Webex allow you to manage how your call information is displayed and handled. You can
+        configure privacy settings for your connected line ID on redirected calls and control other call-related
+        preferences.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param connected_line_id_privacy_on_redirected_calls:
+
+            * `NO_PRIVACY` - Caller sees the final destination's identity when call is redirected.
+            * `PRIVACY_FOR_EXTERNAL_CALLS` - Internal callers see the final destination's identity; external callers
+              see the original recipient's identity.
+            * `PRIVACY_FOR_ALL_CALLS` - All callers see the original recipient's identity when call is redirected
+        :type connected_line_id_privacy_on_redirected_calls: UserCallPoliciesGetConnectedLineIdPrivacyOnRedirectedCalls
+        :rtype: None
+        """
+        body = dict()
+        if connected_line_id_privacy_on_redirected_calls is not None:
+            body['connectedLineIdPrivacyOnRedirectedCalls'] = enum_str(connected_line_id_privacy_on_redirected_calls)
+        url = self.ep('settings/callPolicies')
+        await super().put(url, json=body)
+
+
+class AsMeCallerIdApi(AsApiChild, base='telephony/config/people/me'):
+
+    async def settings(self) -> MeCallerIdSettings:
+        """
+        Get My Caller ID Settings
+
+        Get Caller ID Settings for the authenticated user.
+
+        Calling Line ID Delivery Blocking in Webex prevents your name and phone number from being shown to people you
+        call.
+        Connected Line Identification Restriction allows you to block your name and phone number from being shown when
+        receiving a call.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`MeCallerIdSettings`
+        """
+        url = self.ep('settings/callerId')
+        data = await super().get(url)
+        r = MeCallerIdSettings.model_validate(data)
+        return r
+
+    async def update(self, settings: MeCallerIdSettings):
+        """
+        Update My Caller ID Settings
+
+        Update Caller ID Settings for the authenticated user.
+
+        Calling Line ID Delivery Blocking in Webex prevents your name and phone number from being shown to people you
+        call.
+        Connected Line Identification Restriction allows you to block your name and phone number from being shown when
+        receiving a call.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param settings: new settings
+        :type settings: :class:`MeCallerIdSettings`
+        """
+        body = settings.model_dump(mode='json', by_alias=True, exclude_unset=True)
+        url = self.ep('settings/callerId')
+        await super().put(url, json=body)
+
+    async def available_caller_id_list(self) -> list[MeSelectedCallerId]:
+        """
+        Get My Available Caller ID List
+
+        Get details of available caller IDs of the authenticated user.
+
+        Caller ID settings control how a person's information is displayed when making outgoing calls.
+        The available caller ID list shows the caller IDs that the user can choose from.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: list[MeSelectedCallerId]
+        """
+        url = self.ep('settings/availableCallerIds')
+        data = await super().get(url)
+        r = TypeAdapter(list[MeSelectedCallerId]).validate_python(data['availableCallerIds'])
+        return r
+
+    async def get_selected_caller_id_settings(self) -> MeSelectedCallerId:
+        """
+        Read My Selected Caller ID Settings
+
+        Read selected caller ID settings associated with the authenticated user.
+
+        Caller ID settings control how a person's information is displayed when making outgoing calls.
+        Selected Caller ID settings allow users to choose which configuration among available caller IDs is selected
+        currently.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: MeSelectedCallerId
+        """
+        url = self.ep('settings/selectedCallerId')
+        data = await super().get(url)
+        r = MeSelectedCallerId.model_validate(data['selected'])
+        return r
+
+    async def modify_selected_caller_id_settings(self, settings: MeSelectedCallerId):
+        """
+        Configure My Selected Caller ID Settings
+
+        Update selected caller ID settings associated with the authenticated user.
+
+        Caller ID settings control how a person's information is displayed when making outgoing calls.
+        Selected Caller ID settings allow users to choose which configuration among available caller IDs is selected
+        currently.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param settings: new settings
+        :type settings: :class:`MeSelectedCallerId`
+        """
+        body = settings.update()
+        url = self.ep('settings/selectedCallerId')
+        await super().put(url, json=body)
+
+
+class AsMeDNDApi(AsApiChild, base='telephony/config/people/me'):
+    async def settings(self) -> DND:
+        """
+        Get Do Not Disturb Settings for User
+
+        Get Do Not Disturb settings for the authenticated user.
+
+        Do Not Disturb (DND) enables users to block or silence incoming calls on their phone. When activated, the phone
+        either stops ringing or rejects calls depending on the configured option, but users can still see call
+        information and answer calls if desired.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`DND`
+        """
+        url = self.ep('settings/doNotDisturb')
+        data = await super().get(url)
+        r = DND.model_validate(data)
+        return r
+
+    async def configure(self, dnd_settings: DND):
+        """
+        Update Do Not Disturb Settings for User
+
+        Update Do Not Disturb settings for the authenticated user.
+
+        Do Not Disturb (DND) enables users to block or silence incoming calls on their phone. When activated, the phone
+        either stops ringing or rejects calls depending on the configured option, but users can still see call
+        information and answer calls if desired.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param dnd_settings: new setting to be applied
+        :type dnd_settings: DND
+        :rtype: None
+        """
+        body = dnd_settings.model_dump(mode='json', by_alias=True, exclude_unset=True)
+        url = self.ep('settings/doNotDisturb')
+        await super().put(url, json=body)
+
+
+class AsMeEndpointsApi(AsApiChild, base='telephony/config/people/me'):
+    async def list(self) -> list[MeEndpoint]:
+        """
+        Read the List of My Endpoints
+
+        Retrieve the list of endpoints associated with the authenticated user.
+
+        Endpoints are devices, applications, or hotdesking guest profiles. Endpoints can be owned by an authenticated
+        user or have the user as a secondary line.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: list[MeEndpoint]
+        """
+        url = self.ep('endpoints')
+        data = await super().get(url)
+        r = TypeAdapter(list[MeEndpoint]).validate_python(data['endpoints'])
+        return r
+
+    async def details(self, endpoint_id: str) -> MeEndpoint:
+        """
+        Get My Endpoints Details
+
+        Get details of an endpoint associated with the authenticated user.
+
+        Endpoints are devices, applications, or hotdesking guest profiles. Endpoints can be owned by an authenticated
+        user or have the user as a secondary line.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param endpoint_id: Unique identifier of the endpoint.
+        :type endpoint_id: str
+        :rtype: :class:`MeEndpoint`
+        """
+        url = self.ep(f'endpoints/{endpoint_id}')
+        data = await super().get(url)
+        r = MeEndpoint.model_validate(data)
+        return r
+
+    async def update(self, endpoint_id: str, mobility_alerting_enabled: bool):
+        """
+        Update My Endpoints Details
+
+        Update alerting settings of the mobility endpoint associated with the authenticated user.
+
+        Endpoints are devices, applications, or hotdesking guest profiles. Endpoints can be owned by an authenticated
+        user or have the user as a secondary line.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param endpoint_id: Unique identifier of the endpoint.
+        :type endpoint_id: str
+        :param mobility_alerting_enabled: If `true`, alerting is enabled for the endpoint.
+        :type mobility_alerting_enabled: bool
+        :rtype: None
+        """
+        body = {'mobilitySettings': {'alertingEnabled': mobility_alerting_enabled}}
+        url = self.ep(f'endpoints/{endpoint_id}')
+        await super().put(url, json=body)
+
+    async def available_preferred_answer_endpoints(self, org_id: str = None) -> List[MeEndpoint]:
+        """
+        Get List Available Preferred Answer Endpoints
+
+        Get the person's preferred answer endpoint and the list of endpoints available for selection. The list of
+        endpoints is empty if the person has no endpoints assigned which support the preferred answer endpoint
+        functionality.
+
+        A Webex Calling user may be associated with multiple endpoints such as Webex App (desktop or mobile), Cisco
+        desk IP phone, Webex Calling-supported analog devices or third-party endpoints. Preferred answering endpoints
+        allow users to specify which of these devices should be prioritized for answering calls, particularly when a
+        person's extension (or a virtual line assigned to them) rings on multiple devices. This helps ensure that
+        calls are answered on the most convenient or appropriate device for the person.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access API.
+        :type org_id: str
+        :rtype: list[Endpoints]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('settings/availablePreferredAnswerEndpoints')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[MeEndpoint]).validate_python(data['endpoints'])
+        return r
+
+    async def get_preferred_answer_endpoint(self) -> MeEndpoint:
+        """
+        Get Preferred Answer Endpoint
+
+        Retrieve the selected preferred answering endpoint for the user. If a preferred endpoint is not set for the
+        person, API returns empty
+
+        A Webex Calling user may be associated with multiple endpoints such as Webex App (desktop or mobile), Cisco
+        desk IP phone, Webex Calling-supported analog devices or third-party endpoints. Preferred answering endpoints
+        allow users to specify which of these devices should be prioritized for answering calls, particularly when a
+        person's extension (or a virtual line assigned to them) rings on multiple devices. This helps ensure that
+        calls are answered on the most convenient or appropriate device for the person.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`MeEndpoint`
+        """
+
+        url = self.ep('settings/preferredAnswerEndpoint')
+        data = await super().get(url)
+        if not data:
+            return None
+        r = MeEndpoint.model_validate(data)
+        return r
+
+    async def modify_preferred_answer_endpoint(self, id: str):
+        """
+        Modify Preferred Answer Endpoint
+
+        Sets or clears the person’s preferred answer endpoint. To clear the preferred answer endpoint the `id`
+        attribute must be set to null.
+
+        A Webex Calling user may be associated with multiple endpoints such as Webex App (desktop or mobile), Cisco
+        desk IP phone, Webex Calling-supported analog devices or third-party endpoints. Preferred answering endpoints
+        allow users to specify which of these devices should be prioritized for answering calls, particularly when a
+        person's extension (or a virtual line assigned to them) rings on multiple devices. This helps ensure that
+        calls are answered on the most convenient or appropriate device for the person.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param id: Person’s preferred answer endpoint.
+        :type id: str
+        :type org_id: str
+        :rtype: None
+        """
+        body = dict()
+        body['id'] = id
+        url = self.ep('settings/preferredAnswerEndpoint')
+        await super().put(url, json=body)
+
+
+class AsMeExecutiveApi(AsApiChild, base='telephony/config/people/me'):
+    async def alert_settings(self) -> ExecAlert:
+        """
+        Get User Executive Alert Settings
+
+        Get executive alert settings for the authenticated user.
+
+        Executive Alert settings in Webex allow you to control how calls are routed to executive assistants, including
+        alerting mode, rollover options, and caller ID presentation. You can configure settings such as sequential or
+        simultaneous alerting, and specify what happens when calls aren't answered.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`ExecAlert`
+        """
+        url = self.ep('settings/executive/alert')
+        data = await super().get(url)
+        r = ExecAlert.model_validate(data)
+        return r
+
+    async def update_alert_settings(self, settings: ExecAlert):
+        """
+        Modify User Executive Alert Settings
+
+        Update executive alert settings for the authenticated user.
+
+        Executive Alert settings in Webex allow you to control how calls are routed to executive assistants, including
+        alerting mode, rollover options, and caller ID presentation. You can configure settings such as sequential or
+        simultaneous alerting, and specify what happens when calls aren't answered.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param settings: Alert settings
+        :type settings: ExecAlert
+        """
+        body = settings.update()
+        url = self.ep('settings/executive/alert')
+        await super().put(url, json=body)
+
+    async def assigned_assistants(self) -> AssignedAssistants:
+        """
+        Get My Executive Assigned Assistants
+
+        Get list of assigned executive assistants for an authenticated user.
+
+        As an executive, you can add assistants to your executive pool to manage calls for you. You can set when and
+        which types of calls they can handle. Assistants can opt in when needed or opt out when not required.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`AssignedAssistants`
+        """
+        url = self.ep('settings/executive/assignedAssistants')
+        data = await super().get(url)
+        r = AssignedAssistants.model_validate(data)
+        return r
+
+    async def update_assigned_assistants(self, assigned_assistants: AssignedAssistants):
+        """
+        Update My Executive Assigned Assistants
+
+        Update assigned executive assistants for the authenticated user.
+
+        As an executive, you can add assistants to your executive pool to manage calls for you. You can set when and
+        which types of calls they can handle. Assistants can opt in when needed or opt out when not required.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param assigned_assistants: Assigned Assistants
+        :type assigned_assistants: AssignedAssistants
+        :rtype: None
+        """
+        body = assigned_assistants.update()
+        if assigned_assistants.assistants:
+            body['assistantIds'] = [a.id for a in assigned_assistants.assistants]
+            body.pop('assistants')
+        url = self.ep('settings/executive/assignedAssistants')
+        await super().put(url, json=body)
+
+    async def executive_assistant_settings(self) -> AssistantSettings:
+        """
+        Get My Executive Assistant Settings
+
+        Get settings for an executive assistant.
+
+        Executive assistants can make, answer, intercept, and route calls appropriately on behalf of their executive.
+        Assistants can also set the call forwarding destination, and join or leave an executive’s pool.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`AssistantSettings`
+        """
+        url = self.ep('settings/executive/assistant')
+        data = await super().get(url)
+        r = AssistantSettings.model_validate(data)
+        return r
+
+    async def update_executive_assistant_settings(self, assistant_settings: AssistantSettings):
+        """
+        Update My Executive Assistant Settings
+
+        Update Settings for an executive assistant.
+
+        Executive assistants can make, answer, intercept, and route calls appropriately on behalf of their executive.
+        Assistants can also set the call forwarding destination, and join or leave an executive’s pool.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param assistant_settings: My Executive Assistant Settings
+        :type assistant_settings: AssistantSettings
+        """
+        body = assistant_settings.update()
+        url = self.ep('settings/executive/assistant')
+        await super().put(url, json=body)
+
+    async def executive_available_assistants(self) -> list[ExecOrAssistant]:
+        """
+        Get My Executive Available Assistants
+
+        Get a list of available executive assistants for the authenticated user.
+
+        As an executive, you can add assistants to your executive pool to manage calls for you. You can set when and
+        which types of calls they can handle. Assistants can opt in when needed or opt out when not required.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: list[ExecOrAssistant]
+        """
+        url = self.ep('settings/executive/availableAssistants')
+        data = await super().get(url)
+        r = TypeAdapter(list[ExecOrAssistant]).validate_python(data['assistants'])
+        return r
+
+    async def executive_call_filtering_settings(self) -> ExecCallFiltering:
+        """
+        Get User Executive Call Filtering Settings
+
+        Get executive call filtering settings for the authenticated user.
+
+        Executive Call Filtering in Webex allows you to control which calls are allowed to reach the executive
+        assistant based on custom criteria, such as specific phone numbers or call types. You can enable or disable
+        call filtering and configure filter rules to manage incoming calls.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`ExecCallFiltering`
+        """
+        url = self.ep('settings/executive/callFiltering')
+        data = await super().get(url)
+        r = ExecCallFiltering.model_validate(data)
+        return r
+
+    async def update_executive_call_filtering_settings(self, settings: ExecCallFiltering):
+        """
+        Update User Executive Call Filtering Settings
+
+        Update executive call filtering settings for the authenticated user.
+
+        Executive Call Filtering in Webex allows you to control which calls are allowed to reach the executive
+        assistant based on custom criteria, such as specific phone numbers or call types. You can enable or disable
+        call filtering and configure filter rules to manage incoming calls.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param settings: Call Filtering Settings
+        :type settings: ExecCallFiltering
+        """
+        body = settings.update()
+        url = self.ep('settings/executive/callFiltering')
+        await super().put(url, json=body)
+
+    async def create_call_filtering_criteria(self, settings: ExecCallFilteringCriteria) -> str:
+        """
+        Create User Executive Call Filtering Criteria
+
+        Create a new executive call filtering criteria for the authenticated user.
+
+        Executive Call Filtering Criteria in Webex allows you to define detailed filter rules for incoming calls. This
+        API creates a new filter rule with the specified configuration, including schedule, phone numbers, and call
+        routing preferences.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param settings: Call Filtering Settings
+        :type settings: ExecCallFilteringCriteria
+        """
+        body = settings.create()
+        url = self.ep('settings/executive/callFiltering/criteria')
+        data = await super().post(url, json=body)
+        r = data['id']
+        return r
+
+    async def delete_call_filtering_criteria(self, id: str):
+        """
+        Delete User Executive Call Filtering Criteria
+
+        Delete a specific executive call filtering criteria for the authenticated user.
+
+        Executive Call Filtering Criteria in Webex allows you to manage detailed filter rules for incoming calls. This
+        API removes a specific filter rule by its unique identifier.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param id: The `id` parameter specifies the unique identifier for the executive call filtering criteria.
+            Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL2RHVnpkRjltYVd4MFpYST0`.
+        :type id: str
+        :rtype: None
+        """
+        url = self.ep(f'settings/executive/callFiltering/criteria/{id}')
+        await super().delete(url)
+
+    async def call_filtering_criteria(self, id: str) -> ExecCallFilteringCriteria:
+        """
+        Get User Executive Call Filtering Criteria Settings
+
+        Get executive call filtering criteria settings for the authenticated user.
+
+        Executive Call Filtering Criteria in Webex allows you to retrieve detailed configuration for a specific filter
+        rule. This includes schedule settings, phone number filters, and call routing preferences for executive call
+        filtering.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param id: The `id` parameter specifies the unique identifier for the executive call filtering criteria.
+            Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL2RHVnpkRjltYVd4MFpYST0`.
+        :type id: str
+        :rtype: :class:`ExecCallFilteringCriteria`
+        """
+        url = self.ep(f'settings/executive/callFiltering/criteria/{id}')
+        data = await super().get(url)
+        r = ExecCallFilteringCriteria.model_validate(data)
+        return r
+
+    async def update_call_filtering_criteria(self, id: str, settings: ExecCallFilteringCriteria) -> str:
+        """
+        Update User Executive Call Filtering Criteria Settings
+
+        Update executive call filtering criteria settings for the authenticated user.
+
+        Executive Call Filtering Criteria in Webex allows you to modify detailed configuration for a specific filter
+        rule. This includes updating schedule settings, phone number filters, and call routing preferences for
+        executive call filtering.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param id: The `id` parameter specifies the unique identifier for the executive call filtering criteria.
+            Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL2RHVnpkRjltYVd4MFpYST0`.
+        :type id: str
+        :param settings: Call Filtering Settings
+        :type settings: ExecCallFilteringCriteria
+        :rtype: str
+        """
+        body = settings.update()
+        url = self.ep(f'settings/executive/callFiltering/criteria/{id}')
+        data = await super().put(url, json=body)
+        r = data['id']
+        return r
+
+    async def screening_settings(self) -> ExecScreening:
+        """
+        Get User Executive Screening Settings
+
+        Get executive screening settings for the authenticated user.
+
+        Executive Screening in Webex allows you to manage how incoming calls are screened and alerted based on your
+        preferences. You can enable or disable executive screening and configure alert types and locations for
+        notifications.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`ExecScreening`
+        """
+        url = self.ep('settings/executive/screening')
+        data = await super().get(url)
+        r = ExecScreening.model_validate(data)
+        return r
+
+    async def update_screening_settings(self, settings: ExecScreening):
+        """
+        Modify User Executive Screening Settings
+
+        Update executive screening settings for the authenticated user.
+
+        Executive Screening in Webex allows you to manage how incoming calls are screened and alerted based on your
+        preferences. You can enable or disable executive screening and configure alert types and locations for
+        notifications.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param settings: Screening Settings
+        :type settings: ExecScreening
+
+        """
+        body = settings.model_dump(mode='json', by_alias=True, exclude_unset=True)
+        url = self.ep('settings/executive/screening')
+        await super().put(url, json=body)
+
+
+class AsMeForwardingApi(AsApiChild, base='telephony/config/people/me'):
+    async def settings(self) -> PersonForwardingSetting:
+        """
+        Read My Call Forwarding Settings
+
+        Read call forwarding settings associated with the authenticated user.
+
+        Three types of call forwarding are supported:
+
+        + Always - forwards all incoming calls to the destination you choose.
+
+        + When busy - forwards all incoming calls to the destination you chose while the phone is in use or the person
+        is busy.
+
+        + When no answer - forwarding only occurs when you are away or not answering your phone.
+
+        In addition, the Business Continuity feature will send calls to a destination of your choice if your phone is
+        not connected to the network for any reason, such as a power outage, failed Internet connection, or wiring
+        problem.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`PersonForwardingSetting`
+        """
+        url = self.ep('settings/callForwarding')
+        data = await super().get(url)
+        r = PersonForwardingSetting.model_validate(data)
+        return r
+
+    async def configure(self, forwarding: PersonForwardingSetting):
+        """
+        Configure My Call Forwarding Settings
+
+        Update call forwarding settings associated with the authenticated user.
+
+        Three types of call forwarding are supported:
+
+        + Always - forwards all incoming calls to the destination you choose.
+
+        + When busy - forwards all incoming calls to the destination you chose while the phone is in use or the person
+        is busy.
+
+        + When no answer - forwarding only occurs when you are away or not answering your phone.
+
+        In addition, the Business Continuity feature will send calls to a destination of your choice if your phone is
+        not connected to the network for any reason, such as a power outage, failed Internet connection, or wiring
+        problem.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param forwarding: new forwarding settings
+        :type forwarding: PersonForwardingSetting
+
+        Example:
+
+            .. code-block:: python
+
+                api = self.api.me.forwarding
+
+                forwarding = api.read()
+                always = CallForwardingAlways(
+                    enabled=True,
+                    destination='9999',
+                    destination_voicemail_enabled=True,
+                    ring_reminder_enabled=True)
+                forwarding.call_forwarding.always = always
+                api.configure(forwarding=forwarding)
+        """
+        body = forwarding.update()
+        url = self.ep('settings/callForwarding')
+        await super().put(url, json=body)
+
+
 class AsMePersonalAssistantApi(AsApiChild, base='telephony/config/people/me/settings/personalAssistant'):
     """
     Personal Assistant Settings For Me
@@ -4240,8 +5136,180 @@ class AsMePersonalAssistantApi(AsApiChild, base='telephony/config/people/me/sett
         await super().put(url, json=body)
 
 
-@dataclass(init=False, repr=False)
-class AsMeSettingsApi(AsApiChild, base='people'):
+class AsMeRecordingApi(AsApiChild, base='telephony/config/people/me'):
+    async def settings(self) -> MeRecordingSettings:
+        """
+        Get My Call Recording Settings
+
+        Get details of call recording settings associated with the authenticated user.
+
+        Call recording settings allow you to access and customize options that determine when and how your calls are
+        recorded, providing control over recording modes and notifications.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`MeRecordingSettings`
+        """
+        url = self.ep('settings/callRecording')
+        data = await super().get(url)
+        r = MeRecordingSettings.model_validate(data)
+        return r
+
+
+class AsMeSNRApi(AsApiChild, base='telephony/config/people/me'):
+
+    async def settings(self) -> MeSNRSettings:
+        """
+        Get User's Single Number Reach Settings
+
+        Retrieves all single number reach settings configured for the authenticated user.
+
+        The "Single Number Reach" feature in Webex allows users to access their business phone capabilities from any
+        device, making it easy to make and receive calls as if at their office. This is especially useful for remote
+        or mobile workers needing flexibility.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`MeSNRSettings`
+        """
+        url = self.ep('settings/singleNumberReach')
+        data = await super().get(url)
+        r = MeSNRSettings.model_validate(data)
+        return r
+
+    async def update(self, alert_all_locations_for_click_to_dial_calls_enabled: bool = None):
+        """
+        Update User's Single Number Reach Settings
+
+        Updates single number reach settings associated with the authenticated user.
+
+        The "Single Number Reach" feature in Webex allows users to access their business phone capabilities from any
+        device, making it easy to make and receive calls as if at their office. This is especially useful for remote
+        or mobile workers needing flexibility.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param alert_all_locations_for_click_to_dial_calls_enabled: If `true`, all locations will be alerted for
+            click-to-dial calls.
+        :type alert_all_locations_for_click_to_dial_calls_enabled: bool
+        :rtype: None
+        """
+        body = dict()
+        if alert_all_locations_for_click_to_dial_calls_enabled is not None:
+            body['alertAllLocationsForClickToDialCallsEnabled'] = alert_all_locations_for_click_to_dial_calls_enabled
+        url = self.ep('settings/singleNumberReach')
+        await super().put(url, json=body)
+
+    async def create_snr(self, settings: SingleNumberReachNumber) -> str:
+        """
+        Add phone number as User's Single Number Reach
+
+        Add a phone number as a single number reach for the authenticated user.
+
+        The "Single Number Reach" feature in Webex allows users to access their business phone capabilities from any
+        device, making it easy to make and receive calls as if at their office. This is especially useful for remote
+        or mobile workers needing flexibility.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param settings: User's Single Number Reach Settings
+        :type settings: :class:`SingleNumberReachNumber`
+        :return: Unique identifier of the phone number.
+        :rtype: str
+        """
+        body = settings.create_update()
+        url = self.ep('settings/singleNumberReach/numbers')
+        data = await super().post(url, json=body)
+        r = data['id']
+        return r
+
+    async def delete_snr(self, phone_number_id: str):
+        """
+        Delete User's Single Number Reach Contact Settings
+
+        Delete contact settings associated with the authenticated user.
+
+        The "Single Number Reach" feature in Webex allows users to access their business phone capabilities from any
+        device, making it easy to make and receive calls as if at their office. This is especially useful for remote
+        or mobile workers needing flexibility.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param phone_number_id: Unique identifier of the phone number.
+        :type phone_number_id: str
+        :rtype: None
+        """
+        url = self.ep(f'settings/singleNumberReach/numbers/{phone_number_id}')
+        await super().delete(url)
+
+    async def update_snr(self, phone_number_id: str, settings: SingleNumberReachNumber):
+        """
+        Modify User's Single Number Reach Contact Settings
+
+        Update the contact settings of single number reach for the authenticated user.
+
+        The "Single Number Reach" feature in Webex allows users to access their business phone capabilities from any
+        device, making it easy to make and receive calls as if at their office. This is especially useful for remote
+        or mobile workers needing flexibility.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param phone_number_id: Unique identifier of the phone number.
+        :type phone_number_id: str
+        :param settings: User's Single Number Reach Settings
+        :type settings: :class:`SingleNumberReachNumber`
+        """
+        body = settings.create_update()
+        url = self.ep(f'settings/singleNumberReach/numbers/{phone_number_id}')
+        await super().put(url, json=body)
+
+
+class AsMeVoicemailApi(AsApiChild, base='telephony/config/people/me'):
+    async def settings(self) -> VoicemailSettings:
+        """
+        Read Voicemail Settings for a Person
+
+        Retrieve a person's voicemail settings.
+
+        The voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice
+        messages via voicemail.
+
+        Optionally, notifications can be sent to a mobile phone via text or email. These notifications will not include
+        the voicemail files.
+
+        This API requires a user auth token with a scope of `spark-admin:people_read`.
+
+        :rtype: :class:`VoicemailSettings`
+        """
+        url = self.ep('settings/voicemail')
+        data = await super().get(url)
+        r = VoicemailSettings.model_validate(data)
+        return r
+
+    async def configure(self, settings: VoicemailSettings):
+        """
+        Configure Voicemail Settings for a Person
+
+        Configure a person's voicemail settings.
+
+        The voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice
+        messages via voicemail.
+
+        Optionally, notifications can be sent to a mobile phone via text or email. These notifications will not include
+        the voicemail files.
+
+        This API requires a user auth token with a scope of `spark-admin:people_write`.
+
+        :param settings: Voicemail settings
+        :type settings: VoicemailSettings
+        :rtype: None
+        """
+        body = settings.update()
+        url = self.ep('settings/voicemail')
+        await super().put(url, json=body)
+
+
+class AsMeSettingsApi(AsApiChild, base='telephony/config/people/me'):
     """
     Call Settings For Me
 
@@ -4251,9 +5319,22 @@ class AsMeSettingsApi(AsApiChild, base='people'):
 
     Configuring settings requires a user auth token with a scope of `spark:telephony_config_write`.
     """
-
-    personal_assistant: AsMePersonalAssistantApi
+    barge: AsMeBargeApi
+    call_block: AsMeCallBlockApi
+    call_center: AsMeCallCenterApi
+    call_park: AsMeCallParkApi
+    call_pickup: AsMeCallPickupApi
+    call_policies: AsMeCallPoliciesApi
+    caller_id: AsMeCallerIdApi
+    dnd: AsMeDNDApi
+    endpoints: AsMeEndpointsApi
+    executive: AsMeExecutiveApi
+    forwarding: AsMeForwardingApi
     go_override: AsGoOverrideApi
+    personal_assistant: AsMePersonalAssistantApi
+    recording: AsMeRecordingApi
+    snr: AsMeSNRApi
+    voicemail: AsMeVoicemailApi
 
     def __init__(self, session: AsRestSession):
         """
@@ -4261,8 +5342,132 @@ class AsMeSettingsApi(AsApiChild, base='people'):
         :meta private:
         """
         super().__init__(session=session)
+        self.barge = AsMeBargeApi(session=session)
+        self.call_block = AsMeCallBlockApi(session=session)
+        self.call_center = AsMeCallCenterApi(session=session)
+        self.call_park = AsMeCallParkApi(session=session)
+        self.call_pickup = AsMeCallPickupApi(session=session)
+        self.call_policies = AsMeCallPoliciesApi(session=session)
+        self.caller_id = AsMeCallerIdApi(session=session)
+        self.dnd: AsMeDNDApi = AsMeDNDApi(session=session)
+        self.endpoints = AsMeEndpointsApi(session=session)
+        self.executive = AsMeExecutiveApi(session=session)
+        self.forwarding = AsMeForwardingApi(session=session)
         self.go_override = AsGoOverrideApi(session=session)
         self.personal_assistant = AsMePersonalAssistantApi(session=session)
+        self.recording = AsMeRecordingApi(session=session)
+        self.snr = AsMeSNRApi(session=session)
+        self.voicemail = AsMeVoicemailApi(session=session)
+
+    async def details(self) -> MeProfile:
+        """
+        Get My Own Details
+
+        Get profile details for the authenticated user.
+
+        Profile details include the user's name, email, location and calling details.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`MeProfile`
+        """
+        url = self.ep()
+        data = await super().get(url)
+        r = MeProfile.model_validate(data)
+        return r
+
+    async def announcement_languages(self) -> list[AnnouncementLanguage]:
+        """
+        Retrieve announcement languages for the authenticated user
+
+        Retrieve the list of available announcement languages for the authenticated user's telephony configuration.
+
+        Announcement languages determine the language used for system prompts and announcements during calls.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: list[AnnouncementLanguage]
+        """
+        url = self.ep('announcementLanguages')
+        data = await super().get(url)
+        r = TypeAdapter(list[AnnouncementLanguage]).validate_python(data['languages'])
+        return r
+
+    async def country_telephony_config_requirements(self,
+                                              country_code: str) -> CountryTelephonyConfigRequirements:
+        """
+        Retrieve country-specific telephony configuration requirements
+
+        Retrieve country-specific telephony configuration requirements for the authenticated user.
+
+        Webex Calling supports multiple regions and time zones to validate and present the information using the local
+        date and time, as well as localized dialing rules.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param country_code: The ISO country code for which configuration requirements are requested.
+        :type country_code: str
+        :rtype: :class:`CountryTelephonyConfigRequirements`
+        """
+        url = self.ep(f'countries/{country_code}')
+        data = await super().get(url)
+        r = CountryTelephonyConfigRequirements.model_validate(data)
+        return r
+
+    async def feature_access_codes(self) -> list[FeatureAccessCode]:
+        """
+        Get My Feature Access Codes
+
+        Retrieve all Feature Access Codes configured for services that are assigned to the authenticated user. For each
+        feature access code, the name and code are returned. If an alternate code is defined, it is also returned.
+
+        Feature access codes (FACs), also known as star codes, give users access to advanced calling features.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: list[FeatureAccessCode]
+        """
+        url = self.ep('settings/featureAccessCode')
+        data = await super().get(url)
+        r = TypeAdapter(list[FeatureAccessCode]).validate_python(data['featureAccessCodeList'])
+        return r
+
+    async def monitoring_settings(self) -> MeMonitoringSettings:
+        """
+        Get My Monitoring Settings
+
+        Retrieves the monitoring settings of the logged in person, which shows specified people, places, virtual lines
+        or call park extensions that are being monitored.
+
+        Monitors the line status which indicates if a person, place or virtual line is on a call and if a call has been
+        parked on that extension.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`MeMonitoringSettings`
+        """
+        url = self.ep('settings/monitoring')
+        data = await super().get(url)
+        r = MeMonitoringSettings.model_validate(data)
+        return r
+
+    async def calling_services_list(self) -> list[ServicesEnum]:
+        """
+        Get My Calling Services List
+
+        Retrieves the list of enabled calling services for the authenticated user.
+
+        These services are designed to improve call handling and ensure that users can manage their communications
+        effectively. They are commonly found in both personal and business telephony systems.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: list[ServicesEnum]
+        """
+        url = self.ep('settings/services')
+        data = await super().get(url)
+        r = TypeAdapter(list[ServicesEnum]).validate_python(data['services'])
+        return r
 
 
 class AsMeetingChatsApi(AsApiChild, base='meetings/postMeetingChats'):
@@ -10279,6 +11484,7 @@ class AsDndApi(AsPersonSettingsApiChild):
     async def read(self, entity_id: str, org_id: str = None) -> DND:
         """
         Read Do Not Disturb Settings for an entity
+
         Retrieve an entity's Do Not Disturb Settings
 
         When enabled, this feature will give all incoming calls the busy treatment. Optionally, you can enable a Ring
@@ -10298,6 +11504,7 @@ class AsDndApi(AsPersonSettingsApiChild):
     async def configure(self, entity_id: str, dnd_settings: DND, org_id: str = None):
         """
         Configure Do Not Disturb Settings for an entity
+
         Configure an entity's Do Not Disturb Settings
 
         When enabled, this feature will give all incoming calls the busy treatment. Optionally, you can enable a Ring
@@ -10315,7 +11522,7 @@ class AsDndApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(entity_id)
         params = org_id and {'orgId': org_id} or None
-        await self.put(ep, params=params, data=dnd_settings.model_dump_json())
+        await self.put(ep, params=params, json=dnd_settings.model_dump(mode='json', by_alias=True, exclude_unset=True))
 
 
 class AsECBNApi(AsPersonSettingsApiChild):
@@ -11677,7 +12884,7 @@ class AsPersonForwardingApi(AsPersonSettingsApiChild):
                     destination_voicemail_enabled=True,
                     ring_reminder_enabled=True)
                 forwarding.call_forwarding.always = always
-                api.configure(entity_id=self.target.id, forwarding=update)
+                api.configure(entity_id=self.target.id, forwarding=forwarding)
 
         """
         ep = self.f_ep(person_id=entity_id)
@@ -32562,9 +33769,11 @@ class AsWebexSimpleApi:
     xapi: AsXApi
     #: :class:`AsRestSession` used for all API requests
     session: AsRestSession
+    #: whether the session used for all requests must be closed when :meth:`close` is called
+    _must_close_session: bool
 
     def __init__(self, *, tokens: Union[str, Tokens] = None, concurrent_requests: int = 10, retry_429: bool = True,
-                 **kwargs):
+                 session: AsRestSession = None, **kwargs):
         """
 
         :param tokens: token to be used by the API. Can be a :class:`tokens.Tokens` instance, a string or None. If
@@ -32573,6 +33782,9 @@ class AsWebexSimpleApi:
         :type concurrent_requests: int
         :param retry_429: automatically retry for 429 throttling response
         :type retry_429: bool
+        :param session: if given, this :class:`rest.AsRestSession` instance will be used for all requests instead of
+            creating a new one
+        :type session: AsRestSession
         :param kwargs: additional arguments to be passed to the constructor of the :attr:`session` object to be used
             for all requests
         """
@@ -32585,8 +33797,14 @@ class AsWebexSimpleApi:
                                  'WEBEX_ACCESS_TOKEN environment variable')
             tokens = Tokens(access_token=tokens)
 
-        session = AsRestSession(tokens=tokens, concurrent_requests=concurrent_requests, retry_429=retry_429,
-                              **kwargs)
+        if session is None:
+            session = AsRestSession(tokens=tokens, concurrent_requests=concurrent_requests, retry_429=retry_429,
+                                  **kwargs)
+            self._must_close_session = True
+        else:
+            self._must_close_session = False
+        self.session = session
+
         self.admin_audit = AsAdminAuditEventsApi(session=session)
         self.attachment_actions = AsAttachmentActionsApi(session=session)
         self.authorizations = AsAuthorizationsApi(session=session)
@@ -32623,7 +33841,6 @@ class AsWebexSimpleApi:
         self.workspace_personalization = AsWorkspacePersonalizationApi(session=session)
         self.workspace_settings = AsWorkspaceSettingsApi(session=session)
         self.xapi = AsXApi(session=session)
-        self.session = session
 
     @property
     def access_token(self) -> str:
@@ -32636,7 +33853,8 @@ class AsWebexSimpleApi:
         return self.session.access_token
 
     async def close(self):
-        await self.session.close()
+        if self._must_close_session:
+            await self.session.close()
 
     async def __aenter__(self):
         return self
