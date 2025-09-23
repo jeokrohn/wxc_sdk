@@ -315,16 +315,16 @@ class WorkspacesApi(ApiChild, base='workspaces'):
              calendar: CalendarType = None, device_hosted_meetings_enabled: bool = None,
              device_platform: DevicePlatform = None, health_level: WorkspaceHealthLevel = None,
              include_devices: bool = None, include_capabilities: bool = None,
-             planned_maintenance: MaintenanceMode = None, org_id: str = None,
+             planned_maintenance: MaintenanceMode = None, custom_attribute: str = None, org_id: str = None,
              **params) -> Generator[Workspace, None, None]:
         """
         List Workspaces
 
-        List workspaces. Use query parameters to filter the response. The orgId parameter can only be used by admin
-        users of another organization (such as partners). The workspaceLocationId, floorId, capacity and type fields
-        will only be present for workspaces that have a value set for them. The special values notSet (for filtering
-        on category) and -1 (for filtering on capacity) can be used to filter for workspaces without a type and/or
-        capacity.
+        Use query parameters to filter the response. The `orgId` parameter can only be used by admin users of another
+        organization (such as partners). The `locationId`, `workspaceLocationId`, `indoorNavigation`, `floorId`,
+        `capacity` and `type` fields will only be present for workspaces that have a value set for them. The special
+        values `notSet` (for filtering on category) and `-1` (for filtering on capacity) can be used to filter for
+        workspaces without a type and/or capacity.
 
         :param location_id: Location associated with the workspace. Values must originate from the /locations API and
             not the legacy /workspaceLocations API.
@@ -363,6 +363,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type include_capabilities: bool
         :param planned_maintenance: List workspaces with given maintenance mode.
         :type planned_maintenance: WorkspacePlannedMaintenanceMode
+        :param custom_attribute: List workspaces with given custom attribute key.
+        :type custom_attribute: str
         :param org_id: List workspaces in this organization. Only admin users of another organization
             (such as partners) may use this parameter.
         :type org_id: str
@@ -400,6 +402,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
             params['includeCapabilities'] = str(include_capabilities).lower()
         if planned_maintenance is not None:
             params['plannedMaintenance'] = enum_str(planned_maintenance)
+        if custom_attribute is not None:
+            params['customAttribute'] = custom_attribute
         ep = self.ep()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=ep, model=Workspace, params=params)

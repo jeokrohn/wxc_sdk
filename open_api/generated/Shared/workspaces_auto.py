@@ -355,8 +355,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
                         calendar: WorkspaceCalendarType = None, device_hosted_meetings_enabled: bool = None,
                         device_platform: WorkspaceDevicePlatform = None, health_level: WorkspaceHealthLevel = None,
                         include_devices: bool = None, include_capabilities: bool = None,
-                        planned_maintenance: WorkspacePlannedMaintenanceMode = None, org_id: str = None,
-                        **params) -> Generator[Workspace, None, None]:
+                        planned_maintenance: WorkspacePlannedMaintenanceMode = None, custom_attribute: str = None,
+                        org_id: str = None, **params) -> Generator[Workspace, None, None]:
         """
         List workspaces.
 
@@ -401,6 +401,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type include_capabilities: bool
         :param planned_maintenance: List workspaces with given maintenance mode.
         :type planned_maintenance: WorkspacePlannedMaintenanceMode
+        :param custom_attribute: List workspaces with given custom attribute key.
+        :type custom_attribute: str
         :param org_id: List workspaces in this organization. Only admin users of another organization (such as
             partners) may use this parameter.
         :type org_id: str
@@ -438,6 +440,8 @@ class WorkspacesApi(ApiChild, base='workspaces'):
             params['includeCapabilities'] = str(include_capabilities).lower()
         if planned_maintenance is not None:
             params['plannedMaintenance'] = enum_str(planned_maintenance)
+        if custom_attribute is not None:
+            params['customAttribute'] = custom_attribute
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Workspace, item_key='items', params=params)
 
