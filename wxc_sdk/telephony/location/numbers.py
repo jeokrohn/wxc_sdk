@@ -106,13 +106,16 @@ class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
         """
         Add Phone Numbers to a location
 
-        Adds a specified set of phone numbers to a location for an organization.
+        Adds a specified set of phone numbers to a location for an organization. Phone numbers must follow the E.164
+        format.
 
-        Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
-        must follow the E.164 format. Active phone numbers are in service.
+        Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Active phone
+        numbers are in service.
 
         Adding a phone number to a location requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
+
+        Phone numbers included in the request that already exist in the location will simply be ignored.
 
         This API is only supported for adding DID and Toll-free numbers to non-integrated
         PSTN connection types such as Local Gateway (LGW) and Non-integrated CPP. It should never be used for

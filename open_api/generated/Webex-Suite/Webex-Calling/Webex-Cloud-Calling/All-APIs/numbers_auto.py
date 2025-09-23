@@ -708,13 +708,16 @@ class NumbersApi(ApiChild, base='telephony/config'):
         """
         Add Phone Numbers to a location
 
-        Adds a specified set of phone numbers to a location for an organization.
+        Adds a specified set of phone numbers to a location for an organization. Phone numbers must follow the E.164
+        format.
 
-        Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Phone numbers
-        must follow the E.164 format. Active phone numbers are in service.
+        Each location has a set of phone numbers that can be assigned to people, workspaces, or features. Active phone
+        numbers are in service.
 
         Adding a phone number to a location requires a full administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
+
+        Phone numbers included in the request that already exist in the location will simply be ignored.
 
         <br/>
 
@@ -723,7 +726,6 @@ class NumbersApi(ApiChild, base='telephony/config'):
         locations with integrated PSTN connection types like Cisco Calling Plans or Integrated CCP because backend
         data issues may occur.
         </Callout></div>
-
         <div><Callout type="warning">Mobile numbers can be added to any location that has PSTN connection setup. Only
         20 mobile numbers can be added per request.
         </Callout></div>
