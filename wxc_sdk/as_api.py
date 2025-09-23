@@ -27463,7 +27463,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         url = self.ep(f'devices/{device_id}/actions/applyChanges/invoke')
         await self.post(url=url, params=params)
 
-    async def device_settings(self, device_id: str, device_model: str, org_id: str = None) -> DeviceCustomization:
+    async def device_settings(self, device_id: str, device_model: str = None, org_id: str = None) -> DeviceCustomization:
         """
         Get override settings for a device.
 
@@ -27474,16 +27474,19 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
 
         :param device_id: Unique identifier for the device.
         :type device_id: str
-        :param device_model: Model type of the device.
+        :param device_model: The model type of the device. The corresponding device model display name sometimes called
+            the product name, can also be used to specify the model.
         :type device_model: str
         :param org_id: Settings on the device in this organization.
         :type org_id: str
         :return: Device settings
         :rtype: DeviceCustomization
         """
-        params = {'model': device_model}
-        if org_id:
+        params = {}
+        if org_id is not None:
             params['orgId'] = org_id
+        if device_model is not None:
+            params['deviceModel'] = device_model
         url = self.ep(f'devices/{device_id}/settings')
         data = await self.get(url=url, params=params)
         return DeviceCustomization.model_validate(data)

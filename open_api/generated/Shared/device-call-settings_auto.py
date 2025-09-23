@@ -1975,6 +1975,8 @@ class DeviceObject(ApiModel):
     allow_configure_phone_settings_enabled: Optional[bool] = None
     #: Enables / disables hotline support.
     supports_hotline_enabled: Optional[bool] = None
+    #: Maximum number of line appearances available on the device.
+    max_number_of_line_appearances: Optional[int] = None
 
 
 class DeleteDeviceBackgroundImagesResponse(ApiModel):
@@ -2773,7 +2775,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'devices/{device_id}/members')
         super().put(url, params=params, json=body)
 
-    def get_device_settings(self, device_id: str, device_model: str,
+    def get_device_settings(self, device_id: str, device_model: str = None,
                             org_id: str = None) -> DeviceSettingsObjectForDeviceLevel:
         """
         Get Device Settings
@@ -2797,7 +2799,8 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        params['deviceModel'] = device_model
+        if device_model is not None:
+            params['deviceModel'] = device_model
         url = self.ep(f'devices/{device_id}/settings')
         data = super().get(url, params=params)
         r = DeviceSettingsObjectForDeviceLevel.model_validate(data)
