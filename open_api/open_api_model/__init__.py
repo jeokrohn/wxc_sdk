@@ -13,6 +13,7 @@ from wxc_sdk.base import to_camel
 
 log = logging.getLogger(__name__)
 
+
 class OABaseModel(BaseModel):
     """
     Base class for OpenAPI models
@@ -175,7 +176,7 @@ class OASchemaProperty(OABaseModel):
             desc = self.description[desc_start:desc_end]
             enum_value = match.group(1)
             details[enum_value] = desc.strip()
-        return [(enum_value, d if (d:=details.get(enum_value)) else '')
+        return [(enum_value, d if (d := details.get(enum_value)) else '')
                 for enum_value in self.enum]
 
     @property
@@ -191,14 +192,14 @@ class OASchemaProperty(OABaseModel):
 
         # look for first enum value description
         pattern = f'(:?(.*?)\n)?^ \* `.+?` -'
-        m = re.match(pattern, self.description, re.MULTILINE+re.DOTALL)
+        m = re.match(pattern, self.description, re.MULTILINE + re.DOTALL)
         if m:
             description = m.group(1) or ''
             return description.strip()
         return self.description
 
     @property
-    def docstring(self)->str:
+    def docstring(self) -> str:
         """
         either the full description or the description without the enum value documentation
         """
@@ -275,6 +276,11 @@ class OAResponse(OABaseModel):
     ref: Optional[str] = Field(alias='$ref', default=None)
 
 
+class ExternalDocs(OABaseModel):
+    description: Optional[str] = None
+    url: Optional[str] = None
+
+
 class OAOperation(OABaseModel):
     summary: str
     operation_id: Optional[str] = None
@@ -285,6 +291,7 @@ class OAOperation(OABaseModel):
     responses: dict[str, OAResponse]
     tags: Optional[List[str]] = Field(default_factory=list)
     deprecated: Optional[bool] = None
+    external_docs: Optional[ExternalDocs] = None
 
     @property
     def path_parameters(self) -> List[OAParameter]:
@@ -312,11 +319,14 @@ class OAComponents(OABaseModel):
     security_schemes: Optional[dict[str, Any]] = None
     responses: Optional[dict[str, OAResponse]] = None
 
+
 class NameAndDescription(OABaseModel):
     name: str
     description: Optional[str] = None
 
+
 Tag = Union[str, NameAndDescription]
+
 
 class OASpec(OABaseModel):
     openapi: str
@@ -326,6 +336,7 @@ class OASpec(OABaseModel):
     components: OAComponents
     tags: Optional[list[Tag]] = None
     security: Optional[List[Any]] = None
+    external_docs: Optional[ExternalDocs] = None
 
     def operations(self) -> Generator[tuple[str, str, OAOperation], None, None]:
         """
