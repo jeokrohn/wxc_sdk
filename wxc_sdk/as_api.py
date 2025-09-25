@@ -17591,6 +17591,68 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
         url = self._endpoint(location_id=location_id, path='callForwarding/availableNumbers')
         return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
 
+    async def list_announcement_files(self, location_id: str, auto_attendant_id: str,
+                                org_id: str = None) -> List[AnnAudioFile]:
+        """
+        Read the List of Auto Attendant Announcement Files
+
+        List file info for all auto attendant announcement files associated with this auto attendant.
+
+        Auto attendant announcement files contain messages and music that callers hear while waiting in the queue. A
+        auto attendant can be configured to play whatever subset of these announcement files is desired.
+
+        Retrieving this list of files requires a full or read-only administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_read`.
+
+        Note that uploading of announcement files via API is not currently supported, but is available via Webex
+        Control Hub.
+
+        :param location_id: Location in which this auto attendant exists.
+        :type location_id: str
+        :param auto_attendant_id: Retrieve announcement files for the auto attendant with this identifier.
+        :type auto_attendant_id: str
+        :param org_id: Retrieve announcement files for an auto attendant from this organization.
+        :type org_id: str
+        :rtype: list[AnnAudioFile]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.session.ep(
+            f'telephony/config/locations/{location_id}/autoAttendants/{auto_attendant_id}/announcements')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[AnnAudioFile]).validate_python(data['announcements'])
+        return r
+
+    async def delete_announcement_file(self, location_id: str, auto_attendant_id: str, file_name: str,
+                                 org_id: str = None):
+        """
+        Delete an Auto Attendant Announcement File
+
+        Delete an announcement file for the designated auto attendant.
+
+        Auto Attendant announcement files contain messages and music that callers hear while waiting in the queue. A
+        auto attendant can be configured to play whatever subset of these announcement files is desired.
+
+        Deleting an announcement file for a auto attendant requires a full administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Delete an announcement for a auto attendant in this location.
+        :type location_id: str
+        :param auto_attendant_id: Delete an announcement for the auto attendant with this identifier.
+        :type auto_attendant_id: str
+        :type file_name: str
+        :param org_id: Delete auto attendant announcement from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.session.ep(
+            f'telephony/config/locations/{location_id}/autoAttendants/{auto_attendant_id}/announcements/{file_name}')
+        await super().delete(url, params=params)
+
 
 class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
     """

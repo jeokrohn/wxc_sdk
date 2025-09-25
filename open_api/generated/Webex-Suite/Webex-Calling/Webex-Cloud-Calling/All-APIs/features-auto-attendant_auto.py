@@ -11,10 +11,10 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['AlternateNumbersObject', 'AlternateNumbersObjectRingPattern', 'AudioAnnouncementFileGetObject',
-           'AudioAnnouncementFileObjectLevel', 'AudioAnnouncementFileObjectMediaFileType',
-           'AutoAttendantCallForwardAvailableNumberObject', 'AutoAttendantCallForwardAvailableNumberObjectOwner',
-           'AutoAttendantCallForwardSettingsDetailsObject',
+__all__ = ['ActionToBePerformedObject', 'ActionToBePerformedObjectAction', 'AlternateNumbersObject',
+           'AlternateNumbersObjectRingPattern', 'AudioAnnouncementFileGetObject', 'AudioAnnouncementFileObjectLevel',
+           'AudioAnnouncementFileObjectMediaFileType', 'AutoAttendantCallForwardAvailableNumberObject',
+           'AutoAttendantCallForwardAvailableNumberObjectOwner', 'AutoAttendantCallForwardSettingsDetailsObject',
            'AutoAttendantCallForwardSettingsDetailsObjectOperatingModes',
            'AutoAttendantCallForwardSettingsDetailsObjectOperatingModesExceptionType',
            'AutoAttendantCallForwardSettingsModifyDetailsObject', 'AutoAttendantPrimaryAvailableNumberObject',
@@ -23,12 +23,13 @@ __all__ = ['AlternateNumbersObject', 'AlternateNumbersObjectRingPattern', 'Audio
            'CallForwardSelectiveCallsFromObjectSelection', 'CallForwardSelectiveCallsToNumbersObject',
            'CallForwardSelectiveCallsToNumbersObjectType', 'CallForwardSelectiveCallsToObject',
            'CallForwardSelectiveForwardToObject', 'CallForwardSelectiveForwardToObjectSelection',
-           'FeaturesAutoAttendantApi', 'GetAutoAttendantCallForwardSelectiveRuleObject', 'GetAutoAttendantObject',
+           'CallTreatmentObject', 'CallTreatmentObjectRetryAttemptForNoInput', 'FeaturesAutoAttendantApi',
+           'GetAnnouncementFileInfo', 'GetAutoAttendantCallForwardSelectiveRuleObject', 'GetAutoAttendantObject',
            'GetAutoAttendantObjectExtensionDialing', 'GetCallForwardAlwaysSettingObject', 'HoursMenuGetObject',
            'HoursMenuGetObjectGreeting', 'KeyConfigurationsGetObject', 'KeyConfigurationsGetObjectAction',
-           'KeyConfigurationsGetObjectKey', 'ListAutoAttendantObject', 'ModesGet', 'ModesGetForwardTo',
-           'ModesGetForwardToDefaultForwardToSelection', 'ModesGetType', 'ModesPatch', 'ModesPatchForwardTo',
-           'NumberOwnerType', 'STATE', 'TelephonyType']
+           'KeyConfigurationsGetObjectKey', 'Level', 'ListAutoAttendantObject', 'MediaType', 'ModesGet',
+           'ModesGetForwardTo', 'ModesGetForwardToDefaultForwardToSelection', 'ModesGetType', 'ModesPatch',
+           'ModesPatchForwardTo', 'NumberOwnerType', 'STATE', 'TelephonyType']
 
 
 class AlternateNumbersObjectRingPattern(str, Enum):
@@ -372,6 +373,56 @@ class KeyConfigurationsGetObject(ApiModel):
     audio_announcement_file: Optional[AudioAnnouncementFileGetObject] = None
 
 
+class CallTreatmentObjectRetryAttemptForNoInput(str, Enum):
+    #: Announcement will not be repeated.
+    no_repeat = 'NO_REPEAT'
+    #: Repeat the announcement once.
+    one_time = 'ONE_TIME'
+    #: Repeat the announcement twice.
+    two_times = 'TWO_TIMES'
+    #: Repeat the announcement thrice.
+    three_times = 'THREE_TIMES'
+
+
+class ActionToBePerformedObjectAction(str, Enum):
+    #: Plays a recorded message and then disconnects the call.
+    play_message_and_disconnect = 'PLAY_MESSAGE_AND_DISCONNECT'
+    #: Transfers the call to the specified number, without playing a transfer prompt.
+    transfer_without_prompt = 'TRANSFER_WITHOUT_PROMPT'
+    #: Plays the message and then transfers the call to the specified number.
+    transfer_with_prompt = 'TRANSFER_WITH_PROMPT'
+    #: Plays the message and then transfers the call to the specified operator number.
+    transfer_to_operator = 'TRANSFER_TO_OPERATOR'
+    #: Transfers the call to the configured mailbox, without playing a transfer prompt.
+    transfer_to_mailbox = 'TRANSFER_TO_MAILBOX'
+    #: Disconnect the call.
+    disconnect = 'DISCONNECT'
+
+
+class ActionToBePerformedObject(ApiModel):
+    #: Action to perform after the retry attempt is reached.
+    action: Optional[ActionToBePerformedObjectAction] = None
+    #: Greeting type is defined when `action` is set to `PLAY_MESSAGE_AND_DISCONNECT`.
+    greeting: Optional[HoursMenuGetObjectGreeting] = None
+    #: Pre-configured announcement audio files when `action` is set to `PLAY_MESSAGE_AND_DISCONNECT` and `greeting` is
+    #: set to `CUSTOM`.
+    audio_announcement_file: Optional[AudioAnnouncementFileGetObject] = None
+    #: Transfer call to the specified number when `action` is set to `TRANSFER_WITH_PROMPT`, `TRANSFER_WITHOUT_PROMPT`
+    #: and `TRANSFER_TO_OPERATOR` and `TRANSFER_TO_MAILBOX`.
+    transfer_call_to: Optional[str] = None
+
+
+class CallTreatmentObject(ApiModel):
+    #: Number of times to repeat the Welcome greeting when the user does not provide an input. By default, NO_REPEAT is
+    #: set.
+    retry_attempt_for_no_input: Optional[CallTreatmentObjectRetryAttemptForNoInput] = None
+    #: Interval the Auto Attendant service waits before timing out. By default, 10 seconds. Min value is 1 and max
+    #: value is 60.
+    no_input_timer: Optional[str] = None
+    #: Action to perform after the retry attempt is reached.
+    action_to_be_performed: Optional[ActionToBePerformedObject] = None
+
+
 class HoursMenuGetObject(ApiModel):
     #: Greeting type defined for the auto attendant.
     greeting: Optional[HoursMenuGetObjectGreeting] = None
@@ -381,6 +432,8 @@ class HoursMenuGetObject(ApiModel):
     audio_announcement_file: Optional[AudioAnnouncementFileGetObject] = None
     #: Key configurations defined for the auto attendant.
     key_configurations: Optional[KeyConfigurationsGetObject] = None
+    #: Call treatment details.
+    call_treatment: Optional[CallTreatmentObject] = None
 
 
 class GetAutoAttendantObject(ApiModel):
@@ -539,6 +592,33 @@ class AutoAttendantCallForwardAvailableNumberObject(ApiModel):
     #: high-utilization or high-concurrency PSTN phone numbers that are neither mobile nor toll-free.
     is_service_number: Optional[bool] = None
     owner: Optional[AutoAttendantCallForwardAvailableNumberObjectOwner] = None
+
+
+class MediaType(str, Enum):
+    #: WAV File Extension.
+    wav = 'WAV'
+
+
+class Level(str, Enum):
+    #: Organization level.
+    organization = 'ORGANIZATION'
+    #: Location level.
+    location = 'LOCATION'
+    #: Entity level.
+    entity = 'ENTITY'
+
+
+class GetAnnouncementFileInfo(ApiModel):
+    #: ID of the announcement.
+    id: Optional[str] = None
+    #: Name of greeting file.
+    file_name: Optional[str] = None
+    #: Size of greeting file in kilo-bytes.
+    file_size: Optional[str] = None
+    #: Media file type of the announcement.
+    media_file_type: Optional[MediaType] = None
+    #: Level where the announcement is created.
+    level: Optional[Level] = None
 
 
 class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
@@ -938,6 +1018,66 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
             body['afterHoursMenu'] = after_hours_menu.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
         super().put(url, params=params, json=body)
+
+    def read_the_list_of_auto_attendant_announcement_files(self, location_id: str, auto_attendant_id: str,
+                                                           org_id: str = None) -> list[GetAnnouncementFileInfo]:
+        """
+        Read the List of Auto Attendant Announcement Files
+
+        List file info for all auto attendant announcement files associated with this auto attendant.
+
+        Auto attendant announcement files contain messages and music that callers hear while waiting in the queue. A
+        auto attendant can be configured to play whatever subset of these announcement files is desired.
+
+        Retrieving this list of files requires a full or read-only administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_read`.
+
+        Note that uploading of announcement files via API is not currently supported, but is available via Webex
+        Control Hub.
+
+        :param location_id: Location in which this auto attendant exists.
+        :type location_id: str
+        :param auto_attendant_id: Retrieve announcement files for the auto attendant with this identifier.
+        :type auto_attendant_id: str
+        :param org_id: Retrieve announcement files for a auto attendant from this organization.
+        :type org_id: str
+        :rtype: list[GetAnnouncementFileInfo]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/announcements')
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[GetAnnouncementFileInfo]).validate_python(data['announcements'])
+        return r
+
+    def delete_a_auto_attendant_announcement_file(self, location_id: str, auto_attendant_id: str, file_name: str,
+                                                  org_id: str = None):
+        """
+        Delete a Auto Attendant Announcement File
+
+        Delete an announcement file for the designated auto attendant.
+
+        Auto Attendant announcement files contain messages and music that callers hear while waiting in the queue. A
+        auto attendant can be configured to play whatever subset of these announcement files is desired.
+
+        Deleting an announcement file for a auto attendant requires a full administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Delete an announcement for a auto attendant in this location.
+        :type location_id: str
+        :param auto_attendant_id: Delete an announcement for the auto attendant with this identifier.
+        :type auto_attendant_id: str
+        :type file_name: str
+        :param org_id: Delete auto attendant announcement from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/announcements/{file_name}')
+        super().delete(url, params=params)
 
     def get_call_forwarding_settings_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
                                                            org_id: str = None) -> AutoAttendantCallForwardSettingsDetailsObject:

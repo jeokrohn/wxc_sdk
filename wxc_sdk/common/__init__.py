@@ -1087,7 +1087,7 @@ class MediaFileType(str, Enum):
 
 
 class AnnouncementLevel(Enum):
-    #: Specifies this audio file is configured across organisation.
+    #: Specifies this audio file is configured across organization.
     organization = 'ORGANIZATION'
     #: Specifies this audio file is configured across location.
     location = 'LOCATION'
@@ -1104,6 +1104,8 @@ class AnnAudioFile(ApiModel):
     id: Optional[str] = None
     #: Name of the file.
     file_name: Optional[str] = None
+    #: Size of greeting file in kilo-bytes.
+    file_size: Optional[str] = None
     #: Media Type of the audio file.
     media_file_type: Optional[MediaFileType] = None
     #: Audio announcement file type location.

@@ -7,6 +7,7 @@ Release history
 - feat: new API :attr:`api.telephony.devices.dynamic_settings <wxc_sdk.telephony.devices.TelephonyDevicesApi.dynamic_settings>`
 - feat: allow instantiation of WebexSimpleApi/AsWebexSimpleApi instances with existing session object
 - feat: significant enhancements :class:`api.me.MeSettingsApi <wxc_sdk.me.MeSettingsApi>`
+- feat: new endpoints :meth:`api.telephony.auto_attendant.delete_announcement_file <wxc_sdk.telephony.autoattendant.AutoAttendantApi.delete_announcement_file>`, :meth:`api.telephony.auto_attendant.list_announcement_files <wxc_sdk.telephony.autoattendant.AutoAttendantApi.list_announcement_files>`
 
 1.26.0
 ------

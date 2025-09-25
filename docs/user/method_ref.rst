@@ -903,12 +903,16 @@ The method name is a link to the method documentation.
         Get Auto Attendant Call Forward Available Phone Numbers
    * - :meth:`api.telephony.auto_attendant.create <wxc_sdk.telephony.autoattendant.AutoAttendantApi.create>`
         Create an Auto Attendant
+   * - :meth:`api.telephony.auto_attendant.delete_announcement_file <wxc_sdk.telephony.autoattendant.AutoAttendantApi.delete_announcement_file>`
+        Delete an Auto Attendant Announcement File
    * - :meth:`api.telephony.auto_attendant.delete_auto_attendant <wxc_sdk.telephony.autoattendant.AutoAttendantApi.delete_auto_attendant>`
         elete the designated Auto Attendant
    * - :meth:`api.telephony.auto_attendant.details <wxc_sdk.telephony.autoattendant.AutoAttendantApi.details>`
         Get Details for an Auto Attendant
    * - :meth:`api.telephony.auto_attendant.list <wxc_sdk.telephony.autoattendant.AutoAttendantApi.list>`
         Read the List of Auto Attendants
+   * - :meth:`api.telephony.auto_attendant.list_announcement_files <wxc_sdk.telephony.autoattendant.AutoAttendantApi.list_announcement_files>`
+        Read the List of Auto Attendant Announcement Files
    * - :meth:`api.telephony.auto_attendant.primary_available_phone_numbers <wxc_sdk.telephony.autoattendant.AutoAttendantApi.primary_available_phone_numbers>`
         Get Auto Attendant Primary Available Phone Numbers
    * - :meth:`api.telephony.auto_attendant.update <wxc_sdk.telephony.autoattendant.AutoAttendantApi.update>`

@@ -6,14 +6,18 @@ import json
 # TODO: additional tests
 import random
 from contextlib import contextmanager
+from itertools import chain
 
 from tests.base import TestCaseWithLog, TestWithLocations, async_test
 from tests.testutil import available_extensions_gen, new_aa_names
 from wxc_sdk.all_types import AutoAttendant, ScheduleType
+from wxc_sdk.common import AnnouncementLevel
 from wxc_sdk.common.schedules import Schedule
 from wxc_sdk.locations import Location
+from wxc_sdk.telephony.announcements_repo import RepoAnnouncement
 from wxc_sdk.telephony.autoattendant import AutoAttendantMenu, AutoAttendantKeyConfiguration, MenuKey, \
     AutoAttendantAction
+from wxc_sdk.telephony.location import TelephonyLocation
 
 
 class TestAutoAttendant(TestCaseWithLog):
@@ -166,3 +170,60 @@ class TestDelete(TestCaseWithLog):
         target_aa = random.choice(aa_list)
         print(f'Deleting aa "{target_aa.name}" in location "{target_aa.location_name}"')
         ata.delete_auto_attendant(location_id=target_aa.location_id, auto_attendant_id=target_aa.auto_attendant_id)
+
+
+class TestAnnouncementFiles(TestCaseWithLog):
+    """
+    List announcement files
+    """
+
+    @async_test
+    async def test_001_list_ann_files(self):
+        """
+        List announcement files for all existing auto attendants
+        """
+        aa_list = list(self.api.telephony.auto_attendant.list())
+        if not aa_list:
+            self.skipTest('No existing auto attendants')
+
+        location_ids_set = sorted({aa.location_id for aa in aa_list})
+        locations: dict[str, TelephonyLocation] = {loc.location_id: loc for loc in self.api.telephony.location.list()}
+
+        # get global and location announcements (only for locations with auto attendants)
+        global_announcements, loc_announcements_list = await asyncio.gather(
+            self.async_api.telephony.announcements_repo.list(),
+            asyncio.gather(*[self.async_api.telephony.announcements_repo.list(
+                location_id=location_id)
+                for location_id in location_ids_set]))
+        global_announcements: list[RepoAnnouncement]
+        loc_announcements_list: list[list[RepoAnnouncement]]
+
+        announcements_for_location: dict[str, list[RepoAnnouncement]] = {loc_id: loc_anns
+                                                                         for loc_id, loc_anns in zip(location_ids_set,
+                                                                                                     loc_announcements_list)}
+
+        aa_files_list = await asyncio.gather(*[self.async_api.telephony.auto_attendant.list_announcement_files(
+            location_id=aa.location_id, auto_attendant_id=aa.auto_attendant_id) for aa in aa_list])
+        aa_files_list: list[list[RepoAnnouncement]]
+        aa_file_id_set = {af.id for af in chain.from_iterable(aa_files_list)}
+
+        print(f'Unique announcement files: {len(aa_file_id_set)}')
+        err = None
+        loc_len = max(len(locations[loc_id].name) for loc_id in location_ids_set)
+        aa_len = max(len(aa.name) for aa in aa_list)
+        for aa, af_files in zip(aa_list, aa_files_list):
+            location = locations[aa.location_id]
+            loc_announcements = announcements_for_location[aa.location_id]
+            af_files_org = [af for af in af_files if af.level == AnnouncementLevel.organization.value]
+            af_files_loc = [af for af in af_files if af.level == AnnouncementLevel.location.value]
+
+            print(
+                f'{aa.name:{aa_len}} in {location.name:{loc_len}}: {len(af_files)} files ({len(af_files_org)} org, '
+                f'{len(af_files_loc)} loc) {len(loc_announcements)} existing location announcements')
+            try:
+                # number of available announcements must be equal to the number of org + location announcements
+                self.assertEqual(len(af_files), len(af_files_org) + len(af_files_loc))
+            except AssertionError as e:
+                err = err or e
+        if err:
+            raise err

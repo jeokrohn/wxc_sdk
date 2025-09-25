@@ -5,7 +5,7 @@ from collections.abc import Generator
 from dataclasses import dataclass
 from typing import Optional, List
 
-from pydantic import Field
+from pydantic import Field, TypeAdapter
 
 from .forwarding import ForwardingApi, FeatureSelector
 from ..api_child import ApiChild
@@ -16,7 +16,8 @@ from ..person_settings.available_numbers import AvailableNumber
 from ..rest import RestSession
 
 __all__ = ['Dialing', 'MenuKey', 'AutoAttendantAction', 'AutoAttendantKeyConfiguration',
-           'AutoAttendantMenu', 'AutoAttendant', 'AutoAttendantApi']
+           'AutoAttendantMenu', 'AutoAttendant', 'AutoAttendantApi', 'CallTreatmentRetry', 'ActionToBePerformed',
+           'ActionToBePerformedAction', 'CallTreatment']
 
 
 class Dialing(str, Enum):
@@ -86,6 +87,56 @@ class AutoAttendantAudioFile(ApiModel):
     media_type: MediaFileType
 
 
+class CallTreatmentRetry(str, Enum):
+    #: Announcement will not be repeated.
+    no_repeat = 'NO_REPEAT'
+    #: Repeat the announcement once.
+    one_time = 'ONE_TIME'
+    #: Repeat the announcement twice.
+    two_times = 'TWO_TIMES'
+    #: Repeat the announcement thrice.
+    three_times = 'THREE_TIMES'
+
+
+class ActionToBePerformedAction(str, Enum):
+    #: Plays a recorded message and then disconnects the call.
+    play_message_and_disconnect = 'PLAY_MESSAGE_AND_DISCONNECT'
+    #: Transfers the call to the specified number, without playing a transfer prompt.
+    transfer_without_prompt = 'TRANSFER_WITHOUT_PROMPT'
+    #: Plays the message and then transfers the call to the specified number.
+    transfer_with_prompt = 'TRANSFER_WITH_PROMPT'
+    #: Plays the message and then transfers the call to the specified operator number.
+    transfer_to_operator = 'TRANSFER_TO_OPERATOR'
+    #: Transfers the call to the configured mailbox, without playing a transfer prompt.
+    transfer_to_mailbox = 'TRANSFER_TO_MAILBOX'
+    #: Disconnect the call.
+    disconnect = 'DISCONNECT'
+
+
+class ActionToBePerformed(ApiModel):
+    #: Action to perform after the retry attempt is reached.
+    action: Optional[ActionToBePerformedAction] = None
+    #: Greeting type is defined when `action` is set to `PLAY_MESSAGE_AND_DISCONNECT`.
+    greeting: Optional[Greeting] = None
+    #: Pre-configured announcement audio files when `action` is set to `PLAY_MESSAGE_AND_DISCONNECT` and `greeting` is
+    #: set to `CUSTOM`.
+    audio_announcement_file: Optional[AnnAudioFile] = None
+    #: Transfer call to the specified number when `action` is set to `TRANSFER_WITH_PROMPT`, `TRANSFER_WITHOUT_PROMPT`
+    #: and `TRANSFER_TO_OPERATOR` and `TRANSFER_TO_MAILBOX`.
+    transfer_call_to: Optional[str] = None
+
+
+class CallTreatment(ApiModel):
+    #: Number of times to repeat the Welcome greeting when the user does not provide an input. By default, NO_REPEAT is
+    #: set.
+    retry_attempt_for_no_input: Optional[CallTreatmentRetry] = None
+    #: Interval the Auto Attendant service waits before timing out. By default, 10 seconds. Min value is 1 and max
+    #: value is 60.
+    no_input_timer: Optional[str] = None
+    #: Action to perform after the retry attempt is reached.
+    action_to_be_performed: Optional[ActionToBePerformed] = None
+
+
 class AutoAttendantMenu(ApiModel):
     """
     Menu defined for Auto Attendant
@@ -94,13 +145,12 @@ class AutoAttendantMenu(ApiModel):
     greeting: Greeting
     #: Flag to indicate if auto attendant extension is enabled or not.
     extension_enabled: bool
-    #: Key configurations defined for the auto attendant.
-    key_configurations: list[AutoAttendantKeyConfiguration]
-    #: Announcement Audio File details.
-    #: this is deprecated with the availability of the announcement repo start using audio_announcement_file
-    audio_file: Optional[AutoAttendantAudioFile] = None
     #: Announcement Audio File details.
     audio_announcement_file: Optional[AnnAudioFile] = None
+    #: Key configurations defined for the auto attendant.
+    key_configurations: list[AutoAttendantKeyConfiguration]
+    #: Call treatment details.
+    call_treatment: Optional[CallTreatment] = None
 
     @staticmethod
     def default() -> 'AutoAttendantMenu':
@@ -514,3 +564,65 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
             params['extension'] = extension
         url = self._endpoint(location_id=location_id, path='callForwarding/availableNumbers')
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    def list_announcement_files(self, location_id: str, auto_attendant_id: str,
+                                org_id: str = None) -> List[AnnAudioFile]:
+        """
+        Read the List of Auto Attendant Announcement Files
+
+        List file info for all auto attendant announcement files associated with this auto attendant.
+
+        Auto attendant announcement files contain messages and music that callers hear while waiting in the queue. A
+        auto attendant can be configured to play whatever subset of these announcement files is desired.
+
+        Retrieving this list of files requires a full or read-only administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_read`.
+
+        Note that uploading of announcement files via API is not currently supported, but is available via Webex
+        Control Hub.
+
+        :param location_id: Location in which this auto attendant exists.
+        :type location_id: str
+        :param auto_attendant_id: Retrieve announcement files for the auto attendant with this identifier.
+        :type auto_attendant_id: str
+        :param org_id: Retrieve announcement files for an auto attendant from this organization.
+        :type org_id: str
+        :rtype: list[AnnAudioFile]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.session.ep(
+            f'telephony/config/locations/{location_id}/autoAttendants/{auto_attendant_id}/announcements')
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[AnnAudioFile]).validate_python(data['announcements'])
+        return r
+
+    def delete_announcement_file(self, location_id: str, auto_attendant_id: str, file_name: str,
+                                 org_id: str = None):
+        """
+        Delete an Auto Attendant Announcement File
+
+        Delete an announcement file for the designated auto attendant.
+
+        Auto Attendant announcement files contain messages and music that callers hear while waiting in the queue. A
+        auto attendant can be configured to play whatever subset of these announcement files is desired.
+
+        Deleting an announcement file for a auto attendant requires a full administrator or location administrator auth
+        token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Delete an announcement for a auto attendant in this location.
+        :type location_id: str
+        :param auto_attendant_id: Delete an announcement for the auto attendant with this identifier.
+        :type auto_attendant_id: str
+        :type file_name: str
+        :param org_id: Delete auto attendant announcement from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.session.ep(
+            f'telephony/config/locations/{location_id}/autoAttendants/{auto_attendant_id}/announcements/{file_name}')
+        super().delete(url, params=params)
