@@ -22,7 +22,8 @@ __all__ = ['StepExecutionStatus', 'JobExecutionStatus', 'StartJobResponse', 'Job
            'RoutingPrefixCounts', 'MoveCounts', 'MoveUser', 'MoveUsersList',
            'MoveUserJobDetails', 'MoveUsersJobsApi', 'StartMoveUsersJobResponse', 'CallRecordingJobCounts',
            'CallRecordingJobStatus', 'CallRecordingJobsApi', 'SendActivationEmailApi', 'ActivationEmailCounts',
-           'ActivationEmailJobDetail', 'DynamicSettingsUpdateJobItem', 'UpdateDynamicDeviceSettingsJobsApi']
+           'ActivationEmailJobDetail', 'DynamicSettingsUpdateJobItem', 'UpdateDynamicDeviceSettingsJobsApi',
+           'DisableCallingLocationCounts', 'DisableCallingLocationJobStatus', 'DisableCallingLocationJobsApi']
 
 
 class StepExecutionStatus(ApiModel):
@@ -496,7 +497,7 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
             * BATCH-1017021 - Failed to move because it is an inactive number.
 
             * BATCH-1017022 - Failed to move because the source location and target location have different CCP
-            providers.
+              providers.
 
             * BATCH-1017023 - Failed because it is not an unassigned number.
 
@@ -1757,6 +1758,194 @@ class UpdateDynamicDeviceSettingsJobsApi(ApiChild, base='telephony/config'):
         return self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)
 
 
+# noinspection DuplicatedCode
+class DisableCallingLocationCounts(ApiModel):
+    #: Total virtual extensions account.
+    total_virtual_extensions_account: Optional[int] = None
+    #: Number of virtual extensions deleted.
+    virtual_extensions_deleted: Optional[int] = None
+    #: Number of virtual extensions that failed to delete.
+    virtual_extensions_delete_failed: Optional[int] = None
+    #: Total feature accounts.
+    total_feature_accounts: Optional[int] = None
+    #: Number of feature accounts deleted.
+    feature_accounts_deleted: Optional[int] = None
+    #: Number of feature accounts that failed to delete.
+    feature_accounts_delete_failed: Optional[int] = None
+
+
+class DisableCallingLocationJobStatus(StartJobResponse):
+    #: Counts of processed accounts during disable calling location operation.
+    counts: Optional[DisableCallingLocationCounts] = None
+
+
+class DisableCallingLocationJobsApi(ApiChild, base='telephony/config'):
+
+    def list(self, org_id: str = None,
+             **params) -> Generator[DisableCallingLocationJobStatus, None, None]:
+        """
+        Get a List of Disable Calling Location Jobs
+
+        Get a List of Disable Calling Location Jobs for the organization.
+
+        Retrieving the list of disable calling location jobs requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: List disable calling location jobs for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`DisableCallingLocationJobStatus` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('jobs/locations/deleteCallingLocation')
+        return self.session.follow_pagination(url=url, model=DisableCallingLocationJobStatus, item_key='items',
+                                              params=params)
+
+    def initiate(self, location_id: str, location_name: str = None,
+                 force_delete: bool = None,
+                 org_id: str = None) -> DisableCallingLocationJobStatus:
+        """
+        Disable a Location for Webex Calling.
+
+        Initiating a disable calling location job requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        The API returns a jobId that can be used with other job-related APIs to track the status and progress of the
+        disable operation.
+
+        :param location_id: Unique identifier for the calling location to disable.
+        :type location_id: str
+        :param location_name: Name of the calling location to disable.
+        :type location_name: str
+        :param force_delete: Force delete is only applicable when calling features like call queues, hunt groups,
+            virtual lines, etc  or a trunk that is not in use exists in the calling location and customer still wants
+            to disable the calling location.
+        :type force_delete: bool
+        :param org_id: Organization ID for disabling the location for Webex Calling.
+        :type org_id: str
+        :rtype: :class:`DisableCallingLocationJobStatus`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['locationId'] = location_id
+        if location_name is not None:
+            body['locationName'] = location_name
+        if force_delete is not None:
+            body['forceDelete'] = force_delete
+        url = self.ep('jobs/locations/deleteCallingLocation')
+        data = super().post(url, params=params, json=body)
+        r = DisableCallingLocationJobStatus.model_validate(data)
+        return r
+
+    def status(self, job_id: str,
+               org_id: str = None) -> DisableCallingLocationJobStatus:
+        """
+        Get Disable Calling Location Job Status
+
+        Get the status and details of a specific disable calling location job.
+
+        Retrieving job status requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param job_id: Unique identifier for the job.
+        :type job_id: str
+        :param org_id: Organization ID for which to retrieve the job status.
+        :type org_id: str
+        :rtype: :class:`DisableCallingLocationJobStatus`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'jobs/locations/deleteCallingLocation/{job_id}')
+        data = super().get(url, params=params)
+        r = DisableCallingLocationJobStatus.model_validate(data)
+        return r
+
+    def pause(self, job_id: str, org_id: str = None):
+        """
+        Pause a Disable Calling Location Job
+
+        Pause an in-progress disable calling location job. The job must be in the PROCESSING state to be paused.
+
+        Pausing a job requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param job_id: Unique identifier for the job to pause.
+        :type job_id: str
+        :param org_id: Organization ID for which to pause the job.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'jobs/locations/deleteCallingLocation/{job_id}/actions/pause/invoke')
+        super().post(url, params=params)
+
+    def resume(self, job_id: str, org_id: str = None):
+        """
+        Resume a Paused Disable Calling Location Job
+
+        Resume a previously paused disable calling location job. The job must be in the PAUSED state to be resumed.
+
+        Resuming a job requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param job_id: Unique identifier for the job to resume.
+        :type job_id: str
+        :param org_id: Organization ID for which to resume the job.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'jobs/locations/deleteCallingLocation/{job_id}/actions/resume/invoke')
+        super().post(url, params=params)
+
+    def errors(self, job_id: str, org_id: str = None) -> List[JobErrorItem]:
+        """
+        Retrieve Errors for a Disable Calling Location Job
+
+        Retrieve detailed error information for a disable calling location job. This is particularly useful for jobs
+        that have failed or encountered errors during processing.
+
+        Retrieving job errors requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        Possible error codes include:
+
+        * `BATCH-1012002` - Unable to delete calling location from Broadworks.
+        * `BATCH-1012004` - Safe delete checks failed.
+        * `BATCH-1012005` - Failed to perform safe delete checks.
+        * `BATCH-1012006` - Trunks in use in the location. Count: {0}
+        * `BATCH-1012007` - Users associated with the location. Count: {0}
+        * `BATCH-1012008` - Workspaces associated with the location. Count: {0}
+        * `BATCH-1012009` - Virtual lines associated with the location. Count: {0}
+        * `BATCH-1012010` - Number order is pending.
+        * `BATCH-1012011` - Features associated with the location. This is a blocking error, use forceDelete to disable
+          the calling location.
+        * `BATCH-1012012` - Not allowed to delete the last calling location. Calling requires at least one active
+          location in the organization, This is a blocking error.
+        * `BATCH-1012013` - Local gateway's associated with the location. Count: {0}. This is a blocking error, use
+          forceDelete to disable the calling location.
+        * `BATCH-1012014` - Location not found.
+
+        :param job_id: Unique identifier for the job to get errors for.
+        :type job_id: str
+        :param org_id: Organization ID for disable calling location job.
+        :type org_id: str
+        :rtype: list[JobErrorItem]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'jobs/locations/deleteCallingLocation/{job_id}/errors')
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[JobErrorItem]).validate_python(data['items'])
+        return r
+
+
 @dataclass(init=False, repr=False)
 class JobsApi(ApiChild, base='telephony/config/jobs'):
     """
@@ -1780,6 +1969,8 @@ class JobsApi(ApiChild, base='telephony/config/jobs'):
     rebuild_phones: RebuildPhonesJobsApi
     #: API for update routing prefix jobs
     update_routing_prefix: UpdateRoutingPrefixJobsApi
+    #: API for disable calling location jobs
+    disable_calling_location: DisableCallingLocationJobsApi
 
     def __init__(self, *, session: RestSession):
         super().__init__(session=session)
@@ -1792,3 +1983,4 @@ class JobsApi(ApiChild, base='telephony/config/jobs'):
         self.move_users = MoveUsersJobsApi(session=session)
         self.rebuild_phones = RebuildPhonesJobsApi(session=session)
         self.update_routing_prefix = UpdateRoutingPrefixJobsApi(session=session)
+        self.disable_calling_location = DisableCallingLocationJobsApi(session=session)

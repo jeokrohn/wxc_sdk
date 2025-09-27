@@ -264,6 +264,31 @@ class LocationsApi(ApiChild, base='locations'):
         # TODO: doc issue, looks like this endpoint returns location details, but the doc only mentions "id"
         return data['id']
 
+    def delete(self, location_id: str, org_id: str = None):
+        """
+        Delete Location
+
+        Delete a location, by ID.
+
+        * Specify the location ID in the `locationId` parameter in the URI.
+
+        * Deleting a location in your organization requires a full administrator auth token with a scope of
+        `spark-admin:locations_write`.
+
+        * NOTE: Disabling Webex Calling for a Webex Calling enabled location is required prior to deleting a location.
+
+        :param location_id: A unique identifier for the location.
+        :type location_id: str
+        :param org_id: Specify the organization for the location to be deleted.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{location_id}')
+        super().delete(url, params=params)
+
     def update(self, location_id: str, settings: Location, org_id: str = None):
         """
         Update details for a location, by ID.

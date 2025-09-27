@@ -23,7 +23,9 @@ from ...person_settings.permissions_out import OutgoingPermissionsApi
 from ...rest import RestSession
 
 __all__ = ['CallingLineId', 'PSTNConnection', 'TelephonyLocation', 'CallBackSelected', 'ContactDetails',
-           'LocationECBNLocation', 'LocationECBNLocationMember', 'LocationECBN', 'TelephonyLocationApi']
+           'LocationECBNLocation', 'LocationECBNLocationMember', 'LocationECBN',
+           'BlockingDisableCalling', 'NonBlockingDisableCalling', 'BlockingUnlessForced',
+           'LocationDeleteStatus', 'SafeDeleteCheckResponse', 'TelephonyLocationApi']
 
 
 class CallingLineId(ApiModel):
@@ -168,6 +170,51 @@ class ContactDetails(ApiModel):
     #: Location feature ID of the contact. Supported location feature types are Auto Attendant, Call Queue, Hunt Group,
     #: Single Number Reach, and Paging Group.
     feature_id: Optional[str] = None
+
+
+class BlockingDisableCalling(ApiModel):
+    #: Indicates if this is the last calling location in the organization.
+    last_location: Optional[bool] = None
+    #: Number of trunks in use at this location.
+    trunks_in_use_count: Optional[int] = None
+    #: Number of users in use at this location.
+    users_in_use_count: Optional[int] = None
+    #: Number of workspaces in use at this location.
+    workspaces_in_use_count: Optional[int] = None
+    #: Number of virtual lines in use at this location.
+    virtual_line_in_use_count: Optional[int] = None
+    #: Indicates if there are pending number orders for this location.
+    numbers_order_pending: Optional[bool] = None
+
+
+class NonBlockingDisableCalling(ApiModel):
+    #: Indicates if there are phone numbers at this location.
+    numbers_present: Optional[bool] = None
+
+
+class BlockingUnlessForced(ApiModel):
+    #: Indicates if there are non-user entities in use at this location that would block disabling unless force is
+    #: applied.
+    non_user_entities_in_use: Optional[bool] = None
+    #: Total number of trunks at this location.
+    trunks_count: Optional[int] = None
+
+
+class LocationDeleteStatus(str, Enum):
+    #: Disable Webex Calling location operation is blocked and cannot proceed.
+    blocked = 'BLOCKED'
+    #: Disable Webex Calling location operation can proceed without any restrictions.
+    unblocked = 'UNBLOCKED'
+    #: Disable Webex Calling location operation requires forceDelete to be set to true.
+    force_required = 'FORCE_REQUIRED'
+
+
+class SafeDeleteCheckResponse(ApiModel):
+    #: Status of disable calling location safe delete check.
+    location_delete_status: Optional[LocationDeleteStatus] = None
+    blocking: Optional[BlockingDisableCalling] = None
+    non_blocking: Optional[NonBlockingDisableCalling] = None
+    blocking_unless_forced: Optional[BlockingUnlessForced] = None
 
 
 @dataclass(init=False, repr=False)
@@ -730,7 +777,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         body = dict()
         body['name'] = name
         body['contacts'] = contacts
-        url = self.ep(f'locations/{location_id}/receptionistContacts/directories')
+        url = self.ep(f'{location_id}/receptionistContacts/directories')
         data = super().post(url, params=params, json=body)
         r = data['id']
         return r
@@ -756,7 +803,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'locations/{location_id}/receptionistContacts/directories')
+        url = self.ep(f'{location_id}/receptionistContacts/directories')
         data = super().get(url, params=params)
         r = TypeAdapter(list[IdAndName]).validate_python(data['directories'])
         return r
@@ -819,7 +866,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
             params['extension'] = extension
         if person_id is not None:
             params['personId'] = person_id
-        url = self.ep(f'locations/{location_id}/receptionistContacts/directories/{directory_id}')
+        url = self.ep(f'{location_id}/receptionistContacts/directories/{directory_id}')
         data = super().get(url, params=params)
         r = TypeAdapter(list[ContactDetails]).validate_python(data['contacts'])
         return r
@@ -846,7 +893,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'locations/{location_id}/receptionistContacts/directories/{directory_id}')
+        url = self.ep(f'{location_id}/receptionistContacts/directories/{directory_id}')
         super().delete(url, params=params)
 
     def modify_receptionist_contact_directory(self, location_id: str, directory_id: str, name: str,
@@ -883,7 +930,32 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         body = dict()
         body['name'] = name
         body['contacts'] = contacts
-        url = self.ep(f'locations/{location_id}/receptionistContacts/directories/{directory_id}')
+        url = self.ep(f'{location_id}/receptionistContacts/directories/{directory_id}')
         data = super().put(url, params=params, json=body)
         r = data['id']
+        return r
+
+    def safe_delete_check_before_disabling_calling_location(self, location_id: str,
+                                                            org_id: str = None) -> SafeDeleteCheckResponse:
+        """
+        Safe Delete Check Before Disabling a Location for Webex Calling
+
+        Performs a safe delete check operation to identify any issues that would prevent the calling location from
+        being disabled. This API helps identify resources that need to be addressed before a calling location can be
+        successfully disabled.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Unique identifier for the location to be checked.
+        :type location_id: str
+        :param org_id: Organization ID for which the safe delete check operation is being performed.
+        :type org_id: str
+        :rtype: :class:`SafeDeleteCheckResponse`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{location_id}/actions/precheckForDeletion/invoke')
+        data = super().post(url, params=params)
+        r = SafeDeleteCheckResponse.model_validate(data)
         return r

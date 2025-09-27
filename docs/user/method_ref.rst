@@ -113,6 +113,18 @@ The method name is a link to the method documentation.
         List change device settings jobs
    * - :meth:`api.jobs.device_settings.status <wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.status>`
         Get change device settings job status
+   * - :meth:`api.jobs.disable_calling_location.errors <wxc_sdk.telephony.jobs.DisableCallingLocationJobsApi.errors>`
+        Retrieve Errors for a Disable Calling Location Job
+   * - :meth:`api.jobs.disable_calling_location.initiate <wxc_sdk.telephony.jobs.DisableCallingLocationJobsApi.initiate>`
+        Disable a Location for Webex Calling
+   * - :meth:`api.jobs.disable_calling_location.list <wxc_sdk.telephony.jobs.DisableCallingLocationJobsApi.list>`
+        Get a List of Disable Calling Location Jobs
+   * - :meth:`api.jobs.disable_calling_location.pause <wxc_sdk.telephony.jobs.DisableCallingLocationJobsApi.pause>`
+        Pause a Disable Calling Location Job
+   * - :meth:`api.jobs.disable_calling_location.resume <wxc_sdk.telephony.jobs.DisableCallingLocationJobsApi.resume>`
+        Resume a Paused Disable Calling Location Job
+   * - :meth:`api.jobs.disable_calling_location.status <wxc_sdk.telephony.jobs.DisableCallingLocationJobsApi.status>`
+        Get Disable Calling Location Job Status
    * - :meth:`api.jobs.dynamic_device_settings.errors <wxc_sdk.telephony.jobs.UpdateDynamicDeviceSettingsJobsApi.errors>`
         List Dynamic Device Settings Job Errors
    * - :meth:`api.jobs.dynamic_device_settings.list <wxc_sdk.telephony.jobs.UpdateDynamicDeviceSettingsJobsApi.list>`
@@ -177,6 +189,8 @@ The method name is a link to the method documentation.
         Create a Location
    * - :meth:`api.locations.create_floor <wxc_sdk.locations.LocationsApi.create_floor>`
         Create a Location Floor
+   * - :meth:`api.locations.delete <wxc_sdk.locations.LocationsApi.delete>`
+        Delete Location
    * - :meth:`api.locations.delete_floor <wxc_sdk.locations.LocationsApi.delete_floor>`
         Delete a Location Floor
    * - :meth:`api.locations.details <wxc_sdk.locations.LocationsApi.details>`
@@ -1341,6 +1355,18 @@ The method name is a link to the method documentation.
         List change device settings jobs
    * - :meth:`api.telephony.jobs.device_settings.status <wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.status>`
         Get change device settings job status
+   * - :meth:`api.telephony.jobs.disable_calling_location.errors <wxc_sdk.telephony.jobs.DisableCallingLocationJobsApi.errors>`
+        Retrieve Errors for a Disable Calling Location Job
+   * - :meth:`api.telephony.jobs.disable_calling_location.initiate <wxc_sdk.telephony.jobs.DisableCallingLocationJobsApi.initiate>`
+        Disable a Location for Webex Calling
+   * - :meth:`api.telephony.jobs.disable_calling_location.list <wxc_sdk.telephony.jobs.DisableCallingLocationJobsApi.list>`
+        Get a List of Disable Calling Location Jobs
+   * - :meth:`api.telephony.jobs.disable_calling_location.pause <wxc_sdk.telephony.jobs.DisableCallingLocationJobsApi.pause>`
+        Pause a Disable Calling Location Job
+   * - :meth:`api.telephony.jobs.disable_calling_location.resume <wxc_sdk.telephony.jobs.DisableCallingLocationJobsApi.resume>`
+        Resume a Paused Disable Calling Location Job
+   * - :meth:`api.telephony.jobs.disable_calling_location.status <wxc_sdk.telephony.jobs.DisableCallingLocationJobsApi.status>`
+        Get Disable Calling Location Job Status
    * - :meth:`api.telephony.jobs.dynamic_device_settings.errors <wxc_sdk.telephony.jobs.UpdateDynamicDeviceSettingsJobsApi.errors>`
         List Dynamic Device Settings Job Errors
    * - :meth:`api.telephony.jobs.dynamic_device_settings.list <wxc_sdk.telephony.jobs.UpdateDynamicDeviceSettingsJobsApi.list>`
@@ -1425,6 +1451,8 @@ The method name is a link to the method documentation.
         Get a Location Emergency callback number
    * - :meth:`api.telephony.location.receptionist_contact_directory_details <wxc_sdk.telephony.location.TelephonyLocationApi.receptionist_contact_directory_details>`
         Get details for a Receptionist Contact Directory
+   * - :meth:`api.telephony.location.safe_delete_check_before_disabling_calling_location <wxc_sdk.telephony.location.TelephonyLocationApi.safe_delete_check_before_disabling_calling_location>`
+        Safe Delete Check Before Disabling a Location for Webex Calling
    * - :meth:`api.telephony.location.update <wxc_sdk.telephony.location.TelephonyLocationApi.update>`
         Update Location Webex Calling Details
    * - :meth:`api.telephony.location.update_ecbn <wxc_sdk.telephony.location.TelephonyLocationApi.update_ecbn>`
@@ -1525,6 +1553,8 @@ The method name is a link to the method documentation.
         Get a Location Emergency callback number
    * - :meth:`api.telephony.locations.receptionist_contact_directory_details <wxc_sdk.telephony.location.TelephonyLocationApi.receptionist_contact_directory_details>`
         Get details for a Receptionist Contact Directory
+   * - :meth:`api.telephony.locations.safe_delete_check_before_disabling_calling_location <wxc_sdk.telephony.location.TelephonyLocationApi.safe_delete_check_before_disabling_calling_location>`
+        Safe Delete Check Before Disabling a Location for Webex Calling
    * - :meth:`api.telephony.locations.update <wxc_sdk.telephony.location.TelephonyLocationApi.update>`
         Update Location Webex Calling Details
    * - :meth:`api.telephony.locations.update_ecbn <wxc_sdk.telephony.location.TelephonyLocationApi.update_ecbn>`

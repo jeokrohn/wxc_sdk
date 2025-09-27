@@ -8,6 +8,7 @@ Release history
 - feat: allow instantiation of WebexSimpleApi/AsWebexSimpleApi instances with existing session object
 - feat: significant enhancements :class:`api.me.MeSettingsApi <wxc_sdk.me.MeSettingsApi>`
 - feat: new endpoints :meth:`api.telephony.auto_attendant.delete_announcement_file <wxc_sdk.telephony.autoattendant.AutoAttendantApi.delete_announcement_file>`, :meth:`api.telephony.auto_attendant.list_announcement_files <wxc_sdk.telephony.autoattendant.AutoAttendantApi.list_announcement_files>`
+- feat: delete locations. New endpoints :meth:`api.locations.delete <wxc_sdk.locations.LocationsApi.delete>`, :meth:`api.telephony.locations.safe_delete_check_before_disabling_calling_location <wxc_sdk.telephony.location.TelephonyLocationApi.safe_delete_check_before_disabling_calling_location>`. new api - :attr:`api.jobs.disable_calling_location <wxc_sdk.telephony.jobs.JobsApi.disable_calling_location>`
 
 1.26.0
 ------

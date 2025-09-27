@@ -13,19 +13,23 @@ from wxc_sdk.base import SafeEnum as Enum
 
 __all__ = ['AudioAnnouncementFileGetObject', 'AudioAnnouncementFileGetObjectLevel',
            'AudioAnnouncementFileGetObjectMediaFileType', 'BatchJobError', 'BatchResponse',
-           'BatchResponseLatestExecutionExitCode', 'CallBackEffectiveLevel', 'CallBackMemberType', 'CallBackQuality',
-           'CallBackSelected', 'ContactDetails', 'Counts', 'Error', 'ErrorMessage', 'ExtensionStatusObject',
-           'ExtensionStatusObjectState', 'GetLocationCallBackNumberObject',
+           'BatchResponseLatestExecutionExitCode', 'BlockingDisableCallingLocation',
+           'BlockingUnlessForcedDisableCallingLocation', 'CallBackEffectiveLevel', 'CallBackMemberType',
+           'CallBackQuality', 'CallBackSelected', 'ContactDetails', 'Counts', 'DisableCallingLocationCounts',
+           'DisableCallingLocationJobStatus', 'Error', 'ErrorBean', 'ErrorMessage', 'ErrorType',
+           'ExtensionStatusObject', 'ExtensionStatusObjectState', 'GetLocationCallBackNumberObject',
            'GetLocationCallBackNumberObjectLocationInfo', 'GetLocationCallBackNumberObjectLocationMemberInfo',
            'GetMusicOnHoldObject', 'GetMusicOnHoldObjectGreeting',
            'GetPrivateNetworkConnectObjectNetworkConnectionType', 'GetTelephonyLocationObject',
            'GetTelephonyLocationObjectCallingLineId', 'GetTelephonyLocationObjectConnection', 'JobExecutionStatus',
            'ListLocationObject', 'LocationAvailableChargeNumberObject', 'LocationAvailableChargeNumberObjectOwner',
            'LocationAvailableNumberObject', 'LocationCallInterceptAvailableNumberObject', 'LocationCallSettingsApi',
-           'LocationECBNAvailableNumberObject', 'LocationECBNAvailableNumberObjectOwner', 'LocationObject',
-           'LocationPUTResponse', 'NumberObject', 'NumberOwnerType', 'PersonId', 'PostLocationCallingRequestAddress',
-           'PostValidateExtensionResponse', 'PostValidateExtensionResponseStatus', 'RouteIdentity', 'RouteType',
-           'State', 'StepExecutionStatuses', 'TelephonyType', 'WebexGoAvailableNumberObject']
+           'LocationDeleteStatus', 'LocationECBNAvailableNumberObject', 'LocationECBNAvailableNumberObjectOwner',
+           'LocationObject', 'LocationPUTResponse', 'NonBlockingDisableCallingLocation', 'NumberObject',
+           'NumberOwnerType', 'PersonId', 'PostLocationCallingRequestAddress', 'PostValidateExtensionResponse',
+           'PostValidateExtensionResponseStatus', 'RouteIdentity', 'RouteType',
+           'SafeDeleteCheckForDisableCallingLocationResponse', 'State', 'StepExecutionStatuses', 'TelephonyType',
+           'WebexGoAvailableNumberObject']
 
 
 class State(str, Enum):
@@ -624,6 +628,111 @@ class LocationCallInterceptAvailableNumberObject(ApiModel):
     owner: Optional[LocationAvailableChargeNumberObjectOwner] = None
 
 
+class ErrorType(str, Enum):
+    #: A warning message that doesn't block the operation.
+    warn = 'WARN'
+    #: An error message that indicates a failure in the operation.
+    error = 'ERROR'
+
+
+class ErrorBean(ApiModel):
+    #: Sequential number of the error item.
+    item_number: Optional[int] = None
+    #: The item that caused the error.
+    item: Optional[str] = None
+    #: Type of the error.
+    error_type: Optional[ErrorType] = None
+    #: Error details.
+    error: Optional[Error] = None
+    #: Tracking ID for the error.
+    tracking_id: Optional[str] = None
+
+
+class LocationDeleteStatus(str, Enum):
+    #: Disable Webex Calling location operation is blocked and cannot proceed.
+    blocked = 'BLOCKED'
+    #: Disable Webex Calling location operation can proceed without any restrictions.
+    unblocked = 'UNBLOCKED'
+    #: Disable Webex Calling location operation requires forceDelete to be set to true.
+    force_required = 'FORCE_REQUIRED'
+
+
+class BlockingDisableCallingLocation(ApiModel):
+    #: Indicates if this is the last calling location in the organization.
+    last_location: Optional[bool] = None
+    #: Number of trunks in use at this location.
+    trunks_in_use_count: Optional[int] = None
+    #: Number of users in use at this location.
+    users_in_use_count: Optional[int] = None
+    #: Number of workspaces in use at this location.
+    workspaces_in_use_count: Optional[int] = None
+    #: Number of virtual lines in use at this location.
+    virtual_line_in_use_count: Optional[int] = None
+    #: Indicates if there are pending number orders for this location.
+    numbers_order_pending: Optional[bool] = None
+
+
+class NonBlockingDisableCallingLocation(ApiModel):
+    #: Indicates if there are phone numbers at this location.
+    numbers_present: Optional[bool] = None
+
+
+class BlockingUnlessForcedDisableCallingLocation(ApiModel):
+    #: Indicates if there are non-user entities in use at this location that would block disabling unless force is
+    #: applied.
+    non_user_entities_in_use: Optional[bool] = None
+    #: Total number of trunks at this location.
+    trunks_count: Optional[int] = None
+
+
+class SafeDeleteCheckForDisableCallingLocationResponse(ApiModel):
+    #: Status of disable calling location safe delete check.
+    location_delete_status: Optional[LocationDeleteStatus] = None
+    blocking: Optional[BlockingDisableCallingLocation] = None
+    non_blocking: Optional[NonBlockingDisableCallingLocation] = None
+    blocking_unless_forced: Optional[BlockingUnlessForcedDisableCallingLocation] = None
+
+
+class DisableCallingLocationCounts(ApiModel):
+    #: Total virtual extensions account.
+    total_virtual_extensions_account: Optional[int] = None
+    #: Number of virtual extensions deleted.
+    virtual_extensions_deleted: Optional[int] = None
+    #: Number of virtual extensions that failed to delete.
+    virtual_extensions_delete_failed: Optional[int] = None
+    #: Total feature accounts.
+    total_feature_accounts: Optional[int] = None
+    #: Number of feature accounts deleted.
+    feature_accounts_deleted: Optional[int] = None
+    #: Number of feature accounts that failed to delete.
+    feature_accounts_delete_failed: Optional[int] = None
+
+
+class DisableCallingLocationJobStatus(ApiModel):
+    #: Name of the job
+    name: Optional[str] = None
+    #: Unique identifier for the job.
+    id: Optional[str] = None
+    #: Name of the calling location being disabled.
+    location_name: Optional[str] = None
+    #: Tracking identifier for the job.
+    tracking_id: Optional[str] = None
+    #: ID of the user who initiated the job.
+    source_user_id: Optional[str] = None
+    #: Organization ID of the source customer.
+    source_customer_id: Optional[str] = None
+    #: Organization ID of the target customer.
+    target_customer_id: Optional[str] = None
+    #: Instance identifier for the job.
+    instance_id: Optional[int] = None
+    #: Latest execution status of the job.
+    latest_execution_status: Optional[str] = None
+    #: Latest execution exit code.
+    latest_execution_exit_code: Optional[str] = None
+    #: Counts of processed accounts during disable calling location operation.
+    counts: Optional[DisableCallingLocationCounts] = None
+
+
 class LocationCallSettingsApi(ApiChild, base='telephony/config'):
     """
     Location Call Settings
@@ -670,6 +779,168 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         url = self.ep('actions/validateExtensions/invoke')
         data = super().post(url, params=params, json=body)
         r = PostValidateExtensionResponse.model_validate(data)
+        return r
+
+    def get_list_of_disable_calling_location_jobs(self, org_id: str = None,
+                                                  **params) -> Generator[DisableCallingLocationJobStatus, None, None]:
+        """
+        Get a List of Disable Calling Location Jobs
+
+        Get a List of Disable Calling Location Jobs for the organization.
+
+        Retrieving the list of disable calling location jobs requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: List disable calling location jobs for this organization.
+        :type org_id: str
+        :return: Generator yielding :class:`DisableCallingLocationJobStatus` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('jobs/locations/deleteCallingLocation')
+        return self.session.follow_pagination(url=url, model=DisableCallingLocationJobStatus, item_key='items', params=params)
+
+    def disable_location_for_webex_calling(self, location_id: str, location_name: str = None,
+                                           force_delete: bool = None,
+                                           org_id: str = None) -> DisableCallingLocationJobStatus:
+        """
+        Disable a Location for Webex Calling.
+
+        Initiating a disable calling location job requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        The API returns a jobId that can be used with other job-related APIs to track the status and progress of the
+        disable operation.
+
+        :param location_id: Unique identifier for the calling location to disable.
+        :type location_id: str
+        :param location_name: Name of the calling location to disable.
+        :type location_name: str
+        :param force_delete: Force delete is only applicable when calling features like call queues, hunt groups,
+            virtual lines, etc  or a trunk that is not in use exists in the calling location and customer still wants
+            to disable the calling location.
+        :type force_delete: bool
+        :param org_id: Organization ID for disabling the location for Webex Calling.
+        :type org_id: str
+        :rtype: :class:`DisableCallingLocationJobStatus`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['locationId'] = location_id
+        if location_name is not None:
+            body['locationName'] = location_name
+        if force_delete is not None:
+            body['forceDelete'] = force_delete
+        url = self.ep('jobs/locations/deleteCallingLocation')
+        data = super().post(url, params=params, json=body)
+        r = DisableCallingLocationJobStatus.model_validate(data)
+        return r
+
+    def get_disable_calling_location_job_status(self, job_id: str,
+                                                org_id: str = None) -> DisableCallingLocationJobStatus:
+        """
+        Get Disable Calling Location Job Status
+
+        Get the status and details of a specific disable calling location job.
+
+        Retrieving job status requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param job_id: Unique identifier for the job.
+        :type job_id: str
+        :param org_id: Organization ID for which to retrieve the job status.
+        :type org_id: str
+        :rtype: :class:`DisableCallingLocationJobStatus`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'jobs/locations/deleteCallingLocation/{job_id}')
+        data = super().get(url, params=params)
+        r = DisableCallingLocationJobStatus.model_validate(data)
+        return r
+
+    def pause_disable_calling_location_job(self, job_id: str, org_id: str = None):
+        """
+        Pause a Disable Calling Location Job
+
+        Pause an in-progress disable calling location job. The job must be in the PROCESSING state to be paused.
+
+        Pausing a job requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param job_id: Unique identifier for the job to pause.
+        :type job_id: str
+        :param org_id: Organization ID for which to pause the job.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'jobs/locations/deleteCallingLocation/{job_id}/actions/pause/invoke')
+        super().post(url, params=params)
+
+    def resume_paused_disable_calling_location_job(self, job_id: str, org_id: str = None):
+        """
+        Resume a Paused Disable Calling Location Job
+
+        Resume a previously paused disable calling location job. The job must be in the PAUSED state to be resumed.
+
+        Resuming a job requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param job_id: Unique identifier for the job to resume.
+        :type job_id: str
+        :param org_id: Organization ID for which to resume the job.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'jobs/locations/deleteCallingLocation/{job_id}/actions/resume/invoke')
+        super().post(url, params=params)
+
+    def retrieve_errors_for_disable_calling_location_job(self, job_id: str, org_id: str = None) -> list[ErrorBean]:
+        """
+        Retrieve Errors for a Disable Calling Location Job
+
+        Retrieve detailed error information for a disable calling location job. This is particularly useful for jobs
+        that have failed or encountered errors during processing.
+
+        Retrieving job errors requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        Possible error codes include:
+        * `BATCH-1012002` - Unable to delete calling location from Broadworks.
+        * `BATCH-1012004` - Safe delete checks failed.
+        * `BATCH-1012005` - Failed to perform safe delete checks.
+        * `BATCH-1012006` - Trunks in use in the location. Count: {0}
+        * `BATCH-1012007` - Users associated with the location. Count: {0}
+        * `BATCH-1012008` - Workspaces associated with the location. Count: {0}
+        * `BATCH-1012009` - Virtual lines associated with the location. Count: {0}
+        * `BATCH-1012010` - Number order is pending.
+        * `BATCH-1012011` - Features associated with the location. This is a blocking error, use forceDelete to disable
+        the calling location.
+        * `BATCH-1012012` - Not allowed to delete the last calling location. Calling requires at least one active
+        location in the organization, This is a blocking error.
+        * `BATCH-1012013` - Local gateway's associated with the location. Count: {0}. This is a blocking error, use
+        forceDelete to disable the calling location.
+        * `BATCH-1012014` - Location not found.
+
+        :param job_id: Unique identifier for the job to get errors for.
+        :type job_id: str
+        :param org_id: Organization ID for disable calling location job.
+        :type org_id: str
+        :rtype: list[ErrorBean]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'jobs/locations/deleteCallingLocation/{job_id}/errors')
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[ErrorBean]).validate_python(data['items'])
         return r
 
     def get_a_list_of_update_routing_prefix_jobs(self, org_id: str = None) -> list[BatchResponse]:
@@ -961,6 +1232,31 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         body['announcementLanguageCode'] = announcement_language_code
         url = self.ep(f'locations/{location_id}/actions/modifyAnnouncementLanguage/invoke')
         super().post(url, params=params, json=body)
+
+    def safe_delete_check_before_disabling_calling_location(self, location_id: str,
+                                                            org_id: str = None) -> SafeDeleteCheckForDisableCallingLocationResponse:
+        """
+        Safe Delete Check Before Disabling a Location for Webex Calling
+
+        Performs a safe delete check operation to identify any issues that would prevent the calling location from
+        being disabled. This API helps identify resources that need to be addressed before a calling location can be
+        successfully disabled.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Unique identifier for the location to be checked.
+        :type location_id: str
+        :param org_id: Organization ID for which the safe delete check operation is being performed.
+        :type org_id: str
+        :rtype: :class:`SafeDeleteCheckForDisableCallingLocationResponse`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/actions/precheckForDeletion/invoke')
+        data = super().post(url, params=params)
+        r = SafeDeleteCheckForDisableCallingLocationResponse.model_validate(data)
+        return r
 
     def validate_extensions(self, location_id: str, extensions: list[str],
                             org_id: str = None) -> PostValidateExtensionResponse:
