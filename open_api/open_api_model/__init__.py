@@ -215,9 +215,8 @@ class OASchemaProperty(OABaseModel):
         if plist is None:
             return None
         object_item = next((item for item in plist if item.type == 'object'), None)
-        if not object_item:
-            return None
-        if object_item.properties:
+        # if there is an object item, it must not have properties
+        if object_item and object_item.properties:
             raise ValueError(f"Object schema {object_item} has properties, cannot return a reference")
         ref_item = next((item for item in plist if item.ref is not None), None)
         return ref_item and ref_item.ref

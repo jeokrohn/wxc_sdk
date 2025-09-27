@@ -95,6 +95,11 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
                 # reference to a different schema that (hopefully) will be added to the registry as PythonClass later
                 class_name = class_name_from_ref(ref)
                 referenced_class_name = self.qualified_class_name(class_name_from_schema_name(class_name))
+                # if we have no docstring for the property, we can try to get it from the allOf schema
+                if not prop.docstring and prop.all_of:
+                    desc_prop = next((p for p in prop.all_of if p.description), None)
+                    if desc_prop:
+                        prop.description = desc_prop.description
                 return referenced_class_name, referenced_class_name
         except AttributeError:
             raise
