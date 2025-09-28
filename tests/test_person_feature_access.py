@@ -1,12 +1,15 @@
 import asyncio
 import json
 import random
+from unittest import skip
 
 from tests.base import TestCaseWithUsers, async_test
 from wxc_sdk.person_settings.feature_access import FeatureAccessLevel, FeatureAccessSettings, UserFeatureAccessSettings
 
 
 class TestPersonFeatureAccess(TestCaseWithUsers):
+    # proxy = True
+
     @classmethod
     def setUpClass(cls):
         """
@@ -32,7 +35,7 @@ class TestPersonFeatureAccess(TestCaseWithUsers):
         """
         api = self.api.person_settings.feature_access
         before = api.read_default()
-        fields = before.model_fields
+        fields = before.__class__.model_fields
         field_to_modify = random.choice(list(fields))
         current_value = before.__getattribute__(field_to_modify)
         new_value = FeatureAccessLevel.full_access if current_value != FeatureAccessLevel.full_access else (

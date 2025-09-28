@@ -1,6 +1,6 @@
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 
 from pydantic import Field, TypeAdapter
 
@@ -35,6 +35,16 @@ class RouteList(ApiModel):
     rg_id: str = Field(alias='routeGroupId')
     #: Name of the Route Group associated with Route List.
     rg_name: str = Field(alias='routeGroupName')
+    #: Peak active calls on the Route List in the organization.
+    peak_active_route_list_calls_org: Optional[int] = None
+    #: Current active calls on the Route List in the organization.
+    current_active_route_list_calls_org: Optional[int] = None
+    #: Total calls volume on the Route List in the organization.
+    route_list_calls_volume_org: Optional[int] = None
+    #: Peak active calls on the Route List.
+    peak_active_route_list_calls: Optional[int] = None
+    #: Current active calls on the Route List.
+    current_active_route_list_calls: Optional[int] = None
 
 
 class NumberAndAction(ApiModel):

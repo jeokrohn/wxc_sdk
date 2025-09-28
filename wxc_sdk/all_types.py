@@ -13,7 +13,7 @@ from wxc_sdk.common import AcdCustomization, AlternateNumber, AnnAudioFile, Anno
     DeviceCustomization, DeviceCustomizations, DevicePlatform, DeviceType, DialPatternStatus, DialPatternValidate, \
     DirectoryMethod, DisplayCallqueueAgentSoftkey, DisplayNameSelection, EnabledAndValue, EnhancedMulticast, \
     Greeting, HttpProxy, HttpProxyMode, IdAndName, IdOnly, LineKeyLabelSelection, LineKeyLedPattern, LinkRelation, \
-    LoggingLevel, MaintenanceMode, MeGroupMember, MeGroupSettings, MediaFileType, MonitoredMember, \
+    LoggingLevel, MaintenanceMode, MeGroupMember, MeGroupSettings, MediaFile, MediaFileType, MonitoredMember, \
     MppCustomization, MppVlanDevice, Multicast, NoiseCancellation, NumberOwner, NumberState, OwnerType, \
     PatternAction, PersonPlaceAgent, PhoneLanguage, PrimaryOrSecondary, PrimaryOrShared, PskObject, RingPattern, \
     RoomType, RouteIdentity, RouteType, SetOrClear, SoftKeyLayout, SoftKeyMenu, StorageType, UsbPortsObject, \
@@ -144,7 +144,8 @@ from wxc_sdk.scim.users import EmailObject, EmailObjectType, EnterpriseUser, Man
     ManagerObject, NameObject, PatchUserOperation, PatchUserOperationOp, PhotoObject, PhotoObjectType, ScimMeta, \
     ScimPhoneNumberType, ScimUser, ScimValueDisplayRef, SearchUserResponse, SipAddressObject, UserAddress, \
     UserManager, UserPhoneNumber, UserTypeObject, WebexUser, WebexUserMeta
-from wxc_sdk.status import Component, Incident, IncidentUpdate, StatusAPI, StatusSummary, WebexStatus
+from wxc_sdk.status import AffectComponent, Component, Incident, IncidentUpdate, StatusAPI, StatusSummary, \
+    WebexStatus
 from wxc_sdk.team_memberships import TeamMembership
 from wxc_sdk.teams import Team
 from wxc_sdk.telephony import AnnouncementLanguage, AppliedService, AppliedServiceTranslationPattern, \
@@ -267,8 +268,8 @@ from wxc_sdk.xapi import ExecuteCommandResponse, QueryStatusResponse
 __all__ = ['AcdCustomization', 'Action', 'ActionToBePerformed', 'ActionToBePerformedAction', 'ActivationCodeResponse',
            'ActivationEmailCounts', 'ActivationEmailJobDetail', 'ActivationState', 'AdaptiveCard',
            'AdaptiveCardAction', 'AdaptiveCardBody', 'AddDECTHandset', 'AddDECTHandsetBulkError',
-           'AddDECTHandsetBulkResponse', 'AddDECTHandsetBulkResult', 'AdmitParticipantsBody', 'Agent',
-           'AgentACDState', 'AgentCallQueueSetting', 'AgentCallerId', 'AgentOrSupervisor', 'AlternateNumber',
+           'AddDECTHandsetBulkResponse', 'AddDECTHandsetBulkResult', 'AdmitParticipantsBody', 'AffectComponent',
+           'Agent', 'AgentACDState', 'AgentCallQueueSetting', 'AgentCallerId', 'AgentOrSupervisor', 'AlternateNumber',
            'AlternateNumberSettings', 'AnnAudioFile', 'Announcement', 'AnnouncementLanguage', 'AnnouncementLevel',
            'AnnouncementMode', 'AnswerCondition', 'AnswerObject', 'Answers', 'ApiModel', 'ApiModelWithErrors',
            'ApiSelector', 'AppServicesSettings', 'AppliedService', 'AppliedServiceTranslationPattern',
@@ -358,7 +359,7 @@ __all__ = ['AcdCustomization', 'Action', 'ActionToBePerformed', 'ActionToBePerfo
            'ManagerObject', 'MeCallCenterSettings', 'MeCallQueue', 'MeCallerIdSettings', 'MeDevice', 'MeEndpoint',
            'MeGroupMember', 'MeGroupSettings', 'MeHost', 'MeMobility', 'MeMonitoredElement', 'MeMonitoringSettings',
            'MeNumber', 'MeOwner', 'MeProfile', 'MeRecordingSettings', 'MeRecordingVendor', 'MeSNRSettings',
-           'MeSecondaryLine', 'MeSelectedCallerId', 'MediaFileType', 'MediaSessionQuality', 'Meeting',
+           'MeSecondaryLine', 'MeSelectedCallerId', 'MediaFile', 'MediaFileType', 'MediaSessionQuality', 'Meeting',
            'MeetingCallType', 'MeetingDevice', 'MeetingOptions', 'MeetingPreferenceDetails', 'MeetingService',
            'MeetingState', 'MeetingTelephony', 'MeetingType', 'MeetingsSite', 'MemberCommon', 'Membership',
            'MembershipsData', 'MenuKey', 'Message', 'MessageAttachment', 'MessageSummary', 'MessagesData', 'Meta',

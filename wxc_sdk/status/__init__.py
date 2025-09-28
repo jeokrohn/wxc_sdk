@@ -9,7 +9,7 @@ from pydantic import Field, TypeAdapter
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 
-__all__ = ['Component', 'IncidentUpdate', 'Incident', 'WebexStatus', 'StatusSummary', 'StatusAPI']
+__all__ = ['AffectComponent', 'Component', 'IncidentUpdate', 'Incident', 'WebexStatus', 'StatusSummary', 'StatusAPI']
 
 
 class Component(ApiModel):
@@ -29,6 +29,34 @@ class Component(ApiModel):
     link: Optional[str] = None
     external_id: Optional[str] = None
     help_link: Optional[str] = Field(alias='helpLink')
+    service_id: Optional[str] = None
+
+
+class AffectComponent(ApiModel):
+    affect_id: Optional[str] = None
+    description: Optional[str] = Field(alias='discription', default=None)
+    message_id: Optional[str] = None
+    commercial: Optional[bool] = None
+    link: Optional[str] = None
+    created_at: Optional[datetime] = None
+    create_time: Optional[datetime] = None
+    last_modified_time: Optional[datetime] = None
+    external_id: Optional[str] = None
+    fedramp: Optional[bool] = Field(alias='fedRAMP', default=None)
+    help_link: Optional[str] = None
+    updated_at: Optional[datetime] = None
+    group_id: Optional[str] = None
+    name: Optional[str] = None
+    id: Optional[str] = None
+    position: Optional[int] = None
+    is_group: Optional[bool] = None
+    product_group: Optional[str] = None
+    service_id: Optional[str] = None
+    status: Optional[str] = None
+    deleted: Optional[bool] = None
+    component_id: Optional[str] = None
+    component: Optional[str] = None
+    component_name: Optional[str] = None
 
 
 class IncidentUpdate(ApiModel):
@@ -38,6 +66,8 @@ class IncidentUpdate(ApiModel):
     created_at: Optional[datetime] = None
     body: Optional[str] = None
     status: Optional[str] = None
+    message_id: Optional[str] = None
+    affect_components: Optional[list[AffectComponent]] = None
 
 
 class Incident(ApiModel):
@@ -62,6 +92,8 @@ class Incident(ApiModel):
     start_at: Optional[datetime] = None
     end_at: Optional[datetime] = None
     auto_status_setting: Optional[bool] = None
+    service_id: Optional[str] = None
+    locations: Optional[str] = None
 
 
 class WebexStatus(ApiModel):

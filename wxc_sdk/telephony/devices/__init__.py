@@ -141,6 +141,7 @@ class SupportedDevice(ApiModel):
     supports_hotline_enabled: Optional[bool] = None
     #: Supports hot desk only.
     supports_hot_desk_only: Optional[bool] = None
+    max_number_of_line_appearances: Optional[int] = None
 
 
 class SupportedDevices(ApiModel):

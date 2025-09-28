@@ -33,7 +33,6 @@ class TestAppSharedLine(TestCaseWithUsers):
                                                                         exclude_none=True, by_alias=True),
                          indent=2))
         self.assertTrue(all(m.member_id for m in members), 'Member ID should not be empty, WXCAPIBULK-724')
-        self.assertTrue(False, f'WXCAPIBULK-724 got fixed? MemberCommon.member_id is mandatory now.')
 
     def test_search_members_location_hartford(self):
         target_user = random.choice(self.users)

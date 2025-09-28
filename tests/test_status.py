@@ -42,4 +42,3 @@ class TestStatus(TestCaseWithLog):
         maintenances = api.all_scheduled_maintenances()
         print(f'got {len(maintenances)} scheduled maintenances')
         print('\n'.join(m.name for m in maintenances))
-

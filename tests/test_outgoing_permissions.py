@@ -24,10 +24,27 @@ from wxc_sdk.person_settings.permissions_out import DigitPattern, Action, Outgoi
 from wxc_sdk.telephony import (NumberType, NumberListPhoneNumber, OriginatorType, DestinationType,
                                TestCallRoutingResult, ConfigurationLevel)
 from wxc_sdk.telephony.virtual_line import VirtualLine
-from wxc_sdk.workspaces import Workspace, CallingType
+from wxc_sdk.workspaces import Workspace, CallingType, HotdeskingStatus
 
+class TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly(TestLocationsUsersWorkspacesVirtualLines):
+    """
+    Base class for tests that need locations, users, workspaces, and virtual lines
+    but no hotdesk-only workspaces
+    """
 
-class TestOutgoingPermissions(TestLocationsUsersWorkspacesVirtualLines):
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        # filter out hotdesk-only workspaces
+        cls.workspaces = [ws for ws in cls.workspaces
+                          if not (ws.hotdesking_status == HotdeskingStatus.on and
+                                  ws.calling and
+                                  ws.calling.type == CallingType.webex and
+                                  ws.calling.webex_calling and
+                                  ws.calling.webex_calling.extension is None and
+                                  ws.calling.webex_calling.phone_number is None)]
+
+class TestOutgoingPermissions(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
     """
     Test reading/writing outgoing permission settings for locations, users, workspaces, virtual lines
     """
@@ -82,7 +99,7 @@ class TestOutgoingPermissions(TestLocationsUsersWorkspacesVirtualLines):
         ...
 
 
-class TestAccessCodes(TestLocationsUsersWorkspacesVirtualLines):
+class TestAccessCodes(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
     """
     Tests for outgoing permissions access codes
     + read access codes
@@ -328,7 +345,7 @@ class TestAccessCodes(TestLocationsUsersWorkspacesVirtualLines):
                                      api=self.async_api.telephony.virtual_lines.permissions_out)
 
 
-class TestDigitPatterns(TestLocationsUsersWorkspacesVirtualLines):
+class TestDigitPatterns(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
     @async_test
     async def test_location_list(self):
         """
@@ -395,7 +412,8 @@ class TestDigitPatterns(TestLocationsUsersWorkspacesVirtualLines):
             # get all patterns
             after = await api.get_digit_patterns(entity_id=entity_id)
             existing_patterns_by_name = set(p.name for p in after.digit_patterns)
-            patterns_not_added = [pattern for pattern in patterns_to_create if f'test_{pattern}' not in existing_patterns_by_name]
+            patterns_not_added = [pattern for pattern in patterns_to_create if
+                                  f'test_{pattern}' not in existing_patterns_by_name]
             self.assertEqual(len(failed), len(patterns_not_added),
                              f'Failed to create {len(patterns_not_added)} patterns; expected: {len(failed)}')
             self.assertEqual(1, len(failed), f'Failed to create {len(failed)} patterns; expected: 1')
@@ -608,7 +626,7 @@ class TestBetweenUsers(TestCaseWithLog):
             self.skipTest('No location with at least two extensions')
         super().setUp()
 
-    def a_can_call_b(self)->TestCallRoutingResult:
+    def a_can_call_b(self) -> TestCallRoutingResult:
         # verify that A can call B
         print('Verifying that A can call B')
         routing_result = self.api.telephony.test_call_routing(

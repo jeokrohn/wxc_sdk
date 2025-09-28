@@ -84,6 +84,7 @@ class AuditEventData(ApiModel):
     email_address_count: Optional[Any] = None
     email_type: Optional[Any] = None
     end_date: Optional[Any] = None
+    end_time: Optional[Any] = None
     enrollment_status: Optional[Any] = None
     entitlements: Optional[Any] = None
     entity_id: Optional[Any] = None
@@ -103,6 +104,7 @@ class AuditEventData(ApiModel):
     location_name: Optional[Any] = None
     location: Optional[Any] = None
     mac_address: Optional[Any] = None
+    mode: Optional[Any] = None
     name: Optional[Any] = None
     new_org_default_enabled: Optional[Any] = None
     new_vendor_name: Optional[Any] = None
@@ -135,10 +137,12 @@ class AuditEventData(ApiModel):
     setting_value: Optional[Any] = None
     site_admin_roles: Optional[Any] = None
     start_date: Optional[Any] = None
+    start_time: Optional[Any] = None
     sub_type: Optional[Any] = None
     success: Optional[Any] = None
     tags: Optional[Any] = None
     target_email: Optional[Any] = None
+    target_group_id: Optional[Any] = None
     target_location_name: Optional[Any] = None
     template_name: Optional[Any] = None
     template_type: Optional[Any] = None

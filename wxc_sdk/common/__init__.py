@@ -28,7 +28,7 @@ __all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting',
            'BluetoothSetting', 'NoiseCancellation', 'SoftKeyLayout', 'SoftKeyMenu', 'PskObject', 'BackgroundImageColor',
            'BacklightTimer68XX78XX', 'DectCustomization', 'OwnerType', 'NumberOwner', 'ApplyLineKeyTemplateAction',
            'AssignedDectNetwork', 'DevicePlatform', 'Multicast', 'EnhancedMulticast', 'DeviceType', 'UserLicenseType',
-           'MaintenanceMode', 'SetOrClear', 'MeGroupSettings', 'MeGroupMember', 'PrimaryOrSecondary']
+           'MaintenanceMode', 'SetOrClear', 'MeGroupSettings', 'MeGroupMember', 'PrimaryOrSecondary', 'MediaFile']
 
 
 class IdOnly(ApiModel):
@@ -1085,6 +1085,11 @@ class MediaFileType(str, Enum):
     #: 3GP File Extension.
     three_gp = '3GP'
 
+class MediaFile(ApiModel):
+    #: File name of the custom greeting uploaded.
+    name: Optional[str] = None
+    #: Media type of the custom greeting uploaded.
+    media_type: Optional[str] = None
 
 class AnnouncementLevel(Enum):
     #: Specifies this audio file is configured across organization.
@@ -1209,6 +1214,12 @@ class MeGroupMember(ApiModel):
     display_name: Optional[str] = None
     #: Department name of the member.
     department_name: Optional[str] = None
+    #: Direct number of the member.
+    direct_number: Optional[str] = None
+    #: Extension of the member.
+    extension: Optional[str] = None
+    #: Email address of the member.
+    email: Optional[str] = None
 
 
 class MeGroupSettings(ApiModel):

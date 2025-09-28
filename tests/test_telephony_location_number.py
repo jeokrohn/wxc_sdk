@@ -161,7 +161,7 @@ class TestAddExisting(NumberTest):
 
 @dataclass(init=False, repr=False)
 class TestAvailable(TestWithLocations):
-    proxy = True
+    # proxy = True
 
     validated_owners: ClassVar[set[str]]
 

@@ -10,7 +10,7 @@ from requests_toolbelt.multipart.encoder import MultipartEncoder
 from .common import PersonSettingsApiChild
 from ..base import ApiModel
 from ..common import Greeting, VoicemailMessageStorage, StorageType, VoicemailEnabled, VoicemailNotifications, \
-    VoicemailFax, VoicemailTransferToNumber, VoicemailCopyOfMessage
+    VoicemailFax, VoicemailTransferToNumber, VoicemailCopyOfMessage, MediaFile
 
 __all__ = ['VoicemailApi', 'VoicemailEnabledWithGreeting', 'UnansweredCalls', 'VoicemailSettings']
 
@@ -23,6 +23,7 @@ class VoicemailEnabledWithGreeting(VoicemailEnabled):
     greeting: Optional[Greeting] = None
     #: Indicates a custom greeting has been uploaded.
     greeting_uploaded: Optional[bool] = None
+    audio_file: Optional[MediaFile] = None
 
 
 class UnansweredCalls(VoicemailEnabledWithGreeting):

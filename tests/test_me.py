@@ -4,7 +4,9 @@ tests for /me endpoint
 import asyncio
 import base64
 import json
+from concurrent.futures.thread import ThreadPoolExecutor
 from random import choice
+from typing import Union
 
 from pydantic import TypeAdapter
 
@@ -12,8 +14,7 @@ from tests.base import TestWithRandomUserApi, async_test
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.as_rest import AsRestError
-from wxc_sdk.me import ServicesEnum
-from wxc_sdk.me.callcenter import MeCallCenterSettings
+from wxc_sdk.me import ServicesEnum, MeProfile
 from wxc_sdk.me.endpoints import MeEndpoint
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings.call_policy import PrivacyOnRedirectedCalls
@@ -23,7 +24,7 @@ from wxc_sdk.telephony import AnnouncementLanguage
 
 
 class TestMe(TestWithRandomUserApi):
-    proxy = True
+    # proxy = True
 
     def test_profile(self):
         """
@@ -34,6 +35,31 @@ class TestMe(TestWithRandomUserApi):
             api: WebexSimpleApi
             details = api.me.details()
         print(json.dumps(details.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
+
+    def test_profile_all(self)->Union[Exception, MeProfile]:
+        """
+        Get profile details for all users
+        """
+        def get_profile(user:Person):
+            with self.user_api(user) as api:
+                api: WebexSimpleApi
+                try:
+                    details = api.me.details()
+                except Exception as e:
+                    return e
+            return details
+
+        candidates = [user for user in self.users if not user.emails[0].startswith('admin')]
+        with ThreadPoolExecutor() as pool:
+            results = list(pool.map(get_profile, candidates))
+        err = None
+        for user, result in zip(candidates, results):
+            if isinstance(result, Exception):
+                err = err or result
+                print(f"Error getting profile for {user.display_name}: {result}")
+        if err:
+            raise err
+
 
     def test_announcement_languages(self):
         """
@@ -195,7 +221,7 @@ class TestMe(TestWithRandomUserApi):
 
 class TestEndpoints(TestWithRandomUserApi):
     # fixed_user_display_name = 'Dustin Harris'
-    proxy = True
+    # proxy = True
 
     def test_list(self):
         """
@@ -498,7 +524,7 @@ class TestForwarding(TestWithRandomUserApi):
 
 class TestCallPark(TestWithRandomUserApi):
     # fixed_user_display_name = 'Dustin Harris'
-    proxy = True
+    # proxy = True
 
     @async_test
     async def test_read(self):
@@ -893,7 +919,7 @@ class TestCallCenter(TestWithRandomUserApi):
 
 class TestSNR(TestWithRandomUserApi):
     # fixed_user_display_name = 'Dustin Harris'
-    proxy = True
+    # proxy = True
 
     @async_test
     async def test_settings(self):
@@ -930,7 +956,7 @@ class TestSNR(TestWithRandomUserApi):
 
 class TestVoicemail(TestWithRandomUserApi):
     # fixed_user_display_name = 'Dustin Harris'
-    proxy = True
+    # proxy = True
 
     @async_test
     async def test_settings(self):
