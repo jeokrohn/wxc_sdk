@@ -30,6 +30,12 @@ class MeCallQueue(ApiModel):
     available: Optional[bool] = None
     #: Call center skill level.
     skill_level: Optional[int] = None
+    #: Call center phone number.
+    phone_number: Optional[str] = None
+    #: Call center extension.
+    extension: Optional[str] = None
+    #: Determines whether a queue can be joined or not.
+    allow_log_off_enabled: Optional[bool] = None
 
 
 class MeCallCenterSettings(ApiModel):

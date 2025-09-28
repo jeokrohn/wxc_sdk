@@ -41,8 +41,8 @@ __all__ = ['AddressObject', 'AgentACDStateType', 'Assistant', 'AvailableAssistan
            'UserNumber', 'UserProfileGetResponseObject', 'VoicemailInfo', 'VoicemailInfoEmailCopyOfMessage',
            'VoicemailInfoFaxMessage', 'VoicemailInfoMessageStorage', 'VoicemailInfoMessageStorageStorageType',
            'VoicemailInfoNotifications', 'VoicemailInfoSendAllCalls', 'VoicemailInfoSendBusyCalls',
-           'VoicemailInfoSendBusyCallsGreeting', 'VoicemailInfoSendUnansweredCalls', 'VoicemailPutSendBusyCalls',
-           'VoicemailPutSendUnansweredCalls']
+           'VoicemailInfoSendBusyCallsAudioFile', 'VoicemailInfoSendBusyCallsGreeting',
+           'VoicemailInfoSendUnansweredCalls', 'VoicemailPutSendBusyCalls', 'VoicemailPutSendUnansweredCalls']
 
 
 class AgentACDStateType(str, Enum):
@@ -74,6 +74,12 @@ class CallQueueGet(ApiModel):
     available: Optional[bool] = None
     #: Call center skill level.
     skill_level: Optional[int] = None
+    #: Call center phone number.
+    phone_number: Optional[str] = None
+    #: Call center extension.
+    extension: Optional[str] = None
+    #: Determines whether a queue can be joined or not.
+    allow_log_off_enabled: Optional[bool] = None
 
 
 class CallQueueSettingsGetResponseObject(ApiModel):
@@ -147,6 +153,13 @@ class VoicemailInfoSendBusyCallsGreeting(str, Enum):
     custom = 'CUSTOM'
 
 
+class VoicemailInfoSendBusyCallsAudioFile(ApiModel):
+    #: File name of the custom greeting uploaded.
+    name: Optional[str] = None
+    #: Media type of the custom greeting uploaded. Supported media types are `WAV` and `MP3`.
+    media_type: Optional[str] = None
+
+
 class VoicemailInfoSendBusyCalls(ApiModel):
     #: Calls will be sent to voicemail when busy.
     enabled: Optional[bool] = None
@@ -154,6 +167,7 @@ class VoicemailInfoSendBusyCalls(ApiModel):
     greeting: Optional[VoicemailInfoSendBusyCallsGreeting] = None
     #: A custom greeting has been uploaded.
     greeting_uploaded: Optional[bool] = None
+    audio_file: Optional[VoicemailInfoSendBusyCallsAudioFile] = None
 
 
 class VoicemailInfoSendUnansweredCalls(ApiModel):
@@ -167,6 +181,7 @@ class VoicemailInfoSendUnansweredCalls(ApiModel):
     number_of_rings: Optional[int] = None
     #: System-wide maximum number of rings allowed for `numberOfRings` setting.
     system_max_number_of_rings: Optional[int] = None
+    audio_file: Optional[VoicemailInfoSendBusyCallsAudioFile] = None
 
 
 class VoicemailInfoNotifications(ApiModel):
@@ -288,6 +303,12 @@ class CallPickupGroupMember(ApiModel):
     last_name: Optional[str] = None
     #: Department name of the member.
     department_name: Optional[str] = None
+    #: Direct number of the member.
+    direct_number: Optional[str] = None
+    #: Extension of the member.
+    extension: Optional[str] = None
+    #: Email address of the member.
+    email: Optional[str] = None
 
 
 class CallPickupGroupSettingsGet(ApiModel):
@@ -440,16 +461,16 @@ class ServicesEnum(str, Enum):
     speed_dial_100 = 'Speed Dial 100'
     #: Allows the user to pick up a call directed to another user.
     directed_call_pickup = 'Directed Call Pickup'
-    #: in (string) - Allows the user to pick up a call directed to another user and join the call.
-    directed_call_pickup_with_barge = 'Directed Call Pickup with Barge'
+    #: Allows the user to pick up a call directed to another user and join the call.
+    directed_call_pickup_with_barge_in = 'Directed Call Pickup with Barge-in'
     #: Displays the caller's ID on the user's phone.
     external_calling_line_id_delivery = 'External Calling Line ID Delivery'
     #: Displays the caller's ID on the user's phone.
     internal_calling_line_id_delivery = 'Internal Calling Line ID Delivery'
     #: Alerts the user of incoming calls when they are on another call.
     call_waiting = 'Call Waiting'
-    #: in Exempt (string) - Prevents other users from barging in on the user's calls.
-    barge_in_exempt = 'Barge'
+    #: Prevents other users from barging in on the user's calls.
+    barge_in_exempt = 'Barge-in Exempt'
     #: Allows the user to push a button to talk.
     push_to_talk = 'Push to Talk'
     #: Logs the user's call history.
@@ -462,16 +483,16 @@ class ServicesEnum(str, Enum):
     multiple_call_arrangement = 'Multiple Call Arrangement'
     #: Allows the user to monitor the status of another user's phone.
     busy_lamp_field = 'Busy Lamp Field'
-    #: Way Call (string) - Allows the user to have a three-way call.
-    three = 'Three'
+    #: Allows the user to have a three-way call.
+    three_way_call = 'Three-Way Call'
     #: Allows the user to transfer a call.
     call_transfer = 'Call Transfer'
     #: Allows the user to keep their number private.
     privacy = 'Privacy'
     #: Allows the user to send and receive faxes.
     fax_messaging = 'Fax Messaging'
-    #: Way Call (string) - Allows the user to have an N-way call.
-    n = 'N'
+    #: Allows the user to have an N-way call.
+    n_way_call = 'N-Way Call'
     #: Forwards calls when the user is not reachable.
     call_forwarding_not_reachable = 'Call Forwarding Not Reachable'
     #: Displays the caller's ID on the user's phone.
@@ -696,13 +717,17 @@ class UserCallRecordingGetResponseObject(ApiModel):
 class UserNumber(ApiModel):
     #: Direct number of the user.
     direct_number: Optional[str] = None
-    #: Enterprise number of the user.
+    #: Enterprise number of the user. This always combines the location routing prefix with the user's extension, and
+    #: is only present when both are present. That is, the location has a routing prefix and the user has an
+    #: extension.
     enterprise: Optional[str] = None
-    #: Extension of the user.
+    #: Extension of the user. This is always the user's extension, only present if the user has an extension.
     extension: Optional[str] = None
     #: Routing prefix of the user.
     routing_prefix: Optional[str] = None
-    #: Enterprise Significant Numbers (Routing prefix + extension of a person or workspace).
+    #: Enterprise Significant Number. This combines the location routing prefix and extension when both are set, and
+    #: only the extension when the location routing prefix is not set. if the extension is not set, the esn is not
+    #: present.
     esn: Optional[str] = None
     #: Indicates if the number is primary or alternate number.
     primary: Optional[bool] = None
@@ -1170,7 +1195,7 @@ class GetCountryTelephonyConfigRequirementsResponse(ApiModel):
     zip_code_required: Optional[bool] = None
     states: Optional[list[GetAnnouncementLanguagesForMeResponseLanguagesItem]] = None
     #: List of supported timezones for the country.
-    timezones: Optional[list[str]] = None
+    time_zones: Optional[list[str]] = None
 
 
 class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
@@ -1299,7 +1324,7 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
         url = self.ep(f'endpoints/{endpoint_id}')
         super().put(url, json=body)
 
-    def get_my_available_caller_idlist(self) -> SelectedCallerIdSettingsGetSelected:
+    def get_my_available_caller_idlist(self) -> list[SelectedCallerIdSettingsGetSelected]:
         """
         Get My Available Caller ID List
 
@@ -1310,14 +1335,14 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
 
         This API requires a user auth token with a scope of `spark:telephony_config_read`.
 
-        :rtype: SelectedCallerIdSettingsGetSelected
+        :rtype: list[SelectedCallerIdSettingsGetSelected]
         """
         url = self.ep('settings/availableCallerIds')
         data = super().get(url)
-        r = SelectedCallerIdSettingsGetSelected.model_validate(data['availableCallerIds'])
+        r = TypeAdapter(list[SelectedCallerIdSettingsGetSelected]).validate_python(data['availableCallerIds'])
         return r
 
-    def get_list_available_preferred_answer_endpoints(self, org_id: str = None) -> list[Endpoints]:
+    def get_list_available_preferred_answer_endpoints(self) -> list[Endpoints]:
         """
         Get List Available Preferred Answer Endpoints
 
@@ -1333,17 +1358,10 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
 
         This API requires a user auth token with a scope of `spark:telephony_config_read`.
 
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
-            (such as partners) may use this parameter as the default is the same organization as the token used to
-            access API.
-        :type org_id: str
         :rtype: list[Endpoints]
         """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
         url = self.ep('settings/availablePreferredAnswerEndpoints')
-        data = super().get(url, params=params)
+        data = super().get(url)
         r = TypeAdapter(list[Endpoints]).validate_python(data['endpoints'])
         return r
 
@@ -2335,7 +2353,7 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
         url = self.ep('settings/personalAssistant')
         super().put(url, json=body)
 
-    def get_my_preferred_answer_endpoint(self, org_id: str = None) -> PreferredAnswerEndpoint:
+    def get_my_preferred_answer_endpoint(self) -> PreferredAnswerEndpoint:
         """
         Get Preferred Answer Endpoint
 
@@ -2350,21 +2368,14 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
 
         This API requires a user auth token with a scope of `spark:telephony_config_read`.
 
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
-            (such as partners) may use this parameter as the default is the same organization as the token used to
-            access API.
-        :type org_id: str
         :rtype: :class:`PreferredAnswerEndpoint`
         """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
         url = self.ep('settings/preferredAnswerEndpoint')
-        data = super().get(url, params=params)
+        data = super().get(url)
         r = PreferredAnswerEndpoint.model_validate(data)
         return r
 
-    def modify_my_preferred_answer_endpoint(self, id: str, org_id: str = None):
+    def modify_my_preferred_answer_endpoint(self, id: str):
         """
         Modify Preferred Answer Endpoint
 
@@ -2381,19 +2392,12 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
 
         :param id: Person’s preferred answer endpoint.
         :type id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
-            (such as partners) may use this parameter as the default is the same organization as the token used to
-            access API.
-        :type org_id: str
         :rtype: None
         """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
         body = dict()
         body['id'] = id
         url = self.ep('settings/preferredAnswerEndpoint')
-        super().put(url, params=params, json=body)
+        super().put(url, json=body)
 
     def get_my_call_center_settings(self) -> CallQueueSettingsGetResponseObject:
         """
@@ -2441,8 +2445,7 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
         url = self.ep('settings/queues')
         super().put(url, json=body)
 
-    def get_secondary_lines_available_preferred_answer_endpoint_list(self, line_owner_id: str,
-                                                                     org_id: str = None) -> list[Endpoints]:
+    def get_secondary_lines_available_preferred_answer_endpoint_list(self, line_owner_id: str) -> list[Endpoints]:
         """
         Get My Secondary Line Owner's Available Preferred Answer Endpoint List
 
@@ -2459,22 +2462,14 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
 
         :param line_owner_id: Unique identifier for the secondary line owner (applicable only for Virtual Lines).
         :type line_owner_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
-            (such as partners) may use this parameter as the default is the same organization as the token used to
-            access API.
-        :type org_id: str
         :rtype: list[Endpoints]
         """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
         url = self.ep(f'settings/secondaryLines/{line_owner_id}/availablePreferredAnswerEndpoints')
-        data = super().get(url, params=params)
+        data = super().get(url)
         r = TypeAdapter(list[Endpoints]).validate_python(data['endpoints'])
         return r
 
-    def get_my_secondary_lines_preferred_answer_endpoint(self, line_owner_id: str,
-                                                         org_id: str = None) -> PreferredAnswerEndpoint:
+    def get_my_secondary_lines_preferred_answer_endpoint(self, line_owner_id: str) -> PreferredAnswerEndpoint:
         """
         Get My Secondary Line Owner's Preferred Answer Endpoint
 
@@ -2491,21 +2486,14 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
 
         :param line_owner_id: Unique identifier for the secondary line owner (applicable only for Virtual Lines).
         :type line_owner_id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
-            (such as partners) may use this parameter as the default is the same organization as the token used to
-            access API.
-        :type org_id: str
         :rtype: :class:`PreferredAnswerEndpoint`
         """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
         url = self.ep(f'settings/secondaryLines/{line_owner_id}/preferredAnswerEndpoint')
-        data = super().get(url, params=params)
+        data = super().get(url)
         r = PreferredAnswerEndpoint.model_validate(data)
         return r
 
-    def modify_my_secondary_lines_preferred_answer_endpoint(self, line_owner_id: str, id: str, org_id: str = None):
+    def modify_my_secondary_lines_preferred_answer_endpoint(self, line_owner_id: str, id: str):
         """
         Modify My Secondary Line Owner's Preferred Answer Endpoint
 
@@ -2524,21 +2512,15 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
         :type line_owner_id: str
         :param id: Person’s preferred answer endpoint.
         :type id: str
-        :param org_id: ID of the organization in which the person resides. Only admin users of another organization
-            (such as partners) may use this parameter as the default is the same organization as the token used to
-            access API.
-        :type org_id: str
         :rtype: None
         """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
         body = dict()
         body['id'] = id
         url = self.ep(f'settings/secondaryLines/{line_owner_id}/preferredAnswerEndpoint')
-        super().put(url, params=params, json=body)
+        super().put(url, json=body)
 
-    def get_my_secondary_lines_available_caller_idlist(self, lineowner_id: str) -> SelectedCallerIdSettingsGetSelected:
+    def get_my_secondary_lines_available_caller_idlist(self,
+                                                       lineowner_id: str) -> list[SelectedCallerIdSettingsGetSelected]:
         """
         Get My Secondary Line Owner's Available Caller ID List
 
@@ -2553,11 +2535,11 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
 
         :param lineowner_id: Unique identifier for the secondary line owner (applicable only for Virtual Lines).
         :type lineowner_id: str
-        :rtype: SelectedCallerIdSettingsGetSelected
+        :rtype: list[SelectedCallerIdSettingsGetSelected]
         """
         url = self.ep(f'settings/secondaryLines/{lineowner_id}/availableCallerIds')
         data = super().get(url)
-        r = SelectedCallerIdSettingsGetSelected.model_validate(data['availableCallerIds'])
+        r = TypeAdapter(list[SelectedCallerIdSettingsGetSelected]).validate_python(data['availableCallerIds'])
         return r
 
     def get_my_secondary_lines_call_forwarding_settings(self, lineowner_id: str) -> CallForwardingInfo:

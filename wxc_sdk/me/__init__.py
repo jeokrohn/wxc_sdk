@@ -42,16 +42,21 @@ from wxc_sdk.telephony import AnnouncementLanguage, NameAndCode
 class MeNumber(ApiModel):
     #: Direct number of the user.
     direct_number: Optional[str] = None
-    #: Enterprise number of the user.
+    #: Enterprise number of the user. This always combines the location routing prefix with the user's extension, and
+    #: is only present when both are present. That is, the location has a routing prefix and the user has an
+    #: extension.
     enterprise: Optional[str] = None
-    #: Extension of the user.
+    #: Extension of the user. This is always the user's extension, only present if the user has an extension.
     extension: Optional[str] = None
     #: Routing prefix of the user.
     routing_prefix: Optional[str] = None
-    #: Enterprise Significant Numbers (Routing prefix + extension of a person or workspace).
+    #: Enterprise Significant Number. This combines the location routing prefix and extension when both are set, and
+    #: only the extension when the location routing prefix is not set. if the extension is not set, the esn is not
+    #: present.
     esn: Optional[str] = None
     #: Indicates if the number is primary or alternate number.
     primary: Optional[bool] = None
+    state: Optional[str] = None
 
 
 class MeOwner(ApiModel):
@@ -126,7 +131,7 @@ class CountryTelephonyConfigRequirements(ApiModel):
     zip_code_required: Optional[bool] = None
     states: Optional[list[NameAndCode]] = None
     #: List of supported timezones for the country.
-    timeZones: Optional[list[str]] = None
+    time_zones: Optional[list[str]] = None
 
 
 class FeatureAccessCode(ApiModel):
@@ -227,8 +232,7 @@ class ServicesEnum(str, Enum):
     speed_dial_100 = 'Speed Dial 100'
     #: Allows the user to pick up a call directed to another user.
     directed_call_pickup = 'Directed Call Pickup'
-    #: Directed Call Pickup with Barge-in - Allows the user to pick up a call directed to another user and join the
-    # call.
+    #: Allows the user to pick up a call directed to another user and join the call.
     directed_call_pickup_with_barge_in = 'Directed Call Pickup with Barge-in'
     #: Displays the caller's ID on the user's phone.
     external_calling_line_id_delivery = 'External Calling Line ID Delivery'
@@ -236,7 +240,7 @@ class ServicesEnum(str, Enum):
     internal_calling_line_id_delivery = 'Internal Calling Line ID Delivery'
     #: Alerts the user of incoming calls when they are on another call.
     call_waiting = 'Call Waiting'
-    #: Barge-in Exempt - Prevents other users from barging in on the user's calls.
+    #: Prevents other users from barging in on the user's calls.
     barge_in_exempt = 'Barge-in Exempt'
     #: Allows the user to push a button to talk.
     push_to_talk = 'Push to Talk'
@@ -250,7 +254,7 @@ class ServicesEnum(str, Enum):
     multiple_call_arrangement = 'Multiple Call Arrangement'
     #: Allows the user to monitor the status of another user's phone.
     busy_lamp_field = 'Busy Lamp Field'
-    #: Three-Way Call - Allows the user to have a three-way call.
+    #: Allows the user to have a three-way call.
     three_way_call = 'Three-Way Call'
     #: Allows the user to transfer a call.
     call_transfer = 'Call Transfer'
@@ -258,7 +262,7 @@ class ServicesEnum(str, Enum):
     privacy = 'Privacy'
     #: Allows the user to send and receive faxes.
     fax_messaging = 'Fax Messaging'
-    #: N-Way Call - Allows the user to have an N-way call.
+    #: Allows the user to have an N-way call.
     n_way_call = 'N-Way Call'
     #: Forwards calls when the user is not reachable.
     call_forwarding_not_reachable = 'Call Forwarding Not Reachable'
@@ -290,6 +294,9 @@ class ServicesEnum(str, Enum):
     sequential_ring = 'Sequential Ring'
     #: Allows the user to block calls.
     call_block = 'Call Block'
+    call_center_premium = 'Call Center - Premium'
+    calling_name_retrieval = 'Calling Name Retrieval'
+    executive_assistant = 'Executive-Assistant'
 
 
 @dataclass(init=False, repr=False)
