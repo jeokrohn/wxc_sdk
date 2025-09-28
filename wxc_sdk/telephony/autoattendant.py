@@ -132,7 +132,7 @@ class CallTreatment(ApiModel):
     retry_attempt_for_no_input: Optional[CallTreatmentRetry] = None
     #: Interval the Auto Attendant service waits before timing out. By default, 10 seconds. Min value is 1 and max
     #: value is 60.
-    no_input_timer: Optional[str] = None
+    no_input_timer: Optional[int] = None
     #: Action to perform after the retry attempt is reached.
     action_to_be_performed: Optional[ActionToBePerformed] = None
 
