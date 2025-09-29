@@ -145,7 +145,14 @@ class SupportedDevice(ApiModel):
 
 
 class SupportedDevices(ApiModel):
+    #: List of available upgrade channels.
+    #: * `STABLE` - These are standard stable releases.
+    #: * `STABLE_DELAY` - These are delayed stable releases.
+    #: * `PREVIEW` - These are Preview/pre-release versions.
+    #: * `BETA` - These are Beta testing versions.
+    #: * `TESTING` - These are testing versions.
     upgrade_channel_list: Optional[list[str]] = None
+    #: List of supported devices.
     devices: Optional[list[SupportedDevice]] = None
 
 

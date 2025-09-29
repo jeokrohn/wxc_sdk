@@ -43,7 +43,8 @@ __all__ = ['AcdObject', 'Action', 'ActivationStates', 'ApplyLineKeyTemplateJobDe
            'ProgrammableLineKeys', 'PskObject', 'PutMemberObject', 'ReadTheListOfBackgroundImagesResponse',
            'RebuildPhonesJob', 'SearchMemberObject', 'SelectionType', 'SnmpObject', 'SoftKeyLayoutObject',
            'SoftKeyMenuObject', 'StartJobResponse', 'StartJobResponseLatestExecutionExitCode',
-           'StepExecutionStatusesObject', 'SupportedForObject', 'SupportsLogCollectionObject', 'TypeObject',
+           'StepExecutionStatusesObject', 'SupportedDevicesObject', 'SupportedForObject',
+           'SupportsLogCollectionObject', 'TypeObject', 'UpgradeChannelObject',
            'UploadAdeviceBackgroundImageResponse', 'UsageType', 'UsbPortsObject', 'UserDeviceCount', 'ValidationRule',
            'VolumeSettingsObject', 'WebAccessObject', 'WifiNetworkObject', 'WifiObject', 'WifiObjectDevice']
 
@@ -1851,6 +1852,14 @@ class ItemObject(ApiModel):
     error: Optional[ErrorObject] = None
 
 
+class UpgradeChannelObject(str, Enum):
+    stable = 'STABLE'
+    stable_delay = 'STABLE_DELAY'
+    preview = 'PREVIEW'
+    beta = 'BETA'
+    testing = 'TESTING'
+
+
 class TypeObject(str, Enum):
     #: Cisco Multiplatform Phone
     mpp = 'MPP'
@@ -1977,6 +1986,18 @@ class DeviceObject(ApiModel):
     supports_hotline_enabled: Optional[bool] = None
     #: Maximum number of line appearances available on the device.
     max_number_of_line_appearances: Optional[int] = None
+
+
+class SupportedDevicesObject(ApiModel):
+    #: List of available upgrade channels.
+    #: * `STABLE` - These are standard stable releases.
+    #: * `STABLE_DELAY` - These are delayed stable releases.
+    #: * `PREVIEW` - These are Preview/pre-release versions.
+    #: * `BETA` - These are Beta testing versions.
+    #: * `TESTING` - These are testing versions.
+    upgrade_channel_list: Optional[list[UpgradeChannelObject]] = None
+    #: List of supported devices.
+    devices: Optional[list[DeviceObject]] = None
 
 
 class DeleteDeviceBackgroundImagesResponse(ApiModel):
@@ -3576,7 +3597,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         super().put(url, params=params, json=body)
 
     def read_the_list_of_supported_devices(self, allow_configure_layout_enabled: bool = None, type: str = None,
-                                           org_id: str = None) -> list[DeviceObject]:
+                                           org_id: str = None) -> SupportedDevicesObject:
         """
         Read the List of Supported Devices
 
@@ -3592,7 +3613,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type type: str
         :param org_id: List supported devices for an organization.
         :type org_id: str
-        :rtype: list[DeviceObject]
+        :rtype: :class:`SupportedDevicesObject`
         """
         params = {}
         if org_id is not None:
@@ -3603,7 +3624,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
             params['type'] = type
         url = self.ep('supportedDevices')
         data = super().get(url, params=params)
-        r = TypeAdapter(list[DeviceObject]).validate_python(data['devices'])
+        r = SupportedDevicesObject.model_validate(data)
         return r
 
     def get_workspace_devices(self, workspace_id: str, org_id: str = None) -> PlaceDeviceList:
