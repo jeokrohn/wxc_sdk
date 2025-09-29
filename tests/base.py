@@ -468,7 +468,12 @@ class TestCaseWithLog(TestCaseWithTokens):
                 if logs_re.match(log)]
 
         existing_test_ids = set(logs_re.match(log).group('test_id') for log in logs)
-        if SKIP_TESTS_WITH_EXISTING_LOGS and test_case_id in existing_test_ids:
+        env_skip_tests = os.getenv('SKIP_TESTS_WITH_EXISTING_LOG')
+        if env_skip_tests and env_skip_tests.lower() in ('1', 'true', 'yes'):
+            env_skip_tests = True
+        else:
+            env_skip_tests = False
+        if (SKIP_TESTS_WITH_EXISTING_LOGS or env_skip_tests) and test_case_id in existing_test_ids:
             self.skipTest(f'Log file already exists for test case {test_case_id}')
 
         # next log file index is based on index of last log file in the list
