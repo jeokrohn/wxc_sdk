@@ -11,32 +11,32 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['AccessLevel', 'Action', 'AgentCallerIdType', 'ApplicationAvailableSharedLineMemberItem',
-           'ApplicationPutSharedLineMemberItem', 'ApplicationsSetting', 'AudioAnnouncementFileGetObject',
-           'AudioAnnouncementFileGetObjectLevel', 'AudioAnnouncementFileGetObjectMediaFileType', 'AuthorizationCode',
-           'AuthorizationCodeLevel', 'AvailableCallerIdObject', 'AvailableSharedLineMemberItem', 'CallsFrom',
-           'CallsFromSelectiveAccept', 'CallsFromSelectiveReject', 'CountObject', 'Criteria', 'CriteriaAccept',
-           'CriteriaForward', 'DeviceType', 'EndpointInformation', 'Endpoints', 'ErrorMessageObject', 'ErrorObject',
-           'ErrorOrImpactItem', 'ExceptionTypeObject', 'GetMessageSummaryResponse', 'GetMusicOnHoldObject',
-           'GetMusicOnHoldObjectGreeting', 'GetSharedLineMemberItem', 'GetSharedLineMemberList',
-           'GetUserMSTeamsSettingsObject', 'ItemObject', 'JobDetailsResponse', 'JobDetailsResponseById',
-           'JobDetailsResponseLatestExecutionExitCode', 'JobDetailsResponseLatestExecutionStatus',
-           'JobExecutionStatusObject', 'LicenseType', 'LineType', 'Location', 'ModeManagementFeatureTypeObject',
-           'ModifyUserMSTeamsSettingsObjectSettingName', 'NumberOwnerType', 'PersonCallForwardAvailableNumberObject',
-           'PersonCallForwardAvailableNumberObjectOwner', 'PersonECBNAvailableNumberObject',
-           'PersonECBNAvailableNumberObjectOwner', 'PersonECBNAvailableNumberObjectOwnerType',
-           'PersonPrimaryAvailableNumberObject', 'PersonPrimaryAvailableNumberObjectTelephonyType',
-           'PersonSecondaryAvailableNumberObject', 'PersonalAssistantGet', 'PersonalAssistantGetAlerting',
-           'PersonalAssistantGetPresence', 'PhoneNumber', 'PutSharedLineMemberItem', 'RingPattern', 'STATE',
-           'ScheduleLevel', 'ScheduleType', 'SelectiveAcceptCallCriteriaGet', 'SelectiveAcceptCallGet',
-           'SelectiveForwardCallCriteriaGet', 'SelectiveForwardCallGet', 'SelectiveRejectCallCriteriaGet',
-           'SelectiveRejectCallGet', 'SettingsObject', 'SettingsObjectLevel', 'SettingsObjectSettingName', 'Source',
-           'SourceSelectiveAccept', 'StepExecutionStatusesObject', 'TelephonyType', 'TransferNumberGet',
-           'UserCallSettings22Api', 'UserDigitPatternObject', 'UserItem', 'UserListItem',
-           'UserModeManagementAvailableFeaturesObject', 'UserModeManagementFeatureObject',
-           'UserOutgoingPermissionDigitPatternGetListObject', 'UserOutgoingPermissionDigitPatternPostObjectAction',
-           'UserPlaceAuthorizationCodeListGet', 'UserSettingsPermissionsGet', 'UserSettingsPermissionsGetDefault',
-           'UserType', 'UsersListItem', 'VoiceMailPartyInformation', 'VoiceMessageDetails']
+__all__ = ['AccessLevel', 'Action', 'AgentCallerIdType', 'ApplicationPutSharedLineMemberItem', 'ApplicationsSetting',
+           'AudioAnnouncementFileGetObject', 'AudioAnnouncementFileGetObjectLevel',
+           'AudioAnnouncementFileGetObjectMediaFileType', 'AuthorizationCode', 'AuthorizationCodeLevel',
+           'AvailableCallerIdObject', 'AvailableSharedLineMemberItem', 'CallsFrom', 'CallsFromSelectiveAccept',
+           'CallsFromSelectiveReject', 'CountObject', 'Criteria', 'CriteriaAccept', 'CriteriaForward', 'DeviceType',
+           'EndpointInformation', 'Endpoints', 'ErrorMessageObject', 'ErrorObject', 'ErrorOrImpactItem',
+           'ExceptionTypeObject', 'GetMessageSummaryResponse', 'GetMusicOnHoldObject', 'GetMusicOnHoldObjectGreeting',
+           'GetSharedLineMemberItem', 'GetSharedLineMemberList', 'GetUserMSTeamsSettingsObject', 'ItemObject',
+           'JobDetailsResponse', 'JobDetailsResponseById', 'JobDetailsResponseLatestExecutionExitCode',
+           'JobDetailsResponseLatestExecutionStatus', 'JobExecutionStatusObject', 'LicenseType', 'LineType',
+           'Location', 'ModeManagementFeatureTypeObject', 'ModifyUserMSTeamsSettingsObjectSettingName',
+           'NumberOwnerType', 'PersonCallForwardAvailableNumberObject', 'PersonCallForwardAvailableNumberObjectOwner',
+           'PersonECBNAvailableNumberObject', 'PersonECBNAvailableNumberObjectOwner',
+           'PersonECBNAvailableNumberObjectOwnerType', 'PersonPrimaryAvailableNumberObject',
+           'PersonPrimaryAvailableNumberObjectTelephonyType', 'PersonSecondaryAvailableNumberObject',
+           'PersonalAssistantGet', 'PersonalAssistantGetAlerting', 'PersonalAssistantGetPresence', 'PhoneNumber',
+           'PutSharedLineMemberItem', 'RingPattern', 'STATE', 'ScheduleLevel', 'ScheduleType',
+           'SelectiveAcceptCallCriteriaGet', 'SelectiveAcceptCallGet', 'SelectiveForwardCallCriteriaGet',
+           'SelectiveForwardCallGet', 'SelectiveRejectCallCriteriaGet', 'SelectiveRejectCallGet', 'SettingsObject',
+           'SettingsObjectLevel', 'SettingsObjectSettingName', 'Source', 'SourceSelectiveAccept',
+           'StepExecutionStatusesObject', 'TelephonyType', 'TransferNumberGet', 'UserCallSettings22Api',
+           'UserDigitPatternObject', 'UserItem', 'UserListItem', 'UserModeManagementAvailableFeaturesObject',
+           'UserModeManagementFeatureObject', 'UserOutgoingPermissionDigitPatternGetListObject',
+           'UserOutgoingPermissionDigitPatternPostObjectAction', 'UserPlaceAuthorizationCodeListGet',
+           'UserSettingsPermissionsGet', 'UserSettingsPermissionsGetDefault', 'UserType', 'UsersListItem',
+           'VoiceMailPartyInformation', 'VoiceMessageDetails']
 
 
 class Action(str, Enum):
@@ -1203,23 +1203,6 @@ class UserSettingsPermissionsGet(ApiModel):
     user_org_settings_permissions: Optional[UserSettingsPermissionsGetDefault] = None
 
 
-class ApplicationAvailableSharedLineMemberItem(ApiModel):
-    #: A unique member identifier.
-    id: Optional[str] = None
-    #: First name of member.
-    first_name: Optional[str] = None
-    #: Last name of member.
-    last_name: Optional[str] = None
-    #: Phone number of member. Currently, E.164 format is not supported.
-    phone_number: Optional[str] = None
-    #: Phone extension of member.
-    extension: Optional[str] = None
-    #: Indicates if the line is acting as a primary line or a shared line for this device.
-    line_type: Optional[LineType] = None
-    #: Location object having a unique identifier for the location and its name.
-    location: Optional[Location] = None
-
-
 class ApplicationPutSharedLineMemberItem(ApiModel):
     #: Unique identifier for the person or workspace.
     id: Optional[str] = None
@@ -1382,13 +1365,13 @@ class UserCallSettings22Api(ApiChild, base=''):
         Below is a list of possible error `code` values and their associated `message`, which can be found in the
         `errors` array during initial API request validation, regardless of the `validate` attribute value:
 
-        * 400 - Attribute 'User ID' is required.
+        * BATCH-400 - Attribute 'User ID' is required.
 
-        * 400 - Users list should not be empty.
+        * BATCH-400 - Users list should not be empty.
 
-        * 400 - Users should not be empty.
+        * BATCH-400 - Users should not be empty.
 
-        * 400 - Attribute 'Validate' is required.
+        * 1026006 - Attribute 'Validate' is required.
 
         * 1026010 - User is not a valid Calling User.
 
@@ -1740,7 +1723,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = JobDetailsResponseById.model_validate(data)
         return r
 
-    def pause_the_move_users_job(self, job_id: str, org_id: str = None):
+    def pause_move_users_job(self, job_id: str, org_id: str = None):
         """
         Pause the Move Users Job
 
@@ -1760,7 +1743,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/jobs/person/moveLocation/{job_id}/actions/pause/invoke')
         super().post(url, params=params)
 
-    def resume_the_move_users_job(self, job_id: str, org_id: str = None):
+    def resume_move_users_job(self, job_id: str, org_id: str = None):
         """
         Resume the Move Users Job
 
@@ -2080,7 +2063,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = AvailableCallerIdObject.model_validate(data['selectedCallerId'])
         return r
 
-    def modify_agent_s_caller_id_information(self, person_id: str, selected_caller_id: str):
+    def modify_agent_caller_id_information(self, person_id: str, selected_caller_id: str):
         """
         Modify Agent's Caller ID Information.
 
@@ -2104,7 +2087,7 @@ class UserCallSettings22Api(ApiChild, base=''):
 
     def search_shared_line_appearance_members_new(self, person_id: str, order: str = None, location: str = None,
                                                   name: str = None, phone_number: str = None, extension: str = None,
-                                                  **params) -> Generator[ApplicationAvailableSharedLineMemberItem, None, None]:
+                                                  **params) -> Generator[AvailableSharedLineMemberItem, None, None]:
         """
         Search Shared-Line Appearance Members New
 
@@ -2128,7 +2111,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type phone_number: str
         :param extension: Search for users with extensions that match the query.
         :type extension: str
-        :return: Generator yielding :class:`ApplicationAvailableSharedLineMemberItem` instances
+        :return: Generator yielding :class:`AvailableSharedLineMemberItem` instances
         """
         if order is not None:
             params['order'] = order
@@ -2141,7 +2124,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         if extension is not None:
             params['extension'] = extension
         url = self.ep(f'telephony/config/people/{person_id}/applications/availableMembers')
-        return self.session.follow_pagination(url=url, model=ApplicationAvailableSharedLineMemberItem, item_key='members', params=params)
+        return self.session.follow_pagination(url=url, model=AvailableSharedLineMemberItem, item_key='members', params=params)
 
     def get_shared_line_appearance_members_new(self, person_id: str) -> GetSharedLineMemberList:
         """
@@ -2661,7 +2644,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/modeManagement/features')
         super().put(url, params=params, json=body)
 
-    def retrieve_music_on_hold_settings_for_a_person(self, person_id: str, org_id: str = None) -> GetMusicOnHoldObject:
+    def retrieve_music_on_hold_settings_for_person(self, person_id: str, org_id: str = None) -> GetMusicOnHoldObject:
         """
         Retrieve Music On Hold Settings for a Person
 
@@ -2688,10 +2671,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = GetMusicOnHoldObject.model_validate(data)
         return r
 
-    def configure_music_on_hold_settings_for_a_person(self, person_id: str, moh_enabled: bool = None,
-                                                      greeting: GetMusicOnHoldObjectGreeting = None,
-                                                      audio_announcement_file: AudioAnnouncementFileGetObject = None,
-                                                      org_id: str = None):
+    def configure_music_on_hold_settings_for_person(self, person_id: str, moh_enabled: bool = None,
+                                                    greeting: GetMusicOnHoldObjectGreeting = None,
+                                                    audio_announcement_file: AudioAnnouncementFileGetObject = None,
+                                                    org_id: str = None):
         """
         Configure Music On Hold Settings for a Person
 
@@ -2765,7 +2748,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/numbers')
         super().put(url, params=params, json=body)
 
-    def delete_access_codes_for_a_person(self, person_id: str, org_id: str = None):
+    def delete_access_codes_for_person(self, person_id: str, org_id: str = None):
         """
         Delete Access Codes for a Person
 
@@ -2790,8 +2773,8 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/accessCodes')
         super().delete(url, params=params)
 
-    def retrieve_access_codes_for_a_person(self, person_id: str,
-                                           org_id: str = None) -> UserPlaceAuthorizationCodeListGet:
+    def retrieve_access_codes_for_person(self, person_id: str,
+                                         org_id: str = None) -> UserPlaceAuthorizationCodeListGet:
         """
         Retrieve Access Codes for a Person
 
@@ -2818,7 +2801,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = UserPlaceAuthorizationCodeListGet.model_validate(data)
         return r
 
-    def create_access_codes_for_a_person(self, person_id: str, code: str, description: str, org_id: str = None):
+    def create_access_codes_for_person(self, person_id: str, code: str, description: str, org_id: str = None):
         """
         Create Access Codes for a Person
 
@@ -2850,8 +2833,8 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/accessCodes')
         super().post(url, params=params, json=body)
 
-    def modify_access_codes_for_a_person(self, person_id: str, use_custom_access_codes: bool = None,
-                                         delete_codes: list[str] = None, org_id: str = None):
+    def modify_access_codes_for_person(self, person_id: str, use_custom_access_codes: bool = None,
+                                       delete_codes: list[str] = None, org_id: str = None):
         """
         Modify Access Codes for a Person
 
@@ -2886,7 +2869,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/accessCodes')
         super().put(url, params=params, json=body)
 
-    def retrieve_transfer_numbers_for_a_person(self, person_id: str, org_id: str = None) -> TransferNumberGet:
+    def retrieve_transfer_numbers_for_person(self, person_id: str, org_id: str = None) -> TransferNumberGet:
         """
         Retrieve Transfer Numbers for a Person
 
@@ -2915,9 +2898,9 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = TransferNumberGet.model_validate(data)
         return r
 
-    def modify_transfer_numbers_for_a_person(self, person_id: str, use_custom_transfer_numbers: bool,
-                                             auto_transfer_number1: str = None, auto_transfer_number2: str = None,
-                                             auto_transfer_number3: str = None, org_id: str = None):
+    def modify_transfer_numbers_for_person(self, person_id: str, use_custom_transfer_numbers: bool,
+                                           auto_transfer_number1: str = None, auto_transfer_number2: str = None,
+                                           auto_transfer_number3: str = None, org_id: str = None):
         """
         Modify Transfer Numbers for a Person
 
@@ -2990,8 +2973,8 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/digitPatterns')
         super().delete(url, params=params)
 
-    def retrieve_digit_patterns_for_a_person(self, person_id: str,
-                                             org_id: str = None) -> UserOutgoingPermissionDigitPatternGetListObject:
+    def retrieve_digit_patterns_for_person(self, person_id: str,
+                                           org_id: str = None) -> UserOutgoingPermissionDigitPatternGetListObject:
         """
         Retrieve Digit Patterns for a Person
 
@@ -3018,8 +3001,8 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = UserOutgoingPermissionDigitPatternGetListObject.model_validate(data)
         return r
 
-    def create_digit_patterns_for_a_person(self, person_id: str, name: str, pattern: str, action: Action,
-                                           transfer_enabled: bool, org_id: str = None) -> str:
+    def create_digit_patterns_for_person(self, person_id: str, name: str, pattern: str, action: Action,
+                                         transfer_enabled: bool, org_id: str = None) -> str:
         """
         Create Digit Patterns for a Person
 
@@ -3059,9 +3042,9 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = data['id']
         return r
 
-    def modify_the_digit_pattern_category_control_settings_for_a_person(self, person_id: str,
-                                                                        use_custom_digit_patterns: bool = None,
-                                                                        org_id: str = None):
+    def modify_digit_pattern_category_control_settings_for_person(self, person_id: str,
+                                                                  use_custom_digit_patterns: bool = None,
+                                                                  org_id: str = None):
         """
         Modify the Digit Pattern Category Control Settings for a Person
 
@@ -3145,9 +3128,9 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = UserDigitPatternObject.model_validate(data)
         return r
 
-    def modify_a_digit_pattern_for_a_person(self, person_id: str, digit_pattern_id: str, name: str = None,
-                                            pattern: str = None, action: Action = None, transfer_enabled: bool = None,
-                                            org_id: str = None):
+    def modify_digit_pattern_for_person(self, person_id: str, digit_pattern_id: str, name: str = None,
+                                        pattern: str = None, action: Action = None, transfer_enabled: bool = None,
+                                        org_id: str = None):
         """
         Modify a digit pattern for a Person.
 
@@ -3289,8 +3272,8 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/secondary/availableNumbers')
         return self.session.follow_pagination(url=url, model=PersonSecondaryAvailableNumberObject, item_key='phoneNumbers', params=params)
 
-    def get_the_user_s_selective_call_accept_criteria_list(self, person_id: str,
-                                                           org_id: str = None) -> SelectiveAcceptCallGet:
+    def get_user_selective_call_accept_criteria_list(self, person_id: str,
+                                                     org_id: str = None) -> SelectiveAcceptCallGet:
         """
         Get the User’s Selective Call Accept Criteria List
 
@@ -3316,7 +3299,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = SelectiveAcceptCallGet.model_validate(data)
         return r
 
-    def update_user_s_selective_call_accept_criteria(self, person_id: str, enabled: bool, org_id: str = None):
+    def update_user_selective_call_accept_criteria(self, person_id: str, enabled: bool, org_id: str = None):
         """
         Update User’s Selective Call Accept Criteria
 
@@ -3344,15 +3327,15 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/selectiveAccept')
         super().put(url, params=params, json=body)
 
-    def create_a_criteria_to_the_user_s_selective_call_accept_service(self, person_id: str,
-                                                                      calls_from: CallsFromSelectiveAccept,
-                                                                      accept_enabled: bool, schedule_name: str = None,
-                                                                      schedule_type: ScheduleType = None,
-                                                                      schedule_level: ScheduleLevel = None,
-                                                                      anonymous_callers_enabled: bool = None,
-                                                                      unavailable_callers_enabled: bool = None,
-                                                                      phone_numbers: list[str] = None,
-                                                                      org_id: str = None) -> str:
+    def create_criteria_to_user_selective_call_accept_service(self, person_id: str,
+                                                              calls_from: CallsFromSelectiveAccept,
+                                                              accept_enabled: bool, schedule_name: str = None,
+                                                              schedule_type: ScheduleType = None,
+                                                              schedule_level: ScheduleLevel = None,
+                                                              anonymous_callers_enabled: bool = None,
+                                                              unavailable_callers_enabled: bool = None,
+                                                              phone_numbers: list[str] = None,
+                                                              org_id: str = None) -> str:
         """
         Create a Criteria to the User’s Selective Call Accept Service
 
@@ -3412,8 +3395,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = data['id']
         return r
 
-    def delete_a_criteria_from_the_user_s_selective_call_accept_service(self, person_id: str, id: str,
-                                                                        org_id: str = None):
+    def delete_criteria_from_user_selective_call_accept_service(self, person_id: str, id: str, org_id: str = None):
         """
         Delete a Criteria From the User’s Selective Call Accept service
 
@@ -3439,8 +3421,8 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/selectiveAccept/criteria/{id}')
         super().delete(url, params=params)
 
-    def get_a_criteria_for_the_user_s_selective_call_accept_service(self, person_id: str, id: str,
-                                                                    org_id: str = None) -> SelectiveAcceptCallCriteriaGet:
+    def get_criteria_for_user_selective_call_accept_service(self, person_id: str, id: str,
+                                                            org_id: str = None) -> SelectiveAcceptCallCriteriaGet:
         """
         Get a Criteria for the User’s Selective Call Accept Service
 
@@ -3468,16 +3450,14 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = SelectiveAcceptCallCriteriaGet.model_validate(data)
         return r
 
-    def modify_a_criteria_from_the_user_s_selective_call_accept_service(self, person_id: str, id: str,
-                                                                        calls_from: CallsFromSelectiveAccept,
-                                                                        accept_enabled: bool,
-                                                                        schedule_name: str = None,
-                                                                        schedule_type: ScheduleType = None,
-                                                                        schedule_level: ScheduleLevel = None,
-                                                                        anonymous_callers_enabled: bool = None,
-                                                                        unavailable_callers_enabled: bool = None,
-                                                                        phone_numbers: list[str] = None,
-                                                                        org_id: str = None):
+    def modify_criteria_from_user_selective_call_accept_service(self, person_id: str, id: str,
+                                                                calls_from: CallsFromSelectiveAccept,
+                                                                accept_enabled: bool, schedule_name: str = None,
+                                                                schedule_type: ScheduleType = None,
+                                                                schedule_level: ScheduleLevel = None,
+                                                                anonymous_callers_enabled: bool = None,
+                                                                unavailable_callers_enabled: bool = None,
+                                                                phone_numbers: list[str] = None, org_id: str = None):
         """
         Modify a Criteria From the User’s Selective Call Accept Service
 
@@ -3537,7 +3517,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/selectiveAccept/criteria/{id}')
         super().put(url, params=params, json=body)
 
-    def get_the_user_s_selective_call_forwarding(self, person_id: str, org_id: str = None) -> SelectiveForwardCallGet:
+    def get_user_selective_call_forwarding(self, person_id: str, org_id: str = None) -> SelectiveForwardCallGet:
         """
         Get the User’s Selective Call Forwarding
 
@@ -3563,11 +3543,11 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = SelectiveForwardCallGet.model_validate(data)
         return r
 
-    def update_user_s_selective_call_forwarding_criteria_list(self, person_id: str, enabled: bool,
-                                                              default_phone_number_to_forward: str = None,
-                                                              ring_reminder_enabled: bool = None,
-                                                              send_to_voicemail_enabled: bool = None,
-                                                              org_id: str = None):
+    def update_user_selective_call_forwarding_criteria_list(self, person_id: str, enabled: bool,
+                                                            default_phone_number_to_forward: str = None,
+                                                            ring_reminder_enabled: bool = None,
+                                                            send_to_voicemail_enabled: bool = None,
+                                                            org_id: str = None):
         """
         Update User’s Selective Call Forwarding Criteria List
 
@@ -3684,8 +3664,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = data['id']
         return r
 
-    def delete_a_criteria_from_the_user_s_selective_call_forwarding_service(self, person_id: str, id: str,
-                                                                            org_id: str = None):
+    def delete_criteria_from_user_selective_call_forwarding_service(self, person_id: str, id: str, org_id: str = None):
         """
         Delete a Criteria From the User’s Selective Call Forwarding Service
 
@@ -3711,8 +3690,8 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/selectiveForward/criteria/{id}')
         super().delete(url, params=params)
 
-    def get_a_criteria_for_the_user_s_selective_call_forwarding_service(self, person_id: str, id: str,
-                                                                        org_id: str = None) -> SelectiveForwardCallCriteriaGet:
+    def get_criteria_for_user_selective_call_forwarding_service(self, person_id: str, id: str,
+                                                                org_id: str = None) -> SelectiveForwardCallCriteriaGet:
         """
         Get a Criteria for the User’s Selective Call Forwarding Service
 
@@ -3740,18 +3719,17 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = SelectiveForwardCallCriteriaGet.model_validate(data)
         return r
 
-    def modify_a_criteria_for_the_user_s_selective_call_forwarding_service(self, person_id: str, id: str,
-                                                                           forward_to_phone_number: str,
-                                                                           send_to_voicemail_enabled: bool,
-                                                                           calls_from: CallsFromSelectiveReject,
-                                                                           schedule_name: str = None,
-                                                                           schedule_type: ScheduleType = None,
-                                                                           schedule_level: ScheduleLevel = None,
-                                                                           anonymous_callers_enabled: bool = None,
-                                                                           unavailable_callers_enabled: bool = None,
-                                                                           phone_numbers: list[str] = None,
-                                                                           forward_enabled: bool = None,
-                                                                           org_id: str = None):
+    def modify_criteria_for_user_selective_call_forwarding_service(self, person_id: str, id: str,
+                                                                   forward_to_phone_number: str,
+                                                                   send_to_voicemail_enabled: bool,
+                                                                   calls_from: CallsFromSelectiveReject,
+                                                                   schedule_name: str = None,
+                                                                   schedule_type: ScheduleType = None,
+                                                                   schedule_level: ScheduleLevel = None,
+                                                                   anonymous_callers_enabled: bool = None,
+                                                                   unavailable_callers_enabled: bool = None,
+                                                                   phone_numbers: list[str] = None,
+                                                                   forward_enabled: bool = None, org_id: str = None):
         """
         Modify a Criteria for the User’s Selective Call Forwarding Service
 
@@ -3818,8 +3796,8 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/selectiveForward/criteria/{id}')
         super().put(url, params=params, json=body)
 
-    def get_the_user_s_selective_call_rejection_criteria_listing(self, person_id: str,
-                                                                 org_id: str = None) -> SelectiveRejectCallGet:
+    def get_user_selective_call_rejection_criteria_listing(self, person_id: str,
+                                                           org_id: str = None) -> SelectiveRejectCallGet:
         """
         Get the User’s Selective Call Rejection Criteria Listing
 
@@ -3845,7 +3823,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = SelectiveRejectCallGet.model_validate(data)
         return r
 
-    def update_user_s_selective_call_rejection_criteria_list(self, person_id: str, enabled: bool, org_id: str = None):
+    def update_user_selective_call_rejection_criteria_list(self, person_id: str, enabled: bool, org_id: str = None):
         """
         Update User’s Selective Call Rejection Criteria List
 
@@ -3873,15 +3851,14 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/selectiveReject')
         super().put(url, params=params, json=body)
 
-    def create_a_criteria_to_the_user_s_selective_call_rejection_service(self, person_id: str, calls_from: CallsFrom,
-                                                                         reject_enabled: bool,
-                                                                         schedule_name: str = None,
-                                                                         schedule_type: ScheduleType = None,
-                                                                         schedule_level: ScheduleLevel = None,
-                                                                         anonymous_callers_enabled: bool = None,
-                                                                         unavailable_callers_enabled: bool = None,
-                                                                         phone_numbers: list[str] = None,
-                                                                         org_id: str = None) -> str:
+    def create_criteria_to_user_selective_call_rejection_service(self, person_id: str, calls_from: CallsFrom,
+                                                                 reject_enabled: bool, schedule_name: str = None,
+                                                                 schedule_type: ScheduleType = None,
+                                                                 schedule_level: ScheduleLevel = None,
+                                                                 anonymous_callers_enabled: bool = None,
+                                                                 unavailable_callers_enabled: bool = None,
+                                                                 phone_numbers: list[str] = None,
+                                                                 org_id: str = None) -> str:
         """
         Create a Criteria to the User’s Selective Call Rejection Service
 
@@ -3941,8 +3918,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = data['id']
         return r
 
-    def delete_a_criteria_from_the_user_s_selective_call_rejection_service(self, person_id: str, id: str,
-                                                                           org_id: str = None):
+    def delete_criteria_from_user_selective_call_rejection_service(self, person_id: str, id: str, org_id: str = None):
         """
         Delete a Criteria From the User’s Selective Call Rejection Service
 
@@ -3968,8 +3944,8 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/selectiveReject/criteria/{id}')
         super().delete(url, params=params)
 
-    def get_a_criteria_for_the_user_s_selective_call_rejection_service(self, person_id: str, id: str,
-                                                                       org_id: str = None) -> SelectiveRejectCallCriteriaGet:
+    def get_criteria_for_user_selective_call_rejection_service(self, person_id: str, id: str,
+                                                               org_id: str = None) -> SelectiveRejectCallCriteriaGet:
         """
         Get a Criteria for the User’s Selective Call Rejection Service
 
@@ -3997,15 +3973,14 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = SelectiveRejectCallCriteriaGet.model_validate(data)
         return r
 
-    def modify_a_criteria_for_the_user_s_selective_call_rejection_service(self, person_id: str, id: str,
-                                                                          calls_from: CallsFrom, reject_enabled: bool,
-                                                                          schedule_name: str = None,
-                                                                          schedule_type: ScheduleType = None,
-                                                                          schedule_level: ScheduleLevel = None,
-                                                                          anonymous_callers_enabled: bool = None,
-                                                                          unavailable_callers_enabled: bool = None,
-                                                                          phone_numbers: list[str] = None,
-                                                                          org_id: str = None):
+    def modify_criteria_for_user_selective_call_rejection_service(self, person_id: str, id: str, calls_from: CallsFrom,
+                                                                  reject_enabled: bool, schedule_name: str = None,
+                                                                  schedule_type: ScheduleType = None,
+                                                                  schedule_level: ScheduleLevel = None,
+                                                                  anonymous_callers_enabled: bool = None,
+                                                                  unavailable_callers_enabled: bool = None,
+                                                                  phone_numbers: list[str] = None,
+                                                                  org_id: str = None):
         """
         Modify a Criteria for the User’s Selective Call Rejection Service
 
@@ -4359,7 +4334,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/settings/permissions/actions/reset/invoke')
         super().post(url)
 
-    def modify_a_person_s_voicemail_passcode(self, person_id: str, passcode: str, org_id: str = None):
+    def modify_person_voicemail_passcode(self, person_id: str, passcode: str, org_id: str = None):
         """
         Modify a person's voicemail passcode.
 
