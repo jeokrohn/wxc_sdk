@@ -108,7 +108,7 @@ class TestHar(TestCase):
 
 @skip('skipping for now')
 class TestWriteHar(TestCaseWithLog):
-    proxy = True
+    # proxy = True
     with_har = True
 
     def test_list_people(self):

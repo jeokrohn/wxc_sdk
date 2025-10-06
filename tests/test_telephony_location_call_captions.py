@@ -5,7 +5,7 @@ from tests.base import TestWithLocations, async_test
 
 
 class Test(TestWithLocations):
-    proxy = True
+    # proxy = True
 
     @async_test
     async def test_read_all(self):

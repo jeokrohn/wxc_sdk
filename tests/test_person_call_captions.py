@@ -5,7 +5,7 @@ from tests.base import TestCaseWithUsers, async_test
 
 
 class Test(TestCaseWithUsers):
-    proxy = True
+    # proxy = True
 
     @async_test
     async def test_read_all(self):

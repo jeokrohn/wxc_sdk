@@ -10,7 +10,7 @@ class TestCallCaptions(TestCaseWithLog):
     """
     test org level telephony call captions settings
     """
-    proxy = True
+    # proxy = True
 
     def test_get_call_captions_settings(self):
         """
