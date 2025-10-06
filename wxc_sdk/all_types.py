@@ -84,7 +84,8 @@ from wxc_sdk.org_contacts import Contact, ContactAddress, ContactEmail, ContactI
 from wxc_sdk.organizations import Organization
 from wxc_sdk.people import PeopleStatus, Person, PersonAddress, PersonType, PhoneNumber, PhoneNumberType, \
     SipAddress, SipType
-from wxc_sdk.person_settings import DeviceActivationState, DeviceList, DeviceOwner, Hoteling, TelephonyDevice
+from wxc_sdk.person_settings import DeviceActivationState, DeviceList, DeviceOwner, Hoteling, TelephonyDevice, \
+    UserCallCaptions
 from wxc_sdk.person_settings.agent_caller_id import AgentCallerId, AvailableCallerIdType
 from wxc_sdk.person_settings.appservices import AppServicesSettings
 from wxc_sdk.person_settings.available_numbers import AvailableNumber, AvailablePhoneNumberLicenseType
@@ -152,7 +153,7 @@ from wxc_sdk.telephony import AnnouncementLanguage, AppliedService, AppliedServi
     CallInterceptDetails, CallInterceptDetailsPermission, CallSourceInfo, CallSourceType, CallingPlanReason, \
     ConfigurationLevel, DestinationType, EmergencyDestination, FeatureAccessCodeDestination, \
     HostedFeatureDestination, HostedUserDestination, LocationAndNumbers, MoHConfig, MoHTheme, NameAndCode, \
-    NumberDetails, NumberListPhoneNumber, NumberListPhoneNumberType, NumberType, OriginatorType, \
+    NumberDetails, NumberListPhoneNumber, NumberListPhoneNumberType, NumberType, OrgCallCaptions, OriginatorType, \
     OutgoingCallingPlanPermissionsByDigitPattern, OutgoingCallingPlanPermissionsByType, PbxUserDestination, \
     PstnNumberDestination, RouteListDestination, ServiceType, TelephonyType, TestCallRoutingResult, \
     TranslationPatternConfigurationLevel, TrunkDestination, UCMProfile, VirtualExtensionDestination
@@ -215,7 +216,7 @@ from wxc_sdk.telephony.jobs import ActivationEmailCounts, ActivationEmailJobDeta
     MoveUser, MoveUserJobDetails, MoveUsersList, NumberItem, NumberJob, RoutingPrefixCounts, StartJobResponse, \
     StartMoveUsersJobResponse, StepExecutionStatus
 from wxc_sdk.telephony.location import BlockingDisableCalling, BlockingUnlessForced, CallBackSelected, \
-    CallingLineId, ContactDetails, LocationDeleteStatus, LocationECBN, LocationECBNLocation, \
+    CallingLineId, ContactDetails, LocationCallCaptions, LocationDeleteStatus, LocationECBN, LocationECBNLocation, \
     LocationECBNLocationMember, NonBlockingDisableCalling, PSTNConnection, SafeDeleteCheckResponse, \
     TelephonyLocation
 from wxc_sdk.telephony.location.emergency_services import LocationCallNotificationOrganization, \
@@ -350,7 +351,7 @@ __all__ = ['AcdCustomization', 'Action', 'ActionToBePerformed', 'ActionToBePerfo
            'JoinMeetingResponse', 'KemKey', 'KemModuleType', 'LayoutMode', 'License', 'LicenseProperties',
            'LicenseRequest', 'LicenseRequestOperation', 'LicenseUser', 'LicenseUserType', 'Lifecycle',
            'LineKeyLabelSelection', 'LineKeyLedPattern', 'LineKeyTemplate', 'LineKeyTemplateAdvisoryTypes',
-           'LineKeyType', 'LinkRelation', 'Location', 'LocationAddress', 'LocationAndNumbers',
+           'LineKeyType', 'LinkRelation', 'Location', 'LocationAddress', 'LocationAndNumbers', 'LocationCallCaptions',
            'LocationCallNotificationOrganization', 'LocationCallParkSettings', 'LocationComplianceAnnouncement',
            'LocationDeleteStatus', 'LocationECBN', 'LocationECBNLocation', 'LocationECBNLocationMember',
            'LocationEmergencyCallNotification', 'LocationMoHGreetingType', 'LocationMoHSetting',
@@ -373,7 +374,7 @@ __all__ = ['AcdCustomization', 'Action', 'ActionToBePerformed', 'ActionToBePerfo
            'NumberDetails', 'NumberItem', 'NumberJob', 'NumberListPhoneNumber', 'NumberListPhoneNumberType',
            'NumberOwner', 'NumberState', 'NumberType', 'NumberUsageType', 'NumbersRequestAction', 'OfficeNumber',
            'OnboardingMethod', 'OperatingMode', 'OperatingModeHoliday', 'OperatingModeRecurYearlyByDate',
-           'OperatingModeRecurYearlyByDay', 'OperatingModeRecurrence', 'OperatingModeSchedule',
+           'OperatingModeRecurYearlyByDay', 'OperatingModeRecurrence', 'OperatingModeSchedule', 'OrgCallCaptions',
            'OrgComplianceAnnouncement', 'OrgEmergencyCallNotification', 'OrgMSTeamsSettings',
            'OrganisationVoicemailSettings', 'OrganisationVoicemailSettingsAPI', 'Organization', 'OriginatorType',
            'OutboundProxy', 'OutgoingCallingPlanPermissionsByDigitPattern', 'OutgoingCallingPlanPermissionsByType',
@@ -428,16 +429,16 @@ __all__ = ['AcdCustomization', 'Action', 'ActionToBePerformed', 'ActionToBePerfo
            'UpdateContactPhoneNumbers', 'UpdateDefaultSiteBody', 'UpdateMeetingInviteeBody', 'UpdateNumbersResponse',
            'UpdateParticipantBody', 'UpdateParticipantResponse', 'UpdatePersonNumbers', 'UpdatePersonPhoneNumber',
            'UpdatePersonalMeetingRoomOptionsBody', 'UpdateTranscriptSnippetBody', 'UpdateWorkspacePhoneNumber',
-           'UsageRouteLists', 'UsageType', 'UsbPortsObject', 'UserAddress', 'UserBase', 'UserDeviceCount',
-           'UserFeatureAccessSettings', 'UserLicenseType', 'UserLicensesResponse', 'UserManager', 'UserNumber',
-           'UserPhoneNumber', 'UserType', 'UserTypeObject', 'ValidateExtensionStatus', 'ValidateExtensionStatusState',
-           'ValidateExtensionsResponse', 'ValidatePhoneNumber', 'ValidatePhoneNumberStatus',
-           'ValidatePhoneNumberStatusState', 'ValidatePhoneNumbersResponse', 'ValidateVirtualExtensionRange',
-           'ValidateVirtualExtensionStatus', 'ValidationRule', 'ValidationRules', 'ValidationStatus', 'Video',
-           'VideoDevice', 'VideoIn', 'VideoOptions', 'VideoState', 'VirtualExtension', 'VirtualExtensionDestination',
-           'VirtualExtensionLevel', 'VirtualExtensionMode', 'VirtualExtensionRange', 'VirtualExtensionRangeAction',
-           'VirtualExtensionRangeValidationResult', 'VirtualExtensionValidationStatus', 'VirtualLine',
-           'VirtualLineDevices', 'VirtualLineLocation', 'VirtualLineNumberPhoneNumber', 'VlanSetting',
+           'UsageRouteLists', 'UsageType', 'UsbPortsObject', 'UserAddress', 'UserBase', 'UserCallCaptions',
+           'UserDeviceCount', 'UserFeatureAccessSettings', 'UserLicenseType', 'UserLicensesResponse', 'UserManager',
+           'UserNumber', 'UserPhoneNumber', 'UserType', 'UserTypeObject', 'ValidateExtensionStatus',
+           'ValidateExtensionStatusState', 'ValidateExtensionsResponse', 'ValidatePhoneNumber',
+           'ValidatePhoneNumberStatus', 'ValidatePhoneNumberStatusState', 'ValidatePhoneNumbersResponse',
+           'ValidateVirtualExtensionRange', 'ValidateVirtualExtensionStatus', 'ValidationRule', 'ValidationRules',
+           'ValidationStatus', 'Video', 'VideoDevice', 'VideoIn', 'VideoOptions', 'VideoState', 'VirtualExtension',
+           'VirtualExtensionDestination', 'VirtualExtensionLevel', 'VirtualExtensionMode', 'VirtualExtensionRange',
+           'VirtualExtensionRangeAction', 'VirtualExtensionRangeValidationResult', 'VirtualExtensionValidationStatus',
+           'VirtualLine', 'VirtualLineDevices', 'VirtualLineLocation', 'VirtualLineNumberPhoneNumber', 'VlanSetting',
            'VoiceMailPartyInformation', 'VoiceMailRules', 'VoiceMessageDetails', 'VoicePortalSettings',
            'VoicemailCopyOfMessage', 'VoicemailEnabled', 'VoicemailEnabledWithGreeting', 'VoicemailFax',
            'VoicemailGroup', 'VoicemailGroupDetail', 'VoicemailMessageStorage', 'VoicemailNotifications',

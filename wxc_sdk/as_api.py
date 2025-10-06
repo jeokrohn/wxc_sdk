@@ -5691,6 +5691,27 @@ class AsMeSettingsApi(AsApiChild, base='telephony/config/people/me'):
         r = TypeAdapter(list[ServicesEnum]).validate_python(data['services'])
         return r
 
+    async def call_captions_settings(self) -> UserCallCaptions:
+        """
+        Get my call captions settings
+
+        Retrieve the effective call captions settings of the authenticated user.
+
+        **NOTE**: The call captions feature is not supported for Webex Calling Standard users or users assigned to
+        locations in India.
+
+        The call caption feature allows the customer to enable and manage closed captions and transcript functionality
+        (rolling caption panel) in Webex Calling, without requiring the user to escalate the call to a meeting.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`UserCallCaptions`
+        """
+        url = self.ep('settings/callCaptions')
+        data = await super().get(url)
+        r = UserCallCaptions.model_validate(data)
+        return r
+
 
 class AsMeetingChatsApi(AsApiChild, base='meetings/postMeetingChats'):
     """
@@ -14952,7 +14973,66 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
             params['orgId'] = org_id
         body = dict()
         body['hoteling'] = hoteling.model_dump(mode='json', by_alias=True, exclude_none=True)
-        url = self.ep(f'telephony/config/people/{person_id}/devices/settings/hoteling')
+        url = self.session.ep(f'telephony/config/people/{person_id}/devices/settings/hoteling')
+        await super().put(url, params=params, json=body)
+
+    async def get_call_captions_settings(self, person_id: str, org_id: str = None) -> UserCallCaptions:
+        """
+        Get the user call captions settings
+
+        Retrieve the user's call captions settings.
+
+        **NOTE**: The call captions feature is not supported for Webex Calling Standard users or users assigned to
+        locations in India.
+
+        The call caption feature allows the customer to enable and manage closed captions and transcript functionality
+        (rolling caption panel) in Webex Calling, without requiring the user to escalate the call to a meeting.
+
+        This API requires a full, user, read-only, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param org_id: Unique identifier for the organization.
+        :type org_id: str
+        :rtype: :class:`UserCallCaptions`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.session.ep(f'telephony/config/people/{person_id}/callCaptions')
+        data = await super().get(url, params=params)
+        r = UserCallCaptions.model_validate(data)
+        return r
+
+    async def update_call_captions_settings(self, person_id: str, settings: UserCallCaptions, org_id: str = None):
+        """
+        Update the user call captions settings
+
+        Update the user's call captions settings.
+
+        **NOTE**: The call captions feature is not supported for Webex Calling Standard users or users assigned to
+        locations in India.
+
+        The call caption feature allows the customer to enable and manage closed captions and transcript functionality
+        (rolling caption panel) in Webex Calling, without requiring the user to escalate the call to a meeting.
+
+        This API requires a full, user or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param settings: User call captions settings.
+        :type settings: UserCallCaptions
+        :param org_id: Unique identifier for the organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.session.ep(f'telephony/config/people/{person_id}/callCaptions')
         await super().put(url, params=params, json=body)
 
 
@@ -29905,6 +29985,65 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         r = SafeDeleteCheckResponse.model_validate(data)
         return r
 
+    async def get_call_captions_settings(self, location_id: str,
+                                                org_id: str = None) -> LocationCallCaptions:
+        """
+        Get the location call captions settings
+
+        Retrieve the location's call captions settings.
+
+        **NOTE**: The call captions feature is not supported for locations in India.
+
+        The call caption feature allows the customer to enable and manage closed captions and transcript functionality
+        (rolling caption panel) in Webex Calling, without requiring the user to escalate the call to a meeting.
+
+        This API requires a full, read-only, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param org_id: Unique identifier for the organization.
+        :type org_id: str
+        :rtype: :class:`LocationCallCaptions`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{location_id}/callCaptions')
+        data = await super().get(url, params=params)
+        r = LocationCallCaptions.model_validate(data)
+        return r
+
+    async def update_call_captions_settings(self, location_id: str, settings: LocationCallCaptions,
+                                                   org_id: str = None):
+        """
+        Update the location call captions settings
+
+        Update the location's call captions settings.
+
+        **NOTE**: The call captions feature is not supported for locations in India.
+
+        The call caption feature allows the customer to enable and manage closed captions and transcript functionality
+        (rolling caption panel) in Webex Calling, without requiring the user to escalate the call to a meeting.
+
+        This API requires a full or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param settings: settings to update
+        :type settings: :class:`LocationCallCaptions`
+        :param org_id: Unique identifier for the organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.ep(f'{location_id}/callCaptions')
+        await super().put(url, params=params, json=body)
+
 
 class AsVirtualExtensionsApi(AsApiChild, base='telephony/config'):
     """
@@ -32247,6 +32386,54 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         data = await super().post(url, json=body)
         r = data['callToken']
         return r
+
+    async def get_call_captions_settings(self, org_id: str = None) -> OrgCallCaptions:
+        """
+        Get the organization call captions settings
+
+        Retrieve the organization's call captions settings.
+
+        The call caption feature allows the customer to enable and manage closed captions and transcript functionality
+        (rolling caption panel) in Webex Calling, without requiring the user to escalate the call to a meeting.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: Unique identifier for the organization.
+        :type org_id: str
+        :rtype: :class:`OrgCallCaptions`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('callCaptions')
+        data = await super().get(url, params=params)
+        r = OrgCallCaptions.model_validate(data)
+        return r
+
+    async def update_call_captions_settings(self, settings: OrgCallCaptions, org_id: str = None):
+        """
+        Update the organization call captions settings
+
+        Update the organization's call captions settings.
+
+        The call caption feature allows the customer to enable and manage closed captions and transcript functionality
+        (rolling caption panel) in Webex Calling, without requiring the user to escalate the call to a meeting.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param settings: Organization call captions settings
+        :type settings: OrgCallCaptions
+        :param org_id: Unique identifier for the organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.ep('callCaptions')
+        await super().put(url, params=params, json=body)
 
 
 class AsWebhookApi(AsApiChild, base='webhooks'):

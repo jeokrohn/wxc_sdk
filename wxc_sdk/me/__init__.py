@@ -29,7 +29,7 @@ from wxc_sdk.me.personal_assistant import MePersonalAssistantApi
 from wxc_sdk.me.recording import MeRecordingApi
 from wxc_sdk.me.snr import MeSNRApi
 from wxc_sdk.me.voicemail import MeVoicemailApi
-from wxc_sdk.person_settings import DeviceActivationState
+from wxc_sdk.person_settings import DeviceActivationState, UserCallCaptions
 from wxc_sdk.rest import RestSession
 
 __all__ = ['MeSettingsApi', 'MeProfile', 'MeNumber', 'MeOwner', 'MeDevice',
@@ -458,4 +458,25 @@ class MeSettingsApi(ApiChild, base='telephony/config/people/me'):
         url = self.ep('settings/services')
         data = super().get(url)
         r = TypeAdapter(list[ServicesEnum]).validate_python(data['services'])
+        return r
+
+    def call_captions_settings(self) -> UserCallCaptions:
+        """
+        Get my call captions settings
+
+        Retrieve the effective call captions settings of the authenticated user.
+
+        **NOTE**: The call captions feature is not supported for Webex Calling Standard users or users assigned to
+        locations in India.
+
+        The call caption feature allows the customer to enable and manage closed captions and transcript functionality
+        (rolling caption panel) in Webex Calling, without requiring the user to escalate the call to a meeting.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`UserCallCaptions`
+        """
+        url = self.ep('settings/callCaptions')
+        data = super().get(url)
+        r = UserCallCaptions.model_validate(data)
         return r

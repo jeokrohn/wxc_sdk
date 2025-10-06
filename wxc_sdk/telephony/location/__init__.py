@@ -25,7 +25,7 @@ from ...rest import RestSession
 __all__ = ['CallingLineId', 'PSTNConnection', 'TelephonyLocation', 'CallBackSelected', 'ContactDetails',
            'LocationECBNLocation', 'LocationECBNLocationMember', 'LocationECBN',
            'BlockingDisableCalling', 'NonBlockingDisableCalling', 'BlockingUnlessForced',
-           'LocationDeleteStatus', 'SafeDeleteCheckResponse', 'TelephonyLocationApi']
+           'LocationDeleteStatus', 'SafeDeleteCheckResponse', 'LocationCallCaptions', 'TelephonyLocationApi']
 
 
 class CallingLineId(ApiModel):
@@ -215,6 +215,29 @@ class SafeDeleteCheckResponse(ApiModel):
     blocking: Optional[BlockingDisableCalling] = None
     non_blocking: Optional[NonBlockingDisableCalling] = None
     blocking_unless_forced: Optional[BlockingUnlessForced] = None
+
+
+class LocationCallCaptions(ApiModel):
+    #: Location-level closed captions are enabled or disabled.
+    location_closed_captions_enabled: Optional[bool] = None
+    #: Location-level transcripts are enabled or disabled.
+    location_transcripts_enabled: Optional[bool] = None
+    #: Organization closed captions are enabled or disabled.
+    org_closed_captions_enabled: Optional[bool] = None
+    #: Organization transcripts are enabled or disabled.
+    org_transcripts_enabled: Optional[bool] = None
+    #: If `useOrgSettingsEnabled` is `true`, organization-level settings will control the location's closed captions
+    #: and transcripts. Otherwise, location-level settings are used.
+    use_org_settings_enabled: Optional[bool] = None
+
+    def update(self)->dict:
+        """
+        dict for updates
+
+        :meta private:
+        """
+        return self.model_dump(mode='json', exclude_unset=True, by_alias=True, exclude_none=True,
+                               exclude={'org_closed_captions_enabled', 'org_transcripts_enabled'})
 
 
 @dataclass(init=False, repr=False)
@@ -959,3 +982,62 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         data = super().post(url, params=params)
         r = SafeDeleteCheckResponse.model_validate(data)
         return r
+
+    def get_call_captions_settings(self, location_id: str,
+                                                org_id: str = None) -> LocationCallCaptions:
+        """
+        Get the location call captions settings
+
+        Retrieve the location's call captions settings.
+
+        **NOTE**: The call captions feature is not supported for locations in India.
+
+        The call caption feature allows the customer to enable and manage closed captions and transcript functionality
+        (rolling caption panel) in Webex Calling, without requiring the user to escalate the call to a meeting.
+
+        This API requires a full, read-only, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param org_id: Unique identifier for the organization.
+        :type org_id: str
+        :rtype: :class:`LocationCallCaptions`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{location_id}/callCaptions')
+        data = super().get(url, params=params)
+        r = LocationCallCaptions.model_validate(data)
+        return r
+
+    def update_call_captions_settings(self, location_id: str, settings: LocationCallCaptions,
+                                                   org_id: str = None):
+        """
+        Update the location call captions settings
+
+        Update the location's call captions settings.
+
+        **NOTE**: The call captions feature is not supported for locations in India.
+
+        The call caption feature allows the customer to enable and manage closed captions and transcript functionality
+        (rolling caption panel) in Webex Calling, without requiring the user to escalate the call to a meeting.
+
+        This API requires a full or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param settings: settings to update
+        :type settings: :class:`LocationCallCaptions`
+        :param org_id: Unique identifier for the organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.ep(f'{location_id}/callCaptions')
+        super().put(url, params=params, json=body)

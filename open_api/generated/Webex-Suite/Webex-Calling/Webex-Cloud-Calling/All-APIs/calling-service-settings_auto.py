@@ -11,8 +11,8 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['CallingServiceSettingsApi', 'GetVoicemailRulesObject', 'GetVoicemailRulesObjectBlockPreviousPasscodes',
-           'GetVoicemailRulesObjectDefaultVoicemailPinRules',
+__all__ = ['CallingServiceSettingsApi', 'GetCallCaptionsObject', 'GetVoicemailRulesObject',
+           'GetVoicemailRulesObjectBlockPreviousPasscodes', 'GetVoicemailRulesObjectDefaultVoicemailPinRules',
            'GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockContiguousSequences',
            'GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockRepeatedDigits',
            'GetVoicemailRulesObjectDefaultVoicemailPinRulesLength', 'GetVoicemailRulesObjectExpirePasscode',
@@ -104,6 +104,13 @@ class Language(ApiModel):
     code: Optional[str] = None
 
 
+class GetCallCaptionsObject(ApiModel):
+    #: Organization-level closed captions are enabled or disabled.
+    org_closed_captions_enabled: Optional[bool] = None
+    #: Organization-level transcripts are enabled or disabled.
+    org_transcripts_enabled: Optional[bool] = None
+
+
 class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
     """
     Calling Service Settings
@@ -136,6 +143,61 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         data = super().get(url)
         r = TypeAdapter(list[Language]).validate_python(data['languages'])
         return r
+
+    def get_the_organization_call_captions_settings(self, org_id: str = None) -> GetCallCaptionsObject:
+        """
+        Get the organization call captions settings
+
+        Retrieve the organization's call captions settings.
+
+        The call caption feature allows the customer to enable and manage closed captions and transcript functionality
+        (rolling caption panel) in Webex Calling, without requiring the user to escalate the call to a meeting.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: Unique identifier for the organization.
+        :type org_id: str
+        :rtype: :class:`GetCallCaptionsObject`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('callCaptions')
+        data = super().get(url, params=params)
+        r = GetCallCaptionsObject.model_validate(data)
+        return r
+
+    def update_the_organization_call_captions_settings(self, org_closed_captions_enabled: bool = None,
+                                                       org_transcripts_enabled: bool = None, org_id: str = None):
+        """
+        Update the organization call captions settings
+
+        Update the organization's call captions settings.
+
+        The call caption feature allows the customer to enable and manage closed captions and transcript functionality
+        (rolling caption panel) in Webex Calling, without requiring the user to escalate the call to a meeting.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param org_closed_captions_enabled: Enable or disable organization-level closed captions.
+        :type org_closed_captions_enabled: bool
+        :param org_transcripts_enabled: Enable or disable organization-level transcripts.
+        :type org_transcripts_enabled: bool
+        :param org_id: Unique identifier for the organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if org_closed_captions_enabled is not None:
+            body['orgClosedCaptionsEnabled'] = org_closed_captions_enabled
+        if org_transcripts_enabled is not None:
+            body['orgTranscriptsEnabled'] = org_transcripts_enabled
+        url = self.ep('callCaptions')
+        super().put(url, params=params, json=body)
 
     def get_the_organization_music_on_hold_configuration(self, org_id: str = None) -> str:
         """

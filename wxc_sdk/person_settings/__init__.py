@@ -49,7 +49,7 @@ from ..common.schedules import ScheduleApi, ScheduleApiBase
 from ..rest import RestSession
 
 __all__ = ['PersonSettingsApi', 'DeviceOwner', 'DeviceActivationState', 'Hoteling', 'TelephonyDevice',
-           'DeviceList']
+           'DeviceList', 'UserCallCaptions']
 
 
 # TODO: UC profile
@@ -124,6 +124,31 @@ class DeviceList(ApiModel):
     max_device_count: int
     #: Maximum number of devices a person can own.
     max_owned_device_count: Optional[int] = None
+
+
+class UserCallCaptions(ApiModel):
+    #: User-level closed captions are enabled or disabled.
+    user_closed_captions_enabled: Optional[bool] = None
+    #: User-level transcripts are enabled or disabled.
+    user_transcripts_enabled: Optional[bool] = None
+    #: Location closed captions are enabled or disabled. If `useOrgSettingsEnabled` is `true`, these are
+    #: organization-level settings. Otherwise, location-level settings are used.
+    location_closed_captions_enabled: Optional[bool] = None
+    #: Location transcripts are enabled or disabled. If `useOrgSettingsEnabled` is `true`, these are organization-level
+    #: settings. Otherwise, location-level settings are used.
+    location_transcripts_enabled: Optional[bool] = None
+    #: If `useLocationSettingsEnabled` is `true`, location settings will control the user's closed captions and
+    #: transcripts. Otherwise, user-level settings are used.
+    use_location_settings_enabled: Optional[bool] = None
+
+    def update(self) -> dict:
+        """
+        data for update
+
+        :meta private:
+        """
+        return self.model_dump(mode='json', by_alias=True, exclude_none=True, exclude_unset=True,
+                               exclude={'location_closed_captions_enabled', 'location_transcripts_enabled'})
 
 
 @dataclass(init=False, repr=False)
@@ -312,5 +337,64 @@ class PersonSettingsApi(ApiChild, base='people'):
             params['orgId'] = org_id
         body = dict()
         body['hoteling'] = hoteling.model_dump(mode='json', by_alias=True, exclude_none=True)
-        url = self.ep(f'telephony/config/people/{person_id}/devices/settings/hoteling')
+        url = self.session.ep(f'telephony/config/people/{person_id}/devices/settings/hoteling')
+        super().put(url, params=params, json=body)
+
+    def get_call_captions_settings(self, person_id: str, org_id: str = None) -> UserCallCaptions:
+        """
+        Get the user call captions settings
+
+        Retrieve the user's call captions settings.
+
+        **NOTE**: The call captions feature is not supported for Webex Calling Standard users or users assigned to
+        locations in India.
+
+        The call caption feature allows the customer to enable and manage closed captions and transcript functionality
+        (rolling caption panel) in Webex Calling, without requiring the user to escalate the call to a meeting.
+
+        This API requires a full, user, read-only, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param org_id: Unique identifier for the organization.
+        :type org_id: str
+        :rtype: :class:`UserCallCaptions`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.session.ep(f'telephony/config/people/{person_id}/callCaptions')
+        data = super().get(url, params=params)
+        r = UserCallCaptions.model_validate(data)
+        return r
+
+    def update_call_captions_settings(self, person_id: str, settings: UserCallCaptions, org_id: str = None):
+        """
+        Update the user call captions settings
+
+        Update the user's call captions settings.
+
+        **NOTE**: The call captions feature is not supported for Webex Calling Standard users or users assigned to
+        locations in India.
+
+        The call caption feature allows the customer to enable and manage closed captions and transcript functionality
+        (rolling caption panel) in Webex Calling, without requiring the user to escalate the call to a meeting.
+
+        This API requires a full, user or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param settings: User call captions settings.
+        :type settings: UserCallCaptions
+        :param org_id: Unique identifier for the organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.session.ep(f'telephony/config/people/{person_id}/callCaptions')
         super().put(url, params=params, json=body)

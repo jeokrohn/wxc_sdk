@@ -383,15 +383,15 @@ class CreateDevice(TestWithLocations):
         details = self.api.telephony.devices.details(device_id=result.device_id)
         print(json.dumps(details.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
 
-    def test_006_create_desk_phone(self):
+    def create_phone(self, device_type: DeviceType):
         """
-        Create a desk phone device for a user
+        Create a desk phone device for a user of given device type
         """
         # get all device types
         with self.no_log():
             supported_devices = self.api.telephony.supported_devices()
             desk_phones = [device for device in supported_devices.devices
-                           if device.device_type == DeviceType.desk_phone]
+                           if device.device_type == device_type]
             model = random.choice(desk_phones).model
 
             # pick a random user
@@ -424,6 +424,15 @@ class CreateDevice(TestWithLocations):
             print(f'New device found in person_settings.devices(person_id)')
 
         self.assertTrue(not errs, ', '.join(errs))
+
+    def test_006_create_desk_phone(self):
+        """
+        Create a desk phone device for a user
+        """
+        self.create_phone(DeviceType.desk_phone)
+
+    def test_007_create_desk_phone_mpp(self):
+        self.create_phone(DeviceType.mpp)
 
 
 @skip

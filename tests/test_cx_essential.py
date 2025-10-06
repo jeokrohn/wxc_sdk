@@ -3,6 +3,7 @@ import base64
 import random
 import uuid
 from collections.abc import Generator
+from concurrent.futures.thread import ThreadPoolExecutor
 from contextlib import contextmanager
 from itertools import chain
 from time import sleep
@@ -20,8 +21,9 @@ from wxc_sdk.person_settings.call_recording import CallRecordingSetting
 from wxc_sdk.rest import RestError
 from wxc_sdk.telephony import NumberListPhoneNumberType
 from wxc_sdk.telephony.callqueue import CallQueue
-from wxc_sdk.telephony.callqueue.agents import CallQueueAgent
+from wxc_sdk.telephony.callqueue.agents import CallQueueAgent, CallQueueAgentQueue
 from wxc_sdk.telephony.cx_essentials import ScreenPopConfiguration
+from wxc_sdk.telephony.cx_essentials.wrapup_reasons import QueueWrapupReasonSettings
 from wxc_sdk.telephony.hg_and_cq import Agent
 
 
@@ -496,24 +498,75 @@ class TestWrapUpReason(TempCxeQueueMixin):
         """
         Create wrap-up reason and assign it to all existing queues
         """
+        def remove_wrapup_from_all_queues(reason_id: str, queues:list[CallQueueAgentQueue]):
+            """
+            prepare for removal of wrap-up reason from all queues. We need to make sure that the wrap-up reason is not
+            the default wrapup reason on any queue
+
+            :param reason_id:
+            :param queues:
+            :return:
+            """
+
+            # the queue list misses the location id, so we need to get the full queue list to work around that
+            # tracked by issue #242
+            all_queues = list(self.api.telephony.callqueue.list(hasCxEssentials=True))
+            with ThreadPoolExecutor() as pool:
+                queue_settings = list(pool.map(
+                    lambda q: api.read_queue_settings(location_id=q.location_id, queue_id=q.id),
+                    all_queues))
+            queue_settings: list[QueueWrapupReasonSettings]
+
+            # noinspection PyUnboundLocalVariable
+            for q, qs in zip(all_queues, queue_settings):
+                # find the target wrap-up reason in the queue settings
+                wu_in_queue = next((wur for wur in qs.wrapup_reasons if wur.id == reason_id), None)
+                if wu_in_queue:
+                    if wu_in_queue.default_enabled:
+                        # if the wrap-up reason is the default, set default to None
+                        api.update_queue_settings(location_id=q.location_id, queue_id=q.id,
+                                                  default_wrapup_reason_id='')
+            return
+
         api = self.api.telephony.cx_essentials.wrapup_reasons
+        # test with a temporary queue
+        wu_reason_id = None
         with self.temp_cxe_queue() as queue:
             queue: CallQueue
+            # create a unique wrap-up reason name
             new_name = next(self.new_wrapup_reason_names())
+
             # create a wrap-up reason and assign it to all queues
             wu_reason_id = api.create(name=new_name, description=f'desc {new_name}', assign_all_queues_enabled=True)
+            err = None
             try:
                 details = api.details(wu_reason_id)
-                # queue should be in wrap-up reason queues
+                # temp queue id should be in set of ids of queues assigned to the new wrap-up reason
                 self.assertIn(queue.id, {q.id for q in details.queues},
                               'Queue should be in wrap-up reason queues')
             finally:
+                # remove the wrap-up reason from all queues again, so it can be deleted
                 if details.queues:
                     # unassign the wrap-up reason from all queues
                     # this is necessary to delete the wrap-up reason
                     # otherwise the backend will complain that the wrap-up reason is still assigned to a queue
-                    api.update(wu_reason_id, queues_to_unassign=[q.id for q in details.queues])
-                api.delete(wu_reason_id)
+                    remove_wrapup_from_all_queues(wu_reason_id, details.queues)
+                    try:
+                        api.update(wu_reason_id, queues_to_unassign=[q.id for q in details.queues])
+                    except RestError as e:
+                        err = e
+
+                try:
+                    api.delete(wu_reason_id)
+                    wu_reason_id = None
+                except RestError as e:
+                    err = err or e
+
+        if wu_reason_id:
+            # failed to delete wrap-up reason
+            api.delete(wu_reason_id)
+        if err:
+            raise err
 
     @skip('be nice to the backend :-)')
     @async_test

@@ -19,7 +19,7 @@ __all__ = ['AudioAnnouncementFileGetObject', 'AudioAnnouncementFileGetObjectLeve
            'DisableCallingLocationJobStatus', 'Error', 'ErrorBean', 'ErrorMessage', 'ErrorType',
            'ExtensionStatusObject', 'ExtensionStatusObjectState', 'GetLocationCallBackNumberObject',
            'GetLocationCallBackNumberObjectLocationInfo', 'GetLocationCallBackNumberObjectLocationMemberInfo',
-           'GetMusicOnHoldObject', 'GetMusicOnHoldObjectGreeting',
+           'GetLocationCallCaptionsObject', 'GetMusicOnHoldObject', 'GetMusicOnHoldObjectGreeting',
            'GetPrivateNetworkConnectObjectNetworkConnectionType', 'GetTelephonyLocationObject',
            'GetTelephonyLocationObjectCallingLineId', 'GetTelephonyLocationObjectConnection', 'JobExecutionStatus',
            'ListLocationObject', 'LocationAvailableChargeNumberObject', 'LocationAvailableChargeNumberObjectOwner',
@@ -733,6 +733,20 @@ class DisableCallingLocationJobStatus(ApiModel):
     counts: Optional[DisableCallingLocationCounts] = None
 
 
+class GetLocationCallCaptionsObject(ApiModel):
+    #: Location-level closed captions are enabled or disabled.
+    location_closed_captions_enabled: Optional[bool] = None
+    #: Location-level transcripts are enabled or disabled.
+    location_transcripts_enabled: Optional[bool] = None
+    #: Organization closed captions are enabled or disabled.
+    org_closed_captions_enabled: Optional[bool] = None
+    #: Organization transcripts are enabled or disabled.
+    org_transcripts_enabled: Optional[bool] = None
+    #: If `useOrgSettingsEnabled` is `true`, organization-level settings will control the location's closed captions
+    #: and transcripts. Otherwise, location-level settings are used.
+    use_org_settings_enabled: Optional[bool] = None
+
+
 class LocationCallSettingsApi(ApiChild, base='telephony/config'):
     """
     Location Call Settings
@@ -1324,6 +1338,78 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
             params['ownerName'] = owner_name
         url = self.ep(f'locations/{location_id}/availableNumbers')
         return self.session.follow_pagination(url=url, model=LocationAvailableNumberObject, item_key='phoneNumbers', params=params)
+
+    def get_the_location_call_captions_settings(self, location_id: str,
+                                                org_id: str = None) -> GetLocationCallCaptionsObject:
+        """
+        Get the location call captions settings
+
+        Retrieve the location's call captions settings.
+
+        **NOTE**: The call captions feature is not supported for locations in India.
+
+        The call caption feature allows the customer to enable and manage closed captions and transcript functionality
+        (rolling caption panel) in Webex Calling, without requiring the user to escalate the call to a meeting.
+
+        This API requires a full, read-only, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param org_id: Unique identifier for the organization.
+        :type org_id: str
+        :rtype: :class:`GetLocationCallCaptionsObject`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/callCaptions')
+        data = super().get(url, params=params)
+        r = GetLocationCallCaptionsObject.model_validate(data)
+        return r
+
+    def update_the_location_call_captions_settings(self, location_id: str,
+                                                   location_closed_captions_enabled: bool = None,
+                                                   location_transcripts_enabled: bool = None,
+                                                   use_org_settings_enabled: bool = None, org_id: str = None):
+        """
+        Update the location call captions settings
+
+        Update the location's call captions settings.
+
+        **NOTE**: The call captions feature is not supported for locations in India.
+
+        The call caption feature allows the customer to enable and manage closed captions and transcript functionality
+        (rolling caption panel) in Webex Calling, without requiring the user to escalate the call to a meeting.
+
+        This API requires a full or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param location_closed_captions_enabled: Enable or disable location-level closed captions.
+        :type location_closed_captions_enabled: bool
+        :param location_transcripts_enabled: Enable or disable location-level transcripts.
+        :type location_transcripts_enabled: bool
+        :param use_org_settings_enabled: If `useOrgSettingsEnabled` is `true`, organization-level settings will control
+            the location's closed captions and transcripts. Otherwise, location-level settings are used.
+        :type use_org_settings_enabled: bool
+        :param org_id: Unique identifier for the organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if location_closed_captions_enabled is not None:
+            body['locationClosedCaptionsEnabled'] = location_closed_captions_enabled
+        if location_transcripts_enabled is not None:
+            body['locationTranscriptsEnabled'] = location_transcripts_enabled
+        if use_org_settings_enabled is not None:
+            body['useOrgSettingsEnabled'] = use_org_settings_enabled
+        url = self.ep(f'locations/{location_id}/callCaptions')
+        super().put(url, params=params, json=body)
 
     def get_location_call_intercept_available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
                                                             owner_name: str = None, extension: str = None,

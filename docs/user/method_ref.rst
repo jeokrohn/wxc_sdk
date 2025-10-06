@@ -207,6 +207,8 @@ The method name is a link to the method documentation.
         Update a Location Floor
    * - :meth:`api.me.announcement_languages <wxc_sdk.me.MeSettingsApi.announcement_languages>`
         Retrieve announcement languages for the authenticated user
+   * - :meth:`api.me.call_captions_settings <wxc_sdk.me.MeSettingsApi.call_captions_settings>`
+        Get my call captions settings
    * - :meth:`api.me.calling_services_list <wxc_sdk.me.MeSettingsApi.calling_services_list>`
         Get My Calling Services List
    * - :meth:`api.me.country_telephony_config_requirements <wxc_sdk.me.MeSettingsApi.country_telephony_config_requirements>`
@@ -493,10 +495,14 @@ The method name is a link to the method documentation.
         Update a Person
    * - :meth:`api.person_settings.devices <wxc_sdk.person_settings.PersonSettingsApi.devices>`
         Get all devices for a person
+   * - :meth:`api.person_settings.get_call_captions_settings <wxc_sdk.person_settings.PersonSettingsApi.get_call_captions_settings>`
+        Get the user call captions settings
    * - :meth:`api.person_settings.modify_hoteling_settings_primary_devices <wxc_sdk.person_settings.PersonSettingsApi.modify_hoteling_settings_primary_devices>`
         Modify Hoteling Settings for a Person's Primary Devices
    * - :meth:`api.person_settings.reset_vm_pin <wxc_sdk.person_settings.PersonSettingsApi.reset_vm_pin>`
         Reset Voicemail PIN
+   * - :meth:`api.person_settings.update_call_captions_settings <wxc_sdk.person_settings.PersonSettingsApi.update_call_captions_settings>`
+        Update the user call captions settings
    * - :meth:`api.person_settings.agent_caller_id.available_caller_ids <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.available_caller_ids>`
         Retrieve Agent's List of Available Caller IDs
    * - :meth:`api.person_settings.agent_caller_id.configure <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.configure>`
@@ -867,6 +873,8 @@ The method name is a link to the method documentation.
         Create a call token
    * - :meth:`api.telephony.device_settings <wxc_sdk.telephony.TelephonyApi.device_settings>`
         Get device override settings for an organization
+   * - :meth:`api.telephony.get_call_captions_settings <wxc_sdk.telephony.TelephonyApi.get_call_captions_settings>`
+        Get the organization call captions settings
    * - :meth:`api.telephony.phone_number_details <wxc_sdk.telephony.TelephonyApi.phone_number_details>`
         get summary (counts) of phone numbers
    * - :meth:`api.telephony.phone_numbers <wxc_sdk.telephony.TelephonyApi.phone_numbers>`
@@ -883,6 +891,8 @@ The method name is a link to the method documentation.
         Test Call Routing
    * - :meth:`api.telephony.ucm_profiles <wxc_sdk.telephony.TelephonyApi.ucm_profiles>`
         Read the List of UC Manager Profiles
+   * - :meth:`api.telephony.update_call_captions_settings <wxc_sdk.telephony.TelephonyApi.update_call_captions_settings>`
+        Update the organization call captions settings
    * - :meth:`api.telephony.update_moh <wxc_sdk.telephony.TelephonyApi.update_moh>`
         Update the organization Music on Hold configuration
    * - :meth:`api.telephony.validate_extensions <wxc_sdk.telephony.TelephonyApi.validate_extensions>`
@@ -1437,6 +1447,8 @@ The method name is a link to the method documentation.
         Enable a Location for Webex Calling
    * - :meth:`api.telephony.location.generate_password <wxc_sdk.telephony.location.TelephonyLocationApi.generate_password>`
         Generate example password for Location
+   * - :meth:`api.telephony.location.get_call_captions_settings <wxc_sdk.telephony.location.TelephonyLocationApi.get_call_captions_settings>`
+        Get the location call captions settings
    * - :meth:`api.telephony.location.list <wxc_sdk.telephony.location.TelephonyLocationApi.list>`
         List Locations Webex Calling Details
    * - :meth:`api.telephony.location.list_receptionist_contact_directories <wxc_sdk.telephony.location.TelephonyLocationApi.list_receptionist_contact_directories>`
@@ -1455,6 +1467,8 @@ The method name is a link to the method documentation.
         Safe Delete Check Before Disabling a Location for Webex Calling
    * - :meth:`api.telephony.location.update <wxc_sdk.telephony.location.TelephonyLocationApi.update>`
         Update Location Webex Calling Details
+   * - :meth:`api.telephony.location.update_call_captions_settings <wxc_sdk.telephony.location.TelephonyLocationApi.update_call_captions_settings>`
+        Update the location call captions settings
    * - :meth:`api.telephony.location.update_ecbn <wxc_sdk.telephony.location.TelephonyLocationApi.update_ecbn>`
         Update a Location Emergency callback number
    * - :meth:`api.telephony.location.validate_extensions <wxc_sdk.telephony.location.TelephonyLocationApi.validate_extensions>`
@@ -1539,6 +1553,8 @@ The method name is a link to the method documentation.
         Enable a Location for Webex Calling
    * - :meth:`api.telephony.locations.generate_password <wxc_sdk.telephony.location.TelephonyLocationApi.generate_password>`
         Generate example password for Location
+   * - :meth:`api.telephony.locations.get_call_captions_settings <wxc_sdk.telephony.location.TelephonyLocationApi.get_call_captions_settings>`
+        Get the location call captions settings
    * - :meth:`api.telephony.locations.list <wxc_sdk.telephony.location.TelephonyLocationApi.list>`
         List Locations Webex Calling Details
    * - :meth:`api.telephony.locations.list_receptionist_contact_directories <wxc_sdk.telephony.location.TelephonyLocationApi.list_receptionist_contact_directories>`
@@ -1557,6 +1573,8 @@ The method name is a link to the method documentation.
         Safe Delete Check Before Disabling a Location for Webex Calling
    * - :meth:`api.telephony.locations.update <wxc_sdk.telephony.location.TelephonyLocationApi.update>`
         Update Location Webex Calling Details
+   * - :meth:`api.telephony.locations.update_call_captions_settings <wxc_sdk.telephony.location.TelephonyLocationApi.update_call_captions_settings>`
+        Update the location call captions settings
    * - :meth:`api.telephony.locations.update_ecbn <wxc_sdk.telephony.location.TelephonyLocationApi.update_ecbn>`
         Update a Location Emergency callback number
    * - :meth:`api.telephony.locations.validate_extensions <wxc_sdk.telephony.location.TelephonyLocationApi.validate_extensions>`

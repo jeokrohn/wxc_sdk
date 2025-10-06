@@ -18,25 +18,25 @@ __all__ = ['AccessLevel', 'Action', 'AgentCallerIdType', 'ApplicationPutSharedLi
            'CallsFromSelectiveReject', 'CountObject', 'Criteria', 'CriteriaAccept', 'CriteriaForward', 'DeviceType',
            'EndpointInformation', 'Endpoints', 'ErrorMessageObject', 'ErrorObject', 'ErrorOrImpactItem',
            'ExceptionTypeObject', 'GetMessageSummaryResponse', 'GetMusicOnHoldObject', 'GetMusicOnHoldObjectGreeting',
-           'GetSharedLineMemberItem', 'GetSharedLineMemberList', 'GetUserMSTeamsSettingsObject', 'ItemObject',
-           'JobDetailsResponse', 'JobDetailsResponseById', 'JobDetailsResponseLatestExecutionExitCode',
-           'JobDetailsResponseLatestExecutionStatus', 'JobExecutionStatusObject', 'LicenseType', 'LineType',
-           'Location', 'ModeManagementFeatureTypeObject', 'ModifyUserMSTeamsSettingsObjectSettingName',
-           'NumberOwnerType', 'PersonCallForwardAvailableNumberObject', 'PersonCallForwardAvailableNumberObjectOwner',
-           'PersonECBNAvailableNumberObject', 'PersonECBNAvailableNumberObjectOwner',
-           'PersonECBNAvailableNumberObjectOwnerType', 'PersonPrimaryAvailableNumberObject',
-           'PersonPrimaryAvailableNumberObjectTelephonyType', 'PersonSecondaryAvailableNumberObject',
-           'PersonalAssistantGet', 'PersonalAssistantGetAlerting', 'PersonalAssistantGetPresence', 'PhoneNumber',
-           'PutSharedLineMemberItem', 'RingPattern', 'STATE', 'ScheduleLevel', 'ScheduleType',
-           'SelectiveAcceptCallCriteriaGet', 'SelectiveAcceptCallGet', 'SelectiveForwardCallCriteriaGet',
-           'SelectiveForwardCallGet', 'SelectiveRejectCallCriteriaGet', 'SelectiveRejectCallGet', 'SettingsObject',
-           'SettingsObjectLevel', 'SettingsObjectSettingName', 'Source', 'SourceSelectiveAccept',
-           'StepExecutionStatusesObject', 'TelephonyType', 'TransferNumberGet', 'UserCallSettings22Api',
-           'UserDigitPatternObject', 'UserItem', 'UserListItem', 'UserModeManagementAvailableFeaturesObject',
-           'UserModeManagementFeatureObject', 'UserOutgoingPermissionDigitPatternGetListObject',
-           'UserOutgoingPermissionDigitPatternPostObjectAction', 'UserPlaceAuthorizationCodeListGet',
-           'UserSettingsPermissionsGet', 'UserSettingsPermissionsGetDefault', 'UserType', 'UsersListItem',
-           'VoiceMailPartyInformation', 'VoiceMessageDetails']
+           'GetSharedLineMemberItem', 'GetSharedLineMemberList', 'GetUserCallCaptionsObject',
+           'GetUserMSTeamsSettingsObject', 'ItemObject', 'JobDetailsResponse', 'JobDetailsResponseById',
+           'JobDetailsResponseLatestExecutionExitCode', 'JobDetailsResponseLatestExecutionStatus',
+           'JobExecutionStatusObject', 'LicenseType', 'LineType', 'Location', 'ModeManagementFeatureTypeObject',
+           'ModifyUserMSTeamsSettingsObjectSettingName', 'NumberOwnerType', 'PersonCallForwardAvailableNumberObject',
+           'PersonCallForwardAvailableNumberObjectOwner', 'PersonECBNAvailableNumberObject',
+           'PersonECBNAvailableNumberObjectOwner', 'PersonECBNAvailableNumberObjectOwnerType',
+           'PersonPrimaryAvailableNumberObject', 'PersonPrimaryAvailableNumberObjectTelephonyType',
+           'PersonSecondaryAvailableNumberObject', 'PersonalAssistantGet', 'PersonalAssistantGetAlerting',
+           'PersonalAssistantGetPresence', 'PhoneNumber', 'PutSharedLineMemberItem', 'RingPattern', 'STATE',
+           'ScheduleLevel', 'ScheduleType', 'SelectiveAcceptCallCriteriaGet', 'SelectiveAcceptCallGet',
+           'SelectiveForwardCallCriteriaGet', 'SelectiveForwardCallGet', 'SelectiveRejectCallCriteriaGet',
+           'SelectiveRejectCallGet', 'SettingsObject', 'SettingsObjectLevel', 'SettingsObjectSettingName', 'Source',
+           'SourceSelectiveAccept', 'StepExecutionStatusesObject', 'TelephonyType', 'TransferNumberGet',
+           'UserCallSettings22Api', 'UserDigitPatternObject', 'UserItem', 'UserListItem',
+           'UserModeManagementAvailableFeaturesObject', 'UserModeManagementFeatureObject',
+           'UserOutgoingPermissionDigitPatternGetListObject', 'UserOutgoingPermissionDigitPatternPostObjectAction',
+           'UserPlaceAuthorizationCodeListGet', 'UserSettingsPermissionsGet', 'UserSettingsPermissionsGetDefault',
+           'UserType', 'UsersListItem', 'VoiceMailPartyInformation', 'VoiceMessageDetails']
 
 
 class Action(str, Enum):
@@ -1249,6 +1249,22 @@ class ApplicationsSetting(ApiModel):
     available_line_count: Optional[int] = None
 
 
+class GetUserCallCaptionsObject(ApiModel):
+    #: User-level closed captions are enabled or disabled.
+    user_closed_captions_enabled: Optional[bool] = None
+    #: User-level transcripts are enabled or disabled.
+    user_transcripts_enabled: Optional[bool] = None
+    #: Location closed captions are enabled or disabled. If `useOrgSettingsEnabled` is `true`, these are
+    #: organization-level settings. Otherwise, location-level settings are used.
+    location_closed_captions_enabled: Optional[bool] = None
+    #: Location transcripts are enabled or disabled. If `useOrgSettingsEnabled` is `true`, these are organization-level
+    #: settings. Otherwise, location-level settings are used.
+    location_transcripts_enabled: Optional[bool] = None
+    #: If `useLocationSettingsEnabled` is `true`, location settings will control the user's closed captions and
+    #: transcripts. Otherwise, user-level settings are used.
+    use_location_settings_enabled: Optional[bool] = None
+
+
 class LicenseType(str, Enum):
     webex_calling_professional = 'Webex Calling Professional'
     webex_calling_standard = 'Webex Calling Standard'
@@ -2256,6 +2272,78 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/applications/{application_id}/members')
         super().put(url, json=body)
 
+    def get_user_call_captions_settings(self, person_id: str, org_id: str = None) -> GetUserCallCaptionsObject:
+        """
+        Get the user call captions settings
+
+        Retrieve the user's call captions settings.
+
+        **NOTE**: The call captions feature is not supported for Webex Calling Standard users or users assigned to
+        locations in India.
+
+        The call caption feature allows the customer to enable and manage closed captions and transcript functionality
+        (rolling caption panel) in Webex Calling, without requiring the user to escalate the call to a meeting.
+
+        This API requires a full, user, read-only, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param org_id: Unique identifier for the organization.
+        :type org_id: str
+        :rtype: :class:`GetUserCallCaptionsObject`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/people/{person_id}/callCaptions')
+        data = super().get(url, params=params)
+        r = GetUserCallCaptionsObject.model_validate(data)
+        return r
+
+    def update_user_call_captions_settings(self, person_id: str, user_closed_captions_enabled: bool = None,
+                                           user_transcripts_enabled: bool = None,
+                                           use_location_settings_enabled: bool = None, org_id: str = None):
+        """
+        Update the user call captions settings
+
+        Update the user's call captions settings.
+
+        **NOTE**: The call captions feature is not supported for Webex Calling Standard users or users assigned to
+        locations in India.
+
+        The call caption feature allows the customer to enable and manage closed captions and transcript functionality
+        (rolling caption panel) in Webex Calling, without requiring the user to escalate the call to a meeting.
+
+        This API requires a full, user or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param user_closed_captions_enabled: Enable or disable user-level closed captions.
+        :type user_closed_captions_enabled: bool
+        :param user_transcripts_enabled: Enable or disable user-level transcripts.
+        :type user_transcripts_enabled: bool
+        :param use_location_settings_enabled: If `useLocationSettingsEnabled` is `true`, location settings will control
+            the user's closed captions and transcripts. Otherwise, user-level settings are used.
+        :type use_location_settings_enabled: bool
+        :param org_id: Unique identifier for the organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if user_closed_captions_enabled is not None:
+            body['userClosedCaptionsEnabled'] = user_closed_captions_enabled
+        if user_transcripts_enabled is not None:
+            body['userTranscriptsEnabled'] = user_transcripts_enabled
+        if use_location_settings_enabled is not None:
+            body['useLocationSettingsEnabled'] = use_location_settings_enabled
+        url = self.ep(f'telephony/config/people/{person_id}/callCaptions')
+        super().put(url, params=params, json=body)
+
     def get_person_call_forward_available_phone_numbers(self, person_id: str, phone_number: list[str] = None,
                                                         owner_name: str = None, extension: str = None,
                                                         org_id: str = None,
@@ -2546,11 +2634,11 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/features/personalAssistant')
         super().put(url, params=params, json=body)
 
-    def retrieve_the_list_of_available_features_(self, person_id: str, name: str = None, phone_number: str = None,
-                                                 extension: str = None, order: str = None, org_id: str = None,
-                                                 **params) -> Generator[UserModeManagementAvailableFeaturesObject, None, None]:
+    def retrieve_the_list_of_available_features(self, person_id: str, name: str = None, phone_number: str = None,
+                                                extension: str = None, order: str = None, org_id: str = None,
+                                                **params) -> Generator[UserModeManagementAvailableFeaturesObject, None, None]:
         """
-        Retrieve the List of Available Features.
+        Retrieve the List of Available Features
 
         Retrieve a list of feature identifiers that can be assigned to a user for `Mode Management`. Feature
         identifiers reference feature instances like `Auto Attendants`, `Call Queues`, and `Hunt Groups`.
@@ -2588,10 +2676,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/modeManagement/availableFeatures')
         return self.session.follow_pagination(url=url, model=UserModeManagementAvailableFeaturesObject, item_key='features', params=params)
 
-    def retrieve_the_list_of_features_assigned_to_a_user_for_mode_management_(self, person_id: str,
-                                                                              org_id: str = None) -> list[UserModeManagementFeatureObject]:
+    def retrieve_the_list_of_features_assigned_to_a_user_for_mode_management(self, person_id: str,
+                                                                             org_id: str = None) -> list[UserModeManagementFeatureObject]:
         """
-        Retrieve the List of Features Assigned to a User for Mode Management.
+        Retrieve the List of Features Assigned to a User for Mode Management
 
         Retrieve a list of feature identifiers that are already assigned to a user for `Mode Management`. Feature
         identifiers reference feature instances like `Auto Attendants`, `Call Queues`, and `Hunt Groups`.
@@ -2616,10 +2704,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = TypeAdapter(list[UserModeManagementFeatureObject]).validate_python(data['features'])
         return r
 
-    def assign_a_list_of_features_to_a_user_for_mode_management_(self, person_id: str, feature_ids: list[str],
-                                                                 org_id: str = None):
+    def assign_a_list_of_features_to_a_user_for_mode_management(self, person_id: str, feature_ids: list[str],
+                                                                org_id: str = None):
         """
-        Assign a List of Features to a User for Mode Management.
+        Assign a List of Features to a User for Mode Management
 
         Assign a user a list of feature identifiers for `Mode Management`. Feature identifiers reference feature
         instances like `Auto Attendants`, `Call Queues`, and `Hunt Groups`.

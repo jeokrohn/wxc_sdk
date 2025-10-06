@@ -30,8 +30,8 @@ __all__ = ['AddressObject', 'AgentACDStateType', 'Assistant', 'AvailableAssistan
            'ExecutiveCallFilteringGetFilterType', 'ExecutiveCallFilteringPatchCriteriaActivationItem', 'ExecutivePut',
            'ExecutiveScreeningGet', 'ExecutiveScreeningGetAlertType', 'FeatureAccessCode',
            'GetAnnouncementLanguagesForMeResponseLanguagesItem', 'GetCountryTelephonyConfigRequirementsResponse',
-           'GetSingleNumberReachObject', 'HostObject', 'Location', 'LocationObject', 'MemberType',
-           'ModifyEndpointObjectMobilitySettings', 'MonitoredElementItem', 'MonitoredElementItemType',
+           'GetSingleNumberReachObject', 'GetUserCallCaptionsObject', 'HostObject', 'Location', 'LocationObject',
+           'MemberType', 'ModifyEndpointObjectMobilitySettings', 'MonitoredElementItem', 'MonitoredElementItemType',
            'MonitoringSettingsGetResponseObject', 'Numbers', 'OwnerObject', 'PauseResumeNotifyMethodType',
            'PersonalAssistantGet', 'PersonalAssistantGetAlerting', 'PersonalAssistantGetPresence',
            'PreferredAnswerEndpoint', 'RecordingModeType', 'SecondaryLine', 'SelectedCallerIdSettingsGetSelected',
@@ -1181,6 +1181,13 @@ class DoNotDisturbGet(ApiModel):
     webex_go_override_enabled: Optional[bool] = None
 
 
+class GetUserCallCaptionsObject(ApiModel):
+    #: User closed captions are enabled or disabled.
+    user_closed_captions_enabled: Optional[bool] = None
+    #: User transcripts are enabled or disabled.
+    user_transcripts_enabled: Optional[bool] = None
+
+
 class GetAnnouncementLanguagesForMeResponseLanguagesItem(ApiModel):
     #: Language Name
     name: Optional[str] = None
@@ -1481,6 +1488,27 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
         url = self.ep(f'settings/callBlock/numbers/{phone_number_id}')
         data = super().get(url)
         r = data['blockCallsEnabled']
+        return r
+
+    def get_my_call_captions_settings(self) -> GetUserCallCaptionsObject:
+        """
+        Get my call captions settings
+
+        Retrieve the effective call captions settings of the authenticated user.
+
+        **NOTE**: The call captions feature is not supported for Webex Calling Standard users or users assigned to
+        locations in India.
+
+        The call caption feature allows the customer to enable and manage closed captions and transcript functionality
+        (rolling caption panel) in Webex Calling, without requiring the user to escalate the call to a meeting.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`GetUserCallCaptionsObject`
+        """
+        url = self.ep('settings/callCaptions')
+        data = super().get(url)
+        r = GetUserCallCaptionsObject.model_validate(data)
         return r
 
     def get_my_call_forwarding_settings(self) -> CallForwardingInfo:

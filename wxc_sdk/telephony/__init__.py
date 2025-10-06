@@ -66,7 +66,7 @@ __all__ = ['NumberListPhoneNumberType', 'TelephonyType',
            'CallInterceptDetailsPermission', 'CallInterceptDetails', 'CallingPlanReason',
            'OutgoingCallingPlanPermissionsByType', 'OutgoingCallingPlanPermissionsByDigitPattern', 'AppliedService',
            'AnnouncementLanguage', 'TelephonyApi',
-           'MoHTheme', 'MoHConfig', 'NameAndCode']
+           'MoHTheme', 'MoHConfig', 'NameAndCode', 'OrgCallCaptions']
 
 
 class NumberListPhoneNumberType(str, Enum):
@@ -515,7 +515,9 @@ class AnnouncementLanguage(ApiModel):
     #: Language Code
     code: Optional[str] = None
 
+
 NameAndCode = AnnouncementLanguage
+
 
 class MoHTheme(str, Enum):
     #: Legacy MoH Theme
@@ -528,6 +530,21 @@ class MoHConfig(ApiModel):
     #: Default org level Music on Hold option, can be one of two options: Choose between Opus Number 1
     #: (Music On Hold used in other Cisco products like UCM) and existing legacy Music On Hold.
     default_org_moh: MoHTheme
+
+
+class OrgCallCaptions(ApiModel):
+    #: Organization-level closed captions are enabled or disabled.
+    org_closed_captions_enabled: Optional[bool] = None
+    #: Organization-level transcripts are enabled or disabled.
+    org_transcripts_enabled: Optional[bool] = None
+
+    def update(self)->dict:
+        """
+        data for update
+
+        :meta private:
+        """
+        return self.model_dump(mode='json', by_alias=True, exclude_unset=True, exclude_none=True)
 
 
 @dataclass(init=False, repr=False)
@@ -1005,3 +1022,51 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         data = super().post(url, json=body)
         r = data['callToken']
         return r
+
+    def get_call_captions_settings(self, org_id: str = None) -> OrgCallCaptions:
+        """
+        Get the organization call captions settings
+
+        Retrieve the organization's call captions settings.
+
+        The call caption feature allows the customer to enable and manage closed captions and transcript functionality
+        (rolling caption panel) in Webex Calling, without requiring the user to escalate the call to a meeting.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: Unique identifier for the organization.
+        :type org_id: str
+        :rtype: :class:`OrgCallCaptions`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('callCaptions')
+        data = super().get(url, params=params)
+        r = OrgCallCaptions.model_validate(data)
+        return r
+
+    def update_call_captions_settings(self, settings: OrgCallCaptions, org_id: str = None):
+        """
+        Update the organization call captions settings
+
+        Update the organization's call captions settings.
+
+        The call caption feature allows the customer to enable and manage closed captions and transcript functionality
+        (rolling caption panel) in Webex Calling, without requiring the user to escalate the call to a meeting.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param settings: Organization call captions settings
+        :type settings: OrgCallCaptions
+        :param org_id: Unique identifier for the organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.ep('callCaptions')
+        super().put(url, params=params, json=body)

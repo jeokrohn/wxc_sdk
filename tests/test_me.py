@@ -14,7 +14,7 @@ from tests.base import TestWithRandomUserApi, async_test
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.as_rest import AsRestError
-from wxc_sdk.me import ServicesEnum, MeProfile
+from wxc_sdk.me import ServicesEnum, MeProfile, UserCallCaptions
 from wxc_sdk.me.endpoints import MeEndpoint
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings.call_policy import PrivacyOnRedirectedCalls
@@ -989,3 +989,37 @@ class TestVoicemail(TestWithRandomUserApi):
                 print(json.dumps(result.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
         if err:
             raise err
+
+class TestCallCaptions(TestWithRandomUserApi):
+
+    @async_test
+    async def test_settings(self):
+        """
+        Get call caption settings for all calling users
+        """
+
+        async def get_settings(user: Person):
+            with self.user_api(user) as api:
+                async with self.as_webex_api(tokens=api.access_token) as as_api:
+                    as_api: AsWebexSimpleApi
+                    try:
+                        return await as_api.me.call_captions_settings()
+                    except AsRestError as e:
+                        raise e
+            # end of get_settings
+
+        users = [user for user in self.users if not user.display_name.startswith('admin@')]
+        results = await asyncio.gather(*[get_settings(user)
+                                         for user in users], return_exceptions=True)
+        err = None
+        for user, result in zip(users, results):
+            if isinstance(result, Exception):
+                err = err or result
+                print(f"Error call captions settings for {user.display_name}: {result}")
+            elif result is not None:
+                result: UserCallCaptions
+                print(f"call caption settings for {user.display_name}: ")
+                print(json.dumps(result.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
+        if err:
+            raise err
+
