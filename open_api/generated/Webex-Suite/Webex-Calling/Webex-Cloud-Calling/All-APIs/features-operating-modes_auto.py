@@ -318,10 +318,10 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
     query parameter.
     """
 
-    def retrieve_the_list_of_available_operating_modes_in_a_location_(self, location_id: str,
-                                                                      org_id: str = None) -> list[LocationObject]:
+    def retrieve_the_list_of_available_operating_modes_in_a_location(self, location_id: str,
+                                                                     org_id: str = None) -> list[LocationObject]:
         """
-        Retrieve the List of Available Operating Modes in a Location.
+        Retrieve the List of Available Operating Modes in a Location
 
         Retrieve list of `Operating Modes` which are available to be assigned to a location level feature (`Auto
         Attendant`, `Call Queue`, or `Hunt Group`). Since each location and an org can have a max of 100 `Operating
@@ -392,12 +392,12 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/operatingModes/callForwarding/availableNumbers')
         return self.session.follow_pagination(url=url, model=OperatingModeCallForwardAvailableNumberObject, item_key='phoneNumbers', params=params)
 
-    def read_the_list_of_operating_modes_(self, limit_to_location_id: str, name: str = None,
-                                          limit_to_org_level_enabled: bool = None, order: str = None,
-                                          org_id: str = None,
-                                          **params) -> Generator[OperatingModeListGetObject, None, None]:
+    def read_the_list_of_operating_modes(self, limit_to_location_id: str, name: str = None,
+                                         limit_to_org_level_enabled: bool = None, order: str = None,
+                                         org_id: str = None,
+                                         **params) -> Generator[OperatingModeListGetObject, None, None]:
         """
-        Read the List of Operating Modes.
+        Read the List of Operating Modes
 
         Retrieve `Operating Modes` list defined at location, or organization level. Use query parameters to filter the
         result set by location or level. The list returned is sorted in ascending order by operating mode name. Long
@@ -433,13 +433,13 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
         url = self.ep('operatingModes')
         return self.session.follow_pagination(url=url, model=OperatingModeListGetObject, item_key='operatingModes', params=params)
 
-    def create_an_operating_mode_(self, name: str, type: OperatingModeScheduleTypeObject, level: OrgLocLevelObject,
-                                  call_forwarding: OperatingModeCallForwarding, location_id: str = None,
-                                  same_hours_daily: OperatingModeSameHoursDailyScheduleObject = None,
-                                  different_hours_daily: OperatingModeDifferentHoursDailyScheduleObject = None,
-                                  holidays: list[OperatingModeHolidayObject] = None, org_id: str = None) -> str:
+    def create_an_operating_mode(self, name: str, type: OperatingModeScheduleTypeObject, level: OrgLocLevelObject,
+                                 call_forwarding: OperatingModeCallForwarding, location_id: str = None,
+                                 same_hours_daily: OperatingModeSameHoursDailyScheduleObject = None,
+                                 different_hours_daily: OperatingModeDifferentHoursDailyScheduleObject = None,
+                                 holidays: list[OperatingModeHolidayObject] = None, org_id: str = None) -> str:
         """
-        Create an Operating Mode.
+        Create an Operating Mode
 
         Create an `Operating Mode` at an organization, or a location level.
 
@@ -492,9 +492,9 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
         r = data['id']
         return r
 
-    def delete_an_operating_mode_(self, mode_id: str, org_id: str = None):
+    def delete_an_operating_mode(self, mode_id: str, org_id: str = None):
         """
-        Delete an Operating Mode.
+        Delete an Operating Mode
 
         Delete the designated `Operating Mode`.
 
@@ -513,9 +513,9 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
         url = self.ep(f'operatingModes/{mode_id}')
         super().delete(url, params=params)
 
-    def get_details_for_an_operating_mode_(self, mode_id: str, org_id: str = None) -> OperatingModeGetObject:
+    def get_details_for_an_operating_mode(self, mode_id: str, org_id: str = None) -> OperatingModeGetObject:
         """
-        Get Details for an Operating Mode.
+        Get Details for an Operating Mode
 
         Retrieve an `Operating Mode` by `Operating Mode ID`.
 
@@ -539,13 +539,13 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
         r = OperatingModeGetObject.model_validate(data)
         return r
 
-    def modify_an_operating_mode_(self, mode_id: str, name: str = None,
-                                  same_hours_daily: OperatingModeSameHoursDailyScheduleObject = None,
-                                  different_hours_daily: OperatingModeDifferentHoursDailyScheduleObject = None,
-                                  holidays: list[OperatingModeHolidayObject] = None,
-                                  call_forwarding: OperatingModeCallForwarding = None, org_id: str = None):
+    def modify_an_operating_mode(self, mode_id: str, name: str = None,
+                                 same_hours_daily: OperatingModeSameHoursDailyScheduleObject = None,
+                                 different_hours_daily: OperatingModeDifferentHoursDailyScheduleObject = None,
+                                 holidays: list[OperatingModeHolidayObject] = None,
+                                 call_forwarding: OperatingModeCallForwarding = None, org_id: str = None):
         """
-        Modify an Operating Mode.
+        Modify an Operating Mode
 
         Modify the designated `Operating Mode's` configuration.
 
@@ -588,12 +588,12 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
         url = self.ep(f'operatingModes/{mode_id}')
         super().put(url, params=params, json=body)
 
-    def create_an_operating_mode_holiday_(self, mode_id: str, name: str, all_day_enabled: bool, start_date: Union[str,
-                                          datetime], end_date: Union[str, datetime], start_time: str = None,
-                                          end_time: str = None, recurrence: OperatingModeRecurrenceObject = None,
-                                          org_id: str = None) -> str:
+    def create_an_operating_mode_holiday(self, mode_id: str, name: str, all_day_enabled: bool, start_date: Union[str,
+                                         datetime], end_date: Union[str, datetime], start_time: str = None,
+                                         end_time: str = None, recurrence: OperatingModeRecurrenceObject = None,
+                                         org_id: str = None) -> str:
         """
-        Create an Operating Mode Holiday.
+        Create an Operating Mode Holiday
 
         Create a holiday schedule event for the designated `Operating Mode`.
 
@@ -643,9 +643,9 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
         r = data['id']
         return r
 
-    def delete_an_operating_mode_holiday_(self, mode_id: str, holiday_id: str, org_id: str = None):
+    def delete_an_operating_mode_holiday(self, mode_id: str, holiday_id: str, org_id: str = None):
         """
-        Delete an Operating Mode Holiday.
+        Delete an Operating Mode Holiday
 
         Delete the designated `Operating Mode Holiday`.
 
@@ -666,10 +666,10 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
         url = self.ep(f'operatingModes/{mode_id}/holidays/{holiday_id}')
         super().delete(url, params=params)
 
-    def get_details_for_an_operating_mode_holiday_(self, mode_id: str, holiday_id: str,
-                                                   org_id: str = None) -> OperatingModeHolidayGetObject:
+    def get_details_for_an_operating_mode_holiday(self, mode_id: str, holiday_id: str,
+                                                  org_id: str = None) -> OperatingModeHolidayGetObject:
         """
-        Get details for an Operating Mode Holiday.
+        Get details for an Operating Mode Holiday
 
         Retrieve an `Operating Mode Holiday` by ID.
 
@@ -694,13 +694,13 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
         r = OperatingModeHolidayGetObject.model_validate(data)
         return r
 
-    def modify_an_operating_mode_holiday_(self, mode_id: str, holiday_id: str, name: str = None,
-                                          all_day_enabled: bool = None, start_date: Union[str, datetime] = None,
-                                          end_date: Union[str, datetime] = None, start_time: str = None,
-                                          end_time: str = None, recurrence: OperatingModeRecurrenceObject = None,
-                                          org_id: str = None):
+    def modify_an_operating_mode_holiday(self, mode_id: str, holiday_id: str, name: str = None,
+                                         all_day_enabled: bool = None, start_date: Union[str, datetime] = None,
+                                         end_date: Union[str, datetime] = None, start_time: str = None,
+                                         end_time: str = None, recurrence: OperatingModeRecurrenceObject = None,
+                                         org_id: str = None):
         """
-        Modify an Operating Mode Holiday.
+        Modify an Operating Mode Holiday
 
         Modify the designated `Operating Mode Holiday's` configuration.
 
