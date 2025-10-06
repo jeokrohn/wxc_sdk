@@ -925,12 +925,12 @@ class TestAgentDetails(TestCaseWithUsers):
         * one has to paginate through until hitting a 404 error
         """
         start = 0
-        agent_queues:list[CallQueueAgentQueue] = []
+        agent_queues: list[CallQueueAgentQueue] = []
         while True:
             try:
                 agent_details = self.api.telephony.callqueue.agents.details(id=self.agent.person_id,
                                                                             has_cx_essentials=False,
-                                                                            start =start,
+                                                                            start=start,
                                                                             max_=10)
             except RestError as e:
                 if e.response.status_code == 404:

@@ -26,7 +26,6 @@ class TestDynamicSettings(TestWithLocations):
             for device in devices:
                 print(f' - {device.model} ({device.family_display_name})')
 
-
     def test_get_settings_groups(self):
         """
         Test getting dynamic settings groups
@@ -80,7 +79,7 @@ class TestDynamicSettings(TestWithLocations):
         family_or_model_display_names = list(set(g.family_or_model_display_name for g in groups.settings_groups))
 
         settings = await asyncio.gather(*[api.get_location_device_settings(loc.location_id,
-                                                                                   fmdn)
+                                                                           fmdn)
                                           for fmdn in family_or_model_display_names
                                           for loc in self.telephony_locations])
         print(f'Got dynamic devices settings for {len(settings)} locations')

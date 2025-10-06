@@ -498,7 +498,8 @@ class TestWrapUpReason(TempCxeQueueMixin):
         """
         Create wrap-up reason and assign it to all existing queues
         """
-        def remove_wrapup_from_all_queues(reason_id: str, queues:list[CallQueueAgentQueue]):
+
+        def remove_wrapup_from_all_queues(reason_id: str, queues: list[CallQueueAgentQueue]):
             """
             prepare for removal of wrap-up reason from all queues. We need to make sure that the wrap-up reason is not
             the default wrapup reason on any queue

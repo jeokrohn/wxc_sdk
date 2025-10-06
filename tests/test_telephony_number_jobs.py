@@ -101,7 +101,7 @@ class TestMoveNumbers(TestWithLocations):
     @asynccontextmanager
     async def move_number_context(self, number_count: int = 1,
                                   number_state: NumberState = NumberState.active,
-                                  keep_log: bool=True) -> MoveNumberContext:
+                                  keep_log: bool = True) -> MoveNumberContext:
         with self.no_log(keep_log):
             source_location, target_location = await self.pick_locations()
 
@@ -206,8 +206,8 @@ class TestMoveNumbers(TestWithLocations):
         return
 
     @TestCaseWithLog.async_test
-    async def test_001_move_number(self, number_count:int=1,
-                                   number_state:NumberState=NumberState.active):
+    async def test_001_move_number(self, number_count: int = 1,
+                                   number_state: NumberState = NumberState.active):
         """
         try to move one active number from one location to another
         """

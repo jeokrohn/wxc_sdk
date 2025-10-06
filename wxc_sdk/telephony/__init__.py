@@ -538,7 +538,7 @@ class OrgCallCaptions(ApiModel):
     #: Organization-level transcripts are enabled or disabled.
     org_transcripts_enabled: Optional[bool] = None
 
-    def update(self)->dict:
+    def update(self) -> dict:
         """
         data for update
 

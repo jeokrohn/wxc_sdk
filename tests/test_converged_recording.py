@@ -20,7 +20,7 @@ from wxc_sdk.tokens import Tokens
 class WithRecordingServiceApp(TestCaseWithLog):
     """
     Base class for tests that need to use the recording service app.
-    Service app hase these scopes:
+    Service app has these scopes:
         * spark-compliance:webhooks_read
         * spark:kms
         * spark-admin:locations_read
@@ -117,7 +117,6 @@ class WithRecordingServiceApp(TestCaseWithLog):
         super().setUp()
         self.har_writer.register_webex_api(self.recording_service_api)
 
-
     @property
     def org_id(self) -> str:
         return webex_id_to_uuid(self.me.org_id)
@@ -166,4 +165,3 @@ class TestConvergedRecording(WithRecordingServiceApp, WithIntegrationTokens):
         print(json.dumps(TypeAdapter(list[ConvergedRecordingMeta]).dump_python(results, mode='json', by_alias=True),
                          indent=2))
         print(f'Got metadata for {len(results)} recordings')
-

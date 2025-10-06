@@ -26,15 +26,18 @@ class TestXAPI(TestCaseWithLog):
         :param device:
         """
         max_duration = 120
+
         async def wait_for_connection_state(state: ConnectionStatus):
             while True:
                 details = await self.async_api.devices.details(device_id=device.device_id)
                 now = time.time()
-                if details.connection_status==state:
-                    print(f'{device.display_name}({int(now-start)}): reached target state {details.connection_status}')
+                if details.connection_status == state:
+                    print(
+                        f'{device.display_name}({int(now - start)}): reached target state {details.connection_status}')
                     break
-                print(f'{device.display_name}({int(now-start)}): waiting for {state}, got {details.connection_status}')
-                if now-start > max_duration:
+                print(
+                    f'{device.display_name}({int(now - start)}): waiting for {state}, got {details.connection_status}')
+                if now - start > max_duration:
                     raise TimeoutError(f'{device.display_name} did not reach {state} in {max_duration} seconds')
                 await asyncio.sleep(5)
 
@@ -64,7 +67,7 @@ class TestXAPI(TestCaseWithLog):
                                                                                exclude_unset=True),
                          indent=2))
         r = await asyncio.gather(*[self.monitor_reboot(target) for target in targets],
-                                return_exceptions=True)
+                                 return_exceptions=True)
         err = next((e for e in r if isinstance(e, Exception)), None)
         if err is not None:
             raise err

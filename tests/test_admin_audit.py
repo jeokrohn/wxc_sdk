@@ -23,7 +23,7 @@ class TestAdminAudit(TestCaseWithLog):
         extras = dict()
         for event in events:
             data = event.data
-            #print(f'{event.created}: {data.action_text}')
+            # print(f'{event.created}: {data.action_text}')
             extra = data.model_extra
 
             if not extra:
@@ -35,4 +35,3 @@ class TestAdminAudit(TestCaseWithLog):
             for k in sorted(extras):
                 print(f'{underscore(k)}: Optional[Any] = None')
         self.assertTrue(not extras)
-

@@ -25,14 +25,17 @@ class PublishItem(BaseModel):
 class VisibilityItem(BaseModel):
     access_level: int = Field(..., alias='accessLevel')
 
+
 class FeatureToggle(BaseModel):
     method: str
     path: str
     toggle_name: str = Field(..., alias='toggleName')
 
+
 class APIVersion(BaseModel):
     version: str
     feature_toggles: List[FeatureToggle] = Field(..., alias='featureToggles')
+
 
 class APIConfig(BaseModel):
     api_id: str = Field(..., alias='apiId')
@@ -55,7 +58,7 @@ class OpenApiSpecInfo:
     api_config: Optional[APIConfig] = None
 
     @property
-    def rel_spec_path(self)->str:
+    def rel_spec_path(self) -> str:
         path = self.spec_path[len(self.base_path):]
         m = re.match(r'^/(.+)/v\d', path)
         path = m.group(1)
@@ -84,6 +87,7 @@ class OpenApiSpecInfo:
         except FileNotFoundError:
             api_config = None
         return cls(base_path=base_path, spec_path=path, api_config=api_config, version=version, api_name=api_name)
+
 
 def open_api_specs() -> Generator[OpenApiSpecInfo, None, None]:
     """

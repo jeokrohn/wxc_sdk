@@ -14,6 +14,7 @@ class TestCallBridge(TestLocationsUsersWorkspacesVirtualLines):
     """
     test call bridge settings for locations, users, workspaces, virtual lines
     """
+
     def test_read_user(self):
         target_user = random.choice(self.users)
         target_user: Person
@@ -33,5 +34,3 @@ class TestCallBridge(TestLocationsUsersWorkspacesVirtualLines):
 
     def test_upadate_user(self):
         ...
-
-

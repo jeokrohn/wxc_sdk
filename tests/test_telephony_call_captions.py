@@ -34,4 +34,3 @@ class TestCallCaptions(TestCaseWithLog):
             self.api.telephony.update_call_captions_settings(before)
             restored = self.api.telephony.get_call_captions_settings()
             self.assertEqual(before, restored)
-

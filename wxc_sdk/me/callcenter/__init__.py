@@ -8,6 +8,7 @@ from wxc_sdk.base import SafeEnum as Enum
 
 __all__ = ['MeCallCenterApi', 'MeCallCenterSettings', 'MeCallQueue', 'AgentACDState']
 
+
 class AgentACDState(str, Enum):
     #: Agent has signed in.
     sign_in = 'SIGN_IN'
@@ -43,7 +44,7 @@ class MeCallCenterSettings(ApiModel):
     #: Indicates a list of call centers the agent has joined or may join.
     queues: Optional[list[MeCallQueue]] = None
 
-    def update(self)->dict:
+    def update(self) -> dict:
         """
         Prepare the object for an update operation by converting it to a dictionary.
 

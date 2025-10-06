@@ -69,7 +69,7 @@ class AppServicesApi(ApiChild, base=''):
         super().__init__(session=session)
         self.shared_line = AppSharedLineApi(session=session)
 
-    def f_ep(self, person_id:str):
+    def f_ep(self, person_id: str):
         """
 
         :meta private:

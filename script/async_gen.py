@@ -105,6 +105,7 @@ RE_ASYNC_SOURCE = re.compile("'''async(.*?)$(?P<async_source>.+?)'''", flags=re.
 
 IGNORE_BASES = {'Enum', 'str'}
 
+
 @dataclass
 class Module:
     #: project relative module name

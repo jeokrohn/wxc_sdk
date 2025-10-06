@@ -838,12 +838,10 @@ class ReadAPIB(ApibTest):
                             for el_info in parsed_api.elements_with_path()
                             if isinstance(el_info.element, ApibEnum)]
             suspicious = [(attr_info, attr_value) for attr_info, attr_value in enum_attr_infos
-                          if attr_info.attr_value!=attr_value]
+                          if attr_info.attr_value != attr_value]
             foo = 1
         if err:
             raise err
-
-
 
     def test_007_find_key_value(self):
         """

@@ -53,8 +53,8 @@ class TestPersonModeManagement(TestCaseWithLog):
         for user, features in zip(self.users, assigned_features):
             print(f'Assigned features for {user.display_name}({user.emails[0]}):')
             print(json.dumps(TypeAdapter(list[ModeManagementFeature]).dump_python(features, mode='json',
-                                                                             by_alias=True,
-                                                                             exclude_unset=True),
+                                                                                  by_alias=True,
+                                                                                  exclude_unset=True),
                              indent=2))
 
     def test_assign_features_to_user(self):

@@ -1085,11 +1085,13 @@ class MediaFileType(str, Enum):
     #: 3GP File Extension.
     three_gp = '3GP'
 
+
 class MediaFile(ApiModel):
     #: File name of the custom greeting uploaded.
     name: Optional[str] = None
     #: Media type of the custom greeting uploaded.
     media_type: Optional[str] = None
+
 
 class AnnouncementLevel(Enum):
     #: Specifies this audio file is configured across organization.
@@ -1227,6 +1229,7 @@ class MeGroupSettings(ApiModel):
     group_name: Optional[str] = None
     #: List of members in the call park group.
     member_list: Optional[list[MeGroupMember]] = None
+
 
 class PrimaryOrSecondary(str, Enum):
     #: Primary number to call.

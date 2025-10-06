@@ -67,6 +67,7 @@ __all__ = ['TestCaseWithTokens', 'TestCaseWithLog', 'gather', 'TestWithLocations
 
 SKIP_TESTS_WITH_EXISTING_LOGS = False
 
+
 def gather(mapping: Iterable[Any], return_exceptions: bool = False) -> Generator[Union[Any, Exception]]:
     """
     Gather results from a threading.map() call;  similar to asyncio.gather
@@ -230,6 +231,7 @@ class TestCaseWithTokens(TestCase):
         self.assertTrue(self.tokens and self.api, 'Failed to obtain tokens')
         self.assertEqual(ApiModel.Config.extra, 'forbid', 'API_MODEL_ALLOW_EXTRA must be set to "forbid"')
         random.seed()
+
 
 async_test = TestCaseWithTokens.async_test
 
@@ -629,7 +631,7 @@ class TestCaseWithLog(TestCaseWithTokens):
             print(f'{url_and_method}: {url_counters[url_and_method]} requests')
 
     @contextmanager
-    def webex_api(self, tokens: Union[str, Tokens])-> WebexSimpleApi:
+    def webex_api(self, tokens: Union[str, Tokens]) -> WebexSimpleApi:
         """
         Context manager to get a WebexSimpleApi instance. With equivalent proxy settings and HAR writer as the test case
         :return: WebexSimpleApi instance
@@ -798,9 +800,10 @@ class TestCaseWithUsers(TestCaseWithLog):
                     if False:
                         # maybe getting details for all users is faster than listing...
                         with ThreadPoolExecutor() as pool:
-                            user_cache.users = list(pool.map(lambda user: cls.api.people.details(person_id=user.person_id,
-                                                                                                 calling_data=True),
-                                                             user_dict.values()))
+                            user_cache.users = list(
+                                pool.map(lambda user: cls.api.people.details(person_id=user.person_id,
+                                                                             calling_data=True),
+                                         user_dict.values()))
                     else:
                         # bite the bullet: list users with calling data --> slooooooowww
                         user_cache.users = list(cls.api.people.list(calling_data=True))
@@ -1208,6 +1211,7 @@ class UserTokens(TestCaseWithLog):
             log.error('Failed to obtain tokens')
             return None
         return new_tokens
+
 
 @dataclass(init=False, repr=False)
 class TestWithRandomUserApi(UserTokens, TestCaseWithUsers):

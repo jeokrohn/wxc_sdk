@@ -190,10 +190,10 @@ class TestTelephonySupervisors(TestCaseWithLog):
             print(f'Removing agent: {agents[0].display_name}, {base64.b64decode(agents[0].id + "==").decode()}')
             print(f'Adding agent: {agents[2].display_name}, {base64.b64decode(agents[2].id + "==").decode()}')
             sapi.assign_unassign_agents(supervisor_id=supervisor.id,
-                                         agents=[IdAndAction(id=agents[0].id,
-                                                             action=PatternAction.delete),
-                                                 IdAndAction(id=agents[2].id,
-                                                             action=PatternAction.add)])
+                                        agents=[IdAndAction(id=agents[0].id,
+                                                            action=PatternAction.delete),
+                                                IdAndAction(id=agents[2].id,
+                                                            action=PatternAction.add)])
 
             # verify that the agent list is updated accordingly
             details = list(sapi.details(supervisor.id))
@@ -215,8 +215,8 @@ class TestTelephonySupervisors(TestCaseWithLog):
 
             # try to add 1st agent ... again
             r = sapi.assign_unassign_agents(supervisor_id=supervisor.id,
-                                             agents=[IdAndAction(id=agents[0].id,
-                                                                 action=PatternAction.add)])
+                                            agents=[IdAndAction(id=agents[0].id,
+                                                                action=PatternAction.add)])
             self.assertIsNotNone(r)
             self.assertEqual(1, len(r))
             status = r[0]

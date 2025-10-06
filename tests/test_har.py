@@ -6,10 +6,10 @@ from collections import defaultdict
 from dataclasses import dataclass
 from io import StringIO
 from itertools import chain
-from typing import Optional, TextIO
+from typing import Optional
 from unittest import TestCase, skip
 
-from tests.base import TestCaseWithLog, TestCaseWithTokens
+from tests.base import TestCaseWithLog
 from wxc_sdk.har_writer import HAREntry, HarWriter
 from wxc_sdk.har_writer.har import HAR, PostData
 

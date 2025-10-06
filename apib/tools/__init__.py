@@ -17,6 +17,7 @@ from html2text import html2text
 def cap_first(s: str) -> str:
     return f'{s[0].upper()}{s[1:]}'
 
+
 def words_to_camel(s: str) -> str:
     """
     Generate a camel case Python name from multi-word input string

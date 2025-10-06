@@ -68,7 +68,7 @@ class TestEmergencyServices(TestWithLocations):
         with self.no_log():
             settings_list = await self.get_all_location_settings(return_exceptions=False)
         candidates = [(loc, setting) for loc, setting in zip(self.locations, settings_list)
-                      if setting.emergency_call_notification_enabled == False]
+                      if (setting.emergency_call_notification_enabled == False)]
         if not candidates:
             self.skipTest('No locations with emergency call notification disabled')
         target, setting = random.choice(candidates)
@@ -181,7 +181,7 @@ class TestUserECBN(TestCaseWithUsers):
 
         # see if there are other available numbers
         numbers = list(self.api.telephony.phone_numbers(number_type=NumberType.number, owner_type=OwnerType.people,
-                                                         location_id=target.location_id))
+                                                        location_id=target.location_id))
         other_numbers = [number for number in numbers if number.owner.owner_id != target.person_id]
         if not other_numbers:
             self.skipTest('No other user phone numbers found in location')

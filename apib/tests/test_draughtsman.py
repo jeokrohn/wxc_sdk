@@ -1,5 +1,3 @@
-from unittest import TestCase
-
 from draughtsman import parse
 
 from apib.tests.test_apib import ApibTest

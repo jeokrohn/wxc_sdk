@@ -37,8 +37,8 @@ class CodeGenerator:
     #: Dictionary of parsed APIB files. Indexed by basename of APIB file w/o suffix
     parsed_blueprints: dict[str, ApibParseResult]
 
-    def __init__(self, with_unreferenced_classes: bool = False, class_registry = None):
-        class_registry= class_registry or PythonClassRegistry()
+    def __init__(self, with_unreferenced_classes: bool = False, class_registry=None):
+        class_registry = class_registry or PythonClassRegistry()
         self.class_registry = class_registry
         self.parsed_blueprints = dict()
         self.with_unreferenced_classes = with_unreferenced_classes

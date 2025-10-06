@@ -13,7 +13,6 @@ from typing import ClassVar, Union
 from unittest import TestCase
 
 import yaml
-from docutils.nodes import description
 from pydantic import ValidationError
 
 from open_api.open_api_class_registry import OpenApiPythonClassRegistry
@@ -117,7 +116,6 @@ class TestParseOpenApi(TestCase):
         self.assertFalse(err, 'Some OpenAPI specs could not be parsed')
 
 
-
 @dataclass(init=False, repr=False)
 class WithOpenApiSpecInfos(TestCase):
     spec_infos: ClassVar[list[OpenApiSpecInfo]]
@@ -202,6 +200,7 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
         Generator of all schema properties with api_name and name
         """
         visited_refs = set()
+
         def yield_and_descend_into_property(spec: OASpec, prop: OASchemaProperty, path: str):
             while prop.ref and prop.ref not in visited_refs:
                 visited_refs.add(prop.ref)
@@ -238,18 +237,14 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
                                 if content.schema_:
                                     yield from yield_and_descend_into_property(spec,
                                                                                content.schema_,
-                                                                               f'{path} {method} {code} resp:{content_type}')
+                                                                               f'{path} {method} {code} resp:'
+                                                                               f'{content_type}')
                                 # if
                             # for
                         # if
                     # for
                 # if
         return
-
-
-
-
-
 
     # noinspection GrazieInspection
     def test_scheme_component_types(self):

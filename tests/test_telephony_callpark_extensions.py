@@ -38,4 +38,3 @@ class TestCPE(TestWithLocations):
         cpe = cp.details(location_id=location.location_id, cpe_id=cpe_id)
         print(f'New call park extension in location "{location.name}":')
         print(dumps(loads(cpe.model_dump_json()), indent=2))
-

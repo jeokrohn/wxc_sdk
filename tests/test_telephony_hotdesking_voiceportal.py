@@ -32,7 +32,7 @@ class TestHotDeskingSigninViaVoicePortal(TestCaseWithUsers, TestWithLocations):
             setting = before.model_copy(deep=True)
             setting.enabled = not setting.enabled
             self.api.telephony.hotdesking_voiceportal.user_update(person_id=user.person_id,
-                                                                        setting=setting)
+                                                                  setting=setting)
             after = self.api.telephony.hotdesking_voiceportal.user_get(person_id=user.person_id)
             self.assertEqual(setting, after)
         finally:
@@ -63,7 +63,7 @@ class TestHotDeskingSigninViaVoicePortal(TestCaseWithUsers, TestWithLocations):
             setting = before.model_copy(deep=True)
             setting.enabled = not setting.enabled
             self.api.telephony.hotdesking_voiceportal.location_update(location_id=location.location_id,
-                                                                        setting=setting)
+                                                                      setting=setting)
             after = self.api.telephony.hotdesking_voiceportal.location_get(location_id=location.location_id)
             self.assertEqual(setting, after)
         finally:

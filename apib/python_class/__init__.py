@@ -622,7 +622,7 @@ class Attribute:
                             docstring=e.description, sample=None, referenced_class=None)
 
     @property
-    def name_for_source(self)->str:
+    def name_for_source(self) -> str:
         name_map = {'*': 'star',
                     '#': 'hash'}
 
@@ -657,7 +657,8 @@ class Attribute:
                 name = self.name_for_source
 
                 if name != 'none' or True:
-                    # skip creation of 'none' attribute for enums; this is most probably meant to refer to the actual Null
+                    # skip creation of 'none' attribute for enums; this is most probably meant to refer to the actual
+                    # Null
                     # value
                     # replace all non-alphanumeric characters with '_'
                     name, _ = subn(r'[^a-z0-9]', '_', name)
@@ -856,5 +857,3 @@ def guess_datetime_or_int(sample: Optional[str], type_hint: Optional[str]) -> tu
             return str(sample), 'str'
         return sample, 'int'
     return sample, python_type
-
-

@@ -599,7 +599,7 @@ def new_operating_mode_names(api: WebexSimpleApi) -> Generator[str, None, None]:
     Generate new mode names
     """
     names = set(m.name for m in api.telephony.operating_modes.list())
-    return (name for i in range(1, 1000) if (name:=f'test_{i:03}') not in names)
+    return (name for i in range(1, 1000) if (name := f'test_{i:03}') not in names)
 
 
 def create_operating_mode(api: WebexSimpleApi, location: TelephonyLocation = None,
@@ -630,9 +630,10 @@ def create_operating_mode(api: WebexSimpleApi, location: TelephonyLocation = Non
     details = api.telephony.operating_modes.details(mode_id)
     return details
 
+
 def new_aa_names(api: WebexSimpleApi) -> Generator[str, None, None]:
     """
     Generate new mode names
     """
     names = set(m.name for m in api.telephony.auto_attendant.list())
-    return (name for i in range(1, 1000) if (name:=f'aa_{i:03}') not in names)
+    return (name for i in range(1, 1000) if (name := f'aa_{i:03}') not in names)

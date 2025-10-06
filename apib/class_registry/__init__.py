@@ -478,7 +478,7 @@ class PythonClassRegistry:
         """
         check for classes that are actually aliases and fix references to these classes
         """
-        alias_classes:dict[str:PythonClass] = {ident:pc for ident, pc in self._classes.items() if pc.alias}
+        alias_classes: dict[str:PythonClass] = {ident: pc for ident, pc in self._classes.items() if pc.alias}
         # get all attributes that reference an alias class
         for pc in self._classes.values():
             # go though all attributes and alias (if any) ...

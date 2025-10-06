@@ -19,4 +19,3 @@ class TestMeGoOverride(TestWithRandomUserApi):
         dnd_settings = self.api.person_settings.dnd.read(entity_id=user.person_id)
         self.assertEqual(me_go_settings, dnd_settings.webex_go_override_enabled)
         return
-

@@ -222,6 +222,7 @@ class TestVirtualLines(VirtualLineTest):
             else:
                 r = f'{r} - no owner! {device.device_id=} {base64.b64decode(device.device_id).decode()}'
             return r
+
         owner_err = False
         for vl, assigned_devices in zip(virtual_lines, assigned_devices_list):
             vl: VirtualLine
@@ -698,10 +699,12 @@ class TestPagination(VirtualLineTest):
         # both lists should be equal
         self.assertEqual(vl_list, vl_list_paginated)
 
+
 class TestOutgoingCallPermissions(TestWithTemporaryVirtualLine):
     """
 
     """
+
     def test_read_and_create_patterns(self):
         api = self.api.telephony.virtual_lines.permissions_out
         patterns = api.read(entity_id=self.target.id)

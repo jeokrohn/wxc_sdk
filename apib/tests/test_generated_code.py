@@ -6,9 +6,8 @@ import inspect
 import logging
 import os
 import sys
-from inspect import getmembers, isclass
 from os.path import splitext, join
-from tempfile import NamedTemporaryFile, TemporaryDirectory
+from tempfile import TemporaryDirectory
 
 from apib.generator import CodeGenerator
 from apib.tests.test_apib import ApibTest
@@ -50,8 +49,6 @@ class Tests(ApibTest):
                     print(f'Failed to import "{module_name}": {e}')
         if err:
             raise err
-
-
 
         # for each APIB file
         # instantiate code generator for APIB file

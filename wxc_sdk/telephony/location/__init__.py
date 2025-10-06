@@ -230,7 +230,7 @@ class LocationCallCaptions(ApiModel):
     #: and transcripts. Otherwise, location-level settings are used.
     use_org_settings_enabled: Optional[bool] = None
 
-    def update(self)->dict:
+    def update(self) -> dict:
         """
         dict for updates
 
@@ -984,7 +984,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         return r
 
     def get_call_captions_settings(self, location_id: str,
-                                                org_id: str = None) -> LocationCallCaptions:
+                                   org_id: str = None) -> LocationCallCaptions:
         """
         Get the location call captions settings
 
@@ -1013,7 +1013,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         return r
 
     def update_call_captions_settings(self, location_id: str, settings: LocationCallCaptions,
-                                                   org_id: str = None):
+                                      org_id: str = None):
         """
         Update the location call captions settings
 

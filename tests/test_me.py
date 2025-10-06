@@ -36,11 +36,12 @@ class TestMe(TestWithRandomUserApi):
             details = api.me.details()
         print(json.dumps(details.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
 
-    def test_profile_all(self)->Union[Exception, MeProfile]:
+    def test_profile_all(self) -> Union[Exception, MeProfile]:
         """
         Get profile details for all users
         """
-        def get_profile(user:Person):
+
+        def get_profile(user: Person):
             with self.user_api(user) as api:
                 api: WebexSimpleApi
                 try:
@@ -59,7 +60,6 @@ class TestMe(TestWithRandomUserApi):
                 print(f"Error getting profile for {user.display_name}: {result}")
         if err:
             raise err
-
 
     def test_announcement_languages(self):
         """
@@ -990,6 +990,7 @@ class TestVoicemail(TestWithRandomUserApi):
         if err:
             raise err
 
+
 class TestCallCaptions(TestWithRandomUserApi):
 
     @async_test
@@ -1022,4 +1023,3 @@ class TestCallCaptions(TestWithRandomUserApi):
                 print(json.dumps(result.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
         if err:
             raise err
-

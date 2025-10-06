@@ -1,7 +1,6 @@
 import asyncio
 import json
 import random
-from unittest import skip
 
 from tests.base import TestCaseWithUsers, async_test
 from wxc_sdk.person_settings.feature_access import FeatureAccessLevel, FeatureAccessSettings, UserFeatureAccessSettings

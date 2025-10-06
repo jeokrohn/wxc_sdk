@@ -19,8 +19,7 @@ from wxc_sdk.common.schedules import ScheduleLevel
 from wxc_sdk.person_settings.forwarding import CallForwardingCommon
 from wxc_sdk.telephony.location import TelephonyLocation
 from wxc_sdk.telephony.operating_modes import (OperatingMode, OperatingModeSchedule, DifferentHoursDaily, DaySchedule,
-                                               OperatingModeHoliday, OperatingModeRecurrence,
-                                               OperatingModeRecurYearlyByDate, Month)
+                                               OperatingModeHoliday)
 
 
 class TestOperatingModes(TestCaseWithLog):

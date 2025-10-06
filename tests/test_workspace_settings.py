@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from typing import ClassVar
 
 from tests.base import TestCaseWithLog, async_test, TestWithProfessionalWorkspace, TestWithTarget
-from wxc_sdk.common.schedules import Schedule, ScheduleType
+from wxc_sdk.common.schedules import Schedule
 from wxc_sdk.common.selective import SelectiveFrom, SelectiveScheduleLevel
 from wxc_sdk.person_settings import TelephonyDevice
 from wxc_sdk.person_settings.call_policy import PrivacyOnRedirectedCalls

@@ -26,6 +26,7 @@ from wxc_sdk.telephony import (NumberType, NumberListPhoneNumber, OriginatorType
 from wxc_sdk.telephony.virtual_line import VirtualLine
 from wxc_sdk.workspaces import Workspace, CallingType, HotdeskingStatus
 
+
 class TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly(TestLocationsUsersWorkspacesVirtualLines):
     """
     Base class for tests that need locations, users, workspaces, and virtual lines
@@ -43,6 +44,7 @@ class TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly(TestLocationsUsersWo
                                   ws.calling.webex_calling and
                                   ws.calling.webex_calling.extension is None and
                                   ws.calling.webex_calling.phone_number is None)]
+
 
 class TestOutgoingPermissions(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
     """

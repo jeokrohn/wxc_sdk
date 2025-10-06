@@ -119,7 +119,7 @@ class Repo(TestWithLocations):
         print(f'Target location: "{target_location.name}"')
         new_name = next(self.new_ann_names(location_id=target_location.location_id))
         new_id = api.upload_announcement(name=new_name, file='sample.wav', upload_as=f'sample_{new_name[-3:]}.wav',
-                                    location_id=target_location.location_id)
+                                         location_id=target_location.location_id)
 
         print(f'Uploaded new announcement in location: {new_name} id: {new_id}')
         announcements = api.list(location_id=target_location.location_id)

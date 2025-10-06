@@ -3,6 +3,7 @@ from wxc_sdk.person_settings.barge import BargeSettings
 
 __all__ = ['MeBargeApi']
 
+
 class MeBargeApi(ApiChild, base='telephony/config/people/me'):
     def get(self) -> BargeSettings:
         """
