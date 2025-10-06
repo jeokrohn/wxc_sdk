@@ -22,7 +22,7 @@ __all__ = ['ConvergedRecordingsApi', 'GetRecordingMetadataResponse', 'GetRecordi
            'GetRecordingMetadataResponseServiceDataSession', 'RecordingObject', 'RecordingObjectFormat',
            'RecordingObjectOwnerType', 'RecordingObjectServiceData', 'RecordingObjectServiceType',
            'RecordingObjectStatus', 'RecordingObjectWithDirectDownloadLinks',
-           'RecordingObjectWithDirectDownloadLinksOwnerType', 'RecordingObjectWithDirectDownloadLinksServiceType',
+           'RecordingObjectWithDirectDownloadLinksStatus',
            'RecordingObjectWithDirectDownloadLinksTemporaryDirectDownloadLinks', 'StorageRegion']
 
 
@@ -34,6 +34,7 @@ class RecordingObjectFormat(str, Enum):
 class RecordingObjectServiceType(str, Enum):
     #: Recording service type is Webex Call.
     calling = 'calling'
+    #: Call Recordings of a Customer Assist Queue.
     customer_assist = 'customerAssist'
 
 
@@ -75,6 +76,7 @@ class RecordingObject(ApiModel):
     #: clicked in the meeting.
     time_recorded: Optional[datetime] = None
     format_: Optional[RecordingObjectFormat] = None
+    #: * `calling` - Recording service type is Webex Call.
     service_type: Optional[RecordingObjectServiceType] = None
     #: The duration of the recording, in seconds.
     duration_seconds: Optional[int] = None
@@ -92,11 +94,6 @@ class RecordingObject(ApiModel):
     storage_region: Optional[str] = None
     #: Fields relevant to each service Type.
     service_data: Optional[RecordingObjectServiceData] = None
-
-
-class RecordingObjectWithDirectDownloadLinksServiceType(str, Enum):
-    #: Recording service-type is calling.
-    calling = 'calling'
 
 
 class RecordingObjectWithDirectDownloadLinksTemporaryDirectDownloadLinks(ApiModel):
@@ -122,13 +119,14 @@ class RecordingObjectWithDirectDownloadLinksTemporaryDirectDownloadLinks(ApiMode
     expiration: Optional[str] = None
 
 
-class RecordingObjectWithDirectDownloadLinksOwnerType(str, Enum):
-    #: Recording belongs to a user.
-    user = 'user'
-    #: Recording belongs to a workspace device.
-    place = 'place'
-    #: Recording belongs to a workspace device.
-    virtual_line = 'virtualLine'
+class RecordingObjectWithDirectDownloadLinksStatus(str, Enum):
+    #: Recording is available.
+    available = 'available'
+    #: Recording has been moved to the recycle bin.
+    deleted = 'deleted'
+    #: Recording has been purged from the recycle bin. Please note that only a compliance officer can access recordings
+    #: with a `purged` status.
+    purged = 'purged'
 
 
 class RecordingObjectWithDirectDownloadLinks(ApiModel):
@@ -145,7 +143,8 @@ class RecordingObjectWithDirectDownloadLinks(ApiModel):
     #: clicked in the meeting.
     time_recorded: Optional[datetime] = None
     format_: Optional[RecordingObjectFormat] = None
-    service_type: Optional[RecordingObjectWithDirectDownloadLinksServiceType] = None
+    #: * `calling` - Recording service-type is calling.
+    service_type: Optional[RecordingObjectServiceType] = None
     #: The duration of the recording in seconds.
     duration_seconds: Optional[int] = None
     #: The size of the recording file in bytes.
@@ -157,13 +156,13 @@ class RecordingObjectWithDirectDownloadLinks(ApiModel):
     #: been turned on for the recording being requested.
     temporary_direct_download_links: Optional[RecordingObjectWithDirectDownloadLinksTemporaryDirectDownloadLinks] = None
     #: * `available` - Recording is available.
-    status: Optional[RecordingObjectStatus] = None
+    status: Optional[RecordingObjectWithDirectDownloadLinksStatus] = None
     #: Webex UUID for recording owner/host.
     owner_id: Optional[str] = None
     #: Webex email for recording owner/host.
     owner_email: Optional[str] = None
     #: * `user` - Recording belongs to a user.
-    owner_type: Optional[RecordingObjectWithDirectDownloadLinksOwnerType] = None
+    owner_type: Optional[RecordingObjectOwnerType] = None
     #: Storage location for recording within Webex datacenters.
     storage_region: Optional[str] = None
     #: Fields relevant to each service Type.
@@ -281,7 +280,8 @@ class ConvergedRecordingsApi(ApiChild, base=''):
     """
 
     def list_recordings_for_admin_or_compliance_officer(self, from_: Union[str, datetime] = None, to_: Union[str,
-                                                        datetime] = None, status: RecordingObjectStatus = None,
+                                                        datetime] = None,
+                                                        status: RecordingObjectWithDirectDownloadLinksStatus = None,
                                                         service_type: RecordingObjectServiceType = None,
                                                         format_: RecordingObjectFormat = None, owner_id: str = None,
                                                         owner_email: str = None,
@@ -317,9 +317,10 @@ class ConvergedRecordingsApi(ApiChild, base=''):
             <https://en.wikipedia.org/wiki/ISO_8601>`_ compliant format.
             `to` cannot be before `from`. The interval between `from` and `to` must be within 30 days.
         :type to_: Union[str, datetime]
-        :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
+        :param status: Recording's status. If not specified or `available`, retrieves recordings that are available. if
+            specified as `purged`, retrieves recordings those are deleted but available to a compliance officer.
             Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin.
-        :type status: RecordingObjectStatus
+        :type status: RecordingObjectWithDirectDownloadLinksStatus
         :param service_type: Recording's service-type. If specified, the API filters recordings by service-type. Valid
             values are `calling` and `customerAssist`.
         :type service_type: RecordingObjectServiceType
@@ -378,10 +379,11 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         return self.session.follow_pagination(url=url, model=RecordingObject, item_key='items', params=params)
 
     def list_recordings(self, from_: Union[str, datetime] = None, to_: Union[str, datetime] = None,
-                        status: RecordingObjectStatus = None, service_type: RecordingObjectServiceType = None,
-                        format_: RecordingObjectFormat = None, owner_type: RecordingObjectOwnerType = None,
-                        storage_region: StorageRegion = None, location_id: str = None, topic: str = None,
-                        timezone: str = None, **params) -> Generator[RecordingObject, None, None]:
+                        status: RecordingObjectWithDirectDownloadLinksStatus = None,
+                        service_type: RecordingObjectServiceType = None, format_: RecordingObjectFormat = None,
+                        owner_type: RecordingObjectOwnerType = None, storage_region: StorageRegion = None,
+                        location_id: str = None, topic: str = None, timezone: str = None,
+                        **params) -> Generator[RecordingObject, None, None]:
         """
         List Recordings
 
@@ -413,7 +415,7 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         :type to_: Union[str, datetime]
         :param status: Recording's status. If not specified or `available`, retrieves recordings that are available.
             Otherwise, if specified as `deleted`, retrieves recordings that have been moved into the recycle bin.
-        :type status: RecordingObjectStatus
+        :type status: RecordingObjectWithDirectDownloadLinksStatus
         :param service_type: Recording's service-type. If specified, the API filters recordings by service-type. Valid
             values are `calling` and `customerAssist`.
         :type service_type: RecordingObjectServiceType
