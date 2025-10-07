@@ -373,57 +373,40 @@ class CDR(ApiModel):
     call_outcome: Optional[str] = None
     #: Additional information about the Call outcome returned. Possible reasons are:
     #:
-    #: Success
+    #: - Success
+    #: - Normal: Call is completed successfully.
+    #: - UserBusy: Call is a success, but the user is busy.
+    #: - NoAnswer: Call is a success, but the user didn't answer.
     #:
-    #: - Normal—Call was completed successfully.
+    #: - Refusal
+    #: - CallRejected: Call attempt rejected at the recipient's end.
+    #: - UnassignedNumber: The dialed number isn't assigned to any user or service.
+    #: - SIP408: Request timed out because couldn’t find the user in time.
+    #: - InternalRequestTimeout: Request timed out as the service couldn’t fulfill the request due to an unexpected
+    #:   condition.
+    #: - Q850102ServerTimeout: Recovery on timer expiry/server timed out
+    #: - NoUserResponse: No response from any end-user device/client
+    #: - NoAnswerFromUser: No answer from the user.
+    #: - SIP480: Callee or called party is currently unavailable.
+    #: - SIP487: Request is terminated by bye or cancel.
+    #: - TemporarilyUnavailable: User is temporarily unavailable.
+    #: - AdminCallBlock: Call attempt is rejected due to the organization's call block list.
+    #: - UserCallBlock: The call to user is rejected because the number is on the user's block list.
+    #: - Unreachable: Unable to route the call to the desired destination.
+    #: - LocalGatewayLoop: Loop detected between the local gateway and Webex Calling.
+    #: - UserAbsent: User is temporarily unreachable or unavailable.
     #:
-    #: - UserBusy—Call was a success, but the user was busy.
-    #:
-    #: - NoAnswer—Call was a success, but the user didn't answer.
-    #:
-    #: Refusal
-    #:
-    #: - CallRejected—User rejected the call.
-    #:
-    #: - UnassignedNumber—Dialed number isn't assigned to any user or service.
-    #:
-    #: - SIP408—Request timed out.
-    #:
-    #: - InternalRequestTimeout—Request timed out.
-    #:
-    #: - Q850102ServerTimeout—Server timed out.
-    #:
-    #: - NoUserResponse—No response from the user.
-    #:
-    #: - NoAnswerFromUser—No answer from the user.
-    #:
-    #: - SIP480—Caller was unavailable.
-    #:
-    #: - SIP487—Request was terminated by the called number.
-    #:
-    #: - TemporarilyUnavailable—User was temporarily unavailable.
-    #:
-    #: - AdminCallBlock—Call was rejected.
-    #:
-    #: - UserCallBlock—Call was rejected.
-    #:
-    #: - Unreachable—Unable to route the call to the destination.
-    #:
-    #: Failure
-    #:
-    #: - DestinationOutOfOrder—Service request failed.
-    #:
-    #: - SIP501—Invalid method.
-    #:
-    #: - SIP503—Service was temporarily unavailable.
-    #:
-    #: - ProtocolError—Unknown release code.
-    #:
-    #: - SIP606—Some aspect of the session description wasn't acceptable.
-    #:
-    #: - NoRouteToDestination—No route available to the destination.
-    #:
-    #: - Internal—Failed because of internal Webex Calling reasons.
+    #: - Failure
+    #: - DestinationOutOfOrder: Service request failed as the destination can’t be reached or the interface to the
+    #:   destination isn’t functioning correctly.
+    #: - SIP501: Invalid method and can’t identify the request method.
+    #: - SIP503: Service is temporarily unavailable so can’t process the request.
+    #: - ProtocolError: Unknown or unimplemented release code.
+    #: - SIP606: Some aspect of the session description wasn't acceptable.
+    #: - NoRouteToDestination: No route available to the destination
+    #: - Internal: Failed because of internal Webex Calling reasons.
+    #: - MaxConcurrentTerminatingAlertingRequestsExceeded: The number of simultaneous unanswered calls to a local
+    #:   gateway, for the same calling and called number, exceeded the limit.
     call_outcome_reason: Optional[str] = None
     #: The length of ringing before the call was answered or timed out, in seconds.
     ring_duration: Optional[int] = None
@@ -487,37 +470,71 @@ class CDR(ApiModel):
     #: Example: If Alice has a device assigned, where multiline is configured or Bob and makes/receives a call from
     #: Bob's line, then Bob's CDR for the call will have Alice UUID as the device owner.
     device_owner_uuid: Optional[str] = None
-    #: Call recording platform name and the recording platform can be "DubberRecorder", "Webex" or "Unknown" if the
-    #: call recording Platform Name could not be fetched. Other supported vendors include Eleveo, ASCTech, MiaRec,
-    #: and Imagicle.
+    #: `Call recording Platform Name` and the recording platform can be "DubberRecorder", "Webex" or "Unknown" if the
+    #: `Call Recording Platform Name` could not be fetched. Other supported vendors include "Eleveo", "ASCTech",
+    #: "MiaRec", and "Imagicle".
     call_recording_platform_name: Optional[str] = None
-    #: The status of the recorded media can be
-    #:
-    #: * successful
-    #: * failed
-    #: * successful but not kept
+    #: Status of the recorded media: "successful", "failed", or "successful but not kept."
     call_recording_result: Optional[str] = None
-    #: This field indicates the user's recording mode for this call. The values for this field are:
-    #:
-    #: * always
-    #: * always-pause-resume
-    #: * on-demand
-    #: * on-demand-user-start
+    #: User's recording mode for the call. The values for this field are "always", always-pause-resume", "on-demand",
+    #: or "on-demand-user-start."
     call_recording_trigger: Optional[str] = None
+    #: When the call is redirected one or more times, this field represents the unique identifier of the first
+    #: redirecting party. This might be a user or service that's accountable for the CDRs. The field holds the value
+    #: of the UUID contained in the Cisco Common Identity associated with a user or service.
+    original_called_party_uuid: Optional[str] = Field(alias='Original Called Party UUID', default=None)
+    #: When Recall Type = call park, it indicates that the parked call is retrieved and presented to the user that
+    #: originally parked the call or an alternate recall user. The field is only set for a call park recall scenario
+    #: when the parked call isn’t retrieved within the provisioned recall time.
+    recall_type: Optional[str] = Field(alias='Recall Type', default=None)
+    #: Indicates the total duration of call hold time in seconds. This is the floor value of the calculated hold
+    #: duration
+    hold_duration: Optional[int] = Field(alias='Hold Duration', default=None)
+    #: Indicates the last key pressed value by the caller.
+    auto_attendant_key_pressed: Optional[str] = Field(alias='Auto Attendant Key Pressed', default=None)
+    #: The field represents the type of call queue service.
+    #:
+    #: Example:
+    #:
+    #: Queue Type = Customer Assist, if it’s a customer assist based call queue
+    #:
+    #: Queue Type = Call Queue, if it’s a calling > feature based call queue
+    queue_type: Optional[str] = Field(alias='Queue Type', default=None)
+    #: This field is present in the terminating CDR when the call is answered by a different user, service or location.
+    #:
+    #: Example: Set to Answered Elsewhere = Yes, for a call forking feature like Hunt Group, or Call Queue where agents
+    #: didn't answer the call or when a user is at time of day.
+    answered_elsewhere: Optional[str] = Field(alias='Answered Elsewhere', default=None)
 
 
 @dataclass(init=False, repr=False)
-class DetailedCDRApi(ApiChild, base='devices'):
+class DetailedCDRApi(ApiChild, base=''):
     """
-    To retrieve Detailed Call History information, you must use a token with the spark-admin:calling_cdr_read scope.
-    The authenticating user must be a read-only-admin or full-admin of the organization and have the administrator
-    role "Webex Calling Detailed Call History API access" enabled.
+    Reports: Detailed Call History
+
+    The base URL for these APIs is **analytics.webexapis.com** (or **analytics-
+    calling-gov.webexapis.com** for Government), which does not work with the API
+    reference's **Try It** feature. If you have any questions or need help please
+    contact the Webex Developer Support team at devsupport@webex.com.
+
+    To retrieve Detailed Call History information, you must use a token with the `spark-admin:calling_cdr_read` `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_.
+    The authenticating user must have the administrator role "Webex Calling Detailed Call History API access" enabled.
 
     Detailed Call History information is available 5 minutes after a call has ended and may be retrieved for up to 48
     hours. For example, if a call ends at 9:46 am, the record for that call can be collected using the API from 9:51
     am, and is available until 9:46 am two days later.
 
-    This API is rate-limited to one call every 5 minutes for a given organization ID.
+    This API is rate-limited to one call every 1 minutes for a given organization ID.
+
+    Details on the fields returned from this API and their potential values are available at
+    <https://help.webex.com/en-us/article/nmug598/Reports-for-Your-Cloud-Collaboration-Portfolio>. Select the **Report
+    templates** tab, and then in the **Webex Calling reports** section see **Calling Detailed Call History Report**.
+
+    By default, the calls to analytics.webexapis.com are sent to the closest region's servers. If the region's servers
+    host the organization's data, then the data is returned. Otherwise, an HTTP 451 error code response is returned.
+    The body of the response in this case contains the end point information where a user can get data for the user's
+    organization.
     """
 
     def get_cdr_history(self, start_time: Union[str, datetime] = None, end_time: Union[datetime, str] = None,

@@ -540,6 +540,32 @@ class CDR(ApiModel):
     #: This field represents an immutable UUID, as defined by Cisco, for a PSTN provider partner. It uniquely
     #: identifies the entity that has provided PSTN service in that country.
     pstn_provider_id: Optional[str] = Field(alias='PSTN Provider ID', default=None)
+    #: When the call is redirected one or more times, this field represents the unique identifier of the first
+    #: redirecting party. This might be a user or service that's accountable for the CDRs. The field holds the value
+    #: of the UUID contained in the Cisco Common Identity associated with a user or service.
+    original_called_party_uuid: Optional[str] = Field(alias='Original Called Party UUID', default=None)
+    #: When Recall Type = call park, it indicates that the parked call is retrieved and presented to the user that
+    #: originally parked the call or an alternate recall user. The field is only set for a call park recall scenario
+    #: when the parked call isn’t retrieved within the provisioned recall time.
+    recall_type: Optional[str] = Field(alias='Recall Type', default=None)
+    #: Indicates the total duration of call hold time in seconds. This is the floor value of the calculated hold
+    #: duration
+    hold_duration: Optional[int] = Field(alias='Hold Duration', default=None)
+    #: Indicates the last key pressed value by the caller.
+    auto_attendant_key_pressed: Optional[str] = Field(alias='Auto Attendant Key Pressed', default=None)
+    #: The field represents the type of call queue service.
+    #: 
+    #: Example:
+    #: 
+    #: Queue Type = Customer Assist, if it’s a customer assist based call queue
+    #: 
+    #: Queue Type = Call Queue, if it’s a calling > feature based call queue
+    queue_type: Optional[str] = Field(alias='Queue Type', default=None)
+    #: This field is present in the terminating CDR when the call is answered by a different user, service or location.
+    #: 
+    #: Example: Set to Answered Elsewhere = Yes, for a call forking feature like Hunt Group, or Call Queue where agents
+    #: didn't answer the call or when a user is at time of day.
+    answered_elsewhere: Optional[str] = Field(alias='Answered Elsewhere', default=None)
 
 
 class ReportsDetailedCallHistoryApi(ApiChild, base='cdr_feed'):
@@ -555,8 +581,7 @@ class ReportsDetailedCallHistoryApi(ApiChild, base='cdr_feed'):
     
     To retrieve Detailed Call History information, you must use a token with the `spark-admin:calling_cdr_read` `scope
     <https://developer.webex.com/docs/integrations#scopes>`_.
-    The authenticating user must be a read-only-admin or full-admin of the organization and have the administrator
-    role "Webex Calling Detailed Call History API access" enabled.
+    The authenticating user must have the administrator role "Webex Calling Detailed Call History API access" enabled.
     
     Detailed Call History information is available 5 minutes after a call has ended and may be retrieved for up to 48
     hours. For example, if a call ends at 9:46 am, the record for that call can be collected using the API from 9:51
