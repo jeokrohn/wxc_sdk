@@ -179,3 +179,4 @@ cython_debug/
 /examples/*.har
 /apib/tests/generated/
 /tests/user_tokens.yml
+/examples/output.csv
