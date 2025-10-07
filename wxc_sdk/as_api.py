@@ -1084,17 +1084,33 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         return ConvergedRecordingMeta.model_validate(data)
 
 
-class AsDetailedCDRApi(AsApiChild, base='devices'):
+class AsDetailedCDRApi(AsApiChild, base=''):
     """
-    To retrieve Detailed Call History information, you must use a token with the spark-admin:calling_cdr_read scope.
-    The authenticating user must be a read-only-admin or full-admin of the organization and have the administrator
-    role "Webex Calling Detailed Call History API access" enabled.
+    Reports: Detailed Call History
+
+    The base URL for these APIs is **analytics.webexapis.com** (or **analytics-
+    calling-gov.webexapis.com** for Government), which does not work with the API
+    reference's **Try It** feature. If you have any questions or need help please
+    contact the Webex Developer Support team at devsupport@webex.com.
+
+    To retrieve Detailed Call History information, you must use a token with the `spark-admin:calling_cdr_read` `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_.
+    The authenticating user must have the administrator role "Webex Calling Detailed Call History API access" enabled.
 
     Detailed Call History information is available 5 minutes after a call has ended and may be retrieved for up to 48
     hours. For example, if a call ends at 9:46 am, the record for that call can be collected using the API from 9:51
     am, and is available until 9:46 am two days later.
 
-    This API is rate-limited to one call every 5 minutes for a given organization ID.
+    This API is rate-limited to one call every 1 minutes for a given organization ID.
+
+    Details on the fields returned from this API and their potential values are available at
+    <https://help.webex.com/en-us/article/nmug598/Reports-for-Your-Cloud-Collaboration-Portfolio>. Select the **Report
+    templates** tab, and then in the **Webex Calling reports** section see **Calling Detailed Call History Report**.
+
+    By default, the calls to analytics.webexapis.com are sent to the closest region's servers. If the region's servers
+    host the organization's data, then the data is returned. Otherwise, an HTTP 451 error code response is returned.
+    The body of the response in this case contains the end point information where a user can get data for the user's
+    organization.
     """
 
     def get_cdr_history_gen(self, start_time: Union[str, datetime] = None, end_time: Union[datetime, str] = None,
@@ -10521,7 +10537,7 @@ class AsAppServicesApi(AsApiChild, base=''):
         super().__init__(session=session)
         self.shared_line = AsAppSharedLineApi(session=session)
 
-    def f_ep(self, person_id:str):
+    def f_ep(self, person_id: str):
         """
 
         :meta private:
@@ -29986,7 +30002,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         return r
 
     async def get_call_captions_settings(self, location_id: str,
-                                                org_id: str = None) -> LocationCallCaptions:
+                                   org_id: str = None) -> LocationCallCaptions:
         """
         Get the location call captions settings
 
@@ -30015,7 +30031,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         return r
 
     async def update_call_captions_settings(self, location_id: str, settings: LocationCallCaptions,
-                                                   org_id: str = None):
+                                      org_id: str = None):
         """
         Update the location call captions settings
 
