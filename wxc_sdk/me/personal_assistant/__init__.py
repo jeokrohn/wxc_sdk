@@ -32,7 +32,7 @@ class MePersonalAssistantApi(ApiChild, base='telephony/config/people/me/settings
 
     def update(self, settings: PersonalAssistant):
         """
-        Update My Personal Assistant
+        Modify My Personal Assistant
 
         Update user's own Personal Assistant details.
 

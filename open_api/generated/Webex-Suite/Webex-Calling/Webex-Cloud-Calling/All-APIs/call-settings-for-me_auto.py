@@ -16,7 +16,7 @@ __all__ = ['AddressObject', 'AgentACDStateType', 'Assistant', 'AvailableAssistan
            'CallForwardingInfoCallForwardingBusy', 'CallForwardingInfoCallForwardingNoAnswer',
            'CallForwardingPutCallForwarding', 'CallForwardingPutCallForwardingNoAnswer', 'CallParkMember',
            'CallPickupGroupMember', 'CallPickupGroupSettingsGet', 'CallQueueGet', 'CallQueuePut',
-           'CallQueueSettingsGetResponseObject', 'CallSettingsForMeApi', 'CallerIdSettingsGet', 'CallerIdType',
+           'CallQueueSettingsGetResponseObject', 'CallSettingsForMe12Api', 'CallerIdSettingsGet', 'CallerIdType',
            'DeviceActivationState', 'DeviceType', 'DeviceTypeObject', 'DoNotDisturbGet', 'Endpoint',
            'EndpointMobilitySettings', 'EndpointType', 'Endpoints', 'Executive', 'ExecutiveAlertGet',
            'ExecutiveAlertGetAlertingMode', 'ExecutiveAlertGetClidNameMode', 'ExecutiveAlertGetClidPhoneNumberMode',
@@ -1205,9 +1205,9 @@ class GetCountryTelephonyConfigRequirementsResponse(ApiModel):
     time_zones: Optional[list[str]] = None
 
 
-class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
+class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
     """
-    Call Settings For Me
+    Call Settings For Me (1/2)
     
     Call settings for me APIs allow a person to read or modify their settings.
     
@@ -1235,7 +1235,7 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
 
     def get_announcement_languages_for_me(self) -> list[GetAnnouncementLanguagesForMeResponseLanguagesItem]:
         """
-        Retrieve announcement languages for the authenticated user
+        Get announcement languages for the authenticated user
 
         Retrieve the list of available announcement languages for the authenticated user's telephony configuration.
 
@@ -1253,7 +1253,7 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
     def get_country_telephony_config_requirements(self,
                                                   country_code: str) -> GetCountryTelephonyConfigRequirementsResponse:
         """
-        Retrieve country-specific telephony configuration requirements
+        Get country-specific telephony configuration requirements
 
         Retrieve country-specific telephony configuration requirements for the authenticated user.
 
@@ -1311,7 +1311,7 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
 
     def modify_my_endpoint_details(self, endpoint_id: str, mobility_settings: ModifyEndpointObjectMobilitySettings):
         """
-        Update My Endpoints Details
+        Modify My Endpoints Details
 
         Update alerting settings of the mobility endpoint associated with the authenticated user.
 
@@ -1374,7 +1374,7 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
 
     def get_barge_in_settings(self) -> BargeInInfo:
         """
-        Retrieve Barge-In Settings
+        Get Barge-In Settings
 
         Retrieve Barge-In settings of the user.
 
@@ -1695,7 +1695,7 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
     def modify_my_caller_idsettings(self, calling_line_id_delivery_blocking_enabled: bool = None,
                                     connected_line_identification_restriction_enabled: bool = None):
         """
-        Update My Caller ID Settings
+        Modify My Caller ID Settings
 
         Update Caller ID Settings for the authenticated user.
 
@@ -1744,7 +1744,7 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
     def update_my_do_not_disturb_settings(self, enabled: bool = None, ring_splash_enabled: bool = None,
                                           webex_go_override_enabled: bool = None):
         """
-        Update Do Not Disturb Settings for User
+        Modify Do Not Disturb Settings for User
 
         Update Do Not Disturb settings for the authenticated user.
 
@@ -1891,7 +1891,7 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
     def modify_my_executive_assigned_assistants(self, allow_opt_in_out_enabled: bool = None,
                                                 assistant_ids: list[str] = None):
         """
-        Update My Executive Assigned Assistants
+        Modify My Executive Assigned Assistants
 
         Update assigned executive assistants for the authenticated user.
 
@@ -1937,7 +1937,7 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
                                                forward_to_phone_number: str = None,
                                                executives: list[ExecutivePut] = None):
         """
-        Update My Executive Assistant Settings
+        Modify My Executive Assistant Settings
 
         Update Settings for an executive assistant.
 
@@ -2007,7 +2007,7 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
                                                     filter_type: ExecutiveCallFilteringGetFilterType = None,
                                                     criteria_activation: list[ExecutiveCallFilteringPatchCriteriaActivationItem] = None):
         """
-        Update User Executive Call Filtering Settings
+        Modify User Executive Call Filtering Settings
 
         Update executive call filtering settings for the authenticated user.
 
@@ -2045,7 +2045,7 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
                                                     phone_numbers: list[str] = None, filter_enabled: bool = None,
                                                     calls_to_numbers: list[ExecutiveCallFilteringCriteriaPatchCallsToNumbersItem] = None) -> str:
         """
-        Create User Executive Call Filtering Criteria
+        Add User Executive Call Filtering Criteria
 
         Create a new executive call filtering criteria for the authenticated user.
 
@@ -2155,7 +2155,7 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
                                                     phone_numbers: list[str] = None, filter_enabled: bool = None,
                                                     calls_to_numbers: list[ExecutiveCallFilteringCriteriaPatchCallsToNumbersItem] = None) -> str:
         """
-        Update User Executive Call Filtering Criteria Settings
+        Modify User Executive Call Filtering Criteria Settings
 
         Update executive call filtering criteria settings for the authenticated user.
 
@@ -2339,7 +2339,7 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
                                      transfer_number: str = None, alerting: PersonalAssistantGetAlerting = None,
                                      alert_me_first_number_of_rings: int = None):
         """
-        Update My Personal Assistant
+        Modify My Personal Assistant
 
         Update user's own Personal Assistant details.
 
@@ -2606,7 +2606,7 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
                                                            call_forwarding: CallForwardingPutCallForwarding = None,
                                                            business_continuity: CallForwardingInfoCallForwardingBusy = None):
         """
-        Update My Secondary Line Owner's Call Forwarding Settings
+        Modify My Secondary Line Owner's Call Forwarding Settings
 
         Update call forwarding settings associated with a secondary line owner of the authenticated user.
 
@@ -2738,7 +2738,7 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
                                                     calling_line_id_delivery_blocking_enabled: bool = None,
                                                     connected_line_identification_restriction_enabled: bool = None):
         """
-        Update My Secondary Line Owner Caller ID Settings
+        Modify My Secondary Line Owner Caller ID Settings
 
         Update Caller ID Settings for the secondary line owner of the authenticated user.
 
@@ -2871,7 +2871,7 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
     def modify_my_secondary_lines_selected_caller_idsettings(self, lineowner_id: str,
                                                              selected: SelectedCallerIdSettingsPutSelected):
         """
-        Update My Secondary Line Owner's Selected Caller ID Settings
+        Modify My Secondary Line Owner's Selected Caller ID Settings
 
         Update selected caller ID settings associated with a secondary line owner of the authenticated user.
 
@@ -2948,7 +2948,7 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
                                                      message_storage: VoicemailInfoMessageStorage = None,
                                                      fax_message: VoicemailInfoFaxMessage = None):
         """
-        Update My Secondary Line Owner's Voicemail Settings
+        Modify My Secondary Line Owner's Voicemail Settings
 
         Update voicemail settings associated with a secondary line owner of the authenticated user.
 
@@ -3082,7 +3082,7 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
 
     def modify_my_single_number_reach_settings(self, alert_all_locations_for_click_to_dial_calls_enabled: bool = None):
         """
-        Update User's Single Number Reach Settings
+        Modify User's Single Number Reach Settings
 
         Updates single number reach settings associated with the authenticated user.
 
@@ -3306,7 +3306,7 @@ class CallSettingsForMeApi(ApiChild, base='telephony/config/people/me'):
 
     def modify_my_webex_go_override_settings(self, enabled: bool = None):
         """
-        Update My WebexGoOverride Settings
+        Modify My WebexGoOverride Settings
 
         Update "Mobile User Aware" override setting for Do Not Disturb feature.
 

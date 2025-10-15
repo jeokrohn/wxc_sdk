@@ -26,7 +26,7 @@ class GoOverrideApi(ApiChild, base='telephony/config/people/me/settings/webexGoO
 
     def update(self, enabled: bool = None):
         """
-        Update My WebexGoOverride Settings
+        Modify My WebexGoOverride Settings
 
         Update "Mobile User Aware" override setting for Do Not Disturb feature.
 

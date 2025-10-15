@@ -4410,7 +4410,7 @@ class AsGoOverrideApi(AsApiChild, base='telephony/config/people/me/settings/webe
 
     async def update(self, enabled: bool = None):
         """
-        Update My WebexGoOverride Settings
+        Modify My WebexGoOverride Settings
 
         Update "Mobile User Aware" override setting for Do Not Disturb feature.
 
@@ -4699,7 +4699,7 @@ class AsMeCallerIdApi(AsApiChild, base='telephony/config/people/me'):
 
     async def update(self, settings: MeCallerIdSettings):
         """
-        Update My Caller ID Settings
+        Modify My Caller ID Settings
 
         Update Caller ID Settings for the authenticated user.
 
@@ -4856,7 +4856,7 @@ class AsMeEndpointsApi(AsApiChild, base='telephony/config/people/me'):
 
     async def update(self, endpoint_id: str, mobility_alerting_enabled: bool):
         """
-        Update My Endpoints Details
+        Modify My Endpoints Details
 
         Update alerting settings of the mobility endpoint associated with the authenticated user.
 
@@ -5015,7 +5015,7 @@ class AsMeExecutiveApi(AsApiChild, base='telephony/config/people/me'):
 
     async def update_assigned_assistants(self, assigned_assistants: AssignedAssistants):
         """
-        Update My Executive Assigned Assistants
+        Modify My Executive Assigned Assistants
 
         Update assigned executive assistants for the authenticated user.
 
@@ -5055,7 +5055,7 @@ class AsMeExecutiveApi(AsApiChild, base='telephony/config/people/me'):
 
     async def update_executive_assistant_settings(self, assistant_settings: AssistantSettings):
         """
-        Update My Executive Assistant Settings
+        Modify My Executive Assistant Settings
 
         Update Settings for an executive assistant.
 
@@ -5129,7 +5129,7 @@ class AsMeExecutiveApi(AsApiChild, base='telephony/config/people/me'):
 
     async def create_call_filtering_criteria(self, settings: ExecCallFilteringCriteria) -> str:
         """
-        Create User Executive Call Filtering Criteria
+        Add User Executive Call Filtering Criteria
 
         Create a new executive call filtering criteria for the authenticated user.
 
@@ -5357,7 +5357,7 @@ class AsMePersonalAssistantApi(AsApiChild, base='telephony/config/people/me/sett
 
     async def update(self, settings: PersonalAssistant):
         """
-        Update My Personal Assistant
+        Modify My Personal Assistant
 
         Update user's own Personal Assistant details.
 

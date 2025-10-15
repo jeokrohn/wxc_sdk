@@ -72,7 +72,7 @@ class MeCallerIdApi(ApiChild, base='telephony/config/people/me'):
 
     def update(self, settings: MeCallerIdSettings):
         """
-        Update My Caller ID Settings
+        Modify My Caller ID Settings
 
         Update Caller ID Settings for the authenticated user.
 

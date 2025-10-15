@@ -329,7 +329,7 @@ class MeExecutiveApi(ApiChild, base='telephony/config/people/me'):
 
     def update_assigned_assistants(self, assigned_assistants: AssignedAssistants):
         """
-        Update My Executive Assigned Assistants
+        Modify My Executive Assigned Assistants
 
         Update assigned executive assistants for the authenticated user.
 
@@ -369,7 +369,7 @@ class MeExecutiveApi(ApiChild, base='telephony/config/people/me'):
 
     def update_executive_assistant_settings(self, assistant_settings: AssistantSettings):
         """
-        Update My Executive Assistant Settings
+        Modify My Executive Assistant Settings
 
         Update Settings for an executive assistant.
 
@@ -443,7 +443,7 @@ class MeExecutiveApi(ApiChild, base='telephony/config/people/me'):
 
     def create_call_filtering_criteria(self, settings: ExecCallFilteringCriteria) -> str:
         """
-        Create User Executive Call Filtering Criteria
+        Add User Executive Call Filtering Criteria
 
         Create a new executive call filtering criteria for the authenticated user.
 

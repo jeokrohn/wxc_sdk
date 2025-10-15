@@ -31,7 +31,7 @@ class MeSecondaryLineVoicemailApi(ApiChild, base='telephony/config/people/me'):
 
     def configure(self, lineowner_id: str, settings: VoicemailSettings):
         """
-        Update My Secondary Line Owner's Voicemail Settings
+        Modify My Secondary Line Owner's Voicemail Settings
 
         Update voicemail settings associated with a secondary line owner of the authenticated user.
 

@@ -58,7 +58,7 @@ class MeSecondaryLineCallerIdApi(ApiChild, base='telephony/config/people/me'):
 
     def update(self, lineowner_id: str, settings: MeCallerIdSettings):
         """
-        Update My Secondary Line Owner Caller ID Settings
+        Modify My Secondary Line Owner Caller ID Settings
 
         Update Caller ID Settings for the secondary line owner of the authenticated user.
 
@@ -106,7 +106,7 @@ class MeSecondaryLineCallerIdApi(ApiChild, base='telephony/config/people/me'):
 
     def modify_selected_caller_id_settings(self, lineowner_id: str, settings: MeSelectedCallerId):
         """
-        Update My Secondary Line Owner's Selected Caller ID Settings
+        Modify My Secondary Line Owner's Selected Caller ID Settings
 
         Update selected caller ID settings associated with a secondary line owner of the authenticated user.
 

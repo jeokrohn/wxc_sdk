@@ -252,7 +252,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.me.caller_id.settings <wxc_sdk.me.callerid.MeCallerIdApi.settings>`
         Get My Caller ID Settings
    * - :meth:`api.me.caller_id.update <wxc_sdk.me.callerid.MeCallerIdApi.update>`
-        Update My Caller ID Settings
+        Modify My Caller ID Settings
    * - :meth:`api.me.dnd.configure <wxc_sdk.me.dnd.MeDNDApi.configure>`
         Update Do Not Disturb Settings for User
    * - :meth:`api.me.dnd.settings <wxc_sdk.me.dnd.MeDNDApi.settings>`
@@ -268,7 +268,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.me.endpoints.modify_preferred_answer_endpoint <wxc_sdk.me.endpoints.MeEndpointsApi.modify_preferred_answer_endpoint>`
         Modify Preferred Answer Endpoint
    * - :meth:`api.me.endpoints.update <wxc_sdk.me.endpoints.MeEndpointsApi.update>`
-        Update My Endpoints Details
+        Modify My Endpoints Details
    * - :meth:`api.me.executive.alert_settings <wxc_sdk.me.executive.MeExecutiveApi.alert_settings>`
         Get User Executive Alert Settings
    * - :meth:`api.me.executive.assigned_assistants <wxc_sdk.me.executive.MeExecutiveApi.assigned_assistants>`
@@ -276,7 +276,7 @@ The method name is a link to the method documentation.
    * - :meth:`api.me.executive.call_filtering_criteria <wxc_sdk.me.executive.MeExecutiveApi.call_filtering_criteria>`
         Get User Executive Call Filtering Criteria Settings
    * - :meth:`api.me.executive.create_call_filtering_criteria <wxc_sdk.me.executive.MeExecutiveApi.create_call_filtering_criteria>`
-        Create User Executive Call Filtering Criteria
+        Add User Executive Call Filtering Criteria
    * - :meth:`api.me.executive.delete_call_filtering_criteria <wxc_sdk.me.executive.MeExecutiveApi.delete_call_filtering_criteria>`
         Delete User Executive Call Filtering Criteria
    * - :meth:`api.me.executive.executive_assistant_settings <wxc_sdk.me.executive.MeExecutiveApi.executive_assistant_settings>`
@@ -290,11 +290,11 @@ The method name is a link to the method documentation.
    * - :meth:`api.me.executive.update_alert_settings <wxc_sdk.me.executive.MeExecutiveApi.update_alert_settings>`
         Modify User Executive Alert Settings
    * - :meth:`api.me.executive.update_assigned_assistants <wxc_sdk.me.executive.MeExecutiveApi.update_assigned_assistants>`
-        Update My Executive Assigned Assistants
+        Modify My Executive Assigned Assistants
    * - :meth:`api.me.executive.update_call_filtering_criteria <wxc_sdk.me.executive.MeExecutiveApi.update_call_filtering_criteria>`
         Update User Executive Call Filtering Criteria Settings
    * - :meth:`api.me.executive.update_executive_assistant_settings <wxc_sdk.me.executive.MeExecutiveApi.update_executive_assistant_settings>`
-        Update My Executive Assistant Settings
+        Modify My Executive Assistant Settings
    * - :meth:`api.me.executive.update_executive_call_filtering_settings <wxc_sdk.me.executive.MeExecutiveApi.update_executive_call_filtering_settings>`
         Update User Executive Call Filtering Settings
    * - :meth:`api.me.executive.update_screening_settings <wxc_sdk.me.executive.MeExecutiveApi.update_screening_settings>`
@@ -306,11 +306,11 @@ The method name is a link to the method documentation.
    * - :meth:`api.me.go_override.get <wxc_sdk.me.go_override.GoOverrideApi.get>`
         Get My WebexGoOverride Settings
    * - :meth:`api.me.go_override.update <wxc_sdk.me.go_override.GoOverrideApi.update>`
-        Update My WebexGoOverride Settings
+        Modify My WebexGoOverride Settings
    * - :meth:`api.me.personal_assistant.get <wxc_sdk.me.personal_assistant.MePersonalAssistantApi.get>`
         Get My Personal Assistant
    * - :meth:`api.me.personal_assistant.update <wxc_sdk.me.personal_assistant.MePersonalAssistantApi.update>`
-        Update My Personal Assistant
+        Modify My Personal Assistant
    * - :meth:`api.me.recording.settings <wxc_sdk.me.recording.MeRecordingApi.settings>`
         Get My Call Recording Settings
    * - :meth:`api.me.snr.create_snr <wxc_sdk.me.snr.MeSNRApi.create_snr>`

@@ -40,7 +40,7 @@ class MeSecondaryLineForwardingApi(ApiChild, base='telephony/config/people/me'):
 
     def configure(self, lineowner_id: str, forwarding: PersonForwardingSetting):
         """
-        Update My Secondary Line Owner's Call Forwarding Settings
+        Modify My Secondary Line Owner's Call Forwarding Settings
 
         Update call forwarding settings associated with a secondary line owner of the authenticated user.
 

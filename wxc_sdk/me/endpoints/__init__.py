@@ -122,7 +122,7 @@ class MeEndpointsApi(ApiChild, base='telephony/config/people/me'):
 
     def update(self, endpoint_id: str, mobility_alerting_enabled: bool):
         """
-        Update My Endpoints Details
+        Modify My Endpoints Details
 
         Update alerting settings of the mobility endpoint associated with the authenticated user.
 
