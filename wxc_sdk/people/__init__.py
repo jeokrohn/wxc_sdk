@@ -377,6 +377,10 @@ class PeopleApi(ApiChild, base='people'):
           SIPAddresses immediately. Instead, you can verify them with a separate GET to /people, after they were newly
           configured.
 
+        * When assigning multiple licenses in a single request, the system will assign all valid and available
+          licenses. If any requested licenses cannot be assigned, the operation will continue with the remaining
+          licenses. As a result, it is possible that not all requested licenses are assigned to the user.
+
         :param settings: settings for new user
         :type settings: Person
         :param calling_data: Include Webex Calling user details in the response.
@@ -477,6 +481,14 @@ class PeopleApi(ApiChild, base='people'):
           person. As a result, a PUT request that returns an error response code may still have altered some values of
           the person's data. Therefore, it is recommended to perform a GET request after encountering an error to verify
           the current state of the resource.
+
+        * Some licenses are implicitly assigned by the system and cannot be admin controlled. They are necessary for
+          the baseline function of the Webex system. If you get an error about implicitly assigned licensed that cannot
+          be removed, please ensure you have the corresponding license in your PUT request.
+
+        * When assigning multiple licenses in a single request, the system will assign all valid and available
+          licenses. If any requested licenses cannot be assigned, the operation will continue with the remaining
+          licenses. As a result, it is possible that not all requested licenses are assigned to the user.
 
         :param person: The person to update
         :type person: Person
