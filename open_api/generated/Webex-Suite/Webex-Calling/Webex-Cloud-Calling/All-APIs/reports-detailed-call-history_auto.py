@@ -541,12 +541,14 @@ class CDR(ApiModel):
     #: identifies the entity that has provided PSTN service in that country.
     pstn_provider_id: Optional[str] = Field(alias='PSTN Provider ID', default=None)
     #: When the call is redirected one or more times, this field represents the unique identifier of the first
-    #: redirecting party. This might be a user or service that's accountable for the CDRs. The field holds the value
-    #: of the UUID contained in the Cisco Common Identity associated with a user or service.
+    #: redirecting party. This might be a user, service, workspace, or virtual line that’s accountable for the CDRs.
+    #: The field holds the value of the UUID contained in the Cisco Common Identity associated with a user, service,
+    #: workspace, or virtual line.
     original_called_party_uuid: Optional[str] = Field(alias='Original Called Party UUID', default=None)
-    #: When Recall Type = call park, it indicates that the parked call is retrieved and presented to the user that
-    #: originally parked the call or an alternate recall user. The field is only set for a call park recall scenario
-    #: when the parked call isn’t retrieved within the provisioned recall time.
+    #: This field indicates that the call is a call park recall. A call park recall occurs when a parked call is not
+    #: retrieved within the provisioned recall time. In such cases, the system attempts to return the parked call to
+    #: the user who originally parked it or to an alternate recall destination, which can only be a hunt group. The
+    #: recall attempt may either succeed or fail, and if it fails, the parked call remains unretrieved.
     recall_type: Optional[str] = Field(alias='Recall Type', default=None)
     #: Indicates the total duration of call hold time in seconds. This is the floor value of the calculated hold
     #: duration
@@ -561,10 +563,11 @@ class CDR(ApiModel):
     #: 
     #: Queue Type = Call Queue, if it’s a calling > feature based call queue
     queue_type: Optional[str] = Field(alias='Queue Type', default=None)
-    #: This field is present in the terminating CDR when the call is answered by a different user, service or location.
+    #: This field is present in the terminating CDR when an incoming call is answered by a different user, workspace,
+    #: virtual line, or service.
     #: 
-    #: Example: Set to Answered Elsewhere = Yes, for a call forking feature like Hunt Group, or Call Queue where agents
-    #: didn't answer the call or when a user is at time of day.
+    #: Example: Set to Answered Elsewhere = Yes, for a Hunt Group agent's call when simultaneous routing is in use and
+    #: another agent answers the call.
     answered_elsewhere: Optional[str] = Field(alias='Answered Elsewhere', default=None)
 
 
