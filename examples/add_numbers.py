@@ -65,7 +65,7 @@ def setup_logging(*, api: AsWebexSimpleApi, verbose: bool, log_file: Optional[st
                 with HarWriter(api=api, path=log_file):
                     yield
             else:
-                f_handler = logging.FileHandler(args.log_file)
+                f_handler = logging.FileHandler(log_file)
                 f_handler.setLevel(logging.DEBUG)
                 f_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
                 logging.getLogger().addHandler(f_handler)
