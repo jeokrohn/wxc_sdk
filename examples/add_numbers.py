@@ -25,18 +25,19 @@ optional arguments:
 Example: add_numbers.py add_numbers.csv --log-file add_numbers.har --dry-run
 
 """
-import argparse
 import asyncio
 import csv
 import logging
 import os
 import sys
-from argparse import Namespace
 from collections import defaultdict, Counter
 from contextlib import contextmanager
+from functools import wraps
 from itertools import chain
+from pathlib import Path
 from typing import Optional
 
+import typer
 from dotenv import load_dotenv
 
 from examples.service_app import SERVICE_APP_ENVS, env_path, get_tokens
@@ -49,7 +50,7 @@ BATCH_SIZE = 10
 
 
 @contextmanager
-def setup_logging(args: Namespace, api: AsWebexSimpleApi):
+def setup_logging(*, api: AsWebexSimpleApi, verbose: bool, log_file: Optional[str]):
     """
     Set up logging
     """
@@ -74,10 +75,10 @@ def setup_logging(args: Namespace, api: AsWebexSimpleApi):
     logging.getLogger().setLevel(logging.DEBUG)
     # create a console logging handler
     console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.DEBUG if args.verbose else logging.INFO)
+    console_handler.setLevel(logging.DEBUG if verbose else logging.INFO)
     # console_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
     logging.getLogger().addHandler(console_handler)
-    with file_handler(args.log_file):
+    with file_handler(log_file):
         yield
 
 
@@ -172,25 +173,43 @@ async def add_tns(api: AsWebexSimpleApi, location_id: str, tns: list[str], inact
     return True
 
 
-async def add_numbers():
+def async_command(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        return asyncio.run(f(*args, **kwargs))
+
+    return wrapper
+
+
+app = typer.Typer()
+
+
+@app.command(epilog=f'Example: {sys.argv[0]} add_numbers.csv --log-file add_numbers.har --dry-run',
+             help='Add TNs to Webex Calling locations')
+@async_command
+async def add_numbers(file: Path,
+                      dry_run: bool = typer.Option(False, '--dry-run',
+                                                   help='Do not make any changes'),
+                      verbose: bool = typer.Option(False, '--verbose',
+                                                   help='Print debug information'),
+                      log_file: Optional[Path] = typer.Option(None, '--log-file',
+                                                              help='Log file. If extension is .har, log in HAR format'),
+                      token: Optional[str] = typer.Option(None, '--token',
+                                                          help=f'Access token can be provided using --token argument, '
+                                                               f'set in WEBEX_ACCESS_TOKEN environment variable or '
+                                                               f'can be a service app token. For the latter set '
+                                                               f'environment variables {SERVICE_APP_ENVS}. '
+                                                               f'Environment variables can also be set in '
+                                                               f'{env_path()}'),
+                      inactive: bool = typer.Option(False, '--inactive',
+                                                    help='Add TNs as inactive')
+
+                      ):
     """
     Add TNs to Webex Calling locations
     """
-    # get commandline arguments
-    parser = argparse.ArgumentParser(description='Add TNs to Webex Calling locations',
-                                     epilog='Example: %(prog)s add_numbers.csv --log-file add_numbers.har --dry-run')
-    parser.add_argument('file', help='CSV file with location names and TNs')
-    parser.add_argument('--dry-run', action='store_true', help='Do not make any changes')
-    parser.add_argument('--verbose', action='store_true', help='Print debug information')
-    parser.add_argument('--log-file', help='Log file. If extension is .har, log in HAR format')
-    parser.add_argument('--token', help=f'Access token can be provided using --token argument, set in '
-                                        f'WEBEX_ACCESS_TOKEN environment variable or can be a service app token. For '
-                                        f'the latter set environment variables {SERVICE_APP_ENVS}. Environment '
-                                        f'variables can also be set in {env_path()}')
-    parser.add_argument('--inactive', action='store_true', help='Add TNs as inactive')
-    args = parser.parse_args()
     load_dotenv(env_path())
-    tokens = get_tokens() if args.token is None else Tokens(access_token=args.token)
+    tokens = get_tokens() if token is None else Tokens(access_token=token)
     if tokens is None:
         print(f'Access token can be provided using --token argument, set in WEBEX_ACCESS_TOKEN environment variable or '
               f'can be a service app token. For the latter set environment variables {SERVICE_APP_ENVS}. Environment '
@@ -199,7 +218,7 @@ async def add_numbers():
         exit(1)
 
     async with AsWebexSimpleApi(tokens=tokens) as api:
-        with setup_logging(args, api):
+        with setup_logging(api=api, verbose=verbose, log_file=str(log_file)):
             # validate the access token
             try:
                 await api.people.me()
@@ -208,8 +227,8 @@ async def add_numbers():
                 logging.error('Token might be invalid')
                 exit(1)
             # read location names and TNs from a CSV file
-            logging.info(f'Reading file {args.file}')
-            locations_and_tns = read_csv(args.file)
+            logging.info(f'Reading file {file}')
+            locations_and_tns = read_csv(file)
 
             # validate the location names
             logging.info('Validating location names...')
@@ -229,9 +248,9 @@ async def add_numbers():
                 exit(1)
 
             # add TNs to the locations
-            if not args.dry_run:
+            if not dry_run:
                 logging.info('Adding TNs...')
-                results = await asyncio.gather(*[add_tns(api, location_id, tns, args.inactive)
+                results = await asyncio.gather(*[add_tns(api, location_id, tns, inactive)
                                                  for location_id, tns in zip(location_ids,
                                                                              locations_and_tns.values())])
                 if not all(results):
@@ -244,4 +263,4 @@ async def add_numbers():
 
 
 if __name__ == '__main__':
-    asyncio.run(add_numbers())
+    app()
