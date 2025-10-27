@@ -1,4 +1,19 @@
-#!/usr/bin/env python
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#     "aenum",
+#     "aiohttp",
+#     "html2text",
+#     "pydantic",
+#     "python-dateutil",
+#     "python-dotenv",
+#     "pytz",
+#     "PyYAML",
+#     "requests",
+#     "requests-toolbelt"
+# ]
+# ///
 """
 CLI tool to generate Python source from OpenApi specs
     usage: apib2py.py [-h] [--pypath PYPATH] [--pysrc PYSRC] [--nobeta] [--exclude EXCLUDE] [--with-unref] apib
@@ -32,6 +47,12 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+# we need to add the parent dir into sys.path so that the following import can be resolved
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+print(f'inserting parent dir {parent_dir} into sys.path')
+sys.path.insert(0, parent_dir)
+print(sys.path)
+print()
 from open_api.open_api_code_generator import OACodeGenerator
 
 

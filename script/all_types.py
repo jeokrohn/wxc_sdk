@@ -1,4 +1,17 @@
-#!/usr/bin/env python
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.11,<3.14"
+# dependencies = [
+#     "aenum",
+#     "aiohttp",
+#     "pydantic",
+#     "python-dateutil",
+#     "pytz",
+#     "PyYAML",
+#     "requests",
+#     "requests-toolbelt"
+# ]
+# ///
 
 """
 find all .py files in ../wxc_sdk
@@ -14,6 +27,13 @@ import sys
 from importlib import import_module
 from io import StringIO
 from pathlib import Path
+
+# we need to add the parent dir into sys.path so that the import of wxc_sdk can be resolved locally
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+print(f'inserting parent dir {parent_dir} into sys.path')
+sys.path.insert(0, parent_dir)
+print(sys.path)
+print()
 
 
 def module_name_from_path(path):

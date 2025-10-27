@@ -1,4 +1,26 @@
-#!/usr/bin/env python
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.11,<3.14"
+# dependencies = [
+#     "aenum",
+#     "aiohttp",
+#     "pydantic",
+#     "python-dateutil",
+#     "pytz",
+#     "PyYAML",
+#     "requests",
+#     "requests-toolbelt"
+# ]
+# ///
+# we need to add the parent dir into sys.path so that the import of wxc_sdk can be resolved locally
+import sys
+import os
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+print(f'inserting parent dir {parent_dir} into sys.path')
+sys.path.insert(0, parent_dir)
+print(sys.path)
+print()
+
 import logging
 import os
 import re
