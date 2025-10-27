@@ -148,18 +148,30 @@ Read/update call intercept settings of a user
 
 .. code-block:: text
 
-    usage: call_intercept.py [-h] [--token TOKEN] user_email [{on,off}]
-   
-    positional arguments:
-      user_email     email address of user
-      {on,off}       operation to apply
-   
-    options:
-     -h, --help     show this help message and exit
-     --token TOKEN  admin access token to use
+     Usage: call_intercept.py [OPTIONS] USER_EMAIL [ON_OFF]:[on|off]
 
-The script uses the access token passed via the CLI, reads one from the WEBEX_ACCESS_TOKEN environment variable or
-obtains tokens via an OAuth flow. For the last option the integration parameters are read from environment variables which can be set in a ``.env`` file
+     read/update call intercept settings of a calling user.
+
+    ╭─ Arguments ────────────────────────────────────────────────────────────────────────────────╮
+    │ *    user_email      EMAIL_TYPE         email address of user [required]                   │
+    │      on_off          [ON_OFF]:[on|off]  operation to apply.                                │
+    ╰────────────────────────────────────────────────────────────────────────────────────────────╯
+    ╭─ Options ──────────────────────────────────────────────────────────────────────────────────╮
+    │ --token                     TEXT  Access token can be provided using --token argument, set │
+    │                                   in WEBEX_ACCESS_TOKEN environment variable or can be a   │
+    │                                   service app token. For the latter set environment        │
+    │                                   variables ('SERVICE_APP_REFRESH_TOKEN',                  │
+    │                                   'SERVICE_APP_CLIENT_ID', 'SERVICE_APP_CLIENT_SECRET').   │
+    │                                   Environment variables can also be set in service_app.env │
+    │ --install-completion              Install completion for the current shell.                │
+    │ --show-completion                 Show completion for the current shell, to copy it or     │
+    │                                   customize the installation.                              │
+    │ --help                            Show this message and exit.                              │
+    ╰────────────────────────────────────────────────────────────────────────────────────────────╯
+
+     Example: ./call_intercept.py bob@example.com on
+
+
 
 Source: |call_intercept.py|_
 
@@ -368,16 +380,27 @@ Provision location level access codes from a CSV file
 
 .. code-block:: text
 
-    usage: access_codes.py [-h] [--token TOKEN] csv_file
-   
-    Provision location level access codes from a CSV file
-   
-    positional arguments:
-      csv_file       CSV file with access codes
-   
-    options:
-      -h, --help     show this help message and exit
-      --token TOKEN  API token
+     Usage: access_codes.py [OPTIONS] CSV_FILE
+
+     Provision location level access codes from a CSV file
+
+    ╭─ Arguments ────────────────────────────────────────────────────────────────────────────────╮
+    │ *    csv_file      PATH  CSV file with access codes [required]                             │
+    ╰────────────────────────────────────────────────────────────────────────────────────────────╯
+    ╭─ Options ──────────────────────────────────────────────────────────────────────────────────╮
+    │ --dry-run                         Do not make any changes                                  │
+    │ --token                     TEXT  Access token can be provided using --token argument, set │
+    │                                   in WEBEX_ACCESS_TOKEN environment variable or can be a   │
+    │                                   service app token. For the latter set environment        │
+    │                                   variables ('SERVICE_APP_REFRESH_TOKEN',                  │
+    │                                   'SERVICE_APP_CLIENT_ID', 'SERVICE_APP_CLIENT_SECRET').   │
+    │                                   Environment variables can also be set in                 │
+    │                                   service_app.env                                          │
+    │ --install-completion              Install completion for the current shell.                │
+    │ --show-completion                 Show completion for the current shell, to copy it or     │
+    │                                   customize the installation.                              │
+    │ --help                            Show this message and exit.                              │
+    ╰────────────────────────────────────────────────────────────────────────────────────────────╯
 
 Source: |access_codes.py|_
 
@@ -436,28 +459,31 @@ Bulk add TNs to Webex Calling locations
 
 .. code-block:: text
 
-    usage: add_numbers.py [-h] [--dry-run] [--verbose] [--log-file LOG_FILE] [--token TOKEN]
-                          [--inactive]
-                          file
+     Usage: add_numbers.py [OPTIONS] FILE
 
-    Add TNs to Webex Calling locations
+     Add TNs to Webex Calling locations
 
-    positional arguments:
-      file                 CSV file with location names and TNs
+    ╭─ Arguments ────────────────────────────────────────────────────────────────────────────────╮
+    │ *    file      PATH  CSV file with location names and TNs [required]                       │
+    ╰────────────────────────────────────────────────────────────────────────────────────────────╯
+    ╭─ Options ──────────────────────────────────────────────────────────────────────────────────╮
+    │ --dry-run                         Do not make any changes                                  │
+    │ --verbose                         Print debug information                                  │
+    │ --log-file                  PATH  Log file. If extension is .har, log in HAR format        │
+    │ --token                     TEXT  Access token can be provided using --token argument, set │
+    │                                   in WEBEX_ACCESS_TOKEN environment variable or can be a   │
+    │                                   service app token. For the latter set environment        │
+    │                                   variables ('SERVICE_APP_REFRESH_TOKEN',                  │
+    │                                   'SERVICE_APP_CLIENT_ID', 'SERVICE_APP_CLIENT_SECRET').   │
+    │                                   Environment variables can also be set in add_numbers.env │
+    │ --inactive                        Add TNs as inactive                                      │
+    │ --install-completion              Install completion for the current shell.                │
+    │ --show-completion                 Show completion for the current shell, to copy it or     │
+    │                                   customize the installation.                              │
+    │ --help                            Show this message and exit.                              │
+    ╰────────────────────────────────────────────────────────────────────────────────────────────╯
 
-    optional arguments:
-      -h, --help           show this help message and exit
-      --dry-run            Do not make any changes
-      --verbose            Print debug information
-      --log-file LOG_FILE  Log file. If extension is .har, log in HAR format
-      --token TOKEN        Access token can be provided using --token argument, set in
-                           WEBEX_ACCESS_TOKEN environment variable or can be a service app token. For
-                           the latter set environment variables ('SERVICE_APP_REFRESH_TOKEN',
-                           'SERVICE_APP_CLIENT_ID', 'SERVICE_APP_CLIENT_SECRET'). Environment variables
-                           can also be set in add_numbers.env
-      --inactive           Add TNs as inactive
-
-    Example: add_numbers.py add_numbers.csv --log-file add_numbers.har --dry-run
+     Example: ./add_numbers.py add_numbers.csv --log-file add_numbers.har --dry-run
 
 Source: |add_numbers.py|_
 

@@ -1,4 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.11,<3.14"
+# dependencies = [
+#     "python-dotenv",
+#     "wxc-sdk",
+# ]
+# ///
 """
 Demo for Webex service app: using service APP tokens to access a API endpoints
 """
@@ -35,6 +42,9 @@ def env_path() -> str:
     frame = inspect.currentframe().f_back
     file_name = inspect.getframeinfo(frame).filename
     env_name = f'{os.path.splitext(os.path.basename(file_name))[0]}.env'
+    if not os.path.isfile(env_name):
+        # fallback to .env specific to this file
+        env_name = f'{os.path.splitext(os.path.basename(__file__))[0]}.env'
     return env_name
 
 
@@ -99,7 +109,6 @@ def get_tokens() -> Optional[Tokens]:
 def service_app():
     """
     Use service app access token to call Webex Calling API endpoints
-    :return:
     """
     load_dotenv(env_path())
     # assert that all required environment variable are set
@@ -119,13 +128,14 @@ def service_app():
     print('\n'.join(f' * {s}' for s in sorted(tokens.scope.split())))
 
     # use tokens to access APIs
-    api = WebexSimpleApi(tokens=tokens)
+    with WebexSimpleApi(tokens=tokens) as api:
 
-    users = list(api.people.list())
-    print(f'{len(users)} users')
+        users = list(api.people.list())
+        print(f'{len(users)} users')
 
-    queues = list(api.telephony.callqueue.list())
-    print(f'{len(queues)} call queues')
+        queues = list(api.telephony.callqueue.list())
+        print(f'{len(queues)} call queues')
+    return
 
 
 if __name__ == '__main__':

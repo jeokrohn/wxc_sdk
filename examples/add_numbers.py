@@ -1,28 +1,41 @@
-#!/usr/bin/env python
+#!/usr/bin/env -S uv run --script
+#
+# /// script
+# requires-python = ">=3.11,<3.14"
+# dependencies = [
+#     "python-dotenv",
+#     "typer",
+#     "wxc-sdk",
+# ]
+# ///
 """
 Add TNs to a locations.
-usage: add_numbers.py [-h] [--dry-run] [--verbose] [--log-file LOG_FILE] [--token TOKEN]
-                      [--inactive]
-                      file
 
-Add TNs to Webex Calling locations
+ Usage: add_numbers.py [OPTIONS] FILE
 
-positional arguments:
-  file                 CSV file with location names and TNs
+ Add TNs to Webex Calling locations
 
-optional arguments:
-  -h, --help           show this help message and exit
-  --dry-run            Do not make any changes
-  --verbose            Print debug information
-  --log-file LOG_FILE  Log file. If extension is .har, log in HAR format
-  --token TOKEN        Access token can be provided using --token argument, set in
-                       WEBEX_ACCESS_TOKEN environment variable or can be a service app token. For
-                       the latter set environment variables ('SERVICE_APP_REFRESH_TOKEN',
-                       'SERVICE_APP_CLIENT_ID', 'SERVICE_APP_CLIENT_SECRET'). Environment variables
-                       can also be set in add_numbers.env
-  --inactive           Add TNs as inactive
+╭─ Arguments ────────────────────────────────────────────────────────────────────────────────╮
+│ *    file      PATH  CSV file with location names and TNs [required]                       │
+╰────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ──────────────────────────────────────────────────────────────────────────────────╮
+│ --dry-run                         Do not make any changes                                  │
+│ --verbose                         Print debug information                                  │
+│ --log-file                  PATH  Log file. If extension is .har, log in HAR format        │
+│ --token                     TEXT  Access token can be provided using --token argument, set │
+│                                   in WEBEX_ACCESS_TOKEN environment variable or can be a   │
+│                                   service app token. For the latter set environment        │
+│                                   variables ('SERVICE_APP_REFRESH_TOKEN',                  │
+│                                   'SERVICE_APP_CLIENT_ID', 'SERVICE_APP_CLIENT_SECRET').   │
+│                                   Environment variables can also be set in add_numbers.env │
+│ --inactive                        Add TNs as inactive                                      │
+│ --install-completion              Install completion for the current shell.                │
+│ --show-completion                 Show completion for the current shell, to copy it or     │
+│                                   customize the installation.                              │
+│ --help                            Show this message and exit.                              │
+╰────────────────────────────────────────────────────────────────────────────────────────────╯
 
-Example: add_numbers.py add_numbers.csv --log-file add_numbers.har --dry-run
+ Example: ./add_numbers.py add_numbers.csv --log-file add_numbers.har --dry-run
 
 """
 import asyncio
@@ -40,7 +53,7 @@ from typing import Optional
 import typer
 from dotenv import load_dotenv
 
-from examples.service_app import SERVICE_APP_ENVS, env_path, get_tokens
+from service_app import SERVICE_APP_ENVS, env_path, get_tokens
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.common import NumberState
 from wxc_sdk.har_writer import HarWriter
@@ -50,22 +63,23 @@ BATCH_SIZE = 10
 
 
 @contextmanager
-def setup_logging(*, api: AsWebexSimpleApi, verbose: bool, log_file: Optional[str]):
+def setup_logging(*, api: AsWebexSimpleApi, verbose: bool, log_file: Optional[Path]):
     """
     Set up logging
     """
 
     @contextmanager
-    def file_handler(log_file: str):
+    def file_handler():
         if not log_file:
             yield
         else:
             # log to file or to HAR
-            if os.path.splitext(log_file)[-1].lower() == '.har':
-                with HarWriter(api=api, path=log_file):
+            log_file_str = str(log_file)
+            if os.path.splitext(log_file_str)[-1].lower() == '.har':
+                with HarWriter(api=api, path=log_file_str):
                     yield
             else:
-                f_handler = logging.FileHandler(log_file)
+                f_handler = logging.FileHandler(log_file_str)
                 f_handler.setLevel(logging.DEBUG)
                 f_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
                 logging.getLogger().addHandler(f_handler)
@@ -78,7 +92,7 @@ def setup_logging(*, api: AsWebexSimpleApi, verbose: bool, log_file: Optional[st
     console_handler.setLevel(logging.DEBUG if verbose else logging.INFO)
     # console_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
     logging.getLogger().addHandler(console_handler)
-    with file_handler(log_file):
+    with file_handler():
         yield
 
 
@@ -187,7 +201,8 @@ app = typer.Typer()
 @app.command(epilog=f'Example: {sys.argv[0]} add_numbers.csv --log-file add_numbers.har --dry-run',
              help='Add TNs to Webex Calling locations')
 @async_command
-async def add_numbers(file: Path,
+async def add_numbers(file: Path = typer.Argument(exists=True,
+                                                  help='CSV file with location names and TNs'),
                       dry_run: bool = typer.Option(False, '--dry-run',
                                                    help='Do not make any changes'),
                       verbose: bool = typer.Option(False, '--verbose',
@@ -218,7 +233,7 @@ async def add_numbers(file: Path,
         exit(1)
 
     async with AsWebexSimpleApi(tokens=tokens) as api:
-        with setup_logging(api=api, verbose=verbose, log_file=str(log_file)):
+        with setup_logging(api=api, verbose=verbose, log_file=log_file):
             # validate the access token
             try:
                 await api.people.me()

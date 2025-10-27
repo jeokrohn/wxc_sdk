@@ -1,144 +1,108 @@
-#!/usr/bin/env python
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.11,<3.14"
+# dependencies = [
+#     "email-validator",
+#     "python-dotenv",
+#     "typer",
+#     "wxc-sdk",
+# ]
+# ///
 """
 Script to read/update call intercept settings of a calling user.
 
-The script uses the access token passed via the CLI, reads one from the WEBEX_ACCESS_TOKEN environment variable or
-obtains tokens via an OAuth flow.
+ Usage: call_intercept.py [OPTIONS] USER_EMAIL [ON_OFF]:[on|off]
 
-    usage: call_intercept.py [-h] [--token TOKEN] user_email [{on,off}]
+ read/update call intercept settings of a calling user.
 
-    positional arguments:
-      user_email     email address of user
-      {on,off}       operation to apply
+╭─ Arguments ────────────────────────────────────────────────────────────────────────────────╮
+│ *    user_email      EMAIL_TYPE         email address of user [required]                   │
+│      on_off          [ON_OFF]:[on|off]  operation to apply.                                │
+╰────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ──────────────────────────────────────────────────────────────────────────────────╮
+│ --token                     TEXT  Access token can be provided using --token argument, set │
+│                                   in WEBEX_ACCESS_TOKEN environment variable or can be a   │
+│                                   service app token. For the latter set environment        │
+│                                   variables ('SERVICE_APP_REFRESH_TOKEN',                  │
+│                                   'SERVICE_APP_CLIENT_ID', 'SERVICE_APP_CLIENT_SECRET').   │
+│                                   Environment variables can also be set in service_app.env │
+│ --install-completion              Install completion for the current shell.                │
+│ --show-completion                 Show completion for the current shell, to copy it or     │
+│                                   customize the installation.                              │
+│ --help                            Show this message and exit.                              │
+╰────────────────────────────────────────────────────────────────────────────────────────────╯
 
-    options:
-      -h, --help     show this help message and exit
-      --token TOKEN  admin access token to use
+ Example: ./call_intercept.py bob@example.com on
 """
-import argparse
 import logging
 import os
-import re
 import sys
-from json import loads
+from enum import Enum
 from typing import Optional
 
+import typer
 from dotenv import load_dotenv
+from email_validator import validate_email
+
+from service_app import SERVICE_APP_ENVS, env_path, get_tokens
 from wxc_sdk import WebexSimpleApi
-from wxc_sdk.integration import Integration
 from wxc_sdk.person_settings.call_intercept import InterceptSetting
 from wxc_sdk.rest import RestError
-from wxc_sdk.scopes import parse_scopes
 from wxc_sdk.tokens import Tokens
-from yaml import safe_dump, safe_load
 
 log = logging.getLogger(__name__)
 
 
-def env_path() -> str:
+def email_type(value: str):
     """
-    determine path for .env to load environment variables from
-
-    :return: .env file path
+    Validate email address
     """
-    return os.path.join(os.getcwd(), f'{os.path.splitext(os.path.basename(__file__))[0]}.env')
+    validated = validate_email(value, check_deliverability=False)
+    return validated.normalized
 
 
-def yml_path() -> str:
-    """
-    determine path of YML file to persist tokens
-
-    :return: path to YML file
-    :rtype: str
-    """
-    return os.path.join(os.getcwd(), f'{os.path.splitext(os.path.basename(__file__))[0]}.yml')
+class OnOff(str, Enum):
+    ON = 'on'
+    OFF = 'off'
 
 
-def build_integration() -> Integration:
-    """
-    read integration parameters from environment variables and create an integration
-
-    :return: :class:`wxc_sdk.integration.Integration` instance
-    """
-    client_id = os.getenv('TOKEN_INTEGRATION_CLIENT_ID')
-    client_secret = os.getenv('TOKEN_INTEGRATION_CLIENT_SECRET')
-    scopes = os.getenv('TOKEN_INTEGRATION_CLIENT_SCOPES')
-    if scopes:
-        scopes = parse_scopes(scopes)
-    if not all((client_id, client_secret, scopes)):
-        raise ValueError('failed to get integration parameters from environment')
-    redirect_url = 'http://localhost:6001/redirect'
-    return Integration(client_id=client_id, client_secret=client_secret, scopes=scopes,
-                       redirect_url=redirect_url)
+app = typer.Typer()
 
 
-def get_tokens() -> Optional[Tokens]:
-    """
-
-    Tokens are read from a YML file. If needed an OAuth flow is initiated.
-
-    :return: tokens
-    :rtype: :class:`wxc_sdk.tokens.Tokens`
-    """
-
-    def write_tokens(tokens_to_cache: Tokens):
-        with open(yml_path(), mode='w') as f:
-            safe_dump(loads(tokens_to_cache.json()), f)
-        return
-
-    def read_tokens() -> Optional[Tokens]:
-        try:
-            with open(yml_path(), mode='r') as f:
-                data = safe_load(f)
-                tokens_read = Tokens.model_validate(data)
-        except Exception as e:
-            log.info(f'failed to read tokens from file: {e}')
-            tokens_read = None
-        return tokens_read
-
-    integration = build_integration()
-    tokens = integration.get_cached_tokens(read_from_cache=read_tokens,
-                                           write_to_cache=write_tokens)
-    return tokens
-
-
-RE_EMAIL = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
-
-
-def email_type(value):
-    if not RE_EMAIL.match(value):
-        raise argparse.ArgumentTypeError(f"'{value}' is not a valid email")
-    return value
-
-
-def main():
+@app.command(name=os.path.basename(__file__),
+             help='read/update call intercept settings of a calling user.',
+             epilog=f'Example: {sys.argv[0]} bob@example.com on')
+def main(user_email: str = typer.Argument(...,
+                                          help='email address of user',
+                                          parser=email_type),
+         on_off: Optional[OnOff] = typer.Argument(None,
+                                                  help='operation to apply.'),
+         token: Optional[str] = typer.Option(None, '--token',
+                                             help=f'Access token can be provided using --token argument, '
+                                                  f'set in WEBEX_ACCESS_TOKEN environment variable or '
+                                                  f'can be a service app token. For the latter set '
+                                                  f'environment variables {SERVICE_APP_ENVS}. '
+                                                  f'Environment variables can also be set in '
+                                                  f'{env_path()}')):
     """
     where the magic happens
     """
-    # read .env file with the settings for the integration to be used to obtain tokens
+    # get tokens
     load_dotenv(env_path())
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('user_email', type=email_type, help='email address of user')
-    parser.add_argument('on_off', choices=['on', 'off'], nargs='?', help='operation to apply')
-    parser.add_argument('--token', type=str, required=False, help='admin access token to use')
-    args = parser.parse_args()
-
-    if args.token:
-        tokens = args.token
-    elif (tokens := os.getenv('WEBEX_ACCESS_TOKEN')) is None:
-        tokens = get_tokens()
-
-    if not tokens:
-        print('Failed to get tokens', file=sys.stderr)
-        exit(1)
+    tokens = get_tokens() if token is None else Tokens(access_token=token)
+    if tokens is None:
+        print(f'Access token can be provided using --token argument, set in WEBEX_ACCESS_TOKEN environment variable or '
+              f'can be a service app token. For the latter set environment variables {SERVICE_APP_ENVS}. Environment '
+              f'variables can '
+              f'also be set in {env_path()}', file=sys.stderr)
 
     # set level to DEBUG to see debug of REST requests
     logging.basicConfig(level=(gt := getattr(sys, 'gettrace', None)) and gt() and logging.DEBUG or logging.INFO)
 
     with WebexSimpleApi(tokens=tokens) as api:
         # get user
-        email = args.user_email.lower()
+        email = user_email.lower()
         user = next((user
                      for user in api.people.list(email=email)
                      if user.emails[0] == email), None)
@@ -154,10 +118,10 @@ def main():
             exit(1)
 
         print('on' if intercept.enabled else 'off')
-        if args.on_off:
+        if on_off:
             # action: turn on/off
             intercept = InterceptSetting.default()
-            intercept.enabled = args.on_off == 'on'
+            intercept.enabled = on_off == OnOff.ON
             try:
                 api.person_settings.call_intercept.configure(user.person_id,
                                                              intercept=intercept)
@@ -179,4 +143,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    app()
