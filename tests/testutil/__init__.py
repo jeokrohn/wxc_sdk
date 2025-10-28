@@ -17,7 +17,7 @@ from random import randint
 from typing import Generator, Optional, Union, Literal
 
 from test_helper.digittree import DigitTree
-from test_helper.randomlocation import RandomLocation, Address
+from test_helper.randomlocation import RandomLocation, Address, NpaInfo
 from test_helper.randomuser import User
 from test_helper.randomuserutil import RandomUserUtil
 
@@ -38,7 +38,7 @@ __all__ = ['as_available_tns', 'available_tns', 'available_extensions', 'Locatio
            'as_available_extensions_gen', 'create_random_wsl', 'available_mac_address', 'new_workspace_names',
            'TEST_WORKSPACES_PREFIX', 'create_workspace_with_webex_calling', 'get_calling_license',
            'create_calling_user', 'create_random_calling_user', 'create_cxe_queue', 'create_simple_call_queue',
-           'new_operating_mode_names', 'create_operating_mode', 'new_aa_names']
+           'new_operating_mode_names', 'create_operating_mode', 'new_aa_names', 'LocationSettings']
 
 from wxc_sdk.telephony.callqueue import CallQueue, CallQueueCallPolicies, QueueSettings
 
@@ -47,6 +47,8 @@ from wxc_sdk.telephony.hg_and_cq import Agent, CallingLineIdPolicy
 from wxc_sdk.telephony.location import TelephonyLocation
 from wxc_sdk.telephony.operating_modes import OperatingModeHoliday, OperatingModeRecurrence, \
     OperatingModeRecurYearlyByDate, Month, OperatingMode, OperatingModeSchedule
+from wxc_sdk.telephony.prem_pstn.route_group import RouteGroup
+from wxc_sdk.telephony.prem_pstn.trunk import Trunk
 
 from wxc_sdk.workspace_locations import WorkspaceLocation
 from wxc_sdk.workspaces import Workspace, WorkspaceCalling, CallingType, WorkspaceWebexCalling, \
@@ -413,13 +415,18 @@ def new_workspace_names(api: WebexSimpleApi) -> Generator[str, None, None]:
 def create_workspace_with_webex_calling(api: WebexSimpleApi, target_location: Location,
                                         supported_devices: WorkspaceSupportedDevices,
                                         license: License = None,
+                                        phone_number: str = None,
+                                        extension: str = None,
                                         **kwargs) -> Workspace:
     """
     create a workspace with webex calling in given location
     """
-    # get an extension in location
-    extension = next(available_extensions_gen(api=api,
-                                              location_id=target_location.location_id))
+    # get an extension in location if none given
+    if extension is None:
+        extension = next(available_extensions_gen(api=api,
+                                                  location_id=target_location.location_id))
+    # set to None if empty string -> no extension will be set
+    extension = extension or None
 
     # get a name for new workspace
     name = next(new_workspace_names(api=api))
@@ -427,7 +434,8 @@ def create_workspace_with_webex_calling(api: WebexSimpleApi, target_location: Lo
     # create workspace with that extension
     webex_calling = WorkspaceWebexCalling(
         extension=extension,
-        location_id=target_location.location_id)
+        location_id=target_location.location_id,
+        phone_number=phone_number)
     if license is not None:
         webex_calling.licenses = [license.license_id]
     new_workspace = Workspace(
@@ -637,3 +645,93 @@ def new_aa_names(api: WebexSimpleApi) -> Generator[str, None, None]:
     """
     names = set(m.name for m in api.telephony.auto_attendant.list())
     return (name for i in range(1, 1000) if (name := f'aa_{i:03}') not in names)
+
+
+@dataclass()
+class LocationSettings:
+    name: str
+    address: Address
+    npa: str
+    tn_list: list[str]
+    trunk_name: str
+    routing_prefix: str
+
+    @classmethod
+    async def create(cls, *, async_api: AsWebexSimpleApi) -> 'LocationSettings':
+        async with RandomLocation() as random_location:
+            # get
+            # * locations
+            # * phone numbers in org
+            # * list of trunks
+            # * list of route groups
+            # * list of NPAs
+            phone_numbers, trunks, route_groups, locations, npa_data = await asyncio.gather(
+                async_api.telephony.phone_numbers(number_type=NumberType.number),
+                async_api.telephony.prem_pstn.trunk.list(),
+                async_api.telephony.prem_pstn.route_group.list(),
+                async_api.locations.list(),
+                random_location.load_npa_data())
+            phone_numbers: list[NumberListPhoneNumber]
+            trunks: list[Trunk]
+            route_groups: list[RouteGroup]
+            locations: list[Location]
+            npa_data: list[NpaInfo]
+
+            # active NPAs in US
+            us_npa_list = [npa.npa for npa in npa_data
+                           if npa.country == 'US' and npa.in_service]
+
+            # NPAs used in existing phone numbers
+            used_npa_list = set(number.phone_number[2:5] for number in phone_numbers
+                                if number.phone_number.startswith('+1'))
+
+            # active NPAs not currently in use
+            available_npa_list = [npa for npa in us_npa_list
+                                  if npa not in used_npa_list]
+
+            # pick a random NPA and get an address and an available number in that NPA
+            random.shuffle(available_npa_list)
+            address = None
+            while address is None:
+                npa = available_npa_list.pop(0)
+                address, tn_list = await asyncio.gather(random_location.npa_random_address(npa=npa),
+                                                        as_available_tns(as_api=async_api, tn_prefix=npa,
+                                                                         tns_requested=5))
+            address: Address
+            tn_list: list[str]
+
+            # determine routing prefixes
+            location_details = await asyncio.gather(
+                *[async_api.telephony.location.details(location_id=loc.location_id)
+                  for loc in locations],
+                return_exceptions=True)
+
+            # ignore locations for which we can't get telephony location details
+            location_details = [ld for ld in location_details
+                                if not isinstance(ld, Exception)]
+            location_details: list[TelephonyLocation]
+            routing_prefixes = set(ld.routing_prefix for ld in location_details
+                                   if ld.routing_prefix)
+
+            # pick an available routing prefix
+            routing_prefix = next(prefix for i in chain([int(npa)], range(1, 1000))
+                                  if (prefix := f'8{i:03}') not in routing_prefixes)
+
+        # get name for location
+        location_names = set(loc.name for loc in locations)
+        # name like {city} {npa}-dd (suffix only present if there is already a location with that name
+        location_name = next(name for suffix in chain([''], (f'-{i:02}' for i in range(1, 100)))
+                             if (name := f'{address.city} {npa}{suffix}') not in location_names)
+
+        # create name for a trunk in that location
+        trunk_name = next(name for suffix in chain([''], (f'-{i:02}'
+                                                          for i in range(1, 100)))
+                          if (name := f'{address.city}{suffix}') not in set(trunk.name for trunk in trunks))
+
+
+        return cls(name=location_name,
+                   address=address,
+                   npa=npa,
+                   tn_list=tn_list,
+                   trunk_name=trunk_name,
+                   routing_prefix=routing_prefix)

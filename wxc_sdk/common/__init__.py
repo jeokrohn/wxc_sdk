@@ -252,6 +252,8 @@ class RouteType(str, Enum):
     route_group = 'ROUTE_GROUP'
     # Connection between Webex Calling and the premises.
     trunk = 'TRUNK'
+    cisco_pstn = 'CISCO_PSTN'
+    cloud_connected_pstn = 'CLOUD_CONNECTED_PSTN'
 
 
 class DialPatternStatus(str, Enum):

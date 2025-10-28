@@ -630,50 +630,52 @@ class TestCaseWithLog(TestCaseWithTokens):
         for url_and_method in sorted(url_counters, key=lambda k: url_counters[k]):
             print(f'{url_and_method}: {url_counters[url_and_method]} requests')
 
+    @classmethod
     @contextmanager
-    def webex_api(self, tokens: Union[str, Tokens]) -> WebexSimpleApi:
+    def webex_api(cls, tokens: Union[str, Tokens]) -> WebexSimpleApi:
         """
         Context manager to get a WebexSimpleApi instance. With equivalent proxy settings and HAR writer as the test case
         :return: WebexSimpleApi instance
         """
-        if self.proxy:
-            proxy_url = self.proxy_url
+        if cls.proxy:
+            proxy_url = cls.proxy_url
             verify = False
         else:
             proxy_url = None
             verify = None
         with WebexSimpleApi(tokens=tokens, proxy_url=proxy_url, verify=verify) as api:
-            if self.with_har:
-                har_id = self.har_writer.register_webex_api(api)
+            if cls.with_har and cls.har_writer:
+                har_id = cls.har_writer.register_webex_api(api)
             else:
                 har_id = None
             try:
                 yield api
             finally:
                 if har_id:
-                    self.har_writer.unregister_api(har_id)
+                    cls.har_writer.unregister_api(har_id)
 
+    @classmethod
     @asynccontextmanager
-    async def as_webex_api(self, tokens: Union[str, Tokens]) -> AsWebexSimpleApi:
+    async def as_webex_api(cls, tokens: Union[str, Tokens]) -> AsWebexSimpleApi:
         """
         Async context manager to get an AsWebexSimpleApi instance. With equivalent proxy settings and HAR writer as
         the test case
         :return: AsWebexSimpleApi instance
         """
-        if self.proxy:
-            proxy_url = self.proxy_url
+        if cls.proxy:
+            proxy_url = cls.proxy_url
         else:
             proxy_url = None
         async with AsWebexSimpleApi(tokens=tokens, proxy=proxy_url, ssl=False) as api:
-            if self.with_har:
-                har_id = self.har_writer.register_as_webex_api(api)
+            if cls.with_har and cls.har_writer:
+                har_id = cls.har_writer.register_as_webex_api(api)
             else:
                 har_id = None
             try:
                 yield api
             finally:
                 if har_id:
-                    self.har_writer.unregister_api(har_id)
+                    cls.har_writer.unregister_api(har_id)
 
 
 @dataclass(init=False, repr=False)
@@ -692,7 +694,7 @@ class TestWithLocations(TestCaseWithLog):
         super().setUpClass()
 
         async def get_calling_locations() -> list[Location]:
-            async with AsWebexSimpleApi(tokens=cls.tokens) as api:
+            async with cls.as_webex_api(tokens=cls.tokens) as api:
                 locations = await api.locations.list()
                 # figure out which locations are calling locations
                 details = await asyncio.gather(*[api.telephony.location.details(location_id=loc.location_id)

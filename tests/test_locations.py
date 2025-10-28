@@ -18,7 +18,7 @@ from pydantic import TypeAdapter
 from test_helper.randomlocation import RandomLocation, NpaInfo, Address
 
 from tests.base import TestCaseWithLog, async_test, TestWithLocations
-from tests.testutil import as_available_tns, create_random_wsl
+from tests.testutil import as_available_tns, create_random_wsl, LocationSettings
 from wxc_sdk.as_rest import AsRestError
 from wxc_sdk.base import webex_id_to_uuid, ApiModel
 from wxc_sdk.common import RouteType, RouteIdentity
@@ -98,123 +98,67 @@ class TestLocation(TestWithLocations):
         * main number (inactive)
         * ...
         """
+        # get settings for new location
+        with self.no_log():
+            ls = await LocationSettings.create(async_api=self.async_api)
 
-        async with RandomLocation() as random_location:
-            # get
-            # * locations
-            # * phone numbers in org
-            # * list of trunks
-            # * list of route groups
-            # * list of NPAs
-            with self.no_log():
-                phone_numbers, trunks, route_groups, npa_data = await asyncio.gather(
-                    self.async_api.telephony.phone_numbers(number_type=NumberType.number),
-                    self.async_api.telephony.prem_pstn.trunk.list(),
-                    self.async_api.telephony.prem_pstn.route_group.list(),
-                    random_location.load_npa_data())
-                locations = self.locations
-                phone_numbers: list[NumberListPhoneNumber]
-                trunks: list[Trunk]
-                route_groups: list[RouteGroup]
-                npa_data: list[NpaInfo]
-
-                # determine routing prefixes
-                # noinspection PyTypeChecker
-                location_details = await asyncio.gather(
-                    *[self.async_api.telephony.location.details(location_id=loc.location_id)
-                      for loc in locations])
-                location_details: list[TelephonyLocation]
-                routing_prefixes = set(ld.routing_prefix for ld in location_details
-                                       if ld.routing_prefix)
-
-            # active NPAs in US
-            us_npa_list = [npa.npa for npa in npa_data
-                           if npa.country == 'US' and npa.in_service]
-
-            # NPAs used in existing phone numbers
-            used_npa_list = set(number.phone_number[2:5] for number in phone_numbers
-                                if number.phone_number.startswith('+1'))
-
-            # active NPAs not currently in use
-            available_npa_list = [npa for npa in us_npa_list
-                                  if npa not in used_npa_list]
-
-            # pick a random NPA and get an address and an available number in that NPA
-            with self.no_log():
-                address = None
-                while address is None:
-                    npa = choice(available_npa_list)
-                    address, tn_list = await asyncio.gather(random_location.npa_random_address(npa=npa),
-                                                            as_available_tns(as_api=self.async_api, tn_prefix=npa))
-            address: Address
-            tn_list: list[str]
-            tn = tn_list[0]
-
-        # get name for location
-        location_names = set(loc.name for loc in locations)
-        # name like {city} {npa}-dd (suffix only present if there is already a location with that name
-        location_name = next(name for suffix in chain([''], (f'-{i:02}' for i in range(1, 100)))
-                             if (name := f'{address.city} {npa}{suffix}') not in location_names)
-        print(f'Creating location: {npa=}, {npa=}, {address=}')
+        print(f'Creating location: {ls.npa=}, {ls.address=}')
 
         # TODO: looks like announcement_language and time_zone can't be set here?
-        location_id = self.api.locations.create(name=location_name,
+        location_id = self.api.locations.create(name=ls.name,
                                                 time_zone='America/Chicago',
                                                 announcement_language=None,
                                                 preferred_language='de_de',
-                                                address1=address.address1,
-                                                city=address.city,
-                                                state=address.state_or_province_abbr,
-                                                postal_code=address.zip_or_postal_code,
+                                                address1=ls.address.address1,
+                                                city=ls.address.city,
+                                                state=ls.address.state_or_province_abbr,
+                                                postal_code=ls.address.zip_or_postal_code,
                                                 country='US')
 
-        created_location = await self.async_api.locations.details(location_id=location_id)
+        # check that details for new location can be read
+        await self.async_api.locations.details(location_id=location_id)
+
         # enable location for webex calling
         location = Location(location_id=location_id,
-                            name=location_name,
+                            name=ls.name,
                             time_zone='America/Chicago',
                             announcement_language='de_de',
                             preferred_language='de_de',
-                            address=LocationAddress(address1=address.address1,
-                                                    city=address.city,
-                                                    state=address.state_or_province_abbr,
-                                                    postal_code=address.zip_or_postal_code,
+                            address=LocationAddress(address1=ls.address.address1,
+                                                    city=ls.address.city,
+                                                    state=ls.address.state_or_province_abbr,
+                                                    postal_code=ls.address.zip_or_postal_code,
                                                     country='US'))
         tel_location_id = self.api.telephony.location.enable_for_calling(location=location)
         print(f'New location id: {location_id}/{b64decode(location_id + "==").decode()}')
 
         # add trunk
-        trunk_name = next(name for suffix in chain([''], (f'-{i:02}'
-                                                          for i in range(1, 100)))
-                          if (name := f'{address.city}{suffix}') not in set(trunk.name for trunk in trunks))
         password = self.api.telephony.location.generate_password(location_id=location_id)
-        print(f'Creating trunk "{trunk_name}" in location "{location_name}"')
-        trunk_id = self.api.telephony.prem_pstn.trunk.create(name=trunk_name,
+        print(f'Creating trunk "{ls.trunk_name}" in location "{ls.name}"')
+        trunk_id = self.api.telephony.prem_pstn.trunk.create(name=ls.trunk_name,
                                                              location_id=location_id,
                                                              password=password)
 
         # set PSTN choice for location to trunk
-        print(f'Setting new trunk "{trunk_name}" as PSTN choice for location "{location_name}"')
+        print(f'Setting new trunk "{ls.trunk_name}" as PSTN choice for location "{ls.name}"')
         self.api.telephony.location.update(location_id=location_id,
                                            settings=TelephonyLocation(
                                                connection=PSTNConnection(type=RouteType.trunk,
                                                                          id=trunk_id)))
 
         # add number to location
-        self.api.telephony.location.number.add(location_id=location_id, phone_numbers=[tn])
+        self.api.telephony.location.number.add(location_id=location_id, phone_numbers=[ls.tn_list[0]])
 
         # finally set that number as main number and set site code
         # also enable unknown extension dialing to the trunk we just defined
-        routing_prefix = next(prefix for i in chain([int(npa)], range(1, 1000))
-                              if (prefix := f'8{i:03}') not in routing_prefixes)
         await asyncio.gather(
             self.async_api.telephony.location.update(location_id=location_id,
                                                      settings=TelephonyLocation(
                                                          calling_line_id=CallingLineId(
-                                                             phone_number=tn),
-                                                         routing_prefix=routing_prefix,
+                                                             phone_number=ls.tn_list[0]),
+                                                         routing_prefix=ls.routing_prefix,
                                                          outside_dial_digit='9',
-                                                         external_caller_id_name=address.city)),
+                                                         external_caller_id_name=ls.address.city)),
             self.async_api.telephony.location.internal_dialing.update(
                 location_id=location_id,
                 update=InternalDialing(
