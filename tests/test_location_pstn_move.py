@@ -4,25 +4,23 @@ test to move a location from on-premises PSTN to CCPP and update the phone numbe
 import asyncio
 from dataclasses import dataclass
 from time import sleep
-from unittest import skip
 
-from tests.base import TestCaseWithLog
+from tests.base import TestCaseWithLog, async_test
 from tests.testutil import LocationSettings, create_workspace_with_webex_calling
+from wxc_sdk.all_types import *
 from wxc_sdk.as_api import AsWebexSimpleApi
-from wxc_sdk.common import RouteType, NumberState
-from wxc_sdk.locations import Location, LocationAddress
-from wxc_sdk.telephony.location import TelephonyLocation, PSTNConnection, CallingLineId, LocationDeleteStatus
-from wxc_sdk.workspaces import WorkspaceSupportedDevices, Workspace
 
 
-@skip('Apparently changing PSTN to CCPP is not supported via Hydra')
 @dataclass(init=False, repr=False)
 class TestLocationPSTNMove(TestCaseWithLog):
     # proxy = True
 
+    # initial TN for workspace
     workspace_number: str = None
+    # TN to be set on workspace
     new_workspace_number: str = None
 
+    # settings for testlocation creation
     location_settings: LocationSettings = None
     location_id: str = None
     location: Location = None
@@ -39,7 +37,7 @@ class TestLocationPSTNMove(TestCaseWithLog):
         * create registering trunk in location
         * set PSTN to on-premises PSTN
         * add some random numbers to location
-        * set main number
+        * set the main number
         """
         # get settings for new location
         ls = await LocationSettings.create(async_api=api)
@@ -58,7 +56,7 @@ class TestLocationPSTNMove(TestCaseWithLog):
                                                    country='US')
 
         # enable location for webex calling
-        location = Location(location_id=cls.location_id,
+        location = Location(id=cls.location_id,
                             name=ls.name,
                             time_zone='America/Chicago',
                             announcement_language='de_de',
@@ -87,7 +85,7 @@ class TestLocationPSTNMove(TestCaseWithLog):
                                               phone_numbers=[cls.workspace_number],
                                               state=NumberState.active)
 
-        # finally set that number as main number and set site code
+        # finally, set that number as main number and set site code
         await api.telephony.location.update(location_id=cls.location_id,
                                             settings=TelephonyLocation(
                                                 calling_line_id=CallingLineId(
@@ -116,6 +114,7 @@ class TestLocationPSTNMove(TestCaseWithLog):
                 phone_number=cls.workspace_number,
                 extension='',
                 license=None)
+        return
 
     @classmethod
     def cleanup_test_environment(cls):
@@ -141,12 +140,14 @@ class TestLocationPSTNMove(TestCaseWithLog):
 
         # delete location
         cls.api.locations.delete(location_id=cls.location_id)
+        return
 
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
         # Create a test environment
         asyncio.run(cls.create_test_environment())
+        return
 
     @classmethod
     def tearDownClass(cls) -> None:
@@ -154,22 +155,83 @@ class TestLocationPSTNMove(TestCaseWithLog):
             cls.cleanup_test_environment()
         finally:
             super().tearDownClass()
+        return
 
-    def test_move(self):
+    @async_test
+    async def test_move(self):
         """
         Test to move a location from on-premises PSTN to CCPP
         """
-        # get PSTN Choices for location
-        pstn_choices = self.api.telephony.pstn.list(location_id=self.location_id)
-        current_pstn = self.api.telephony.pstn.read(location_id=self.location_id)
-        pure_ip = next((p for p in pstn_choices if p.display_name.startswith('Pure IP')), None)
-        if not pure_ip:
-            raise Exception('No Pure IP PSTN Choice found')
-        if True:
-            self.api.telephony.pstn.configure(location_id=self.location_id,premise_route_id=pure_ip.id, premise_route_type=RouteType.cloud_connected_pstn)
-        else:
-            self.api.telephony.location.update(location_id=self.location_id,
-                                               settings=TelephonyLocation(
-                                                   connection=PSTNConnection(type=RouteType.cloud_connected_pstn,
-                                                                             id=pure_ip.id)))
-        pstn_after = self.api.telephony.pstn.read(location_id=self.location_id)
+
+        async def update_pstn_and_number():
+            """
+            Update PSTN and phone number
+            """
+
+            async def update_pstn():
+                """
+                Update PSTN
+                """
+                # get PSTN Choices for location and current setting
+                pstn_choices, pstn_before = await asyncio.gather(
+                    self.async_api.telephony.pstn.list(location_id=self.location_id),
+                    self.async_api.telephony.pstn.read(location_id=self.location_id))
+                pstn_choices: list[PSTNConnectionOption]
+                pstn_before: [PSTNConnectionOption]
+
+                pure_ip = next((p for p in pstn_choices if p.display_name.startswith('Pure IP')), None)
+                if not pure_ip:
+                    raise Exception('No Pure IP PSTN choice found')
+                await self.async_api.telephony.pstn.configure(location_id=self.location_id, id=pure_ip.id)
+                # read PSTN settings after
+                pstn_after = await self.async_api.telephony.pstn.read(location_id=self.location_id)
+                return
+
+            async def update_number():
+                # add new number
+                await self.async_api.telephony.location.number.add(location_id=self.location_id,
+                                                                   phone_numbers=[self.new_workspace_number],
+                                                                   state=NumberState.active)
+                await asyncio.gather(
+                    # update number of workspace
+                    self.async_api.workspaces.update(
+                        workspace_id=self.workspace.workspace_id,
+                        settings=Workspace(
+                            calling=WorkspaceCalling(
+                                type=CallingType.webex,
+                                webex_calling=WorkspaceWebexCalling(
+                                    phone_number=self.new_workspace_number,
+                                    location_id=self.location_id)))),
+                    # update main number
+                    self.async_api.telephony.location.update(location_id=self.location_id,
+                                                             settings=TelephonyLocation(
+                                                                 calling_line_id=CallingLineId(
+                                                                     phone_number=self.new_workspace_number))))
+                # remove old number from location
+                await self.async_api.telephony.location.number.remove(location_id=self.location_id,
+                                                                      phone_numbers=[self.workspace_number])
+                return
+
+            await asyncio.gather(
+                update_pstn(),
+                update_number())
+            return
+
+        async def create_and_assign_floor():
+            """
+            Create and assign floor
+            """
+            # create floor
+            floor = await self.async_api.locations.create_floor(location_id=self.location_id,
+                                                                floor_number=1,
+                                                                display_name='First floor')
+            # assign floor to workspace
+            await self.async_api.workspaces.update(workspace_id=self.workspace.workspace_id,
+                                                   settings=Workspace(floor_id=floor.id,
+                                                                      location_id=self.location_id))
+            return
+
+        await asyncio.gather(
+            update_pstn_and_number(),
+            create_and_assign_floor())
+        return
