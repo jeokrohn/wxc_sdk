@@ -93,7 +93,7 @@ fi
 # Project build steps
 if [ ${all} ] || [ ${package} ]; then
     echo "==> Building the Source Distribution package"
-    poetry build
+    uv build
 fi
 
 if [ ${oas} ]; then

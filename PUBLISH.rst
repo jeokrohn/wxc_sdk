@@ -3,7 +3,8 @@
 * create branch for new release
 * review pyproject.toml for outdated packages
     * update constraints as needed
-* poetry update
+* uv lock --upgrade
+* uv sync
 * run "script/test lint" and review/fix
 * set version number in pyproject.toml
 * set version number in wxc_sdk.__init__
@@ -20,7 +21,7 @@
 * tag commit with version number: e.g. "1.5.0"
 * push to GitHub: MAKE SURE TO PUSH TAGS!
 
-* poetry publish
+* uv publish
 * review read the docs: especially check build logs for errors
 * readthedocs: set new default version
 * build docs for last tag on readthedocs; under "Versions"
