@@ -908,9 +908,12 @@ wheels = [
 
 [[package]]
 name = "html2text"
-version = "2024.2.26"
+version = "2025.4.15"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/1a/43/e1d53588561e533212117750ee79ad0ba02a41f52a08c1df3396bd466c05/html2text-2024.2.26.tar.gz", hash = "sha256:05f8e367d15aaabc96415376776cdd11afd5127a77fce6e36afc60c563ca2c32", size = 56527, upload-time = "2024-02-27T18:49:24.855Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/f8/27/e158d86ba1e82967cc2f790b0cb02030d4a8bef58e0c79a8590e9678107f/html2text-2025.4.15.tar.gz", hash = "sha256:948a645f8f0bc3abe7fd587019a2197a12436cd73d0d4908af95bfc8da337588", size = 64316, upload-time = "2025-04-15T04:02:30.045Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1d/84/1a0f9555fd5f2b1c924ff932d99b40a0f8a6b12f6dd625e2a47f415b00ea/html2text-2025.4.15-py3-none-any.whl", hash = "sha256:00569167ffdab3d7767a4cdf589b7f57e777a5ed28d12907d8c58769ec734acc", size = 34656, upload-time = "2025-04-15T04:02:28.44Z" },
+]
 
 [[package]]
 name = "idna"
@@ -3121,7 +3124,7 @@ dev = [
     { name = "email-validator", specifier = ">=2.3.0,<3" },
     { name = "flake8", specifier = ">=5.0.3,<6" },
     { name = "geopy", specifier = ">=2.2.0,<3" },
-    { name = "html2text", specifier = ">=2024.2.26,<2025" },
+    { name = "html2text" },
     { name = "inflection", specifier = ">=0.5.1,<0.6" },
     { name = "lxml", specifier = ">=5.4.0,<6" },
     { name = "matplotlib", specifier = ">=3.6.1,<4" },

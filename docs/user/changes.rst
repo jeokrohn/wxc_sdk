@@ -1,6 +1,8 @@
 Release history
 ===============
 
+1.27.1
+------
 - feat: new parameters host, stream for :meth:`api.cdr.get_cdr_history <wxc_sdk.cdr.DetailedCDRApi.get_cdr_history>`
 
 1.27.0
