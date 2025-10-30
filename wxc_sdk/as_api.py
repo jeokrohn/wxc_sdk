@@ -1114,7 +1114,8 @@ class AsDetailedCDRApi(AsApiChild, base=''):
     """
 
     def get_cdr_history_gen(self, start_time: Union[str, datetime] = None, end_time: Union[datetime, str] = None,
-                        locations: list[str] = None, **params) -> AsyncGenerator[CDR, None, None]:
+                        locations: list[str] = None, host:str = 'analytics.webexapis.com', stream: bool = False,
+                        **params) -> AsyncGenerator[CDR, None, None]:
         """
         Provides Webex Calling Detailed Call History data for your organization.
 
@@ -1136,10 +1137,15 @@ class AsDetailedCDRApi(AsApiChild, base=''):
         :param locations: Names of the location (as shown in Control Hub). Up to 10 comma-separated locations can be
             provided. Allows you to query reports by location.
         :type locations: list[str]
+        :param host: analytics host to access. Defaults to 'analytics.webexapis.com'.
+        :type host: str
+        :param stream: If true, collect data from cdr_stream, else from cdr_feed. Defaults to False (cdr_feed).
+        :type stream: bool
         :param params: additional arguments
         :return:
         """
-        url = 'https://analytics.webexapis.com/v1/cdr_feed'
+        endpoint = 'cdr_stream' if stream else 'cdr_feed'
+        url = f'https://{host}/v1/{endpoint}'
         if locations:
             params['locations'] = ','.join(locations)
         if not start_time:
@@ -1159,7 +1165,8 @@ class AsDetailedCDRApi(AsApiChild, base=''):
         return self.session.follow_pagination(url=url, model=CDR, params=params, item_key='items')
 
     async def get_cdr_history(self, start_time: Union[str, datetime] = None, end_time: Union[datetime, str] = None,
-                        locations: list[str] = None, **params) -> List[CDR]:
+                        locations: list[str] = None, host:str = 'analytics.webexapis.com', stream: bool = False,
+                        **params) -> List[CDR]:
         """
         Provides Webex Calling Detailed Call History data for your organization.
 
@@ -1181,10 +1188,15 @@ class AsDetailedCDRApi(AsApiChild, base=''):
         :param locations: Names of the location (as shown in Control Hub). Up to 10 comma-separated locations can be
             provided. Allows you to query reports by location.
         :type locations: list[str]
+        :param host: analytics host to access. Defaults to 'analytics.webexapis.com'.
+        :type host: str
+        :param stream: If true, collect data from cdr_stream, else from cdr_feed. Defaults to False (cdr_feed).
+        :type stream: bool
         :param params: additional arguments
         :return:
         """
-        url = 'https://analytics.webexapis.com/v1/cdr_feed'
+        endpoint = 'cdr_stream' if stream else 'cdr_feed'
+        url = f'https://{host}/v1/{endpoint}'
         if locations:
             params['locations'] = ','.join(locations)
         if not start_time:

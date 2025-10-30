@@ -1,6 +1,8 @@
 Release history
 ===============
 
+- feat: new parameters host, stream for :meth:`api.cdr.get_cdr_history <wxc_sdk.cdr.DetailedCDRApi.get_cdr_history>`
+
 1.27.0
 ------
 - feat: support for pChargeInfoSupportPolicy on :class:`trunk details <wxc_sdk.telephony.prem_pstn.trunk.TrunkDetail>` and in :meth:`api.telephony.prem_pstn.trunk.create <wxc_sdk.telephony.prem_pstn.trunk.TrunkApi.create>` and :meth:`api.telephony.prem_pstn.trunk.update <wxc_sdk.telephony.prem_pstn.trunk.TrunkApi.update>`
