@@ -157,7 +157,7 @@ class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
             body['subscriptionId'] = subscription_id
         if carrier_id is not None:
             body['carrierId'] = carrier_id
-        r = self.post(url=url, params=params, json=body)
+        r = self.post(url=url, params=params, json=body, ignore_status=400)
         if isinstance(r, list):
             return NumberAddResponse.model_validate(r[0])
         return NumberAddResponse.model_validate({})

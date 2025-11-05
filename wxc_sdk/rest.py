@@ -328,7 +328,7 @@ class RestSession(Session):
 
     @retry_request
     def _request_w_response(self, method: str, url: str, headers=None, content_type: str = None,
-                            **kwargs) -> Tuple[Response, StrOrDict]:
+                            ignore_status: int = None, **kwargs) -> Tuple[Response, StrOrDict]:
         """
         low level API REST request with support for 429 rate limiting
 
@@ -340,6 +340,8 @@ class RestSession(Session):
         :type headers: Optional[dict]
         :param content_type:
         :type content_type: str
+        :param ignore_status:
+        :type ignore_status: int
         :param kwargs: additional keyword args
         :type kwargs: dict
         :return: Tuple of response object and body. Body can be text or dict (parsed from JSON body)
@@ -362,9 +364,10 @@ class RestSession(Session):
             try:
                 response.raise_for_status()
             except HTTPError as error:
-                # create a RestError based on HTTP error
-                error = RestError(error.args[0], response=error.response)
-                raise error
+                if ignore_status is None or error.response.status_code != ignore_status:
+                    # create a RestError based on HTTP error
+                    error = RestError(error.args[0], response=error.response)
+                    raise error
             # get response body as text or dict (parsed JSON)
             ct = response.headers.get('Content-Type')
             if not ct:

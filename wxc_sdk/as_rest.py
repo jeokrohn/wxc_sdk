@@ -389,7 +389,8 @@ class AsRestSession(ClientSession):
 
     @retry_request
     async def _request_w_response(self, method: str, url: str, headers=None, content_type: str = None,
-                                  data=None, json=None, **kwargs) -> Tuple[ClientResponse, StrOrDict]:
+                                  data=None, json=None, ignore_status: int = None,
+                                  **kwargs) -> Tuple[ClientResponse, StrOrDict]:
         """
         low level API REST request with support for 429 rate limiting
 
@@ -401,7 +402,7 @@ class AsRestSession(ClientSession):
         :type headers: Optional[dict]
         :param content_type:
         :type content_type: str
-        :param kwargs: additional keyward args
+        :param kwargs: additional keyword args
         :type kwargs: dict
         :return: Tuple of response object and body. Body can be text or dict (parsed from JSON body)
         :rtype:
@@ -447,12 +448,13 @@ class AsRestSession(ClientSession):
             try:
                 response.raise_for_status()
             except ClientResponseError as error:
-                # create a RestError based on HTTP error
-                error = AsRestError(request_info=error.request_info,
-                                    history=error.history, status=error.status,
-                                    message=error.message, headers=error.headers,
-                                    detail=response_data)
-                raise error
+                if ignore_status is None or error.status != ignore_status:
+                    # create a RestError based on HTTP error
+                    error = AsRestError(request_info=error.request_info,
+                                        history=error.history, status=error.status,
+                                        message=error.message, headers=error.headers,
+                                        detail=response_data)
+                    raise error
 
         return response, response_data
 
