@@ -328,6 +328,9 @@ Tag = Union[str, NameAndDescription]
 
 
 class OASpec(OABaseModel):
+    class Config:
+        extra = 'ignore'
+
     openapi: str
     info: OAInfo
     servers: Optional[List[OAServer]] = None
