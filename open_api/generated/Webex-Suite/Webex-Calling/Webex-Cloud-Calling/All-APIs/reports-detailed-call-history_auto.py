@@ -575,31 +575,39 @@ class ReportsDetailedCallHistoryApi(ApiChild, base='cdr_feed'):
     """
     Reports: Detailed Call History
     
-    The base URL for these APIs is **analytics.webexapis.com** (or **analytics-
-    calling-gov.webexapis.com** for Government), which does not work with the API
-    reference's **Try It** feature. If you have any questions or need help please
-    contact the Webex Developer Support team at devsupport@webex.com.
+    The base URL for these APIs is **analytics-calling.webexapis.com** (or
+    **analytics-calling-gov.webexapis.com** for Government). These endpoints are
+    not compatible with the API reference's **Try It** feature. For questions or
+    assistance, please contact the Webex Developer Support team at
+    devsupport@webex.com.
     
     
     
-    To retrieve Detailed Call History information, you must use a token with the `spark-admin:calling_cdr_read` `scope
-    <https://developer.webex.com/docs/integrations#scopes>`_.
-    The authenticating user must have the administrator role "Webex Calling Detailed Call History API access" enabled.
+    The CDR Feed API is recommended for users who need to pull CDR records for a specific time period. For more
+    up-to-date records, use the cdr_stream endpoint API instead.
     
-    Detailed Call History information is available 5 minutes after a call has ended and may be retrieved for up to 48
-    hours. For example, if a call ends at 9:46 am, the record for that call can be collected using the API from 9:51
-    am, and is available until 9:46 am two days later.
+    To retrieve Detailed Call History information, your request must include a token with the
+    `spark-admin:calling_cdr_read` `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_. Additionally, the authenticating user must have the administrator role
+    "Webex Calling Detailed Call History API access" enabled.
     
-    This API is rate-limited to one call every 1 minutes for a given organization ID.
+    The CDR Feed API can query any 12-hour period between 5 minutes ago and 30 days prior to the current UTC time. Only
+    12 hours of records can be retrieved per request (i.e., the time between the selected start and end times in a
+    single API call). For example: If a call ends at 9:46 AM, the record is available for collection starting at 9:51
+    AM and remains available until 9:46 AM 30 days later. The maximum query duration starting at 9:51 AM would end at
+    9:51 PM the same day.
+    
+    This API is rate-limited to 1 initial request per minute per user token, with up to 10 additional pagination
+    requests per minute per user token.
     
     Details on the fields returned from this API and their potential values are available at
     <https://help.webex.com/en-us/article/nmug598/Reports-for-Your-Cloud-Collaboration-Portfolio>. Select the **Report
-    templates** tab, and then in the **Webex Calling reports** section see **Calling Detailed Call History Report**.
+    templates** tab, and under the **Webex Calling reports**, see **Calling Detailed Call History Report**.
     
-    By default, the calls to analytics.webexapis.com are sent to the closest region's servers. If the region's servers
-    host the organization's data, then the data is returned. Otherwise, an HTTP 451 error code response is returned.
-    The body of the response in this case contains the end point information where a user can get data for the user's
-    organization.
+    By default, the calls to analytics-calling.webexapis.com are routed to the closest region's servers. If the
+    region's servers host the organization's data, then the data is returned. Otherwise, an HTTP 451 error code is
+    returned. In such cases, the response body contains endpoint information indicating where the organization’s data
+    can be retrieved.
     """
 
     def get_detailed_call_history(self, start_time: Union[str, datetime], end_time: Union[str, datetime],
@@ -618,12 +626,12 @@ class ReportsDetailedCallHistoryApi(ApiChild, base='cdr_feed'):
         Values in response items may be extended as more capabilities are added to Webex Calling.
 
         :param start_time: Time of the first report you wish to collect. (Report time is the time the call finished).
-            **Note:** The specified time must be between 5 minutes ago and 48 hours ago, and be formatted as
+            **Note:** The specified time must be between 5 minutes ago and 48 hours ago, and formatted as
             `YYYY-MM-DDTHH:MM:SS.mmmZ`.
         :type start_time: Union[str, datetime]
         :param end_time: Time of the last report you wish to collect. (Report time is the time the call finished).
-            **Note:** The specified time should be later than `startTime` but no later than 48 hours, and be formatted
-            as `YYYY-MM-DDTHH:MM:SS.mmmZ`.
+            **Note:** The specified time should be later than `startTime` but no later than 48 hours, and formatted as
+            `YYYY-MM-DDTHH:MM:SS.mmmZ`.
         :type end_time: Union[str, datetime]
         :param locations: Name of the location (as shown in Control Hub). Up to 10 comma-separated locations can be
             provided. Allows you to query reports by location.

@@ -1088,33 +1088,41 @@ class AsDetailedCDRApi(AsApiChild, base=''):
     """
     Reports: Detailed Call History
 
-    The base URL for these APIs is **analytics.webexapis.com** (or **analytics-
-    calling-gov.webexapis.com** for Government), which does not work with the API
-    reference's **Try It** feature. If you have any questions or need help please
-    contact the Webex Developer Support team at devsupport@webex.com.
+    The base URL for these APIs is **analytics-calling.webexapis.com** (or
+    **analytics-calling-gov.webexapis.com** for Government). These endpoints are
+    not compatible with the API reference's **Try It** feature. For questions or
+    assistance, please contact the Webex Developer Support team at
+    devsupport@webex.com.
 
-    To retrieve Detailed Call History information, you must use a token with the `spark-admin:calling_cdr_read` `scope
-    <https://developer.webex.com/docs/integrations#scopes>`_.
-    The authenticating user must have the administrator role "Webex Calling Detailed Call History API access" enabled.
+    The CDR Feed API is recommended for users who need to pull CDR records for a specific time period. For more
+    up-to-date records, use the cdr_stream endpoint API instead.
 
-    Detailed Call History information is available 5 minutes after a call has ended and may be retrieved for up to 48
-    hours. For example, if a call ends at 9:46 am, the record for that call can be collected using the API from 9:51
-    am, and is available until 9:46 am two days later.
+    To retrieve Detailed Call History information, your request must include a token with the
+    `spark-admin:calling_cdr_read` `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_. Additionally, the authenticating user must have the
+    administrator role "Webex Calling Detailed Call History API access" enabled.
 
-    This API is rate-limited to one call every 1 minutes for a given organization ID.
+    The CDR Feed API can query any 12-hour period between 5 minutes ago and 30 days prior to the current UTC time. Only
+    12 hours of records can be retrieved per request (i.e., the time between the selected start and end times in a
+    single API call). For example: If a call ends at 9:46 AM, the record is available for collection starting at 9:51
+    AM and remains available until 9:46 AM 30 days later. The maximum query duration starting at 9:51 AM would end at
+    9:51 PM the same day.
+
+    This API is rate-limited to 1 initial request per minute per user token, with up to 10 additional pagination
+    requests per minute per user token.
 
     Details on the fields returned from this API and their potential values are available at
     <https://help.webex.com/en-us/article/nmug598/Reports-for-Your-Cloud-Collaboration-Portfolio>. Select the **Report
-    templates** tab, and then in the **Webex Calling reports** section see **Calling Detailed Call History Report**.
+    templates** tab, and under the **Webex Calling reports**, see **Calling Detailed Call History Report**.
 
-    By default, the calls to analytics.webexapis.com are sent to the closest region's servers. If the region's servers
-    host the organization's data, then the data is returned. Otherwise, an HTTP 451 error code response is returned.
-    The body of the response in this case contains the end point information where a user can get data for the user's
-    organization.
+    By default, the calls to analytics-calling.webexapis.com are routed to the closest region's servers. If the
+    region's servers host the organization's data, then the data is returned. Otherwise, an HTTP 451 error code is
+    returned. In such cases, the response body contains endpoint information indicating where the organization’s data
+    can be retrieved.
     """
 
     def get_cdr_history_gen(self, start_time: Union[str, datetime] = None, end_time: Union[datetime, str] = None,
-                        locations: list[str] = None, host:str = 'analytics.webexapis.com', stream: bool = False,
+                        locations: list[str] = None, host:str = 'analytics-calling.webexapis.com', stream: bool = False,
                         **params) -> AsyncGenerator[CDR, None, None]:
         """
         Provides Webex Calling Detailed Call History data for your organization.
@@ -1124,15 +1132,16 @@ class AsDetailedCDRApi(AsApiChild, base=''):
         collect.
         The API will return all reports that were created between startTime and endTime.
 
-        :param start_time: Time of the first report you wish to collect. (report time is the time the call finished).
-            Can be a datetime object or an ISO-8601 datetime string to be
-            parsed by :meth:`dateutil.parser.isoparse`.
+        :param start_time: Time of the first report you wish to collect. (Report time is the time the call finished).
 
-            Note: The specified time must be between 5 minutes ago and 48 hours ago.
+            Note: The specified time must be between 5 minutes ago and 48 hours ago, and Can be a datetime object or
+            an ISO-8601 datetime string to be parsed by :meth:`dateutil.parser.isoparse`
+
         :type start_time: Union[str, datetime]
-        :param end_time: Time of the last report you wish to collect. Note: The specified time should be earlier than
-            startTime and no earlier than 48 hours ago. Can be a datetime object or an ISO-8601 datetime string to be
-            parsed by :meth:`dateutil.parser.isoparse`.
+        :param end_time: Time of the last report you wish to collect. (Report time is the time the call finished).
+
+            Note: The specified time should be earlier than startTime and no earlier than 48 hours ago. Can be a
+            datetime object or an ISO-8601 datetime string to be parsed by :meth:`dateutil.parser.isoparse`.
         :type end_time: Union[str, datetime]
         :param locations: Names of the location (as shown in Control Hub). Up to 10 comma-separated locations can be
             provided. Allows you to query reports by location.
@@ -1165,7 +1174,7 @@ class AsDetailedCDRApi(AsApiChild, base=''):
         return self.session.follow_pagination(url=url, model=CDR, params=params, item_key='items')
 
     async def get_cdr_history(self, start_time: Union[str, datetime] = None, end_time: Union[datetime, str] = None,
-                        locations: list[str] = None, host:str = 'analytics.webexapis.com', stream: bool = False,
+                        locations: list[str] = None, host:str = 'analytics-calling.webexapis.com', stream: bool = False,
                         **params) -> List[CDR]:
         """
         Provides Webex Calling Detailed Call History data for your organization.
@@ -1175,15 +1184,16 @@ class AsDetailedCDRApi(AsApiChild, base=''):
         collect.
         The API will return all reports that were created between startTime and endTime.
 
-        :param start_time: Time of the first report you wish to collect. (report time is the time the call finished).
-            Can be a datetime object or an ISO-8601 datetime string to be
-            parsed by :meth:`dateutil.parser.isoparse`.
+        :param start_time: Time of the first report you wish to collect. (Report time is the time the call finished).
 
-            Note: The specified time must be between 5 minutes ago and 48 hours ago.
+            Note: The specified time must be between 5 minutes ago and 48 hours ago, and Can be a datetime object or
+            an ISO-8601 datetime string to be parsed by :meth:`dateutil.parser.isoparse`
+
         :type start_time: Union[str, datetime]
-        :param end_time: Time of the last report you wish to collect. Note: The specified time should be earlier than
-            startTime and no earlier than 48 hours ago. Can be a datetime object or an ISO-8601 datetime string to be
-            parsed by :meth:`dateutil.parser.isoparse`.
+        :param end_time: Time of the last report you wish to collect. (Report time is the time the call finished).
+
+            Note: The specified time should be earlier than startTime and no earlier than 48 hours ago. Can be a
+            datetime object or an ISO-8601 datetime string to be parsed by :meth:`dateutil.parser.isoparse`.
         :type end_time: Union[str, datetime]
         :param locations: Names of the location (as shown in Control Hub). Up to 10 comma-separated locations can be
             provided. Allows you to query reports by location.
