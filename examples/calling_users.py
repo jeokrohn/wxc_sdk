@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 from wxc_sdk import WebexSimpleApi
 
-load_dotenv()
+load_dotenv(override=True)
 
 api = WebexSimpleApi()
 

@@ -223,7 +223,7 @@ async def add_numbers(file: Path = typer.Argument(exists=True,
     """
     Add TNs to Webex Calling locations
     """
-    load_dotenv(env_path())
+    load_dotenv(env_path(), override=True)
     tokens = get_tokens() if token is None else Tokens(access_token=token)
     if tokens is None:
         print(f'Access token can be provided using --token argument, set in WEBEX_ACCESS_TOKEN environment variable or '

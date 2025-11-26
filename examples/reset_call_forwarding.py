@@ -15,7 +15,7 @@ from wxc_sdk.as_api import AsWebexSimpleApi
 
 async def main():
     # load environment. SDk fetches the access token from WEBEX_ACCESS_TOKEN environment variable
-    load_dotenv()
+    load_dotenv(override=True)
 
     logging.basicConfig(level=logging.INFO)
 

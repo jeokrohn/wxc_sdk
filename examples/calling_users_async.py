@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 
 from wxc_sdk.as_api import AsWebexSimpleApi
 
-load_dotenv()
+load_dotenv(override=True)
 
 
 async def get_calling_users():

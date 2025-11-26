@@ -95,7 +95,7 @@ async def as_main():
                         help='file with list of spaces to keep')
     args = parser.parse_args()
 
-    load_dotenv()
+    load_dotenv(override=True)
     token = args.token or os.getenv('WEBEX_ACCESS_TOKEN')
     if not token:
         print('No token provided and WEBEX_ACCESS_TOKEN not set in environment', file=sys.stderr)

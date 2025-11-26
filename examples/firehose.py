@@ -88,7 +88,7 @@ logging.getLogger('wxc_sdk.rest').setLevel(logging.DEBUG)
 
 log = logging.getLogger(__name__)
 
-load_dotenv(env_path())
+load_dotenv(env_path(), override=True)
 
 
 @dataclass(init=False, repr=False)

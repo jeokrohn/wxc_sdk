@@ -158,7 +158,7 @@ def main(csv_file: Path = typer.Argument(exists=True,
                                                   f'Environment variables can also be set in '
                                                   f'{env_path()}')):
     # get access token
-    load_dotenv(env_path())
+    load_dotenv(env_path(), override=True)
     tokens = get_tokens() if token is None else Tokens(access_token=token)
     if tokens is None:
         print(f'Access token can be provided using --token argument, set in WEBEX_ACCESS_TOKEN environment variable or '

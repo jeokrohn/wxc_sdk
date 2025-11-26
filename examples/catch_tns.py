@@ -268,7 +268,7 @@ async def catch_tns():
     parser.add_argument('--cleanup', required=False, help='remove all pooling HGs', action='store_true')
     args = parser.parse_args()
 
-    load_dotenv(env_path())
+    load_dotenv(env_path(), override=True)
 
     tokens = args.token or None
 

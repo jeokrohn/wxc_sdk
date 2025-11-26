@@ -65,7 +65,8 @@ def main():
     # get tokens
     tokens = args.token
     load_dotenv(os.path.join(os.getcwd(),
-                             f'{os.path.splitext(os.path.basename(__file__))[0]}.env'))
+                             f'{os.path.splitext(os.path.basename(__file__))[0]}.env'),
+                override=True)
 
     # try to get token from file .. or in the 2nd round force new tokens if the token is for a different email address
     for force_new in (False, True):

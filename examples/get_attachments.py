@@ -50,7 +50,7 @@ async def download_attachment(session: AsRestSession, semaphore: Semaphore, url:
 
 async def get_attachments():
     # get token from environment
-    load_dotenv()
+    load_dotenv(override=True)
     token = os.getenv('WEBEX_ACCESS_TOKEN')
 
     # get target spaces, messages from that space, and attachment URLs from messages

@@ -184,7 +184,7 @@ async def observe_national_holidays(*, api: AsWebexSimpleApi, locations: List[Lo
 if __name__ == '__main__':
     # read dotenv which has some environment variables like Webex API token and Calendarify
     # API key.
-    load_dotenv()
+    load_dotenv(override=True)
 
     # enable logging
     logging.basicConfig(level=logging.DEBUG,

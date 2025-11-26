@@ -88,7 +88,7 @@ def main(user_email: str = typer.Argument(...,
     where the magic happens
     """
     # get tokens
-    load_dotenv(env_path())
+    load_dotenv(env_path(), override=True)
 
     tokens = get_tokens() if token is None else Tokens(access_token=token)
     if tokens is None:

@@ -17,7 +17,7 @@ from wxc_sdk.all_types import *
 VOICEMAIL_SETTINGS_NUMBER_OF_RINGS = 6
 
 # loading environment variables - use .env file for development
-load_dotenv()
+load_dotenv(override=True)
 
 
 def update_vm_settings():

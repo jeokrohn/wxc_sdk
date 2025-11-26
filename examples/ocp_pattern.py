@@ -187,7 +187,7 @@ async def main():
 
     # get tokens
     # if token is provided use that token, else try to read from file
-    load_dotenv(env_path())
+    load_dotenv(env_path(), override=True)
     tokens = get_tokens() if args.token is None else Tokens(access_token=args.token)
     if tokens is None:
         print(
