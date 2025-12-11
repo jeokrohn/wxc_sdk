@@ -2,6 +2,7 @@ Release history
 ===============
 
 - fix: ignore status 400 for meth:`api.telephony.location.number.add <wxc_sdk.telephony.location.numbers.LocationNumbersApi.add>`
+- fix: :meth:`api.telephony.prem_pstn.dial_plan.modify_patterns <wxc_sdk.telephony.prem_pstn.dial_plan.DialPlanApi.modify_patterns>` had wrong body content
 
 1.27.1
 ------

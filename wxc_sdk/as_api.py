@@ -25624,7 +25624,7 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
         body['dialPatterns'] = TypeAdapter(list[PatternAndAction]).dump_python(dial_patterns, mode='json',
                                                                                by_alias=True,
                                                                                exclude_none=True)
-        await self.put(url=url, params=params, data=body)
+        await self.put(url=url, params=params, json=body)
 
     async def delete_all_patterns(self, dial_plan_id: str, org_id: str = None):
         """
