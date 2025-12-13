@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.9, <3.14"
 resolution-markers = [
     "python_full_version >= '3.12'",
@@ -2603,6 +2603,15 @@ wheels = [
 ]
 
 [[package]]
+name = "random-address"
+version = "1.3.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/02/c0/e0ebdfa7385b2124a31481fe48b641275246a8cb68ff82f0f91029d097c6/random_address-1.3.0.tar.gz", hash = "sha256:d984292f3d121bd5641b64c9007a04728ab338405b5c30ceea83f5f4bca2fd67", size = 101111, upload-time = "2025-04-07T14:44:38.773Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/eb/7e/19ca748e493b12d36d79fd6112145b7b917e7818ed4d50a0c56de632b1c8/random_address-1.3.0-py3-none-any.whl", hash = "sha256:a3919e971564e34f5ec24e802241b186b0f531cc481a5c527992d4783eb8634f", size = 100584, upload-time = "2025-04-07T14:44:36.644Z" },
+]
+
+[[package]]
 name = "requests"
 version = "2.32.5"
 source = { registry = "https://pypi.org/simple" }
@@ -3093,6 +3102,7 @@ dev = [
     { name = "pyjwt" },
     { name = "pytest" },
     { name = "python-dotenv" },
+    { name = "random-address" },
     { name = "selenium", version = "4.36.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "selenium", version = "4.38.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "setuptools" },
@@ -3134,6 +3144,7 @@ dev = [
     { name = "pyjwt", specifier = ">=2.4.0,<3" },
     { name = "pytest", specifier = ">=7.1.1,<8" },
     { name = "python-dotenv", specifier = ">=1.0.0,<2" },
+    { name = "random-address", specifier = ">=1.3.0" },
     { name = "selenium", specifier = ">=4.5.0,<5" },
     { name = "setuptools", specifier = ">=67.6.0,<68" },
     { name = "sphinx" },

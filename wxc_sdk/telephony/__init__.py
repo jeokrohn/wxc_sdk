@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from pydantic import Field, TypeAdapter, field_validator
+from wxc_sdk.telephony.emergency_address import EmergencyAddressApi
 
 from .access_codes import LocationAccessCodesApi
 from .announcements_repo import AnnouncementsRepositoryApi
@@ -569,6 +570,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     dect_devices: DECTDevicesApi
     #: WxC device operations
     devices: TelephonyDevicesApi
+    emergency_address: EmergencyAddressApi
     #: emergency services
     emergency_services: OrgEmergencyServicesApi
     guest_calling: GuestCallingApi
@@ -619,6 +621,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         self.cx_essentials = CustomerExperienceEssentialsApi(session=session)
         self.dect_devices = DECTDevicesApi(session=session)
         self.devices = TelephonyDevicesApi(session=session)
+        self.emergency_address = EmergencyAddressApi(session=session)
         self.emergency_services = OrgEmergencyServicesApi(session=session)
         self.guest_calling = GuestCallingApi(session=session)
         self.hotdesk = HotDeskApi(session=session)

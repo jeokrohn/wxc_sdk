@@ -20,6 +20,7 @@ Subpackages
    wxc_sdk.telephony.cx_essentials
    wxc_sdk.telephony.dect_devices
    wxc_sdk.telephony.devices
+   wxc_sdk.telephony.emergency_address
    wxc_sdk.telephony.emergency_services
    wxc_sdk.telephony.guest_calling
    wxc_sdk.telephony.hotdesk

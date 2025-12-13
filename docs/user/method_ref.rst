@@ -1281,6 +1281,14 @@ The method name is a link to the method documentation.
         Get Validation Schema
    * - :meth:`api.telephony.devices.dynamic_settings.update_specified_settings_for_the_device <wxc_sdk.telephony.devices.dynamic_settings.DevicesDynamicSettingsApi.update_specified_settings_for_the_device>`
         Update specified settings for the device
+   * - :meth:`api.telephony.emergency_address.add_to_location <wxc_sdk.telephony.emergency_address.EmergencyAddressApi.add_to_location>`
+        Add an Emergency Address to a Location
+   * - :meth:`api.telephony.emergency_address.lookup_for_location <wxc_sdk.telephony.emergency_address.EmergencyAddressApi.lookup_for_location>`
+        Emergency Address Lookup to Verify if Address is Valid
+   * - :meth:`api.telephony.emergency_address.update_for_location <wxc_sdk.telephony.emergency_address.EmergencyAddressApi.update_for_location>`
+        Update the Emergency Address of a Location
+   * - :meth:`api.telephony.emergency_address.update_for_phone_number <wxc_sdk.telephony.emergency_address.EmergencyAddressApi.update_for_phone_number>`
+        Update the emergency address for a phone number
    * - :meth:`api.telephony.emergency_services.read_emergency_call_notification <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.read_emergency_call_notification>`
         Get an Organization Emergency Call Notification
    * - :meth:`api.telephony.emergency_services.update_emergency_call_notification <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.update_emergency_call_notification>`

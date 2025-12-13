@@ -40,20 +40,20 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsConferenceControlsApi', 'AsConvergedRecordingsApi', 'AsCustomerExperienceEssentialsApi',
            'AsDECTDevicesApi', 'AsDetailedCDRApi', 'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi',
            'AsDevicesApi', 'AsDevicesDynamicSettingsApi', 'AsDialPlanApi', 'AsDigitPatternsApi',
-           'AsDisableCallingLocationJobsApi', 'AsDndApi', 'AsECBNApi', 'AsEventsApi', 'AsExecAssistantApi',
-           'AsFeatureAccessApi', 'AsFeatureSelector', 'AsForwardingApi', 'AsGoOverrideApi', 'AsGroupsApi',
-           'AsGuestCallingApi', 'AsGuestManagementApi', 'AsHotDeskApi', 'AsHotDeskingSigninViaVoicePortalApi',
-           'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi',
-           'AsLicensesApi', 'AsLocationAccessCodesApi', 'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi',
-           'AsLocationMoHApi', 'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi',
-           'AsMSTeamsSettingApi', 'AsManageNumbersJobsApi', 'AsMeBargeApi', 'AsMeCallBlockApi', 'AsMeCallCenterApi',
-           'AsMeCallParkApi', 'AsMeCallPickupApi', 'AsMeCallPoliciesApi', 'AsMeCallerIdApi', 'AsMeDNDApi',
-           'AsMeEndpointsApi', 'AsMeExecutiveApi', 'AsMeForwardingApi', 'AsMePersonalAssistantApi',
-           'AsMeRecordingApi', 'AsMeSNRApi', 'AsMeSettingsApi', 'AsMeVoicemailApi', 'AsMeetingChatsApi',
-           'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
-           'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi',
-           'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsModeManagementApi', 'AsMonitoringApi',
-           'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOperatingModesApi',
+           'AsDisableCallingLocationJobsApi', 'AsDndApi', 'AsECBNApi', 'AsEmergencyAddressApi', 'AsEventsApi',
+           'AsExecAssistantApi', 'AsFeatureAccessApi', 'AsFeatureSelector', 'AsForwardingApi', 'AsGoOverrideApi',
+           'AsGroupsApi', 'AsGuestCallingApi', 'AsGuestManagementApi', 'AsHotDeskApi',
+           'AsHotDeskingSigninViaVoicePortalApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi',
+           'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationAccessCodesApi',
+           'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi', 'AsLocationNumbersApi',
+           'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMSTeamsSettingApi', 'AsManageNumbersJobsApi',
+           'AsMeBargeApi', 'AsMeCallBlockApi', 'AsMeCallCenterApi', 'AsMeCallParkApi', 'AsMeCallPickupApi',
+           'AsMeCallPoliciesApi', 'AsMeCallerIdApi', 'AsMeDNDApi', 'AsMeEndpointsApi', 'AsMeExecutiveApi',
+           'AsMeForwardingApi', 'AsMePersonalAssistantApi', 'AsMeRecordingApi', 'AsMeSNRApi', 'AsMeSettingsApi',
+           'AsMeVoicemailApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi',
+           'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi',
+           'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsModeManagementApi',
+           'AsMonitoringApi', 'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOperatingModesApi',
            'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi', 'AsOrganisationAccessCodesApi',
            'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOrganizationContactsApi',
            'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi',
@@ -23091,6 +23091,133 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         await super().put(url, params=params, json=body)
 
 
+class AsEmergencyAddressApi(AsApiChild, base='telephony/pstn'):
+    """
+    API to handle emergency address settings for a location
+
+    """
+
+    async def add_to_location(self, location_id: str, address: Union[EmergencyAddress, SuggestedEmergencyAddress],
+                        org_id: str = None) -> str:
+        """
+        Add an Emergency Address to a Location
+
+        Adds a new emergency address to the specified location. On success, returns the unique identifier of the newly
+        created emergency address.
+
+        Emergency address settings allow the admin to configure or update the physical address associated with a phone
+        number or a location.
+
+        Adding emergency address to a location requires a full administrator auth token with scope of
+        `spark-admin:telephony_pstn_write`.
+
+        :param location_id: Location to which the emergency address will be added.
+        :type location_id: str
+        :param address: Emergency address to add.
+        :type address: Union[EmergencyAddress, SuggestedEmergencyAddress]
+        :param org_id: Adding emergency address for a location in this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = address.update()
+        url = self.ep(f'locations/{location_id}/emergencyAddress')
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    async def lookup_for_location(self, location_id: str, address: Union[EmergencyAddress, SuggestedEmergencyAddress],
+                            org_id: str = None) -> list[SuggestedEmergencyAddress]:
+        """
+        Emergency Address Lookup to Verify if Address is Valid
+
+        Returns a suggested address. If the input address is valid and unchanged, no errors are returned. If the input
+        address requires corrections, the response includes a suggested address along with error details.
+
+        Emergency address settings allow the admin to configure or update the physical address associated with a phone
+        number or a location.
+
+        Emergency address lookup to verify if address is valid requires a full administrator auth token with scope of
+        `spark-admin:telephony_pstn_read`.
+
+        :param location_id: Emergency address lookup for this location.
+        :type location_id: str
+        :param address: Emergency address to lookup.
+        :type address: Union[EmergencyAddress, SuggestedEmergencyAddress]
+        :param org_id: Emergency address lookup for this organization.
+        :type org_id: str
+        :rtype: list[SuggestedEmergencyAddress]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = address.update()
+        url = self.ep(f'locations/{location_id}/emergencyAddress/lookup')
+        data = await super().post(url, params=params, json=body)
+        r = TypeAdapter(list[SuggestedEmergencyAddress]).validate_python(data['addresses'])
+        return r
+
+    async def update_for_location(self, location_id: str, address_id: str,
+                            address: Union[EmergencyAddress, SuggestedEmergencyAddress], org_id: str = None):
+        """
+        Update the Emergency Address of a Location
+
+        Updates the emergency address of the specified location.
+
+        Emergency address settings allow the admin to configure or update the physical address associated with a phone
+        number or a location.
+
+        Updating the emergency address of a location requires a full administrator auth token with scope of
+        `spark-admin:telephony_pstn_write`.
+
+        :param location_id: Location for which the emergency address will be updated.
+        :type location_id: str
+        :param address_id: Unique identifier for the emergency address that will be updated.
+        :type address_id: str
+        :param address: Emergency address to update.
+        :type address: Union[EmergencyAddress, SuggestedEmergencyAddress]
+        :param org_id: Updating the emergency address of a location in this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = address.update()
+        url = self.ep(f'locations/{location_id}/emergencyAddresses/{address_id}')
+        await super().put(url, params=params, json=body)
+
+    async def update_for_phone_number(self, phone_number: str,
+                                emergency_address: Union[EmergencyAddress, SuggestedEmergencyAddress],
+                                org_id: str = None):
+        """
+        Update the emergency address for a phone number.
+
+        Emergency address settings allow the admin to configure or update the physical address associated with a phone
+        number or a location.
+
+        Updating the emergency address for a phone number requires a full administrator auth token with scope of
+        `spark-admin:telephony_pstn_write`.
+
+        :param phone_number: Update the emergency address for this phone number.
+        :type phone_number: str
+        :param emergency_address: Emergency address to update.
+        :type emergency_address: Union[EmergencyAddress, SuggestedEmergencyAddress]
+        :param org_id: Update the emergency address of phone number in this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['emergencyAddress'] = emergency_address.update()
+        url = self.ep(f'numbers/{phone_number}/emergencyAddress')
+        await super().put(url, params=params, json=body)
+
+
 class AsGuestCallingApi(AsApiChild, base='telephony/config/guestCalling'):
     """
     Guest Calling Settings with Click-to-call
@@ -31871,6 +31998,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     dect_devices: AsDECTDevicesApi
     #: WxC device operations
     devices: AsTelephonyDevicesApi
+    emergency_address: AsEmergencyAddressApi
     #: emergency services
     emergency_services: AsOrgEmergencyServicesApi
     guest_calling: AsGuestCallingApi
@@ -31921,6 +32049,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         self.cx_essentials = AsCustomerExperienceEssentialsApi(session=session)
         self.dect_devices = AsDECTDevicesApi(session=session)
         self.devices = AsTelephonyDevicesApi(session=session)
+        self.emergency_address = AsEmergencyAddressApi(session=session)
         self.emergency_services = AsOrgEmergencyServicesApi(session=session)
         self.guest_calling = AsGuestCallingApi(session=session)
         self.hotdesk = AsHotDeskApi(session=session)

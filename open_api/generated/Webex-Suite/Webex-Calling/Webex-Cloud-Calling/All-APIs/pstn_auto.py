@@ -11,8 +11,9 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['AllowedServiceTypesFromHydra', 'ConnectionOptionsResponse', 'ConnectionResponse', 'PSTNApi',
-           'PSTNServiceType', 'PSTNType', 'PremiseRouteType']
+__all__ = ['AddressLookupErrorObject', 'AllowedServiceTypesFromHydra', 'ConnectionOptionsResponse',
+           'ConnectionResponse', 'EmergencyAddressObject', 'PSTNApi', 'PSTNServiceType', 'PSTNType',
+           'PremiseRouteType', 'SuggestedEmergencyAddressObject']
 
 
 class PSTNServiceType(str, Enum):
@@ -82,12 +83,58 @@ class AllowedServiceTypesFromHydra(str, Enum):
     mobile_numbers = 'MOBILE_NUMBERS'
 
 
-class PSTNApi(ApiChild, base='telephony/pstn/locations'):
+class EmergencyAddressObject(ApiModel):
+    #: Primary street information for the emergency address.
+    address1: Optional[str] = None
+    #: Apartment number or any other secondary information for the emergency address.
+    address2: Optional[str] = None
+    #: City for the emergency address.
+    city: Optional[str] = None
+    #: State or Province or Region for the emergency address.
+    state: Optional[str] = None
+    #: Postal code for the emergency address.
+    postal_code: Optional[str] = None
+    #: Country for the emergency address.
+    country: Optional[str] = None
+
+
+class AddressLookupErrorObject(ApiModel):
+    #: Error code.
+    code: Optional[str] = None
+    #: Error title.
+    title: Optional[str] = None
+    #: Detailed error message.
+    detail: Optional[str] = None
+
+
+class SuggestedEmergencyAddressObject(ApiModel):
+    #: Primary street information for the emergency address.
+    address1: Optional[str] = None
+    #: Apartment number or any other secondary information for the emergency address.
+    address2: Optional[str] = None
+    #: City for the emergency address.
+    city: Optional[str] = None
+    #: State or Province or Region for the emergency address.
+    state: Optional[str] = None
+    #: Postal code for the emergency address.
+    postal_code: Optional[str] = None
+    #: Country for the emergency address.
+    country: Optional[str] = None
+    #: Additional metadata for the emergency address.
+    meta: Optional[dict] = None
+    #: List of errors encountered during address validation. Returned only when the input address was corrected and a
+    #: suggested address was provided. Each error describes a specific issue with the original input.
+    errors: Optional[list[AddressLookupErrorObject]] = None
+
+
+class PSTNApi(ApiChild, base='telephony/pstn'):
     """
     PSTN
     
     PSTN Location Connection Settings supports PSTN selection when creating a location or changing a PSTN type for a
     location. This is only supported for Local Gateway and Non-integrated CCP.
+    
+    PSTN Emergency Address APIs support reading and writing of Emergency Address settings for a specific organization.
     
     Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
     `spark-admin:telephony_pstn_read`.
@@ -119,7 +166,7 @@ class PSTNApi(ApiChild, base='telephony/pstn/locations'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{location_id}/connection')
+        url = self.ep(f'locations/{location_id}/connection')
         data = super().get(url, params=params)
         r = ConnectionResponse.model_validate(data)
         return r
@@ -160,7 +207,7 @@ class PSTNApi(ApiChild, base='telephony/pstn/locations'):
             body['premiseRouteType'] = premise_route_type
         if premise_route_id is not None:
             body['premiseRouteId'] = premise_route_id
-        url = self.ep(f'{location_id}/connection')
+        url = self.ep(f'locations/{location_id}/connection')
         super().put(url, params=params, json=body)
 
     def retrieve_pstn_connection_options_for_a_location(self, location_id: str,
@@ -190,7 +237,195 @@ class PSTNApi(ApiChild, base='telephony/pstn/locations'):
             params['orgId'] = org_id
         if service_types is not None:
             params['serviceTypes'] = service_types
-        url = self.ep(f'{location_id}/connectionOptions')
+        url = self.ep(f'locations/{location_id}/connectionOptions')
         data = super().get(url, params=params)
         r = TypeAdapter(list[ConnectionOptionsResponse]).validate_python(data['items'])
         return r
+
+    def add_emergency_address_to_location(self, location_id: str, address1: str = None, address2: str = None,
+                                          city: str = None, state: str = None, postal_code: str = None,
+                                          country: str = None, org_id: str = None) -> str:
+        """
+        Add an Emergency Address to a Location
+
+        Adds a new emergency address to the specified location. On success, returns the unique identifier of the newly
+        created emergency address.
+
+        Emergency address settings allow the admin to configure or update the physical address associated with a phone
+        number or a location.
+
+        Adding emergency address to a location requires a full administrator auth token with scope of
+        `spark-admin:telephony_pstn_write`.
+
+        :param location_id: Location to which the emergency address will be added.
+        :type location_id: str
+        :param address1: Primary street information for the emergency address.
+        :type address1: str
+        :param address2: Apartment number or any other secondary information for the emergency address.
+        :type address2: str
+        :param city: City for the emergency address.
+        :type city: str
+        :param state: State or Province or Region for the emergency address.
+        :type state: str
+        :param postal_code: Postal code for the emergency address.
+        :type postal_code: str
+        :param country: Country for the emergency address.
+        :type country: str
+        :param org_id: Adding emergency address for a location in this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if address1 is not None:
+            body['address1'] = address1
+        if address2 is not None:
+            body['address2'] = address2
+        if city is not None:
+            body['city'] = city
+        if state is not None:
+            body['state'] = state
+        if postal_code is not None:
+            body['postalCode'] = postal_code
+        if country is not None:
+            body['country'] = country
+        url = self.ep(f'locations/{location_id}/emergencyAddress')
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    def emergency_address_lookup(self, location_id: str, address1: str = None, address2: str = None, city: str = None,
+                                 state: str = None, postal_code: str = None, country: str = None,
+                                 org_id: str = None) -> list[SuggestedEmergencyAddressObject]:
+        """
+        Emergency Address Lookup to Verify if Address is Valid
+
+        Returns a suggested address. If the input address is valid and unchanged, no errors are returned. If the input
+        address requires corrections, the response includes a suggested address along with error details.
+
+        Emergency address settings allow the admin to configure or update the physical address associated with a phone
+        number or a location.
+
+        Emergency address lookup to verify if address is valid requires a full administrator auth token with scope of
+        `spark-admin:telephony_pstn_read`.
+
+        :param location_id: Emergency address lookup for this location.
+        :type location_id: str
+        :param address1: Primary street information for the emergency address.
+        :type address1: str
+        :param address2: Apartment number or any other secondary information for the emergency address.
+        :type address2: str
+        :param city: City for the emergency address.
+        :type city: str
+        :param state: State or Province or Region for the emergency address.
+        :type state: str
+        :param postal_code: Postal code for the emergency address.
+        :type postal_code: str
+        :param country: Country for the emergency address.
+        :type country: str
+        :param org_id: Emergency address lookup for this organization.
+        :type org_id: str
+        :rtype: list[SuggestedEmergencyAddressObject]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if address1 is not None:
+            body['address1'] = address1
+        if address2 is not None:
+            body['address2'] = address2
+        if city is not None:
+            body['city'] = city
+        if state is not None:
+            body['state'] = state
+        if postal_code is not None:
+            body['postalCode'] = postal_code
+        if country is not None:
+            body['country'] = country
+        url = self.ep(f'locations/{location_id}/emergencyAddress/lookup')
+        data = super().post(url, params=params, json=body)
+        r = TypeAdapter(list[SuggestedEmergencyAddressObject]).validate_python(data['addresses'])
+        return r
+
+    def update_emergency_address_of_location(self, location_id: str, address_id: str, address1: str = None,
+                                             address2: str = None, city: str = None, state: str = None,
+                                             postal_code: str = None, country: str = None, org_id: str = None):
+        """
+        Update the Emergency Address of a Location
+
+        Updates the emergency address of the specified location.
+
+        Emergency address settings allow the admin to configure or update the physical address associated with a phone
+        number or a location.
+
+        Updating the emergency address of a location requires a full administrator auth token with scope of
+        `spark-admin:telephony_pstn_write`.
+
+        :param location_id: Location for which the emergency address will be updated.
+        :type location_id: str
+        :param address_id: Unique identifier for the emergency address that will be updated.
+        :type address_id: str
+        :param address1: Primary street information for the emergency address.
+        :type address1: str
+        :param address2: Apartment number or any other secondary information for the emergency address.
+        :type address2: str
+        :param city: City for the emergency address.
+        :type city: str
+        :param state: State or Province or Region for the emergency address.
+        :type state: str
+        :param postal_code: Postal code for the emergency address.
+        :type postal_code: str
+        :param country: Country for the emergency address.
+        :type country: str
+        :param org_id: Updating the emergency address of a location in this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if address1 is not None:
+            body['address1'] = address1
+        if address2 is not None:
+            body['address2'] = address2
+        if city is not None:
+            body['city'] = city
+        if state is not None:
+            body['state'] = state
+        if postal_code is not None:
+            body['postalCode'] = postal_code
+        if country is not None:
+            body['country'] = country
+        url = self.ep(f'locations/{location_id}/emergencyAddresses/{address_id}')
+        super().put(url, params=params, json=body)
+
+    def update_emergency_address_for_phone_number(self, phone_number: str,
+                                                  emergency_address: EmergencyAddressObject,
+                                                  org_id: str = None):
+        """
+        Update the emergency address for a phone number.
+
+        Emergency address settings allow the admin to configure or update the physical address associated with a phone
+        number or a location.
+
+        Updating the emergency address for a phone number requires a full administrator auth token with scope of
+        `spark-admin:telephony_pstn_write`.
+
+        :param phone_number: Update the emergency address for this phone number.
+        :type phone_number: str
+        :type emergency_address: EmergencyAddressObject
+        :param org_id: Update the emergency address of phone number in this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['emergencyAddress'] = emergency_address.model_dump(mode='json', by_alias=True, exclude_none=True)
+        url = self.ep(f'numbers/{phone_number}/emergencyAddress')
+        super().put(url, params=params, json=body)
