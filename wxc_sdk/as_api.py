@@ -25854,10 +25854,9 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         :rtype: str
         """
         params = org_id and {'orgId': org_id} or None
-        body = route_group.model_dump_json(include={'name': True,
-                                                    'local_gateways': {'__all__': {'trunk_id', 'priority'}}})
+        data = route_group.create_or_update()
         url = self.ep()
-        data = await self.post(url=url, params=params, data=body)
+        data = await self.post(url=url, params=params, json=data)
         return data['id']
 
     async def details(self, rg_id: str, org_id: str = None) -> RouteGroup:
@@ -25900,10 +25899,9 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         :type org_id: str
         """
         params = org_id and {'orgId': org_id} or None
-        body = update.model_dump_json(include={'name': True,
-                                               'local_gateways': {'__all__': {'trunk_id', 'priority'}}})
+        data = update.create_or_update()
         url = self.ep(rg_id)
-        await self.put(url=url, params=params, data=body)
+        await self.put(url=url, params=params, json=data)
 
     async def delete_route_group(self, rg_id: str, org_id: str = None):
         """

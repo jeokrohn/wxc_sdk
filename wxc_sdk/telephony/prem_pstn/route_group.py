@@ -1,6 +1,6 @@
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Dict
 
 from pydantic import Field
 
@@ -28,6 +28,17 @@ class RouteGroup(ApiModel):
     organization: Optional[Customer] = None
     #: only returned by detail()
     local_gateways: Optional[list[RGTrunk]] = None
+
+    def create_or_update(self) -> Dict:
+        """
+        data for create or update call
+
+        :meta private:
+        """
+        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
+                               include={'name': True,
+                                        'local_gateways': {
+                                            '__all__': {'trunk_id', 'priority'}}})
 
 
 class RouteGroupUsage(ApiModel):
@@ -104,10 +115,9 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         :rtype: str
         """
         params = org_id and {'orgId': org_id} or None
-        body = route_group.model_dump_json(include={'name': True,
-                                                    'local_gateways': {'__all__': {'trunk_id', 'priority'}}})
+        data = route_group.create_or_update()
         url = self.ep()
-        data = self.post(url=url, params=params, data=body)
+        data = self.post(url=url, params=params, json=data)
         return data['id']
 
     def details(self, rg_id: str, org_id: str = None) -> RouteGroup:
@@ -150,10 +160,9 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         :type org_id: str
         """
         params = org_id and {'orgId': org_id} or None
-        body = update.model_dump_json(include={'name': True,
-                                               'local_gateways': {'__all__': {'trunk_id', 'priority'}}})
+        data = update.create_or_update()
         url = self.ep(rg_id)
-        self.put(url=url, params=params, data=body)
+        self.put(url=url, params=params, json=data)
 
     def delete_route_group(self, rg_id: str, org_id: str = None):
         """
