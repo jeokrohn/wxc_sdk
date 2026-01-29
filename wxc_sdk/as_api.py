@@ -25879,7 +25879,10 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
         params = org_id and {'orgId': org_id} or None
         url = self.ep(rg_id)
         data = await self.get(url=url, params=params)
-        return RouteGroup.model_validate(data)
+        rg = RouteGroup.model_validate(data)
+        # rg id is not set in response
+        rg.rg_id = rg_id
+        return rg
 
     async def update(self, rg_id: str, update: RouteGroup, org_id: str = None):
         """
