@@ -30,6 +30,8 @@ def get_npas_for_zip(zip_code: str) -> Set[str]:
     """
     Get all NPA (area codes) associated with a given ZIP code using the nalennd.com API.
 
+    This is taken from https://www.npanxxsource.com/npa-nxx-to-zip-code-lookup.htm
+
     Args:
         zip_code (str): The ZIP code to lookup (e.g., "85308")
 

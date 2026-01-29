@@ -17,7 +17,8 @@ class TestPersonFeatureAccess(TestCaseWithUsers):
         super().setUpClass()
         # Set the access token for the API session; apparently the API has challenges with integration tokens?
         # cls.api.session._tokens.access_token = \
-        #     'OTMzNmIyODUtMjEzMi00ZTEwLThiODQtYWIzNWMwODRkM2JhM2RkZTU3NDYtMTBl_P0A1_36818b6f-ef07-43d1-b76f-ced79ab2e3e7'
+        #     'OTMzNmIyODUtMjEzMi00ZTEwLThiODQtYWIzNWMwODRkM2JhM2RkZTU3NDYtMTBl_P0A1_36818b6f-ef07-43d1-b76f
+        #     -ced79ab2e3e7'
 
     def test_read_default(self):
         """
