@@ -1,0 +1,27 @@
+{
+  "oauth_access_token": "",
+  "admin_scopes": [],
+  "org_id": "",
+  "input_datasets": [
+    "schemas/locations.csv",
+    "schemas/people.csv",
+    "schemas/numbers.csv",
+    "schemas/workspaces.csv",
+    "schemas/groups.csv",
+    "schemas/schedules.csv",
+    "schemas/announcements.csv",
+    "schemas/calling_features.csv",
+    "schemas/devices.csv",
+    "schemas/forwarding.csv",
+    "schemas/outgoing_permissions.csv"
+  ],
+  "naming_standards": "",
+  "extension_plan_rules": "",
+  "prefix_rule_51_secondary_number": "",
+  "prefix_rule_53_forwarding_destination": "",
+  "runbook_freeze_window": "",
+  "audit_log_enabled": true,
+  "dry_run_mode": false,
+  "rollback_plan": "",
+  "pipeline_version": "git"
+}
