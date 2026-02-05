@@ -1,0 +1,4 @@
+location,code,description,operation
+Lab Location A,1234,Lab lobby access,add
+Lab Location A,5678,IT storage access,add
+Lab Location B,0000,Guest access code,add
