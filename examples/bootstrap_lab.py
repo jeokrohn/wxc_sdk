@@ -4,7 +4,9 @@ Bootstrap a small Webex Calling lab (2 locations + users + extensions).
 
 This script is meant for sandbox use. It will:
 1) Create or reuse two locations.
-2) Create or reuse users with calling extensions.
+2) Enable each location for Webex Calling.
+3) Create or reuse users with calling extensions.
+4) Log counts before/after to verify remote changes.
 
 Requirements:
 * WEBEX_ACCESS_TOKEN (or a service app token) in the environment.
@@ -19,12 +21,14 @@ from __future__ import annotations
 import argparse
 import os
 from dataclasses import dataclass
+import re
 from typing import Iterable, Optional
 
 from dotenv import load_dotenv
 
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.people import Person
+from wxc_sdk.rest import RestError
 
 
 @dataclass(frozen=True)
@@ -150,6 +154,91 @@ def ensure_locations(api: WebexSimpleApi, org_id: str, dry_run: bool) -> dict[st
     return location_ids
 
 
+def enable_locations_for_calling(
+    api: WebexSimpleApi,
+    location_ids: dict[str, str],
+    dry_run: bool,
+) -> None:
+    for name, location_id in location_ids.items():
+        try:
+            api.telephony.location.details(location_id=location_id)
+            print(f"Calling already enabled for location: {name}")
+            continue
+        except RestError:
+            if dry_run:
+                print(f"[dry-run] Enable location for calling: {name}")
+                continue
+        location = api.locations.details(location_id=location_id)
+        enabled_id = api.telephony.location.enable_for_calling(location=location)
+        print(f"Enabled location for calling: {name} ({enabled_id})")
+
+
+def prompt_confirm(message: str) -> bool:
+    response = input(f"{message} [y/N]: ").strip().lower()
+    return response in {"y", "yes"}
+
+
+def prompt_non_empty(message: str, default: Optional[str] = None) -> str:
+    while True:
+        raw = input(f"{message}{' [' + default + ']' if default else ''}: ").strip()
+        if not raw and default:
+            return default
+        if raw:
+            return raw
+        print("Value is required.")
+
+
+def prompt_user_seeds(domain: str) -> list[UserSeed]:
+    print("Enter lab users (LDAP-style email + long extension). Type 'done' to finish.")
+    users: list[UserSeed] = []
+    email_re = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+    ext_re = re.compile(r"^\d{4,}$")
+    while True:
+        email = input("User email (or 'done'): ").strip()
+        if email.lower() == "done":
+            break
+        if not email and domain:
+            print("Email is required.")
+            continue
+        if email and not email_re.match(email):
+            print("Invalid email format.")
+            continue
+        extension = input("User extension (digits, >=4): ").strip()
+        if not ext_re.match(extension):
+            print("Invalid extension format.")
+            continue
+        location_name = prompt_non_empty("Location name for user")
+        users.append(UserSeed(email=email, extension=extension, location_name=location_name))
+    return users
+
+
+def log_user_counts(api: WebexSimpleApi, users: Iterable[UserSeed], label: str) -> None:
+    count = 0
+    for seed in users:
+        count += len(list(api.people.list(email=seed.email)))
+    print(f"{label} users (by email): {count}")
+
+
+def validate_person_create(person: Person) -> None:
+    if not person.emails:
+        raise ValueError("Person payload must include at least one email.")
+    if not person.display_name:
+        raise ValueError("Person payload must include display_name.")
+    if not person.extension:
+        raise ValueError("Person payload must include extension.")
+    if not person.location_id:
+        raise ValueError("Person payload must include location_id.")
+    if not person.licenses:
+        raise ValueError("Person payload must include licenses.")
+
+
+def validate_person_response(person: Person) -> None:
+    if not person.person_id:
+        raise ValueError("Person response missing person_id.")
+    if not person.display_name:
+        raise ValueError("Person response missing display_name.")
+
+
 def ensure_users(
     api: WebexSimpleApi,
     users: Iterable[UserSeed],
@@ -172,10 +261,13 @@ def ensure_users(
             location_id=location_id,
             licenses=[calling_license_id],
         )
+        validate_person_create(person)
+        print(f"Prepared create payload for {seed.email}: {person.create_update()}")
         if dry_run:
             print(f"[dry-run] Create user: {seed.email} (ext {seed.extension})")
             continue
         created = api.people.create(person, calling_data=True)
+        validate_person_response(created)
         print(f"Created user: {created.display_name} ({created.person_id})")
 
 
@@ -196,8 +288,23 @@ def main() -> None:
     calling_license_id = resolve_calling_license(api)
 
     location_ids = ensure_locations(api, org_id, args.dry_run)
-    user_seeds = build_user_seeds(args.domain)
+    enable_locations_for_calling(api, location_ids, args.dry_run)
+
+    if prompt_confirm("Use interactive user input instead of defaults?"):
+        user_seeds = prompt_user_seeds(args.domain)
+        if not user_seeds:
+            print("No users provided; exiting.")
+            return
+    else:
+        user_seeds = build_user_seeds(args.domain)
+
+    log_user_counts(api, user_seeds, "Before")
+    if not args.dry_run and not prompt_confirm("Proceed with user creation?"):
+        print("Aborted by user.")
+        return
+
     ensure_users(api, user_seeds, location_ids, calling_license_id, args.dry_run)
+    log_user_counts(api, user_seeds, "After")
 
 
 if __name__ == "__main__":
