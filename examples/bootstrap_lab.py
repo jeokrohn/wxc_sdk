@@ -24,7 +24,6 @@ from typing import Iterable, Optional
 from dotenv import load_dotenv
 
 from wxc_sdk import WebexSimpleApi
-from wxc_sdk.bulk_provision.action_helpers import email_display_name
 from wxc_sdk.people import Person
 
 
@@ -83,6 +82,11 @@ def build_user_seeds(domain: str) -> list[UserSeed]:
     ]
 
 
+def email_display_name(email: str) -> str:
+    local = email.split("@")[0]
+    return local.replace(".", " ").replace("_", " ").title()
+
+
 def resolve_org_id(api: WebexSimpleApi, override: Optional[str]) -> str:
     if override:
         return override
@@ -97,14 +101,26 @@ def resolve_calling_license(api: WebexSimpleApi) -> str:
     if license_id:
         return license_id
     license_name = os.getenv("CALLING_LICENSE_NAME")
-    if not license_name:
-        raise RuntimeError("Set CALLING_LICENSE_ID or CALLING_LICENSE_NAME in your environment.")
     licenses = api.licenses.list()
-    matched = next((lic for lic in licenses if lic.name == license_name), None)
-    if not matched:
+    if license_name:
+        matched = next((lic for lic in licenses if lic.name == license_name), None)
+        if matched:
+            return matched.license_id
         available = ", ".join(sorted(lic.name for lic in licenses))
         raise RuntimeError(f'License "{license_name}" not found. Available: {available}')
-    return matched.license_id
+
+    calling_license = next(
+        (lic for lic in licenses if "calling" in lic.name.lower()),
+        None,
+    )
+    if calling_license:
+        print(f'Auto-selected calling license "{calling_license.name}".')
+        return calling_license.license_id
+    available = ", ".join(sorted(lic.name for lic in licenses))
+    raise RuntimeError(
+        "No calling license found. Set CALLING_LICENSE_ID or CALLING_LICENSE_NAME. "
+        f"Available licenses: {available}"
+    )
 
 
 def ensure_locations(api: WebexSimpleApi, org_id: str, dry_run: bool) -> dict[str, str]:
