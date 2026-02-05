@@ -175,7 +175,7 @@ def ensure_users(
         if dry_run:
             print(f"[dry-run] Create user: {seed.email} (ext {seed.extension})")
             continue
-        created = api.people.create(person)
+        created = api.people.create(person, calling_data=True)
         print(f"Created user: {created.display_name} ({created.person_id})")
 
 
