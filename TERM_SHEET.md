@@ -240,3 +240,108 @@ Cada step define éxito por:
 * Cada fila termina en results/pending/rejected con trazabilidad completa.
 * Re-ejecución del mismo CSV no duplica entidades (lookup+upsert).
 * Reanudación desde checkpoint funciona y no corrompe outputs.
+
+---
+
+## Sugerencias optimizadas (mínimo esfuerzo, máxima certeza en 1ª puesta en servidor)
+
+### A. Imprescindible para ejecutar “una sede completa” sin intervención
+
+1. **Contrato único de entrada (CSV) y nada más**
+   * **Qué hacer**: definir **un solo CSV** con columnas mínimas para: `location`, `user`, `extension/number`, `calling_settings` (las que realmente vais a aplicar).
+   * **Por qué**: sin esto, el pipeline y el executor quedan ambiguos y habrá fallos “por datos”.
+   * **Entregable**: `input_schema.md` + validación estricta → `rejected_rows.csv`.
+
+2. **Orden fijo de fases (3 fases)**
+   * **Qué hacer**: ejecutar siempre en este orden:
+     * **Fase 1**: Locations (crear/actualizar)
+     * **Fase 2**: Users (crear/actualizar + habilitar calling si aplica)
+     * **Fase 3**: Extensions/Números/Asignaciones + settings finales
+   * **Por qué**: evita dependencias rotas sin diseñar un grafo complejo.
+   * **Entregable**: `executor` con `phase` y 3 runs internos o 3 filtros por `entity_type`.
+
+3. **Lookup + Upsert por clave estable (idempotencia remota mínima)**
+   * **Qué hacer**:
+     * Location: lookup por `location_name` (o external_id si existe).
+     * User: lookup por `email`.
+     * Extension: lookup por (`location_id`, `extension`) o (`location_id`, `number`).
+     * Si existe → update; si no → create.
+   * **Por qué**: permite re-ejecutar sin duplicar y completa “half applied” tras reinicio.
+   * **Nota**: no hacer diff “desired vs actual”.
+
+4. **Checkpoint simple por fase**
+   * **Qué hacer**: un `checkpoint.json` con:
+     * `phase`, `last_row_id`, `input_hash`
+   * **Por qué**: reanudación real sin ingeniería extra.
+   * **No hacer**: índices complejos, dedupe de results, etc.
+
+5. **Outputs mínimos re-procesables**
+   * `results.csv`: una línea por fila con estado final (`success|pending|rejected`) y `remote_id` si aplica.
+   * `pending_rows.csv`: fila + `reason_code` + `step` (para re-run).
+   * `rejected_rows.csv`: fallos de validación pre-API.
+   * **Por qué**: trazabilidad y “no se rompe el run”.
+
+---
+
+### B. Imprescindible para “certeza en servidor” (sin sobre-diseño)
+
+6. **Startup safety checks (preflight mínimo)**
+   * **Qué hacer antes de procesar 3.000–21.000**:
+     * validar env vars requeridas,
+     * hacer 1–2 llamadas “baratas” (p.ej. listar org/locations o un GET simple) para confirmar token/base_url/permisos.
+   * **Por qué**: evita ejecutar 1 hora y descubrir que faltan scopes.
+
+7. **Timeouts + retries acotados + circuito “hard stop”**
+   * **Qué hacer**:
+     * timeouts obligatorios,
+     * retries solo para 429/5xx/timeouts,
+     * circuit breaker por batch si dominan errores de permisos/auth.
+   * **Por qué**: evita cuelgues y runs inútiles. Es poca complejidad y mucho valor.
+
+8. **Success condition por endpoint (mínimo)**
+   * **Qué hacer**: éxito = `http_status esperado` + `id` cuando sea create.
+   * **Por qué**: elimina falsos positivos y “esperar mensajes”.
+
+---
+
+### C. Simplificaciones deliberadas (para no gastar esfuerzo ahora)
+
+9. **No implementar**
+   * catálogo extenso de `reason_code` (solo 8–10 códigos prácticos),
+   * dedupe avanzado o “results de-duplication”,
+   * rollback automático (por defecto NO),
+   * concurrencia,
+   * indexado masivo remoto previo,
+   * polling async salvo que aparezca 202 en endpoints críticos.
+
+10. **Rollback: enfoque más conveniente**
+    * **Qué hacer**: no rollback.
+    * **Qué sí**: registrar `half_applied` en pending y confiar en re-run (lookup+upsert) para completar.
+    * **Por qué**: menor complejidad y suficiente para 1ª activación.
+
+---
+
+### D. Testing mínimo que da certeza real (sin batería infinita)
+
+11. **2 capas y listo**
+    * Unit tests: pipeline (validación/normalización) + writers/checkpoint.
+    * Behavioural tests (mock HTTP): 6 escenarios:
+      1. create success
+      2. update success
+      3. 429→retry→success
+      4. 5xx→retry agotado→pending
+      5. 4xx→pending sin retry
+      6. crash/restart (simulado)→resume sin duplicar (lookup encuentra y se hace update o se marca success)
+
+---
+
+### Lista final “lo mínimo que cambia el juego” (prioridad absoluta)
+
+1. CSV schema único + validación → rejected
+2. 3 fases fijas (locations→users→extensions/settings)
+3. lookup+upsert por clave estable (idempotencia remota)
+4. checkpoint simple por fase
+5. results/pending en CSV append seguro
+6. startup safety checks
+7. timeouts + retries acotados + circuit breaker
+8. behavioural tests con mocks para los 6 flujos críticos
