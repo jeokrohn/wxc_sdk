@@ -4,9 +4,12 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime
 import json
 import logging
 import os
+from pathlib import Path
+import tempfile
 from dataclasses import dataclass
 from typing import Any
 
@@ -34,6 +37,12 @@ class ActionSpec:
     pre_post_notes: list[str]
     probe_calls: list[ApiCall]
     apply_calls: list[ApiCall]
+
+
+@dataclass(frozen=True)
+class SnapshotMeta:
+    latest_path: Path
+    timestamped_path: Path
 
 
 class SimpleApiClient:
@@ -103,12 +112,82 @@ def _run_calls(client: SimpleApiClient, calls: list[ApiCall], variables: dict[st
     return failures
 
 
+def _snapshot_meta(action_key: str, snapshot_dir: str | None) -> SnapshotMeta:
+    base_dir = Path(snapshot_dir) if snapshot_dir else Path(tempfile.gettempdir())
+    base_dir.mkdir(parents=True, exist_ok=True)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    latest_name = f"lastdatetime_snapshot_action_{action_key}.json"
+    timestamped_name = f"{timestamp}_{latest_name}"
+    return SnapshotMeta(latest_path=base_dir / latest_name, timestamped_path=base_dir / timestamped_name)
+
+
+def _save_snapshot(meta: SnapshotMeta, payload: dict[str, Any]) -> None:
+    snapshot_text = json.dumps(payload, ensure_ascii=False, indent=2)
+    meta.timestamped_path.write_text(snapshot_text, encoding="utf-8")
+    meta.latest_path.write_text(snapshot_text, encoding="utf-8")
+
+
+def _load_snapshot(path: Path) -> dict[str, Any]:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _preflight_snapshot(client: SimpleApiClient, spec: ActionSpec, variables: dict[str, Any], logger: logging.Logger) -> dict[str, Any]:
+    entries: list[dict[str, Any]] = []
+    for call in spec.probe_calls:
+        path = _format_value(call.path, variables)
+        params = _format_value(call.params, variables) if call.params else None
+        logger.info("Preflight snapshot GET start", extra={"step": call.name, "path": path})
+        try:
+            response = client.request("GET", path, params=params, json_payload=None)
+            json_body: dict[str, Any] | list[Any] | None
+            try:
+                json_body = response.json()
+            except ValueError:
+                json_body = None
+            entries.append(
+                {
+                    "name": call.name,
+                    "path": path,
+                    "status": response.status_code,
+                    "body": json_body,
+                    "text": response.text[:2000],
+                }
+            )
+            logger.info("Preflight snapshot GET done", extra={"step": call.name, "status": response.status_code})
+        except Exception as err:  # pragma: no cover - runtime guard
+            logger.exception("Preflight snapshot GET failed", extra={"step": call.name, "error": str(err)})
+            entries.append({"name": call.name, "path": path, "error": str(err)})
+    return {"action_key": spec.key, "captured_at": datetime.now().isoformat(), "entries": entries}
+
+
+def _calls_from_snapshot(snapshot: dict[str, Any], logger: logging.Logger) -> list[ApiCall]:
+    calls: list[ApiCall] = []
+    for index, entry in enumerate(snapshot.get("entries", []), start=1):
+        body = entry.get("body")
+        path = entry.get("path")
+        if not path or not isinstance(body, dict):
+            continue
+        calls.append(
+            ApiCall(
+                name=f"revert_{entry.get('name', index)}",
+                method="PUT",
+                path=path,
+                payload=body,
+                acceptable_statuses=(200, 201, 204, 400, 404),
+            )
+        )
+    if not calls:
+        logger.error("Snapshot has no reversible entries with JSON object body")
+    return calls
+
+
 def run_action_spec(spec: ActionSpec) -> int:
     parser = argparse.ArgumentParser(description=spec.title)
-    parser.add_argument("--mode", choices=["probe", "apply"], default="probe")
+    parser.add_argument("--mode", choices=["probe", "apply", "revert"], default="probe")
     parser.add_argument("--base-url", default=os.getenv("WEBEX_BASE_URL", "https://webexapis.com/v1"))
     parser.add_argument("--token", default=os.getenv("WEBEX_ACCESS_TOKEN"))
     parser.add_argument("--vars", default="{}", help="JSON with ids/fields used in endpoint templates")
+    parser.add_argument("--snapshot-dir", default=None, help="Directory for preflight snapshots used by --mode revert")
     parser.add_argument("--timeout", type=int, default=20)
     parser.add_argument("--retries", type=int, default=2)
     parser.add_argument("--insecure", action="store_true", help="Disable TLS cert validation")
@@ -136,6 +215,23 @@ def run_action_spec(spec: ActionSpec) -> int:
 
     logger.info("No server-side dry-run endpoint is documented for these APIs. probe mode uses controlled invalid or read-only calls.")
     calls = spec.probe_calls if args.mode == "probe" else spec.apply_calls
+
+    if args.mode == "apply":
+        snapshot_meta = _snapshot_meta(spec.key, args.snapshot_dir)
+        snapshot_payload = _preflight_snapshot(client, spec, variables, logger)
+        _save_snapshot(snapshot_meta, snapshot_payload)
+        logger.info("Preflight snapshot saved", extra={"latest": str(snapshot_meta.latest_path), "timestamped": str(snapshot_meta.timestamped_path)})
+
+    if args.mode == "revert":
+        snapshot_meta = _snapshot_meta(spec.key, args.snapshot_dir)
+        if not snapshot_meta.latest_path.exists():
+            logger.error("Snapshot for revert not found", extra={"snapshot": str(snapshot_meta.latest_path)})
+            return 2
+        snapshot_payload = _load_snapshot(snapshot_meta.latest_path)
+        calls = _calls_from_snapshot(snapshot_payload, logger)
+        if not calls:
+            return 2
+
     failures = _run_calls(client, calls, variables, logger)
     logger.info("Completed action with %s failure(s)", failures)
     return 1 if failures else 0
