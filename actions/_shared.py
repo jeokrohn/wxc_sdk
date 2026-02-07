@@ -10,6 +10,8 @@ import logging
 import os
 import string
 from dataclasses import dataclass
+from pathlib import Path
+import tempfile
 from typing import Any
 
 import requests
@@ -36,6 +38,12 @@ class ActionSpec:
     pre_post_notes: list[str]
     probe_calls: list[ApiCall]
     apply_calls: list[ApiCall]
+
+
+@dataclass(frozen=True)
+class SnapshotMeta:
+    latest_path: Path
+    timestamped_path: Path
 
 
 def _string_placeholders(value: str) -> set[str]:
@@ -232,7 +240,7 @@ def run_action_spec(spec: ActionSpec) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=_help_epilog(spec),
     )
-    parser.add_argument("--mode", choices=["probe", "apply"], default="probe")
+    parser.add_argument("--mode", choices=["probe", "apply", "revert"], default="probe")
     parser.add_argument("--base-url", default=os.getenv("WEBEX_BASE_URL", "https://webexapis.com/v1"))
     parser.add_argument("--token", default=os.getenv("WEBEX_ACCESS_TOKEN"))
     parser.add_argument("--vars", default="{}", help="JSON with ids/fields used in endpoint templates")
@@ -253,7 +261,14 @@ def run_action_spec(spec: ActionSpec) -> int:
         logger.error("Missing token. Set WEBEX_ACCESS_TOKEN or --token")
         return 2
 
-    variables = json.loads(args.vars)
+    try:
+        variables = json.loads(args.vars)
+    except json.JSONDecodeError as err:
+        logger.error("Invalid JSON for --vars: %s", err)
+        return 2
+    if not isinstance(variables, dict):
+        logger.error("--vars must be a JSON object (dictionary)")
+        return 2
     required_vars, _ = _required_optional_vars(spec)
     missing_required = [name for name in required_vars if name not in variables]
     if missing_required and args.mode == "apply":
