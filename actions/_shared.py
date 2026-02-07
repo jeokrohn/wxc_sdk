@@ -8,8 +8,7 @@ from datetime import datetime
 import json
 import logging
 import os
-from pathlib import Path
-import tempfile
+import string
 from dataclasses import dataclass
 from typing import Any
 
@@ -39,10 +38,56 @@ class ActionSpec:
     apply_calls: list[ApiCall]
 
 
-@dataclass(frozen=True)
-class SnapshotMeta:
-    latest_path: Path
-    timestamped_path: Path
+def _string_placeholders(value: str) -> set[str]:
+    return {
+        field_name
+        for _, field_name, _, _ in string.Formatter().parse(value)
+        if field_name
+    }
+
+
+def _collect_placeholders(value: Any) -> set[str]:
+    if isinstance(value, str):
+        return _string_placeholders(value)
+    if isinstance(value, dict):
+        items: set[str] = set()
+        for nested_value in value.values():
+            items.update(_collect_placeholders(nested_value))
+        return items
+    if isinstance(value, list):
+        items: set[str] = set()
+        for nested_value in value:
+            items.update(_collect_placeholders(nested_value))
+        return items
+    return set()
+
+
+def _required_optional_vars(spec: ActionSpec) -> tuple[list[str], list[str]]:
+    probe_vars: set[str] = set()
+    apply_vars: set[str] = set()
+    for call in spec.probe_calls:
+        probe_vars.update(_collect_placeholders(call.path))
+        probe_vars.update(_collect_placeholders(call.payload))
+        probe_vars.update(_collect_placeholders(call.params))
+    for call in spec.apply_calls:
+        apply_vars.update(_collect_placeholders(call.path))
+        apply_vars.update(_collect_placeholders(call.payload))
+        apply_vars.update(_collect_placeholders(call.params))
+    required = sorted(apply_vars)
+    optional = sorted(probe_vars - apply_vars)
+    return required, optional
+
+
+def _help_epilog(spec: ActionSpec) -> str:
+    required_vars, optional_vars = _required_optional_vars(spec)
+    required_text = ", ".join(required_vars) if required_vars else "(none)"
+    optional_text = ", ".join(optional_vars) if optional_vars else "(none)"
+    return (
+        "Variables for --vars (JSON)\n"
+        f"  Required (apply mode): {required_text}\n"
+        f"  Optional (probe-only): {optional_text}\n"
+        "  Example: --vars '{\"location_id\":\"...\"}'"
+    )
 
 
 class SimpleApiClient:
@@ -182,8 +227,12 @@ def _calls_from_snapshot(snapshot: dict[str, Any], logger: logging.Logger) -> li
 
 
 def run_action_spec(spec: ActionSpec) -> int:
-    parser = argparse.ArgumentParser(description=spec.title)
-    parser.add_argument("--mode", choices=["probe", "apply", "revert"], default="probe")
+    parser = argparse.ArgumentParser(
+        description=spec.title,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=_help_epilog(spec),
+    )
+    parser.add_argument("--mode", choices=["probe", "apply"], default="probe")
     parser.add_argument("--base-url", default=os.getenv("WEBEX_BASE_URL", "https://webexapis.com/v1"))
     parser.add_argument("--token", default=os.getenv("WEBEX_ACCESS_TOKEN"))
     parser.add_argument("--vars", default="{}", help="JSON with ids/fields used in endpoint templates")
@@ -205,6 +254,11 @@ def run_action_spec(spec: ActionSpec) -> int:
         return 2
 
     variables = json.loads(args.vars)
+    required_vars, _ = _required_optional_vars(spec)
+    missing_required = [name for name in required_vars if name not in variables]
+    if missing_required and args.mode == "apply":
+        logger.error("Missing required --vars for apply mode: %s", ", ".join(missing_required))
+        return 2
     client = SimpleApiClient(
         base_url=args.base_url,
         token=args.token,
