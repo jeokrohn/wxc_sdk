@@ -1,0 +1,10 @@
+entity_type,entity_key,location_key,row_ref,group_name,group_external_id,group_member_emails_csv,feature_access_email,feature_access_payload_json,pickup_name,pickup_extension,pickup_target_emails_csv,queue_name,queue_extension_or_number,queue_language,queue_agent_emails_csv,hunt_name,hunt_extension_or_number,hunt_policy,hunt_member_emails_csv,aa_name,aa_extension_or_number,aa_language,aa_schedule_key,aa_announcement_key,device_owner_type,device_owner_key,device_model,device_serial,device_mac,number_to_remove
+groups,GRP_RECEPCION,LOC_BCN_HQ,row-3001,GRP_RECEPCION,GRP_RECEPCION_EXT,,,,,,,,,,,,,,,,,,,,,,,,,
+group_membership,GRP_RECEPCION,LOC_BCN_HQ,row-3002,GRP_RECEPCION,,ana.perez@example.com|luis@example.com,,,,,,,,,,,,,,,,,,,,,,,,
+feature_access,FA_ANA,LOC_BCN_HQ,row-3003,,,,ana.perez@example.com,"{""feature"":""voicemail"",""enabled"":true}",,,,,,,,,,,,,,,,,,,,,,
+call_pickup_group,CPG_MAIN,LOC_BCN_HQ,row-3004,,,,,,CPG_MAIN,2501,ana.perez@example.com|luis@example.com,,,,,,,,,,,,,,,,,,,
+call_queue,CQ_OPERADORA,LOC_BCN_HQ,row-3005,,,,,,,,,CQ_OPERADORA,2601,es_ES,ana.perez@example.com|luis@example.com,,,,,,,,,,,,,,,
+hunt_group,HG_VENTAS,LOC_BCN_HQ,row-3006,,,,,,,,,,,,,HG_VENTAS,2701,CIRCULAR,ana.perez@example.com|luis@example.com,,,,,,,,,,,
+auto_attendant,AA_MAIN,LOC_BCN_HQ,row-3007,,,,,,,,,,,,,,,,,AA_MAIN,2801,es_ES,SCH_BUSINESS_HOURS,ANN_WELCOME_ES,,,,,,
+devices,DEV_ANA_8851,LOC_BCN_HQ,row-3008,,,,,,,,,,,,,,,,,,,,,,person,ana.perez@example.com,Cisco-8851,FTX1234567A,AA:BB:CC:DD:EE:FF,
+number_removal,RM_NUM_34930009999,LOC_BCN_HQ,row-3009,,,,,,,,,,,,,,,,,,,,,,,,,,,+34930009999

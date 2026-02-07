@@ -1,0 +1,10 @@
+entity_type,entity_key,location_key,row_ref,location_name,location_external_id,time_zone,address_line1,address_city,address_state,address_postal_code,address_country,trunk_name,sbc_address,sip_port,transport,route_group_name,route_group_trunk_ids,internal_route_unknown_enabled,internal_route_target_type,internal_route_target_key,dial_plan_rule_name,dial_plan_pattern,dial_plan_priority,dial_plan_target_type,dial_plan_target_key,location_outgoing_permissions_profile,location_caller_id_policy,number_state_action,phone_numbers_csv,schedule_name,schedule_type,schedule_payload_json,announcement_name,announcement_file_path
+location,LOC_BCN_HQ,LOC_BCN_HQ,row-1001,Barcelona HQ,LOC_BCN_HQ,Europe/Madrid,Carrer Exemple 1,Barcelona,Barcelona,08001,ES,,,,,,,,,,,,,,,,,,,,,,,
+trunk,TRUNK_SBC_MAIN,LOC_BCN_HQ,row-1002,,,,,,,,,TRUNK_SBC_MAIN,sbc01.example.local,5061,TLS,,,,,,,,,,,,,,,,,,,
+route_group,RG_SBC_MAIN,LOC_BCN_HQ,row-1003,,,,,,,,,,,,,RG_SBC_MAIN,TRUNK_SBC_MAIN,,,,,,,,,,,,,,,,,
+internal_dialing,ID_LOC_BCN_HQ,LOC_BCN_HQ,row-1004,,,,,,,,,,,,,,,true,ROUTE_GROUP,RG_SBC_MAIN,,,,,,,,,,,,,,
+dial_plan,RULE_LEGACY_53,LOC_BCN_HQ,row-1005,,,,,,,,,,,,,,,,,,RULE_LEGACY_53,53XXXX,10,ROUTE_GROUP,RG_SBC_MAIN,,,,,,,,,
+location_call_profiles,LCP_LOC_BCN_HQ,LOC_BCN_HQ,row-1006,,,,,,,,,,,,,,,,,,,,,,,allow_all,location_default,,,,,,,
+location_number_state,LNS_LOC_BCN_HQ,LOC_BCN_HQ,row-1007,,,,,,,,,,,,,,,,,,,,,,,,,ACTIVATE,+34930000001|+34930000002,,,,,
+schedules,SCH_BUSINESS_HOURS,LOC_BCN_HQ,row-1008,,,,,,,,,,,,,,,,,,,,,,,,,,,BH_MAIN,business_hours,"{""monday"":""09:00-18:00""}",,
+announcements_repo,ANN_WELCOME_ES,LOC_BCN_HQ,row-1009,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,ANN_WELCOME_ES,./audio/welcome_es.wav

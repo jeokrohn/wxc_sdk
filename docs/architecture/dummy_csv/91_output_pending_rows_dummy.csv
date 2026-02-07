@@ -1,0 +1,2 @@
+timestamp,batch_id,row_id,phase,entity_type,entity_key,step,reason_code,reason_message,http_status,raw_row_minified
+2026-02-05T10:01:00Z,phase2-batch-0001,2001,2,user_calling_settings,ana.perez@example.com,user_apply_calling_settings,permission_denied,Token sin scope spark-admin:telephony_config_write,403,"{""entity_type"":""user_calling_settings"",""email"":""ana.perez@example.com""}"

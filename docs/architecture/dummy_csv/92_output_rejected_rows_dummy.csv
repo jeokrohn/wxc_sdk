@@ -1,0 +1,2 @@
+timestamp,row_id,entity_type,entity_key,reason_code,reason_message,raw_row_minified
+2026-02-05T09:59:00Z,2002,user_numbers,ana.perez@example.com,invalid_input_schema,Formato de phone_number inválido,"{""entity_type"":""user_numbers"",""phone_number"":""930001001""}"

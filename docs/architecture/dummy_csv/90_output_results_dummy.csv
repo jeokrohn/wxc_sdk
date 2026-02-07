@@ -1,0 +1,3 @@
+timestamp,batch_id,row_id,phase,entity_type,entity_key,step,status,http_status,message,remote_id
+2026-02-05T10:00:00Z,phase1-batch-0001,1001,1,location,LOC_BCN_HQ,location_create,success,201,Location creada,Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OLzEyMw==
+2026-02-05T10:01:00Z,phase2-batch-0001,2001,2,user_calling_settings,ana.perez@example.com,user_apply_calling_settings,pending,403,Falta permiso de configuración,

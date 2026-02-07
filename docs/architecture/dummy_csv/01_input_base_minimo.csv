@@ -1,0 +1,4 @@
+entity_type,entity_key,location_key,row_ref
+location,LOC_BCN_HQ,LOC_BCN_HQ,row-0001
+user_calling_settings,ana.perez@example.com,LOC_BCN_HQ,row-0002
+call_queue,LOC_BCN_HQ:Q_OPERADORA,LOC_BCN_HQ,row-0003

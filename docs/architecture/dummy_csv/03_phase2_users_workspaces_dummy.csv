@@ -1,0 +1,12 @@
+entity_type,entity_key,location_key,row_ref,email,calling_enabled,user_extension,user_phone_number_primary,user_phone_numbers_secondary_csv,user_forwarding_enabled,user_forwarding_destination,user_recording_enabled,user_recording_provider,user_monitoring_target_emails_csv,user_exec_assistant_emails_csv,workspace_display_name,workspace_external_id,workspace_extension,workspace_phone_number_primary,workspace_phone_numbers_secondary_csv,workspace_forwarding_enabled,workspace_forwarding_destination,workspace_recording_enabled,workspace_monitoring_target_ids_csv
+user_calling_settings,ana.perez@example.com,LOC_BCN_HQ,row-2001,ana.perez@example.com,true,,,,,,,,,,,,,,,,,,
+user_numbers,ana.perez@example.com,LOC_BCN_HQ,row-2002,ana.perez@example.com,,2301,+34930001001,+34930001002|+34930001003,,,,,,,,,,,,,,,
+user_forwarding,ana.perez@example.com,LOC_BCN_HQ,row-2003,ana.perez@example.com,,,,,true,531234,,,,,,,,,,,,,
+user_recording,ana.perez@example.com,LOC_BCN_HQ,row-2004,ana.perez@example.com,,,,,,,true,webex,,,,,,,,,,,
+user_monitoring,ana.perez@example.com,LOC_BCN_HQ,row-2005,ana.perez@example.com,,,,,,,,,supervisor@example.com,,,,,,,,,,
+user_exec_assistant,ana.perez@example.com,LOC_BCN_HQ,row-2006,ana.perez@example.com,,,,,,,,,,assistant1@example.com|assistant2@example.com,,,,,,,,,
+workspace,WS_SALA_101,LOC_BCN_HQ,row-2007,,,,,,,,,,,,Sala 101,WS_SALA_101,,,,,,,
+workspace_numbers,WS_SALA_101,LOC_BCN_HQ,row-2008,,,,,,,,,,,,Sala 101,WS_SALA_101,2401,+34930002001,+34930002002,,,,
+workspace_forwarding,WS_SALA_101,LOC_BCN_HQ,row-2009,,,,,,,,,,,,Sala 101,WS_SALA_101,,,,true,531999,,
+workspace_recording,WS_SALA_101,LOC_BCN_HQ,row-2010,,,,,,,,,,,,Sala 101,WS_SALA_101,,,,,,true,
+workspace_monitoring,WS_SALA_101,LOC_BCN_HQ,row-2011,,,,,,,,,,,,Sala 101,WS_SALA_101,,,,,,,person-1|person-2
