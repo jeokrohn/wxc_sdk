@@ -46,7 +46,7 @@ class PersonalAssistant(ApiModel):
     presence: Optional[PersonalAssistantPresence] = None
     #: The date until which personal assistant is active.
     until_date_time: Optional[datetime] = None
-    #: Toggle the option to transfer to another number.
+    #: If `true`, allows transfer and forwarding for the call type.
     transfer_enabled: Optional[bool] = None
     #: Number to transfer to.
     transfer_number: Optional[str] = None

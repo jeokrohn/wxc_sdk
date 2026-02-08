@@ -865,7 +865,7 @@ class PersonalAssistantGet(ApiModel):
     presence: Optional[PersonalAssistantGetPresence] = None
     #: The date until which personal assistant is active.
     until_date_time: Optional[datetime] = None
-    #: Toggle the option to transfer to another number.
+    #: If `true`, allows transfer and forwarding for the call type.
     transfer_enabled: Optional[bool] = None
     #: Number to transfer to.
     transfer_number: Optional[str] = None
@@ -2353,7 +2353,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type presence: PersonalAssistantGetPresence
         :param until_date_time: The date until which the personal assistant is active.
         :type until_date_time: Union[str, datetime]
-        :param transfer_enabled: Toggle the option to transfer to another number.
+        :param transfer_enabled: If `true`, allows transfer and forwarding for the call type.
         :type transfer_enabled: bool
         :param transfer_number: Number to transfer to.
         :type transfer_number: str
