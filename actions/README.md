@@ -41,3 +41,17 @@ Cada script ahora muestra en `--help` qué variables de `--vars` son:
 - **Optional (probe-only)**: solo útiles para `--mode probe`.
 
 Además, se incluye un mapeo consolidado en `actions/vars_mapping.md` con el detalle por script, endpoint y estado de paridad (script vs SDK 1.27 vs especificación oficial).
+
+## Runner consolidado con validación de respuestas
+`actions/run_apply_actions.py` ahora permite:
+
+- Cargar token por `WEBEX_ACCESS_TOKEN`, `WEBEX_TOKEN`, `--token` o `--token-file`.
+- Cargar `--context-file` (default `actions/lab_context.json`) para reemplazar automáticamente valores `MISSING_*`.
+- Guardar reporte JSON (`--report-file`) con resultado por script y por API call (conteo 2xx vs non-2xx).
+- Generar un log por acción (`--log-file` interno por script) además del log consolidado.
+
+Ejemplo:
+
+```bash
+python actions/run_apply_actions.py   --continue-on-error   --context-file actions/lab_context.json   --log-file actions/logs/apply_runner_latest.log   --report-file actions/logs/apply_runner_latest.json
+```
