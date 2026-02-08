@@ -85,3 +85,26 @@ def test_preflight_snapshot_skips_calls_with_missing_variables():
 
     assert snapshot["entries"][0]["skipped"] is True
     assert snapshot["entries"][0]["missing_vars"] == ["serial"]
+
+
+def test_run_calls_logs_full_response_body_and_headers(caplog):
+    class DummyResponse:
+        status_code = 200
+        text = "x" * 1200
+        headers = {"X-Test": "header-value"}
+
+    class DummyClient:
+        def request(self, *args, **kwargs):
+            return DummyResponse()
+
+    logger = logging.getLogger("test_actions_shared")
+    call = _shared.ApiCall(name="probe", method="GET", path="devices")
+
+    with caplog.at_level(logging.INFO, logger="test_actions_shared"):
+        failures = _shared._run_calls(DummyClient(), [call], {}, logger)
+
+    assert failures == 0
+    done_records = [r for r in caplog.records if r.message.startswith("API call done | step=")]
+    assert len(done_records) == 1
+    assert "response_headers={'X-Test': 'header-value'}" in done_records[0].message
+    assert f"response_body={'x' * 1200}" in done_records[0].message
