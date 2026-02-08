@@ -48,3 +48,40 @@ def test_calls_from_snapshot_uses_json_objects_only():
     assert calls[0].method == "PUT"
     assert calls[0].path == "telephony/config/test"
     assert calls[0].payload == {"enabled": True}
+
+
+def test_format_value_raises_missing_variables_error():
+    try:
+        _shared._format_value("devices/{serial}", {"workspace_id": "x"})
+    except _shared.MissingVariablesError as err:
+        assert err.missing_keys == ["serial"]
+    else:
+        raise AssertionError("Expected MissingVariablesError")
+
+
+def test_preflight_snapshot_skips_calls_with_missing_variables():
+    class DummyClient:
+        def request(self, *args, **kwargs):  # pragma: no cover - should not be reached
+            raise AssertionError("request() should not be called")
+
+    spec = _shared.ActionSpec(
+        key="action_devices",
+        title="Devices",
+        objective="Test",
+        pre_post_notes=[],
+        probe_calls=[
+            _shared.ApiCall(
+                name="probe_devices",
+                method="GET",
+                path="devices",
+                params={"serial": "{serial}"},
+            )
+        ],
+        apply_calls=[],
+    )
+    logger = logging.getLogger("test_actions_shared")
+
+    snapshot = _shared._preflight_snapshot(DummyClient(), spec, {"workspace_id": "ws"}, logger)
+
+    assert snapshot["entries"][0]["skipped"] is True
+    assert snapshot["entries"][0]["missing_vars"] == ["serial"]
