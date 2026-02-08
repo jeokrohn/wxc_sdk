@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 from operator import attrgetter
 
 from tests.base import TestCaseWithLog, async_test
@@ -57,3 +58,8 @@ class AuthTest(TestCaseWithLog):
             f(authorization_id='foo', org_id='bar')
         with self.assertRaises(ValueError):
             f(org_id='foo')
+
+    def test_get_token_expiration_status(self):
+        r = self.api.authorizations.get_token_expiration_status()
+        print(r)
+        print(datetime.datetime.fromtimestamp(r/1000))

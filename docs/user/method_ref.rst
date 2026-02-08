@@ -19,6 +19,8 @@ The method name is a link to the method documentation.
         Shows details for a attachment action, by ID
    * - :meth:`api.authorizations.delete <wxc_sdk.authorizations.AuthorizationsApi.delete>`
         Deletes an authorization, by authorization ID or client ID and org ID
+   * - :meth:`api.authorizations.get_token_expiration_status <wxc_sdk.authorizations.AuthorizationsApi.get_token_expiration_status>`
+        Get expiration status for a token
    * - :meth:`api.authorizations.list <wxc_sdk.authorizations.AuthorizationsApi.list>`
         Lists all authorizations for a user
    * - :meth:`api.cdr.get_cdr_history <wxc_sdk.cdr.DetailedCDRApi.get_cdr_history>`

@@ -4,6 +4,7 @@ Release history
 - fix: ignore status 400 for meth:`api.telephony.location.number.add <wxc_sdk.telephony.location.numbers.LocationNumbersApi.add>`
 - fix: :meth:`api.telephony.prem_pstn.dial_plan.modify_patterns <wxc_sdk.telephony.prem_pstn.dial_plan.DialPlanApi.modify_patterns>` had wrong body content
 - feat: new api: :attr:`api.telephony.emergency_address <wxc_sdk.telephony.TelephonyApi.emergency_address>`
+- feat: new endpoint :meth:`api.authorizations.get_token_expiration_status <wxc_sdk.authorizations.AuthorizationsApi.get_token_expiration_status>`
 
 1.27.1
 ------

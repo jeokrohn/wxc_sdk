@@ -103,6 +103,19 @@ class AuthorizationsApi(ApiChild, base='authorizations'):
         data = self.get(url, params=params)
         return TypeAdapter(list[Authorization]).validate_python(data['items'])
 
+    def get_token_expiration_status(self) -> int:
+        """
+        Get expiration status for a token
+
+        Epoch-based expiration time for the token.
+
+        :rtype: int
+        """
+        url = self.ep('tokenExpiry')
+        data = super().get(url)
+        r = data['exp']
+        return r
+
     def delete(self, authorization_id: str = None, client_id: str = None, org_id: str = None):
         """
         Deletes an authorization, by authorization ID or client ID and org ID.
