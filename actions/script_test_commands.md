@@ -3,18 +3,6 @@
 > Comandos listos para copiar/pegar, con datos dummy ya rellenos y formato correcto de `--vars`.
 > Requiere `WEBEX_ACCESS_TOKEN` válido y recursos existentes en tenant para que `--mode apply` funcione realmente.
 
-## Paso -1: provisionar dependencias reales en el lab (recomendado)
-
-```bash
-export WEBEX_ACCESS_TOKEN="tu_token_real"
-python actions/provision_lab_dependencies.py --mode apply --user-count 3 --domain lab.example.com
-# Esto genera:
-# - actions/lab_context.json
-# - actions/lab_apply_commands.sh
-```
-
-> Si tu tenant no tiene todavía route groups, trunks, queues o workspaces, el script dejará campos `MISSING_*` para que crees esas dependencias una vez y repitas.
-
 ## Paso 0: generar usuarios dummy
 
 ```bash
