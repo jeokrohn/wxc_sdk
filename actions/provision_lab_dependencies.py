@@ -82,6 +82,30 @@ def first_item(items: list[dict[str, Any]]) -> dict[str, Any] | None:
     return items[0] if items else None
 
 
+def _fallback_people(api: Api, *, needed: int, ext_start: int, phone_prefix: str, skip_ids: set[str]) -> list[dict[str, str]]:
+    """Busca personas existentes para completar contexto cuando no se resolvieron los dummy users."""
+    people = api.req("GET", "people", params={"max": 100}).get("items", [])
+    resolved: list[dict[str, str]] = []
+    for idx, person in enumerate(people):
+        person_id = person.get("id")
+        if not person_id or person_id in skip_ids:
+            continue
+        numbers = person.get("phoneNumbers") or []
+        primary = next((n.get("value") for n in numbers if n.get("value")), None)
+        extension = person.get("extension") or str(ext_start + idx)
+        resolved.append(
+            {
+                "email": (person.get("emails") or ["unknown@example.com"])[0],
+                "id": person_id,
+                "extension": str(extension),
+                "primary_number": primary or f"{phone_prefix}{(idx + 1):07d}",
+            }
+        )
+        if len(resolved) >= needed:
+            break
+    return resolved
+
+
 def build_context(api: Api, args: argparse.Namespace) -> dict[str, Any]:
     context: dict[str, Any] = dict(DEFAULT_VALUES)
 
@@ -129,7 +153,21 @@ def build_context(api: Api, args: argparse.Namespace) -> dict[str, Any]:
             print(f"WARN lookup user {user.email}: {e}")
 
     if len(created) < 2:
-        raise RuntimeError("No se pudieron resolver al menos 2 usuarios (person_id/member_id) en el tenant.")
+        needed = 2 - len(created)
+        fallback = _fallback_people(
+            api,
+            needed=needed,
+            ext_start=args.ext_start + len(created),
+            phone_prefix=args.phone_prefix,
+            skip_ids={entry["id"] for entry in created if entry.get("id")},
+        )
+        created.extend(fallback)
+
+    if len(created) < 2:
+        raise RuntimeError(
+            "No se pudieron resolver al menos 2 usuarios (person_id/member_id) en el tenant. "
+            "Sigue el flujo documentado en actions/LAB_MVP_RUNBOOK.md (generar usuarios, cargarlos y reprobar)."
+        )
 
     context["users"] = created
     context["person_id"] = created[0]["id"]
