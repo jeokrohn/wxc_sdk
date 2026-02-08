@@ -91,6 +91,8 @@ class QueueObjectWithDefaultEnabled(ApiModel):
     name: Optional[str] = None
     #: Name of the location.
     location_name: Optional[str] = None
+    #: Unique location identifier.
+    location_id: Optional[str] = None
     #: Phone number of the queue.
     phone_number: Optional[str] = None
     #: Extension of the queue.
@@ -117,6 +119,8 @@ class QueueObject(ApiModel):
     name: Optional[str] = None
     #: Name of the location.
     location_name: Optional[str] = None
+    #: Unique location identifier.
+    location_id: Optional[str] = None
     #: Phone number of the queue.
     phone_number: Optional[str] = None
     #: Extension of the queue.
