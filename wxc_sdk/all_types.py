@@ -16,12 +16,12 @@ from wxc_sdk.common import AcdCustomization, AlternateNumber, AnnAudioFile, Anno
     LoggingLevel, MaintenanceMode, MeGroupMember, MeGroupSettings, MediaFile, MediaFileType, MonitoredMember, \
     MppCustomization, MppVlanDevice, Multicast, NoiseCancellation, NumberOwner, NumberState, OwnerType, \
     PatternAction, PersonPlaceAgent, PhoneLanguage, PrimaryOrSecondary, PrimaryOrShared, PskObject, RingPattern, \
-    RoomType, RouteIdentity, RouteType, SetOrClear, SoftKeyLayout, SoftKeyMenu, StorageType, UsbPortsObject, \
-    UserBase, UserLicenseType, UserNumber, UserType, ValidateExtensionStatus, ValidateExtensionStatusState, \
-    ValidateExtensionsResponse, ValidatePhoneNumberStatus, ValidatePhoneNumberStatusState, \
-    ValidatePhoneNumbersResponse, ValidationStatus, VlanSetting, VoicemailCopyOfMessage, VoicemailEnabled, \
-    VoicemailFax, VoicemailMessageStorage, VoicemailNotifications, VoicemailTransferToNumber, VolumeSettings, \
-    WifiAuthenticationMethod, WifiCustomization, WifiNetwork
+    RoomType, RouteIdentity, RouteType, SetOrClear, SoftKeyLayout, SoftKeyMenu, StorageType, UsageType, \
+    UsbPortsObject, UserBase, UserLicenseType, UserNumber, UserType, ValidateExtensionStatus, \
+    ValidateExtensionStatusState, ValidateExtensionsResponse, ValidatePhoneNumberStatus, \
+    ValidatePhoneNumberStatusState, ValidatePhoneNumbersResponse, ValidationStatus, VlanSetting, \
+    VoicemailCopyOfMessage, VoicemailEnabled, VoicemailFax, VoicemailMessageStorage, VoicemailNotifications, \
+    VoicemailTransferToNumber, VolumeSettings, WifiAuthenticationMethod, WifiCustomization, WifiNetwork
 from wxc_sdk.common.schedules import Event, RecurWeekly, RecurYearlyByDate, RecurYearlyByDay, Recurrence, \
     Schedule, ScheduleApiBase, ScheduleDay, ScheduleLevel, ScheduleMonth, ScheduleType, ScheduleTypeOrStr, \
     ScheduleWeek
@@ -187,8 +187,7 @@ from wxc_sdk.telephony.cx_essentials.wrapup_reasons import AvailableQueue, Queue
     WrapUpReason, WrapUpReasonDetails, WrapupReasonQueue
 from wxc_sdk.telephony.dect_devices import AddDECTHandset, AddDECTHandsetBulkError, AddDECTHandsetBulkResponse, \
     AddDECTHandsetBulkResult, BaseStationDetail, BaseStationResponse, BaseStationResult, BaseStationsResponse, \
-    DECTHandsetItem, DECTHandsetLine, DECTHandsetList, DECTNetworkDetail, DECTNetworkModel, DectDevice, Handset, \
-    UsageType
+    DECTHandsetItem, DECTHandsetLine, DECTHandsetList, DECTNetworkDetail, DECTNetworkModel, DectDevice, Handset
 from wxc_sdk.telephony.devices import ActivationState, AvailableMember, BackgroundImage, BackgroundImages, \
     DeleteDeviceBackgroundImagesResponse, DeleteImageRequestObject, DeleteImageResponseSuccessObject, \
     DeleteImageResponseSuccessObjectResult, DeviceLayout, DeviceManagedBy, DeviceManufacturer, DeviceMember, \

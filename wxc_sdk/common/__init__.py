@@ -28,7 +28,8 @@ __all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting',
            'BluetoothSetting', 'NoiseCancellation', 'SoftKeyLayout', 'SoftKeyMenu', 'PskObject', 'BackgroundImageColor',
            'BacklightTimer68XX78XX', 'DectCustomization', 'OwnerType', 'NumberOwner', 'ApplyLineKeyTemplateAction',
            'AssignedDectNetwork', 'DevicePlatform', 'Multicast', 'EnhancedMulticast', 'DeviceType', 'UserLicenseType',
-           'MaintenanceMode', 'SetOrClear', 'MeGroupSettings', 'MeGroupMember', 'PrimaryOrSecondary', 'MediaFile']
+           'MaintenanceMode', 'SetOrClear', 'MeGroupSettings', 'MeGroupMember', 'PrimaryOrSecondary', 'MediaFile',
+           'UsageType']
 
 
 class IdOnly(ApiModel):
@@ -1238,3 +1239,8 @@ class PrimaryOrSecondary(str, Enum):
     primary = 'PRIMARY'
     #: Secondary number to call, if available.
     secondary = 'SECONDARY'
+
+class UsageType(str, Enum):
+    device_owner = 'DEVICE_OWNER'
+    shared_line = 'SHARED_LINE'
+

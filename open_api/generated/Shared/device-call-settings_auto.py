@@ -2585,9 +2585,9 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = UploadAdeviceBackgroundImageResponse.model_validate(data)
         return r
 
-    def search_members(self, device_id: str, location_id: str, member_name: str = None, phone_number: str = None,
-                       extension: str = None, usage_type: UsageType = None, order: str = None, org_id: str = None,
-                       **params) -> Generator[SearchMemberObject, None, None]:
+    def search_members(self, device_id: str, member_name: str = None, phone_number: str = None,
+                       location_id: str = None, extension: str = None, usage_type: UsageType = None,
+                       order: str = None, org_id: str = None, **params) -> Generator[SearchMemberObject, None, None]:
         """
         Search Members
 
@@ -2601,12 +2601,12 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
 
         :param device_id: Unique identifier for the device.
         :type device_id: str
-        :param location_id: Unique identifier for the location.
-        :type location_id: str
         :param member_name: Search (Contains) numbers based on member name.
         :type member_name: str
         :param phone_number: Search (Contains) based on number.
         :type phone_number: str
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
         :param extension: Search (Contains) based on extension.
         :type extension: str
         :param usage_type: Search for members eligible to become the owner of the device, or share line on the device.
@@ -2624,7 +2624,8 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
             params['memberName'] = member_name
         if phone_number is not None:
             params['phoneNumber'] = phone_number
-        params['locationId'] = location_id
+        if location_id is not None:
+            params['locationId'] = location_id
         if extension is not None:
             params['extension'] = extension
         if usage_type is not None:

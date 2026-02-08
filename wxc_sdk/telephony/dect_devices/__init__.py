@@ -6,11 +6,11 @@ from pydantic import TypeAdapter, Field
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel, enum_str
 from wxc_sdk.base import SafeEnum as Enum
-from wxc_sdk.common import IdAndName, UserType, AssignedDectNetwork
+from wxc_sdk.common import IdAndName, UserType, AssignedDectNetwork, UsageType
 from wxc_sdk.telephony.devices import AvailableMember
 
 __all__ = ['DECTNetworkModel', 'DECTNetworkDetail', 'BaseStationResult', 'BaseStationResponse', 'BaseStationsResponse',
-           'DECTHandsetLine', 'Handset', 'BaseStationDetail', 'DECTHandsetItem', 'DECTHandsetList', 'UsageType',
+           'DECTHandsetLine', 'Handset', 'BaseStationDetail', 'DECTHandsetItem', 'DECTHandsetList',
            'DectDevice', 'AddDECTHandset', 'AddDECTHandsetBulkError', 'AddDECTHandsetBulkResult',
            'AddDECTHandsetBulkResponse', 'DECTDevicesApi']
 
@@ -165,11 +165,6 @@ class DECTHandsetList(ApiModel):
     number_of_lines_assigned: Optional[int] = None
     #: Array of `DECTHandsetItem` objects, each representing a handset with its associated details and lines.
     handsets: Optional[list[DECTHandsetItem]] = None
-
-
-class UsageType(str, Enum):
-    device_owner = 'DEVICE_OWNER'
-    shared_line = 'SHARED_LINE'
 
 
 class DectDevice(ApiModel):

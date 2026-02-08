@@ -6,6 +6,8 @@ Release history
 - feat: new api: :attr:`api.telephony.emergency_address <wxc_sdk.telephony.TelephonyApi.emergency_address>`
 - feat: new endpoint :meth:`api.authorizations.get_token_expiration_status <wxc_sdk.authorizations.AuthorizationsApi.get_token_expiration_status>`
 - feat: new endpoint :meth:`api.telephony.calls.update_external_voicemail_mwi <wxc_sdk.telephony.calls.CallsApi.update_external_voicemail_mwi>`
+- feat: updated parameters for :meth:`api.telephony.devices.available_members <wxc_sdk.telephony.devices.TelephonyDevicesApi.available_members>`
+
 
 1.27.1
 ------

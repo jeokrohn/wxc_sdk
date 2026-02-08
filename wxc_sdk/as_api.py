@@ -27983,6 +27983,8 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
 
     def available_members_gen(self, device_id: str, location_id: str = None, member_name: str = None,
                           phone_number: str = None, extension: str = None, org_id: str = None,
+                          usage_type: UsageType = None,
+                          order: str = None,
                           **params) -> AsyncGenerator[AvailableMember, None, None]:
         """
         Search members that can be assigned to the device.
@@ -28002,6 +28004,11 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         :type phone_number: str
         :param extension: Search (Contains) based on extension.
         :type extension: str
+        :param usage_type: Search for members eligible to become the owner of the device, or share line on the device.
+        :type usage_type: UsageType
+        :param order: Sort the list of available members on the device in ascending order by name, use either last name
+            `lname` or first name `fname`. Default: last name in ascending order.
+        :type order: str
         :param org_id: Retrieves the list of available members on the device in this Organization.
         :type org_id: str
         :return: list of available members
@@ -28014,6 +28021,8 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
 
     async def available_members(self, device_id: str, location_id: str = None, member_name: str = None,
                           phone_number: str = None, extension: str = None, org_id: str = None,
+                          usage_type: UsageType = None,
+                          order: str = None,
                           **params) -> List[AvailableMember]:
         """
         Search members that can be assigned to the device.
@@ -28033,6 +28042,11 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         :type phone_number: str
         :param extension: Search (Contains) based on extension.
         :type extension: str
+        :param usage_type: Search for members eligible to become the owner of the device, or share line on the device.
+        :type usage_type: UsageType
+        :param order: Sort the list of available members on the device in ascending order by name, use either last name
+            `lname` or first name `fname`. Default: last name in ascending order.
+        :type order: str
         :param org_id: Retrieves the list of available members on the device in this Organization.
         :type org_id: str
         :return: list of available members
