@@ -170,10 +170,18 @@ def _run_calls(client: SimpleApiClient, calls: list[ApiCall], variables: dict[st
         try:
             response = client.request(call.method, path, params=params, json_payload=payload)
             status = response.status_code
-            body = response.text[:800]
+            body = response.text
             ok = status in call.acceptable_statuses
             level = logging.INFO if ok else logging.ERROR
-            logger.log(level, "API call done", extra={"step": call.name, "status": status, "body": body})
+            response_headers = dict(response.headers)
+            logger.log(
+                level,
+                "API call done | step=%s status=%s response_headers=%s response_body=%s",
+                call.name,
+                status,
+                response_headers,
+                body,
+            )
             if not ok:
                 failures += 1
         except Exception as err:  # pragma: no cover - runtime guard
