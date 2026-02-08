@@ -8,6 +8,7 @@ from datetime import datetime
 import json
 import logging
 import os
+import sys
 import string
 from dataclasses import dataclass
 from pathlib import Path
@@ -18,6 +19,12 @@ import requests
 from requests import Response
 
 LOG_FORMAT = "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
+
+
+class MissingVariablesError(KeyError):
+    def __init__(self, missing_keys: set[str]):
+        self.missing_keys = sorted(missing_keys)
+        super().__init__(", ".join(self.missing_keys))
 
 
 @dataclass(frozen=True)
@@ -135,6 +142,9 @@ class SimpleApiClient:
 
 def _format_value(value: Any, variables: dict[str, Any]) -> Any:
     if isinstance(value, str):
+        missing = _string_placeholders(value) - set(variables)
+        if missing:
+            raise MissingVariablesError(missing)
         return value.format_map(variables)
     if isinstance(value, dict):
         return {k: _format_value(v, variables) for k, v in value.items()}
@@ -146,9 +156,16 @@ def _format_value(value: Any, variables: dict[str, Any]) -> Any:
 def _run_calls(client: SimpleApiClient, calls: list[ApiCall], variables: dict[str, Any], logger: logging.Logger) -> int:
     failures = 0
     for call in calls:
-        path = _format_value(call.path, variables)
-        payload = _format_value(call.payload, variables) if call.payload else None
-        params = _format_value(call.params, variables) if call.params else None
+        try:
+            path = _format_value(call.path, variables)
+            payload = _format_value(call.payload, variables) if call.payload else None
+            params = _format_value(call.params, variables) if call.params else None
+        except MissingVariablesError as err:
+            logger.warning(
+                "Skipping API call due to missing template variables",
+                extra={"step": call.name, "missing_vars": err.missing_keys},
+            )
+            continue
         logger.info("API call start", extra={"step": call.name, "method": call.method, "path": path})
         try:
             response = client.request(call.method, path, params=params, json_payload=payload)
@@ -187,8 +204,16 @@ def _load_snapshot(path: Path) -> dict[str, Any]:
 def _preflight_snapshot(client: SimpleApiClient, spec: ActionSpec, variables: dict[str, Any], logger: logging.Logger) -> dict[str, Any]:
     entries: list[dict[str, Any]] = []
     for call in spec.probe_calls:
-        path = _format_value(call.path, variables)
-        params = _format_value(call.params, variables) if call.params else None
+        try:
+            path = _format_value(call.path, variables)
+            params = _format_value(call.params, variables) if call.params else None
+        except MissingVariablesError as err:
+            logger.warning(
+                "Skipping preflight snapshot call due to missing template variables",
+                extra={"step": call.name, "missing_vars": err.missing_keys},
+            )
+            entries.append({"name": call.name, "skipped": True, "missing_vars": err.missing_keys})
+            continue
         logger.info("Preflight snapshot GET start", extra={"step": call.name, "path": path})
         try:
             response = client.request("GET", path, params=params, json_payload=None)
@@ -248,10 +273,21 @@ def run_action_spec(spec: ActionSpec) -> int:
     parser.add_argument("--timeout", type=int, default=20)
     parser.add_argument("--retries", type=int, default=2)
     parser.add_argument("--insecure", action="store_true", help="Disable TLS cert validation")
+    parser.add_argument("--log-file", default=None, help="Write action logs to this file")
     args = parser.parse_args()
 
-    logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
+    handlers: list[logging.Handler] = [logging.StreamHandler(sys.stdout)]
+    if args.log_file:
+        log_path = Path(args.log_file)
+    else:
+        log_dir = Path("actions/logs")
+        log_dir.mkdir(parents=True, exist_ok=True)
+        log_path = log_dir / f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{spec.key}.log"
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    handlers.append(logging.FileHandler(log_path, encoding="utf-8"))
+    logging.basicConfig(level=logging.INFO, format=LOG_FORMAT, handlers=handlers, force=True)
     logger = logging.getLogger(spec.key)
+    logger.info("Action log file: %s", log_path)
 
     logger.info("Action objective: %s", spec.objective)
     for note in spec.pre_post_notes:
