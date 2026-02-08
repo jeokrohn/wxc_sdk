@@ -2,6 +2,7 @@
 
 > Comandos listos para copiar/pegar, con datos dummy ya rellenos y formato correcto de `--vars`.
 > Requiere `WEBEX_ACCESS_TOKEN` válido y recursos existentes en tenant para que `--mode apply` funcione realmente.
+> Flujo MVP completo documentado en `actions/LAB_MVP_RUNBOOK.md` (incluye subida de users y gate del primer script).
 
 ## Paso 0: generar usuarios dummy
 

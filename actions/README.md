@@ -3,6 +3,12 @@
 
 Scripts MVP (1 script = 1 acción) para validar viabilidad de endpoints remotos de Webex.
 
+
+## Runbook MVP end-to-end
+Para un flujo completo (generar users dummy -> subida al tenant -> validación del primer script -> ejecución de lote), usa:
+
+- `actions/LAB_MVP_RUNBOOK.md`
+
 ## Hallazgo dry-run/testing server-side
 No se identifica en la especificación de `functionsList.md` ni en `docs/architecture` una opción de `dry-run` remoto para estas operaciones de configuración.
 Por eso cada script soporta:
