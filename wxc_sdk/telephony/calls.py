@@ -13,7 +13,7 @@ from ..webhook import WebhookEvent, WebhookEventData
 
 __all__ = ['CallType', 'TelephonyParty', 'RedirectReason', 'Redirection', 'Recall', 'RecordingState',
            'Personality', 'CallState', 'TelephonyCall', 'TelephonyEventData', 'TelephonyEvent', 'DialResponse',
-           'RejectAction', 'HistoryType', 'CallHistoryRecord', 'CallInfo', 'CallsApi', 'RecallType']
+           'RejectAction', 'HistoryType', 'CallHistoryRecord', 'CallInfo', 'CallsApi', 'RecallType', 'ExternalVoicemailMwiAction']
 
 
 class RejectAction(str, Enum):
@@ -142,6 +142,11 @@ class RecordingState(str, Enum):
     stopped = 'stopped'
     #: Recording failed for the call.
     failed = 'failed'
+
+
+class ExternalVoicemailMwiAction(str, Enum):
+    set = 'SET'
+    clear = 'CLEAR'
 
 
 class TelephonyCall(ApiModel):
@@ -397,7 +402,8 @@ class CallsApi(ApiChild, base='telephony/calls'):
         Get the list of call history records for the user. A maximum of 20 call history records per type (`placed`,
         `missed`, `received`) are returned.
 
-        :param history_type: The type of call history records to retrieve. If not specified, then all call history records are
+        :param history_type: The type of call history records to retrieve. If not specified, then all call history
+        records are
             retrieved.
         :type history_type: CallHistoryRecordTypeEnum
         :rtype: list[CallHistoryRecord]
@@ -748,3 +754,44 @@ class CallsApi(ApiChild, base='telephony/calls'):
         data = super().get(url)
         r = TelephonyCall.model_validate(data)
         return r
+
+    def update_external_voicemail_mwi(self, id: str, action: ExternalVoicemailMwiAction, org_id: str = None):
+        """
+        Set or Clear Message Waiting Indicator (MWI) Status
+
+        Enables an external voicemail service to SET or CLEAR the Message Waiting Indicator (MWI) for a person or
+        workspace.
+
+        Invoke the API using a bearer token from a Service App in the target organization, created by a full admin with
+        the scope `spark-admin:calls_write`.
+
+        Specify the target user or workspace with the required `id` query parameter.
+
+        Optionally, use the orgId parameter to indicate the organization; if omitted, the Service App’s organization is
+        used.
+
+        If `orgId` is provided, it must match the Service App’s organization or be a managed organization.
+
+        Set the desired action (SET or CLEAR) in the message body’s action field.
+
+        Learn more about `using Webex Service Apps
+        <https://developer.webex.com/messaging/docs/service-apps>`_.
+
+        :param id: Unique identifier for the user or workspace.
+        :type id: str
+        :param action: Indicates whether to SET or CLEAR the MWI status.
+        :type action: ExternalVoicemailMwiAction
+        :param org_id: Id of the organization to which the user or workspace belongs. If not provided, the orgId of the
+            Service App is used. If provided, the organization must be the same as or managed by the Service App's
+            organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        params['id'] = id
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['action'] = enum_str(action)
+        url = self.session.ep('telephony/externalVoicemail/mwi')
+        super().post(url, params=params, json=body)

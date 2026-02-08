@@ -177,9 +177,9 @@ from wxc_sdk.telephony.callqueue.agents import AgentCallQueueSetting, CallQueueA
 from wxc_sdk.telephony.callqueue.announcement import Announcement
 from wxc_sdk.telephony.callqueue.policies import AnnouncementMode, CPActionType, CQHolidaySchedule, ForcedForward, \
     HolidayService, NightService, StrandedCalls, StrandedCallsAction
-from wxc_sdk.telephony.calls import CallHistoryRecord, CallInfo, CallState, CallType, DialResponse, HistoryType, \
-    Personality, Recall, RecallType, RecordingState, RedirectReason, Redirection, RejectAction, TelephonyCall, \
-    TelephonyEvent, TelephonyEventData, TelephonyParty
+from wxc_sdk.telephony.calls import CallHistoryRecord, CallInfo, CallState, CallType, DialResponse, \
+    ExternalVoicemailMwiAction, HistoryType, Personality, Recall, RecallType, RecordingState, RedirectReason, \
+    Redirection, RejectAction, TelephonyCall, TelephonyEvent, TelephonyEventData, TelephonyParty
 from wxc_sdk.telephony.conference import ConferenceDetails, ConferenceParticipant, ConferenceState, \
     ConferenceTypeEnum
 from wxc_sdk.telephony.cx_essentials import ScreenPopConfiguration
@@ -335,7 +335,7 @@ __all__ = ['AcdCustomization', 'Action', 'ActionToBePerformed', 'ActionToBePerfo
            'ExecCallFiltering', 'ExecCallFilteringCriteria', 'ExecCallFilteringCriteriaItem',
            'ExecCallFilteringScheduleLevel', 'ExecCallFilteringToNumber', 'ExecOrAssistant', 'ExecScreening',
            'ExecScreeningAlertType', 'ExecuteCommandResponse', 'ExpirePasscode', 'ExternalCallerIdNamePolicy',
-           'ExternalTransfer', 'FailedAttempts', 'FailureBehavior', 'FeatureAccessCode',
+           'ExternalTransfer', 'ExternalVoicemailMwiAction', 'FailedAttempts', 'FailureBehavior', 'FeatureAccessCode',
            'FeatureAccessCodeDestination', 'FeatureAccessLevel', 'FeatureAccessSettings', 'FeatureReference',
            'FeatureSelector', 'FeatureType', 'Floor', 'ForcedForward', 'ForwardCallsTo', 'ForwardFromSelection',
            'ForwardOperatingModes', 'ForwardOperatingModesException', 'ForwardTo', 'ForwardToSelection',

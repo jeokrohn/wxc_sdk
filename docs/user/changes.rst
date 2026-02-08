@@ -5,6 +5,7 @@ Release history
 - fix: :meth:`api.telephony.prem_pstn.dial_plan.modify_patterns <wxc_sdk.telephony.prem_pstn.dial_plan.DialPlanApi.modify_patterns>` had wrong body content
 - feat: new api: :attr:`api.telephony.emergency_address <wxc_sdk.telephony.TelephonyApi.emergency_address>`
 - feat: new endpoint :meth:`api.authorizations.get_token_expiration_status <wxc_sdk.authorizations.AuthorizationsApi.get_token_expiration_status>`
+- feat: new endpoint :meth:`api.telephony.calls.update_external_voicemail_mwi <wxc_sdk.telephony.calls.CallsApi.update_external_voicemail_mwi>`
 
 1.27.1
 ------

@@ -11,10 +11,10 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['BargeInResponse', 'Call', 'CallControlsApi', 'CallHistoryRecord', 'CallHistoryRecordTypeEnum',
-           'CallPersonalityEnum', 'CallStateEnum', 'CallTypeEnum', 'PartyInformation', 'RecallInformation',
-           'RecallTypeEnum', 'RecordingStateEnum', 'RedirectionInformation', 'RedirectionReasonEnum',
-           'RejectActionEnum']
+__all__ = ['BargeinResponse', 'Call', 'CallControlsApi', 'CallHistoryRecord', 'CallHistoryRecordTypeEnum',
+           'CallPersonalityEnum', 'CallStateEnum', 'CallTypeEnum', 'ExternalVoicemailMwiRequestAction',
+           'PartyInformation', 'RecallInformation', 'RecallTypeEnum', 'RecordingStateEnum', 'RedirectionInformation',
+           'RedirectionReasonEnum', 'RejectActionEnum']
 
 
 class RejectActionEnum(str, Enum):
@@ -206,7 +206,12 @@ class CallHistoryRecord(ApiModel):
     time: Optional[datetime] = None
 
 
-class BargeInResponse(ApiModel):
+class ExternalVoicemailMwiRequestAction(str, Enum):
+    set = 'SET'
+    clear = 'CLEAR'
+
+
+class BargeinResponse(ApiModel):
     #: A unique identifier for the call which is used in all subsequent commands for this call.
     call_id: Optional[str] = None
     #: A unqiue identifier for the call session the call belongs to. This can be used to correlate multiple calls that
@@ -214,7 +219,7 @@ class BargeInResponse(ApiModel):
     call_session_id: Optional[str] = None
 
 
-class CallControlsApi(ApiChild, base='telephony/calls'):
+class CallControlsApi(ApiChild, base='telephony'):
     """
     Call Controls
     
@@ -227,9 +232,11 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
     
     - The Call Control APIs are only for use by Webex Calling Multi Tenant users and not applicable for users hosted on
     UCM, including Dedicated Instance users.
+    
+    - The Call Control APIs are not yet supported by Service Apps.
     """
 
-    def list_calls(self) -> list[Call]:
+    def listcalls(self) -> list[Call]:
         """
         List Calls
 
@@ -237,7 +244,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
 
         :rtype: list[Call]
         """
-        url = self.ep()
+        url = self.ep('calls')
         data = super().get(url)
         r = TypeAdapter(list[Call]).validate_python(data['items'])
         return r
@@ -263,10 +270,10 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         body['callId'] = call_id
         if endpoint_id is not None:
             body['endpointId'] = endpoint_id
-        url = self.ep('answer')
+        url = self.ep('calls/answer')
         super().post(url, json=body)
 
-    def barge_in(self, target: str, endpoint_id: str = None) -> BargeInResponse:
+    def bargein(self, target: str, endpoint_id: str = None) -> BargeinResponse:
         """
         Barge In
 
@@ -281,18 +288,18 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
             of the endpointIds returned by the `Get Preferred Answer Endpoint API
             <https://developer.webex.com/docs/api/v1/user-call-settings-2-2/get-preferred-answer-endpoint>`_.
         :type endpoint_id: str
-        :rtype: :class:`BargeInResponse`
+        :rtype: :class:`BargeinResponse`
         """
         body = dict()
         body['target'] = target
         if endpoint_id is not None:
             body['endpointId'] = endpoint_id
-        url = self.ep('bargeIn')
+        url = self.ep('calls/bargeIn')
         data = super().post(url, json=body)
-        r = BargeInResponse.model_validate(data)
+        r = BargeinResponse.model_validate(data)
         return r
 
-    def dial(self, destination: str, endpoint_id: str = None) -> BargeInResponse:
+    def dial(self, destination: str, endpoint_id: str = None) -> BargeinResponse:
         """
         Dial
 
@@ -309,15 +316,15 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
             the endpointIds returned by the `Get Preferred Answer Endpoint API
             <https://developer.webex.com/docs/api/v1/user-call-settings-2-2/get-preferred-answer-endpoint>`_.
         :type endpoint_id: str
-        :rtype: :class:`BargeInResponse`
+        :rtype: :class:`BargeinResponse`
         """
         body = dict()
         body['destination'] = destination
         if endpoint_id is not None:
             body['endpointId'] = endpoint_id
-        url = self.ep('dial')
+        url = self.ep('calls/dial')
         data = super().post(url, json=body)
-        r = BargeInResponse.model_validate(data)
+        r = BargeinResponse.model_validate(data)
         return r
 
     def divert(self, call_id: str, destination: str = None, to_voicemail: bool = None):
@@ -344,7 +351,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
             body['destination'] = destination
         if to_voicemail is not None:
             body['toVoicemail'] = to_voicemail
-        url = self.ep('divert')
+        url = self.ep('calls/divert')
         super().post(url, json=body)
 
     def hangup(self, call_id: str):
@@ -359,10 +366,10 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         """
         body = dict()
         body['callId'] = call_id
-        url = self.ep('hangup')
+        url = self.ep('calls/hangup')
         super().post(url, json=body)
 
-    def list_call_history(self, type: CallHistoryRecordTypeEnum = None) -> list[CallHistoryRecord]:
+    def listcallhistory(self, type: CallHistoryRecordTypeEnum = None) -> list[CallHistoryRecord]:
         """
         List Call History
 
@@ -377,7 +384,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         params = {}
         if type is not None:
             params['type'] = enum_str(type)
-        url = self.ep('history')
+        url = self.ep('calls/history')
         data = super().get(url, params=params)
         r = TypeAdapter(list[CallHistoryRecord]).validate_python(data['items'])
         return r
@@ -394,7 +401,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         """
         body = dict()
         body['callId'] = call_id
-        url = self.ep('hold')
+        url = self.ep('calls/hold')
         super().post(url, json=body)
 
     def mute(self, call_id: str):
@@ -410,7 +417,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         """
         body = dict()
         body['callId'] = call_id
-        url = self.ep('mute')
+        url = self.ep('calls/mute')
         super().post(url, json=body)
 
     def park(self, call_id: str, destination: str = None, is_group_park: bool = None) -> PartyInformation:
@@ -437,12 +444,12 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
             body['destination'] = destination
         if is_group_park is not None:
             body['isGroupPark'] = is_group_park
-        url = self.ep('park')
+        url = self.ep('calls/park')
         data = super().post(url, json=body)
         r = PartyInformation.model_validate(data['parkedAgainst'])
         return r
 
-    def pause_recording(self, call_id: str = None):
+    def pauserecording(self, call_id: str = None):
         """
         Pause Recording
 
@@ -456,10 +463,10 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         body = dict()
         if call_id is not None:
             body['callId'] = call_id
-        url = self.ep('pauseRecording')
+        url = self.ep('calls/pauseRecording')
         super().post(url, json=body)
 
-    def pickup(self, target: str = None, endpoint_id: str = None) -> BargeInResponse:
+    def pickup(self, target: str = None, endpoint_id: str = None) -> BargeinResponse:
         """
         Pickup
 
@@ -476,16 +483,16 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
             the endpointIds returned by the `Get Preferred Answer Endpoint API
             <https://developer.webex.com/docs/api/v1/user-call-settings-2-2/get-preferred-answer-endpoint>`_.
         :type endpoint_id: str
-        :rtype: :class:`BargeInResponse`
+        :rtype: :class:`BargeinResponse`
         """
         body = dict()
         if target is not None:
             body['target'] = target
         if endpoint_id is not None:
             body['endpointId'] = endpoint_id
-        url = self.ep('pickup')
+        url = self.ep('calls/pickup')
         data = super().post(url, json=body)
-        r = BargeInResponse.model_validate(data)
+        r = BargeinResponse.model_validate(data)
         return r
 
     def push(self, call_id: str = None):
@@ -502,7 +509,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         body = dict()
         if call_id is not None:
             body['callId'] = call_id
-        url = self.ep('push')
+        url = self.ep('calls/push')
         super().post(url, json=body)
 
     def reject(self, call_id: str, action: RejectActionEnum = None):
@@ -522,7 +529,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         body['callId'] = call_id
         if action is not None:
             body['action'] = enum_str(action)
-        url = self.ep('reject')
+        url = self.ep('calls/reject')
         super().post(url, json=body)
 
     def resume(self, call_id: str):
@@ -537,10 +544,10 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         """
         body = dict()
         body['callId'] = call_id
-        url = self.ep('resume')
+        url = self.ep('calls/resume')
         super().post(url, json=body)
 
-    def resume_recording(self, call_id: str = None):
+    def resumerecording(self, call_id: str = None):
         """
         Resume Recording
 
@@ -554,10 +561,10 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         body = dict()
         if call_id is not None:
             body['callId'] = call_id
-        url = self.ep('resumeRecording')
+        url = self.ep('calls/resumeRecording')
         super().post(url, json=body)
 
-    def retrieve(self, destination: str = None, endpoint_id: str = None) -> BargeInResponse:
+    def retrieve(self, destination: str = None, endpoint_id: str = None) -> BargeinResponse:
         """
         Retrieve
 
@@ -574,19 +581,19 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
             of the endpointIds returned by the `Get Preferred Answer Endpoint API
             <https://developer.webex.com/docs/api/v1/user-call-settings-2-2/get-preferred-answer-endpoint>`_.
         :type endpoint_id: str
-        :rtype: :class:`BargeInResponse`
+        :rtype: :class:`BargeinResponse`
         """
         body = dict()
         if destination is not None:
             body['destination'] = destination
         if endpoint_id is not None:
             body['endpointId'] = endpoint_id
-        url = self.ep('retrieve')
+        url = self.ep('calls/retrieve')
         data = super().post(url, json=body)
-        r = BargeInResponse.model_validate(data)
+        r = BargeinResponse.model_validate(data)
         return r
 
-    def start_recording(self, call_id: str = None):
+    def startrecording(self, call_id: str = None):
         """
         Start Recording
 
@@ -600,10 +607,10 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         body = dict()
         if call_id is not None:
             body['callId'] = call_id
-        url = self.ep('startRecording')
+        url = self.ep('calls/startRecording')
         super().post(url, json=body)
 
-    def stop_recording(self, call_id: str = None):
+    def stoprecording(self, call_id: str = None):
         """
         Stop Recording
 
@@ -617,10 +624,10 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         body = dict()
         if call_id is not None:
             body['callId'] = call_id
-        url = self.ep('stopRecording')
+        url = self.ep('calls/stopRecording')
         super().post(url, json=body)
 
-    def transfer(self, call_id1: str = None, call_id2: str = None, destination: str = None) -> BargeInResponse:
+    def transfer(self, call_id1: str = None, call_id2: str = None, destination: str = None) -> BargeinResponse:
         """
         Transfer
 
@@ -653,7 +660,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
             `sip:user@company.domain`. This parameter is mandatory if `callId1` is provided and `callId2` is not
             provided.
         :type destination: str
-        :rtype: :class:`BargeInResponse`
+        :rtype: :class:`BargeinResponse`
         """
         body = dict()
         if call_id1 is not None:
@@ -662,12 +669,12 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
             body['callId2'] = call_id2
         if destination is not None:
             body['destination'] = destination
-        url = self.ep('transfer')
+        url = self.ep('calls/transfer')
         data = super().post(url, json=body)
-        r = BargeInResponse.model_validate(data)
+        r = BargeinResponse.model_validate(data)
         return r
 
-    def transmit_dtmf(self, call_id: str = None, dtmf: str = None):
+    def transmitdtmf(self, call_id: str = None, dtmf: str = None):
         """
         Transmit DTMF
 
@@ -677,7 +684,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type call_id: str
         :param dtmf: The DTMF digits to transmit. Each digit must be part of the following set: `[0, 1, 2, 3, 4, 5, 6,
             7, 8, 9, *, #, A, B, C, D]`. A comma "," may be included to indicate a pause between digits. For the value
-            “1,234”, the DTMF 1 digit is initially sent. After a pause, the DTMF 2, 3, and 4 digits are sent
+            '1,234' the DTMF 1 digit is initially sent. After a pause, the DTMF 2, 3, and 4 digits are sent
             successively.
         :type dtmf: str
         :rtype: None
@@ -687,7 +694,7 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
             body['callId'] = call_id
         if dtmf is not None:
             body['dtmf'] = dtmf
-        url = self.ep('transmitDtmf')
+        url = self.ep('calls/transmitDtmf')
         super().post(url, json=body)
 
     def unmute(self, call_id: str):
@@ -703,10 +710,10 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         """
         body = dict()
         body['callId'] = call_id
-        url = self.ep('unmute')
+        url = self.ep('calls/unmute')
         super().post(url, json=body)
 
-    def get_call_details(self, call_id: str) -> Call:
+    def getcalldetails(self, call_id: str) -> Call:
         """
         Get Call Details
 
@@ -716,7 +723,48 @@ class CallControlsApi(ApiChild, base='telephony/calls'):
         :type call_id: str
         :rtype: :class:`Call`
         """
-        url = self.ep(f'{call_id}')
+        url = self.ep(f'calls/{call_id}')
         data = super().get(url)
         r = Call.model_validate(data)
         return r
+
+    def post_external_voicemail_mwi(self, id: str, action: ExternalVoicemailMwiRequestAction, org_id: str = None):
+        """
+        Set or Clear Message Waiting Indicator (MWI) Status
+
+        Enables an external voicemail service to SET or CLEAR the Message Waiting Indicator (MWI) for a person or
+        workspace.
+
+        Invoke the API using a bearer token from a Service App in the target organization, created by a full admin with
+        the scope `spark-admin:calls_write`.
+
+        Specify the target user or workspace with the required `id` query parameter.
+
+        Optionally, use the orgId parameter to indicate the organization; if omitted, the Service App’s organization is
+        used.
+
+        If `orgId` is provided, it must match the Service App’s organization or be a managed organization.
+
+        Set the desired action (SET or CLEAR) in the message body’s action field.
+
+        Learn more about `using Webex Service Apps
+        <https://developer.webex.com/messaging/docs/service-apps>`_.
+
+        :param id: Unique identifier for the user or workspace.
+        :type id: str
+        :param action: Indicates whether to SET or CLEAR the MWI status.
+        :type action: ExternalVoicemailMwiRequestAction
+        :param org_id: Id of the organization to which the user or workspace belongs. If not provided, the orgId of the
+            Service App is used. If provided, the organization must be the same as or managed by the Service App's
+            organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        params['id'] = id
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['action'] = enum_str(action)
+        url = self.ep('externalVoicemail/mwi')
+        super().post(url, params=params, json=body)

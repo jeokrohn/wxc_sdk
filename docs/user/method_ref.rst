@@ -1119,6 +1119,8 @@ The method name is a link to the method documentation.
         Transmit DTMF
    * - :meth:`api.telephony.calls.unmute <wxc_sdk.telephony.calls.CallsApi.unmute>`
         Unmute
+   * - :meth:`api.telephony.calls.update_external_voicemail_mwi <wxc_sdk.telephony.calls.CallsApi.update_external_voicemail_mwi>`
+        Set or Clear Message Waiting Indicator (MWI) Status
    * - :meth:`api.telephony.conference.add_participant <wxc_sdk.telephony.conference.ConferenceControlsApi.add_participant>`
         Add Participant
    * - :meth:`api.telephony.conference.deafen_participant <wxc_sdk.telephony.conference.ConferenceControlsApi.deafen_participant>`
