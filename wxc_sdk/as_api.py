@@ -17669,8 +17669,14 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
         Auto attendants play customized prompts and provide callers with menu options for routing their calls through
         your system.
 
-        Creating an auto attendant requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+        Creating an auto attendant requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        The fields
+        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in
+        Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to
+        configure and view both caller ID and dial-by-name settings
+
 
         :param location_id: Create the auto attendant for this location.
         :type location_id: str

@@ -23,13 +23,13 @@ __all__ = ['ActionToBePerformedObject', 'ActionToBePerformedObjectAction', 'Alte
            'CallForwardSelectiveCallsFromObjectSelection', 'CallForwardSelectiveCallsToNumbersObject',
            'CallForwardSelectiveCallsToNumbersObjectType', 'CallForwardSelectiveCallsToObject',
            'CallForwardSelectiveForwardToObject', 'CallForwardSelectiveForwardToObjectSelection',
-           'CallTreatmentObject', 'CallTreatmentObjectRetryAttemptForNoInput', 'FeaturesAutoAttendantApi',
-           'GetAnnouncementFileInfo', 'GetAutoAttendantCallForwardSelectiveRuleObject', 'GetAutoAttendantObject',
-           'GetAutoAttendantObjectExtensionDialing', 'GetCallForwardAlwaysSettingObject', 'HoursMenuGetObject',
-           'HoursMenuGetObjectGreeting', 'KeyConfigurationsGetObject', 'KeyConfigurationsGetObjectAction',
-           'KeyConfigurationsGetObjectKey', 'Level', 'ListAutoAttendantObject', 'MediaType', 'ModesGet',
-           'ModesGetForwardTo', 'ModesGetForwardToDefaultForwardToSelection', 'ModesGetType', 'ModesPatch',
-           'ModesPatchForwardTo', 'NumberOwnerType', 'STATE', 'TelephonyType']
+           'CallTreatmentObject', 'CallTreatmentObjectRetryAttemptForNoInput', 'DirectLineCallerIdNameObjectForPut',
+           'FeaturesAutoAttendantApi', 'GetAnnouncementFileInfo', 'GetAutoAttendantCallForwardSelectiveRuleObject',
+           'GetAutoAttendantObject', 'GetAutoAttendantObjectExtensionDialing', 'GetCallForwardAlwaysSettingObject',
+           'HoursMenuGetObject', 'HoursMenuGetObjectGreeting', 'KeyConfigurationsGetObject',
+           'KeyConfigurationsGetObjectAction', 'KeyConfigurationsGetObjectKey', 'Level', 'ListAutoAttendantObject',
+           'MediaType', 'ModesGet', 'ModesGetForwardTo', 'ModesGetForwardToDefaultForwardToSelection', 'ModesGetType',
+           'ModesPatch', 'ModesPatchForwardTo', 'NumberOwnerType', 'STATE', 'SelectionObject', 'TelephonyType']
 
 
 class AlternateNumbersObjectRingPattern(str, Enum):
@@ -436,6 +436,21 @@ class HoursMenuGetObject(ApiModel):
     call_treatment: Optional[CallTreatmentObject] = None
 
 
+class SelectionObject(str, Enum):
+    #: When this option is selected, `customName` is to be shown for this auto attendant.
+    custom_name = 'CUSTOM_NAME'
+    #: When this option is selected, `name` is to be shown for this auto attendant.
+    display_name = 'DISPLAY_NAME'
+
+
+class DirectLineCallerIdNameObjectForPut(ApiModel):
+    #: The selection of the direct line caller ID name.
+    selection: Optional[SelectionObject] = None
+    #: Sets or clears the custom direct line caller ID name.  To clear the `customName`, the attribute must be set to
+    #: null or empty string. Required if `selection` is set to `CUSTOM_NAME`.
+    custom_name: Optional[str] = None
+
+
 class GetAutoAttendantObject(ApiModel):
     #: A unique identifier for the auto attendant.
     id: Optional[str] = None
@@ -453,9 +468,11 @@ class GetAutoAttendantObject(ApiModel):
     esn: Optional[str] = None
     #: Flag to indicate if auto attendant number is toll-free number.
     toll_free_number: Optional[bool] = None
-    #: First name defined for an auto attendant.
+    #: First name defined for an auto attendant. This field has been deprecated. Please use `directLineCallerIdName`
+    #: and `dialByName` instead.
     first_name: Optional[str] = None
-    #: Last name defined for an auto attendant.
+    #: Last name defined for an auto attendant. This field has been deprecated. Please use `directLineCallerIdName` and
+    #: `dialByName` instead.
     last_name: Optional[str] = None
     #: Alternate numbers defined for the auto attendant.
     alternate_numbers: Optional[list[AlternateNumbersObject]] = None
@@ -477,6 +494,10 @@ class GetAutoAttendantObject(ApiModel):
     business_hours_menu: Optional[HoursMenuGetObject] = None
     #: After hours menu defined for the auto attendant.
     after_hours_menu: Optional[HoursMenuGetObject] = None
+    #: Settings for the direct line caller ID name to be shown for this auto attendant.
+    direct_line_caller_id_name: Optional[DirectLineCallerIdNameObjectForPut] = None
+    #: The name to be used for dial by name functions.
+    dial_by_name: Optional[str] = None
 
 
 class ListAutoAttendantObject(ApiModel):
@@ -680,7 +701,8 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
                                  language_code: str = None, holiday_schedule: str = None,
                                  extension_dialing: GetAutoAttendantObjectExtensionDialing = None,
                                  name_dialing: GetAutoAttendantObjectExtensionDialing = None, time_zone: str = None,
-                                 org_id: str = None) -> str:
+                                 direct_line_caller_id_name: DirectLineCallerIdNameObjectForPut = None,
+                                 dial_by_name: str = None, org_id: str = None) -> str:
         """
         Create an Auto Attendant
 
@@ -690,7 +712,10 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         your system.
 
         Creating an auto attendant requires a full administrator or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.
+        `spark-admin:telephony_config_write`.<div><Callout type="warning">The fields
+        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in
+        Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to
+        configure and view both caller ID and dial-by-name settings.</Callout></div>
 
         :param location_id: Create the auto attendant for this location.
         :type location_id: str
@@ -706,9 +731,11 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type phone_number: str
         :param extension: Auto attendant extension.  Either `phoneNumber` or `extension` is mandatory.
         :type extension: str
-        :param first_name: First name defined for an auto attendant.
+        :param first_name: First name defined for an auto attendant. This field has been deprecated. Please use
+            `directLineCallerIdName` and `dialByName` instead.
         :type first_name: str
-        :param last_name: Last name defined for an auto attendant.
+        :param last_name: Last name defined for an auto attendant. This field has been deprecated. Please use
+            `directLineCallerIdName` and `dialByName` instead.
         :type last_name: str
         :param alternate_numbers: Alternate numbers defined for the auto attendant.
         :type alternate_numbers: list[AlternateNumbersObject]
@@ -723,6 +750,12 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type name_dialing: GetAutoAttendantObjectExtensionDialing
         :param time_zone: Time zone defined for the auto attendant.
         :type time_zone: str
+        :param direct_line_caller_id_name: Settings for the direct line caller ID name to be shown for this auto
+            attendant.
+        :type direct_line_caller_id_name: DirectLineCallerIdNameObjectForPut
+        :param dial_by_name: The name to be used for dial by name functions.  Characters of `%`,  `+`, `\`, `"` and
+            Unicode characters are not allowed.
+        :type dial_by_name: str
         :param org_id: Create the auto attendant for this organization.
         :type org_id: str
         :rtype: str
@@ -755,6 +788,10 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
             body['timeZone'] = time_zone
         body['businessHoursMenu'] = business_hours_menu.model_dump(mode='json', by_alias=True, exclude_none=True)
         body['afterHoursMenu'] = after_hours_menu.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if direct_line_caller_id_name is not None:
+            body['directLineCallerIdName'] = direct_line_caller_id_name.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if dial_by_name is not None:
+            body['dialByName'] = dial_by_name
         url = self.ep(f'locations/{location_id}/autoAttendants')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -909,7 +946,10 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         your system.
 
         Retrieving an auto attendant details requires a full or read-only administrator or location administrator auth
-        token with a scope of `spark-admin:telephony_config_read`.
+        token with a scope of `spark-admin:telephony_config_read`.<div><Callout type="warning">The fields
+        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in
+        Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to
+        configure and view both caller ID and dial-by-name settings.</Callout></div>
 
         :param location_id: Retrieve an auto attendant details in this location.
         :type location_id: str
@@ -935,7 +975,9 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
                                  extension_dialing: GetAutoAttendantObjectExtensionDialing = None,
                                  name_dialing: GetAutoAttendantObjectExtensionDialing = None, time_zone: str = None,
                                  business_hours_menu: HoursMenuGetObject = None,
-                                 after_hours_menu: HoursMenuGetObject = None, org_id: str = None):
+                                 after_hours_menu: HoursMenuGetObject = None,
+                                 direct_line_caller_id_name: DirectLineCallerIdNameObjectForPut = None,
+                                 dial_by_name: str = None, org_id: str = None):
         """
         Update an Auto Attendant
 
@@ -945,7 +987,10 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         your system.
 
         Updating an auto attendant requires a full administrator or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.
+        `spark-admin:telephony_config_write`.<div><Callout type="warning">The fields
+        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in
+        Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to
+        configure and view both caller ID and dial-by-name settings.</Callout></div>
 
         :param location_id: Location in which this auto attendant exists.
         :type location_id: str
@@ -957,9 +1002,11 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type phone_number: str
         :param extension: Auto attendant extension.  Either `phoneNumber` or `extension` is mandatory.
         :type extension: str
-        :param first_name: First name defined for an auto attendant.
+        :param first_name: First name defined for an auto attendant. This field has been deprecated. Please use
+            `directLineCallerIdName` and `dialByName` instead.
         :type first_name: str
-        :param last_name: Last name defined for an auto attendant.
+        :param last_name: Last name defined for an auto attendant. This field has been deprecated. Please use
+            `directLineCallerIdName` and `dialByName` instead.
         :type last_name: str
         :param alternate_numbers: Alternate numbers defined for the auto attendant.
         :type alternate_numbers: list[AlternateNumbersObject]
@@ -980,6 +1027,13 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type business_hours_menu: HoursMenuGetObject
         :param after_hours_menu: After hours menu defined for the auto attendant.
         :type after_hours_menu: HoursMenuGetObject
+        :param direct_line_caller_id_name: Settings for the direct line caller ID name to be shown for this auto
+            attendant.
+        :type direct_line_caller_id_name: DirectLineCallerIdNameObjectForPut
+        :param dial_by_name: Sets or clears the name to be used for dial by name functions. To clear the `dialByName`,
+            the attribute must be set to null or empty string. Characters of `%`,  `+`, `\`, `"` and Unicode
+            characters are not allowed.
+        :type dial_by_name: str
         :param org_id: Update an auto attendant from this organization.
         :type org_id: str
         :rtype: None
@@ -1016,6 +1070,10 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
             body['businessHoursMenu'] = business_hours_menu.model_dump(mode='json', by_alias=True, exclude_none=True)
         if after_hours_menu is not None:
             body['afterHoursMenu'] = after_hours_menu.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if direct_line_caller_id_name is not None:
+            body['directLineCallerIdName'] = direct_line_caller_id_name.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if dial_by_name is not None:
+            body['dialByName'] = dial_by_name
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
         super().put(url, params=params, json=body)
 

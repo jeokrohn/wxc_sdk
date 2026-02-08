@@ -160,7 +160,7 @@ from wxc_sdk.telephony import AnnouncementLanguage, AppliedService, AppliedServi
 from wxc_sdk.telephony.announcements_repo import FeatureReference, RepoAnnouncement, RepositoryUsage
 from wxc_sdk.telephony.autoattendant import ActionToBePerformed, ActionToBePerformedAction, AutoAttendant, \
     AutoAttendantAction, AutoAttendantKeyConfiguration, AutoAttendantMenu, CallTreatment, CallTreatmentRetry, \
-    Dialing, MenuKey
+    Dialing, DirectLineCallerIdName, DirectLineCallerIdNameSelection, MenuKey
 from wxc_sdk.telephony.call_recording import CallRecordingInfo, CallRecordingLocationVendors, CallRecordingRegion, \
     CallRecordingTermsOfService, CallRecordingVendors, FailureBehavior, LocationComplianceAnnouncement, \
     OrgComplianceAnnouncement, RecordingUser, RecordingVendor
@@ -322,7 +322,8 @@ __all__ = ['AcdCustomization', 'Action', 'ActionToBePerformed', 'ActionToBePerfo
            'DeviceMember', 'DeviceMembersResponse', 'DeviceOwner', 'DevicePlatform', 'DevicePutItem',
            'DeviceSettings', 'DeviceSettingsConfiguration', 'DeviceSettingsGroupTag', 'DeviceStatus', 'DeviceTag',
            'DeviceType', 'DialPatternStatus', 'DialPatternValidate', 'DialPatternValidationResult', 'DialPlan',
-           'DialResponse', 'Dialing', 'DifferentHoursDaily', 'DigitPattern', 'DigitPatterns', 'DirectoryMethod',
+           'DialResponse', 'Dialing', 'DifferentHoursDaily', 'DigitPattern', 'DigitPatterns',
+           'DirectLineCallerIdName', 'DirectLineCallerIdNameSelection', 'DirectoryMethod',
            'DisableCallingLocationCounts', 'DisableCallingLocationJobStatus', 'DisplayCallqueueAgentSoftkey',
            'DisplayNameSelection', 'DistinctiveRing', 'DynamicSettingsGroups', 'DynamicSettingsUpdateJobItem',
            'ECBNDefault', 'ECBNDependencies', 'ECBNEffectiveLevel', 'ECBNLocationEffectiveLevel',
