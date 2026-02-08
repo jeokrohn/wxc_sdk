@@ -4,13 +4,13 @@ Paging group API
 """
 import json
 from collections.abc import Generator
-from typing import Optional, List
+from typing import Optional, List, Dict
 
 from pydantic import Field
 
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel
-from ..common import UserType
+from ..common import UserType, DirectLineCallerIdName
 
 __all__ = ['PagingApi', 'Paging', 'PagingAgent']
 
@@ -73,9 +73,11 @@ class Paging(ApiModel):
     language: Optional[str] = None
     #: Language code.
     language_code: Optional[str] = None
-    #: First name that displays when a group page is performed. Minimum length is 1. Maximum length is 30.
+    #: First name that displays when a group page is performed. Minimum length is 1. Maximum length is 64. This field
+    #: has been deprecated. Please use `directLineCallerIdName` and `dialByName` instead.
     first_name: Optional[str] = None
-    #: Last name that displays when a group page is performed. Minimum length is 1. Maximum length is 30.
+    #: Last name that displays when a group page is performed. Minimum length is 1. Maximum length is 64. This field
+    #: has been deprecated. Please use `directLineCallerIdName` and `dialByName` instead.
     last_name: Optional[str] = None
     #: Determines what is shown on target users caller ID when a group page is performed. If true shows page originator
     #: ID.
@@ -90,23 +92,29 @@ class Paging(ApiModel):
     location_name: Optional[str] = None
     #: ID of location for paging group. Only present in list() response.
     location_id: Optional[str] = None
+    #: Settings for the direct line caller ID name to be shown for this Group Paging.
+    direct_line_caller_id_name: Optional[DirectLineCallerIdName] = None
+    #: The name to be used for dial by name functions.
+    dial_by_name: Optional[str] = None
 
-    def create_or_update(self) -> str:
+    def create_or_update(self) -> Dict:
         """
         Get JSON for create or update call
 
         :return: JSON
-        :rtype: str
+        :rtype: dict
         """
-        data = json.loads(self.model_dump_json(exclude={'paging_id': True,
-                                                        'toll_free_number': True,
-                                                        'language': True,
-                                                        'originators': {'__all__': PagingAgent.create_update_exclude()},
-                                                        'targets': {'__all__': PagingAgent.create_update_exclude()},
-                                                        'location_name': True,
-                                                        'location_id': True,
-                                                        'esn': True,
-                                                        'routing_prefix': True}))
+        data = self.model_dump(mode='json', by_alias=True,
+                               exclude_unset=True,
+                               exclude={'paging_id': True,
+                                        'toll_free_number': True,
+                                        'language': True,
+                                        'originators': {'__all__': PagingAgent.create_update_exclude()},
+                                        'targets': {'__all__': PagingAgent.create_update_exclude()},
+                                        'location_name': True,
+                                        'location_id': True,
+                                        'esn': True,
+                                        'routing_prefix': True})
 
         # originators and targets are only ID lists
         def to_id(key: str):
@@ -216,7 +224,7 @@ class PagingApi(ApiChild, base='telephony/config'):
             raise TypeError('originator_caller_id_enabled required if originators are provided')
         url = self._endpoint(location_id=location_id)
         data = settings.create_or_update()
-        data = self.post(url, data=data, params=params)
+        data = self.post(url, json=data, params=params)
         return data['id']
 
     def delete_paging(self, location_id: str, paging_id: str, org_id: str = None):
@@ -287,7 +295,7 @@ class PagingApi(ApiChild, base='telephony/config'):
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id, paging_id=paging_id)
         data = update.create_or_update()
-        self.put(url, data=data, params=params)
+        self.put(url, json=data, params=params)
 
     def primary_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
                                         org_id: str = None,

@@ -11,17 +11,18 @@ from wxc_sdk.common import AcdCustomization, AlternateNumber, AnnAudioFile, Anno
     BacklightTimer, BacklightTimer68XX78XX, BluetoothMode, BluetoothSetting, CallForwardExpandedSoftKey, \
     CallHistoryMethod, CallParkExtension, CommonDeviceCustomization, Customer, DectCustomization, \
     DeviceCustomization, DeviceCustomizations, DevicePlatform, DeviceType, DialPatternStatus, DialPatternValidate, \
-    DirectoryMethod, DisplayCallqueueAgentSoftkey, DisplayNameSelection, EnabledAndValue, EnhancedMulticast, \
-    Greeting, HttpProxy, HttpProxyMode, IdAndName, IdOnly, LineKeyLabelSelection, LineKeyLedPattern, LinkRelation, \
-    LoggingLevel, MaintenanceMode, MeGroupMember, MeGroupSettings, MediaFile, MediaFileType, MonitoredMember, \
-    MppCustomization, MppVlanDevice, Multicast, NoiseCancellation, NumberOwner, NumberState, OwnerType, \
-    PatternAction, PersonPlaceAgent, PhoneLanguage, PrimaryOrSecondary, PrimaryOrShared, PskObject, RingPattern, \
-    RoomType, RouteIdentity, RouteType, SetOrClear, SoftKeyLayout, SoftKeyMenu, StorageType, UsageType, \
-    UsbPortsObject, UserBase, UserLicenseType, UserNumber, UserType, ValidateExtensionStatus, \
-    ValidateExtensionStatusState, ValidateExtensionsResponse, ValidatePhoneNumberStatus, \
-    ValidatePhoneNumberStatusState, ValidatePhoneNumbersResponse, ValidationStatus, VlanSetting, \
-    VoicemailCopyOfMessage, VoicemailEnabled, VoicemailFax, VoicemailMessageStorage, VoicemailNotifications, \
-    VoicemailTransferToNumber, VolumeSettings, WifiAuthenticationMethod, WifiCustomization, WifiNetwork
+    DirectLineCallerIdName, DirectLineCallerIdNameSelection, DirectoryMethod, DisplayCallqueueAgentSoftkey, \
+    DisplayNameSelection, EnabledAndValue, EnhancedMulticast, Greeting, HttpProxy, HttpProxyMode, IdAndName, \
+    IdOnly, LineKeyLabelSelection, LineKeyLedPattern, LinkRelation, LoggingLevel, MaintenanceMode, MeGroupMember, \
+    MeGroupSettings, MediaFile, MediaFileType, MonitoredMember, MppCustomization, MppVlanDevice, Multicast, \
+    NoiseCancellation, NumberOwner, NumberState, OwnerType, PatternAction, PersonPlaceAgent, PhoneLanguage, \
+    PrimaryOrSecondary, PrimaryOrShared, PskObject, RingPattern, RoomType, RouteIdentity, RouteType, SetOrClear, \
+    SoftKeyLayout, SoftKeyMenu, StorageType, UsageType, UsbPortsObject, UserBase, UserLicenseType, UserNumber, \
+    UserType, ValidateExtensionStatus, ValidateExtensionStatusState, ValidateExtensionsResponse, \
+    ValidatePhoneNumberStatus, ValidatePhoneNumberStatusState, ValidatePhoneNumbersResponse, ValidationStatus, \
+    VlanSetting, VoicemailCopyOfMessage, VoicemailEnabled, VoicemailFax, VoicemailMessageStorage, \
+    VoicemailNotifications, VoicemailTransferToNumber, VolumeSettings, WifiAuthenticationMethod, \
+    WifiCustomization, WifiNetwork
 from wxc_sdk.common.schedules import Event, RecurWeekly, RecurYearlyByDate, RecurYearlyByDay, Recurrence, \
     Schedule, ScheduleApiBase, ScheduleDay, ScheduleLevel, ScheduleMonth, ScheduleType, ScheduleTypeOrStr, \
     ScheduleWeek
@@ -160,7 +161,7 @@ from wxc_sdk.telephony import AnnouncementLanguage, AppliedService, AppliedServi
 from wxc_sdk.telephony.announcements_repo import FeatureReference, RepoAnnouncement, RepositoryUsage
 from wxc_sdk.telephony.autoattendant import ActionToBePerformed, ActionToBePerformedAction, AutoAttendant, \
     AutoAttendantAction, AutoAttendantKeyConfiguration, AutoAttendantMenu, CallTreatment, CallTreatmentRetry, \
-    Dialing, DirectLineCallerIdName, DirectLineCallerIdNameSelection, MenuKey
+    Dialing, MenuKey
 from wxc_sdk.telephony.call_recording import CallRecordingInfo, CallRecordingLocationVendors, CallRecordingRegion, \
     CallRecordingTermsOfService, CallRecordingVendors, FailureBehavior, LocationComplianceAnnouncement, \
     OrgComplianceAnnouncement, RecordingUser, RecordingVendor

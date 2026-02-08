@@ -29,7 +29,7 @@ __all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting',
            'BacklightTimer68XX78XX', 'DectCustomization', 'OwnerType', 'NumberOwner', 'ApplyLineKeyTemplateAction',
            'AssignedDectNetwork', 'DevicePlatform', 'Multicast', 'EnhancedMulticast', 'DeviceType', 'UserLicenseType',
            'MaintenanceMode', 'SetOrClear', 'MeGroupSettings', 'MeGroupMember', 'PrimaryOrSecondary', 'MediaFile',
-           'UsageType']
+           'UsageType', 'DirectLineCallerIdName', 'DirectLineCallerIdNameSelection']
 
 
 class IdOnly(ApiModel):
@@ -1240,7 +1240,22 @@ class PrimaryOrSecondary(str, Enum):
     #: Secondary number to call, if available.
     secondary = 'SECONDARY'
 
+
 class UsageType(str, Enum):
     device_owner = 'DEVICE_OWNER'
     shared_line = 'SHARED_LINE'
 
+
+class DirectLineCallerIdNameSelection(str, Enum):
+    #: When this option is selected, `customName` is to be shown for this auto attendant.
+    custom_name = 'CUSTOM_NAME'
+    #: When this option is selected, `name` is to be shown for this auto attendant.
+    display_name = 'DISPLAY_NAME'
+
+
+class DirectLineCallerIdName(ApiModel):
+    #: The selection of the direct line caller ID name.
+    selection: Optional[DirectLineCallerIdNameSelection] = None
+    #: Sets or clears the custom direct line caller ID name.  To clear the `customName`, the attribute must be set to
+    #: null or empty string. Required if `selection` is set to `CUSTOM_NAME`.
+    custom_name: Optional[str] = None

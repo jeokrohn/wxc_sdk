@@ -18,15 +18,16 @@ __all__ = ['AlternateNumbersWithPattern', 'CallForwardRulesGet', 'CallForwardRul
            'CallForwardingNumbersType', 'CreateForwardingRuleObjectCallsFrom',
            'CreateForwardingRuleObjectCallsFromCustomNumbers', 'CreateForwardingRuleObjectCallsFromSelection',
            'CreateForwardingRuleObjectCallsTo', 'CreateForwardingRuleObjectForwardTo',
-           'CreateForwardingRuleObjectForwardToSelection', 'FeaturesHuntGroupApi', 'GetForwardingRuleObject',
-           'GetHuntGroupCallPolicyObject', 'GetHuntGroupCallPolicyObjectBusyRedirect',
+           'CreateForwardingRuleObjectForwardToSelection', 'DirectLineCallerIdNameObject', 'FeaturesHuntGroupApi',
+           'GetForwardingRuleObject', 'GetHuntGroupCallPolicyObject', 'GetHuntGroupCallPolicyObjectBusyRedirect',
            'GetHuntGroupCallPolicyObjectNoAnswer', 'GetHuntGroupObject', 'GetPersonPlaceVirtualLineHuntGroupObject',
            'HuntGroupCallForwardAvailableNumberObject', 'HuntGroupCallForwardAvailableNumberObjectOwner',
            'HuntGroupPrimaryAvailableNumberObject', 'HuntPolicySelection', 'ListHuntGroupObject', 'ModesGet',
            'ModesGetForwardTo', 'ModesGetForwardToDefaultForwardToSelection', 'ModesGetLevel', 'ModesGetType',
            'ModesPatch', 'ModesPatchForwardTo', 'ModifyCallForwardingObjectCallForwarding', 'NumberOwnerType',
            'PostHuntGroupCallPolicyObject', 'PostHuntGroupCallPolicyObjectNoAnswer',
-           'PostPersonPlaceVirtualLineHuntGroupObject', 'RingPatternObject', 'STATE', 'TelephonyType']
+           'PostPersonPlaceVirtualLineHuntGroupObject', 'RingPatternObject', 'STATE', 'SelectionObject',
+           'TelephonyType']
 
 
 class RingPatternObject(str, Enum):
@@ -316,6 +317,20 @@ class PostPersonPlaceVirtualLineHuntGroupObject(ApiModel):
     weight: Optional[str] = None
 
 
+class SelectionObject(str, Enum):
+    #: When this option is selected, `customName` is to be shown for this hunt group.
+    custom_name = 'CUSTOM_NAME'
+    #: When this option is selected, `name` is to be shown for this hunt group.
+    display_name = 'DISPLAY_NAME'
+
+
+class DirectLineCallerIdNameObject(ApiModel):
+    #: The selection of the direct line caller ID name. Defaults to `DISPLAY_NAME`.
+    selection: Optional[SelectionObject] = None
+    #: The custom direct line caller ID name. Required if `selection` is set to `CUSTOM_NAME`.
+    custom_name: Optional[str] = None
+
+
 class GetForwardingRuleObject(ApiModel):
     #: Unique name for the selective rule in the hunt group.
     name: Optional[str] = None
@@ -415,10 +430,12 @@ class GetHuntGroupObject(ApiModel):
     language: Optional[str] = None
     #: Language code for hunt group.
     language_code: Optional[str] = None
-    #: First name to be shown when calls are forwarded out of this hunt group. Defaults to `.`.
+    #: First name to be shown when calls are forwarded out of this hunt group. Defaults to `.`. This field has been
+    #: deprecated. Please use `directLineCallerIdName` and `dialByName` instead.
     first_name: Optional[str] = None
     #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to phone number if set,
-    #: otherwise defaults to call group name.
+    #: otherwise defaults to call group name. This field has been deprecated. Please use `directLineCallerIdName` and
+    #: `dialByName` instead.
     last_name: Optional[str] = None
     #: Time zone for the hunt group.
     time_zone: Optional[str] = None
@@ -428,6 +445,10 @@ class GetHuntGroupObject(ApiModel):
     agents: Optional[list[GetPersonPlaceVirtualLineHuntGroupObject]] = None
     #: Whether or not the hunt group can be used as the caller ID when the agent places outgoing calls.
     hunt_group_caller_id_for_outgoing_calls_enabled: Optional[bool] = None
+    #: Settings for the direct line caller ID name to be shown for this hunt group.
+    direct_line_caller_id_name: Optional[DirectLineCallerIdNameObject] = None
+    #: The name to be used for dial by name functions.
+    dial_by_name: Optional[str] = None
 
 
 class ListHuntGroupObject(ApiModel):
@@ -630,7 +651,9 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
                             agents: list[PostPersonPlaceVirtualLineHuntGroupObject], enabled: bool,
                             phone_number: str = None, extension: str = None, language_code: str = None,
                             first_name: str = None, last_name: str = None, time_zone: str = None,
-                            hunt_group_caller_id_for_outgoing_calls_enabled: bool = None, org_id: str = None) -> str:
+                            hunt_group_caller_id_for_outgoing_calls_enabled: bool = None,
+                            direct_line_caller_id_name: DirectLineCallerIdNameObject = None, dial_by_name: str = None,
+                            org_id: str = None) -> str:
         """
         Create a Hunt Group
 
@@ -640,7 +663,10 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         a pattern to route to a whole group.
 
         Creating a hunt group requires a full administrator or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.
+        `spark-admin:telephony_config_write`.<div><Callout type="warning">The fields
+        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in
+        Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to
+        configure and view both caller ID and dial-by-name settings.</Callout></div>
 
         :param location_id: Create the hunt group for the given location.
         :type location_id: str
@@ -659,15 +685,22 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :param language_code: Language code.
         :type language_code: str
         :param first_name: First name to be shown when calls are forwarded out of this hunt group. Defaults to `.`.
+            This field has been deprecated. Please use `directLineCallerIdName` and `dialByName` instead.
         :type first_name: str
         :param last_name: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone
-            number if set, otherwise defaults to call group name.
+            number if set, otherwise defaults to call group name. This field has been deprecated. Please use
+            `directLineCallerIdName` and `dialByName` instead.
         :type last_name: str
         :param time_zone: Time zone for the hunt group.
         :type time_zone: str
         :param hunt_group_caller_id_for_outgoing_calls_enabled: Enable the hunt group to be used as the caller ID when
             the agent places outgoing calls. When set to true the hunt group's caller ID will be used.
         :type hunt_group_caller_id_for_outgoing_calls_enabled: bool
+        :param direct_line_caller_id_name: Settings for the direct line caller ID name to be shown for this hunt group.
+        :type direct_line_caller_id_name: DirectLineCallerIdNameObject
+        :param dial_by_name: The name to be used for dial by name functions.  Characters of `%`,  `+`, `\`, `"` and
+            Unicode characters are not allowed.
+        :type dial_by_name: str
         :param org_id: Create the hunt group for this organization.
         :type org_id: str
         :rtype: str
@@ -694,6 +727,10 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         body['enabled'] = enabled
         if hunt_group_caller_id_for_outgoing_calls_enabled is not None:
             body['huntGroupCallerIdForOutgoingCallsEnabled'] = hunt_group_caller_id_for_outgoing_calls_enabled
+        if direct_line_caller_id_name is not None:
+            body['directLineCallerIdName'] = direct_line_caller_id_name.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if dial_by_name is not None:
+            body['dialByName'] = dial_by_name
         url = self.ep(f'locations/{location_id}/huntGroups')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -848,7 +885,10 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         a pattern to route to a whole group.
 
         Retrieving hunt group details requires a full or read-only administrator or location administrator auth token
-        with a scope of `spark-admin:telephony_config_read`.
+        with a scope of `spark-admin:telephony_config_read`.<div><Callout type="warning">The fields
+        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in
+        Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to
+        configure and view both caller ID and dial-by-name settings.</Callout></div>
 
         :param location_id: Retrieve settings for a hunt group in this location.
         :type location_id: str
@@ -872,7 +912,9 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
                             first_name: str = None, last_name: str = None, time_zone: str = None,
                             call_policies: PostHuntGroupCallPolicyObject = None,
                             agents: list[PostPersonPlaceVirtualLineHuntGroupObject] = None,
-                            hunt_group_caller_id_for_outgoing_calls_enabled: bool = None, org_id: str = None):
+                            hunt_group_caller_id_for_outgoing_calls_enabled: bool = None,
+                            direct_line_caller_id_name: DirectLineCallerIdNameObject = None, dial_by_name: str = None,
+                            org_id: str = None):
         """
         Update a Hunt Group
 
@@ -882,7 +924,10 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         a pattern to route to a whole group.
 
         Updating a hunt group requires a full administrator or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.
+        `spark-admin:telephony_config_write`.<div><Callout type="warning">The fields
+        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in
+        Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to
+        configure and view both caller ID and dial-by-name settings.</Callout></div>
 
         :param location_id: Update the hunt group for this location.
         :type location_id: str
@@ -906,9 +951,11 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :param language_code: Language code.
         :type language_code: str
         :param first_name: First name to be shown when calls are forwarded out of this hunt group. Defaults to `.`.
+            This field has been deprecated. Please use `directLineCallerIdName` and `dialByName` instead.
         :type first_name: str
         :param last_name: Last name to be shown when calls are forwarded out of this hunt group. Defaults to the phone
-            number if set, otherwise defaults to call group name.
+            number if set, otherwise defaults to call group name. This field has been deprecated. Please use
+            `directLineCallerIdName` and `dialByName` instead.
         :type last_name: str
         :param time_zone: Time zone for the hunt group.
         :type time_zone: str
@@ -919,6 +966,12 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :param hunt_group_caller_id_for_outgoing_calls_enabled: Enable the hunt group to be used as the caller ID when
             the agent places outgoing calls. When set to true the hunt group's caller ID will be used.
         :type hunt_group_caller_id_for_outgoing_calls_enabled: bool
+        :param direct_line_caller_id_name: Settings for the direct line caller ID name to be shown for this hunt group.
+        :type direct_line_caller_id_name: DirectLineCallerIdNameObject
+        :param dial_by_name: Sets or clears the name to be used for dial by name functions. To clear the `dialByName`,
+            the attribute must be set to null or empty string. Characters of `%`,  `+`, `\`, `"` and Unicode
+            characters are not allowed.
+        :type dial_by_name: str
         :param org_id: Update hunt group settings from this organization.
         :type org_id: str
         :rtype: None
@@ -953,6 +1006,10 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
             body['agents'] = TypeAdapter(list[PostPersonPlaceVirtualLineHuntGroupObject]).dump_python(agents, mode='json', by_alias=True, exclude_none=True)
         if hunt_group_caller_id_for_outgoing_calls_enabled is not None:
             body['huntGroupCallerIdForOutgoingCallsEnabled'] = hunt_group_caller_id_for_outgoing_calls_enabled
+        if direct_line_caller_id_name is not None:
+            body['directLineCallerIdName'] = direct_line_caller_id_name.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if dial_by_name is not None:
+            body['dialByName'] = dial_by_name
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}')
         super().put(url, params=params, json=body)
 

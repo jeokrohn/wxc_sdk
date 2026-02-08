@@ -8,7 +8,7 @@ from pydantic import Field
 
 from ..base import ApiModel, webex_id_to_uuid
 from ..base import SafeEnum as Enum
-from ..common import UserBase, AlternateNumber, IdAndName
+from ..common import UserBase, AlternateNumber, IdAndName, DirectLineCallerIdName
 
 __all__ = ['HGandCQ', 'Policy', 'Agent', 'AlternateNumberSettings', 'CallingLineIdPolicy']
 
@@ -103,6 +103,10 @@ class HGandCQ(ApiModel):
     time_zone: Optional[str] = None
     #: People, workspaces and virtual lines that are eligible to receive calls.
     agents: Optional[list[Agent]] = None
+    #: Settings for the direct line caller ID name to be shown for this call queue.
+    direct_line_caller_id_name: Optional[DirectLineCallerIdName] = None
+    #: The name to be used for dial by name functions.
+    dial_by_name: Optional[str] = None
 
     @property
     def cpapi_id(self):

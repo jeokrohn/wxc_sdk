@@ -11,7 +11,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['AgentAction', 'AlternateNumbersWithPattern', 'AnnouncementAudioFileGet', 'AnnouncementAudioFileGetLevel',
+__all__ = ['AgentAction', 'AlternateNumbersWithPattern', 'AnnouncementAudioFileGet', 'AnnouncementAudioFileLevel',
            'AudioAnnouncementFileFeatureGetObject', 'AudioAnnouncementFileFeatureGetObjectMediaFileType',
            'AvailableAgentListObject', 'AvailableAgentObject', 'AvailableSupervisorsListObject',
            'CallForwardRulesGet', 'CallForwardRulesSet', 'CallForwardSettingsGetCallForwarding',
@@ -26,12 +26,13 @@ __all__ = ['AgentAction', 'AlternateNumbersWithPattern', 'AnnouncementAudioFileG
            'CallQueueQueueSettingsGetObjectMohMessageNormalSource', 'CallQueueQueueSettingsGetObjectOverflow',
            'CallQueueQueueSettingsGetObjectOverflowAction', 'CallQueueQueueSettingsGetObjectOverflowGreeting',
            'CallQueueQueueSettingsGetObjectWaitMessage', 'CallQueueQueueSettingsGetObjectWaitMessageWaitMode',
-           'CallQueueQueueSettingsGetObjectWelcomeMessage', 'CreateCallQueueObjectCallingLineIdPolicy',
-           'CreateForwardingRuleObjectCallsFrom', 'CreateForwardingRuleObjectCallsFromCustomNumbers',
-           'CreateForwardingRuleObjectCallsFromSelection', 'CreateForwardingRuleObjectCallsTo',
-           'CreateForwardingRuleObjectForwardTo', 'CreateForwardingRuleObjectForwardToSelection',
-           'FeaturesCallQueueApi', 'GetAnnouncementFileInfo', 'GetCallQueueAgentObject',
-           'GetCallQueueAgentObjectAgent', 'GetCallQueueAgentObjectQueuesItem', 'GetCallQueueCallPolicyObject',
+           'CallQueueQueueSettingsGetObjectWelcomeMessage', 'CallQueueQueueSettingsGetObjectWhisperMessage',
+           'CreateCallQueueObjectCallingLineIdPolicy', 'CreateForwardingRuleObjectCallsFrom',
+           'CreateForwardingRuleObjectCallsFromCustomNumbers', 'CreateForwardingRuleObjectCallsFromSelection',
+           'CreateForwardingRuleObjectCallsTo', 'CreateForwardingRuleObjectForwardTo',
+           'CreateForwardingRuleObjectForwardToSelection', 'DirectLineCallerIdNameObject', 'FeaturesCallQueueApi',
+           'GetAnnouncementFileInfo', 'GetCallQueueAgentObject', 'GetCallQueueAgentObjectAgent',
+           'GetCallQueueAgentObjectQueuesItem', 'GetCallQueueCallPolicyObject',
            'GetCallQueueCallPolicyObjectCallBounce', 'GetCallQueueCallPolicyObjectDistinctiveRing',
            'GetCallQueueEssentialsCallPolicyObject', 'GetCallQueueEssentialsObject',
            'GetCallQueueForcedForwardObject', 'GetCallQueueHolidayObject', 'GetCallQueueHolidayObjectAction',
@@ -47,7 +48,7 @@ __all__ = ['AgentAction', 'AlternateNumbersWithPattern', 'AnnouncementAudioFileG
            'ModifyCallForwardingObjectCallForwarding', 'ModifyPersonPlaceVirtualLineCallQueueObject',
            'NumberOwnerType', 'PostPersonPlaceVirtualLineCallQueueObject',
            'PostPersonPlaceVirtualLineSupervisorObject', 'PutPersonPlaceVirtualLineAgentObject', 'RingPatternObject',
-           'STATE', 'TelephonyType']
+           'STATE', 'SelectionObject', 'TelephonyType']
 
 
 class RingPatternObject(str, Enum):
@@ -69,7 +70,7 @@ class AlternateNumbersWithPattern(ApiModel):
     ring_pattern: Optional[RingPatternObject] = None
 
 
-class AnnouncementAudioFileGetLevel(str, Enum):
+class AnnouncementAudioFileLevel(str, Enum):
     location = 'LOCATION'
     organization = 'ORGANIZATION'
     entity = 'ENTITY'
@@ -83,7 +84,7 @@ class AnnouncementAudioFileGet(ApiModel):
     #: Media file type of announcement file.
     media_file_type: Optional[str] = None
     #: The level at which this announcement exists.
-    level: Optional[AnnouncementAudioFileGetLevel] = None
+    level: Optional[AnnouncementAudioFileLevel] = None
 
 
 class AudioAnnouncementFileFeatureGetObjectMediaFileType(str, Enum):
@@ -103,7 +104,7 @@ class AudioAnnouncementFileFeatureGetObject(ApiModel):
     #: Audio announcement file type.
     media_file_type: Optional[AudioAnnouncementFileFeatureGetObjectMediaFileType] = None
     #: Audio announcement file type location.
-    level: Optional[AnnouncementAudioFileGetLevel] = None
+    level: Optional[AnnouncementAudioFileLevel] = None
 
 
 class CallForwardRulesGet(ApiModel):
@@ -397,11 +398,24 @@ class CallQueueQueueSettingsGetObjectMohMessageNormalSource(ApiModel):
     #: announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is
     #: mandatory, and the maximum is 4.
     audio_announcement_files: Optional[list[AnnouncementAudioFileGet]] = None
+    #: Identifier of the playlist used for this MOH source.
+    audio_playlist_id: Optional[str] = None
 
 
 class CallQueueQueueSettingsGetObjectMohMessage(ApiModel):
     normal_source: Optional[CallQueueQueueSettingsGetObjectMohMessageNormalSource] = None
     alternate_source: Optional[CallQueueQueueSettingsGetObjectMohMessageNormalSource] = None
+
+
+class CallQueueQueueSettingsGetObjectWhisperMessage(ApiModel):
+    #: If enabled play the Whisper Message.
+    enabled: Optional[bool] = None
+    #: Indicates how to handle new calls when the queue is full.
+    greeting: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
+    #: Array of announcement files to be played as `whisperMessage` greetings. These files are from the list of
+    #: announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is
+    #: mandatory, and the maximum is 4.
+    audio_announcement_files: Optional[list[AnnouncementAudioFileGet]] = None
 
 
 class CallQueueQueueSettingsGetObject(ApiModel):
@@ -433,7 +447,7 @@ class CallQueueQueueSettingsGetObject(ApiModel):
     moh_message: Optional[CallQueueQueueSettingsGetObjectMohMessage] = None
     #: Play a message to the agent immediately before the incoming call is connected. The message typically announces
     #: the identity of the call queue from which the call is coming.
-    whisper_message: Optional[CallQueueQueueSettingsGetObjectMohMessageNormalSource] = None
+    whisper_message: Optional[CallQueueQueueSettingsGetObjectWhisperMessage] = None
 
 
 class CreateCallQueueObjectCallingLineIdPolicy(str, Enum):
@@ -571,7 +585,7 @@ class GetAnnouncementFileInfo(ApiModel):
     #: Media file type of the announcement.
     media_file_type: Optional[MediaType] = None
     #: Level where the announcement is created.
-    level: Optional[AnnouncementAudioFileGetLevel] = None
+    level: Optional[AnnouncementAudioFileLevel] = None
 
 
 class GetCallQueueForcedForwardObject(ApiModel):
@@ -764,6 +778,20 @@ class ModifyPersonPlaceVirtualLineCallQueueObject(ApiModel):
     skill_level: Optional[int] = None
     #: Indicates the join status of the agent for this queue. The default value for newly added agents is `true`.
     join_enabled: Optional[bool] = None
+
+
+class SelectionObject(str, Enum):
+    #: When this option is selected, `customName` is to be shown for this call queue.
+    custom_name = 'CUSTOM_NAME'
+    #: When this option is selected, `name` is to be shown for this call queue.
+    display_name = 'DISPLAY_NAME'
+
+
+class DirectLineCallerIdNameObject(ApiModel):
+    #: The selection of the direct line caller ID name. Defaults to `DISPLAY_NAME`.
+    selection: Optional[SelectionObject] = None
+    #: The custom direct line caller ID name. Required if `selection` is set to `CUSTOM_NAME`.
+    custom_name: Optional[str] = None
 
 
 class STATE(str, Enum):
@@ -1175,6 +1203,10 @@ class GetCallQueueEssentialsObject(ApiModel):
     agents: Optional[list[GetPersonPlaceObject]] = None
     #: The department information.
     department: Optional[LocationObject] = None
+    #: Settings for the direct line caller ID name to be shown for this call queue.
+    direct_line_caller_id_name: Optional[DirectLineCallerIdNameObject] = None
+    #: The name to be used for dial by name functions.
+    dial_by_name: Optional[str] = None
 
 
 class GetSupervisorDetailWithCustomerExperienceEssentialsResponse(ApiModel):
@@ -1214,7 +1246,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                                                                 calling_line_id_phone_number: str = None,
                                                                 allow_agent_join_enabled: bool = None,
                                                                 phone_number_for_outgoing_calls_enabled: bool = None,
-                                                                org_id: str = None) -> str:
+                                                                direct_line_caller_id_name: DirectLineCallerIdNameObject = None,
+                                                                dial_by_name: str = None, org_id: str = None) -> str:
         """
         Create a Call Queue with Customer Experience Essentials
 
@@ -1229,7 +1262,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         which can be dialed internally to reach the users assigned to the call queue.
 
         Creating a call queue requires a full administrator or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.
+        `spark-admin:telephony_config_write`.<div><Callout type="warning">The fields
+        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in
+        Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to
+        configure and view both caller ID and dial-by-name settings.</Callout></div>
 
         :param location_id: The location ID where the call queue needs to be created.
         :type location_id: str
@@ -1252,9 +1288,11 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :param language_code: Language code.
         :type language_code: str
         :param first_name: First name to be shown when calls are forwarded out of this call queue. Defaults to ".".
+            This field has been deprecated. Please use `directLineCallerIdName` and `dialByName` instead.
         :type first_name: str
         :param last_name: Last name to be shown when calls are forwarded out of this call queue. Defaults to
-            `phoneNumber` if set, otherwise defaults to call group name.
+            `phoneNumber` if set, otherwise defaults to call group name. This field has been deprecated. Please use
+            `directLineCallerIdName` and `dialByName` instead.
         :type last_name: str
         :param time_zone: Time zone for the call queue.
         :type time_zone: str
@@ -1267,6 +1305,11 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :param phone_number_for_outgoing_calls_enabled: When `true`, indicates that the agent's configuration allows
             them to use the queue's Caller ID for outgoing calls.
         :type phone_number_for_outgoing_calls_enabled: bool
+        :param direct_line_caller_id_name: Settings for the direct line caller ID name to be shown for this call queue.
+        :type direct_line_caller_id_name: DirectLineCallerIdNameObject
+        :param dial_by_name: The name to be used for dial by name functions. Characters of `%`,  `+`, `\`, `"` and
+            Unicode characters are not allowed.
+        :type dial_by_name: str
         :param org_id: The organization ID where the call queue needs to be created.
         :type org_id: str
         :rtype: str
@@ -1301,6 +1344,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             body['allowAgentJoinEnabled'] = allow_agent_join_enabled
         if phone_number_for_outgoing_calls_enabled is not None:
             body['phoneNumberForOutgoingCallsEnabled'] = phone_number_for_outgoing_calls_enabled
+        if direct_line_caller_id_name is not None:
+            body['directLineCallerIdName'] = direct_line_caller_id_name.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if dial_by_name is not None:
+            body['dialByName'] = dial_by_name
         url = self.ep(f'locations/{location_id}/queues')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -1466,7 +1513,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         which can be dialed internally to reach the users assigned to the call queue.
 
         Retrieving call queue details requires a full or read-only administrator auth token with a scope of
-        `spark-admin:telephony_config_read`.
+        `spark-admin:telephony_config_read`.<div><Callout type="warning">The fields
+        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in
+        Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to
+        configure and view both caller ID and dial-by-name settings.</Callout></div>
 
         :param location_id: Retrieves the details of a call queue in this location.
         :type location_id: str
@@ -1500,7 +1550,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                             allow_call_waiting_for_agents_enabled: bool = None,
                             agents: list[ModifyPersonPlaceVirtualLineCallQueueObject] = None,
                             allow_agent_join_enabled: bool = None,
-                            phone_number_for_outgoing_calls_enabled: bool = None, org_id: str = None):
+                            phone_number_for_outgoing_calls_enabled: bool = None,
+                            direct_line_caller_id_name: DirectLineCallerIdNameObject = None, dial_by_name: str = None,
+                            org_id: str = None):
         """
         Update a Call Queue
 
@@ -1515,7 +1567,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         internally to reach users assigned to the call queue.
 
         Updating a call queue requires a full administrator or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.
+        `spark-admin:telephony_config_write`.<div><Callout type="warning">The fields
+        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in
+        Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to
+        configure and view both caller ID and dial-by-name settings.</Callout></div>
 
         :param location_id: Location in which this call queue exists.
         :type location_id: str
@@ -1530,9 +1585,11 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :param language_code: Language code.
         :type language_code: str
         :param first_name: First name to be shown when calls are forwarded out of this call queue. Defaults to `.`.
+            This field has been deprecated. Please use `directLineCallerIdName` and `dialByName` instead.
         :type first_name: str
         :param last_name: Last name to be shown when calls are forwarded out of this call queue. Defaults to the
-            `phoneNumber` if set, otherwise defaults to call group name.
+            `phoneNumber` if set, otherwise defaults to call group name. This field has been deprecated. Please use
+            `directLineCallerIdName` and `dialByName` instead.
         :type last_name: str
         :param time_zone: Time zone for the hunt group.
         :type time_zone: str
@@ -1560,6 +1617,12 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :param phone_number_for_outgoing_calls_enabled: When `true`, indicates that the agent's configuration allows
             them to use the queue's Caller ID for outgoing calls.
         :type phone_number_for_outgoing_calls_enabled: bool
+        :param direct_line_caller_id_name: Settings for the direct line caller ID name to be shown for this call queue.
+        :type direct_line_caller_id_name: DirectLineCallerIdNameObject
+        :param dial_by_name: Sets or clears the name to be used for dial by name functions. To clear the `dialByName`,
+            the attribute must be set to null or empty string. Characters of `%`,  `+`, `\`, `"` and Unicode
+            characters are not allowed.
+        :type dial_by_name: str
         :param org_id: Update call queue settings from this organization.
         :type org_id: str
         :rtype: None
@@ -1601,6 +1664,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             body['allowAgentJoinEnabled'] = allow_agent_join_enabled
         if phone_number_for_outgoing_calls_enabled is not None:
             body['phoneNumberForOutgoingCallsEnabled'] = phone_number_for_outgoing_calls_enabled
+        if direct_line_caller_id_name is not None:
+            body['directLineCallerIdName'] = direct_line_caller_id_name.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if dial_by_name is not None:
+            body['dialByName'] = dial_by_name
         url = self.ep(f'locations/{location_id}/queues/{queue_id}')
         super().put(url, params=params, json=body)
 

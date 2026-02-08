@@ -11,13 +11,13 @@ from .forwarding import ForwardingApi, FeatureSelector
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel
 from ..base import SafeEnum as Enum
-from ..common import Greeting, AlternateNumber, MediaFileType, AnnAudioFile
+from ..common import Greeting, AlternateNumber, MediaFileType, AnnAudioFile, DirectLineCallerIdName
 from ..person_settings.available_numbers import AvailableNumber
 from ..rest import RestSession
 
 __all__ = ['Dialing', 'MenuKey', 'AutoAttendantAction', 'AutoAttendantKeyConfiguration',
            'AutoAttendantMenu', 'AutoAttendant', 'AutoAttendantApi', 'CallTreatmentRetry', 'ActionToBePerformed',
-           'ActionToBePerformedAction', 'CallTreatment', 'DirectLineCallerIdName', 'DirectLineCallerIdNameSelection']
+           'ActionToBePerformedAction', 'CallTreatment']
 
 
 class Dialing(str, Enum):
@@ -162,21 +162,6 @@ class AutoAttendantMenu(ApiModel):
         return AutoAttendantMenu(greeting=Greeting.default,
                                  extension_enabled=True,
                                  key_configurations=[AutoAttendantKeyConfiguration.zero_exit()])
-
-
-class DirectLineCallerIdNameSelection(str, Enum):
-    #: When this option is selected, `customName` is to be shown for this auto attendant.
-    custom_name = 'CUSTOM_NAME'
-    #: When this option is selected, `name` is to be shown for this auto attendant.
-    display_name = 'DISPLAY_NAME'
-
-
-class DirectLineCallerIdName(ApiModel):
-    #: The selection of the direct line caller ID name.
-    selection: Optional[DirectLineCallerIdNameSelection] = None
-    #: Sets or clears the custom direct line caller ID name.  To clear the `customName`, the attribute must be set to
-    #: null or empty string. Required if `selection` is set to `CUSTOM_NAME`.
-    custom_name: Optional[str] = None
 
 
 class AutoAttendant(ApiModel):

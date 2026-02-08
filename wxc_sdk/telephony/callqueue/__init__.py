@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from typing import Optional, List
 
 from pydantic import Field
-
 from .agents import CallQueueAgentsApi
 from .announcement import AnnouncementApi
 from .policies import CQPolicyApi
@@ -210,9 +209,16 @@ class WaitMessageSetting(ApiModel):
 
 
 class AudioSource(ApiModel):
+    #: Enable media on hold for queued calls.
     enabled: bool = Field(default=True)
+    #: Indicates how to handle new calls when the queue is full.
     greeting: Greeting = Field(default=Greeting.default)
+    #: Array of announcement files to be played as `mohMessage` greetings. These files are from the list of
+    #: announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is
+    #: mandatory, and the maximum is 4.
     audio_announcement_files: list[AnnAudioFile] = Field(default_factory=list)
+    #: Identifier of the playlist used for this MOH source.
+    audio_playlist_id: Optional[str] = None
 
 
 class WelcomeMessageSetting(AudioSource):
@@ -252,31 +258,34 @@ class QueueSettings(ApiModel):
     """
     Overall call queue settings.
     """
-    #: maximum number of calls for this call queue. Once this number is reached, the overflow settings are triggered
-    # (max 50).
-    queue_size: int
+    #: The maximum number of calls for this call queue. Once this number is reached, the `overflow` settings are
+    #: triggered.
+    queue_size: Optional[int] = None
     #: Play ringing tone to callers when their call is set to an available agent.
     call_offer_tone_enabled: Optional[bool] = None
     #: Reset caller statistics upon queue entry.
     reset_call_statistics_enabled: Optional[bool] = None
     #: Settings for incoming calls exceed queue_size.
     overflow: Optional[OverflowSetting] = None
-    #: Notify the caller with either their estimated wait time or position in the queue. If this option is enabled, it
-    #: plays after the welcome message and before the comfort message. By default, it is not enabled.
-    wait_message: Optional[WaitMessageSetting] = None
     #: Play a message when callers first reach the queue. For example, “Thank you for calling. An agent will be with
     #: you shortly.” It can be set as mandatory. If the mandatory option is not selected and a caller reaches the
     #: call queue while there is an available agent, the caller will not hear this announcement and is transferred to
     #: an agent. The welcome message feature is enabled by default.
     welcome_message: Optional[WelcomeMessageSetting] = None
+    #: Notify the caller with either their estimated wait time or position in the queue. If this option is enabled, it
+    #: plays after the welcome message and before the comfort message. By default, it is not enabled.
+    wait_message: Optional[WaitMessageSetting] = None
     #: Play a message after the welcome message and before hold music. This is typically a CUSTOM announcement that
-    #:  plays information, such as current promotions or information about products and services.
+    #: plays information, such as current promotions or information about products and services.
     comfort_message: Optional[ComfortMessageSetting] = None
+    #: Play a shorter comfort message instead of the usual Comfort or Music On Hold announcement to all the calls that
+    #: should be answered quickly. This feature prevents a caller from hearing a short portion of the standard comfort
+    #: message that abruptly ends when they are connected to an agent.
+    comfort_message_bypass: Optional[ComfortMessageBypass] = None
     #: Play music after the comforting message in a repetitive loop.
     moh_message: Optional[MohMessageSetting] = None
-    #: Comfort message bypass settings
-    comfort_message_bypass: Optional[ComfortMessageBypass] = None
-    #: whisper message to identify the queue for incoming calls.
+    #: Play a message to the agent immediately before the incoming call is connected. The message typically announces
+    #: the identity of the call queue from which the call is coming.
     whisper_message: Optional[AudioSource] = None
     use_enterprise_play_tone_to_agent_settings_enabled: Optional[bool] = None
     play_tone_to_agent_for_barge_in_enabled: Optional[bool] = None

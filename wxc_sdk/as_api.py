@@ -25226,7 +25226,7 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
             raise TypeError('originator_caller_id_enabled required if originators are provided')
         url = self._endpoint(location_id=location_id)
         data = settings.create_or_update()
-        data = await self.post(url, data=data, params=params)
+        data = await self.post(url, json=data, params=params)
         return data['id']
 
     async def delete_paging(self, location_id: str, paging_id: str, org_id: str = None):
@@ -25297,7 +25297,7 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id, paging_id=paging_id)
         data = update.create_or_update()
-        await self.put(url, data=data, params=params)
+        await self.put(url, json=data, params=params)
 
     def primary_available_phone_numbers_gen(self, location_id: str, phone_number: List[str] = None,
                                         org_id: str = None,
