@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any
 
 import requests
+from urllib.parse import quote
 
 from generate_dummy_users import build_users
 
@@ -80,6 +81,27 @@ class Api:
 
 def first_item(items: list[dict[str, Any]]) -> dict[str, Any] | None:
     return items[0] if items else None
+
+
+def optional_req(api: Api, method: str, paths: list[str], *, params: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Ejecuta una llamada opcional probando rutas alternativas.
+
+    Algunos tenants/entornos devuelven 404 en rutas legacy para recursos de telephony.
+    Este helper intenta cada ruta en orden y solo falla si el error no es 404.
+    """
+    last_404: Exception | None = None
+    for path in paths:
+        try:
+            return api.req(method, path, params=params)
+        except RuntimeError as exc:
+            msg = str(exc)
+            if "-> 404:" in msg:
+                last_404 = exc
+                continue
+            raise
+    if last_404:
+        print(f"WARN recurso opcional no disponible en ninguna ruta {paths}: {last_404}")
+    return {}
 
 
 def _fallback_people(api: Api, *, needed: int, ext_start: int, phone_prefix: str, skip_ids: set[str]) -> list[dict[str, str]]:
@@ -194,17 +216,30 @@ def build_context(api: Api, args: argparse.Namespace) -> dict[str, Any]:
     if ws:
         context["workspace_id"] = ws.get("id", "")
 
-    route_groups = api.req("GET", "telephony/config/premPstn/routeGroups").get("routeGroups", [])
+    route_groups = optional_req(
+        api,
+        "GET",
+        ["telephony/config/premisePstn/routeGroups", "telephony/config/premPstn/routeGroups"],
+    ).get("routeGroups", [])
     rg = first_item(route_groups)
     if rg:
         context["route_group_id"] = rg.get("id", "")
 
-    trunks = api.req("GET", "telephony/config/premPstn/trunks").get("trunks", [])
+    trunks = optional_req(
+        api,
+        "GET",
+        ["telephony/config/premisePstn/trunks", "telephony/config/premPstn/trunks"],
+    ).get("trunks", [])
     trunk = first_item(trunks)
     if trunk:
         context["trunk_id"] = trunk.get("id", "")
 
-    queues = api.req("GET", f"telephony/config/locations/{context['location_id']}/queues").get("queues", [])
+    location_id_path = quote(str(context["location_id"]), safe="")
+    queues = optional_req(
+        api,
+        "GET",
+        [f"telephony/config/locations/{location_id_path}/queues"],
+    ).get("queues", [])
     q = first_item(queues)
     if q:
         context["queue_id"] = q.get("id", "")
