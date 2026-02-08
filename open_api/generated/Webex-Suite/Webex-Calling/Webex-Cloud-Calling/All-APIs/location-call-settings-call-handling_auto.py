@@ -12,8 +12,9 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __all__ = ['CallingPermissionObject', 'CallingPermissionObjectAction', 'CallingPermissionObjectCallType',
-           'GetAutoTransferNumberObject', 'GetLocationAccessCodeObjectAccessCodes', 'GetLocationInterceptObject',
-           'GetLocationInterceptObjectIncoming', 'GetLocationInterceptObjectIncomingAnnouncements',
+           'CallingPermissionPatchObject', 'GetAutoTransferNumberObject', 'GetLocationAccessCodeObjectAccessCodes',
+           'GetLocationInterceptObject', 'GetLocationInterceptObjectIncoming',
+           'GetLocationInterceptObjectIncomingAnnouncements',
            'GetLocationInterceptObjectIncomingAnnouncementsGreeting',
            'GetLocationInterceptObjectIncomingAnnouncementsNewNumber', 'GetLocationInterceptObjectIncomingType',
            'GetLocationInterceptObjectOutgoing', 'GetLocationInterceptObjectOutgoingType', 'InternalDialingGet',
@@ -66,10 +67,21 @@ class CallingPermissionObject(ApiModel):
     call_type: Optional[CallingPermissionObjectCallType] = None
     #: Allows to configure settings for each call type.
     action: Optional[CallingPermissionObjectAction] = None
-    #: If `true`, allows a person to transfer or forward internal calls.
+    #: If `true`, allows transfer and forwarding for the call type.
     transfer_enabled: Optional[bool] = None
-    #: If `true`, indicates the call restriction is enabled for the specific call type.
+    #: Indicates if the restriction is enforced by the system for the corresponding call type and cannot be changed.
+    #: For example, certain call types (such as `INTERNATIONAL`) may be permanently blocked and this field will be
+    #: `true` to reflect that the restriction is system-controlled and not editable.
     is_call_type_restriction_enabled: Optional[bool] = None
+
+
+class CallingPermissionPatchObject(ApiModel):
+    #: Below are the call type values.
+    call_type: Optional[CallingPermissionObjectCallType] = None
+    #: Allows to configure settings for each call type.
+    action: Optional[CallingPermissionObjectAction] = None
+    #: If `true`, allows transfer and forwarding for the call type.
+    transfer_enabled: Optional[bool] = None
 
 
 class GetAutoTransferNumberObject(ApiModel):
@@ -142,7 +154,7 @@ class GetLocationInterceptObjectOutgoingType(str, Enum):
 class GetLocationInterceptObjectOutgoing(ApiModel):
     #: Outbound call modes
     type: Optional[GetLocationInterceptObjectOutgoingType] = None
-    #: Enable/disable to route all outbound calls to phone number.
+    #: If `true`, allows transfer and forwarding for the call type.
     transfer_enabled: Optional[bool] = None
     #: If enabled, set outgoing destination phone number.
     destination: Optional[str] = None
@@ -198,7 +210,7 @@ class LocationDigitPatternObject(ApiModel):
     pattern: Optional[str] = None
     #: Action to be performed on the input number that matches the digit pattern.
     action: Optional[CallingPermissionObjectAction] = None
-    #: Option to allow or disallow transfer of calls.
+    #: If `true`, allows transfer and forwarding for the call type.
     transfer_enabled: Optional[bool] = None
 
 
@@ -415,7 +427,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         return r
 
     def update_location_outgoing_permission(self, location_id: str,
-                                            calling_permissions: list[CallingPermissionObject] = None,
+                                            calling_permissions: list[CallingPermissionPatchObject] = None,
                                             org_id: str = None):
         """
         Update Location Outgoing Permission
@@ -431,7 +443,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :param location_id: Update outgoing call settings for this location.
         :type location_id: str
         :param calling_permissions: Array specifying the subset of calling permissions to be updated.
-        :type calling_permissions: list[CallingPermissionObject]
+        :type calling_permissions: list[CallingPermissionPatchObject]
         :param org_id: Update outgoing call settings for this organization.
         :type org_id: str
         :rtype: None
@@ -441,7 +453,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
             params['orgId'] = org_id
         body = dict()
         if calling_permissions is not None:
-            body['callingPermissions'] = TypeAdapter(list[CallingPermissionObject]).dump_python(calling_permissions, mode='json', by_alias=True, exclude_none=True)
+            body['callingPermissions'] = TypeAdapter(list[CallingPermissionPatchObject]).dump_python(calling_permissions, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{location_id}/outgoingPermission')
         super().put(url, params=params, json=body)
 
@@ -692,7 +704,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type pattern: str
         :param action: Action to be performed on the input number that matches the digit pattern.
         :type action: CallingPermissionObjectAction
-        :param transfer_enabled: Option to allow or disallow transfer of calls.
+        :param transfer_enabled: If `true`, allows transfer and forwarding for the call type.
         :type transfer_enabled: bool
         :param org_id: Add a new digit pattern for this organization.
         :type org_id: str
@@ -790,7 +802,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type pattern: str
         :param action: Action to be performed on the input number that matches the digit pattern.
         :type action: CallingPermissionObjectAction
-        :param transfer_enabled: Option to allow or disallow transfer of calls.
+        :param transfer_enabled: If `true`, allows transfer and forwarding for the call type.
         :type transfer_enabled: bool
         :param org_id: Update the digit pattern for this organization.
         :type org_id: str

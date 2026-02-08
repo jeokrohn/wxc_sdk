@@ -62,9 +62,11 @@ class CallTypePermission(ApiModel):
     """
     #: Action on the given call_type.
     action: Action
-    #: Allow to transfer or forward a call of the specified call type.
+    #: If `true`, allows transfer and forwarding for the call type.
     transfer_enabled: bool
-    #: If `true`, indicates the call restriction is enabled for the specific call type.
+    #: Indicates if the restriction is enforced by the system for the corresponding call type and cannot be changed.
+    #: For example, certain call types (such as `INTERNATIONAL`) may be permanently blocked and this field will be
+    #: `true` to reflect that the restriction is system-controlled and not editable.
     is_call_type_restriction_enabled: Optional[bool] = None
 
     @staticmethod
