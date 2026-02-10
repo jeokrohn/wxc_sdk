@@ -81,7 +81,14 @@ class WebhookResource(str, Enum):
     meeting_transcripts = 'meetingTranscripts'
     #: Service App authorization notification.
     service_app = 'serviceApp'
+    #: `Webex Calling
+    #: <https://developer.webex.com/docs/webex-calling-overview>`_ call resources.
     telephony_calls = 'telephony_calls'
+    #: `Webex Calling
+    #: <https://developer.webex.com/docs/webex-calling-overview>`_ conference controls resource.
+    telephony_conference = 'telephony_conference'
+    #: `Webex Calling
+    #: <https://developer.webex.com/docs/webex-calling-overview>`_ voicemail message waiting indicator resource.
     telephony_mwi = 'telephony_mwi'
     #: Performance counter for a dedicated instance.
     uc_counters = 'uc_counters'
