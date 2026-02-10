@@ -404,7 +404,7 @@ class PSTNApi(ApiChild, base='telephony/pstn'):
         super().put(url, params=params, json=body)
 
     def update_emergency_address_for_phone_number(self, phone_number: str,
-                                                  emergency_address: EmergencyAddressObject,
+                                                  emergency_address: EmergencyAddressObject = None,
                                                   org_id: str = None):
         """
         Update the emergency address for a phone number.
@@ -426,6 +426,7 @@ class PSTNApi(ApiChild, base='telephony/pstn'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['emergencyAddress'] = emergency_address.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if emergency_address is not None:
+            body['emergencyAddress'] = emergency_address.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'numbers/{phone_number}/emergencyAddress')
         super().put(url, params=params, json=body)

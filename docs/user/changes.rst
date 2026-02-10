@@ -10,6 +10,7 @@ Release history
 - feat: new attributes :attr:`api.telephony.autoattendant.AutoAttendant.direct_line_caller_id_name <wxc_sdk.telephony.autoattendant.AutoAttendant.dial_by_name>, :attr:`api.telephony.autoattendant.AutoAttendant.dial_by_name <wxc_sdk.telephony.autoattendant.AutoAttendant.dial_by_name>
 - feat: new attributes direct_line_caller_id_name and dial_by_name for HG, CQ and paging group settings
 - feat: new attributes direct_line_caller_id_name and dial_by_name for voicemail group and portal, workspaces
+- feat: parameter emergency_address is optional for EmergencyAddressApi.update_for_phone_number
 
 1.27.1
 ------

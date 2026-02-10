@@ -23278,7 +23278,7 @@ class AsEmergencyAddressApi(AsApiChild, base='telephony/pstn'):
         await super().put(url, params=params, json=body)
 
     async def update_for_phone_number(self, phone_number: str,
-                                emergency_address: Union[EmergencyAddress, SuggestedEmergencyAddress],
+                                emergency_address: Union[EmergencyAddress, SuggestedEmergencyAddress] = None,
                                 org_id: str = None):
         """
         Update the emergency address for a phone number.
@@ -23291,7 +23291,8 @@ class AsEmergencyAddressApi(AsApiChild, base='telephony/pstn'):
 
         :param phone_number: Update the emergency address for this phone number.
         :type phone_number: str
-        :param emergency_address: Emergency address to update.
+        :param emergency_address: Emergency address to update. Using an empty JSON object deletes the custom emergency
+            address for the number and replaces it with the location's default emergency address.
         :type emergency_address: Union[EmergencyAddress, SuggestedEmergencyAddress]
         :param org_id: Update the emergency address of phone number in this organization.
         :type org_id: str
@@ -23301,7 +23302,8 @@ class AsEmergencyAddressApi(AsApiChild, base='telephony/pstn'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['emergencyAddress'] = emergency_address.update()
+        if emergency_address is not None:
+            body['emergencyAddress'] = emergency_address.update()
         url = self.ep(f'numbers/{phone_number}/emergencyAddress')
         await super().put(url, params=params, json=body)
 
