@@ -13,15 +13,16 @@ from wxc_sdk.base import SafeEnum as Enum
 
 __all__ = ['Action', 'AuthorizationCode', 'CLIDPolicySelection', 'CallForwardingAlwaysGet', 'CallForwardingBusyGet',
            'CallForwardingNoAnswerGet', 'CallForwardingPlaceSettingGet', 'CallingPermission',
-           'CallingPermissionAction', 'CallingPermissionCallType', 'InterceptAnnouncementsGet',
-           'InterceptAnnouncementsGetGreeting', 'InterceptAnnouncementsPatch', 'InterceptGet', 'InterceptIncomingGet',
-           'InterceptIncomingGetType', 'InterceptIncomingPatch', 'InterceptNumberGet', 'InterceptOutGoingGet',
-           'InterceptOutGoingGetType', 'ModifyCallingPermission', 'ModifyPlaceCallForwardSettings',
-           'ModifyPlaceCallerIdGetExternalCallerIdNamePolicy', 'MonitoredElementCallParkExtension',
-           'MonitoredElementItem', 'MonitoredElementUser', 'MonitoredElementUserType', 'PhoneNumber',
-           'PlaceCallerIdGet', 'PlaceGetNumbersResponse', 'RingPattern', 'TransferNumberGet',
-           'UserInboundPermissionGet', 'UserInboundPermissionGetExternalTransfer', 'UserMonitoringGet',
-           'UserNumberItem', 'UserOutgoingPermissionGet', 'WorkspaceCallSettings12Api']
+           'CallingPermissionAction', 'CallingPermissionCallType', 'DirectLineCallerIdNameObject',
+           'InterceptAnnouncementsGet', 'InterceptAnnouncementsGetGreeting', 'InterceptAnnouncementsPatch',
+           'InterceptGet', 'InterceptIncomingGet', 'InterceptIncomingGetType', 'InterceptIncomingPatch',
+           'InterceptNumberGet', 'InterceptOutGoingGet', 'InterceptOutGoingGetType', 'ModifyCallingPermission',
+           'ModifyPlaceCallForwardSettings', 'ModifyPlaceCallerIdGetExternalCallerIdNamePolicy',
+           'MonitoredElementCallParkExtension', 'MonitoredElementItem', 'MonitoredElementUser',
+           'MonitoredElementUserType', 'PhoneNumber', 'PlaceCallerIdGet', 'PlaceGetNumbersResponse', 'RingPattern',
+           'SelectionObject', 'TransferNumberGet', 'UserInboundPermissionGet',
+           'UserInboundPermissionGetExternalTransfer', 'UserMonitoringGet', 'UserNumberItem',
+           'UserOutgoingPermissionGet', 'WorkspaceCallSettings12Api']
 
 
 class AuthorizationCode(ApiModel):
@@ -132,9 +133,11 @@ class CallingPermission(ApiModel):
     call_type: Optional[CallingPermissionCallType] = None
     #: Permission for call types.
     action: Optional[CallingPermissionAction] = None
-    #: If `true`, allows a place to transfer or forward internal calls.
+    #: If `true`, allows transfer and forwarding for the call type.
     transfer_enabled: Optional[bool] = None
-    #: The call restriction is enabled for the specific call type.
+    #: Indicates if the restriction is enforced by the system for the corresponding call type and cannot be changed.
+    #: For example, certain call types (such as `INTERNATIONAL`) may be permanently blocked and this field will be
+    #: `true` to reflect that the restriction is system-controlled and not editable.
     is_call_type_restriction_enabled: Optional[bool] = None
 
 
@@ -199,8 +202,7 @@ class InterceptOutGoingGetType(str, Enum):
 class InterceptOutGoingGet(ApiModel):
     #: All outgoing calls are intercepted.
     type: Optional[InterceptOutGoingGetType] = None
-    #: If `true`, when the person attempts to make an outbound call, a system default message is played and the call is
-    #: made to the destination phone number.
+    #: If `true`, allows transfer and forwarding for the call type.
     transfer_enabled: Optional[bool] = None
     #: Number to which the outbound call be transferred.
     destination: Optional[str] = None
@@ -230,7 +232,7 @@ class ModifyCallingPermission(ApiModel):
     call_type: Optional[CallingPermissionCallType] = None
     #: Permission for call types.
     action: Optional[CallingPermissionAction] = None
-    #: Calling Permission for call type enable status.
+    #: If `true`, allows transfer and forwarding for the call type.
     transfer_enabled: Optional[bool] = None
 
 
@@ -249,6 +251,20 @@ class ModifyPlaceCallerIdGetExternalCallerIdNamePolicy(str, Enum):
     location = 'LOCATION'
     #: Outgoing caller ID shows the value from the `customExternalCallerIdName` field.
     other = 'OTHER'
+
+
+class SelectionObject(str, Enum):
+    #: When this option is selected, `customName` is to be shown for this workspace.
+    custom_name = 'CUSTOM_NAME'
+    #: When this option is selected, `displayName` is to be shown for this workspace.
+    display_name = 'DISPLAY_NAME'
+
+
+class DirectLineCallerIdNameObject(ApiModel):
+    #: The selection of the direct line caller ID name. Defaults to `DISPLAY_NAME`.
+    selection: Optional[SelectionObject] = None
+    #: The custom direct line caller ID name. Required if `selection` is set to `CUSTOM_NAME`.
+    custom_name: Optional[str] = None
 
 
 class MonitoredElementCallParkExtension(ApiModel):
@@ -303,7 +319,7 @@ class MonitoredElementUser(ApiModel):
     type: Optional[MonitoredElementUserType] = None
     #: Email of the person or workspace.
     email: Optional[str] = None
-    #: List of phone numbers of the person or workspace.
+    #: The list of phone numbers containing only the primary number for the monitored person, workspace.
     numbers: Optional[list[UserNumberItem]] = None
     #: Name of location for call park.
     location: Optional[str] = None
@@ -333,9 +349,11 @@ class PlaceCallerIdGet(ApiModel):
     #: from another location with the same country, PSTN provider, and zone (only applicable for India locations) as
     #: the workspace's location.
     custom_number: Optional[str] = None
-    #: Workspace's caller ID display name.
+    #: Workspace's caller ID display name. This field has been deprecated. Please use `directLineCallerIdName` and
+    #: `dialByName` instead.
     display_name: Optional[str] = None
-    #: Workspace's caller ID display details. Default is `.`.
+    #: Workspace's caller ID display details. Default is `.`. This field has been deprecated. Please use
+    #: `directLineCallerIdName` and `dialByName` instead.
     display_detail: Optional[str] = None
     #: Block this workspace's identity when receiving a call.
     block_in_forward_calls_enabled: Optional[bool] = None
@@ -345,6 +363,10 @@ class PlaceCallerIdGet(ApiModel):
     custom_external_caller_id_name: Optional[str] = None
     #: Location's external caller ID name which is shown if external caller ID name policy is `LOCATION`.
     location_external_caller_id_name: Optional[str] = None
+    #: Settings for the direct line caller ID name to be shown for this workspace.
+    direct_line_caller_id_name: Optional[DirectLineCallerIdNameObject] = None
+    #: The name to be used for dial by name functions.
+    dial_by_name: Optional[str] = None
 
 
 class TransferNumberGet(ApiModel):
@@ -610,7 +632,10 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
 
         This API requires a full or read-only administrator or location administrator auth token with a scope of
         `spark-admin:workspaces_read` or a user auth token with `spark:workspaces_read` scope can be used to read
-        workspace settings.
+        workspace settings.<div><Callout type="warning">The fields `directLineCallerIdName.selection`,
+        `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP).
+        Instead, administrators must use the `displayName` and `displayDetail` fields to configure and view both
+        caller ID and dial-by-name settings.</Callout></div>
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
@@ -635,7 +660,8 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
                                                      external_caller_id_name_policy: ModifyPlaceCallerIdGetExternalCallerIdNamePolicy = None,
                                                      custom_external_caller_id_name: str = None,
                                                      location_external_caller_id_name: str = None,
-                                                     org_id: str = None):
+                                                     direct_line_caller_id_name: DirectLineCallerIdNameObject = None,
+                                                     dial_by_name: str = None, org_id: str = None):
         """
         Configure Caller ID Settings for a Workspace
 
@@ -645,7 +671,10 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
 
         This API requires a full or user administrator or location administrator auth token with the
         `spark-admin:workspaces_write` scope or a user auth token with `spark:workspaces_write` scope can be used to
-        update workspace settings.
+        update workspace settings.<div><Callout type="warning">The fields `directLineCallerIdName.selection`,
+        `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP).
+        Instead, administrators must use the `displayName` and `displayDetail` fields to configure and view both
+        caller ID and dial-by-name settings.</Callout></div>
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
@@ -655,9 +684,11 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
             workspace's location or from another location with the same country, PSTN provider, and zone (only
             applicable for India locations) as the workspace's location.
         :type custom_number: str
-        :param display_name: Workspace's caller ID display name.
+        :param display_name: Workspace's caller ID display name. This field has been deprecated. Please use
+            `directLineCallerIdName` and `dialByName` instead.
         :type display_name: str
-        :param display_detail: Workspace's caller ID display details.
+        :param display_detail: Workspace's caller ID display details. This field has been deprecated. Please use
+            `directLineCallerIdName` and `dialByName` instead.
         :type display_detail: str
         :param block_in_forward_calls_enabled: Block this workspace's identity when receiving a call.
         :type block_in_forward_calls_enabled: bool
@@ -670,6 +701,12 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         :param location_external_caller_id_name: Location's external caller ID name which is shown if external caller
             ID name policy is `LOCATION`.
         :type location_external_caller_id_name: str
+        :param direct_line_caller_id_name: Settings for the direct line caller ID name to be shown for this workspace.
+        :type direct_line_caller_id_name: DirectLineCallerIdNameObject
+        :param dial_by_name: Sets or clears the name to be used for dial by name functions. To clear the `dialByName`,
+            the attribute must be set to null or empty string. Characters of `%`,  `+`, `\`, `"` and Unicode
+            characters are not allowed.
+        :type dial_by_name: str
         :param org_id: ID of the organization within which the workspace resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
             token used to access the API.
@@ -695,6 +732,10 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
             body['customExternalCallerIdName'] = custom_external_caller_id_name
         if location_external_caller_id_name is not None:
             body['locationExternalCallerIdName'] = location_external_caller_id_name
+        if direct_line_caller_id_name is not None:
+            body['directLineCallerIdName'] = direct_line_caller_id_name.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if dial_by_name is not None:
+            body['dialByName'] = dial_by_name
         url = self.ep(f'{workspace_id}/features/callerId')
         super().put(url, params=params, json=body)
 

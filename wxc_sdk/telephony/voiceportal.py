@@ -13,6 +13,8 @@ from ..base import ApiModel
 
 __all__ = ['VoicePortalSettings', 'FailedAttempts', 'ExpirePasscode', 'PasscodeRules', 'VoicePortalApi']
 
+from ..common import DirectLineCallerIdName
+
 from ..person_settings.available_numbers import AvailableNumber
 
 
@@ -20,19 +22,25 @@ class VoicePortalSettings(ApiModel):
     #: Voice Portal ID
     portal_id: Optional[str] = Field(alias='id', default=None)
     #: Voice Portal Name.
-    name: str
+    name: Optional[str] = None
     #: Language for audio announcements.
-    language: str
-    #: Language code for voicemail group audio announcement
-    language_code: str
+    language: Optional[str] = None
+    #: Language code for voicemail group audio announcement.
+    language_code: Optional[str] = None
     #: Extension of incoming call.
     extension: Optional[str] = None
     #: Phone Number of incoming call.
     phone_number: Optional[str] = None
-    #: Caller ID First Name.
-    first_name: str
-    #: Caller ID Last Name
-    last_name: str
+    #: Caller ID First Name. This field has been deprecated. Please use `directLineCallerIdName` and `dialByName`
+    #: instead.
+    first_name: Optional[str] = None
+    #: Caller ID Last Name. This field has been deprecated. Please use `directLineCallerIdName` and `dialByName`
+    #: instead.
+    last_name: Optional[str] = None
+    #: Settings for the direct line caller ID name to be shown for this voice portal.
+    direct_line_caller_id_name: Optional[DirectLineCallerIdName] = None
+    #: The name to be used for dial by name functions.
+    dial_by_name: Optional[str] = None
 
 
 class FailedAttempts(ApiModel):

@@ -435,7 +435,6 @@ class OwnerType(str, Enum):
 class NumberType(str, Enum):
     number = 'NUMBER'
     extension = 'EXTENSION'
-    default = 'Default'
 
 
 class NumbersApi(ApiChild, base='telephony/config'):
@@ -864,8 +863,8 @@ class NumbersApi(ApiChild, base='telephony/config'):
         :type owner_type: OwnerType
         :param extension: Returns the list of phone numbers with the given extension.
         :type extension: str
-        :param number_type: Returns the filtered list of phone numbers that contain a given type of number.
-            `numberType` cannot be used along with the `available` or `state` query parameters. Possible input values:
+        :param number_type: Returns the filtered list of phone numbers that contain a given type of number. `available`
+            or `state` query parameters cannot be used when `numberType=EXTENSION`. Possible input values:
         :type number_type: NumberType
         :param phone_number_type: Returns the filtered list of phone numbers of the given `phoneNumberType`. Response
             excludes any extensions without numbers. Possible input values:

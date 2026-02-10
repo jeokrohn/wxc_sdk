@@ -4226,7 +4226,12 @@ class AsLocationsApi(AsApiChild, base='locations'):
 
         `latitude`, `longitude` and `notes` are optional parameters to create a new location.
 
-        :param name: The name of the location.
+        Important: While the `name` field supports up to 256 characters, locations that will be enabled for Webex
+        Calling must have names with a maximum of 80 characters. If you plan to enable calling for this location,
+        ensure the name does not exceed 80 characters to maintain compatibility with Control Hub and calling features.
+
+        :param name: The name of the location. Supports up to 256 characters, but locations enabled for Webex Calling
+            are limited to 80 characters maximum.
         :type name: str
         :param time_zone: Time zone associated with this location
         :type time_zone: str
@@ -4308,6 +4313,12 @@ class AsLocationsApi(AsApiChild, base='locations'):
 
         Updating a location in your organization requires an administrator auth token with
         the spark-admin:locations_write.
+
+        Partners may specify `orgId` query parameter to update location in managed organization.
+
+        Important: While the `name` field supports up to 256 characters, locations that are enabled for Webex
+        Calling must have names with a maximum of 80 characters. If the location is enabled for calling, ensure the
+        name does not exceed 80 characters to maintain compatibility with Control Hub and calling features.
 
         :param location_id: Update location common attributes for this location.
         :type location_id: str
@@ -32198,8 +32209,8 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         :type owner_type: OwnerType
         :param extension: Returns the list of PSTN phone numbers with given extension.
         :type extension: str
-        :param number_type: Returns the filtered list of PSTN phone numbers that contains given type of numbers.
-            This parameter cannot be used along with available or state.
+        :param number_type: Returns the filtered list of phone numbers that contain a given type of number. `available`
+            or `state` query parameters cannot be used when `numberType=EXTENSION`.
         :type number_type: NumberType
         :param phone_number_type: Returns the filtered list of PSTN phone numbers that are of given phoneNumberType.
         :type phone_number_type: NumberListPhoneNumberType
@@ -32283,8 +32294,8 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         :type owner_type: OwnerType
         :param extension: Returns the list of PSTN phone numbers with given extension.
         :type extension: str
-        :param number_type: Returns the filtered list of PSTN phone numbers that contains given type of numbers.
-            This parameter cannot be used along with available or state.
+        :param number_type: Returns the filtered list of phone numbers that contain a given type of number. `available`
+            or `state` query parameters cannot be used when `numberType=EXTENSION`.
         :type number_type: NumberType
         :param phone_number_type: Returns the filtered list of PSTN phone numbers that are of given phoneNumberType.
         :type phone_number_type: NumberListPhoneNumberType

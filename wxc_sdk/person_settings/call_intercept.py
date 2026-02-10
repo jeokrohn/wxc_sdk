@@ -83,8 +83,7 @@ class InterceptTypeOutgoing(str, Enum):
 
 class InterceptSettingOutgoing(ApiModel):
     intercept_type: Optional[InterceptTypeOutgoing] = Field(alias='type', default=None)
-    #: If true, when the person attempts to make an outbound call, a system default message is played and the call is
-    #: made to the destination phone number
+    #: If `true`, allows transfer and forwarding for the call type.
     transfer_enabled: Optional[bool] = None
     #: Number to which the outbound call be transferred.
     destination: Optional[str] = None

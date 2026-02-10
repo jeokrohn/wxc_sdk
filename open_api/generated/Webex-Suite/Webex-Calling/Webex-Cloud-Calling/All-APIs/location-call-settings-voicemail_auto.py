@@ -11,9 +11,9 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['GetLocationVoicemailGroupObject', 'GetLocationVoicemailGroupObjectEmailCopyOfMessage',
-           'GetLocationVoicemailGroupObjectFaxMessage', 'GetLocationVoicemailGroupObjectGreeting',
-           'GetLocationVoicemailGroupObjectMessageStorage',
+__all__ = ['DirectLineCallerIdNameObject', 'GetLocationVoicemailGroupObject',
+           'GetLocationVoicemailGroupObjectEmailCopyOfMessage', 'GetLocationVoicemailGroupObjectFaxMessage',
+           'GetLocationVoicemailGroupObjectGreeting', 'GetLocationVoicemailGroupObjectMessageStorage',
            'GetLocationVoicemailGroupObjectMessageStorageStorageType', 'GetLocationVoicemailGroupObjectNotifications',
            'GetVoicePortalObject', 'GetVoicePortalPasscodeRuleObject',
            'GetVoicePortalPasscodeRuleObjectBlockContiguousSequences',
@@ -21,7 +21,7 @@ __all__ = ['GetLocationVoicemailGroupObject', 'GetLocationVoicemailGroupObjectEm
            'GetVoicePortalPasscodeRuleObjectBlockRepeatedDigits', 'GetVoicePortalPasscodeRuleObjectExpirePasscode',
            'GetVoicePortalPasscodeRuleObjectFailedAttempts', 'GetVoicePortalPasscodeRuleObjectLength',
            'GetVoicemailGroupObject', 'LocationCallSettingsVoicemailApi', 'PutVoicePortalObjectPasscode', 'STATE',
-           'TelephonyType', 'VoicePortalAvailableNumberObject']
+           'SelectionObject', 'TelephonyType', 'VoicePortalAvailableNumberObject']
 
 
 class GetLocationVoicemailGroupObjectGreeting(str, Enum):
@@ -68,6 +68,20 @@ class GetLocationVoicemailGroupObjectEmailCopyOfMessage(ApiModel):
     email_id: Optional[str] = None
 
 
+class SelectionObject(str, Enum):
+    #: When this option is selected, `customName` is to be shown for this voicemail group.
+    custom_name = 'CUSTOM_NAME'
+    #: When this option is selected, `name` is to be shown for this voicemail group.
+    display_name = 'DISPLAY_NAME'
+
+
+class DirectLineCallerIdNameObject(ApiModel):
+    #: The selection of the direct line caller ID name. Defaults to `DISPLAY_NAME`.
+    selection: Optional[SelectionObject] = None
+    #: The custom direct line caller ID name. Required if `selection` is set to `CUSTOM_NAME`.
+    custom_name: Optional[str] = None
+
+
 class GetLocationVoicemailGroupObject(ApiModel):
     #: UUID of voicemail group of a particular location.
     id: Optional[str] = None
@@ -83,9 +97,11 @@ class GetLocationVoicemailGroupObject(ApiModel):
     esn: Optional[str] = None
     #: Voicemail group toll free number.
     toll_free_number: Optional[bool] = None
-    #: Voicemail group caller ID first name.
+    #: Voicemail group caller ID first name. This field has been deprecated. Please use `directLineCallerIdName` and
+    #: `dialByName` instead.
     first_name: Optional[str] = None
-    #: Voicemail group called ID last name.
+    #: Voicemail group called ID last name. This field has been deprecated. Please use `directLineCallerIdName` and
+    #: `dialByName` instead.
     last_name: Optional[str] = None
     #: Enable/disable voicemail group.
     enabled: Optional[bool] = None
@@ -109,6 +125,10 @@ class GetLocationVoicemailGroupObject(ApiModel):
     email_copy_of_message: Optional[GetLocationVoicemailGroupObjectEmailCopyOfMessage] = None
     #: Enable/disable to forward voice message.
     voice_message_forwarding_enabled: Optional[bool] = None
+    #: Settings for the direct line caller ID name to be shown for this voicemail group.
+    direct_line_caller_id_name: Optional[DirectLineCallerIdNameObject] = None
+    #: The name to be used for dial by name functions.
+    dial_by_name: Optional[str] = None
 
 
 class GetVoicePortalObject(ApiModel):
@@ -124,10 +144,16 @@ class GetVoicePortalObject(ApiModel):
     extension: Optional[str] = None
     #: Phone Number of incoming call.
     phone_number: Optional[str] = None
-    #: Caller ID First Name.
+    #: Caller ID First Name. This field has been deprecated. Please use `directLineCallerIdName` and `dialByName`
+    #: instead.
     first_name: Optional[str] = None
-    #: Caller ID Last Name.
+    #: Caller ID Last Name. This field has been deprecated. Please use `directLineCallerIdName` and `dialByName`
+    #: instead.
     last_name: Optional[str] = None
+    #: Settings for the direct line caller ID name to be shown for this voice portal.
+    direct_line_caller_id_name: Optional[DirectLineCallerIdNameObject] = None
+    #: The name to be used for dial by name functions.
+    dial_by_name: Optional[str] = None
 
 
 class GetVoicePortalPasscodeRuleObjectExpirePasscode(ApiModel):
@@ -287,7 +313,10 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         system so administrators can manage auto attendant announcements.
 
         Retrieving voice portal information for an organization requires a full read-only administrator or location
-        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.<div><Callout type="warning">The
+        fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not
+        supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName`
+        fields to configure and view both caller ID and dial-by-name settings.</Callout></div>
 
         :param location_id: Location to which the voice portal belongs.
         :type location_id: str
@@ -305,7 +334,9 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
 
     def update_voice_portal(self, location_id: str, name: str = None, language_code: str = None, extension: str = None,
                             phone_number: str = None, first_name: str = None, last_name: str = None,
-                            passcode: PutVoicePortalObjectPasscode = None, org_id: str = None):
+                            passcode: PutVoicePortalObjectPasscode = None,
+                            direct_line_caller_id_name: DirectLineCallerIdNameObject = None, dial_by_name: str = None,
+                            org_id: str = None):
         """
         Update VoicePortal
 
@@ -315,7 +346,10 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         system so administrators can manage auto attendant anouncements.
 
         Updating voice portal information for an organization and/or rules requires a full administrator or location
-        administrator auth token with a scope of `spark-admin:telephony_config_write`.
+        administrator auth token with a scope of `spark-admin:telephony_config_write`.<div><Callout type="warning">The
+        fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not
+        supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName`
+        fields to configure and view both caller ID and dial-by-name settings.</Callout></div>
 
         :param location_id: Location to which the voice portal belongs.
         :type location_id: str
@@ -327,12 +361,21 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type extension: str
         :param phone_number: Phone Number of incoming call.
         :type phone_number: str
-        :param first_name: Caller ID First Name.
+        :param first_name: Caller ID First Name. This field has been deprecated. Please use `directLineCallerIdName`
+            and `dialByName` instead.
         :type first_name: str
-        :param last_name: Caller ID Last Name.
+        :param last_name: Caller ID Last Name. This field has been deprecated. Please use `directLineCallerIdName` and
+            `dialByName` instead.
         :type last_name: str
         :param passcode: Voice Portal Admin Passcode.
         :type passcode: PutVoicePortalObjectPasscode
+        :param direct_line_caller_id_name: Settings for the direct line caller ID name to be shown for this voice
+            portal.
+        :type direct_line_caller_id_name: DirectLineCallerIdNameObject
+        :param dial_by_name: Sets or clears the name to be used for dial by name functions. To clear the `dialByName`,
+            the attribute must be set to null or empty string. Characters of `%`,  `+`, `\`, `"` and Unicode
+            characters are not allowed.
+        :type dial_by_name: str
         :param org_id: Update voicemail rules for this organization.
         :type org_id: str
         :rtype: None
@@ -355,6 +398,10 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
             body['lastName'] = last_name
         if passcode is not None:
             body['passcode'] = passcode.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if direct_line_caller_id_name is not None:
+            body['directLineCallerIdName'] = direct_line_caller_id_name.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if dial_by_name is not None:
+            body['dialByName'] = dial_by_name
         url = self.ep(f'locations/{location_id}/voicePortal')
         super().put(url, params=params, json=body)
 
@@ -478,7 +525,9 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
                                                     transfer_to_number: GetLocationVoicemailGroupObjectNotifications,
                                                     email_copy_of_message: GetLocationVoicemailGroupObjectEmailCopyOfMessage,
                                                     phone_number: str = None, first_name: str = None,
-                                                    last_name: str = None, org_id: str = None) -> str:
+                                                    last_name: str = None,
+                                                    direct_line_caller_id_name: DirectLineCallerIdNameObject = None,
+                                                    dial_by_name: str = None, org_id: str = None) -> str:
         """
         Create a new Voicemail Group for a Location
 
@@ -487,7 +536,10 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         A voicemail group can be created for given location for a customer.
 
         Creating a voicemail group for the given location requires a full or user administrator or location
-        administrator auth token with a scope of `spark-admin:telephony_config_write`.
+        administrator auth token with a scope of `spark-admin:telephony_config_write`.<div><Callout type="warning">The
+        fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not
+        supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName`
+        fields to configure and view both caller ID and dial-by-name settings.</Callout></div>
 
         :param location_id: Create a new voice mail group for this location.
         :type location_id: str
@@ -511,10 +563,18 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type email_copy_of_message: GetLocationVoicemailGroupObjectEmailCopyOfMessage
         :param phone_number: Set voicemail group phone number for this particular location.
         :type phone_number: str
-        :param first_name: Set voicemail group caller ID first name.
+        :param first_name: Set voicemail group caller ID first name. This field has been deprecated. Please use
+            `directLineCallerIdName` and `dialByName` instead.
         :type first_name: str
-        :param last_name: Set voicemail group called ID last name.
+        :param last_name: Set voicemail group called ID last name. This field has been deprecated. Please use
+            `directLineCallerIdName` and `dialByName` instead.
         :type last_name: str
+        :param direct_line_caller_id_name: Settings for the direct line caller ID name to be shown for this voicemail
+            group.
+        :type direct_line_caller_id_name: DirectLineCallerIdNameObject
+        :param dial_by_name: The name to be used for dial by name functions.  Characters of `%`,  `+`, `\`, `"` and
+            Unicode characters are not allowed.
+        :type dial_by_name: str
         :param org_id: Create a new voice mail group for this organization.
         :type org_id: str
         :rtype: str
@@ -538,6 +598,10 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         body['faxMessage'] = fax_message.model_dump(mode='json', by_alias=True, exclude_none=True)
         body['transferToNumber'] = transfer_to_number.model_dump(mode='json', by_alias=True, exclude_none=True)
         body['emailCopyOfMessage'] = email_copy_of_message.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if direct_line_caller_id_name is not None:
+            body['directLineCallerIdName'] = direct_line_caller_id_name.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if dial_by_name is not None:
+            body['dialByName'] = dial_by_name
         url = self.ep(f'locations/{location_id}/voicemailGroups')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -645,7 +709,10 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         message storage settings, and how you would like to be notified of new voicemail messages.
 
         Retrieving voicemail group details requires a full, user or read-only administrator or location administrator
-        auth token with a scope of `spark-admin:telephony_config_read`.
+        auth token with a scope of `spark-admin:telephony_config_read`.<div><Callout type="warning">The fields
+        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in
+        Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to
+        configure and view both caller ID and dial-by-name settings.</Callout></div>
 
         :param location_id: Retrieve voicemail group details for this location.
         :type location_id: str
@@ -674,7 +741,8 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
                                         fax_message: GetLocationVoicemailGroupObjectFaxMessage = None,
                                         transfer_to_number: GetLocationVoicemailGroupObjectNotifications = None,
                                         email_copy_of_message: GetLocationVoicemailGroupObjectEmailCopyOfMessage = None,
-                                        org_id: str = None):
+                                        direct_line_caller_id_name: DirectLineCallerIdNameObject = None,
+                                        dial_by_name: str = None, org_id: str = None):
         """
         Modify Location Voicemail Group
 
@@ -684,7 +752,10 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         how you would like to be notified of new voicemail messages.
 
         Modifying the voicemail group location details requires a full, user administrator or location administrator
-        auth token with a scope of `spark-admin:telephony_config_write`.
+        auth token with a scope of `spark-admin:telephony_config_write`.<div><Callout type="warning">The fields
+        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in
+        Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to
+        configure and view both caller ID and dial-by-name settings.</Callout></div>
 
         :param location_id: Modifies the voicemail group details for this location.
         :type location_id: str
@@ -696,9 +767,11 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type phone_number: str
         :param extension: Set unique voicemail group extension number.
         :type extension: int
-        :param first_name: Set the voicemail group caller ID first name.
+        :param first_name: Set the voicemail group caller ID first name. This field has been deprecated. Please use
+            `directLineCallerIdName` and `dialByName` instead.
         :type first_name: str
-        :param last_name: Set the voicemail group called ID last name.
+        :param last_name: Set the voicemail group called ID last name. This field has been deprecated. Please use
+            `directLineCallerIdName` and `dialByName` instead.
         :type last_name: str
         :param enabled: Set to `true` to enable the voicemail group.
         :type enabled: bool
@@ -720,6 +793,13 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type transfer_to_number: GetLocationVoicemailGroupObjectNotifications
         :param email_copy_of_message: Message copy information
         :type email_copy_of_message: GetLocationVoicemailGroupObjectEmailCopyOfMessage
+        :param direct_line_caller_id_name: Settings for the direct line caller ID name to be shown for this voicemail
+            group.
+        :type direct_line_caller_id_name: DirectLineCallerIdNameObject
+        :param dial_by_name: Sets or clears the name to be used for dial by name functions. To clear the `dialByName`,
+            the attribute must be set to null or empty string. Characters of `%`,  `+`, `\`, `"` and Unicode
+            characters are not allowed.
+        :type dial_by_name: str
         :param org_id: Modifies the voicemail group details for a customer location.
         :type org_id: str
         :rtype: None
@@ -758,6 +838,10 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
             body['transferToNumber'] = transfer_to_number.model_dump(mode='json', by_alias=True, exclude_none=True)
         if email_copy_of_message is not None:
             body['emailCopyOfMessage'] = email_copy_of_message.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if direct_line_caller_id_name is not None:
+            body['directLineCallerIdName'] = direct_line_caller_id_name.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if dial_by_name is not None:
+            body['dialByName'] = dial_by_name
         url = self.ep(f'locations/{location_id}/voicemailGroups/{voicemail_group_id}')
         super().put(url, params=params, json=body)
 

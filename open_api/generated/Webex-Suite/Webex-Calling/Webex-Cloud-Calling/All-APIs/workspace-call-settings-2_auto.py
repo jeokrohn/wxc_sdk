@@ -817,7 +817,7 @@ class WorkspaceDigitPatternObject(ApiModel):
     pattern: Optional[str] = None
     #: Action to be performed on the input number that matches the digit pattern.
     action: Optional[WorkspaceOutgoingPermissionDigitPatternPostObjectAction] = None
-    #: Option to allow or disallow transfer of calls.
+    #: If `true`, allows transfer and forwarding for the call type.
     transfer_enabled: Optional[bool] = None
 
 
@@ -1336,7 +1336,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         `spark-admin:workspaces_read` or a user auth token with a scope of `spark:workspaces_read` to read workspace
         settings.
 
-        **NOTE**: This API is only available for professional licensed workspaces.
+        **NOTE**: This API is available for professional and common area licensed workspaces.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
@@ -1365,7 +1365,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         This API requires a full, user or location administrator auth token with the `spark-admin:workspaces_write`
         scope or a user auth token with a scope of `spark:workspaces_write` to update workspace settings.
 
-        **NOTE**: This API is only available for professional licensed workspaces.
+        **NOTE**: This API is only available for professional and common area licensed workspaces.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
@@ -1777,7 +1777,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type pattern: str
         :param action: Action to be performed on the input number that matches the digit pattern.
         :type action: Action
-        :param transfer_enabled: Option to allow or disallow transfer of calls.
+        :param transfer_enabled: If `true`, allows transfer and forwarding for the call type.
         :type transfer_enabled: bool
         :param org_id: ID of the organization within which the workspace resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
@@ -1909,7 +1909,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type pattern: str
         :param action: Action to be performed on the input number that matches the digit pattern.
         :type action: Action
-        :param transfer_enabled: Option to allow or disallow transfer of calls.
+        :param transfer_enabled: If `true`, allows transfer and forwarding for the call type.
         :type transfer_enabled: bool
         :param org_id: ID of the organization within which the workspace resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the

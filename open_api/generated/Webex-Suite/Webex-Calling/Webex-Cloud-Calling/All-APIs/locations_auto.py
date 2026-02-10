@@ -127,7 +127,12 @@ class LocationsApi(ApiChild, base='locations'):
 
         * `latitude`, `longitude` and `notes` are optional parameters to create a new location.
 
-        :param name: The name of the location.
+        * **Important:** While the `name` field supports up to 256 characters, locations that will be enabled for Webex
+        Calling must have names with a maximum of 80 characters. If you plan to enable calling for this location,
+        ensure the name does not exceed 80 characters to maintain compatibility with Control Hub and calling features.
+
+        :param name: The name of the location. Supports up to 256 characters, but locations enabled for Webex Calling
+            are limited to 80 characters maximum.
         :type name: str
         :param time_zone: Time zone associated with this location, refer to this `link
             <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone>`_ for format.
@@ -238,9 +243,14 @@ class LocationsApi(ApiChild, base='locations'):
 
         * Partners may specify `orgId` query parameter to update location in managed organization.
 
+        * **Important:** While the `name` field supports up to 256 characters, locations that are enabled for Webex
+        Calling must have names with a maximum of 80 characters. If the location is enabled for calling, ensure the
+        name does not exceed 80 characters to maintain compatibility with Control Hub and calling features.
+
         :param location_id: Update location common attributes for this location.
         :type location_id: str
-        :param name: The name of the location.
+        :param name: The name of the location. Supports up to 256 characters, but locations enabled for Webex Calling
+            are limited to 80 characters maximum.
         :type name: str
         :param time_zone: Time zone associated with this location, refer to this `link
             <https://developer.webex.com/docs/api/guides/webex-for-broadworks-developers-guide#webex-meetings-site-timezone>`_ for format.

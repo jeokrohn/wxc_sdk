@@ -694,8 +694,8 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         :type owner_type: OwnerType
         :param extension: Returns the list of PSTN phone numbers with given extension.
         :type extension: str
-        :param number_type: Returns the filtered list of PSTN phone numbers that contains given type of numbers.
-            This parameter cannot be used along with available or state.
+        :param number_type: Returns the filtered list of phone numbers that contain a given type of number. `available`
+            or `state` query parameters cannot be used when `numberType=EXTENSION`.
         :type number_type: NumberType
         :param phone_number_type: Returns the filtered list of PSTN phone numbers that are of given phoneNumberType.
         :type phone_number_type: NumberListPhoneNumberType

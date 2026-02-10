@@ -8,6 +8,8 @@ from ..base import SafeEnum as Enum
 
 __all__ = ['CallerIdApi', 'CallerId', 'ExternalCallerIdNamePolicy', 'CallerIdSelectedType']
 
+from ..common import DirectLineCallerIdName
+
 
 class CallerIdSelectedType(str, Enum):
     """
@@ -37,7 +39,7 @@ class ExternalCallerIdNamePolicy(str, Enum):
 
 class CallerId(ApiModel):
     """
-    Caller id settings of a user
+    Caller id settings of a user, also used for workspaces, virtual lines, ...
     """
 
     @field_validator('direct_number', 'location_number', 'mobile_number', 'custom_number', mode='before')
@@ -61,7 +63,9 @@ class CallerId(ApiModel):
     mobile_number: Optional[str] = None
     #: Flag to indicate if the location number is toll-free number.
     toll_free_location_number: Optional[bool] = None
-    #: This value must be an assigned number from the virtual line's location.
+    #: Custom number which is shown if CUSTOM is selected. This value must be a number from the workspace's location or
+    #: from another location with the same country, PSTN provider, and zone (only applicable for India locations) as
+    #: the workspace's location.
     custom_number: Optional[str] = None
     #: Person's Caller ID first name. The characters `%`,  `+`, ``, `"` and Unicode characters are not allowed.
     first_name: Optional[str] = None
@@ -81,6 +85,16 @@ class CallerId(ApiModel):
     additional_external_caller_id_location_number_enabled: Optional[bool] = None
     #: To set any phone number across location as additional external caller ID for the user.
     additional_external_caller_id_custom_number: Optional[str] = None
+    #: Workspace's caller ID display name. This field has been deprecated. Please use `directLineCallerIdName` and
+    #: `dialByName` instead.
+    display_name: Optional[str] = None
+    #: Workspace's caller ID display details. Default is `.`. This field has been deprecated. Please use
+    #: `directLineCallerIdName` and `dialByName` instead.
+    display_detail: Optional[str] = None
+    #: Settings for the direct line caller ID name to be shown for this workspace.
+    direct_line_caller_id_name: Optional[DirectLineCallerIdName] = None
+    #: The name to be used for dial by name functions.
+    dial_by_name: Optional[str] = None
 
     fields_for_update: ClassVar[set[str]] = {
         'selected',
@@ -92,7 +106,11 @@ class CallerId(ApiModel):
         'custom_external_caller_id_name',
         'location_external_caller_id_name',
         'additional_external_caller_id_direct_line_enabled',
-        'additional_external_caller_id_custom_number'
+        'additional_external_caller_id_custom_number',
+        'display_name',
+        'display_detail',
+        'direct_line_caller_id_name',
+        'dial_by_name',
     }
 
     def configure_params(self) -> dict:

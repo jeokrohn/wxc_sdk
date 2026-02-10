@@ -10,7 +10,7 @@ from ..api_child import ApiChild
 from ..base import to_camel, ApiModel
 from ..common import Greeting, VoicemailMessageStorage, VoicemailNotifications, VoicemailFax, \
     VoicemailTransferToNumber, \
-    VoicemailCopyOfMessage, StorageType
+    VoicemailCopyOfMessage, StorageType, DirectLineCallerIdName
 
 __all__ = ['VoicemailGroup', 'VoicemailGroupDetail', 'VoicemailGroupsApi']
 
@@ -55,9 +55,11 @@ class VoicemailGroupDetail(ApiModel):
     esn: Optional[str] = None
     #: Voicemail group toll free number.
     toll_free_number: Optional[bool] = None
-    #: Voicemail group caller id first name.
+    #: Voicemail group caller ID first name. This field has been deprecated. Please use `directLineCallerIdName` and
+    #: `dialByName` instead.
     first_name: Optional[str] = None
-    #: Voicemail group called id last name.
+    #: Voicemail group called ID last name. This field has been deprecated. Please use `directLineCallerIdName` and
+    #: `dialByName` instead.
     last_name: Optional[str] = None
     #: passcode
     passcode: Optional[int] = None
@@ -85,6 +87,10 @@ class VoicemailGroupDetail(ApiModel):
     voice_message_forwarding_enabled: Optional[bool] = None
     # TODO: undocumented
     time_zone: Optional[str] = None
+    #: Settings for the direct line caller ID name to be shown for this voicemail group.
+    direct_line_caller_id_name: Optional[DirectLineCallerIdName] = None
+    #: The name to be used for dial by name functions.
+    dial_by_name: Optional[str] = None
 
     @staticmethod
     def create(name: str, extension: str, first_name: str, last_name: str, passcode: int, language_code: str = 'en_us',
