@@ -469,6 +469,10 @@ class CDR(ApiModel):
     #: outbound calls routed via a route group to Premises-based PSTN or an on-prem deployment integrated with Webex
     #: Calling (dial plan or unknown extension).
     route_group: Optional[str] = Field(alias='Route group', default=None)
+    #: This field is reported whenever an off-net route list call is made or received that exceeds the Route List Calls
+    #: license volume for the organization. The value indicates the number of bursting calls (calls over the licensed
+    #: volume) at the time the call was made or received.
+    route_list_calls_overage: Optional[str] = Field(alias='Route list calls overage', default=None)
     #: The main number for the user's site where the call was made or received.
     site_main_number: Optional[str] = Field(alias='Site main number', default=None)
     #: Site timezone is the offset in minutes from UTC time of the user's timezone.
@@ -569,6 +573,27 @@ class CDR(ApiModel):
     #: Example: Set to Answered Elsewhere = Yes, for a Hunt Group agent's call when simultaneous routing is in use and
     #: another agent answers the call.
     answered_elsewhere: Optional[str] = Field(alias='Answered Elsewhere', default=None)
+    #: This field contains the score received from the caller reputation provider. The score ranges from 0.0 to 5.0. If
+    #: the provider doesn’t send a score, the system omits this field.
+    caller_reputation_score: Optional[str] = Field(alias='Caller Reputation Score', default=None)
+    #: This field records the outcome of the Caller Reputation Service and appears only in terminating CDRs. The field
+    #: can contain the following values:
+    #: 
+    #: allow — Set when the caller’s reputation score meets or exceeds the higher threshold, or if an error occurs
+    #: while obtaining the reputation score from the provider.
+    #: 
+    #: captcha-allow — Set when the caller’s reputation score falls between the lower and higher thresholds and the
+    #: caller successfully completes the captcha challenge.
+    #: 
+    #: captcha-block — Set when the caller’s reputation score falls between the lower and higher thresholds and the
+    #: caller fails or abandons the captcha challenge.
+    #: 
+    #: block — Set when the caller’s reputation score is below the lower threshold.
+    caller_reputation_service_result: Optional[str] = Field(alias='Caller Reputation Service Result', default=None)
+    #: This field indicates the reason for the reputation score is assigned for a call. This field contains the reason
+    #: value provided by the caller reputation provider in the call analysis request. If the score couldn’t be
+    #: obtained from the provider due to error conditions, then the score reason specifies the particular error.
+    caller_reputation_score_reason: Optional[str] = Field(alias='Caller Reputation Score Reason', default=None)
 
 
 class ReportsDetailedCallHistoryApi(ApiChild, base='cdr_feed'):

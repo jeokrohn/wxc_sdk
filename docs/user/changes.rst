@@ -12,6 +12,7 @@ Release history
 - feat: new attributes direct_line_caller_id_name and dial_by_name for voicemail group and portal, workspaces
 - feat: parameter emergency_address is optional for EmergencyAddressApi.update_for_phone_number
 - feat: addtl. event types for WebhookResource
+- feat: addtl. CDR fields
 
 1.27.1
 ------
