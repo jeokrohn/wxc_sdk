@@ -429,7 +429,23 @@ class PeopleApi(ApiChild, base='people'):
         """
         Delete a Person
 
-        Remove a person from the system. Only an admin can remove a person.
+        Remove a person from the system.
+
+        Required Administrator Roles:
+
+        The following administrators have permission to use this API:
+
+        Customer Organization:
+
+        - Full administrator
+        - User administrator
+
+        Partner/External Access:
+
+        - External full administrator
+
+        Note: External read-only administrators, provisioning administrators, and device administrators cannot
+        delete users.
 
         :param person_id: A unique identifier for the person.
         :return:
