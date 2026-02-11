@@ -1,0 +1,47 @@
+{
+  "aa_name": "AA-LAB-MADRID",
+  "dial_pattern": "+3491XXXXXXX",
+  "dial_plan_name": "DP-LAB-INTERPLATFORM",
+  "forward_destination": "+34915550123",
+  "group_name": "LAB-GROUP-VOICE",
+  "hunt_name": "HG-LAB-SOPORTE",
+  "pickup_name": "PG-LAB-RECEPCION",
+  "queue_name": "CQ-LAB-VENTAS",
+  "route_group_name": "RG-LAB-SBC",
+  "schedule_name": "Horario-LAB-LV",
+  "scope": "organization",
+  "trunk_name": "TRUNK-LAB-MAIN",
+  "workspace_name": "WS-LAB-REUNIONES",
+  "device_model": "Cisco 8851",
+  "location_id": "Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2ZjODY3OGRhLTBiOGItNDBlZS04ZWVjLTNhNzFlODFiMzc0OA",
+  "users": [
+    {
+      "email": "javier.martn.20260208114331.1238@lab.example.com",
+      "id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE",
+      "extension": "5101",
+      "primary_number": "+34915559742549"
+    },
+    {
+      "email": "diego.garca.20260208114331.2341@lab.example.com",
+      "id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS81MjYxMWNkMS1jMTJmLTQxNjgtODc1My04MDdmODJiOTYwNGQ",
+      "extension": "5102",
+      "primary_number": "+34915555861252"
+    },
+    {
+      "email": "diego.garca.20260208114331.3116@lab.example.com",
+      "id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS84ZDg3OGMxMS1kMGUzLTRiZjAtOGNkYy0zYjIwNDlkYjBkNzE",
+      "extension": "5103",
+      "primary_number": "+34915552651454"
+    }
+  ],
+  "person_id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE",
+  "member_id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE",
+  "assistant_person_id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS81MjYxMWNkMS1jMTJmLTQxNjgtODc1My04MDdmODJiOTYwNGQ",
+  "target_person_id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS81MjYxMWNkMS1jMTJmLTQxNjgtODc1My04MDdmODJiOTYwNGQ",
+  "principal_id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE",
+  "extension": "5101",
+  "primary_number": "+34915559742549",
+  "secondary_number": "+34915555861252",
+  "role_id": "Y2lzY29zcGFyazovL3VzL1JPTEUvaWRfdXNlcl9hZG1pbg",
+  "workspace_id": "Y2lzY29zcGFyazovL3VybjpURUFNOnVzLXdlc3QtMl9yL1BMQUNFLzQyOGI3NzVhLWYxNTgtNDVkOC1hOTJhLTg1OTllNTVjM2UxYw=="
+}

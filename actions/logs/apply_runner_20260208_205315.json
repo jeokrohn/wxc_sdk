@@ -1,0 +1,474 @@
+{
+  "generated_at": "2026-02-08T20:54:21.640165",
+  "log_file": "actions\\logs\\apply_runner_20260208_205315.log",
+  "context_file": "actions/lab_context.json",
+  "failures": [
+    "action_auto_attendant.py",
+    "action_call_pickup_group.py",
+    "action_call_profiles.py",
+    "action_call_queue.py",
+    "action_day_t_numbers_caller_id.py",
+    "action_delegated_admin.py",
+    "action_devices.py",
+    "action_group_assignment.py",
+    "action_hunt_group.py",
+    "action_internal_extensions_sbc.py",
+    "action_interplatform_dial_plan.py",
+    "action_legacy_forwarding.py",
+    "action_location_number_removal.py",
+    "action_manager_assistant.py",
+    "action_monitoring.py",
+    "action_nominal_users.py",
+    "action_secondary_numbers.py",
+    "action_user_recording.py",
+    "action_workspaces.py"
+  ],
+  "actions": [
+    {
+      "script": "action_auto_attendant.py",
+      "exit_code": 0,
+      "payload": {
+        "aa_name": "AA-LAB-MADRID",
+        "extension": "5101",
+        "location_id": "Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2ZjODY3OGRhLTBiOGItNDBlZS04ZWVjLTNhNzFlODFiMzc0OA",
+        "schedule_name": "Horario-LAB-LV"
+      },
+      "unresolved_vars": [],
+      "action_log": "C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_auto_attendant.log",
+      "calls_total": 1,
+      "calls_ok_2xx": 0,
+      "calls_non_2xx": 1,
+      "calls": [
+        {
+          "step": "upsert_auto_attendant",
+          "status": 404
+        }
+      ],
+      "stdout": "2026-02-08 20:53:15,556 | INFO | action_auto_attendant | Action log file: C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_auto_attendant.log\n2026-02-08 20:53:15,556 | INFO | action_auto_attendant | Action objective: Orquesta prerequisitos simples (schedule/announcement) y upsert de auto attendant.\n2026-02-08 20:53:15,556 | INFO | action_auto_attendant | Note: Paso previo: crear/usar schedule y announcement si faltan.\n2026-02-08 20:53:15,556 | INFO | action_auto_attendant | Note: Paso posterior: validar menús y horario en lectura final.\n2026-02-08 20:53:15,556 | INFO | action_auto_attendant | No server-side dry-run endpoint is documented for these APIs. probe mode uses controlled invalid or read-only calls.\n2026-02-08 20:53:15,557 | INFO | action_auto_attendant | Preflight snapshot GET start\n2026-02-08 20:53:17,145 | INFO | action_auto_attendant | Preflight snapshot GET done\n2026-02-08 20:53:17,146 | INFO | action_auto_attendant | Preflight snapshot saved\n2026-02-08 20:53:17,146 | INFO | action_auto_attendant | API call start\n2026-02-08 20:53:17,964 | INFO | action_auto_attendant | API call done | step=upsert_auto_attendant status=404 response_headers={'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Trackingid': 'ROUTERGW_b3cca548-b291-41ae-ac48-f1bb7aaf29bb', 'Cisco-Spark-Error-Codes': '5620', 'Date': 'Sun, 08 Feb 2026 19:53:17 GMT', 'Server': 'istio-envoy', 'X-Envoy-Upstream-Service-Time': '432', 'X-Normalized-Path': '/api/v1/customers/{customerId}/locations/{locationId}/features/autoattendants', 'Content-Type': 'application/json', 'Content-Length': '315'} response_body={\"errorCode\":5620,\"message\":\"[Error 5620] Group not found with this external ID: fc8678da-0b8b-40ee-8eec-3a71e81b3748\",\"errors\":[{\"errorCode\":5620,\"description\":\"[Error 5620] Group not found with this external ID: fc8678da-0b8b-40ee-8eec-3a71e81b3748\"}],\"trackingId\":\"ROUTERGW_b3cca548-b291-41ae-ac48-f1bb7aaf29bb\"}\n2026-02-08 20:53:17,964 | INFO | action_auto_attendant | Completed action with 0 failure(s)\n",
+      "stderr": ""
+    },
+    {
+      "script": "action_call_pickup_group.py",
+      "exit_code": 0,
+      "payload": {
+        "extension": "5101",
+        "location_id": "Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2ZjODY3OGRhLTBiOGItNDBlZS04ZWVjLTNhNzFlODFiMzc0OA",
+        "member_id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE",
+        "pickup_name": "PG-LAB-RECEPCION"
+      },
+      "unresolved_vars": [],
+      "action_log": "C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_call_pickup_group.log",
+      "calls_total": 1,
+      "calls_ok_2xx": 0,
+      "calls_non_2xx": 1,
+      "calls": [
+        {
+          "step": "upsert_pickup",
+          "status": 404
+        }
+      ],
+      "stdout": "2026-02-08 20:53:18,188 | INFO | action_call_pickup_group | Action log file: C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_call_pickup_group.log\n2026-02-08 20:53:18,188 | INFO | action_call_pickup_group | Action objective: Create/update de call pickup group y sincronización de miembros.\n2026-02-08 20:53:18,188 | INFO | action_call_pickup_group | Note: Paso previo: lookup por location+name/extension.\n2026-02-08 20:53:18,189 | INFO | action_call_pickup_group | Note: Paso posterior: releer grupo para validar miembros.\n2026-02-08 20:53:18,189 | INFO | action_call_pickup_group | No server-side dry-run endpoint is documented for these APIs. probe mode uses controlled invalid or read-only calls.\n2026-02-08 20:53:18,190 | INFO | action_call_pickup_group | Preflight snapshot GET start\n2026-02-08 20:53:21,354 | INFO | action_call_pickup_group | Preflight snapshot GET done\n2026-02-08 20:53:21,355 | INFO | action_call_pickup_group | Preflight snapshot saved\n2026-02-08 20:53:21,355 | INFO | action_call_pickup_group | API call start\n2026-02-08 20:53:22,070 | INFO | action_call_pickup_group | API call done | step=upsert_pickup status=404 response_headers={'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Trackingid': 'ROUTERGW_d1c5d460-6795-41e1-a03e-58bd2a0f9add', 'Cisco-Spark-Error-Codes': '5620', 'Date': 'Sun, 08 Feb 2026 19:53:21 GMT', 'Server': 'istio-envoy', 'X-Envoy-Upstream-Service-Time': '241', 'X-Normalized-Path': '/api/v1/customers/{customerId}/locations/{locationId}/features/callpickups', 'Content-Type': 'application/json', 'Content-Length': '315'} response_body={\"errorCode\":5620,\"message\":\"[Error 5620] Group not found with this external ID: fc8678da-0b8b-40ee-8eec-3a71e81b3748\",\"errors\":[{\"errorCode\":5620,\"description\":\"[Error 5620] Group not found with this external ID: fc8678da-0b8b-40ee-8eec-3a71e81b3748\"}],\"trackingId\":\"ROUTERGW_d1c5d460-6795-41e1-a03e-58bd2a0f9add\"}\n2026-02-08 20:53:22,070 | INFO | action_call_pickup_group | Completed action with 0 failure(s)\n",
+      "stderr": ""
+    },
+    {
+      "script": "action_call_profiles.py",
+      "exit_code": 0,
+      "payload": {
+        "location_id": "Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2ZjODY3OGRhLTBiOGItNDBlZS04ZWVjLTNhNzFlODFiMzc0OA"
+      },
+      "unresolved_vars": [],
+      "action_log": "C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_call_profiles.log",
+      "calls_total": 1,
+      "calls_ok_2xx": 0,
+      "calls_non_2xx": 1,
+      "calls": [
+        {
+          "step": "update_location_calling",
+          "status": 404
+        }
+      ],
+      "stdout": "2026-02-08 20:53:22,296 | INFO | action_call_profiles | Action log file: C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_call_profiles.log\n2026-02-08 20:53:22,296 | INFO | action_call_profiles | Action objective: Actualiza perfiles de llamada de location/person/workspace según payload simplificado.\n2026-02-08 20:53:22,296 | INFO | action_call_profiles | Note: Paso previo: confirmar entidad destino y licencia.\n2026-02-08 20:53:22,296 | INFO | action_call_profiles | Note: Paso posterior: releer configuración para confirmar estado final.\n2026-02-08 20:53:22,297 | INFO | action_call_profiles | No server-side dry-run endpoint is documented for these APIs. probe mode uses controlled invalid or read-only calls.\n2026-02-08 20:53:22,298 | INFO | action_call_profiles | Preflight snapshot GET start\n2026-02-08 20:53:25,014 | INFO | action_call_profiles | Preflight snapshot GET done\n2026-02-08 20:53:25,015 | INFO | action_call_profiles | Preflight snapshot saved\n2026-02-08 20:53:25,016 | INFO | action_call_profiles | API call start\n2026-02-08 20:53:25,476 | INFO | action_call_profiles | API call done | step=update_location_calling status=404 response_headers={'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Trackingid': 'ROUTERGW_a6432952-b50e-40fb-ad2b-461890a56517', 'Date': 'Sun, 08 Feb 2026 19:53:25 GMT', 'Server': 'istio-envoy', 'X-Envoy-Upstream-Service-Time': '167', 'X-Normalized-Path': '/**', 'Content-Type': 'application/json', 'Content-Length': '413'} response_body={\"message\":\"No static resource hydra/v1/telephony/config/locations/Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2ZjODY3OGRhLTBiOGItNDBlZS04ZWVjLTNhNzFlODFiMzc0OA/callingBehavior.\",\"errors\":[{\"description\":\"No static resource hydra/v1/telephony/config/locations/Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2ZjODY3OGRhLTBiOGItNDBlZS04ZWVjLTNhNzFlODFiMzc0OA/callingBehavior.\"}],\"trackingId\":\"ROUTERGW_a6432952-b50e-40fb-ad2b-461890a56517\"}\n2026-02-08 20:53:25,476 | INFO | action_call_profiles | Completed action with 0 failure(s)\n",
+      "stderr": ""
+    },
+    {
+      "script": "action_call_queue.py",
+      "exit_code": 0,
+      "payload": {
+        "extension": "5101",
+        "location_id": "Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2ZjODY3OGRhLTBiOGItNDBlZS04ZWVjLTNhNzFlODFiMzc0OA",
+        "member_id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE",
+        "queue_id": "MISSING_queue_id",
+        "queue_name": "CQ-LAB-VENTAS"
+      },
+      "unresolved_vars": [
+        "queue_id"
+      ],
+      "action_log": "C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_call_queue.log",
+      "calls_total": 2,
+      "calls_ok_2xx": 0,
+      "calls_non_2xx": 2,
+      "calls": [
+        {
+          "step": "upsert_queue",
+          "status": 404
+        },
+        {
+          "step": "queue_agents_update",
+          "status": 404
+        }
+      ],
+      "stdout": "2026-02-08 20:53:25,695 | INFO | action_call_queue | Action log file: C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_call_queue.log\n2026-02-08 20:53:25,695 | INFO | action_call_queue | Action objective: Create/update de cola y actualización de agentes en segundo paso.\n2026-02-08 20:53:25,695 | INFO | action_call_queue | Note: Paso previo: validar location y announcement opcional.\n2026-02-08 20:53:25,695 | INFO | action_call_queue | Note: Paso posterior: actualizar agentes de la cola.\n2026-02-08 20:53:25,695 | INFO | action_call_queue | No server-side dry-run endpoint is documented for these APIs. probe mode uses controlled invalid or read-only calls.\n2026-02-08 20:53:25,696 | INFO | action_call_queue | Preflight snapshot GET start\n2026-02-08 20:53:27,437 | INFO | action_call_queue | Preflight snapshot GET done\n2026-02-08 20:53:27,438 | INFO | action_call_queue | Preflight snapshot saved\n2026-02-08 20:53:27,438 | INFO | action_call_queue | API call start\n2026-02-08 20:53:27,915 | INFO | action_call_queue | API call done | step=upsert_queue status=404 response_headers={'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Trackingid': 'ROUTERGW_1573eaa3-454c-49cf-8b77-b95e9ba0382f', 'Cisco-Spark-Error-Codes': '5620', 'Date': 'Sun, 08 Feb 2026 19:53:27 GMT', 'Server': 'istio-envoy', 'X-Envoy-Upstream-Service-Time': '253', 'X-Normalized-Path': '/api/v1/customers/{customerId}/locations/{locationId}/features/queues', 'Content-Type': 'application/json', 'Content-Length': '315'} response_body={\"errorCode\":5620,\"message\":\"[Error 5620] Group not found with this external ID: fc8678da-0b8b-40ee-8eec-3a71e81b3748\",\"errors\":[{\"errorCode\":5620,\"description\":\"[Error 5620] Group not found with this external ID: fc8678da-0b8b-40ee-8eec-3a71e81b3748\"}],\"trackingId\":\"ROUTERGW_1573eaa3-454c-49cf-8b77-b95e9ba0382f\"}\n2026-02-08 20:53:27,915 | INFO | action_call_queue | API call start\n2026-02-08 20:53:28,428 | INFO | action_call_queue | API call done | step=queue_agents_update status=404 response_headers={'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Trackingid': 'ROUTERGW_ec183da4-963f-4786-9c82-59ab04e603bc', 'Date': 'Sun, 08 Feb 2026 19:53:28 GMT', 'Server': 'istio-envoy', 'X-Envoy-Upstream-Service-Time': '165', 'X-Normalized-Path': '/**', 'Content-Type': 'application/json', 'Content-Length': '443'} response_body={\"message\":\"No static resource hydra/v1/telephony/config/locations/Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2ZjODY3OGRhLTBiOGItNDBlZS04ZWVjLTNhNzFlODFiMzc0OA/queues/MISSING_queue_id/agents.\",\"errors\":[{\"description\":\"No static resource hydra/v1/telephony/config/locations/Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2ZjODY3OGRhLTBiOGItNDBlZS04ZWVjLTNhNzFlODFiMzc0OA/queues/MISSING_queue_id/agents.\"}],\"trackingId\":\"ROUTERGW_ec183da4-963f-4786-9c82-59ab04e603bc\"}\n2026-02-08 20:53:28,428 | INFO | action_call_queue | Completed action with 0 failure(s)\n",
+      "stderr": ""
+    },
+    {
+      "script": "action_day_t_numbers_caller_id.py",
+      "exit_code": 0,
+      "payload": {
+        "location_id": "Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2ZjODY3OGRhLTBiOGItNDBlZS04ZWVjLTNhNzFlODFiMzc0OA",
+        "person_id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE",
+        "primary_number": "+34915559742549"
+      },
+      "unresolved_vars": [],
+      "action_log": "C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_day_t_numbers_caller_id.log",
+      "calls_total": 2,
+      "calls_ok_2xx": 0,
+      "calls_non_2xx": 2,
+      "calls": [
+        {
+          "step": "activate_numbers",
+          "status": 404
+        },
+        {
+          "step": "update_person_caller_id",
+          "status": 404
+        }
+      ],
+      "stdout": "2026-02-08 20:53:28,649 | INFO | action_day_t_numbers_caller_id | Action log file: C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_day_t_numbers_caller_id.log\n2026-02-08 20:53:28,649 | INFO | action_day_t_numbers_caller_id | Action objective: Activa números de sede y aplica caller-id básico por entidad.\n2026-02-08 20:53:28,649 | INFO | action_day_t_numbers_caller_id | Note: Paso previo: validar inventario y disponibilidad para external caller id.\n2026-02-08 20:53:28,649 | INFO | action_day_t_numbers_caller_id | Note: Paso posterior: leer caller-id final para comprobar cambio.\n2026-02-08 20:53:28,649 | INFO | action_day_t_numbers_caller_id | No server-side dry-run endpoint is documented for these APIs. probe mode uses controlled invalid or read-only calls.\n2026-02-08 20:53:28,650 | INFO | action_day_t_numbers_caller_id | Preflight snapshot GET start\n2026-02-08 20:53:33,195 | INFO | action_day_t_numbers_caller_id | Preflight snapshot GET done\n2026-02-08 20:53:33,197 | INFO | action_day_t_numbers_caller_id | Preflight snapshot saved\n2026-02-08 20:53:33,197 | INFO | action_day_t_numbers_caller_id | API call start\n2026-02-08 20:53:33,498 | INFO | action_day_t_numbers_caller_id | API call done | step=activate_numbers status=404 response_headers={'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Trackingid': 'ROUTERGW_5e8f44f7-4047-4bef-b935-30f92983dd89', 'Date': 'Sun, 08 Feb 2026 19:53:33 GMT', 'Server': 'istio-envoy', 'X-Envoy-Upstream-Service-Time': '170', 'X-Normalized-Path': '/**', 'Content-Type': 'application/json', 'Content-Length': '431'} response_body={\"message\":\"No static resource hydra/v1/telephony/config/locations/Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2ZjODY3OGRhLTBiOGItNDBlZS04ZWVjLTNhNzFlODFiMzc0OA/numbers/actions/activate.\",\"errors\":[{\"description\":\"No static resource hydra/v1/telephony/config/locations/Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2ZjODY3OGRhLTBiOGItNDBlZS04ZWVjLTNhNzFlODFiMzc0OA/numbers/actions/activate.\"}],\"trackingId\":\"ROUTERGW_5e8f44f7-4047-4bef-b935-30f92983dd89\"}\n2026-02-08 20:53:33,498 | INFO | action_day_t_numbers_caller_id | API call start\n2026-02-08 20:53:33,839 | INFO | action_day_t_numbers_caller_id | API call done | step=update_person_caller_id status=404 response_headers={'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Trackingid': 'ROUTERGW_eee90da8-1f9a-47ac-8cde-e17077408048', 'Date': 'Sun, 08 Feb 2026 19:53:33 GMT', 'Server': 'istio-envoy', 'X-Envoy-Upstream-Service-Time': '190', 'X-Normalized-Path': '/**', 'Content-Type': 'application/json', 'Content-Length': '387'} response_body={\"message\":\"No static resource hydra/v1/telephony/config/people/Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE/callerId.\",\"errors\":[{\"description\":\"No static resource hydra/v1/telephony/config/people/Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE/callerId.\"}],\"trackingId\":\"ROUTERGW_eee90da8-1f9a-47ac-8cde-e17077408048\"}\n2026-02-08 20:53:33,839 | INFO | action_day_t_numbers_caller_id | Completed action with 0 failure(s)\n",
+      "stderr": ""
+    },
+    {
+      "script": "action_delegated_admin.py",
+      "exit_code": 0,
+      "payload": {
+        "principal_id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE",
+        "role_id": "Y2lzY29zcGFyazovL3VzL1JPTEUvaWRfdXNlcl9hZG1pbg",
+        "scope": "organization"
+      },
+      "unresolved_vars": [],
+      "action_log": "C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_delegated_admin.log",
+      "calls_total": 1,
+      "calls_ok_2xx": 0,
+      "calls_non_2xx": 1,
+      "calls": [
+        {
+          "step": "attempt_delegate_assignment",
+          "status": 404
+        }
+      ],
+      "stdout": "2026-02-08 20:53:34,060 | INFO | action_delegated_admin | Action log file: C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_delegated_admin.log\n2026-02-08 20:53:34,060 | INFO | action_delegated_admin | Action objective: Documenta y prueba de viabilidad mínima para delegated admin (sin contrato estable en SDK).\n2026-02-08 20:53:34,061 | INFO | action_delegated_admin | Note: Paso previo: confirmar endpoint oficial soportado en tenant/version.\n2026-02-08 20:53:34,061 | INFO | action_delegated_admin | Note: Paso posterior: si no existe contrato estable => marcar out_of_scope.\n2026-02-08 20:53:34,061 | INFO | action_delegated_admin | No server-side dry-run endpoint is documented for these APIs. probe mode uses controlled invalid or read-only calls.\n2026-02-08 20:53:34,062 | INFO | action_delegated_admin | Preflight snapshot GET start\n2026-02-08 20:53:34,846 | INFO | action_delegated_admin | Preflight snapshot GET done\n2026-02-08 20:53:34,847 | INFO | action_delegated_admin | Preflight snapshot saved\n2026-02-08 20:53:34,847 | INFO | action_delegated_admin | API call start\n2026-02-08 20:53:35,012 | INFO | action_delegated_admin | API call done | step=attempt_delegate_assignment status=404 response_headers={'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Trackingid': 'ROUTERGW_3a5c9a80-9a69-469c-9489-c6516605c151', 'Date': 'Sun, 08 Feb 2026 19:53:34 GMT', 'Server': 'istio-envoy', 'X-Envoy-Upstream-Service-Time': '14', 'X-Normalized-Path': '/**', 'Content-Type': 'application/json', 'Content-Length': '189'} response_body={\"message\":\"The requested resource could not be found.\",\"errors\":[{\"description\":\"The requested resource could not be found.\"}],\"trackingId\":\"ROUTERGW_3a5c9a80-9a69-469c-9489-c6516605c151\"}\n2026-02-08 20:53:35,012 | INFO | action_delegated_admin | Completed action with 0 failure(s)\n",
+      "stderr": ""
+    },
+    {
+      "script": "action_devices.py",
+      "exit_code": 0,
+      "payload": {
+        "device_model": "Cisco 8851",
+        "workspace_id": "Y2lzY29zcGFyazovL3VybjpURUFNOnVzLXdlc3QtMl9yL1BMQUNFLzQyOGI3NzVhLWYxNTgtNDVkOC1hOTJhLTg1OTllNTVjM2UxYw==",
+        "serial": "FTX1234LAB1"
+      },
+      "unresolved_vars": [],
+      "action_log": "C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_devices.log",
+      "calls_total": 1,
+      "calls_ok_2xx": 0,
+      "calls_non_2xx": 1,
+      "calls": [
+        {
+          "step": "create_or_assign_device",
+          "status": 400
+        }
+      ],
+      "stdout": "2026-02-08 20:53:35,234 | INFO | action_devices | Action log file: C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_devices.log\n2026-02-08 20:53:35,235 | INFO | action_devices | Action objective: Prueba alta o asignación de dispositivos con payload mínimo.\n2026-02-08 20:53:35,235 | INFO | action_devices | Note: Paso previo: lookup por serial/MAC.\n2026-02-08 20:53:35,235 | INFO | action_devices | Note: Paso posterior: confirmar asignación a persona/workspace.\n2026-02-08 20:53:35,235 | INFO | action_devices | No server-side dry-run endpoint is documented for these APIs. probe mode uses controlled invalid or read-only calls.\n2026-02-08 20:53:35,236 | INFO | action_devices | Preflight snapshot GET start\n2026-02-08 20:53:36,232 | INFO | action_devices | Preflight snapshot GET done\n2026-02-08 20:53:36,233 | INFO | action_devices | Preflight snapshot saved\n2026-02-08 20:53:36,233 | INFO | action_devices | API call start\n2026-02-08 20:53:36,801 | INFO | action_devices | API call done | step=create_or_assign_device status=400 response_headers={'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Trackingid': 'ROUTERGW_1388875f-82de-4a77-8997-2684878ee05b', 'Client-Compatibility-Hint': 'Unknown', 'Content-Encoding': 'gzip', 'Date': 'Sun, 08 Feb 2026 19:53:36 GMT', 'Server': 'istio-envoy', 'X-Envoy-Upstream-Service-Time': '472', 'X-Normalized-Path': '/csdm/api/v1/hydra/devices', 'Content-Type': 'application/json', 'Content-Length': '150'} response_body={\"message\":\"Valid device mac is required\",\"errors\":[{\"description\":\"Valid device mac is required\"}],\"trackingId\":\"ROUTERGW_1388875f-82de-4a77-8997-2684878ee05b\"}\n2026-02-08 20:53:36,801 | INFO | action_devices | Completed action with 0 failure(s)\n",
+      "stderr": ""
+    },
+    {
+      "script": "action_group_assignment.py",
+      "exit_code": 1,
+      "payload": {
+        "group_id": "MISSING_group_id",
+        "group_name": "LAB-GROUP-VOICE",
+        "member_id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE"
+      },
+      "unresolved_vars": [
+        "group_id"
+      ],
+      "action_log": "C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_group_assignment.log",
+      "calls_total": 2,
+      "calls_ok_2xx": 1,
+      "calls_non_2xx": 1,
+      "calls": [
+        {
+          "step": "upsert_group",
+          "status": 201
+        },
+        {
+          "step": "add_membership",
+          "status": 405
+        }
+      ],
+      "stdout": "2026-02-08 20:53:37,026 | INFO | action_group_assignment | Action log file: C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_group_assignment.log\n2026-02-08 20:53:37,026 | INFO | action_group_assignment | Action objective: Valida lookup y upsert de grupos + membresías idempotentes.\n2026-02-08 20:53:37,026 | INFO | action_group_assignment | Note: Paso previo: resolver group_id por nombre.\n2026-02-08 20:53:37,026 | INFO | action_group_assignment | Note: Paso posterior: sincronizar miembros (add/remove) de forma idempotente.\n2026-02-08 20:53:37,026 | INFO | action_group_assignment | No server-side dry-run endpoint is documented for these APIs. probe mode uses controlled invalid or read-only calls.\n2026-02-08 20:53:37,027 | INFO | action_group_assignment | Preflight snapshot GET start\n2026-02-08 20:53:38,330 | INFO | action_group_assignment | Preflight snapshot GET done\n2026-02-08 20:53:38,330 | INFO | action_group_assignment | Preflight snapshot GET start\n2026-02-08 20:53:38,436 | INFO | action_group_assignment | Preflight snapshot GET done\n2026-02-08 20:53:38,437 | INFO | action_group_assignment | Preflight snapshot saved\n2026-02-08 20:53:38,437 | INFO | action_group_assignment | API call start\n2026-02-08 20:53:39,275 | INFO | action_group_assignment | API call done | step=upsert_group status=201 response_headers={'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Trackingid': 'ROUTERGW_60d35618-e40a-4f08-af55-96c816dc5c16', 'Content-Encoding': 'gzip', 'Date': 'Sun, 08 Feb 2026 19:53:39 GMT', 'Server': 'istio-envoy', 'X-Envoy-Upstream-Service-Time': '737', 'X-Normalized-Path': '/groups', 'Content-Type': 'application/json', 'Content-Length': '289'} response_body={\"id\":\"Y2lzY29zcGFyazovL3VzL1NDSU1fR1JPVVAvZjhmNmY1OGYtOTI1NS00NGMwLWI5Y2YtNDk0MGQ2YmM5YjZkOmU1ZjdkOTczLWIyNjktNDY4Ni05OTdlLTQ1MTE5MTY4Y2VkMg\",\"displayName\":\"LAB-GROUP-VOICE\",\"orgId\":\"Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi9lNWY3ZDk3My1iMjY5LTQ2ODYtOTk3ZS00NTExOTE2OGNlZDI\",\"created\":\"2026-02-08T19:53:39.099Z\",\"lastModified\":\"2026-02-08T19:53:39.099Z\",\"memberSize\":0}\n2026-02-08 20:53:39,275 | INFO | action_group_assignment | API call start\n2026-02-08 20:53:39,387 | ERROR | action_group_assignment | API call done | step=add_membership status=405 response_headers={'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Trackingid': 'ROUTERGW_35aa8c9d-eb89-4072-bf76-f3bdc5d0971f', 'Date': 'Sun, 08 Feb 2026 19:53:39 GMT', 'Server': 'istio-envoy', 'X-Envoy-Upstream-Service-Time': '14', 'Content-Type': 'application/json', 'Content-Length': '283'} response_body={\"message\":\"The requested resource only allows certain HTTP request methods. 'POST' is not supported.\",\"errors\":[{\"description\":\"The requested resource only allows certain HTTP request methods. 'POST' is not supported.\"}],\"trackingId\":\"ROUTERGW_35aa8c9d-eb89-4072-bf76-f3bdc5d0971f\"}\n2026-02-08 20:53:39,387 | INFO | action_group_assignment | Completed action with 1 failure(s)\n",
+      "stderr": ""
+    },
+    {
+      "script": "action_hunt_group.py",
+      "exit_code": 0,
+      "payload": {
+        "extension": "5101",
+        "hunt_name": "HG-LAB-SOPORTE",
+        "location_id": "Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2ZjODY3OGRhLTBiOGItNDBlZS04ZWVjLTNhNzFlODFiMzc0OA",
+        "member_id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE"
+      },
+      "unresolved_vars": [],
+      "action_log": "C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_hunt_group.log",
+      "calls_total": 1,
+      "calls_ok_2xx": 0,
+      "calls_non_2xx": 1,
+      "calls": [
+        {
+          "step": "upsert_hunt_group",
+          "status": 400
+        }
+      ],
+      "stdout": "2026-02-08 20:53:39,611 | INFO | action_hunt_group | Action log file: C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_hunt_group.log\n2026-02-08 20:53:39,611 | INFO | action_hunt_group | Action objective: Create/update de hunt group con política de routing y miembros.\n2026-02-08 20:53:39,612 | INFO | action_hunt_group | Note: Paso previo: lookup del hunt group.\n2026-02-08 20:53:39,612 | INFO | action_hunt_group | Note: Paso posterior: comprobar política y miembros.\n2026-02-08 20:53:39,612 | INFO | action_hunt_group | No server-side dry-run endpoint is documented for these APIs. probe mode uses controlled invalid or read-only calls.\n2026-02-08 20:53:39,612 | INFO | action_hunt_group | Preflight snapshot GET start\n2026-02-08 20:53:40,601 | INFO | action_hunt_group | Preflight snapshot GET done\n2026-02-08 20:53:40,602 | INFO | action_hunt_group | Preflight snapshot saved\n2026-02-08 20:53:40,603 | INFO | action_hunt_group | API call start\n2026-02-08 20:53:40,875 | INFO | action_hunt_group | API call done | step=upsert_hunt_group status=400 response_headers={'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Trackingid': 'ROUTERGW_52cd553f-2bb5-4f57-851f-23740965fa3d', 'Cisco-Spark-Error-Codes': '25024', 'Date': 'Sun, 08 Feb 2026 19:53:40 GMT', 'Server': 'istio-envoy', 'X-Envoy-Upstream-Service-Time': '175', 'X-Normalized-Path': '/api/v1/customers/{customerId}/locations/{locationId}/features/huntgroups', 'Content-Type': 'application/json', 'Content-Length': '203'} response_body={\"errorCode\":25024,\"message\":\"Invalid field value: agents.[0]\",\"errors\":[{\"errorCode\":25024,\"description\":\"Invalid field value: agents.[0]\"}],\"trackingId\":\"ROUTERGW_52cd553f-2bb5-4f57-851f-23740965fa3d\"}\n2026-02-08 20:53:40,875 | INFO | action_hunt_group | Completed action with 0 failure(s)\n",
+      "stderr": ""
+    },
+    {
+      "script": "action_internal_extensions_sbc.py",
+      "exit_code": 0,
+      "payload": {
+        "location_id": "Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2ZjODY3OGRhLTBiOGItNDBlZS04ZWVjLTNhNzFlODFiMzc0OA",
+        "route_group_id": "MISSING_route_group_id",
+        "route_group_name": "RG-LAB-SBC",
+        "trunk_id": "MISSING_trunk_id",
+        "trunk_name": "TRUNK-LAB-MAIN"
+      },
+      "unresolved_vars": [
+        "route_group_id",
+        "trunk_id"
+      ],
+      "action_log": "C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_internal_extensions_sbc.log",
+      "calls_total": 3,
+      "calls_ok_2xx": 0,
+      "calls_non_2xx": 3,
+      "calls": [
+        {
+          "step": "upsert_trunk_like",
+          "status": 400
+        },
+        {
+          "step": "upsert_route_group_like",
+          "status": 400
+        },
+        {
+          "step": "update_internal_dialing",
+          "status": 400
+        }
+      ],
+      "stdout": "2026-02-08 20:53:41,099 | INFO | action_internal_extensions_sbc | Action log file: C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_internal_extensions_sbc.log\n2026-02-08 20:53:41,099 | INFO | action_internal_extensions_sbc | Action objective: Valida y ejecuta trunk + route group + internal dialing para enrutar extensiones internas desconocidas.\n2026-02-08 20:53:41,099 | INFO | action_internal_extensions_sbc | Note: Paso previo: confirmar trunk/route_group existentes o crearlos.\n2026-02-08 20:53:41,099 | INFO | action_internal_extensions_sbc | Note: Paso posterior: verificar internal_dialing de la sede y PSTN asociado.\n2026-02-08 20:53:41,099 | INFO | action_internal_extensions_sbc | No server-side dry-run endpoint is documented for these APIs. probe mode uses controlled invalid or read-only calls.\n2026-02-08 20:53:41,101 | INFO | action_internal_extensions_sbc | Preflight snapshot GET start\n2026-02-08 20:53:43,783 | INFO | action_internal_extensions_sbc | Preflight snapshot GET done\n2026-02-08 20:53:43,783 | INFO | action_internal_extensions_sbc | Preflight snapshot GET start\n2026-02-08 20:53:44,694 | INFO | action_internal_extensions_sbc | Preflight snapshot GET done\n2026-02-08 20:53:44,695 | INFO | action_internal_extensions_sbc | Preflight snapshot saved\n2026-02-08 20:53:44,695 | INFO | action_internal_extensions_sbc | API call start\n2026-02-08 20:53:45,523 | INFO | action_internal_extensions_sbc | API call done | step=upsert_trunk_like status=400 response_headers={'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Trackingid': 'ROUTERGW_5815be95-3160-9d6e-9fac-b811c3d75b0d', 'Cisco-Spark-Error-Codes': '25008', 'Date': 'Sun, 08 Feb 2026 19:53:45 GMT', 'Server': 'istio-envoy', 'X-Envoy-Upstream-Service-Time': '200', 'X-Normalized-Path': '/api/v1/customers/{customerId}/localgateways', 'Content-Type': 'application/json', 'Content-Length': '297'} response_body={\"errorCode\":25008,\"message\":\"message=Missing required field(s).;detail=Missing fields: locationId, password\",\"errors\":[{\"errorCode\":25008,\"description\":\"message=Missing required field(s).;detail=Missing fields: locationId, password\"}],\"trackingId\":\"ROUTERGW_5815be95-3160-9d6e-9fac-b811c3d75b0d\"}\n2026-02-08 20:53:45,523 | INFO | action_internal_extensions_sbc | API call start\n2026-02-08 20:53:46,281 | INFO | action_internal_extensions_sbc | API call done | step=upsert_route_group_like status=400 response_headers={'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Trackingid': 'ROUTERGW_39c3c567-0620-4444-88c9-d51c28bc3769', 'Cisco-Spark-Error-Codes': '25008', 'Date': 'Sun, 08 Feb 2026 19:53:46 GMT', 'Server': 'istio-envoy', 'X-Envoy-Upstream-Service-Time': '168', 'X-Normalized-Path': '/api/v1/customers/{customerId}/routegroups', 'Content-Type': 'application/json', 'Content-Length': '283'} response_body={\"errorCode\":25008,\"message\":\"message=Missing required field(s).;detail=Missing fields: localGateways\",\"errors\":[{\"errorCode\":25008,\"description\":\"message=Missing required field(s).;detail=Missing fields: localGateways\"}],\"trackingId\":\"ROUTERGW_39c3c567-0620-4444-88c9-d51c28bc3769\"}\n2026-02-08 20:53:46,281 | INFO | action_internal_extensions_sbc | API call start\n2026-02-08 20:53:47,358 | INFO | action_internal_extensions_sbc | API call done | step=update_internal_dialing status=400 response_headers={'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Trackingid': 'ROUTERGW_6cb0b26b-9e9b-41f7-a6dd-fbbaf1076301', 'Cisco-Spark-Error-Codes': '25024', 'Date': 'Sun, 08 Feb 2026 19:53:46 GMT', 'Server': 'istio-envoy', 'X-Envoy-Upstream-Service-Time': '169', 'X-Normalized-Path': '/api/v1/customers/{customerId}/locations/{locationId}/internaldialing', 'Content-Type': 'application/json', 'Content-Length': '241'} response_body={\"errorCode\":25024,\"message\":\"Invalid field value: unknownExtensionRouteIdentity\",\"errors\":[{\"errorCode\":25024,\"description\":\"Invalid field value: unknownExtensionRouteIdentity\"}],\"trackingId\":\"ROUTERGW_6cb0b26b-9e9b-41f7-a6dd-fbbaf1076301\"}\n2026-02-08 20:53:47,358 | INFO | action_internal_extensions_sbc | Completed action with 0 failure(s)\n",
+      "stderr": ""
+    },
+    {
+      "script": "action_interplatform_dial_plan.py",
+      "exit_code": 1,
+      "payload": {
+        "dial_pattern": "+3491XXXXXXX",
+        "dial_plan_name": "DP-LAB-INTERPLATFORM",
+        "route_group_id": "MISSING_route_group_id"
+      },
+      "unresolved_vars": [
+        "route_group_id"
+      ],
+      "action_log": "C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_interplatform_dial_plan.log",
+      "calls_total": 1,
+      "calls_ok_2xx": 0,
+      "calls_non_2xx": 1,
+      "calls": [
+        {
+          "step": "create_or_update_dial_plan",
+          "status": 404
+        }
+      ],
+      "stdout": "2026-02-08 20:53:47,585 | INFO | action_interplatform_dial_plan | Action log file: C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_interplatform_dial_plan.log\n2026-02-08 20:53:47,585 | INFO | action_interplatform_dial_plan | Action objective: Valida y aplica reglas de dial plan contra Legacy con control básico de colisiones vía respuesta API.\n2026-02-08 20:53:47,585 | INFO | action_interplatform_dial_plan | Note: Paso previo: validar trunk/route_group destino.\n2026-02-08 20:53:47,585 | INFO | action_interplatform_dial_plan | Note: Paso posterior: comprobar regla creada/actualizada con GET por id.\n2026-02-08 20:53:47,585 | INFO | action_interplatform_dial_plan | No server-side dry-run endpoint is documented for these APIs. probe mode uses controlled invalid or read-only calls.\n2026-02-08 20:53:47,586 | INFO | action_interplatform_dial_plan | Preflight snapshot GET start\n2026-02-08 20:53:49,971 | INFO | action_interplatform_dial_plan | Preflight snapshot GET done\n2026-02-08 20:53:49,971 | INFO | action_interplatform_dial_plan | Preflight snapshot GET start\n2026-02-08 20:53:51,402 | INFO | action_interplatform_dial_plan | Preflight snapshot GET done\n2026-02-08 20:53:51,404 | INFO | action_interplatform_dial_plan | Preflight snapshot saved\n2026-02-08 20:53:51,404 | INFO | action_interplatform_dial_plan | API call start\n2026-02-08 20:53:52,531 | ERROR | action_interplatform_dial_plan | API call done | step=create_or_update_dial_plan status=404 response_headers={'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Trackingid': 'ROUTERGW_17ea9610-5960-456d-ba41-611ecc210f0e', 'Date': 'Sun, 08 Feb 2026 19:53:52 GMT', 'Server': 'istio-envoy', 'X-Envoy-Upstream-Service-Time': '166', 'X-Normalized-Path': '/**', 'Content-Type': 'application/json', 'Content-Length': '215'} response_body={\"message\":\"No static resource hydra/v1/telephony/config/dialPlans.\",\"errors\":[{\"description\":\"No static resource hydra/v1/telephony/config/dialPlans.\"}],\"trackingId\":\"ROUTERGW_17ea9610-5960-456d-ba41-611ecc210f0e\"}\n2026-02-08 20:53:52,531 | INFO | action_interplatform_dial_plan | Completed action with 1 failure(s)\n",
+      "stderr": ""
+    },
+    {
+      "script": "action_legacy_forwarding.py",
+      "exit_code": 0,
+      "payload": {
+        "forward_destination": "+34915550123",
+        "person_id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE"
+      },
+      "unresolved_vars": [],
+      "action_log": "C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_legacy_forwarding.log",
+      "calls_total": 1,
+      "calls_ok_2xx": 0,
+      "calls_non_2xx": 1,
+      "calls": [
+        {
+          "step": "update_forwarding",
+          "status": 404
+        }
+      ],
+      "stdout": "2026-02-08 20:53:52,762 | INFO | action_legacy_forwarding | Action log file: C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_legacy_forwarding.log\n2026-02-08 20:53:52,762 | INFO | action_legacy_forwarding | Action objective: Configura o desconfigura desvío a prefijo legacy (ej. 53) en persona/workspace.\n2026-02-08 20:53:52,762 | INFO | action_legacy_forwarding | Note: Paso previo: comprobar que el prefijo legacy enruta en dial plan.\n2026-02-08 20:53:52,762 | INFO | action_legacy_forwarding | Note: Paso posterior: validar forwarding final en lectura de settings.\n2026-02-08 20:53:52,762 | INFO | action_legacy_forwarding | No server-side dry-run endpoint is documented for these APIs. probe mode uses controlled invalid or read-only calls.\n2026-02-08 20:53:52,763 | INFO | action_legacy_forwarding | Preflight snapshot GET start\n2026-02-08 20:53:55,751 | INFO | action_legacy_forwarding | Preflight snapshot GET done\n2026-02-08 20:53:55,753 | INFO | action_legacy_forwarding | Preflight snapshot saved\n2026-02-08 20:53:55,753 | INFO | action_legacy_forwarding | API call start\n2026-02-08 20:53:56,797 | INFO | action_legacy_forwarding | API call done | step=update_forwarding status=404 response_headers={'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Trackingid': 'ROUTERGW_ca07941f-486a-448d-a6db-d8b6fcbdf5e7', 'Date': 'Sun, 08 Feb 2026 19:53:56 GMT', 'Server': 'istio-envoy', 'X-Envoy-Upstream-Service-Time': '167', 'X-Normalized-Path': '/**', 'Content-Type': 'application/json', 'Content-Length': '399'} response_body={\"message\":\"No static resource hydra/v1/telephony/config/people/Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE/callForwarding.\",\"errors\":[{\"description\":\"No static resource hydra/v1/telephony/config/people/Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE/callForwarding.\"}],\"trackingId\":\"ROUTERGW_ca07941f-486a-448d-a6db-d8b6fcbdf5e7\"}\n2026-02-08 20:53:56,797 | INFO | action_legacy_forwarding | Completed action with 0 failure(s)\n",
+      "stderr": ""
+    },
+    {
+      "script": "action_location_number_removal.py",
+      "exit_code": 0,
+      "payload": {
+        "location_id": "Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2ZjODY3OGRhLTBiOGItNDBlZS04ZWVjLTNhNzFlODFiMzc0OA",
+        "primary_number": "+34915559742549"
+      },
+      "unresolved_vars": [],
+      "action_log": "C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_location_number_removal.log",
+      "calls_total": 1,
+      "calls_ok_2xx": 0,
+      "calls_non_2xx": 1,
+      "calls": [
+        {
+          "step": "remove_numbers",
+          "status": 404
+        }
+      ],
+      "stdout": "2026-02-08 20:53:57,018 | INFO | action_location_number_removal | Action log file: C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_location_number_removal.log\n2026-02-08 20:53:57,018 | INFO | action_location_number_removal | Action objective: Precheck mínimo y eliminación idempotente de números de inventario.\n2026-02-08 20:53:57,018 | INFO | action_location_number_removal | Note: Paso previo: verificar que número no está asignado.\n2026-02-08 20:53:57,018 | INFO | action_location_number_removal | Note: Paso posterior: aceptar 404 como idempotente cuando aplique.\n2026-02-08 20:53:57,019 | INFO | action_location_number_removal | No server-side dry-run endpoint is documented for these APIs. probe mode uses controlled invalid or read-only calls.\n2026-02-08 20:53:57,020 | INFO | action_location_number_removal | Preflight snapshot GET start\n2026-02-08 20:54:00,959 | INFO | action_location_number_removal | Preflight snapshot GET done\n2026-02-08 20:54:00,960 | INFO | action_location_number_removal | Preflight snapshot saved\n2026-02-08 20:54:00,961 | INFO | action_location_number_removal | API call start\n2026-02-08 20:54:01,995 | INFO | action_location_number_removal | API call done | step=remove_numbers status=404 response_headers={'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Trackingid': 'ROUTERGW_420fc302-472e-4015-9cdf-a32cb0a99e02', 'Date': 'Sun, 08 Feb 2026 19:54:01 GMT', 'Server': 'istio-envoy', 'X-Envoy-Upstream-Service-Time': '117', 'Content-Type': 'application/json', 'Content-Length': '117'} response_body={\"errorMessage\":\"Location fc8678da-0b8b-40ee-8eec-3a71e81b3748 not found or PSTN for the location is not configured\"}\n2026-02-08 20:54:01,996 | INFO | action_location_number_removal | Completed action with 0 failure(s)\n",
+      "stderr": ""
+    },
+    {
+      "script": "action_manager_assistant.py",
+      "exit_code": 0,
+      "payload": {
+        "assistant_person_id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS81MjYxMWNkMS1jMTJmLTQxNjgtODc1My04MDdmODJiOTYwNGQ",
+        "person_id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE"
+      },
+      "unresolved_vars": [],
+      "action_log": "C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_manager_assistant.log",
+      "calls_total": 1,
+      "calls_ok_2xx": 0,
+      "calls_non_2xx": 1,
+      "calls": [
+        {
+          "step": "update_exec_assistant",
+          "status": 404
+        }
+      ],
+      "stdout": "2026-02-08 20:54:02,219 | INFO | action_manager_assistant | Action log file: C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_manager_assistant.log\n2026-02-08 20:54:02,219 | INFO | action_manager_assistant | Action objective: Configura relación executive/assistants usando update idempotente completo.\n2026-02-08 20:54:02,219 | INFO | action_manager_assistant | Note: Paso previo: resolver executive/assistants por email.\n2026-02-08 20:54:02,219 | INFO | action_manager_assistant | Note: Paso posterior: releer configuración para verificar roles/políticas.\n2026-02-08 20:54:02,220 | INFO | action_manager_assistant | No server-side dry-run endpoint is documented for these APIs. probe mode uses controlled invalid or read-only calls.\n2026-02-08 20:54:02,221 | INFO | action_manager_assistant | Preflight snapshot GET start\n2026-02-08 20:54:06,174 | INFO | action_manager_assistant | Preflight snapshot GET done\n2026-02-08 20:54:06,175 | INFO | action_manager_assistant | Preflight snapshot saved\n2026-02-08 20:54:06,176 | INFO | action_manager_assistant | API call start\n2026-02-08 20:54:06,715 | INFO | action_manager_assistant | API call done | step=update_exec_assistant status=404 response_headers={'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Trackingid': 'ROUTERGW_3cd9b4b8-e40f-482d-9e00-f8a70d26e2ff', 'Date': 'Sun, 08 Feb 2026 19:54:06 GMT', 'Server': 'istio-envoy', 'X-Envoy-Upstream-Service-Time': '168', 'X-Normalized-Path': '/**', 'Content-Type': 'application/json', 'Content-Length': '407'} response_body={\"message\":\"No static resource hydra/v1/telephony/config/people/Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE/executiveAssistant.\",\"errors\":[{\"description\":\"No static resource hydra/v1/telephony/config/people/Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE/executiveAssistant.\"}],\"trackingId\":\"ROUTERGW_3cd9b4b8-e40f-482d-9e00-f8a70d26e2ff\"}\n2026-02-08 20:54:06,715 | INFO | action_manager_assistant | Completed action with 0 failure(s)\n",
+      "stderr": ""
+    },
+    {
+      "script": "action_monitoring.py",
+      "exit_code": 0,
+      "payload": {
+        "person_id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE",
+        "target_person_id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS81MjYxMWNkMS1jMTJmLTQxNjgtODc1My04MDdmODJiOTYwNGQ"
+      },
+      "unresolved_vars": [],
+      "action_log": "C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_monitoring.log",
+      "calls_total": 1,
+      "calls_ok_2xx": 0,
+      "calls_non_2xx": 1,
+      "calls": [
+        {
+          "step": "update_monitoring",
+          "status": 404
+        }
+      ],
+      "stdout": "2026-02-08 20:54:06,939 | INFO | action_monitoring | Action log file: C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_monitoring.log\n2026-02-08 20:54:06,939 | INFO | action_monitoring | Action objective: Actualiza targets de monitoring y prueba errores de soporte/licencia.\n2026-02-08 20:54:06,940 | INFO | action_monitoring | Note: Paso previo: precheck de licencia compatible.\n2026-02-08 20:54:06,940 | INFO | action_monitoring | Note: Paso posterior: validar lista completa de monitored elements.\n2026-02-08 20:54:06,940 | INFO | action_monitoring | No server-side dry-run endpoint is documented for these APIs. probe mode uses controlled invalid or read-only calls.\n2026-02-08 20:54:06,941 | INFO | action_monitoring | Preflight snapshot GET start\n2026-02-08 20:54:09,063 | INFO | action_monitoring | Preflight snapshot GET done\n2026-02-08 20:54:09,064 | INFO | action_monitoring | Preflight snapshot saved\n2026-02-08 20:54:09,065 | INFO | action_monitoring | API call start\n2026-02-08 20:54:09,579 | INFO | action_monitoring | API call done | step=update_monitoring status=404 response_headers={'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Trackingid': 'ROUTERGW_673b37a9-5a6c-4e40-8a10-af027425fef8', 'Date': 'Sun, 08 Feb 2026 19:54:09 GMT', 'Server': 'istio-envoy', 'X-Envoy-Upstream-Service-Time': '168', 'X-Normalized-Path': '/**', 'Content-Type': 'application/json', 'Content-Length': '391'} response_body={\"message\":\"No static resource hydra/v1/telephony/config/people/Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE/monitoring.\",\"errors\":[{\"description\":\"No static resource hydra/v1/telephony/config/people/Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE/monitoring.\"}],\"trackingId\":\"ROUTERGW_673b37a9-5a6c-4e40-8a10-af027425fef8\"}\n2026-02-08 20:54:09,579 | INFO | action_monitoring | Completed action with 0 failure(s)\n",
+      "stderr": ""
+    },
+    {
+      "script": "action_nominal_users.py",
+      "exit_code": 0,
+      "payload": {
+        "extension": "5101",
+        "person_id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE",
+        "primary_number": "+34915559742549"
+      },
+      "unresolved_vars": [],
+      "action_log": "C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_nominal_users.log",
+      "calls_total": 1,
+      "calls_ok_2xx": 0,
+      "calls_non_2xx": 1,
+      "calls": [
+        {
+          "step": "update_user_numbers",
+          "status": 400
+        }
+      ],
+      "stdout": "2026-02-08 20:54:09,801 | INFO | action_nominal_users | Action log file: C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_nominal_users.log\n2026-02-08 20:54:09,801 | INFO | action_nominal_users | Action objective: Resuelve usuario por email y prueba updates de calling/números sin crear identidad.\n2026-02-08 20:54:09,801 | INFO | action_nominal_users | Note: Paso previo: lookup de person por email.\n2026-02-08 20:54:09,801 | INFO | action_nominal_users | Note: Paso posterior: aplicar números/caller-id solo si user existe.\n2026-02-08 20:54:09,802 | INFO | action_nominal_users | No server-side dry-run endpoint is documented for these APIs. probe mode uses controlled invalid or read-only calls.\n2026-02-08 20:54:09,803 | WARNING | action_nominal_users | Skipping preflight snapshot call due to missing template variables\n2026-02-08 20:54:09,803 | INFO | action_nominal_users | Preflight snapshot GET start\n2026-02-08 20:54:14,243 | INFO | action_nominal_users | Preflight snapshot GET done\n2026-02-08 20:54:14,245 | INFO | action_nominal_users | Preflight snapshot saved\n2026-02-08 20:54:14,245 | INFO | action_nominal_users | API call start\n2026-02-08 20:54:14,930 | INFO | action_nominal_users | API call done | step=update_user_numbers status=400 response_headers={'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Trackingid': 'ROUTERGW_3f26ee58-dfb9-44fa-8699-78054245ca81', 'Cisco-Spark-Error-Codes': '25008', 'Date': 'Sun, 08 Feb 2026 19:54:14 GMT', 'Server': 'istio-envoy', 'X-Envoy-Upstream-Service-Time': '181', 'X-Normalized-Path': '/api/v1/customers/{customerId}/users/{userId}/numbers', 'Content-Type': 'application/json', 'Content-Length': '193'} response_body={\"errorCode\":25008,\"message\":\"Missing required field(s).\",\"errors\":[{\"errorCode\":25008,\"description\":\"Missing required field(s).\"}],\"trackingId\":\"ROUTERGW_3f26ee58-dfb9-44fa-8699-78054245ca81\"}\n2026-02-08 20:54:14,930 | INFO | action_nominal_users | Completed action with 0 failure(s)\n",
+      "stderr": ""
+    },
+    {
+      "script": "action_secondary_numbers.py",
+      "exit_code": 0,
+      "payload": {
+        "extension": "5101",
+        "person_id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE",
+        "secondary_number": "+34915555861252"
+      },
+      "unresolved_vars": [],
+      "action_log": "C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_secondary_numbers.log",
+      "calls_total": 1,
+      "calls_ok_2xx": 0,
+      "calls_non_2xx": 1,
+      "calls": [
+        {
+          "step": "update_person_numbers",
+          "status": 400
+        }
+      ],
+      "stdout": "2026-02-08 20:54:15,156 | INFO | action_secondary_numbers | Action log file: C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_secondary_numbers.log\n2026-02-08 20:54:15,156 | INFO | action_secondary_numbers | Action objective: Prueba asignación/remoción de números secundarios en persona/workspace.\n2026-02-08 20:54:15,156 | INFO | action_secondary_numbers | Note: Paso previo: precheck de inventario de número.\n2026-02-08 20:54:15,156 | INFO | action_secondary_numbers | Note: Paso posterior: verificación de asignación con GET numbers.\n2026-02-08 20:54:15,157 | INFO | action_secondary_numbers | No server-side dry-run endpoint is documented for these APIs. probe mode uses controlled invalid or read-only calls.\n2026-02-08 20:54:15,158 | INFO | action_secondary_numbers | Preflight snapshot GET start\n2026-02-08 20:54:17,302 | INFO | action_secondary_numbers | Preflight snapshot GET done\n2026-02-08 20:54:17,304 | INFO | action_secondary_numbers | Preflight snapshot saved\n2026-02-08 20:54:17,304 | INFO | action_secondary_numbers | API call start\n2026-02-08 20:54:18,076 | INFO | action_secondary_numbers | API call done | step=update_person_numbers status=400 response_headers={'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Trackingid': 'ROUTERGW_c499c6cf-985f-4497-bf45-c16d23ac6106', 'Cisco-Spark-Error-Codes': '25008', 'Date': 'Sun, 08 Feb 2026 19:54:17 GMT', 'Server': 'istio-envoy', 'X-Envoy-Upstream-Service-Time': '188', 'X-Normalized-Path': '/api/v1/customers/{customerId}/users/{userId}/numbers', 'Content-Type': 'application/json', 'Content-Length': '193'} response_body={\"errorCode\":25008,\"message\":\"Missing required field(s).\",\"errors\":[{\"errorCode\":25008,\"description\":\"Missing required field(s).\"}],\"trackingId\":\"ROUTERGW_c499c6cf-985f-4497-bf45-c16d23ac6106\"}\n2026-02-08 20:54:18,076 | INFO | action_secondary_numbers | Completed action with 0 failure(s)\n",
+      "stderr": ""
+    },
+    {
+      "script": "action_user_recording.py",
+      "exit_code": 0,
+      "payload": {
+        "person_id": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE"
+      },
+      "unresolved_vars": [],
+      "action_log": "C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_user_recording.log",
+      "calls_total": 1,
+      "calls_ok_2xx": 0,
+      "calls_non_2xx": 1,
+      "calls": [
+        {
+          "step": "update_recording",
+          "status": 404
+        }
+      ],
+      "stdout": "2026-02-08 20:54:18,299 | INFO | action_user_recording | Action log file: C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_user_recording.log\n2026-02-08 20:54:18,299 | INFO | action_user_recording | Action objective: Actualiza grabación de usuario y captura errores comunes de licencia.\n2026-02-08 20:54:18,299 | INFO | action_user_recording | Note: Paso previo: comprobar licencia/feature recording.\n2026-02-08 20:54:18,300 | INFO | action_user_recording | Note: Paso posterior: confirmar modo aplicado con GET.\n2026-02-08 20:54:18,300 | INFO | action_user_recording | No server-side dry-run endpoint is documented for these APIs. probe mode uses controlled invalid or read-only calls.\n2026-02-08 20:54:18,301 | INFO | action_user_recording | Preflight snapshot GET start\n2026-02-08 20:54:19,486 | INFO | action_user_recording | Preflight snapshot GET done\n2026-02-08 20:54:19,488 | INFO | action_user_recording | Preflight snapshot saved\n2026-02-08 20:54:19,488 | INFO | action_user_recording | API call start\n2026-02-08 20:54:19,755 | INFO | action_user_recording | API call done | step=update_recording status=404 response_headers={'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Trackingid': 'ROUTERGW_96d7a290-fb9a-4b9c-81b9-936a232a6d1a', 'Date': 'Sun, 08 Feb 2026 19:54:19 GMT', 'Server': 'istio-envoy', 'X-Envoy-Upstream-Service-Time': '167', 'X-Normalized-Path': '/**', 'Content-Type': 'application/json', 'Content-Length': '397'} response_body={\"message\":\"No static resource hydra/v1/telephony/config/people/Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE/callRecording.\",\"errors\":[{\"description\":\"No static resource hydra/v1/telephony/config/people/Y2lzY29zcGFyazovL3VzL1BFT1BMRS80OWZhZTIyMC02OGZlLTQ2NzEtYmU1My03Y2UxZDgzZTQ1ZDE/callRecording.\"}],\"trackingId\":\"ROUTERGW_96d7a290-fb9a-4b9c-81b9-936a232a6d1a\"}\n2026-02-08 20:54:19,755 | INFO | action_user_recording | Completed action with 0 failure(s)\n",
+      "stderr": ""
+    },
+    {
+      "script": "action_workspaces.py",
+      "exit_code": 1,
+      "payload": {
+        "extension": "5101",
+        "primary_number": "+34915559742549",
+        "workspace_id": "Y2lzY29zcGFyazovL3VybjpURUFNOnVzLXdlc3QtMl9yL1BMQUNFLzQyOGI3NzVhLWYxNTgtNDVkOC1hOTJhLTg1OTllNTVjM2UxYw=="
+      },
+      "unresolved_vars": [],
+      "action_log": "C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_workspaces.log",
+      "calls_total": 1,
+      "calls_ok_2xx": 0,
+      "calls_non_2xx": 1,
+      "calls": [
+        {
+          "step": "update_workspace_numbers",
+          "status": 405
+        }
+      ],
+      "stdout": "2026-02-08 20:54:19,980 | INFO | action_workspaces | Action log file: C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_205315_action_workspaces.log\n2026-02-08 20:54:19,980 | INFO | action_workspaces | Action objective: Lookup/create/update de workspace y update de numeración de calling.\n2026-02-08 20:54:19,980 | INFO | action_workspaces | Note: Paso previo: lookup por displayName o externalId.\n2026-02-08 20:54:19,980 | INFO | action_workspaces | Note: Paso posterior: verificar settings de números del workspace.\n2026-02-08 20:54:19,980 | INFO | action_workspaces | No server-side dry-run endpoint is documented for these APIs. probe mode uses controlled invalid or read-only calls.\n2026-02-08 20:54:19,981 | WARNING | action_workspaces | Skipping preflight snapshot call due to missing template variables\n2026-02-08 20:54:19,981 | INFO | action_workspaces | Preflight snapshot GET start\n2026-02-08 20:54:20,999 | INFO | action_workspaces | Preflight snapshot GET done\n2026-02-08 20:54:21,001 | INFO | action_workspaces | Preflight snapshot saved\n2026-02-08 20:54:21,001 | INFO | action_workspaces | API call start\n2026-02-08 20:54:21,614 | ERROR | action_workspaces | API call done | step=update_workspace_numbers status=405 response_headers={'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Trackingid': 'ROUTERGW_2f2e8aef-572e-4b75-a8f2-9d97a7e7c7dd', 'Cisco-Spark-Error-Codes': '25409', 'Date': 'Sun, 08 Feb 2026 19:54:21 GMT', 'Server': 'istio-envoy', 'X-Envoy-Upstream-Service-Time': '182', 'X-Normalized-Path': '/api/v1/customers/{customerId}/places/{placeId}/numbers', 'Content-Type': 'application/json', 'Content-Length': '269'} response_body={\"errorCode\":25409,\"message\":\"Invalid Professional Place: 428b775a-f158-45d8-a92a-8599e55c3e1c\",\"errors\":[{\"errorCode\":25409,\"description\":\"Invalid Professional Place: 428b775a-f158-45d8-a92a-8599e55c3e1c\"}],\"trackingId\":\"ROUTERGW_2f2e8aef-572e-4b75-a8f2-9d97a7e7c7dd\"}\n2026-02-08 20:54:21,614 | INFO | action_workspaces | Completed action with 1 failure(s)\n",
+      "stderr": ""
+    }
+  ]
+}

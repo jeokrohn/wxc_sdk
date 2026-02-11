@@ -1,0 +1,122 @@
+[
+  {
+    "display_name": "Elena Díaz",
+    "first_name": "Elena",
+    "last_name": "Díaz",
+    "email": "elena.daz.20260208102309.2793@lab.example.com",
+    "extension": "5000",
+    "primary_number": "+34919958782"
+  },
+  {
+    "display_name": "Luis Torres",
+    "first_name": "Luis",
+    "last_name": "Torres",
+    "email": "luis.torres.20260208102309.6682@lab.example.com",
+    "extension": "5001",
+    "primary_number": "+34911354072"
+  },
+  {
+    "display_name": "Elena Gómez",
+    "first_name": "Elena",
+    "last_name": "Gómez",
+    "email": "elena.gmez.20260208102309.4254@lab.example.com",
+    "extension": "5002",
+    "primary_number": "+34918894970"
+  },
+  {
+    "display_name": "Sofía Fernández",
+    "first_name": "Sofía",
+    "last_name": "Fernández",
+    "email": "sofa.fernndez.20260208102309.9500@lab.example.com",
+    "extension": "5003",
+    "primary_number": "+34910659040"
+  },
+  {
+    "display_name": "Diego Sánchez",
+    "first_name": "Diego",
+    "last_name": "Sánchez",
+    "email": "diego.snchez.20260208102309.0993@lab.example.com",
+    "extension": "5004",
+    "primary_number": "+34914238764"
+  },
+  {
+    "display_name": "Luis Sánchez",
+    "first_name": "Luis",
+    "last_name": "Sánchez",
+    "email": "luis.snchez.20260208102309.1571@lab.example.com",
+    "extension": "5005",
+    "primary_number": "+34910417150"
+  },
+  {
+    "display_name": "Ana García",
+    "first_name": "Ana",
+    "last_name": "García",
+    "email": "ana.garca.20260208102309.4911@lab.example.com",
+    "extension": "5006",
+    "primary_number": "+34918065366"
+  },
+  {
+    "display_name": "Elena Pérez",
+    "first_name": "Elena",
+    "last_name": "Pérez",
+    "email": "elena.prez.20260208102309.3024@lab.example.com",
+    "extension": "5007",
+    "primary_number": "+34912878229"
+  },
+  {
+    "display_name": "Carlos Díaz",
+    "first_name": "Carlos",
+    "last_name": "Díaz",
+    "email": "carlos.daz.20260208102309.6276@lab.example.com",
+    "extension": "5008",
+    "primary_number": "+34912482273"
+  },
+  {
+    "display_name": "Ana Díaz",
+    "first_name": "Ana",
+    "last_name": "Díaz",
+    "email": "ana.daz.20260208102309.9801@lab.example.com",
+    "extension": "5009",
+    "primary_number": "+34911236136"
+  },
+  {
+    "display_name": "Elena Martín",
+    "first_name": "Elena",
+    "last_name": "Martín",
+    "email": "elena.martn.20260208102309.5076@lab.example.com",
+    "extension": "5010",
+    "primary_number": "+34917593174"
+  },
+  {
+    "display_name": "Sofía Martín",
+    "first_name": "Sofía",
+    "last_name": "Martín",
+    "email": "sofa.martn.20260208102309.1191@lab.example.com",
+    "extension": "5011",
+    "primary_number": "+34914557039"
+  },
+  {
+    "display_name": "Lucía Fernández",
+    "first_name": "Lucía",
+    "last_name": "Fernández",
+    "email": "luca.fernndez.20260208102309.8324@lab.example.com",
+    "extension": "5012",
+    "primary_number": "+34910932783"
+  },
+  {
+    "display_name": "Marta Pérez",
+    "first_name": "Marta",
+    "last_name": "Pérez",
+    "email": "marta.prez.20260208102309.5500@lab.example.com",
+    "extension": "5013",
+    "primary_number": "+34917669863"
+  },
+  {
+    "display_name": "Sofía Ruiz",
+    "first_name": "Sofía",
+    "last_name": "Ruiz",
+    "email": "sofa.ruiz.20260208102309.9601@lab.example.com",
+    "extension": "5014",
+    "primary_number": "+34919438300"
+  }
+]

@@ -185,7 +185,7 @@ def main() -> int:
             )
             if not args.continue_on_error:
                 logger.error("Fallo en una accion. Se detiene el runner (fail-fast).")
-                break
+                #break
         else:
             logger.info("ACTION OK: %s (2xx_calls=%s)", script_name, ok_calls)
 

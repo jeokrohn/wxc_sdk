@@ -1,0 +1,33 @@
+{
+  "generated_at": "2026-02-08T20:48:03.056873",
+  "log_file": "actions\\logs\\apply_runner_20260208_204800.log",
+  "context_file": "actions/lab_context.json",
+  "failures": [
+    "action_auto_attendant.py"
+  ],
+  "actions": [
+    {
+      "script": "action_auto_attendant.py",
+      "exit_code": 0,
+      "payload": {
+        "aa_name": "AA-LAB-MADRID",
+        "extension": "5101",
+        "location_id": "Y2lzY29zcGFyazovL3VzL0xPQ0FUSU9OL2ZjODY3OGRhLTBiOGItNDBlZS04ZWVjLTNhNzFlODFiMzc0OA",
+        "schedule_name": "Horario-LAB-LV"
+      },
+      "unresolved_vars": [],
+      "action_log": "C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_204800_action_auto_attendant.log",
+      "calls_total": 1,
+      "calls_ok_2xx": 0,
+      "calls_non_2xx": 1,
+      "calls": [
+        {
+          "step": "upsert_auto_attendant",
+          "status": 404
+        }
+      ],
+      "stdout": "2026-02-08 20:48:00,427 | INFO | action_auto_attendant | Action log file: C:\\to_upload\\webex\\wxc_sdk\\actions\\logs\\20260208_204800_action_auto_attendant.log\n2026-02-08 20:48:00,427 | INFO | action_auto_attendant | Action objective: Orquesta prerequisitos simples (schedule/announcement) y upsert de auto attendant.\n2026-02-08 20:48:00,427 | INFO | action_auto_attendant | Note: Paso previo: crear/usar schedule y announcement si faltan.\n2026-02-08 20:48:00,427 | INFO | action_auto_attendant | Note: Paso posterior: validar menús y horario en lectura final.\n2026-02-08 20:48:00,428 | INFO | action_auto_attendant | No server-side dry-run endpoint is documented for these APIs. probe mode uses controlled invalid or read-only calls.\n2026-02-08 20:48:00,428 | INFO | action_auto_attendant | Preflight snapshot GET start\n2026-02-08 20:48:01,580 | INFO | action_auto_attendant | Preflight snapshot GET done\n2026-02-08 20:48:01,581 | INFO | action_auto_attendant | Preflight snapshot saved\n2026-02-08 20:48:01,581 | INFO | action_auto_attendant | API call start\n2026-02-08 20:48:03,022 | INFO | action_auto_attendant | API call done | step=upsert_auto_attendant status=404 response_headers={'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Trackingid': 'ROUTERGW_12197a8d-d883-499a-ad28-841ea8901902', 'Cisco-Spark-Error-Codes': '5620', 'Date': 'Sun, 08 Feb 2026 19:48:01 GMT', 'Server': 'istio-envoy', 'X-Envoy-Upstream-Service-Time': '324', 'X-Normalized-Path': '/api/v1/customers/{customerId}/locations/{locationId}/features/autoattendants', 'Content-Type': 'application/json', 'Content-Length': '315'} response_body={\"errorCode\":5620,\"message\":\"[Error 5620] Group not found with this external ID: fc8678da-0b8b-40ee-8eec-3a71e81b3748\",\"errors\":[{\"errorCode\":5620,\"description\":\"[Error 5620] Group not found with this external ID: fc8678da-0b8b-40ee-8eec-3a71e81b3748\"}],\"trackingId\":\"ROUTERGW_12197a8d-d883-499a-ad28-841ea8901902\"}\n2026-02-08 20:48:03,022 | INFO | action_auto_attendant | Completed action with 0 failure(s)\n",
+      "stderr": ""
+    }
+  ]
+}

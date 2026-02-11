@@ -17,10 +17,10 @@ async def main():
     # load environment. SDk fetches the access token from WEBEX_ACCESS_TOKEN environment variable
     load_dotenv(override=True)
 
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG)
 
     # set to DEBUG to see the actual requests
-    logging.getLogger('wxc_sdk.rest').setLevel(logging.INFO)
+    logging.getLogger('wxc_sdk.rest').setLevel(logging.DEBUG)
 
     async with AsWebexSimpleApi() as api:
 
