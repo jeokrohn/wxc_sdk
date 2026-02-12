@@ -47,10 +47,7 @@ from wxc_sdk.me.callblock import CallBlockNumber
 from wxc_sdk.me.callcenter import AgentACDState, MeCallCenterSettings, MeCallQueue
 from wxc_sdk.me.callerid import MeCallerIdSettings, MeSelectedCallerId
 from wxc_sdk.me.endpoints import EndpointType, MeEndpoint, MeHost, MeMobility, MeSecondaryLine
-from wxc_sdk.me.executive import AssignedAssistants, AssistantSettings, ExecAlert, ExecAlertClidNameMode, \
-    ExecAlertClidPhoneNumberMode, ExecAlertRolloverAction, ExecAlertingMode, ExecCallFilterType, \
-    ExecCallFiltering, ExecCallFilteringCriteria, ExecCallFilteringCriteriaItem, ExecCallFilteringScheduleLevel, \
-    ExecCallFilteringToNumber, ExecOrAssistant, ExecScreening, ExecScreeningAlertType
+from wxc_sdk.me.executive import AssignedAssistants
 from wxc_sdk.me.recording import MeRecordingSettings, MeRecordingVendor
 from wxc_sdk.me.snr import MeSNRSettings
 from wxc_sdk.meetings import AnswerCondition, ApprovalQuestion, ApprovalRule, AttendeePrivileges, \
@@ -105,6 +102,10 @@ from wxc_sdk.person_settings.ecbn import ECBNDefault, ECBNDependencies, ECBNEffe
     ECBNLocationEffectiveLevel, ECBNLocationMember, ECBNQuality, ECBNSelection, PersonECBN, PersonECBNDirectLine, \
     SelectedECBN
 from wxc_sdk.person_settings.exec_assistant import ExecAssistantType, _Helper
+from wxc_sdk.person_settings.executive import AssistantSettings, ExecAlert, ExecAlertClidNameMode, \
+    ExecAlertClidPhoneNumberMode, ExecAlertRolloverAction, ExecAlertingMode, ExecCallFilterType, \
+    ExecCallFiltering, ExecCallFilteringCriteria, ExecCallFilteringCriteriaItem, ExecCallFilteringScheduleLevel, \
+    ExecCallFilteringToNumber, ExecOrAssistant, ExecScreening, ExecScreeningAlertType
 from wxc_sdk.person_settings.feature_access import FeatureAccessLevel, FeatureAccessSettings, \
     UserFeatureAccessSettings
 from wxc_sdk.person_settings.forwarding import CallForwardingAlways, CallForwardingCommon, CallForwardingNoAnswer, \

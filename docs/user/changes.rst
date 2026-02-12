@@ -13,6 +13,7 @@ Release history
 - feat: parameter emergency_address is optional for EmergencyAddressApi.update_for_phone_number
 - feat: addtl. event types for WebhookResource
 - feat: addtl. CDR fields
+- feat: new api :attr:`api.person_settings.executive <wxc_sdk.person_settings.PersonSettingsApi.executive>`
 
 1.27.1
 ------

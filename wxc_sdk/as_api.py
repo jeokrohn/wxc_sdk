@@ -41,24 +41,24 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsDECTDevicesApi', 'AsDetailedCDRApi', 'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi',
            'AsDevicesApi', 'AsDevicesDynamicSettingsApi', 'AsDialPlanApi', 'AsDigitPatternsApi',
            'AsDisableCallingLocationJobsApi', 'AsDndApi', 'AsECBNApi', 'AsEmergencyAddressApi', 'AsEventsApi',
-           'AsExecAssistantApi', 'AsFeatureAccessApi', 'AsFeatureSelector', 'AsForwardingApi', 'AsGoOverrideApi',
-           'AsGroupsApi', 'AsGuestCallingApi', 'AsGuestManagementApi', 'AsHotDeskApi',
-           'AsHotDeskingSigninViaVoicePortalApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi',
-           'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationAccessCodesApi',
-           'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi', 'AsLocationNumbersApi',
-           'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMSTeamsSettingApi', 'AsManageNumbersJobsApi',
-           'AsMeBargeApi', 'AsMeCallBlockApi', 'AsMeCallCenterApi', 'AsMeCallParkApi', 'AsMeCallPickupApi',
-           'AsMeCallPoliciesApi', 'AsMeCallerIdApi', 'AsMeDNDApi', 'AsMeEndpointsApi', 'AsMeExecutiveApi',
-           'AsMeForwardingApi', 'AsMePersonalAssistantApi', 'AsMeRecordingApi', 'AsMeSNRApi', 'AsMeSettingsApi',
-           'AsMeVoicemailApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi',
-           'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi',
-           'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsModeManagementApi',
-           'AsMonitoringApi', 'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOperatingModesApi',
-           'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi', 'AsOrganisationAccessCodesApi',
-           'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOrganizationContactsApi',
-           'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi',
-           'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPersonalAssistantApi', 'AsPlayListApi',
-           'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
+           'AsExecAssistantApi', 'AsExecutiveSettingsApi', 'AsFeatureAccessApi', 'AsFeatureSelector',
+           'AsForwardingApi', 'AsGoOverrideApi', 'AsGroupsApi', 'AsGuestCallingApi', 'AsGuestManagementApi',
+           'AsHotDeskApi', 'AsHotDeskingSigninViaVoicePortalApi', 'AsHotelingApi', 'AsHuntGroupApi',
+           'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi',
+           'AsLocationAccessCodesApi', 'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi',
+           'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMSTeamsSettingApi',
+           'AsManageNumbersJobsApi', 'AsMeBargeApi', 'AsMeCallBlockApi', 'AsMeCallCenterApi', 'AsMeCallParkApi',
+           'AsMeCallPickupApi', 'AsMeCallPoliciesApi', 'AsMeCallerIdApi', 'AsMeDNDApi', 'AsMeEndpointsApi',
+           'AsMeExecutiveApi', 'AsMeForwardingApi', 'AsMePersonalAssistantApi', 'AsMeRecordingApi', 'AsMeSNRApi',
+           'AsMeSettingsApi', 'AsMeVoicemailApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi',
+           'AsMeetingInviteesApi', 'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi',
+           'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi',
+           'AsModeManagementApi', 'AsMonitoringApi', 'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi',
+           'AsOperatingModesApi', 'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi',
+           'AsOrganisationAccessCodesApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi',
+           'AsOrganizationContactsApi', 'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi',
+           'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPersonalAssistantApi',
+           'AsPlayListApi', 'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
            'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsQueueCallRecordingSettingsApi',
            'AsRebuildPhonesJobsApi', 'AsReceptionistApi', 'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi',
            'AsReportsApi', 'AsRestSession', 'AsRolesApi', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi',
@@ -12033,6 +12033,449 @@ class AsExecAssistantApi(AsPersonSettingsApiChild):
         await self.put(ep, params=params, data=data)
 
 
+class AsExecutiveSettingsApi(AsApiChild, base=''):
+    """
+    Person executive settings
+    """
+
+    async def alert_settings(self, person_id: str, org_id: str = None) -> ExecAlert:
+        """
+        Get Person Executive Alert Settings
+
+        Get executive alert settings for the specified person.
+
+        Executive Alert settings in Webex allow you to control how calls are routed to executive assistants, including
+        alerting mode, rollover options, and caller ID presentation. You can configure settings such as sequential or
+        simultaneous alerting, and specify what happens when calls aren't answered.
+
+        This API requires a full, user, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param org_id: Organization ID for the person.
+        :type org_id: str
+        :rtype: :class:`ExecAlert`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/people/{person_id}/executive/alert')
+        data = await super().get(url, params=params)
+        r = ExecAlert.model_validate(data)
+        return r
+
+    async def update_alert_settings(self, person_id: str,
+                              settings: ExecAlert,
+                              org_id: str = None):
+        """
+        Modify Person Executive Alert Settings
+
+        Update executive alert settings for the specified person.
+
+        Executive Alert settings in Webex allow you to control how calls are routed to executive assistants, including
+        alerting mode, rollover options, and caller ID presentation. You can configure settings such as sequential or
+        simultaneous alerting, and specify what happens when calls aren't answered.
+
+        This API requires a full, user, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param settings: Alert Settings for the person.
+        :type settings: ExecutiveAlertSettings
+        :param org_id: Organization ID for the person.
+        :type org_id: str
+        :rtype: None
+        """
+        body = settings.update()
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/people/{person_id}/executive/alert')
+        await super().put(url, params=params, json=body)
+
+    async def assigned_assistants(self, person_id: str, org_id: str = None) -> list[ExecOrAssistant]:
+        """
+        Get Person Executive Assigned Assistants
+
+        Get list of assigned executive assistants for the specified person.
+
+        As an executive, you can add assistants to your executive pool to manage calls for you. You can set when and
+        which types of calls they can handle. Assistants can opt in when needed or opt out when not required.
+
+        This API requires a full, user, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param org_id: Organization ID for the person.
+        :type org_id: str
+        :rtype: list[ExecOrAssistant]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/people/{person_id}/executive/assignedAssistants')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[ExecOrAssistant]).validate_python(data['assistants'])
+        return r
+
+    async def update_assigned_assistants(self, person_id: str, assistant_ids: list[str] = None,
+                                   org_id: str = None):
+        """
+        Modify Person Executive Assigned Assistants
+
+        Update assigned executive assistants for the specified person.
+
+        As an executive, you can add assistants to your executive pool to manage calls for you. You can set when and
+        which types of calls they can handle. Assistants can opt in when needed or opt out when not required.
+
+        This API requires a full, user, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param assistant_ids: List of people to be assigned as assistant. To remove all assigned assistants, set
+            `assistantIds` to `null`.
+        :type assistant_ids: list[str]
+        :param org_id: Organization ID for the person.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if assistant_ids is not None:
+            body['assistantIds'] = assistant_ids
+        url = self.ep(f'telephony/config/people/{person_id}/executive/assignedAssistants')
+        await super().put(url, params=params, json=body)
+
+    async def executive_assistant_settings(self, person_id: str,
+                                     org_id: str = None) -> AssistantSettings:
+        """
+        Get Person Executive Assistant Settings
+
+        Get executive assistant settings for the specified person when person is configured as executive assistant.
+
+        Executive assistants can make, answer, intercept, and route calls appropriately on behalf of their executive.
+        Assistants can also set the call forwarding destination, and join or leave an executive’s pool.
+
+        This API requires a full, user, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param org_id: Organization ID for the person.
+        :type org_id: str
+        :rtype: :class:`AssistantSettings`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/people/{person_id}/executive/assistant')
+        data = await super().get(url, params=params)
+        r = AssistantSettings.model_validate(data)
+        return r
+
+    async def update_executive_assistant_settings(self, person_id: str, settings: AssistantSettings, org_id: str = None):
+        """
+        Modify Person Executive Assistant Settings
+
+        Update executive assistant settings for the specified person when person is configured as executive assistant.
+
+        Executive assistants can make, answer, intercept, and route calls appropriately on behalf of their executive.
+        Assistants can also set the call forwarding destination, and join or leave an executive’s pool.
+
+        This API requires a full, user, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param settings: Person Executive Assistant Settings
+        :type settings: :class:`AssistantSettings`
+        :param org_id: Organization ID for the person.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.ep(f'telephony/config/people/{person_id}/executive/assistant')
+        await super().put(url, params=params, json=body)
+
+    async def executive_available_assistants(self, person_id: str, name: str = None, phone_number: str = None,
+                                       org_id: str = None,
+                                       **params) -> List[ExecOrAssistant]:
+        """
+        Get Person Executive Available Assistants
+
+        Retrieves a list of people available for assignment as executive assistants to the specified person.
+
+        As an executive, you can add assistants to your executive pool to manage calls for you. You can set when and
+        which types of calls they can handle. Assistants can opt in when needed or opt out when not required.
+
+        This API requires a full, user, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param name: Only return people with the matching name (person's first and last name combination).
+        :type name: str
+        :param phone_number: Only return people with the matching phone number or extension.
+        :type phone_number: str
+        :param org_id: Organization ID for the person.
+        :type org_id: str
+        :return: list of available assistants
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        url = self.ep(f'telephony/config/people/{person_id}/executive/availableAssistants')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[ExecOrAssistant]).validate_python(data['assistants'])
+        return r
+
+    async def executive_call_filtering_settings(self, person_id: str,
+                                          org_id: str = None) -> ExecCallFiltering:
+        """
+        Get Person Executive Call Filtering Settings
+
+        Retrieve the executive call filtering settings for the specified person.
+
+        Executive Call Filtering in Webex allows you to control which calls are allowed to reach the executive
+        assistant based on custom criteria, such as specific phone numbers or call types. You can enable or disable
+        call filtering and configure filter rules to manage incoming calls.
+
+        This API requires a full, user, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param org_id: Organization ID for the user.
+        :type org_id: str
+        :rtype: :class:`ExecCallFiltering`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/people/{person_id}/executive/callFiltering')
+        data = await super().get(url, params=params)
+        r = ExecCallFiltering.model_validate(data)
+        return r
+
+    async def update_executive_call_filtering_settings(self, person_id: str, settings: ExecCallFiltering,
+                                                 org_id: str = None):
+        """
+        Modify Person Executive Call Filtering Settings
+
+        Update the executive call filtering settings for the specified person.
+
+        Executive Call Filtering in Webex allows you to control which calls are allowed to reach the executive
+        assistant based on custom criteria, such as specific phone numbers or call types. You can enable or disable
+        call filtering and configure filter rules to manage incoming calls.
+
+        This API requires a full, user, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param settings: Person Executive Call Filtering Settings
+        :type settings: ExecCallFiltering
+        :param org_id: Organization ID for the user.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.ep(f'telephony/config/people/{person_id}/executive/callFiltering')
+        await super().put(url, params=params, json=body)
+
+    async def create_call_filtering_criteria(self, person_id: str, settings: ExecCallFilteringCriteria,
+                                       org_id: str = None) -> str:
+        """
+        Add Person Executive Call Filtering Criteria
+
+        Create a new executive call filtering criteria configuration for the specified person.
+
+        Executive Call Filtering Criteria in Webex allows you to define detailed filter rules for incoming calls. This
+        API creates a new filter rule with the specified configuration, including schedule, phone numbers, and call
+        routing preferences.
+
+        This API requires a full, user or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param settings: Call Filtering Settings
+        :type settings: ExecCallFilteringCriteria
+        :param org_id: Organization ID for the user.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.create()
+        url = self.ep(f'telephony/config/people/{person_id}/executive/callFiltering/criteria')
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    async def delete_call_filtering_criteria(self, person_id: str, id: str, org_id: str = None):
+        """
+        Delete Person Executive Call Filtering Criteria
+
+        Delete a specific executive call filtering criteria configuration for the specified person.
+
+        Executive Call Filtering Criteria in Webex allows you to manage detailed filter rules for incoming calls. This
+        API removes a specific filter rule by its unique identifier.
+
+        This API requires a full, user or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param id: The `id` parameter specifies the unique identifier for the executive call filtering criteria.
+            Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL2RHVnpkRjltYVd4MFpYST0`.
+        :type id: str
+        :param org_id: Organization ID for the user.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/people/{person_id}/executive/callFiltering/criteria/{id}')
+        await super().delete(url, params=params)
+
+    async def get_filtering_criteria(self, person_id: str, id: str,
+                               org_id: str = None) -> ExecCallFilteringCriteria:
+        """
+        Get Person Executive Call Filtering Criteria Settings
+
+        Retrieve the executive call filtering criteria settings for the specified person.
+
+        Executive Call Filtering Criteria in Webex allows you to retrieve the detailed configuration for a specific
+        filter rule. This includes schedule settings, phone number filters, and call routing preferences for executive
+        call filtering.
+
+        This API requires a full, user, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param id: The `id` parameter specifies the unique identifier for the executive call filtering criteria.
+        :type id: str
+        :param org_id: Organization ID for the user.
+        :type org_id: str
+        :rtype: :class:`ExecCallFilteringCriteria`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/people/{person_id}/executive/callFiltering/criteria/{id}')
+        data = await super().get(url, params=params)
+        r = ExecCallFilteringCriteria.model_validate(data)
+        return r
+
+    async def update_call_filtering_criteria(self, person_id: str, id: str,
+                                       settings: ExecCallFilteringCriteria,
+                                       org_id: str = None):
+        """
+        Modify Person Executive Call Filtering Criteria Settings
+
+        Update the executive call filtering settings for the specified person.
+
+        Executive Call Filtering in Webex allows you to control which calls are allowed to reach the executive
+        assistant based on custom criteria, such as specific phone numbers or call types. You can enable or disable
+        call filtering and configure filter rules to manage incoming calls.
+
+        This API requires a full, user or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param id: The `id` parameter specifies the unique identifier for the executive call filtering criteria.
+            Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL2RHVnpkRjltYVd4MFpYST0`.
+        :type id: str
+        :param settings: Call Filtering Settings
+        :type settings: :class:`ExecCallFilteringCriteria`
+        :param org_id: Organization ID for the user.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.ep(f'telephony/config/people/{person_id}/executive/callFiltering/criteria/{id}')
+        await super().put(url, params=params, json=body)
+
+    async def screening_settings(self, person_id: str, org_id: str = None) -> ExecScreening:
+        """
+        Get Person Executive Screening Settings
+
+        Get executive screening settings for the specified person.
+
+        Executive Screening in Webex allows you to manage how incoming calls are screened and alerted based on your
+        preferences. You can enable or disable executive screening and configure alert types and locations for
+        notifications.
+
+        This API requires a full, user, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param org_id: Organization ID for the person.
+        :type org_id: str
+        :rtype: :class:`ExecScreening`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/people/{person_id}/executive/screening')
+        data = await super().get(url, params=params)
+        r = ExecScreening.model_validate(data)
+        return r
+
+    async def update_screening_settings(self, person_id: str, settings: ExecScreening,
+                                  org_id: str = None):
+        """
+        Modify Person Executive Screening Settings
+
+        Update executive screening settings for the specified person.
+
+        Executive Screening in Webex allows you to manage how incoming calls are screened and alerted based on your
+        preferences. You can enable or disable executive screening and configure alert types and locations for
+        notifications.
+
+        This API requires a full, user, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param settings: Screening Settings
+        :type settings: ExecScreening
+        :param org_id: Organization ID for the person.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.model_dump(mode='json', by_alias=True, exclude_unset=True)
+        url = self.ep(f'telephony/config/people/{person_id}/executive/screening')
+        await super().put(url, params=params, json=body)
+
+
 class AsFeatureAccessApi(AsApiChild, base='telephony'):
     """
     End user Feature Access API
@@ -14907,9 +15350,11 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
     dnd: AsDndApi
     #: ECBN settings
     ecbn: AsECBNApi
-    #: Executive Assistant Settings for a Person
+    #: Executive Assistant settings for a Person
     exec_assistant: AsExecAssistantApi
-    #: Featuer access settings for a person
+    #: Executive settings for a person
+    executive: AsExecutiveSettingsApi
+    #: Feature access settings for a person
     feature_access: AsFeatureAccessApi
     #: Forwarding Settings for a Person
     forwarding: AsPersonForwardingApi
@@ -14973,6 +15418,7 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
         self.dnd = AsDndApi(session=session)
         self.ecbn = AsECBNApi(session=session)
         self.exec_assistant = AsExecAssistantApi(session=session)
+        self.executive = AsExecutiveSettingsApi(session=session)
         self.feature_access = AsFeatureAccessApi(session=session)
         self.forwarding = AsPersonForwardingApi(session=session)
         self.hoteling = AsHotelingApi(session=session)

@@ -21,6 +21,7 @@ from .common import ApiSelector
 from .dnd import DndApi
 from .ecbn import ECBNApi
 from .exec_assistant import ExecAssistantApi
+from .executive import ExecutiveSettingsApi
 from .feature_access import FeatureAccessApi
 from .forwarding import PersonForwardingApi
 from .hoteling import HotelingApi
@@ -182,9 +183,11 @@ class PersonSettingsApi(ApiChild, base='people'):
     dnd: DndApi
     #: ECBN settings
     ecbn: ECBNApi
-    #: Executive Assistant Settings for a Person
+    #: Executive Assistant settings for a Person
     exec_assistant: ExecAssistantApi
-    #: Featuer access settings for a person
+    #: Executive settings for a person
+    executive: ExecutiveSettingsApi
+    #: Feature access settings for a person
     feature_access: FeatureAccessApi
     #: Forwarding Settings for a Person
     forwarding: PersonForwardingApi
@@ -248,6 +251,7 @@ class PersonSettingsApi(ApiChild, base='people'):
         self.dnd = DndApi(session=session)
         self.ecbn = ECBNApi(session=session)
         self.exec_assistant = ExecAssistantApi(session=session)
+        self.executive = ExecutiveSettingsApi(session=session)
         self.feature_access = FeatureAccessApi(session=session)
         self.forwarding = PersonForwardingApi(session=session)
         self.hoteling = HotelingApi(session=session)

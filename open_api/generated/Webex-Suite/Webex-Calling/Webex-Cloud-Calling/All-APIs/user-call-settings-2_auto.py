@@ -12,31 +12,39 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __all__ = ['AccessLevel', 'Action', 'AgentCallerIdType', 'ApplicationPutSharedLineMemberItem', 'ApplicationsSetting',
-           'AudioAnnouncementFileGetObject', 'AudioAnnouncementFileGetObjectLevel',
+           'Assistant', 'AudioAnnouncementFileGetObject', 'AudioAnnouncementFileGetObjectLevel',
            'AudioAnnouncementFileGetObjectMediaFileType', 'AuthorizationCode', 'AuthorizationCodeLevel',
-           'AvailableCallerIdObject', 'AvailableSharedLineMemberItem', 'CallsFrom', 'CallsFromSelectiveAccept',
-           'CallsFromSelectiveReject', 'CountObject', 'Criteria', 'CriteriaAccept', 'CriteriaForward', 'DeviceType',
-           'EndpointInformation', 'Endpoints', 'ErrorMessageObject', 'ErrorObject', 'ErrorOrImpactItem',
-           'ExceptionTypeObject', 'GetMessageSummaryResponse', 'GetMusicOnHoldObject', 'GetMusicOnHoldObjectGreeting',
-           'GetSharedLineMemberItem', 'GetSharedLineMemberList', 'GetUserCallCaptionsObject',
-           'GetUserMSTeamsSettingsObject', 'ItemObject', 'JobDetailsResponse', 'JobDetailsResponseById',
-           'JobDetailsResponseLatestExecutionExitCode', 'JobDetailsResponseLatestExecutionStatus',
-           'JobExecutionStatusObject', 'LicenseType', 'LineType', 'Location', 'ModeManagementFeatureTypeObject',
-           'ModifyUserMSTeamsSettingsObjectSettingName', 'NumberOwnerType', 'PersonCallForwardAvailableNumberObject',
-           'PersonCallForwardAvailableNumberObjectOwner', 'PersonECBNAvailableNumberObject',
-           'PersonECBNAvailableNumberObjectOwner', 'PersonECBNAvailableNumberObjectOwnerType',
-           'PersonPrimaryAvailableNumberObject', 'PersonPrimaryAvailableNumberObjectTelephonyType',
-           'PersonSecondaryAvailableNumberObject', 'PersonalAssistantGet', 'PersonalAssistantGetAlerting',
-           'PersonalAssistantGetPresence', 'PhoneNumber', 'PutSharedLineMemberItem', 'RingPattern', 'STATE',
-           'ScheduleLevel', 'ScheduleType', 'SelectiveAcceptCallCriteriaGet', 'SelectiveAcceptCallGet',
-           'SelectiveForwardCallCriteriaGet', 'SelectiveForwardCallGet', 'SelectiveRejectCallCriteriaGet',
-           'SelectiveRejectCallGet', 'SettingsObject', 'SettingsObjectLevel', 'SettingsObjectSettingName', 'Source',
-           'SourceSelectiveAccept', 'StepExecutionStatusesObject', 'TelephonyType', 'TransferNumberGet',
-           'UserCallSettings22Api', 'UserDigitPatternObject', 'UserItem', 'UserListItem',
-           'UserModeManagementAvailableFeaturesObject', 'UserModeManagementFeatureObject',
-           'UserOutgoingPermissionDigitPatternGetListObject', 'UserOutgoingPermissionDigitPatternPostObjectAction',
-           'UserPlaceAuthorizationCodeListGet', 'UserSettingsPermissionsGet', 'UserSettingsPermissionsGetDefault',
-           'UserType', 'UsersListItem', 'VoiceMailPartyInformation', 'VoiceMessageDetails']
+           'AvailableAssistant', 'AvailableCallerIdObject', 'AvailableSharedLineMemberItem', 'CallsFrom',
+           'CallsFromSelectiveAccept', 'CallsFromSelectiveReject', 'CountObject', 'Criteria', 'CriteriaAccept',
+           'CriteriaForward', 'DeviceType', 'EndpointInformation', 'Endpoints', 'ErrorMessageObject', 'ErrorObject',
+           'ErrorOrImpactItem', 'ExceptionTypeObject', 'Executive', 'ExecutiveAlertGet',
+           'ExecutiveAlertGetAlertingMode', 'ExecutiveAlertGetClidNameMode', 'ExecutiveAlertGetClidPhoneNumberMode',
+           'ExecutiveAlertGetRolloverAction', 'ExecutiveAssistantSettingsGet', 'ExecutiveCallFilteringCriteriaGet',
+           'ExecutiveCallFilteringCriteriaGetCallsToNumbersItem',
+           'ExecutiveCallFilteringCriteriaGetCallsToNumbersItemType', 'ExecutiveCallFilteringGet',
+           'ExecutiveCallFilteringGetCriteriaItem', 'ExecutiveCallFilteringGetFilterType',
+           'ExecutiveCallFilteringPatchCriteriaActivationItem', 'ExecutivePut', 'ExecutiveScreeningGet',
+           'ExecutiveScreeningGetAlertType', 'GetMessageSummaryResponse', 'GetMusicOnHoldObject',
+           'GetMusicOnHoldObjectGreeting', 'GetSharedLineMemberItem', 'GetSharedLineMemberList',
+           'GetUserCallCaptionsObject', 'GetUserMSTeamsSettingsObject', 'ItemObject', 'JobDetailsResponse',
+           'JobDetailsResponseById', 'JobDetailsResponseLatestExecutionExitCode',
+           'JobDetailsResponseLatestExecutionStatus', 'JobExecutionStatusObject', 'LicenseType', 'LineType',
+           'Location', 'ModeManagementFeatureTypeObject', 'ModifyUserMSTeamsSettingsObjectSettingName',
+           'NumberOwnerType', 'PersonCallForwardAvailableNumberObject', 'PersonCallForwardAvailableNumberObjectOwner',
+           'PersonECBNAvailableNumberObject', 'PersonECBNAvailableNumberObjectOwner',
+           'PersonECBNAvailableNumberObjectOwnerType', 'PersonPrimaryAvailableNumberObject',
+           'PersonPrimaryAvailableNumberObjectTelephonyType', 'PersonSecondaryAvailableNumberObject',
+           'PersonalAssistantGet', 'PersonalAssistantGetAlerting', 'PersonalAssistantGetPresence', 'PhoneNumber',
+           'PutSharedLineMemberItem', 'RingPattern', 'STATE', 'ScheduleLevel', 'ScheduleType',
+           'SelectiveAcceptCallCriteriaGet', 'SelectiveAcceptCallGet', 'SelectiveForwardCallCriteriaGet',
+           'SelectiveForwardCallGet', 'SelectiveRejectCallCriteriaGet', 'SelectiveRejectCallGet', 'SettingsObject',
+           'SettingsObjectLevel', 'SettingsObjectSettingName', 'Source', 'SourceSelectiveAccept',
+           'StepExecutionStatusesObject', 'TelephonyType', 'TransferNumberGet', 'UserCallSettings22Api',
+           'UserDigitPatternObject', 'UserItem', 'UserListItem', 'UserModeManagementAvailableFeaturesObject',
+           'UserModeManagementFeatureObject', 'UserOutgoingPermissionDigitPatternGetListObject',
+           'UserOutgoingPermissionDigitPatternPostObjectAction', 'UserPlaceAuthorizationCodeListGet',
+           'UserSettingsPermissionsGet', 'UserSettingsPermissionsGetDefault', 'UserType', 'UsersListItem',
+           'VoiceMailPartyInformation', 'VoiceMessageDetails']
 
 
 class Action(str, Enum):
@@ -792,7 +800,7 @@ class UserDigitPatternObject(ApiModel):
     pattern: Optional[str] = None
     #: Action to be performed on the input number that matches the digit pattern.
     action: Optional[UserOutgoingPermissionDigitPatternPostObjectAction] = None
-    #: Option to allow or disallow transfer of calls.
+    #: If `true`, allows transfer and forwarding for the call type.
     transfer_enabled: Optional[bool] = None
 
 
@@ -856,7 +864,7 @@ class PersonalAssistantGet(ApiModel):
     presence: Optional[PersonalAssistantGetPresence] = None
     #: The date until which personal assistant is active.
     until_date_time: Optional[datetime] = None
-    #: Toggle the option to transfer to another number.
+    #: If `true`, allows transfer and forwarding for the call type.
     transfer_enabled: Optional[bool] = None
     #: Number to transfer to.
     transfer_number: Optional[str] = None
@@ -1123,78 +1131,80 @@ class AccessLevel(str, Enum):
 
 
 class UserSettingsPermissionsGetDefault(ApiModel):
-    #: Set whether end users have access to make changes to their `Anonymous call rejection` feature via UserHub, or
+    #: Set whether end users have access to make changes to their `Anonymous call rejection` feature via User Hub, or
     #: other clients (Webex, IP phone, etc.).
     anonymous_call_rejection: Optional[AccessLevel] = None
-    #: Set whether end users have access to make changes to their `Barge In` feature via UserHub, or other clients
+    #: Set whether end users have access to make changes to their `Barge In` feature via User Hub, or other clients
     #: (Webex, IP phone, etc.).
     barge_in: Optional[AccessLevel] = None
-    #: Set whether end users have access to make changes to their `Block caller ID` feature via UserHub, or other
+    #: Set whether end users have access to make changes to their `Block caller ID` feature via User Hub, or other
     #: clients (Webex, IP phone, etc.).
     block_caller_id: Optional[AccessLevel] = None
-    #: Set whether end users have access to make changes to their `Call forwarding` feature via UserHub, or other
+    #: Set whether end users have access to make changes to their `Call forwarding` feature via User Hub, or other
     #: clients (Webex, IP phone, etc.).
     call_forwarding: Optional[AccessLevel] = None
-    #: Set whether end users have access to make changes to their `Call waiting` feature via UserHub, or other clients
+    #: Set whether end users have access to make changes to their `Call waiting` feature via User Hub, or other clients
     #: (Webex, IP phone, etc.).
     call_waiting: Optional[AccessLevel] = None
-    #: Set whether end users have access to make changes to their `Call notify` feature via UserHub, or other clients
+    #: Set whether end users have access to make changes to their `Call notify` feature via User Hub, or other clients
     #: (Webex, IP phone, etc.).
     call_notify: Optional[AccessLevel] = None
-    #: Set whether end users have access to make changes to their `Connected line identity` feature via UserHub, or
+    #: Set whether end users have access to make changes to their `Connected line identity` feature via User Hub, or
     #: other clients (Webex, IP phone, etc.).
     connected_line_identity: Optional[AccessLevel] = None
-    #: Set whether end users have access to make changes to their `Executive/Executive assistant` feature via UserHub,
+    #: Set whether end users have access to make changes to their `Executive/Executive assistant` feature via User Hub,
     #: or other clients (Webex, IP phone, etc.).
     executive: Optional[AccessLevel] = None
-    #: Set whether end users have access to make changes to their `Hoteling` feature via UserHub, or other clients
+    #: Set whether end users have access to make changes to their `Hoteling` feature via User Hub, or other clients
     #: (Webex, IP phone, etc.).
     hoteling: Optional[AccessLevel] = None
-    #: Set whether end users have access to make changes to their `Priority alert` feature via UserHub, or other
+    #: Set whether end users have access to make changes to their `Priority alert` feature via User Hub, or other
     #: clients (Webex, IP phone, etc.).
     priority_alert: Optional[AccessLevel] = None
-    #: Set whether end users have access to make changes to their `Selectively accept calls` feature via UserHub, or
+    #: Set whether end users have access to make changes to their `Selectively accept calls` feature via User Hub, or
     #: other clients (Webex, IP phone, etc.).
     selectively_accept_calls: Optional[AccessLevel] = None
-    #: Set whether end users have access to make changes to their `Selectively reject calls` feature via UserHub, or
+    #: Set whether end users have access to make changes to their `Selectively reject calls` feature via User Hub, or
     #: other clients (Webex, IP phone, etc.).
     selectively_reject_calls: Optional[AccessLevel] = None
-    #: Set whether end users have access to make changes to their `Selectively forward calls` feature via UserHub, or
+    #: Set whether end users have access to make changes to their `Selectively forward calls` feature via User Hub, or
     #: other clients (Webex, IP phone, etc.).
     selectively_forward_calls: Optional[AccessLevel] = None
-    #: Set whether end users have access to make changes to their `Sequential ring` feature via UserHub, or other
+    #: Set whether end users have access to make changes to their `Sequential ring` feature via User Hub, or other
     #: clients (Webex, IP phone, etc.).
     sequential_ring: Optional[AccessLevel] = None
-    #: Set whether end users have access to make changes to their `Simultaneous ring` feature via UserHub, or other
+    #: Set whether end users have access to make changes to their `Simultaneous ring` feature via User Hub, or other
     #: clients (Webex, IP phone, etc.).
     simultaneous_ring: Optional[AccessLevel] = None
-    #: Set whether end users have access to make changes to their `Single number reach` feature via UserHub, or other
+    #: Set whether end users have access to make changes to their `Single number reach` feature via User Hub, or other
     #: clients (Webex, IP phone, etc.).
     single_number_reach: Optional[AccessLevel] = None
-    #: Set whether end users have access to make changes to their `Voicemail feature` feature via UserHub, or other
+    #: Set whether end users have access to make changes to their `Voicemail feature` feature via User Hub, or other
     #: clients (Webex, IP phone, etc.).
     voicemail: Optional[AccessLevel] = None
-    #: Set whether end users have access to make changes to their `Send calls to voicemail` feature via UserHub, or
+    #: Set whether end users have access to make changes to their `Send calls to voicemail` feature via User Hub, or
     #: other clients (Webex, IP phone, etc.).
     send_calls_to_voicemail: Optional[AccessLevel] = None
     #: Set whether end users have access to make changes to their `Email a copy of the voicemail message` feature via
-    #: UserHub, or other clients (Webex, IP phone, etc.).
+    #: User Hub, or other clients (Webex, IP phone, etc.).
     voicemail_email_copy: Optional[AccessLevel] = None
-    #: Set whether end users have access to make changes to their `Fax messaging` feature via UserHub, or other clients
-    #: (Webex, IP phone, etc.).
+    #: Set whether end users have access to make changes to their `Fax messaging` feature via User Hub, or other
+    #: clients (Webex, IP phone, etc.).
     voicemail_fax_messaging: Optional[AccessLevel] = None
-    #: Set whether end users have access to make changes to their `Message storage` feature via UserHub, or other
+    #: Set whether end users have access to make changes to their `Message storage` feature via User Hub, or other
     #: clients (Webex, IP phone, etc.).
     voicemail_message_storage: Optional[AccessLevel] = None
-    #: Set whether end users have access to make changes to their `Notifications` feature via UserHub, or other clients
-    #: (Webex, IP phone, etc.).
+    #: Set whether end users have access to make changes to their `Notifications` feature via User Hub, or other
+    #: clients (Webex, IP phone, etc.).
     voicemail_notifications: Optional[AccessLevel] = None
-    #: Set whether end users have access to make changes to their `Transfer on '0' to another number.` feature via
-    #: UserHub, or other clients (Webex, IP phone, etc.).
+    #: Set whether end users have access to make changes to their `Transfer on '0' to another number.` feature via User
+    #: Hub, or other clients (Webex, IP phone, etc.).
     voicemail_transfer_number: Optional[AccessLevel] = None
     #: Set whether end users have access to make changes to their `Allow End User to Generate Activation Codes & Delete
-    #: their Phones` feature via UserHub, or other clients (Webex, IP phone, etc.).
+    #: their Phones` feature via User Hub, or other clients (Webex, IP phone, etc.).
     generate_activation_code: Optional[AccessLevel] = None
+    #: Set whether end users have access to download voicemail via User Hub, or other clients (Webex, etc.).
+    voicemail_download: Optional[AccessLevel] = None
 
 
 class UserSettingsPermissionsGet(ApiModel):
@@ -1265,6 +1275,249 @@ class GetUserCallCaptionsObject(ApiModel):
     use_location_settings_enabled: Optional[bool] = None
 
 
+class ExecutiveCallFilteringGetFilterType(str, Enum):
+    #: Choose this option to ensure that only specific calls are sent to the executive assistant.
+    custom_call_filters = 'CUSTOM_CALL_FILTERS'
+    #: Choose this option to send both internal and external calls to the executive assistant.
+    all_calls = 'ALL_CALLS'
+    #: Choose this option to send all internal calls to the executive assistant.
+    all_internal_calls = 'ALL_INTERNAL_CALLS'
+    #: Choose this option to send all external calls to the executive assistant.
+    all_external_calls = 'ALL_EXTERNAL_CALLS'
+
+
+class ExecutiveCallFilteringGetCriteriaItem(ApiModel):
+    #: Unique identifier for the filter criteria.
+    id: Optional[str] = None
+    #: Name of the criteria.
+    filter_name: Optional[str] = None
+    #: * `ANY_PHONE_NUMBER` - The criteria applies to any phone number.
+    source: Optional[CallsFromSelectiveReject] = None
+    #: Controls whether this filter criteria is active. When `true`, the criteria is evaluated for incoming calls. When
+    #: `false`, the criteria is completely ignored and has no effect on call filtering.
+    activation_enabled: Optional[bool] = None
+    #: Controls the action when this criteria matches a call. When `true`, matching calls are filtered and will alert
+    #: the executive's assistants. When `false`, matching calls are not filtered and will not alert the executive's
+    #: assistants. Criteria with `filterEnabled` as `false` take precedence over other filtering criteria with
+    #: `filterEnabled` as `true`, allowing exceptions where certain calls are not filtered to the executive's
+    #: assistants.
+    filter_enabled: Optional[bool] = None
+
+
+class ExecutiveCallFilteringGet(ApiModel):
+    #: Indicates whether executive call filtering is enabled.
+    enabled: Optional[bool] = None
+    #: * `CUSTOM_CALL_FILTERS` - Choose this option to ensure that only specific calls are sent to the executive
+    #: assistant.
+    filter_type: Optional[ExecutiveCallFilteringGetFilterType] = None
+    #: The list of call filtering criteria configured for executive call filtering.
+    criteria: Optional[list[ExecutiveCallFilteringGetCriteriaItem]] = None
+
+
+class ExecutiveCallFilteringPatchCriteriaActivationItem(ApiModel):
+    #: Unique identifier for the filter criteria.
+    id: Optional[str] = None
+    #: Controls whether this filter criteria is active. When `true`, the criteria is evaluated for incoming calls. When
+    #: `false`, the criteria is completely ignored and has no effect on call filtering.
+    activation_enabled: Optional[bool] = None
+
+
+class ExecutiveCallFilteringCriteriaGetCallsToNumbersItemType(str, Enum):
+    #: Number is assigned as primary to executive.
+    primary = 'PRIMARY'
+    #: Number is assigned as alternate (secondary) to the executive.
+    alternate = 'ALTERNATE'
+
+
+class ExecutiveCallFilteringCriteriaGetCallsToNumbersItem(ApiModel):
+    #: * `PRIMARY` - Number is assigned as primary to executive.
+    type: Optional[ExecutiveCallFilteringCriteriaGetCallsToNumbersItemType] = None
+    #: The phone number assigned to the executive that will be used to match criteria.
+    phone_number: Optional[str] = None
+
+
+class ExecutiveCallFilteringCriteriaGet(ApiModel):
+    #: Unique identifier for the filter criteria.
+    id: Optional[str] = None
+    #: Name of the criteria.
+    filter_name: Optional[str] = None
+    #: Name of the schedule associated with this criteria.
+    schedule_name: Optional[str] = None
+    #: * `businessHours` - The schedule type that specifies the business or working hours during the day.
+    schedule_type: Optional[ScheduleType] = None
+    #: * `PEOPLE` - The schedule level that specifies that criteria is of People level.
+    schedule_level: Optional[ScheduleLevel] = None
+    #: * `ANY_PHONE_NUMBER` - The criteria applies to any phone number.
+    calls_from: Optional[CallsFromSelectiveReject] = None
+    #: Indicates if the criteria applies to anonymous callers.
+    anonymous_callers_enabled: Optional[bool] = None
+    #: Indicates if the criteria applies to unavailable callers.
+    unavailable_callers_enabled: Optional[bool] = None
+    #: The list of phone numbers that this filtering criteria applies to, when `callsFrom` is set to
+    #: `SELECT_PHONE_NUMBERS`.
+    phone_numbers: Optional[list[str]] = None
+    #: Controls the action when this criteria matches a call. When `true`, matching calls are filtered and will alert
+    #: the executive's assistants. When `false`, matching calls are not filtered and will not alert the executive's
+    #: assistants. Criteria with `filterEnabled` as `false` take precedence over other filtering criteria with
+    #: `filterEnabled` as `true`, allowing exceptions where certain calls are not filtered to the executive's
+    #: assistants.
+    filter_enabled: Optional[bool] = None
+    #: List of numbers for the executive that will match the criteria when called. This may include the executive’s
+    #: primary number and/or extension, as well as secondary (alternate) numbers (and associated extensions). If the
+    #: list is empty, any number or extension for the executive matches the criteria when called. If the list is not
+    #: empty, only the specified numbers and their extensions match the criteria.
+    calls_to_numbers: Optional[list[ExecutiveCallFilteringCriteriaGetCallsToNumbersItem]] = None
+
+
+class ExecutiveAlertGetAlertingMode(str, Enum):
+    #: Alerts assistants one at a time in the defined order.
+    sequential = 'SEQUENTIAL'
+    #: Alerts all assistants at the same time.
+    simultaneous = 'SIMULTANEOUS'
+
+
+class ExecutiveAlertGetRolloverAction(str, Enum):
+    #: The call is sent to the executive's voicemail.
+    voice_messaging = 'VOICE_MESSAGING'
+    #: The call is sent to no answer processing which may trigger executive services such as call forwarding or
+    #: voicemail.
+    #: Rollover is always triggered when no assistants remain for a filtered call. If the rollover timer is enabled,
+    #: rollover can also be triggered when the timer expires, even if assistants are still available.
+    no_answer_processing = 'NO_ANSWER_PROCESSING'
+    #: The call is forwarded to the specified destination (`rolloverForwardToPhoneNumber`).
+    forward = 'FORWARD'
+
+
+class ExecutiveAlertGetClidNameMode(str, Enum):
+    #: Display executive name followed by caller name.
+    executive_originator = 'EXECUTIVE_ORIGINATOR'
+    #: Display caller name followed by executive name.
+    originator_executive = 'ORIGINATOR_EXECUTIVE'
+    #: Display only executive name.
+    executive = 'EXECUTIVE'
+    #: Display only caller name.
+    originator = 'ORIGINATOR'
+    #: Display a custom name.
+    custom = 'CUSTOM'
+
+
+class ExecutiveAlertGetClidPhoneNumberMode(str, Enum):
+    #: Display executive's phone number.
+    executive = 'EXECUTIVE'
+    #: Display caller's phone number.
+    originator = 'ORIGINATOR'
+    #: Display a custom phone number.
+    custom = 'CUSTOM'
+
+
+class ExecutiveAlertGet(ApiModel):
+    #: * `SEQUENTIAL` - Alerts assistants one at a time in the defined order.
+    alerting_mode: Optional[ExecutiveAlertGetAlertingMode] = None
+    #: Number of rings before alerting the next assistant when `alertingMode` is `SEQUENTIAL`.
+    next_assistant_number_of_rings: Optional[int] = None
+    #: Controls whether the rollover timer (`rolloverWaitTimeInSecs`) is enabled. When set to `true`, rollover will
+    #: trigger after the timer expires, even if assistants are still available. When `false`, rollover only occurs
+    #: when no assistants remain.
+    rollover_enabled: Optional[bool] = None
+    #: Specifies what happens when rollover is triggered.
+    rollover_action: Optional[ExecutiveAlertGetRolloverAction] = None
+    #: Phone number to forward calls to when rollover action is set to `FORWARD`.
+    rollover_forward_to_phone_number: Optional[str] = None
+    #: Time in seconds to wait before applying the rollover action when `rolloverEnabled` is `true`.
+    rollover_wait_time_in_secs: Optional[int] = None
+    #: Controls how Caller ID name is displayed on assistant's phone.
+    clid_name_mode: Optional[ExecutiveAlertGetClidNameMode] = None
+    #: Custom caller ID name to display when `clidNameMode` is set to `CUSTOM` (deprecated).
+    custom_clidname: Optional[str] = Field(alias='customCLIDName', default=None)
+    #: Unicode Custom caller ID name to display when `clidNameMode` is set to `CUSTOM`.
+    custom_clidname_in_unicode: Optional[str] = Field(alias='customCLIDNameInUnicode', default=None)
+    #: Controls which Caller ID phone number is displayed on assistant's phone.
+    clid_phone_number_mode: Optional[ExecutiveAlertGetClidPhoneNumberMode] = None
+    #: Custom caller ID phone number to display on assistant's phone when `clidPhoneNumberMode` is set to `CUSTOM`.
+    custom_clidphone_number: Optional[str] = Field(alias='customCLIDPhoneNumber', default=None)
+
+
+class Assistant(ApiModel):
+    #: Unique identifier of the assistant.
+    id: Optional[str] = None
+    #: Unicode first name of the assistant. Is null if not available or if name is a single '.' or '-'.
+    first_name: Optional[str] = None
+    #: Unicode last name of the assistant. Is null if not available or if name is a single '.' or '-'.
+    last_name: Optional[str] = None
+    #: Direct number of the assistant.
+    direct_number: Optional[str] = None
+    #: Extension number of the assistant.
+    extension: Optional[str] = None
+    #: If `true`, the assistant has opted in to handle calls for the executive. If `false`, the assistant has not opted
+    #: in.
+    opt_in_enabled: Optional[bool] = None
+    location: Optional[Location] = None
+
+
+class AvailableAssistant(ApiModel):
+    #: Unique identifier of the person.
+    id: Optional[str] = None
+    #: Unicode first name of the person. Is null if not available or if name is a single '.' or '-'.
+    first_name: Optional[str] = None
+    #: Unicode last name of the person. Is null if not available or if name is a single '.' or '-'.
+    last_name: Optional[str] = None
+    #: Direct number of the person.
+    direct_number: Optional[str] = None
+    #: Extension number of the person.
+    extension: Optional[str] = None
+
+
+class Executive(ApiModel):
+    #: Unique identifier of the executive.
+    id: Optional[str] = None
+    #: Unicode first name of the executive. Is null if not available or if the name is a single ‘.’ or ‘-’.
+    first_name: Optional[str] = None
+    #: Unicode last name of the executive. Is null if not available or if the name is a single ‘.’ or ‘-’.
+    last_name: Optional[str] = None
+    #: Direct number of the executive.
+    direct_number: Optional[str] = None
+    #: Extension number of the executive.
+    extension: Optional[str] = None
+    #: If `true`, the assistant has opted in to handle calls for the executive.
+    opt_in_enabled: Optional[bool] = None
+
+
+class ExecutiveAssistantSettingsGet(ApiModel):
+    #: If `true`, filtered calls to assistant are forwarded to the `forwardToPhoneNumber`.
+    forward_filtered_calls_enabled: Optional[bool] = None
+    #: Phone number to forward calls to when `forwardFilteredCallsEnabled` is set to `true`.
+    forward_to_phone_number: Optional[str] = None
+    #: List of executives for whom person is assigned as assistant.
+    executives: Optional[list[Executive]] = None
+
+
+class ExecutivePut(ApiModel):
+    #: Unique identifier of the executive.
+    person_id: Optional[str] = None
+    #: If `true`, the assistant has opted in to handle calls for the executive.
+    opt_in_enabled: Optional[bool] = None
+
+
+class ExecutiveScreeningGetAlertType(str, Enum):
+    #: No audible alert is provided for executive screening.
+    silent = 'SILENT'
+    #: A short ring (splash) is used as an alert for executive screening.
+    ring_splash = 'RING_SPLASH'
+
+
+class ExecutiveScreeningGet(ApiModel):
+    #: Indicates if executive screening is enabled.
+    enabled: Optional[bool] = None
+    #: * `SILENT` - No audible alert is provided for executive screening.
+    alert_type: Optional[ExecutiveScreeningGetAlertType] = None
+    #: Indicates if alerts are enabled for Single Number Reach locations.
+    alert_anywhere_location_enabled: Optional[bool] = None
+    #: Indicates if alerts are enabled for Webex Go locations.
+    alert_mobility_location_enabled: Optional[bool] = None
+    #: Indicates if alerts are enabled for Shared Call Appearance locations.
+    alert_shared_call_appearance_location_enabled: Optional[bool] = None
+
+
 class LicenseType(str, Enum):
     webex_calling_professional = 'Webex Calling Professional'
     webex_calling_standard = 'Webex Calling Standard'
@@ -1302,8 +1555,7 @@ class UserCallSettings22Api(ApiChild, base=''):
     <https://help.webex.com/en-us/article/n1qbbp7/Features-available-by-license-type-for-Webex-Calling>`_.
     """
 
-    def retrieve_a_persons_application_services_settings_new(self, person_id: str,
-                                                             org_id: str = None) -> ApplicationsSetting:
+    def get_persons_app_services_settings_new(self, person_id: str, org_id: str = None) -> ApplicationsSetting:
         """
         Retrieve a person's Application Services Settings New
 
@@ -1843,7 +2095,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep('telephony/config/people/primary/availableNumbers')
         return self.session.follow_pagination(url=url, model=PersonPrimaryAvailableNumberObject, item_key='phoneNumbers', params=params)
 
-    def read_default_feature_access_settings_for_person(self) -> UserSettingsPermissionsGetDefault:
+    def get_default_feature_access_settings_person(self) -> UserSettingsPermissionsGetDefault:
         """
         Read Default Feature Access Settings for Person
 
@@ -1866,7 +2118,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = UserSettingsPermissionsGetDefault.model_validate(data)
         return r
 
-    def update_default_person_feature_access_configuration(self, anonymous_call_rejection: AccessLevel = None,
+    def modify_default_person_feature_access_configuration(self, anonymous_call_rejection: AccessLevel = None,
                                                            barge_in: AccessLevel = None,
                                                            block_caller_id: AccessLevel = None,
                                                            call_forwarding: AccessLevel = None,
@@ -1889,7 +2141,8 @@ class UserCallSettings22Api(ApiChild, base=''):
                                                            voicemail_message_storage: AccessLevel = None,
                                                            voicemail_notifications: AccessLevel = None,
                                                            voicemail_transfer_number: AccessLevel = None,
-                                                           generate_activation_code: AccessLevel = None):
+                                                           generate_activation_code: AccessLevel = None,
+                                                           voicemail_download: AccessLevel = None):
         """
         Update Default Person Feature Access Configuration
 
@@ -1906,78 +2159,81 @@ class UserCallSettings22Api(ApiChild, base=''):
         must include the `spark-admin:telephony_config_write` scope.
 
         :param anonymous_call_rejection: Set whether end users have access to make changes to their `Anonymous call
-            rejection` feature via UserHub, or other clients (Webex, IP phone, etc.).
+            rejection` feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type anonymous_call_rejection: AccessLevel
-        :param barge_in: Set whether end users have access to make changes to their `Barge In` feature via UserHub, or
+        :param barge_in: Set whether end users have access to make changes to their `Barge In` feature via User Hub, or
             other clients (Webex, IP phone, etc.).
         :type barge_in: AccessLevel
         :param block_caller_id: Set whether end users have access to make changes to their `Block caller ID` feature
-            via UserHub, or other clients (Webex, IP phone, etc.).
+            via User Hub, or other clients (Webex, IP phone, etc.).
         :type block_caller_id: AccessLevel
         :param call_forwarding: Set whether end users have access to make changes to their `Call forwarding` feature
-            via UserHub, or other clients (Webex, IP phone, etc.).
+            via User Hub, or other clients (Webex, IP phone, etc.).
         :type call_forwarding: AccessLevel
-        :param call_waiting: Set whether end users have access to make changes to their `Call waiting` feature via
-            UserHub, or other clients (Webex, IP phone, etc.).
+        :param call_waiting: Set whether end users have access to make changes to their `Call waiting` feature via User
+            Hub, or other clients (Webex, IP phone, etc.).
         :type call_waiting: AccessLevel
-        :param call_notify: Set whether end users have access to make changes to their `Call notify` feature via
-            UserHub, or other clients (Webex, IP phone, etc.).
+        :param call_notify: Set whether end users have access to make changes to their `Call notify` feature via User
+            Hub, or other clients (Webex, IP phone, etc.).
         :type call_notify: AccessLevel
         :param connected_line_identity: Set whether end users have access to make changes to their `Connected line
-            identity` feature via UserHub, or other clients (Webex, IP phone, etc.).
+            identity` feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type connected_line_identity: AccessLevel
         :param executive: Set whether end users have access to make changes to their `Executive/Executive assistant`
-            feature via UserHub, or other clients (Webex, IP phone, etc.).
+            feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type executive: AccessLevel
-        :param hoteling: Set whether end users have access to make changes to their `Hoteling` feature via UserHub, or
+        :param hoteling: Set whether end users have access to make changes to their `Hoteling` feature via User Hub, or
             other clients (Webex, IP phone, etc.).
         :type hoteling: AccessLevel
         :param priority_alert: Set whether end users have access to make changes to their `Priority alert` feature via
-            UserHub, or other clients (Webex, IP phone, etc.).
+            User Hub, or other clients (Webex, IP phone, etc.).
         :type priority_alert: AccessLevel
         :param selectively_accept_calls: Set whether end users have access to make changes to their `Selectively accept
-            calls` feature via UserHub, or other clients (Webex, IP phone, etc.).
+            calls` feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type selectively_accept_calls: AccessLevel
         :param selectively_reject_calls: Set whether end users have access to make changes to their `Selectively reject
-            calls` feature via UserHub, or other clients (Webex, IP phone, etc.).
+            calls` feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type selectively_reject_calls: AccessLevel
         :param selectively_forward_calls: Set whether end users have access to make changes to their `Selectively
-            forward calls` feature via UserHub, or other clients (Webex, IP phone, etc.).
+            forward calls` feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type selectively_forward_calls: AccessLevel
         :param sequential_ring: Set whether end users have access to make changes to their `Sequential ring` feature
-            via UserHub, or other clients (Webex, IP phone, etc.).
+            via User Hub, or other clients (Webex, IP phone, etc.).
         :type sequential_ring: AccessLevel
         :param simultaneous_ring: Set whether end users have access to make changes to their `Simultaneous ring`
-            feature via UserHub, or other clients (Webex, IP phone, etc.).
+            feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type simultaneous_ring: AccessLevel
         :param single_number_reach: Set whether end users have access to make changes to their `Single number reach`
-            feature via UserHub, or other clients (Webex, IP phone, etc.).
+            feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type single_number_reach: AccessLevel
         :param voicemail: Set whether end users have access to make changes to their `Voicemail feature` feature via
-            UserHub, or other clients (Webex, IP phone, etc.).
+            User Hub, or other clients (Webex, IP phone, etc.).
         :type voicemail: AccessLevel
         :param send_calls_to_voicemail: Set whether end users have access to make changes to their `Send calls to
-            voicemail` feature via UserHub, or other clients (Webex, IP phone, etc.).
+            voicemail` feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type send_calls_to_voicemail: AccessLevel
         :param voicemail_email_copy: Set whether end users have access to make changes to their `Email a copy of the
-            voicemail message` feature via UserHub, or other clients (Webex, IP phone, etc.).
+            voicemail message` feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type voicemail_email_copy: AccessLevel
         :param voicemail_fax_messaging: Set whether end users have access to make changes to their `Fax messaging`
-            feature via UserHub, or other clients (Webex, IP phone, etc.).
+            feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type voicemail_fax_messaging: AccessLevel
         :param voicemail_message_storage: Set whether end users have access to make changes to their `Message storage`
-            feature via UserHub, or other clients (Webex, IP phone, etc.).
+            feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type voicemail_message_storage: AccessLevel
         :param voicemail_notifications: Set whether end users have access to make changes to their `Notifications`
-            feature via UserHub, or other clients (Webex, IP phone, etc.).
+            feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type voicemail_notifications: AccessLevel
         :param voicemail_transfer_number: Set whether end users have access to make changes to their `Transfer on '0'
-            to another number.` feature via UserHub, or other clients (Webex, IP phone, etc.).
+            to another number.` feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type voicemail_transfer_number: AccessLevel
         :param generate_activation_code: Set whether end users have access to make changes to their `Allow End User to
-            Generate Activation Codes & Delete their Phones` feature via UserHub, or other clients (Webex, IP phone,
+            Generate Activation Codes & Delete their Phones` feature via User Hub, or other clients (Webex, IP phone,
             etc.).
         :type generate_activation_code: AccessLevel
+        :param voicemail_download: Set whether end users have access to download voicemail via User Hub, or other
+            clients (Webex, etc.).
+        :type voicemail_download: AccessLevel
         :rtype: None
         """
         body = dict()
@@ -2029,11 +2285,13 @@ class UserCallSettings22Api(ApiChild, base=''):
             body['voicemailTransferNumber'] = enum_str(voicemail_transfer_number)
         if generate_activation_code is not None:
             body['generateActivationCode'] = enum_str(generate_activation_code)
+        if voicemail_download is not None:
+            body['voicemailDownload'] = enum_str(voicemail_download)
         url = self.ep('telephony/config/people/settings/permissions')
         super().put(url, json=body)
 
-    def retrieve_agent_s_list_of_available_caller_ids(self, person_id: str,
-                                                      org_id: str = None) -> list[AvailableCallerIdObject]:
+    def retrieve_agents_list_of_available_caller_ids(self, person_id: str,
+                                                     org_id: str = None) -> list[AvailableCallerIdObject]:
         """
         Retrieve Agent's List of Available Caller IDs
 
@@ -2058,7 +2316,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = TypeAdapter(list[AvailableCallerIdObject]).validate_python(data['availableCallerIds'])
         return r
 
-    def retrieve_agent_s_caller_id_information(self, person_id: str) -> AvailableCallerIdObject:
+    def retrieve_agents_caller_idinformation(self, person_id: str) -> AvailableCallerIdObject:
         """
         Retrieve Agent's Caller ID Information
 
@@ -2249,8 +2507,8 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = GetSharedLineMemberList.model_validate(data)
         return r
 
-    def put_shared_line_appearance_members(self, person_id: str, application_id: str,
-                                           members: list[PutSharedLineMemberItem] = None):
+    def modify_shared_line_appearance_members(self, person_id: str, application_id: str,
+                                              members: list[PutSharedLineMemberItem] = None):
         """
         Put Shared-Line Appearance Members
 
@@ -2301,7 +2559,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = GetUserCallCaptionsObject.model_validate(data)
         return r
 
-    def update_user_call_captions_settings(self, person_id: str, user_closed_captions_enabled: bool = None,
+    def modify_user_call_captions_settings(self, person_id: str, user_closed_captions_enabled: bool = None,
                                            user_transcripts_enabled: bool = None,
                                            use_location_settings_enabled: bool = None, org_id: str = None):
         """
@@ -2466,6 +2724,650 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/emergencyCallbackNumber/availableNumbers')
         return self.session.follow_pagination(url=url, model=PersonECBNAvailableNumberObject, item_key='phoneNumbers', params=params)
 
+    def get_person_executive_alert_settings(self, person_id: str, org_id: str = None) -> ExecutiveAlertGet:
+        """
+        Get Person Executive Alert Settings
+
+        Get executive alert settings for the specified person.
+
+        Executive Alert settings in Webex allow you to control how calls are routed to executive assistants, including
+        alerting mode, rollover options, and caller ID presentation. You can configure settings such as sequential or
+        simultaneous alerting, and specify what happens when calls aren't answered.
+
+        This API requires a full, user, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param org_id: Organization ID for the person.
+        :type org_id: str
+        :rtype: :class:`ExecutiveAlertGet`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/people/{person_id}/executive/alert')
+        data = super().get(url, params=params)
+        r = ExecutiveAlertGet.model_validate(data)
+        return r
+
+    def update_person_executive_alert_settings(self, person_id: str,
+                                               alerting_mode: ExecutiveAlertGetAlertingMode = None,
+                                               next_assistant_number_of_rings: int = None,
+                                               rollover_enabled: bool = None,
+                                               rollover_action: ExecutiveAlertGetRolloverAction = None,
+                                               rollover_forward_to_phone_number: str = None,
+                                               rollover_wait_time_in_secs: int = None,
+                                               clid_name_mode: ExecutiveAlertGetClidNameMode = None,
+                                               custom_clidname: str = None, custom_clidname_in_unicode: str = None,
+                                               clid_phone_number_mode: ExecutiveAlertGetClidPhoneNumberMode = None,
+                                               custom_clidphone_number: str = None, org_id: str = None):
+        """
+        Modify Person Executive Alert Settings
+
+        Update executive alert settings for the specified person.
+
+        Executive Alert settings in Webex allow you to control how calls are routed to executive assistants, including
+        alerting mode, rollover options, and caller ID presentation. You can configure settings such as sequential or
+        simultaneous alerting, and specify what happens when calls aren't answered.
+
+        This API requires a full, user, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param alerting_mode: * `SEQUENTIAL` - Alerts assistants one at a time in the defined order.
+        :type alerting_mode: ExecutiveAlertGetAlertingMode
+        :param next_assistant_number_of_rings: Number of rings before alerting the next assistant when `alertingMode`
+            is `SEQUENTIAL`.
+        :type next_assistant_number_of_rings: int
+        :param rollover_enabled: Controls whether the rollover timer (`rolloverWaitTimeInSecs`) is enabled. When set to
+            `true`, rollover will trigger after the timer expires, even if assistants are still available. When
+            `false`, rollover only occurs when no assistants remain.
+        :type rollover_enabled: bool
+        :param rollover_action: Specifies what happens when rollover is triggered.
+        :type rollover_action: ExecutiveAlertGetRolloverAction
+        :param rollover_forward_to_phone_number: Phone number to forward calls to when rollover action is set to
+            `FORWARD`.
+        :type rollover_forward_to_phone_number: str
+        :param rollover_wait_time_in_secs: Time in seconds to wait before applying the rollover action when
+            `rolloverEnabled` is `true`.
+        :type rollover_wait_time_in_secs: int
+        :param clid_name_mode: Controls how Caller ID name is displayed on assistant's phone.
+        :type clid_name_mode: ExecutiveAlertGetClidNameMode
+        :param custom_clidname: Custom caller ID name to display when `clidNameMode` is set to `CUSTOM` (deprecated).
+        :type custom_clidname: str
+        :param custom_clidname_in_unicode: Unicode Custom caller ID name to display when `clidNameMode` is set to
+            `CUSTOM`.
+        :type custom_clidname_in_unicode: str
+        :param clid_phone_number_mode: Controls which Caller ID phone number is displayed on assistant's phone.
+        :type clid_phone_number_mode: ExecutiveAlertGetClidPhoneNumberMode
+        :param custom_clidphone_number: Custom caller ID phone number to display on assistant's phone when
+            `clidPhoneNumberMode` is set to `CUSTOM`.
+        :type custom_clidphone_number: str
+        :param org_id: Organization ID for the person.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if alerting_mode is not None:
+            body['alertingMode'] = enum_str(alerting_mode)
+        if next_assistant_number_of_rings is not None:
+            body['nextAssistantNumberOfRings'] = next_assistant_number_of_rings
+        if rollover_enabled is not None:
+            body['rolloverEnabled'] = rollover_enabled
+        if rollover_action is not None:
+            body['rolloverAction'] = enum_str(rollover_action)
+        if rollover_forward_to_phone_number is not None:
+            body['rolloverForwardToPhoneNumber'] = rollover_forward_to_phone_number
+        if rollover_wait_time_in_secs is not None:
+            body['rolloverWaitTimeInSecs'] = rollover_wait_time_in_secs
+        if clid_name_mode is not None:
+            body['clidNameMode'] = enum_str(clid_name_mode)
+        if custom_clidname is not None:
+            body['customCLIDName'] = custom_clidname
+        if custom_clidname_in_unicode is not None:
+            body['customCLIDNameInUnicode'] = custom_clidname_in_unicode
+        if clid_phone_number_mode is not None:
+            body['clidPhoneNumberMode'] = enum_str(clid_phone_number_mode)
+        if custom_clidphone_number is not None:
+            body['customCLIDPhoneNumber'] = custom_clidphone_number
+        url = self.ep(f'telephony/config/people/{person_id}/executive/alert')
+        super().put(url, params=params, json=body)
+
+    def get_person_executive_assigned_assistants(self, person_id: str, org_id: str = None) -> list[Assistant]:
+        """
+        Get Person Executive Assigned Assistants
+
+        Get list of assigned executive assistants for the specified person.
+
+        As an executive, you can add assistants to your executive pool to manage calls for you. You can set when and
+        which types of calls they can handle. Assistants can opt in when needed or opt out when not required.
+
+        This API requires a full, user, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param org_id: Organization ID for the person.
+        :type org_id: str
+        :rtype: list[Assistant]
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/people/{person_id}/executive/assignedAssistants')
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[Assistant]).validate_python(data['assistants'])
+        return r
+
+    def modify_person_executive_assigned_assistants(self, person_id: str, assistant_ids: list[str] = None,
+                                                    org_id: str = None):
+        """
+        Modify Person Executive Assigned Assistants
+
+        Update assigned executive assistants for the specified person.
+
+        As an executive, you can add assistants to your executive pool to manage calls for you. You can set when and
+        which types of calls they can handle. Assistants can opt in when needed or opt out when not required.
+
+        This API requires a full, user, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param assistant_ids: List of people to be assigned as assistant. To remove all assigned assistants, set
+            `assistantIds` to `null`.
+        :type assistant_ids: list[str]
+        :param org_id: Organization ID for the person.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if assistant_ids is not None:
+            body['assistantIds'] = assistant_ids
+        url = self.ep(f'telephony/config/people/{person_id}/executive/assignedAssistants')
+        super().put(url, params=params, json=body)
+
+    def get_person_executive_assistant_settings(self, person_id: str,
+                                                org_id: str = None) -> ExecutiveAssistantSettingsGet:
+        """
+        Get Person Executive Assistant Settings
+
+        Get executive assistant settings for the specified person when person is configured as executive assistant.
+
+        Executive assistants can make, answer, intercept, and route calls appropriately on behalf of their executive.
+        Assistants can also set the call forwarding destination, and join or leave an executive’s pool.
+
+        This API requires a full, user, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param org_id: Organization ID for the person.
+        :type org_id: str
+        :rtype: :class:`ExecutiveAssistantSettingsGet`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/people/{person_id}/executive/assistant')
+        data = super().get(url, params=params)
+        r = ExecutiveAssistantSettingsGet.model_validate(data)
+        return r
+
+    def modify_person_executive_assistant_settings(self, person_id: str, forward_filtered_calls_enabled: bool = None,
+                                                   forward_to_phone_number: str = None,
+                                                   executives: list[ExecutivePut] = None, org_id: str = None):
+        """
+        Modify Person Executive Assistant Settings
+
+        Update executive assistant settings for the specified person when person is configured as executive assistant.
+
+        Executive assistants can make, answer, intercept, and route calls appropriately on behalf of their executive.
+        Assistants can also set the call forwarding destination, and join or leave an executive’s pool.
+
+        This API requires a full, user, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param forward_filtered_calls_enabled: If `true`, filtered calls to assistant are forwarded to the
+            `forwardToPhoneNumber`.
+        :type forward_filtered_calls_enabled: bool
+        :param forward_to_phone_number: Phone number to forward the filtered calls to. Mandatory if
+            `forwardFilteredCallsEnabled` is set to true.
+        :type forward_to_phone_number: str
+        :param executives: List of executives.
+        :type executives: list[ExecutivePut]
+        :param org_id: Organization ID for the person.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if forward_filtered_calls_enabled is not None:
+            body['forwardFilteredCallsEnabled'] = forward_filtered_calls_enabled
+        if forward_to_phone_number is not None:
+            body['forwardToPhoneNumber'] = forward_to_phone_number
+        if executives is not None:
+            body['executives'] = TypeAdapter(list[ExecutivePut]).dump_python(executives, mode='json', by_alias=True, exclude_none=True)
+        url = self.ep(f'telephony/config/people/{person_id}/executive/assistant')
+        super().put(url, params=params, json=body)
+
+    def get_person_executive_available_assistants(self, person_id: str, name: str = None, phone_number: str = None,
+                                                  org_id: str = None,
+                                                  **params) -> Generator[AvailableAssistant, None, None]:
+        """
+        Get Person Executive Available Assistants
+
+        Retrieves a list of people available for assignment as executive assistants to the specified person.
+
+        As an executive, you can add assistants to your executive pool to manage calls for you. You can set when and
+        which types of calls they can handle. Assistants can opt in when needed or opt out when not required.
+
+        This API requires a full, user, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param name: Only return people with the matching name (person's first and last name combination).
+        :type name: str
+        :param phone_number: Only return people with the matching phone number or extension.
+        :type phone_number: str
+        :param org_id: Organization ID for the person.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableAssistant` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        url = self.ep(f'telephony/config/people/{person_id}/executive/availableAssistants')
+        return self.session.follow_pagination(url=url, model=AvailableAssistant, item_key='assistants', params=params)
+
+    def get_person_executive_call_filtering_settings(self, person_id: str,
+                                                     org_id: str = None) -> ExecutiveCallFilteringGet:
+        """
+        Get Person Executive Call Filtering Settings
+
+        Retrieve the executive call filtering settings for the specified person.
+
+        Executive Call Filtering in Webex allows you to control which calls are allowed to reach the executive
+        assistant based on custom criteria, such as specific phone numbers or call types. You can enable or disable
+        call filtering and configure filter rules to manage incoming calls.
+
+        This API requires a full, user, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param org_id: Organization ID for the user.
+        :type org_id: str
+        :rtype: :class:`ExecutiveCallFilteringGet`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/people/{person_id}/executive/callFiltering')
+        data = super().get(url, params=params)
+        r = ExecutiveCallFilteringGet.model_validate(data)
+        return r
+
+    def update_person_executive_call_filtering_settings(self, person_id: str, enabled: bool = None,
+                                                        filter_type: ExecutiveCallFilteringGetFilterType = None,
+                                                        criteria_activation: list[ExecutiveCallFilteringPatchCriteriaActivationItem] = None,
+                                                        org_id: str = None):
+        """
+        Modify Person Executive Call Filtering Settings
+
+        Update the executive call filtering settings for the specified person.
+
+        Executive Call Filtering in Webex allows you to control which calls are allowed to reach the executive
+        assistant based on custom criteria, such as specific phone numbers or call types. You can enable or disable
+        call filtering and configure filter rules to manage incoming calls.
+
+        This API requires a full, user, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param enabled: Set to `true` to enable executive call filtering or `false` to disable it.
+        :type enabled: bool
+        :param filter_type: * `CUSTOM_CALL_FILTERS` - Choose this option to ensure that only specific calls are sent to
+            the executive assistant.
+        :type filter_type: ExecutiveCallFilteringGetFilterType
+        :param criteria_activation: The list of criteria activation settings to update for executive call filtering.
+        :type criteria_activation: list[ExecutiveCallFilteringPatchCriteriaActivationItem]
+        :param org_id: Organization ID for the user.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if enabled is not None:
+            body['enabled'] = enabled
+        if filter_type is not None:
+            body['filterType'] = enum_str(filter_type)
+        if criteria_activation is not None:
+            body['criteriaActivation'] = TypeAdapter(list[ExecutiveCallFilteringPatchCriteriaActivationItem]).dump_python(criteria_activation, mode='json', by_alias=True, exclude_none=True)
+        url = self.ep(f'telephony/config/people/{person_id}/executive/callFiltering')
+        super().put(url, params=params, json=body)
+
+    def create_person_executive_call_filtering_criteria(self, person_id: str, filter_name: str, calls_from: CallsFrom,
+                                                        filter_enabled: bool, schedule_name: str = None,
+                                                        schedule_type: ScheduleType = None,
+                                                        schedule_level: ScheduleLevel = None,
+                                                        anonymous_callers_enabled: bool = None,
+                                                        unavailable_callers_enabled: bool = None,
+                                                        phone_numbers: list[str] = None,
+                                                        calls_to_numbers: list[ExecutiveCallFilteringCriteriaGetCallsToNumbersItem] = None,
+                                                        org_id: str = None) -> str:
+        """
+        Add Person Executive Call Filtering Criteria
+
+        Create a new executive call filtering criteria configuration for the specified person.
+
+        Executive Call Filtering Criteria in Webex allows you to define detailed filter rules for incoming calls. This
+        API creates a new filter rule with the specified configuration, including schedule, phone numbers, and call
+        routing preferences.
+
+        This API requires a full, user or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param filter_name: Name of the criteria.
+        :type filter_name: str
+        :param calls_from: * `ANY_PHONE_NUMBER` - The criteria applies to any phone number.
+        :type calls_from: CallsFrom
+        :param filter_enabled: Controls the action when this criteria matches a call. When `true`, matching calls are
+            filtered and will alert the executive's assistants. When `false`, matching calls are not filtered and will
+            not alert the executive's assistants. Criteria with `filterEnabled` as `false` take precedence over other
+            filtering criteria with `filterEnabled` as `true`, allowing exceptions where certain calls are not
+            filtered to the executive's assistants.
+        :type filter_enabled: bool
+        :param schedule_name: Name of the schedule associated with this criteria.
+        :type schedule_name: str
+        :param schedule_type: * `businessHours` - The schedule type that specifies the business or working hours during
+            the day.
+        :type schedule_type: ScheduleType
+        :param schedule_level: * `PEOPLE` - The schedule level that specifies that criteria is of People level.
+        :type schedule_level: ScheduleLevel
+        :param anonymous_callers_enabled: Set to enable or disable the criteria for anonymous callers.
+        :type anonymous_callers_enabled: bool
+        :param unavailable_callers_enabled: Set to enable or disable the criteria for unavailable callers.
+        :type unavailable_callers_enabled: bool
+        :param phone_numbers: The list of phone numbers that this filtering criteria applies to, when `callsFrom` is
+            set to `SELECT_PHONE_NUMBERS`.
+        :type phone_numbers: list[str]
+        :param calls_to_numbers: List of numbers for the executive that will match the criteria when called. This may
+            include the executive’s primary number and/or extension, as well as secondary (alternate) numbers (and
+            associated extensions). If the list is empty, any number or extension for the executive matches the
+            criteria when called. If the list is not empty, only the specified numbers and their extensions match the
+            criteria.
+        :type calls_to_numbers: list[ExecutiveCallFilteringCriteriaGetCallsToNumbersItem]
+        :param org_id: Organization ID for the user.
+        :type org_id: str
+        :rtype: str
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        body['filterName'] = filter_name
+        if schedule_name is not None:
+            body['scheduleName'] = schedule_name
+        if schedule_type is not None:
+            body['scheduleType'] = enum_str(schedule_type)
+        if schedule_level is not None:
+            body['scheduleLevel'] = enum_str(schedule_level)
+        body['callsFrom'] = enum_str(calls_from)
+        if anonymous_callers_enabled is not None:
+            body['anonymousCallersEnabled'] = anonymous_callers_enabled
+        if unavailable_callers_enabled is not None:
+            body['unavailableCallersEnabled'] = unavailable_callers_enabled
+        if phone_numbers is not None:
+            body['phoneNumbers'] = phone_numbers
+        body['filterEnabled'] = filter_enabled
+        if calls_to_numbers is not None:
+            body['callsToNumbers'] = TypeAdapter(list[ExecutiveCallFilteringCriteriaGetCallsToNumbersItem]).dump_python(calls_to_numbers, mode='json', by_alias=True, exclude_none=True)
+        url = self.ep(f'telephony/config/people/{person_id}/executive/callFiltering/criteria')
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    def delete_person_executive_call_filtering_criteria(self, person_id: str, id: str, org_id: str = None):
+        """
+        Delete Person Executive Call Filtering Criteria
+
+        Delete a specific executive call filtering criteria configuration for the specified person.
+
+        Executive Call Filtering Criteria in Webex allows you to manage detailed filter rules for incoming calls. This
+        API removes a specific filter rule by its unique identifier.
+
+        This API requires a full, user or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param id: The `id` parameter specifies the unique identifier for the executive call filtering criteria.
+            Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL2RHVnpkRjltYVd4MFpYST0`.
+        :type id: str
+        :param org_id: Organization ID for the user.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/people/{person_id}/executive/callFiltering/criteria/{id}')
+        super().delete(url, params=params)
+
+    def get_person_executive_call_filtering_criteria(self, person_id: str, id: str,
+                                                     org_id: str = None) -> ExecutiveCallFilteringCriteriaGet:
+        """
+        Get Person Executive Call Filtering Criteria Settings
+
+        Retrieve the executive call filtering criteria settings for the specified person.
+
+        Executive Call Filtering Criteria in Webex allows you to retrieve the detailed configuration for a specific
+        filter rule. This includes schedule settings, phone number filters, and call routing preferences for executive
+        call filtering.
+
+        This API requires a full, user, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param id: The `id` parameter specifies the unique identifier for the executive call filtering criteria.
+        :type id: str
+        :param org_id: Organization ID for the user.
+        :type org_id: str
+        :rtype: :class:`ExecutiveCallFilteringCriteriaGet`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/people/{person_id}/executive/callFiltering/criteria/{id}')
+        data = super().get(url, params=params)
+        r = ExecutiveCallFilteringCriteriaGet.model_validate(data)
+        return r
+
+    def update_person_executive_call_filtering_criteria(self, person_id: str, id: str, schedule_name: str = None,
+                                                        schedule_type: ScheduleType = None,
+                                                        schedule_level: ScheduleLevel = None,
+                                                        calls_from: CallsFrom = None,
+                                                        anonymous_callers_enabled: bool = None,
+                                                        unavailable_callers_enabled: bool = None,
+                                                        phone_numbers: list[str] = None, filter_enabled: bool = None,
+                                                        calls_to_numbers: list[ExecutiveCallFilteringCriteriaGetCallsToNumbersItem] = None,
+                                                        org_id: str = None):
+        """
+        Modify Person Executive Call Filtering Criteria Settings
+
+        Update the executive call filtering settings for the specified person.
+
+        Executive Call Filtering in Webex allows you to control which calls are allowed to reach the executive
+        assistant based on custom criteria, such as specific phone numbers or call types. You can enable or disable
+        call filtering and configure filter rules to manage incoming calls.
+
+        This API requires a full, user or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param id: The `id` parameter specifies the unique identifier for the executive call filtering criteria.
+            Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL2RHVnpkRjltYVd4MFpYST0`.
+        :type id: str
+        :param schedule_name: Name of the schedule associated with this criteria.
+        :type schedule_name: str
+        :param schedule_type: * `businessHours` - The schedule type that specifies the business or working hours during
+            the day.
+        :type schedule_type: ScheduleType
+        :param schedule_level: * `PEOPLE` - The schedule level that specifies that criteria is of People level.
+        :type schedule_level: ScheduleLevel
+        :param calls_from: * `ANY_PHONE_NUMBER` - The criteria applies to any phone number.
+        :type calls_from: CallsFrom
+        :param anonymous_callers_enabled: Set to enable or disable the criteria for anonymous callers.
+        :type anonymous_callers_enabled: bool
+        :param unavailable_callers_enabled: Set to enable or disable the criteria for unavailable callers.
+        :type unavailable_callers_enabled: bool
+        :param phone_numbers: The list of phone numbers that this filtering criteria applies to, when `callsFrom` is
+            set to `SELECT_PHONE_NUMBERS`.
+        :type phone_numbers: list[str]
+        :param filter_enabled: Controls the action when this criteria matches a call. When `true`, matching calls are
+            filtered and will alert the executive's assistants. When `false`, matching calls are not filtered and will
+            not alert the executive's assistants. Criteria with `filterEnabled` as `false` take precedence over other
+            filtering criteria with `filterEnabled` as `true`, allowing exceptions where certain calls are not
+            filtered to the executive's assistants.
+        :type filter_enabled: bool
+        :param calls_to_numbers: List of numbers for the executive that will match the criteria when called. This may
+            include the executive’s primary number and/or extension, as well as secondary (alternate) numbers (and
+            associated extensions). If the list is empty, any number or extension for the executive matches the
+            criteria when called. If the list is not empty, only the specified numbers and their extensions match the
+            criteria.
+        :type calls_to_numbers: list[ExecutiveCallFilteringCriteriaGetCallsToNumbersItem]
+        :param org_id: Organization ID for the user.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if schedule_name is not None:
+            body['scheduleName'] = schedule_name
+        if schedule_type is not None:
+            body['scheduleType'] = enum_str(schedule_type)
+        if schedule_level is not None:
+            body['scheduleLevel'] = enum_str(schedule_level)
+        if calls_from is not None:
+            body['callsFrom'] = enum_str(calls_from)
+        if anonymous_callers_enabled is not None:
+            body['anonymousCallersEnabled'] = anonymous_callers_enabled
+        if unavailable_callers_enabled is not None:
+            body['unavailableCallersEnabled'] = unavailable_callers_enabled
+        if phone_numbers is not None:
+            body['phoneNumbers'] = phone_numbers
+        if filter_enabled is not None:
+            body['filterEnabled'] = filter_enabled
+        if calls_to_numbers is not None:
+            body['callsToNumbers'] = TypeAdapter(list[ExecutiveCallFilteringCriteriaGetCallsToNumbersItem]).dump_python(calls_to_numbers, mode='json', by_alias=True, exclude_none=True)
+        url = self.ep(f'telephony/config/people/{person_id}/executive/callFiltering/criteria/{id}')
+        super().put(url, params=params, json=body)
+
+    def get_person_executive_screening_settings(self, person_id: str, org_id: str = None) -> ExecutiveScreeningGet:
+        """
+        Get Person Executive Screening Settings
+
+        Get executive screening settings for the specified person.
+
+        Executive Screening in Webex allows you to manage how incoming calls are screened and alerted based on your
+        preferences. You can enable or disable executive screening and configure alert types and locations for
+        notifications.
+
+        This API requires a full, user, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param org_id: Organization ID for the person.
+        :type org_id: str
+        :rtype: :class:`ExecutiveScreeningGet`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/people/{person_id}/executive/screening')
+        data = super().get(url, params=params)
+        r = ExecutiveScreeningGet.model_validate(data)
+        return r
+
+    def update_person_executive_screening_settings(self, person_id: str, enabled: bool = None,
+                                                   alert_type: ExecutiveScreeningGetAlertType = None,
+                                                   alert_anywhere_location_enabled: bool = None,
+                                                   alert_mobility_location_enabled: bool = None,
+                                                   alert_shared_call_appearance_location_enabled: bool = None,
+                                                   org_id: str = None):
+        """
+        Modify Person Executive Screening Settings
+
+        Update executive screening settings for the specified person.
+
+        Executive Screening in Webex allows you to manage how incoming calls are screened and alerted based on your
+        preferences. You can enable or disable executive screening and configure alert types and locations for
+        notifications.
+
+        This API requires a full, user, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param enabled: Set to enable or disable executive screening.
+        :type enabled: bool
+        :param alert_type: * `SILENT` - No audible alert is provided for executive screening.
+        :type alert_type: ExecutiveScreeningGetAlertType
+        :param alert_anywhere_location_enabled: Indicates if alerts are enabled for Single Number Reach locations.
+        :type alert_anywhere_location_enabled: bool
+        :param alert_mobility_location_enabled: Indicates if alerts are enabled for Webex Go locations.
+        :type alert_mobility_location_enabled: bool
+        :param alert_shared_call_appearance_location_enabled: Indicates if alerts are enabled for Shared Call
+            Appearance locations.
+        :type alert_shared_call_appearance_location_enabled: bool
+        :param org_id: Organization ID for the person.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if enabled is not None:
+            body['enabled'] = enabled
+        if alert_type is not None:
+            body['alertType'] = enum_str(alert_type)
+        if alert_anywhere_location_enabled is not None:
+            body['alertAnywhereLocationEnabled'] = alert_anywhere_location_enabled
+        if alert_mobility_location_enabled is not None:
+            body['alertMobilityLocationEnabled'] = alert_mobility_location_enabled
+        if alert_shared_call_appearance_location_enabled is not None:
+            body['alertSharedCallAppearanceLocationEnabled'] = alert_shared_call_appearance_location_enabled
+        url = self.ep(f'telephony/config/people/{person_id}/executive/screening')
+        super().put(url, params=params, json=body)
+
     def get_person_fax_message_available_phone_numbers(self, person_id: str, phone_number: list[str] = None,
                                                        org_id: str = None,
                                                        **params) -> Generator[PersonSecondaryAvailableNumberObject, None, None]:
@@ -2498,7 +3400,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/faxMessage/availableNumbers')
         return self.session.follow_pagination(url=url, model=PersonSecondaryAvailableNumberObject, item_key='phoneNumbers', params=params)
 
-    def read_call_bridge_settings_for_a_person(self, person_id: str, org_id: str = None) -> bool:
+    def read_call_bridge_settings_person(self, person_id: str, org_id: str = None) -> bool:
         """
         Read Call Bridge Settings for a Person
 
@@ -2523,8 +3425,8 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = data['warningToneEnabled']
         return r
 
-    def configure_call_bridge_settings_for_a_person(self, person_id: str, warning_tone_enabled: bool = None,
-                                                    org_id: str = None):
+    def configure_call_bridge_settings_person(self, person_id: str, warning_tone_enabled: bool = None,
+                                              org_id: str = None):
         """
         Configure Call Bridge Settings for a Person
 
@@ -2578,7 +3480,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = PersonalAssistantGet.model_validate(data)
         return r
 
-    def update_personal_assistant(self, person_id: str, enabled: bool = None,
+    def modify_personal_assistant(self, person_id: str, enabled: bool = None,
                                   presence: PersonalAssistantGetPresence = None, until_date_time: Union[str,
                                   datetime] = None, transfer_enabled: bool = None, transfer_number: str = None,
                                   alerting: PersonalAssistantGetAlerting = None,
@@ -2601,7 +3503,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type presence: PersonalAssistantGetPresence
         :param until_date_time: The date until which the personal assistant is active.
         :type until_date_time: Union[str, datetime]
-        :param transfer_enabled: Toggle the option to transfer to another number.
+        :param transfer_enabled: If `true`, allows transfer and forwarding for the call type.
         :type transfer_enabled: bool
         :param transfer_number: Number to transfer to.
         :type transfer_number: str
@@ -2634,9 +3536,9 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/features/personalAssistant')
         super().put(url, params=params, json=body)
 
-    def retrieve_the_list_of_available_features(self, person_id: str, name: str = None, phone_number: str = None,
-                                                extension: str = None, order: str = None, org_id: str = None,
-                                                **params) -> Generator[UserModeManagementAvailableFeaturesObject, None, None]:
+    def get_list_of_available_features(self, person_id: str, name: str = None, phone_number: str = None,
+                                       extension: str = None, order: str = None, org_id: str = None,
+                                       **params) -> Generator[UserModeManagementAvailableFeaturesObject, None, None]:
         """
         Retrieve the List of Available Features
 
@@ -2676,8 +3578,8 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/modeManagement/availableFeatures')
         return self.session.follow_pagination(url=url, model=UserModeManagementAvailableFeaturesObject, item_key='features', params=params)
 
-    def retrieve_the_list_of_features_assigned_to_a_user_for_mode_management(self, person_id: str,
-                                                                             org_id: str = None) -> list[UserModeManagementFeatureObject]:
+    def get_list_of_features_assigned_to_auser_mode_management(self, person_id: str,
+                                                               org_id: str = None) -> list[UserModeManagementFeatureObject]:
         """
         Retrieve the List of Features Assigned to a User for Mode Management
 
@@ -2704,8 +3606,8 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = TypeAdapter(list[UserModeManagementFeatureObject]).validate_python(data['features'])
         return r
 
-    def assign_a_list_of_features_to_a_user_for_mode_management(self, person_id: str, feature_ids: list[str],
-                                                                org_id: str = None):
+    def assign_list_of_features_to_auser_mode_management(self, person_id: str, feature_ids: list[str],
+                                                         org_id: str = None):
         """
         Assign a List of Features to a User for Mode Management
 
@@ -2802,8 +3704,8 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/musicOnHold')
         super().put(url, params=params, json=body)
 
-    def assign_or_unassign_numbers_to_a_person(self, person_id: str, phone_numbers: list[PhoneNumber],
-                                               enable_distinctive_ring_pattern: bool = None, org_id: str = None):
+    def assign_or_unassign_numbers_to_aperson(self, person_id: str, phone_numbers: list[PhoneNumber],
+                                              enable_distinctive_ring_pattern: bool = None, org_id: str = None):
         """
         Assign or Unassign numbers to a person
 
@@ -3038,7 +3940,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/autoTransferNumbers')
         super().put(url, params=params, json=body)
 
-    def delete_all_digit_patterns_for_a_person(self, person_id: str, org_id: str = None):
+    def delete_all_digit_patterns_person(self, person_id: str, org_id: str = None):
         """
         Delete all digit patterns for a Person.
 
@@ -3109,7 +4011,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type pattern: str
         :param action: Action to be performed on the input number that matches the digit pattern.
         :type action: Action
-        :param transfer_enabled: Option to allow or disallow transfer of calls.
+        :param transfer_enabled: If `true`, allows transfer and forwarding for the call type.
         :type transfer_enabled: bool
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization
             (such as partners) may use this parameter as the default is the same organization as the token used to
@@ -3161,7 +4063,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/digitPatterns')
         super().put(url, params=params, json=body)
 
-    def delete_a_digit_pattern_for_a_person(self, person_id: str, digit_pattern_id: str, org_id: str = None):
+    def delete_adigit_pattern_person(self, person_id: str, digit_pattern_id: str, org_id: str = None):
         """
         Delete a digit pattern for a Person.
 
@@ -3186,8 +4088,8 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/digitPatterns/{digit_pattern_id}')
         super().delete(url, params=params)
 
-    def retrieve_digit_pattern_details_for_a_person(self, person_id: str, digit_pattern_id: str,
-                                                    org_id: str = None) -> UserDigitPatternObject:
+    def retrieve_digit_pattern_details_person(self, person_id: str, digit_pattern_id: str,
+                                              org_id: str = None) -> UserDigitPatternObject:
         """
         Retrieve Digit Pattern Details for a Person
 
@@ -3237,7 +4139,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type pattern: str
         :param action: Action to be performed on the input number that matches the digit pattern.
         :type action: Action
-        :param transfer_enabled: Option to allow or disallow transfer of calls.
+        :param transfer_enabled: If `true`, allows transfer and forwarding for the call type.
         :type transfer_enabled: bool
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization
             (such as partners) may use this parameter as the default is the same organization as the token used to
@@ -3676,18 +4578,17 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/selectiveForward')
         super().put(url, params=params, json=body)
 
-    def create_a_criteria_to_the_user_s_selective_call_forwarding_service(self, person_id: str,
-                                                                          forward_to_phone_number: str,
-                                                                          send_to_voicemail_enabled: bool,
-                                                                          calls_from: CallsFromSelectiveReject,
-                                                                          schedule_name: str = None,
-                                                                          schedule_type: ScheduleType = None,
-                                                                          schedule_level: ScheduleLevel = None,
-                                                                          anonymous_callers_enabled: bool = None,
-                                                                          unavailable_callers_enabled: bool = None,
-                                                                          phone_numbers: list[str] = None,
-                                                                          forward_enabled: bool = None,
-                                                                          org_id: str = None) -> str:
+    def create_criteria_to_user_selective_call_forwarding_service(self, person_id: str, forward_to_phone_number: str,
+                                                                  send_to_voicemail_enabled: bool,
+                                                                  calls_from: CallsFromSelectiveReject,
+                                                                  schedule_name: str = None,
+                                                                  schedule_type: ScheduleType = None,
+                                                                  schedule_level: ScheduleLevel = None,
+                                                                  anonymous_callers_enabled: bool = None,
+                                                                  unavailable_callers_enabled: bool = None,
+                                                                  phone_numbers: list[str] = None,
+                                                                  forward_enabled: bool = None,
+                                                                  org_id: str = None) -> str:
         """
         Create a Criteria to the User’s Selective Call Forwarding Service
 
@@ -4128,8 +5029,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/selectiveReject/criteria/{id}')
         super().put(url, params=params, json=body)
 
-    def retrieve_a_person_s_ms_teams_settings(self, person_id: str,
-                                              org_id: str = None) -> GetUserMSTeamsSettingsObject:
+    def get_person_msteams_settings(self, person_id: str, org_id: str = None) -> GetUserMSTeamsSettingsObject:
         """
         Retrieve a Person's MS Teams Settings
 
@@ -4159,9 +5059,9 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = GetUserMSTeamsSettingsObject.model_validate(data)
         return r
 
-    def configure_a_person_s_ms_teams_setting(self, person_id: str,
-                                              setting_name: ModifyUserMSTeamsSettingsObjectSettingName, value: bool,
-                                              org_id: str = None):
+    def configure_person_msteams_setting(self, person_id: str,
+                                         setting_name: ModifyUserMSTeamsSettingsObjectSettingName, value: bool,
+                                         org_id: str = None):
         """
         Configure a Person's MS Teams Setting
 
@@ -4195,7 +5095,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/settings/msTeams')
         super().put(url, params=params, json=body)
 
-    def read_feature_access_settings_for_a_person(self, person_id: str) -> UserSettingsPermissionsGet:
+    def get_feature_access_settings_person(self, person_id: str) -> UserSettingsPermissionsGet:
         """
         Read Feature Access Settings for a Person
 
@@ -4222,30 +5122,28 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = UserSettingsPermissionsGet.model_validate(data)
         return r
 
-    def update_a_person_s_feature_access_configuration(self, person_id: str,
-                                                       anonymous_call_rejection: AccessLevel = None,
-                                                       barge_in: AccessLevel = None,
-                                                       block_caller_id: AccessLevel = None,
-                                                       call_forwarding: AccessLevel = None,
-                                                       call_waiting: AccessLevel = None,
-                                                       call_notify: AccessLevel = None,
-                                                       connected_line_identity: AccessLevel = None,
-                                                       executive: AccessLevel = None, hoteling: AccessLevel = None,
-                                                       priority_alert: AccessLevel = None,
-                                                       selectively_accept_calls: AccessLevel = None,
-                                                       selectively_reject_calls: AccessLevel = None,
-                                                       selectively_forward_calls: AccessLevel = None,
-                                                       sequential_ring: AccessLevel = None,
-                                                       simultaneous_ring: AccessLevel = None,
-                                                       single_number_reach: AccessLevel = None,
-                                                       voicemail: AccessLevel = None,
-                                                       send_calls_to_voicemail: AccessLevel = None,
-                                                       voicemail_email_copy: AccessLevel = None,
-                                                       voicemail_fax_messaging: AccessLevel = None,
-                                                       voicemail_message_storage: AccessLevel = None,
-                                                       voicemail_notifications: AccessLevel = None,
-                                                       voicemail_transfer_number: AccessLevel = None,
-                                                       generate_activation_code: AccessLevel = None):
+    def modify_person_feature_access_configuration(self, person_id: str, anonymous_call_rejection: AccessLevel = None,
+                                                   barge_in: AccessLevel = None, block_caller_id: AccessLevel = None,
+                                                   call_forwarding: AccessLevel = None,
+                                                   call_waiting: AccessLevel = None, call_notify: AccessLevel = None,
+                                                   connected_line_identity: AccessLevel = None,
+                                                   executive: AccessLevel = None, hoteling: AccessLevel = None,
+                                                   priority_alert: AccessLevel = None,
+                                                   selectively_accept_calls: AccessLevel = None,
+                                                   selectively_reject_calls: AccessLevel = None,
+                                                   selectively_forward_calls: AccessLevel = None,
+                                                   sequential_ring: AccessLevel = None,
+                                                   simultaneous_ring: AccessLevel = None,
+                                                   single_number_reach: AccessLevel = None,
+                                                   voicemail: AccessLevel = None,
+                                                   send_calls_to_voicemail: AccessLevel = None,
+                                                   voicemail_email_copy: AccessLevel = None,
+                                                   voicemail_fax_messaging: AccessLevel = None,
+                                                   voicemail_message_storage: AccessLevel = None,
+                                                   voicemail_notifications: AccessLevel = None,
+                                                   voicemail_transfer_number: AccessLevel = None,
+                                                   generate_activation_code: AccessLevel = None,
+                                                   voicemail_download: AccessLevel = None):
         """
         Update a Person’s Feature Access Configuration
 
@@ -4266,78 +5164,81 @@ class UserCallSettings22Api(ApiChild, base=''):
         :param person_id: User ID of the Organization.
         :type person_id: str
         :param anonymous_call_rejection: Set whether end users have access to make changes to their `Anonymous call
-            rejection` feature via UserHub, or other clients (Webex, IP phone, etc.).
+            rejection` feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type anonymous_call_rejection: AccessLevel
-        :param barge_in: Set whether end users have access to make changes to their `Barge In` feature via UserHub, or
+        :param barge_in: Set whether end users have access to make changes to their `Barge In` feature via User Hub, or
             other clients (Webex, IP phone, etc.).
         :type barge_in: AccessLevel
         :param block_caller_id: Set whether end users have access to make changes to their `Block caller ID` feature
-            via UserHub, or other clients (Webex, IP phone, etc.).
+            via User Hub, or other clients (Webex, IP phone, etc.).
         :type block_caller_id: AccessLevel
         :param call_forwarding: Set whether end users have access to make changes to their `Call forwarding` feature
-            via UserHub, or other clients (Webex, IP phone, etc.).
+            via User Hub, or other clients (Webex, IP phone, etc.).
         :type call_forwarding: AccessLevel
-        :param call_waiting: Set whether end users have access to make changes to their `Call waiting` feature via
-            UserHub, or other clients (Webex, IP phone, etc.).
+        :param call_waiting: Set whether end users have access to make changes to their `Call waiting` feature via User
+            Hub, or other clients (Webex, IP phone, etc.).
         :type call_waiting: AccessLevel
-        :param call_notify: Set whether end users have access to make changes to their `Call notify` feature via
-            UserHub, or other clients (Webex, IP phone, etc.).
+        :param call_notify: Set whether end users have access to make changes to their `Call notify` feature via User
+            Hub, or other clients (Webex, IP phone, etc.).
         :type call_notify: AccessLevel
         :param connected_line_identity: Set whether end users have access to make changes to their `Connected line
-            identity` feature via UserHub, or other clients (Webex, IP phone, etc.).
+            identity` feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type connected_line_identity: AccessLevel
         :param executive: Set whether end users have access to make changes to their `Executive/Executive assistant`
-            feature via UserHub, or other clients (Webex, IP phone, etc.).
+            feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type executive: AccessLevel
-        :param hoteling: Set whether end users have access to make changes to their `Hoteling` feature via UserHub, or
+        :param hoteling: Set whether end users have access to make changes to their `Hoteling` feature via User Hub, or
             other clients (Webex, IP phone, etc.).
         :type hoteling: AccessLevel
         :param priority_alert: Set whether end users have access to make changes to their `Priority alert` feature via
-            UserHub, or other clients (Webex, IP phone, etc.).
+            User Hub, or other clients (Webex, IP phone, etc.).
         :type priority_alert: AccessLevel
         :param selectively_accept_calls: Set whether end users have access to make changes to their `Selectively accept
-            calls` feature via UserHub, or other clients (Webex, IP phone, etc.).
+            calls` feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type selectively_accept_calls: AccessLevel
         :param selectively_reject_calls: Set whether end users have access to make changes to their `Selectively reject
-            calls` feature via UserHub, or other clients (Webex, IP phone, etc.).
+            calls` feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type selectively_reject_calls: AccessLevel
         :param selectively_forward_calls: Set whether end users have access to make changes to their `Selectively
-            forward calls` feature via UserHub, or other clients (Webex, IP phone, etc.).
+            forward calls` feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type selectively_forward_calls: AccessLevel
         :param sequential_ring: Set whether end users have access to make changes to their `Sequential ring` feature
-            via UserHub, or other clients (Webex, IP phone, etc.).
+            via User Hub, or other clients (Webex, IP phone, etc.).
         :type sequential_ring: AccessLevel
         :param simultaneous_ring: Set whether end users have access to make changes to their `Simultaneous ring`
-            feature via UserHub, or other clients (Webex, IP phone, etc.).
+            feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type simultaneous_ring: AccessLevel
         :param single_number_reach: Set whether end users have access to make changes to their `Single number reach`
-            feature via UserHub, or other clients (Webex, IP phone, etc.).
+            feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type single_number_reach: AccessLevel
         :param voicemail: Set whether end users have access to make changes to their `Voicemail feature` feature via
-            UserHub, or other clients (Webex, IP phone, etc.).
+            User Hub, or other clients (Webex, IP phone, etc.).
         :type voicemail: AccessLevel
         :param send_calls_to_voicemail: Set whether end users have access to make changes to their `Send calls to
-            voicemail` feature via UserHub, or other clients (Webex, IP phone, etc.).
+            voicemail` feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type send_calls_to_voicemail: AccessLevel
         :param voicemail_email_copy: Set whether end users have access to make changes to their `Email a copy of the
-            voicemail message` feature via UserHub, or other clients (Webex, IP phone, etc.).
+            voicemail message` feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type voicemail_email_copy: AccessLevel
         :param voicemail_fax_messaging: Set whether end users have access to make changes to their `Fax messaging`
-            feature via UserHub, or other clients (Webex, IP phone, etc.).
+            feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type voicemail_fax_messaging: AccessLevel
         :param voicemail_message_storage: Set whether end users have access to make changes to their `Message storage`
-            feature via UserHub, or other clients (Webex, IP phone, etc.).
+            feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type voicemail_message_storage: AccessLevel
         :param voicemail_notifications: Set whether end users have access to make changes to their `Notifications`
-            feature via UserHub, or other clients (Webex, IP phone, etc.).
+            feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type voicemail_notifications: AccessLevel
         :param voicemail_transfer_number: Set whether end users have access to make changes to their `Transfer on '0'
-            to another number.` feature via UserHub, or other clients (Webex, IP phone, etc.).
+            to another number.` feature via User Hub, or other clients (Webex, IP phone, etc.).
         :type voicemail_transfer_number: AccessLevel
         :param generate_activation_code: Set whether end users have access to make changes to their `Allow End User to
-            Generate Activation Codes & Delete their Phones` feature via UserHub, or other clients (Webex, IP phone,
+            Generate Activation Codes & Delete their Phones` feature via User Hub, or other clients (Webex, IP phone,
             etc.).
         :type generate_activation_code: AccessLevel
+        :param voicemail_download: Set whether end users have access to download voicemail via User Hub, or other
+            clients (Webex, etc.).
+        :type voicemail_download: AccessLevel
         :rtype: None
         """
         body = dict()
@@ -4389,10 +5290,12 @@ class UserCallSettings22Api(ApiChild, base=''):
             body['voicemailTransferNumber'] = enum_str(voicemail_transfer_number)
         if generate_activation_code is not None:
             body['generateActivationCode'] = enum_str(generate_activation_code)
+        if voicemail_download is not None:
+            body['voicemailDownload'] = enum_str(voicemail_download)
         url = self.ep(f'telephony/config/people/{person_id}/settings/permissions')
         super().put(url, json=body)
 
-    def reset_a_person_s_feature_access_configuration_to_the_organization_s_default_settings(self, person_id: str):
+    def reset_person_feature_access_config_to_org_default(self, person_id: str):
         """
         Reset a Person’s Feature Access Configuration to the Organization’s Default Settings
 

@@ -15,78 +15,80 @@ class FeatureAccessLevel(str, Enum):
 
 
 class FeatureAccessSettings(ApiModel):
-    #: Set whether end users have access to make changes to their `Anonymous call rejection` feature via UserHub, or
+    #: Set whether end users have access to make changes to their `Anonymous call rejection` feature via User Hub, or
     #: other clients (Webex, IP phone, etc.).
     anonymous_call_rejection: Optional[FeatureAccessLevel] = None
-    #: Set whether end users have access to make changes to their `Barge In` feature via UserHub, or other clients
+    #: Set whether end users have access to make changes to their `Barge In` feature via User Hub, or other clients
     #: (Webex, IP phone, etc.).
     barge_in: Optional[FeatureAccessLevel] = None
-    #: Set whether end users have access to make changes to their `Block caller ID` feature via UserHub, or other
+    #: Set whether end users have access to make changes to their `Block caller ID` feature via User Hub, or other
     #: clients (Webex, IP phone, etc.).
     block_caller_id: Optional[FeatureAccessLevel] = None
-    #: Set whether end users have access to make changes to their `Call forwarding` feature via UserHub, or other
+    #: Set whether end users have access to make changes to their `Call forwarding` feature via User Hub, or other
     #: clients (Webex, IP phone, etc.).
     call_forwarding: Optional[FeatureAccessLevel] = None
-    #: Set whether end users have access to make changes to their `Call waiting` feature via UserHub, or other clients
+    #: Set whether end users have access to make changes to their `Call waiting` feature via User Hub, or other clients
     #: (Webex, IP phone, etc.).
     call_waiting: Optional[FeatureAccessLevel] = None
-    #: Set whether end users have access to make changes to their `Call notify` feature via UserHub, or other clients
+    #: Set whether end users have access to make changes to their `Call notify` feature via User Hub, or other clients
     #: (Webex, IP phone, etc.).
     call_notify: Optional[FeatureAccessLevel] = None
-    #: Set whether end users have access to make changes to their `Connected line identity` feature via UserHub, or
+    #: Set whether end users have access to make changes to their `Connected line identity` feature via User Hub, or
     #: other clients (Webex, IP phone, etc.).
     connected_line_identity: Optional[FeatureAccessLevel] = None
-    #: Set whether end users have access to make changes to their `Executive/Executive assistant` feature via UserHub,
+    #: Set whether end users have access to make changes to their `Executive/Executive assistant` feature via User Hub,
     #: or other clients (Webex, IP phone, etc.).
     executive: Optional[FeatureAccessLevel] = None
-    #: Set whether end users have access to make changes to their `Hoteling` feature via UserHub, or other clients
+    #: Set whether end users have access to make changes to their `Hoteling` feature via User Hub, or other clients
     #: (Webex, IP phone, etc.).
     hoteling: Optional[FeatureAccessLevel] = None
-    #: Set whether end users have access to make changes to their `Priority alert` feature via UserHub, or other
+    #: Set whether end users have access to make changes to their `Priority alert` feature via User Hub, or other
     #: clients (Webex, IP phone, etc.).
     priority_alert: Optional[FeatureAccessLevel] = None
-    #: Set whether end users have access to make changes to their `Selectively accept calls` feature via UserHub, or
+    #: Set whether end users have access to make changes to their `Selectively accept calls` feature via User Hub, or
     #: other clients (Webex, IP phone, etc.).
     selectively_accept_calls: Optional[FeatureAccessLevel] = None
-    #: Set whether end users have access to make changes to their `Selectively reject calls` feature via UserHub, or
+    #: Set whether end users have access to make changes to their `Selectively reject calls` feature via User Hub, or
     #: other clients (Webex, IP phone, etc.).
     selectively_reject_calls: Optional[FeatureAccessLevel] = None
-    #: Set whether end users have access to make changes to their `Selectively forward calls` feature via UserHub, or
+    #: Set whether end users have access to make changes to their `Selectively forward calls` feature via User Hub, or
     #: other clients (Webex, IP phone, etc.).
     selectively_forward_calls: Optional[FeatureAccessLevel] = None
-    #: Set whether end users have access to make changes to their `Sequential ring` feature via UserHub, or other
+    #: Set whether end users have access to make changes to their `Sequential ring` feature via User Hub, or other
     #: clients (Webex, IP phone, etc.).
     sequential_ring: Optional[FeatureAccessLevel] = None
-    #: Set whether end users have access to make changes to their `Simultaneous ring` feature via UserHub, or other
+    #: Set whether end users have access to make changes to their `Simultaneous ring` feature via User Hub, or other
     #: clients (Webex, IP phone, etc.).
     simultaneous_ring: Optional[FeatureAccessLevel] = None
-    #: Set whether end users have access to make changes to their `Single number reach` feature via UserHub, or other
+    #: Set whether end users have access to make changes to their `Single number reach` feature via User Hub, or other
     #: clients (Webex, IP phone, etc.).
     single_number_reach: Optional[FeatureAccessLevel] = None
-    #: Set whether end users have access to make changes to their `Voicemail feature` feature via UserHub, or other
+    #: Set whether end users have access to make changes to their `Voicemail feature` feature via User Hub, or other
     #: clients (Webex, IP phone, etc.).
     voicemail: Optional[FeatureAccessLevel] = None
-    #: Set whether end users have access to make changes to their `Send calls to voicemail` feature via UserHub, or
+    #: Set whether end users have access to make changes to their `Send calls to voicemail` feature via User Hub, or
     #: other clients (Webex, IP phone, etc.).
     send_calls_to_voicemail: Optional[FeatureAccessLevel] = None
     #: Set whether end users have access to make changes to their `Email a copy of the voicemail message` feature via
-    #: UserHub, or other clients (Webex, IP phone, etc.).
+    #: User Hub, or other clients (Webex, IP phone, etc.).
     voicemail_email_copy: Optional[FeatureAccessLevel] = None
-    #: Set whether end users have access to make changes to their `Fax messaging` feature via UserHub, or other clients
+    #: Set whether end users have access to make changes to their `Fax messaging` feature via User Hub, or other clients
     #: (Webex, IP phone, etc.).
     voicemail_fax_messaging: Optional[FeatureAccessLevel] = None
-    #: Set whether end users have access to make changes to their `Message storage` feature via UserHub, or other
+    #: Set whether end users have access to make changes to their `Message storage` feature via User Hub, or other
     #: clients (Webex, IP phone, etc.).
     voicemail_message_storage: Optional[FeatureAccessLevel] = None
-    #: Set whether end users have access to make changes to their `Notifications` feature via UserHub, or other clients
+    #: Set whether end users have access to make changes to their `Notifications` feature via User Hub, or other clients
     #: (Webex, IP phone, etc.).
     voicemail_notifications: Optional[FeatureAccessLevel] = None
     #: Set whether end users have access to make changes to their `Transfer on '0' to another number.` feature via
-    #: UserHub, or other clients (Webex, IP phone, etc.).
+    #: User Hub, or other clients (Webex, IP phone, etc.).
     voicemail_transfer_number: Optional[FeatureAccessLevel] = None
     #: Set whether end users have access to make changes to their `Allow End User to Generate Activation Codes & Delete
-    #: their Phones` feature via UserHub, or other clients (Webex, IP phone, etc.).
+    #: their Phones` feature via User Hub, or other clients (Webex, IP phone, etc.).
     generate_activation_code: Optional[FeatureAccessLevel] = None
+    #: Set whether end users have access to download voicemail via User Hub, or other clients (Webex, etc.).
+    voicemail_download: Optional[FeatureAccessLevel] = None
 
     def update(self) -> dict:
         """

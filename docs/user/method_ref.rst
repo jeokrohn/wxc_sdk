@@ -591,6 +591,36 @@ The method name is a link to the method documentation.
         Modify Executive Assistant Settings for a Person
    * - :meth:`api.person_settings.exec_assistant.read <wxc_sdk.person_settings.exec_assistant.ExecAssistantApi.read>`
         Retrieve Executive Assistant Settings for a Person
+   * - :meth:`api.person_settings.executive.alert_settings <wxc_sdk.person_settings.executive.ExecutiveSettingsApi.alert_settings>`
+        Get Person Executive Alert Settings
+   * - :meth:`api.person_settings.executive.assigned_assistants <wxc_sdk.person_settings.executive.ExecutiveSettingsApi.assigned_assistants>`
+        Get Person Executive Assigned Assistants
+   * - :meth:`api.person_settings.executive.create_call_filtering_criteria <wxc_sdk.person_settings.executive.ExecutiveSettingsApi.create_call_filtering_criteria>`
+        Add Person Executive Call Filtering Criteria
+   * - :meth:`api.person_settings.executive.delete_call_filtering_criteria <wxc_sdk.person_settings.executive.ExecutiveSettingsApi.delete_call_filtering_criteria>`
+        Delete Person Executive Call Filtering Criteria
+   * - :meth:`api.person_settings.executive.executive_assistant_settings <wxc_sdk.person_settings.executive.ExecutiveSettingsApi.executive_assistant_settings>`
+        Get Person Executive Assistant Settings
+   * - :meth:`api.person_settings.executive.executive_available_assistants <wxc_sdk.person_settings.executive.ExecutiveSettingsApi.executive_available_assistants>`
+        Get Person Executive Available Assistants
+   * - :meth:`api.person_settings.executive.executive_call_filtering_settings <wxc_sdk.person_settings.executive.ExecutiveSettingsApi.executive_call_filtering_settings>`
+        Get Person Executive Call Filtering Settings
+   * - :meth:`api.person_settings.executive.get_filtering_criteria <wxc_sdk.person_settings.executive.ExecutiveSettingsApi.get_filtering_criteria>`
+        Get Person Executive Call Filtering Criteria Settings
+   * - :meth:`api.person_settings.executive.screening_settings <wxc_sdk.person_settings.executive.ExecutiveSettingsApi.screening_settings>`
+        Get Person Executive Screening Settings
+   * - :meth:`api.person_settings.executive.update_alert_settings <wxc_sdk.person_settings.executive.ExecutiveSettingsApi.update_alert_settings>`
+        Modify Person Executive Alert Settings
+   * - :meth:`api.person_settings.executive.update_assigned_assistants <wxc_sdk.person_settings.executive.ExecutiveSettingsApi.update_assigned_assistants>`
+        Modify Person Executive Assigned Assistants
+   * - :meth:`api.person_settings.executive.update_call_filtering_criteria <wxc_sdk.person_settings.executive.ExecutiveSettingsApi.update_call_filtering_criteria>`
+        Modify Person Executive Call Filtering Criteria Settings
+   * - :meth:`api.person_settings.executive.update_executive_assistant_settings <wxc_sdk.person_settings.executive.ExecutiveSettingsApi.update_executive_assistant_settings>`
+        Modify Person Executive Assistant Settings
+   * - :meth:`api.person_settings.executive.update_executive_call_filtering_settings <wxc_sdk.person_settings.executive.ExecutiveSettingsApi.update_executive_call_filtering_settings>`
+        Modify Person Executive Call Filtering Settings
+   * - :meth:`api.person_settings.executive.update_screening_settings <wxc_sdk.person_settings.executive.ExecutiveSettingsApi.update_screening_settings>`
+        Modify Person Executive Screening Settings
    * - :meth:`api.person_settings.feature_access.read <wxc_sdk.person_settings.feature_access.FeatureAccessApi.read>`
         Read Feature Access Settings for a Person
    * - :meth:`api.person_settings.feature_access.read_default <wxc_sdk.person_settings.feature_access.FeatureAccessApi.read_default>`
