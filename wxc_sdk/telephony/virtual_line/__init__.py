@@ -8,7 +8,7 @@ from ...api_child import ApiChild
 from ...base import ApiModel
 from ...common import PrimaryOrShared, AssignedDectNetwork, UserNumber
 from ...locations import LocationAddress
-from ...person_settings import TelephonyDevice, AvailableNumbersApi
+from ...person_settings import TelephonyDevice, AvailableNumbersApi, DndApi
 from ...person_settings.agent_caller_id import AgentCallerIdApi
 from ...person_settings.barge import BargeApi
 from ...person_settings.call_intercept import CallInterceptApi
@@ -113,6 +113,8 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
     call_waiting: CallWaitingApi
     #: caller id settings
     caller_id: CallerIdApi
+    #: DND settings
+    dnd: DndApi
     #: ECBN settings
     ecbn: ECBNApi
     #: forwarding settings
@@ -140,6 +142,7 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
         self.call_recording = CallRecordingApi(session=session, selector=ApiSelector.virtual_line)
         self.call_waiting = CallWaitingApi(session=session, selector=ApiSelector.virtual_line)
         self.caller_id = CallerIdApi(session=session, selector=ApiSelector.virtual_line)
+        self.dnd = DndApi(session=session, selector=ApiSelector.virtual_line)
         self.ecbn = ECBNApi(session=session, selector=ApiSelector.virtual_line)
         self.forwarding = PersonForwardingApi(session=session, selector=ApiSelector.virtual_line)
         self.music_on_hold = MusicOnHoldApi(session=session, selector=ApiSelector.virtual_line)

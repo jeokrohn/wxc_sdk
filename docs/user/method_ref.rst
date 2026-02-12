@@ -1993,6 +1993,10 @@ The method name is a link to the method documentation.
         Configure a Caller ID Settings
    * - :meth:`api.telephony.virtual_lines.caller_id.read <wxc_sdk.person_settings.caller_id.CallerIdApi.read>`
         Retrieve Caller ID Settings
+   * - :meth:`api.telephony.virtual_lines.dnd.configure <wxc_sdk.person_settings.dnd.DndApi.configure>`
+        Configure Do Not Disturb Settings for an entity
+   * - :meth:`api.telephony.virtual_lines.dnd.read <wxc_sdk.person_settings.dnd.DndApi.read>`
+        Read Do Not Disturb Settings for an entity
    * - :meth:`api.telephony.virtual_lines.ecbn.configure <wxc_sdk.person_settings.ecbn.ECBNApi.configure>`
         Update an entity's Emergency Callback Number
    * - :meth:`api.telephony.virtual_lines.ecbn.dependencies <wxc_sdk.person_settings.ecbn.ECBNApi.dependencies>`

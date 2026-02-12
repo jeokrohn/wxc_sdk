@@ -23,13 +23,13 @@ __all__ = ['ApplicationsSetting', 'BargeInInfo', 'CallForwardingInfo', 'CallForw
            'CallRecordingInfoNotificationType', 'CallRecordingInfoRecord', 'CallRecordingInfoRepeat',
            'CallRecordingInfoStartStopAnnouncement', 'CallRecordingPutNotification',
            'CallRecordingPutNotificationType', 'CallWaitingInfo', 'CallerIdInfo',
-           'CallerIdInfoExternalCallerIdNamePolicy', 'CallerIdInfoSelected', 'DoNotDisturbInfo', 'EventLongDetails',
-           'EventLongDetailsRecurrence', 'EventLongDetailsRecurrenceRecurDaily',
-           'EventLongDetailsRecurrenceRecurWeekly', 'GetCallingBehaviorObject',
-           'GetCallingBehaviorObjectBehaviorType', 'GetCallingBehaviorObjectEffectiveBehaviorType', 'GetEvent',
-           'GetMonitoredElementsObject', 'GetMonitoredElementsObjectCallparkextension',
-           'GetMonitoredElementsObjectMember', 'GetNumbers', 'GetNumbersPhoneNumbersItem',
-           'GetNumbersPhoneNumbersItemRingPattern', 'IncomingPermissionSetting',
+           'CallerIdInfoExternalCallerIdNamePolicy', 'CallerIdInfoSelected', 'DirectLineCallerIdNameObject',
+           'DoNotDisturbInfo', 'EventLongDetails', 'EventLongDetailsRecurrence',
+           'EventLongDetailsRecurrenceRecurDaily', 'EventLongDetailsRecurrenceRecurWeekly',
+           'GetCallingBehaviorObject', 'GetCallingBehaviorObjectBehaviorType',
+           'GetCallingBehaviorObjectEffectiveBehaviorType', 'GetEvent', 'GetMonitoredElementsObject',
+           'GetMonitoredElementsObjectCallparkextension', 'GetMonitoredElementsObjectMember', 'GetNumbers',
+           'GetNumbersPhoneNumbersItem', 'GetNumbersPhoneNumbersItemRingPattern', 'IncomingPermissionSetting',
            'IncomingPermissionSettingExternalTransfer', 'MonitoredMemberObject', 'MonitoredNumberObject',
            'MonitoringSettings', 'OutgoingCallingPermissionsSettingGet',
            'OutgoingCallingPermissionsSettingGetCallingPermissionsItem',
@@ -38,7 +38,7 @@ __all__ = ['ApplicationsSetting', 'BargeInInfo', 'CallForwardingInfo', 'CallForw
            'OutgoingCallingPermissionsSettingPutCallingPermissionsItem', 'PeopleOrPlaceOrVirtualLineType',
            'PrivacyGet', 'PushToTalkAccessType', 'PushToTalkConnectionType', 'PushToTalkInfo', 'ReceptionInfo',
            'RetrieveExecutiveAssistantSettingsForAPersonResponseType', 'ScheduleLevel', 'ScheduleLongDetails',
-           'ScheduleShortDetails', 'ScheduleType', 'UserCallSettings12Api', 'VoicemailInfo',
+           'ScheduleShortDetails', 'ScheduleType', 'UserCallSettings12Api', 'UserSelectionObject', 'VoicemailInfo',
            'VoicemailInfoEmailCopyOfMessage', 'VoicemailInfoFaxMessage', 'VoicemailInfoMessageStorage',
            'VoicemailInfoMessageStorageStorageType', 'VoicemailInfoSendBusyCalls', 'VoicemailInfoSendUnansweredCalls',
            'VoicemailPutSendBusyCalls', 'VoicemailPutSendUnansweredCalls']
@@ -202,8 +202,7 @@ class CallInterceptInfoOutgoingType(str, Enum):
 class CallInterceptInfoOutgoing(ApiModel):
     #: `INTERCEPT_ALL` indicated all outgoing calls are intercepted.
     type: Optional[CallInterceptInfoOutgoingType] = None
-    #: If `true`, when the person attempts to make an outbound call, a system default message is played and the call is
-    #: made to the destination phone number
+    #: If `true`, allows transfer and forwarding for the call type.
     transfer_enabled: Optional[bool] = None
     #: Number to which the outbound call be transferred.
     destination: Optional[str] = None
@@ -356,6 +355,24 @@ class CallerIdInfoExternalCallerIdNamePolicy(str, Enum):
     other = 'OTHER'
 
 
+class UserSelectionObject(str, Enum):
+    #: When this option is selected, `customName` is to be shown for this user.
+    custom_name = 'CUSTOM_NAME'
+    #: When this option is selected, `firstName` and `lastName` are to be shown for this user.
+    first_name_last_name = 'FIRST_NAME_LAST_NAME'
+    #: When this option is selected, `lastName` and `firstName` are to be shown for this user.
+    last_name_first_name = 'LAST_NAME_FIRST_NAME'
+    #: When this option is selected, `displayName` is to be shown for this user.
+    display_name = 'DISPLAY_NAME'
+
+
+class DirectLineCallerIdNameObject(ApiModel):
+    #: The selection of the direct line caller ID name. Defaults to `FIRST_NAME_LAST_NAME`.
+    selection: Optional[UserSelectionObject] = None
+    #: The custom direct line caller ID name. Required if `selection` is set to `CUSTOM_NAME`.
+    custom_name: Optional[str] = None
+
+
 class CallerIdInfo(ApiModel):
     #: Allowed types for the `selected` field. This field is read-only and cannot be modified.
     types: Optional[list[CallerIdInfoSelected]] = None
@@ -373,9 +390,11 @@ class CallerIdInfo(ApiModel):
     #: or from another location with the same country, PSTN provider, and zone (only applicable for India locations)
     #: as the person's location.
     custom_number: Optional[str] = None
-    #: Person's Caller ID first name.  Characters of `%`,  `+`, ``, `"` and Unicode characters are not allowed.
+    #: Person's Caller ID first name.  Characters of `%`,  `+`, ``, `"` and Unicode characters are not allowed. This
+    #: field has been deprecated. Please use `directLineCallerIdName` and `dialByFirstName` instead.
     first_name: Optional[str] = None
-    #: Person's Caller ID last name.  Characters of `%`,  `+`, ``, `"` and Unicode characters are not allowed.
+    #: Person's Caller ID last name.  Characters of `%`,  `+`, ``, `"` and Unicode characters are not allowed. This
+    #: field has been deprecated. Please use `directLineCallerIdName` and `dialByLastName` instead.
     last_name: Optional[str] = None
     #: Block this person's identity when receiving a call.
     block_in_forward_calls_enabled: Optional[bool] = None
@@ -394,6 +413,12 @@ class CallerIdInfo(ApiModel):
     #: the person's location or from another location with the same country, PSTN provider, and zone (only applicable
     #: for India locations) as the person's location.
     additional_external_caller_id_custom_number: Optional[str] = None
+    #: Settings for the direct line caller ID name to be shown for this user.
+    direct_line_caller_id_name: Optional[DirectLineCallerIdNameObject] = None
+    #: The first name to be used for dial by name functions.
+    dial_by_first_name: Optional[str] = None
+    #: The last name to be used for dial by name functions.
+    dial_by_last_name: Optional[str] = None
 
 
 class DoNotDisturbInfo(ApiModel):
@@ -563,7 +588,8 @@ class GetMonitoredElementsObjectMember(ApiModel):
     type: Optional[PeopleOrPlaceOrVirtualLineType] = None
     #: The email address of the monitored person.
     email: Optional[str] = None
-    #: The list of phone numbers of the monitored person, workspace or virtual line.
+    #: The list of phone numbers containing only the primary number for the monitored person, workspace, or virtual
+    #: line.
     numbers: Optional[list[MonitoredNumberObject]] = None
     #: The name of the location where the monitored person, workspace, or virtual line is situated.
     location: Optional[str] = None
@@ -719,9 +745,11 @@ class OutgoingCallingPermissionsSettingGetCallingPermissionsItem(ApiModel):
     call_type: Optional[OutgoingCallingPermissionsSettingGetCallingPermissionsItemCallType] = None
     #: Action on the given `callType`.
     action: Optional[OutgoingCallingPermissionsSettingGetCallingPermissionsItemAction] = None
-    #: Allow the person to transfer or forward a call of the specified call type.
+    #: If `true`, allows transfer and forwarding for the call type.
     transfer_enabled: Optional[bool] = None
-    #: If enabled, indicates the call restriction is enabled for the specific call type.
+    #: Indicates if the restriction is enforced by the system for the corresponding call type and cannot be changed.
+    #: For example, certain call types (such as `INTERNATIONAL`) may be permanently blocked and this field will be
+    #: `true` to reflect that the restriction is system-controlled and not editable.
     is_call_type_restriction_enabled: Optional[bool] = None
 
 
@@ -740,7 +768,7 @@ class OutgoingCallingPermissionsSettingPutCallingPermissionsItem(ApiModel):
     call_type: Optional[OutgoingCallingPermissionsSettingGetCallingPermissionsItemCallType] = None
     #: Action on the given `callType`.
     action: Optional[OutgoingCallingPermissionsSettingGetCallingPermissionsItemAction] = None
-    #: Allow the person to transfer or forward a call of the specified call type.
+    #: If `true`, allows transfer and forwarding for the call type.
     transfer_enabled: Optional[bool] = None
 
 
@@ -1363,7 +1391,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
         Caller ID settings control how a person's information is displayed when making outgoing calls.
 
         This API requires a full, user, or read-only administrator or location administrator auth token with a scope of
-        `spark-admin:people_read`.
+        `spark-admin:people_read`.<div><Callout type="warning">The fields `directLineCallerIdName.selection`,
+        `directLineCallerIdName.customName`, `dialByFirstName`, and `dialByLastName` are not supported in Webex for
+        Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and
+        view both caller ID and dial-by-name settings.</Callout></div>
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
@@ -1389,6 +1420,8 @@ class UserCallSettings12Api(ApiChild, base='people'):
                                                   additional_external_caller_id_direct_line_enabled: bool = None,
                                                   additional_external_caller_id_location_number_enabled: bool = None,
                                                   additional_external_caller_id_custom_number: str = None,
+                                                  direct_line_caller_id_name: DirectLineCallerIdNameObject = None,
+                                                  dial_by_first_name: str = None, dial_by_last_name: str = None,
                                                   org_id: str = None):
         """
         Configure Caller ID Settings for a Person
@@ -1398,7 +1431,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
         Caller ID settings control how a person's information is displayed when making outgoing calls.
 
         This API requires a full or user administrator or location administrator auth token with the
-        `spark-admin:people_write` scope.
+        `spark-admin:people_write` scope.<div><Callout type="warning">The fields `directLineCallerIdName.selection`,
+        `directLineCallerIdName.customName`, `dialByFirstName`, and `dialByLastName` are not supported in Webex for
+        Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and
+        view both caller ID and dial-by-name settings.</Callout></div>
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
@@ -1409,10 +1445,12 @@ class UserCallSettings12Api(ApiChild, base='people'):
             applicable for India locations) as the person's location.
         :type custom_number: str
         :param first_name: Person's Caller ID first name.  Characters of `%`,  `+`, ``, `"` and Unicode characters are
-            not allowed.
+            not allowed. This field has been deprecated. Please use `directLineCallerIdName` and `dialByFirstName`
+            instead.
         :type first_name: str
         :param last_name: Person's Caller ID last name.  Characters of `%`,  `+`, ``, `"` and Unicode characters are
-            not allowed.
+            not allowed. This field has been deprecated. Please use `directLineCallerIdName` and `dialByLastName`
+            instead.
         :type last_name: str
         :param block_in_forward_calls_enabled: Block this person's identity when receiving a call.
         :type block_in_forward_calls_enabled: bool
@@ -1432,6 +1470,16 @@ class UserCallSettings12Api(ApiChild, base='people'):
             the person. This value must be a number from the person's location or from another location with the same
             country, PSTN provider, and zone (only applicable for India locations) as the person's location.
         :type additional_external_caller_id_custom_number: str
+        :param direct_line_caller_id_name: Settings for the direct line caller ID name to be shown for this user.
+        :type direct_line_caller_id_name: DirectLineCallerIdNameObject
+        :param dial_by_first_name: Sets or clears the the first name to be used for dial by name functions. To clear
+            the `dialByFirstName`, the attribute must be set to null or empty string. Characters of `%`,  `+`, `\`,
+            `"` and Unicode characters are not allowed.
+        :type dial_by_first_name: str
+        :param dial_by_last_name: Sets or clears the the last name to be used for dial by name functions. To clear the
+            `dialByLastName`, the attribute must be set to null or empty string. Characters of `%`,  `+`, `\`, `"` and
+            Unicode characters are not allowed.
+        :type dial_by_last_name: str
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
@@ -1461,6 +1509,12 @@ class UserCallSettings12Api(ApiChild, base='people'):
             body['additionalExternalCallerIdLocationNumberEnabled'] = additional_external_caller_id_location_number_enabled
         if additional_external_caller_id_custom_number is not None:
             body['additionalExternalCallerIdCustomNumber'] = additional_external_caller_id_custom_number
+        if direct_line_caller_id_name is not None:
+            body['directLineCallerIdName'] = direct_line_caller_id_name.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if dial_by_first_name is not None:
+            body['dialByFirstName'] = dial_by_first_name
+        if dial_by_last_name is not None:
+            body['dialByLastName'] = dial_by_last_name
         url = self.ep(f'{person_id}/features/callerId')
         super().put(url, params=params, json=body)
 

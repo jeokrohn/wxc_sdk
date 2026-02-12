@@ -214,10 +214,11 @@ class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
         :type phone_numbers: list[str]
         :param action: Specifies the action to execute on the provided phone numbers. If no action is specified, the
             default is set to ACTIVATE.
-        For DEACTIVATE action here are few limitations: 1) a maximum of 500 phone numbers can be processed, 2) the
-        numbers must be unassigned, 3) the numbers cannot serve as ECBN (Emergency Callback Number), 4) the numbers
-        must not be mobile numbers, and 5) this action is only applicable to non-integrated PSTN connection types,
-        specifically Local Gateway (LGW) and Non-integrated CCP
+
+            For DEACTIVATE action here are few limitations: 1) a maximum of 500 phone numbers can be processed, 2) the
+            numbers must be unassigned, 3) the numbers cannot serve as ECBN (Emergency Callback Number), 4) the numbers
+            must not be mobile numbers, and 5) this action is only applicable to non-integrated PSTN connection types,
+            specifically Local Gateway (LGW) and Non-integrated CCP
         :type action: NumbersRequestAction
         :param org_id: Organization of the Route Group.
         :type org_id: str

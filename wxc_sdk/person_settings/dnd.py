@@ -23,7 +23,7 @@ class DND(ApiModel):
 
 class DndApi(PersonSettingsApiChild):
     """
-    API for person's DND settings. Also used for workspaces
+    API for person's DND settings. Also used for workspaces and virtual lines
     """
 
     feature = 'doNotDisturb'
@@ -40,9 +40,10 @@ class DndApi(PersonSettingsApiChild):
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
         :param org_id: Entity is in this organization. Only admin users of another organization (such as partners) may
-        use this parameter as the default is the same organization as the token used to access API.
+            use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
-        :return:
+        :return: DND settings
+        :rtype: DND
         """
         ep = self.f_ep(entity_id)
         params = org_id and {'orgId': org_id} or None

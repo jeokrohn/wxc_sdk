@@ -24,22 +24,23 @@ __all__ = ['AgentCallerIdType', 'AudioAnnouncementFileGetObject', 'AudioAnnounce
            'CallRecordingInfoNotificationType', 'CallRecordingInfoRecord', 'CallRecordingInfoRepeat',
            'CallRecordingInfoStartStopAnnouncement', 'CallRecordingPutNotification',
            'CallRecordingPutNotificationType', 'CallerIdInfo', 'CallerIdInfoSelected', 'DectNetwork',
-           'DeviceActivationStates', 'DeviceObject', 'DeviceOwner', 'DevicesObject', 'DirectorySearchObject',
-           'GetMusicOnHoldObject', 'GetVirtualLineDevicesObject', 'GetVirtualLineNumberObjectPhoneNumber',
-           'GetVirtualLineObject', 'GetVirtualLineObjectLocation', 'GetVirtualLineObjectLocationAddress',
-           'GetVirtualLineObjectNumber', 'IncomingPermissionSetting', 'IncomingPermissionSettingExternalTransfer',
-           'LineType', 'ListVirtualLineObject', 'ListVirtualLineObjectExternalCallerIdNamePolicy',
-           'ListVirtualLineObjectLocation', 'ListVirtualLineObjectNumber', 'MemberType', 'MonitoredPersonObject',
-           'NumberOwnerType', 'OutgoingCallingPermissionsSettingGet',
-           'OutgoingCallingPermissionsSettingGetCallingPermissionsItem',
+           'DeviceActivationStates', 'DeviceObject', 'DeviceOwner', 'DevicesObject', 'DirectLineCallerIdNameObject',
+           'DirectorySearchObject', 'GetMusicOnHoldObject', 'GetVirtualLineDevicesObject',
+           'GetVirtualLineNumberObjectPhoneNumber', 'GetVirtualLineObject', 'GetVirtualLineObjectLocation',
+           'GetVirtualLineObjectLocationAddress', 'GetVirtualLineObjectNumber', 'IncomingPermissionSetting',
+           'IncomingPermissionSettingExternalTransfer', 'LineType', 'ListVirtualLineObject',
+           'ListVirtualLineObjectExternalCallerIdNamePolicy', 'ListVirtualLineObjectLocation',
+           'ListVirtualLineObjectNumber', 'MemberType', 'MonitoredPersonObject', 'NumberOwnerType',
+           'OutgoingCallingPermissionsSettingGet', 'OutgoingCallingPermissionsSettingGetCallingPermissionsItem',
            'OutgoingCallingPermissionsSettingGetCallingPermissionsItemAction',
            'OutgoingCallingPermissionsSettingGetCallingPermissionsItemCallType',
            'OutgoingCallingPermissionsSettingPutCallingPermissionsItem', 'PeopleOrPlaceOrVirtualLineType',
            'PrivacyGet', 'PushToTalkAccessType', 'PushToTalkConnectionType', 'PushToTalkInfo', 'STATE',
            'TelephonyType', 'TransferNumberGet', 'UserDigitPatternObject',
            'UserOutgoingPermissionDigitPatternGetListObject', 'UserPlaceAuthorizationCodeListGet',
-           'VirtualLineCallForwardAvailableNumberObject', 'VirtualLineCallForwardAvailableNumberObjectOwner',
-           'VirtualLineCallSettingsApi', 'VirtualLineECBNAvailableNumberObject',
+           'UserSelectionObject', 'VirtualLineCallForwardAvailableNumberObject',
+           'VirtualLineCallForwardAvailableNumberObjectOwner', 'VirtualLineCallSettingsApi',
+           'VirtualLineDoNotDisturbGet', 'VirtualLineECBNAvailableNumberObject',
            'VirtualLineECBNAvailableNumberObjectOwner', 'VirtualLineECBNAvailableNumberObjectOwnerType',
            'VirtualLineFaxMessageAvailableNumberObject', 'VoicemailInfo', 'VoicemailInfoEmailCopyOfMessage',
            'VoicemailInfoFaxMessage', 'VoicemailInfoMessageStorage', 'VoicemailInfoMessageStorageStorageType',
@@ -378,6 +379,24 @@ class CallerIdInfoSelected(str, Enum):
     custom = 'CUSTOM'
 
 
+class UserSelectionObject(str, Enum):
+    #: When this option is selected, `customName` is to be shown for this virtual line.
+    custom_name = 'CUSTOM_NAME'
+    #: When this option is selected, `firstName` and `lastName` are to be shown for this virtual line.
+    first_name_last_name = 'FIRST_NAME_LAST_NAME'
+    #: When this option is selected, `lastName` and `firstName` are to be shown for this virtual line.
+    last_name_first_name = 'LAST_NAME_FIRST_NAME'
+    #: When this option is selected, `displayName` is to be shown for this virtual line.
+    display_name = 'DISPLAY_NAME'
+
+
+class DirectLineCallerIdNameObject(ApiModel):
+    #: The selection of the direct line caller ID name. Defaults to `FIRST_NAME_LAST_NAME`.
+    selection: Optional[UserSelectionObject] = None
+    #: The custom direct line caller ID name. Required if `selection` is set to `CUSTOM_NAME`.
+    custom_name: Optional[str] = None
+
+
 class CallerIdInfo(ApiModel):
     #: Allowed types for the `selected` field. This field is read-only and cannot be modified.
     types: Optional[list[CallerIdInfoSelected]] = None
@@ -396,8 +415,10 @@ class CallerIdInfo(ApiModel):
     #: locations) as the virtual line's location.
     custom_number: Optional[str] = None
     #: Virtual line's Caller ID first name. The characters `%`,  `+`, ``, `"` and Unicode characters are not allowed.
+    #: This field has been deprecated. Please use `directLineCallerIdName` and `dialByFirstName` instead.
     first_name: Optional[str] = None
     #: Virtual line's Caller ID last name. The characters `%`,  `+`, ``, `"` and Unicode characters are not allowed.
+    #: This field has been deprecated. Please use `directLineCallerIdName` and `dialByLastName` instead.
     last_name: Optional[str] = None
     #: Block this virtual line's identity when receiving a call.
     block_in_forward_calls_enabled: Optional[bool] = None
@@ -416,6 +437,12 @@ class CallerIdInfo(ApiModel):
     #: number from the virtual line's location or from another location with the same country, PSTN provider, and zone
     #: (only applicable for India locations) as the virtual line's location.
     additional_external_caller_id_custom_number: Optional[str] = None
+    #: Settings for the direct line caller ID name to be shown for this virtual line.
+    direct_line_caller_id_name: Optional[DirectLineCallerIdNameObject] = None
+    #: The first name to be used for dial-by-name functions.
+    dial_by_first_name: Optional[str] = None
+    #: The last name to be used for dial-by-name functions.
+    dial_by_last_name: Optional[str] = None
 
 
 class CallForwardingInfoCallForwardingAlways(ApiModel):
@@ -564,9 +591,11 @@ class OutgoingCallingPermissionsSettingGetCallingPermissionsItem(ApiModel):
     call_type: Optional[OutgoingCallingPermissionsSettingGetCallingPermissionsItemCallType] = None
     #: Action on the given `callType`.
     action: Optional[OutgoingCallingPermissionsSettingGetCallingPermissionsItemAction] = None
-    #: Allow the virtual line to transfer or forward a call of the specified call type.
+    #: If `true`, allows transfer and forwarding for the call type.
     transfer_enabled: Optional[bool] = None
-    #: If `true`, indicates the call restriction is enabled for the specific call type.
+    #: Indicates if the restriction is enforced by the system for the corresponding call type and cannot be changed.
+    #: For example, certain call types (such as `INTERNATIONAL`) may be permanently blocked and this field will be
+    #: `true` to reflect that the restriction is system-controlled and not editable.
     is_call_type_restriction_enabled: Optional[bool] = None
 
 
@@ -640,8 +669,7 @@ class CallInterceptInfoOutgoingType(str, Enum):
 class CallInterceptInfoOutgoing(ApiModel):
     #: `INTERCEPT_ALL` indicated all outgoing calls are intercepted.
     type: Optional[CallInterceptInfoOutgoingType] = None
-    #: If `true`, when the virtual line attempts to make an outbound call, a system default message is played and the
-    #: call is made to the destination phone number
+    #: If `true`, allows transfer and forwarding for the call type.
     transfer_enabled: Optional[bool] = None
     #: Number to which the outbound call be transferred.
     destination: Optional[str] = None
@@ -1058,7 +1086,7 @@ class UserDigitPatternObject(ApiModel):
     pattern: Optional[str] = None
     #: Action to be performed on the input number that matches the digit pattern.
     action: Optional[OutgoingCallingPermissionsSettingGetCallingPermissionsItemAction] = None
-    #: Option to allow or disallow transfer of calls.
+    #: If `true`, allows transfer and forwarding for the call type.
     transfer_enabled: Optional[bool] = None
 
 
@@ -1081,6 +1109,13 @@ class TransferNumberGet(ApiModel):
     #: When calling a specific call type, this virtual line will be automatically transferred to another number.
     #: `autoTransferNumber3` will be used when the associated calling permission action is set to `TRANSFER_NUMBER_3`.
     auto_transfer_number3: Optional[str] = None
+
+
+class VirtualLineDoNotDisturbGet(ApiModel):
+    #: `true` if the DoNotDisturb feature is enabled.
+    enabled: Optional[bool] = None
+    #: When `true`, enables ring reminder when you receive an incoming call while on Do Not Disturb.
+    ring_splash_enabled: Optional[bool] = None
 
 
 class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines'):
@@ -1283,7 +1318,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         Calling users.
 
         Deleting a virtual line requires a full or user administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.
+        `spark-admin:telephony_config_write` and `identity:contacts_rw`.
 
         :param virtual_line_id: Delete the virtual line with the matching ID.
         :type virtual_line_id: str
@@ -1337,7 +1372,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         Calling users.
 
         Updating a virtual line requires a full or user or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.
+        `spark-admin:telephony_config_write` and `identity:contacts_rw`.
 
         :param virtual_line_id: Update settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -1914,7 +1949,11 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         Caller ID settings control how a virtual line's information is displayed when making outgoing calls.
 
         Retrieving the caller ID settings for a virtual line requires a full, user, or read-only administrator auth
-        token with a scope of `spark-admin:telephony_config_read`.
+        token with a scope of `spark-admin:telephony_config_read`.<div><Callout type="warning">The fields
+        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, `dialByFirstName`, and
+        `dialByLastName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the
+        `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name
+        settings.</Callout></div>
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -1941,6 +1980,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
                                                         additional_external_caller_id_direct_line_enabled: bool = None,
                                                         additional_external_caller_id_location_number_enabled: bool = None,
                                                         additional_external_caller_id_custom_number: str = None,
+                                                        direct_line_caller_id_name: DirectLineCallerIdNameObject = None,
+                                                        dial_by_first_name: str = None, dial_by_last_name: str = None,
                                                         org_id: str = None):
         """
         Configure Caller ID Settings for a Virtual Line
@@ -1950,7 +1991,11 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         Caller ID settings control how a virtual line's information is displayed when making outgoing calls.
 
         Updating the caller ID settings for a virtual line requires a full or user administrator auth token with a
-        scope of `spark-admin:telephony_config_write`.
+        scope of `spark-admin:telephony_config_write`.<div><Callout type="warning">The fields
+        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, `dialByFirstName`, and
+        `dialByLastName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the
+        `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name
+        settings.</Callout></div>
 
         :param virtual_line_id: Update settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -1961,10 +2006,12 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
             applicable for India locations) as the virtual line's location.
         :type custom_number: str
         :param first_name: Virtual line's Caller ID first name. The characters `%`,  `+`, ``, `"` and Unicode
-            characters are not allowed.
+            characters are not allowed. This field has been deprecated. Please use `directLineCallerIdName` and
+            `dialByFirstName` instead.
         :type first_name: str
         :param last_name: Virtual line's Caller ID last name. The characters `%`,  `+`, ``, `"` and Unicode characters
-            are not allowed.
+            are not allowed. This field has been deprecated. Please use `directLineCallerIdName` and `dialByLastName`
+            instead.
         :type last_name: str
         :param block_in_forward_calls_enabled: Block this virtual line's identity when receiving a call.
         :type block_in_forward_calls_enabled: bool
@@ -1985,6 +2032,17 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
             with the same country, PSTN provider, and zone (only applicable for India locations) as the virtual line's
             location.
         :type additional_external_caller_id_custom_number: str
+        :param direct_line_caller_id_name: Settings for the direct line caller ID name to be shown for this virtual
+            line.
+        :type direct_line_caller_id_name: DirectLineCallerIdNameObject
+        :param dial_by_first_name: Sets or clears the first name to be used for dial-by-name functions. To clear the
+            `dialByFirstName`, the attribute must be set to null or empty string. Characters of `%`,  `+`, `\`, `"`
+            and Unicode characters are not allowed.
+        :type dial_by_first_name: str
+        :param dial_by_last_name: Sets or clears the last name to be used for dial-by-name functions. To clear the
+            `dialByLastName`, the attribute must be set to null or empty string. Characters of `%`,  `+`, `\`, `"` and
+            Unicode characters are not allowed.
+        :type dial_by_last_name: str
         :param org_id: ID of the organization in which the virtual line resides. Only admin users of another
             organization (such as partners) may use this parameter, as the default is the same organization as the
             token used to access the API.
@@ -2014,6 +2072,12 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
             body['additionalExternalCallerIdLocationNumberEnabled'] = additional_external_caller_id_location_number_enabled
         if additional_external_caller_id_custom_number is not None:
             body['additionalExternalCallerIdCustomNumber'] = additional_external_caller_id_custom_number
+        if direct_line_caller_id_name is not None:
+            body['directLineCallerIdName'] = direct_line_caller_id_name.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if dial_by_first_name is not None:
+            body['dialByFirstName'] = dial_by_first_name
+        if dial_by_last_name is not None:
+            body['dialByLastName'] = dial_by_last_name
         url = self.ep(f'{virtual_line_id}/callerId')
         super().put(url, params=params, json=body)
 
@@ -2083,7 +2147,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         Calling users.
 
         Updating Directory search for a virtual line requires a full or user administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.
+        `spark-admin:telephony_config_write` and `identity:contacts_rw`.
 
         :param virtual_line_id: Update settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -2099,6 +2163,63 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         body = dict()
         body['enabled'] = enabled
         url = self.ep(f'{virtual_line_id}/directorySearch')
+        super().put(url, params=params, json=body)
+
+    def get_virtual_line_do_not_disturb(self, virtual_line_id: str, org_id: str = None) -> VirtualLineDoNotDisturbGet:
+        """
+        Retrieve DoNotDisturb Settings for a Virtual Line.
+
+        Silence incoming calls with the Do Not Disturb feature.
+        When enabled, callers hear the busy signal.
+
+        This API requires a full, read-only or location administrator auth token with a scope of
+        `telephony_config_read`.
+
+        :param virtual_line_id: Unique identifier for the virtual line.
+        :type virtual_line_id: str
+        :param org_id: ID of the organization within which the virtual line resides.
+        :type org_id: str
+        :rtype: :class:`VirtualLineDoNotDisturbGet`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{virtual_line_id}/doNotDisturb')
+        data = super().get(url, params=params)
+        r = VirtualLineDoNotDisturbGet.model_validate(data)
+        return r
+
+    def put_virtual_line_do_not_disturb(self, virtual_line_id: str, enabled: bool = None,
+                                        ring_splash_enabled: bool = None, org_id: str = None):
+        """
+        Modify DoNotDisturb Settings for a Virtual Line.
+
+        Silence incoming calls with the Do Not Disturb feature.
+        When enabled, callers hear the busy signal.
+
+        This API requires a full, user or location administrator auth token with the
+        `spark-admin:telephony_config_write` scope.
+
+        :param virtual_line_id: Unique identifier for the virtual line.
+        :type virtual_line_id: str
+        :param enabled: `true` if the DoNotDisturb feature is enabled.
+        :type enabled: bool
+        :param ring_splash_enabled: When `true`, enables ring reminder when you receive an incoming call while on Do
+            Not Disturb.
+        :type ring_splash_enabled: bool
+        :param org_id: ID of the organization within which the virtual line resides.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = dict()
+        if enabled is not None:
+            body['enabled'] = enabled
+        if ring_splash_enabled is not None:
+            body['ringSplashEnabled'] = ring_splash_enabled
+        url = self.ep(f'{virtual_line_id}/doNotDisturb')
         super().put(url, params=params, json=body)
 
     def get_virtual_line_ecbn_available_phone_numbers(self, virtual_line_id: str, phone_number: list[str] = None,
@@ -2787,7 +2908,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         :type pattern: str
         :param action: Action to be performed on the input number that matches the digit pattern.
         :type action: OutgoingCallingPermissionsSettingGetCallingPermissionsItemAction
-        :param transfer_enabled: Option to allow or disallow transfer of calls.
+        :param transfer_enabled: If `true`, allows transfer and forwarding for the call type.
         :type transfer_enabled: bool
         :param org_id: ID of the organization in which the virtual line resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
@@ -2920,7 +3041,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         :type pattern: str
         :param action: Action to be performed on the input number that matches the digit pattern.
         :type action: OutgoingCallingPermissionsSettingGetCallingPermissionsItemAction
-        :param transfer_enabled: Option to allow or disallow transfer of calls.
+        :param transfer_enabled: If `true`, allows transfer and forwarding for the call type.
         :type transfer_enabled: bool
         :param org_id: ID of the organization in which the virtual line resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the

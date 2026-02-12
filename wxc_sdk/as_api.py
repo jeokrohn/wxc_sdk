@@ -11809,7 +11809,7 @@ class AsCallingBehaviorApi(AsPersonSettingsApiChild):
 
 class AsDndApi(AsPersonSettingsApiChild):
     """
-    API for person's DND settings. Also used for workspaces
+    API for person's DND settings. Also used for workspaces and virtual lines
     """
 
     feature = 'doNotDisturb'
@@ -11826,9 +11826,10 @@ class AsDndApi(AsPersonSettingsApiChild):
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
         :param org_id: Entity is in this organization. Only admin users of another organization (such as partners) may
-        use this parameter as the default is the same organization as the token used to access API.
+            use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
-        :return:
+        :return: DND settings
+        :rtype: DND
         """
         ep = self.f_ep(entity_id)
         params = org_id and {'orgId': org_id} or None
@@ -29517,10 +29518,11 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
         :type phone_numbers: list[str]
         :param action: Specifies the action to execute on the provided phone numbers. If no action is specified, the
             default is set to ACTIVATE.
-        For DEACTIVATE action here are few limitations: 1) a maximum of 500 phone numbers can be processed, 2) the
-        numbers must be unassigned, 3) the numbers cannot serve as ECBN (Emergency Callback Number), 4) the numbers
-        must not be mobile numbers, and 5) this action is only applicable to non-integrated PSTN connection types,
-        specifically Local Gateway (LGW) and Non-integrated CCP
+
+            For DEACTIVATE action here are few limitations: 1) a maximum of 500 phone numbers can be processed, 2) the
+            numbers must be unassigned, 3) the numbers cannot serve as ECBN (Emergency Callback Number), 4) the numbers
+            must not be mobile numbers, and 5) this action is only applicable to non-integrated PSTN connection types,
+            specifically Local Gateway (LGW) and Non-integrated CCP
         :type action: NumbersRequestAction
         :param org_id: Organization of the Route Group.
         :type org_id: str
@@ -31482,6 +31484,8 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
     call_waiting: AsCallWaitingApi
     #: caller id settings
     caller_id: AsCallerIdApi
+    #: DND settings
+    dnd: AsDndApi
     #: ECBN settings
     ecbn: AsECBNApi
     #: forwarding settings
@@ -31509,6 +31513,7 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
         self.call_recording = AsCallRecordingApi(session=session, selector=ApiSelector.virtual_line)
         self.call_waiting = AsCallWaitingApi(session=session, selector=ApiSelector.virtual_line)
         self.caller_id = AsCallerIdApi(session=session, selector=ApiSelector.virtual_line)
+        self.dnd = AsDndApi(session=session, selector=ApiSelector.virtual_line)
         self.ecbn = AsECBNApi(session=session, selector=ApiSelector.virtual_line)
         self.forwarding = AsPersonForwardingApi(session=session, selector=ApiSelector.virtual_line)
         self.music_on_hold = AsMusicOnHoldApi(session=session, selector=ApiSelector.virtual_line)

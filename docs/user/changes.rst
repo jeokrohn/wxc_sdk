@@ -1,19 +1,21 @@
 Release history
 ===============
 
-- fix: ignore status 400 for meth:`api.telephony.location.number.add <wxc_sdk.telephony.location.numbers.LocationNumbersApi.add>`
+- fix: ignore status 400 for :meth:`api.telephony.location.number.add <wxc_sdk.telephony.location.numbers.LocationNumbersApi.add>`
 - fix: :meth:`api.telephony.prem_pstn.dial_plan.modify_patterns <wxc_sdk.telephony.prem_pstn.dial_plan.DialPlanApi.modify_patterns>` had wrong body content
 - feat: new api: :attr:`api.telephony.emergency_address <wxc_sdk.telephony.TelephonyApi.emergency_address>`
 - feat: new endpoint :meth:`api.authorizations.get_token_expiration_status <wxc_sdk.authorizations.AuthorizationsApi.get_token_expiration_status>`
 - feat: new endpoint :meth:`api.telephony.calls.update_external_voicemail_mwi <wxc_sdk.telephony.calls.CallsApi.update_external_voicemail_mwi>`
 - feat: updated parameters for :meth:`api.telephony.devices.available_members <wxc_sdk.telephony.devices.TelephonyDevicesApi.available_members>`
-- feat: new attributes :attr:`api.telephony.autoattendant.AutoAttendant.direct_line_caller_id_name <wxc_sdk.telephony.autoattendant.AutoAttendant.dial_by_name>, :attr:`api.telephony.autoattendant.AutoAttendant.dial_by_name <wxc_sdk.telephony.autoattendant.AutoAttendant.dial_by_name>
+- feat: new attributes :attr:`api.telephony.autoattendant.AutoAttendant.direct_line_caller_id_name <wxc_sdk.telephony.autoattendant.AutoAttendant.dial_by_name>`, :attr:`api.telephony.autoattendant.AutoAttendant.dial_by_name <wxc_sdk.telephony.autoattendant.AutoAttendant.dial_by_name>`
 - feat: new attributes direct_line_caller_id_name and dial_by_name for HG, CQ and paging group settings
 - feat: new attributes direct_line_caller_id_name and dial_by_name for voicemail group and portal, workspaces
 - feat: parameter emergency_address is optional for EmergencyAddressApi.update_for_phone_number
 - feat: addtl. event types for WebhookResource
 - feat: addtl. CDR fields
 - feat: new api :attr:`api.person_settings.executive <wxc_sdk.person_settings.PersonSettingsApi.executive>`
+- feat: new api :attr:`api.telephony.virtual_lines.dnd <wxc_sdk.telephony.virtual_line.VirtualLinesApi.dnd>`
+- feat: direct_line_caller_id_name, dial_by_first_name, dial_by_last_name attributes for caller id settings for users and virtual lines
 
 1.27.1
 ------

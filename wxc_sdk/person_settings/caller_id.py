@@ -68,8 +68,10 @@ class CallerId(ApiModel):
     #: the workspace's location.
     custom_number: Optional[str] = None
     #: Person's Caller ID first name. The characters `%`,  `+`, ``, `"` and Unicode characters are not allowed.
+    #: field has been deprecated. Please use `directLineCallerIdName` and `dialByFirstName` instead.
     first_name: Optional[str] = None
     #: Person's Caller ID last name. The characters `%`,  `+`, ``, `"` and Unicode characters are not allowed.
+    #: field has been deprecated. Please use `directLineCallerIdName` and `dialByLastName` instead.
     last_name: Optional[str] = None
     #: `true` if the virtual line's identity is blocked when receiving a transferred or forwarded call.
     block_in_forward_calls_enabled: Optional[bool] = None
@@ -95,6 +97,10 @@ class CallerId(ApiModel):
     direct_line_caller_id_name: Optional[DirectLineCallerIdName] = None
     #: The name to be used for dial by name functions.
     dial_by_name: Optional[str] = None
+    #: The first name to be used for dial by name functions.
+    dial_by_first_name: Optional[str] = None
+    #: The last name to be used for dial by name functions.
+    dial_by_last_name: Optional[str] = None
 
     fields_for_update: ClassVar[set[str]] = {
         'selected',
@@ -111,6 +117,8 @@ class CallerId(ApiModel):
         'display_detail',
         'direct_line_caller_id_name',
         'dial_by_name',
+        'dial_by_first_name',
+        'dial_by_last_name',
     }
 
     def configure_params(self) -> dict:
