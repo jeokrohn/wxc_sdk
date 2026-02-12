@@ -1,6 +1,6 @@
 [project]
 name = "wxc_sdk"
-version = "1.27.1"
+version = "1.28"
 description = "SDK for Webex APIs with special focus on Webex Calling specific endpoints"
 authors = [{ name = "Johannes Krohn", email = "jkrohn@cisco.com" }]
 requires-python = ">=3.9,<3.14"

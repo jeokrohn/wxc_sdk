@@ -18,11 +18,11 @@
 # -- Project information -----------------------------------------------------
 
 project = 'wxc_sdk'
-copyright = '2024, Johannes Krohn'
+copyright = '2026, Johannes Krohn'
 author = 'Johannes Krohn'
 
 # The full version, including alpha/beta/rc tags
-release = '1.27.1'
+release = '1.28'
 
 # -- General configuration ---------------------------------------------------
 
