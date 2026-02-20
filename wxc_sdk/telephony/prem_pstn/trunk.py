@@ -305,7 +305,7 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         :param p_charge_info_support_policy: P-Charge Info Support policy.
         :type p_charge_info_support_policy: PChargeInfoSupportPolicy
         :param org_id: Organization to which trunk belongs.
-        :type org_id: str:return:
+        :type org_id: str
         """
         params = {}
         if org_id is not None:
