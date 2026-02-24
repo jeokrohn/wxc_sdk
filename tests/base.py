@@ -695,7 +695,8 @@ class TestWithLocations(TestCaseWithLog):
 
         async def get_calling_locations() -> list[Location]:
             async with cls.as_webex_api(tokens=cls.tokens) as api:
-                locations = await api.locations.list()
+                locations = [loc for loc in await api.locations.list()
+                             if loc.address.country == 'US']
                 # figure out which locations are calling locations
                 details = await asyncio.gather(*[api.telephony.location.details(location_id=loc.location_id)
                                                  for loc in locations], return_exceptions=True)
