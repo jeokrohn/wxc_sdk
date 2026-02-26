@@ -180,3 +180,5 @@ cython_debug/
 /apib/tests/generated/
 /tests/user_tokens.yml
 /examples/*.csv
+/open_api/generated/Customer-Experience/
+/open_api/generated/Webex-Suite/Webex-Calling/Webex-Calling-Beta/
