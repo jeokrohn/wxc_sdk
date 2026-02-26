@@ -1129,6 +1129,8 @@ The method name is a link to the method documentation.
         Pause Recording
    * - :meth:`api.telephony.calls.pickup <wxc_sdk.telephony.calls.CallsApi.pickup>`
         Pickup
+   * - :meth:`api.telephony.calls.pull <wxc_sdk.telephony.calls.CallsApi.pull>`
+        Pull
    * - :meth:`api.telephony.calls.push <wxc_sdk.telephony.calls.CallsApi.push>`
         Push
    * - :meth:`api.telephony.calls.reject <wxc_sdk.telephony.calls.CallsApi.reject>`

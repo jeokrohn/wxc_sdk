@@ -33,7 +33,8 @@ class Monitoring(ApiModel):
     #: Call park notification is enabled or disabled.
     call_park_notification_enabled: Optional[bool] = None
     #: Settings of monitored elements which can be person, place, or call park extension.
-    #: for updates IDs can be used directly instead of :class:`MonitoredElement` objects
+    #: for updates IDs can be used directly instead of :class:`MonitoredElement` objects.
+    #: Maximum 50 elements.
     monitored_elements: Optional[list[Union[str, MonitoredElement]]] = None
 
     @property
@@ -89,6 +90,8 @@ class MonitoringApi(PersonSettingsApiChild):
 
         Monitors the line status of specified people, places, virtual lines or call park extension. The line status
         indicates if a person, place or virtual line is on a call and if a call has been parked on that extension.
+
+        The number of monitored elements is limited to 50.
 
         This API requires a full or user administrator or location administrator auth token with the
         `spark-admin:people_write` scope.

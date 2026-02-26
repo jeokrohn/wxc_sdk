@@ -926,6 +926,8 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         status indicates if a monitored agent or a workspace is on a call, or if a call has been parked on the
         monitored call park extension.
 
+        The number of monitored elements is limited to 50.
+
         This API requires a full or user administrator or location administrator auth token with the
         `spark-admin:workspaces_write` scope or a user auth token with `spark:workspaces_write` scope can be used to
         update workspace settings.
@@ -934,7 +936,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         :type workspace_id: str
         :param enable_call_park_notification: Call park notification is enabled or disabled.
         :type enable_call_park_notification: bool
-        :param monitored_elements: Array of ID strings of monitored elements.
+        :param monitored_elements: Array of ID strings of monitored elements. Maximum 50 elements.
         :type monitored_elements: list[str]
         :param org_id: ID of the organization within which the workspace resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the

@@ -58,7 +58,7 @@ class ConferenceControlsApi(ApiChild, base='telephony/conference'):
     scope.
     """
 
-    def release_conference(self):
+    def release_conference(self, line_owner_id: str = None):
         """
         Release Conference
 
@@ -66,25 +66,34 @@ class ConferenceControlsApi(ApiChild, base='telephony/conference'):
         <https://developer.webex.com/docs/api/v1/call-controls/transfer>`_
         can be used to perform an attended transfer so that the participants remain connected.
 
-        :rtype: None
+        param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str:rtype: None
         """
+        params = {}
+        if line_owner_id is not None:
+            params['lineOwnerId'] = line_owner_id
         url = self.ep()
-        super().delete(url)
+        super().delete(url, params=params)
 
-    def get_conference_details(self) -> ConferenceDetails:
+    def get_conference_details(self, line_owner_id: str = None) -> ConferenceDetails:
         """
         Get Conference Details
 
         Get the details of the conference.  An empty JSON object body is returned if there is no conference.
 
-        :rtype: :class:`ConferenceDetails`
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.:rtype: :class:`ConferenceDetails`
         """
+        params = {}
+        if line_owner_id is not None:
+            params['lineOwnerId'] = line_owner_id
         url = self.ep()
-        data = super().get(url)
+        data = super().get(url, params=params)
         r = ConferenceDetails.model_validate(data)
         return r
 
-    def start_conference(self, call_ids: list[str]):
+    def start_conference(self, call_ids: list[str], line_owner_id: str = None):
         """
         Start Conference
 
@@ -95,14 +104,19 @@ class ConferenceControlsApi(ApiChild, base='telephony/conference'):
         :param call_ids: List of call identifiers of the participants to join into the conference. A minimum of two
             call IDs are required.
         :type call_ids: list[str]
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: None
         """
         body = dict()
         body['callIds'] = call_ids
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
         url = self.ep()
         super().post(url, json=body)
 
-    def add_participant(self, call_id: str):
+    def add_participant(self, call_id: str, line_owner_id: str = None):
         """
         Add Participant
 
@@ -110,10 +124,14 @@ class ConferenceControlsApi(ApiChild, base='telephony/conference'):
 
         :param call_id: The call identifier of the participant to add.
         :type call_id: str
-        :rtype: None
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str:rtype: None
         """
         body = dict()
         body['callId'] = call_id
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
         url = self.ep('addParticipant')
         super().post(url, json=body)
 
@@ -133,16 +151,21 @@ class ConferenceControlsApi(ApiChild, base='telephony/conference'):
         url = self.ep('deafen')
         super().post(url, json=body)
 
-    def hold(self):
+    def hold(self, line_owner_id: str = None):
         """
         Hold
 
         Hold the conference host.  There is no request body.
 
-        :rtype: None
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str:rtype: None
         """
+        params = {}
+        if line_owner_id is not None:
+            params['lineOwnerId'] = line_owner_id
         url = self.ep('hold')
-        super().post(url)
+        super().post(url, params=params)
 
     def mute(self, call_id: str = None):
         """
@@ -163,16 +186,22 @@ class ConferenceControlsApi(ApiChild, base='telephony/conference'):
         url = self.ep('mute')
         super().post(url, json=body)
 
-    def resume(self):
+    def resume(self, line_owner_id: str = None):
         """
         Resume
 
         Resumes the held conference host.  There is no request body.
 
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: None
         """
+        params = {}
+        if line_owner_id is not None:
+            params['lineOwnerId'] = line_owner_id
         url = self.ep('resume')
-        super().post(url)
+        super().post(url, params=params)
 
     def undeafen_participant(self, call_id: str):
         """

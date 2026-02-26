@@ -383,15 +383,15 @@ class UserSelectionObject(str, Enum):
     #: When this option is selected, `customName` is to be shown for this virtual line.
     custom_name = 'CUSTOM_NAME'
     #: When this option is selected, `firstName` and `lastName` are to be shown for this virtual line.
-    first_name_last_name = 'FIRST_NAME_LAST_NAME'
+    firstname_lastname = 'FIRSTNAME_LASTNAME'
     #: When this option is selected, `lastName` and `firstName` are to be shown for this virtual line.
-    last_name_first_name = 'LAST_NAME_FIRST_NAME'
+    lastname_firstname = 'LASTNAME_FIRSTNAME'
     #: When this option is selected, `displayName` is to be shown for this virtual line.
     display_name = 'DISPLAY_NAME'
 
 
 class DirectLineCallerIdNameObject(ApiModel):
-    #: The selection of the direct line caller ID name. Defaults to `FIRST_NAME_LAST_NAME`.
+    #: The selection of the direct line caller ID name. Defaults to `FIRSTNAME_LASTNAME`.
     selection: Optional[UserSelectionObject] = None
     #: The custom direct line caller ID name. Required if `selection` is set to `CUSTOM_NAME`.
     custom_name: Optional[str] = None

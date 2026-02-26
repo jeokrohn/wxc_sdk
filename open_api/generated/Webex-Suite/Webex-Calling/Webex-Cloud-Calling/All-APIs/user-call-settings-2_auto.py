@@ -5349,20 +5349,26 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/voicemail/passcode')
         super().put(url, params=params, json=body)
 
-    def list_messages(self) -> list[VoiceMessageDetails]:
+    def list_messages(self, line_owner_id: str = None) -> list[VoiceMessageDetails]:
         """
         List Messages
 
         Get the list of all voicemail messages for the user.
 
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: list[VoiceMessageDetails]
         """
+        params = {}
+        if line_owner_id is not None:
+            params['lineOwnerId'] = line_owner_id
         url = self.ep('telephony/voiceMessages')
-        data = super().get(url)
+        data = super().get(url, params=params)
         r = TypeAdapter(list[VoiceMessageDetails]).validate_python(data['items'])
         return r
 
-    def mark_as_read(self, message_id: str = None):
+    def mark_as_read(self, message_id: str = None, line_owner_id: str = None):
         """
         Mark As Read
 
@@ -5374,15 +5380,20 @@ class UserCallSettings22Api(ApiChild, base=''):
         :param message_id: The voicemail message identifier of the message to mark as read.  If the `messageId` is not
             provided, then all voicemail messages for the user are marked as read.
         :type message_id: str
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: None
         """
         body = dict()
         if message_id is not None:
             body['messageId'] = message_id
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
         url = self.ep('telephony/voiceMessages/markAsRead')
         super().post(url, json=body)
 
-    def mark_as_unread(self, message_id: str = None):
+    def mark_as_unread(self, message_id: str = None, line_owner_id: str = None):
         """
         Mark As Unread
 
@@ -5394,11 +5405,16 @@ class UserCallSettings22Api(ApiChild, base=''):
         :param message_id: The voicemail message identifier of the message to mark as unread.  If the `messageId` is
             not provided, then all voicemail messages for the user are marked as unread.
         :type message_id: str
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: None
         """
         body = dict()
         if message_id is not None:
             body['messageId'] = message_id
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
         url = self.ep('telephony/voiceMessages/markAsUnread')
         super().post(url, json=body)
 

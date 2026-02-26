@@ -1250,9 +1250,9 @@ class DirectLineCallerIdNameSelection(str, Enum):
     #: When this option is selected, `customName` is to be shown for this user.
     custom_name = 'CUSTOM_NAME'
     #: When this option is selected, `firstName` and `lastName` are to be shown for this user.
-    first_name_last_name = 'FIRST_NAME_LAST_NAME'
+    first_name_last_name = 'FIRSTNAME_LASTNAME'
     #: When this option is selected, `lastName` and `firstName` are to be shown for this user.
-    last_name_first_name = 'LAST_NAME_FIRST_NAME'
+    last_name_first_name = 'LASTNAME_FIRSTNAME'
     #: When this option is selected, `displayName` is to be shown for this user.
     display_name = 'DISPLAY_NAME'
 

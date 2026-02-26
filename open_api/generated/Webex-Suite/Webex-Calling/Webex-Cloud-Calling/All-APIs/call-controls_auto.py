@@ -214,7 +214,7 @@ class ExternalVoicemailMwiRequestAction(str, Enum):
 class BargeinResponse(ApiModel):
     #: A unique identifier for the call which is used in all subsequent commands for this call.
     call_id: Optional[str] = None
-    #: A unqiue identifier for the call session the call belongs to. This can be used to correlate multiple calls that
+    #: A unique identifier for the call session the call belongs to. This can be used to correlate multiple calls that
     #: are part of the same call session.
     call_session_id: Optional[str] = None
 
@@ -233,23 +233,30 @@ class CallControlsApi(ApiChild, base='telephony'):
     - The Call Control APIs are only for use by Webex Calling Multi Tenant users and not applicable for users hosted on
     UCM, including Dedicated Instance users.
     
-    - The Call Control APIs are not yet supported by Service Apps.
+    - The Call Control APIs are not supported by Service Apps. Please see Call Control Members APIs for Service Apps
+    support.
     """
 
-    def listcalls(self) -> list[Call]:
+    def listcalls(self, line_owner_id: str = None) -> list[Call]:
         """
         List Calls
 
         Get the list of details for all active calls associated with the user.
 
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: list[Call]
         """
+        params = {}
+        if line_owner_id is not None:
+            params['lineOwnerId'] = line_owner_id
         url = self.ep('calls')
-        data = super().get(url)
+        data = super().get(url, params=params)
         r = TypeAdapter(list[Call]).validate_python(data['items'])
         return r
 
-    def answer(self, call_id: str, endpoint_id: str = None):
+    def answer(self, call_id: str, endpoint_id: str = None, line_owner_id: str = None):
         """
         Answer
 
@@ -264,16 +271,21 @@ class CallControlsApi(ApiChild, base='telephony'):
             the endpointIds returned by the `Get Preferred Answer Endpoint API
             <https://developer.webex.com/docs/api/v1/user-call-settings-2-2/get-preferred-answer-endpoint>`_.
         :type endpoint_id: str
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: None
         """
         body = dict()
         body['callId'] = call_id
         if endpoint_id is not None:
             body['endpointId'] = endpoint_id
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/answer')
         super().post(url, json=body)
 
-    def bargein(self, target: str, endpoint_id: str = None) -> BargeinResponse:
+    def bargein(self, target: str, endpoint_id: str = None, line_owner_id: str = None) -> BargeinResponse:
         """
         Barge In
 
@@ -288,18 +300,23 @@ class CallControlsApi(ApiChild, base='telephony'):
             of the endpointIds returned by the `Get Preferred Answer Endpoint API
             <https://developer.webex.com/docs/api/v1/user-call-settings-2-2/get-preferred-answer-endpoint>`_.
         :type endpoint_id: str
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: :class:`BargeinResponse`
         """
         body = dict()
         body['target'] = target
         if endpoint_id is not None:
             body['endpointId'] = endpoint_id
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/bargeIn')
         data = super().post(url, json=body)
         r = BargeinResponse.model_validate(data)
         return r
 
-    def dial(self, destination: str, endpoint_id: str = None) -> BargeinResponse:
+    def dial(self, destination: str, endpoint_id: str = None, line_owner_id: str = None) -> BargeinResponse:
         """
         Dial
 
@@ -316,18 +333,23 @@ class CallControlsApi(ApiChild, base='telephony'):
             the endpointIds returned by the `Get Preferred Answer Endpoint API
             <https://developer.webex.com/docs/api/v1/user-call-settings-2-2/get-preferred-answer-endpoint>`_.
         :type endpoint_id: str
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: :class:`BargeinResponse`
         """
         body = dict()
         body['destination'] = destination
         if endpoint_id is not None:
             body['endpointId'] = endpoint_id
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/dial')
         data = super().post(url, json=body)
         r = BargeinResponse.model_validate(data)
         return r
 
-    def divert(self, call_id: str, destination: str = None, to_voicemail: bool = None):
+    def divert(self, call_id: str, destination: str = None, to_voicemail: bool = None, line_owner_id: str = None):
         """
         Divert
 
@@ -343,6 +365,9 @@ class CallControlsApi(ApiChild, base='telephony'):
             call is diverted to the user's own voicemail. If a destination is specified, the call is diverted to the
             specified user's voicemail.
         :type to_voicemail: bool
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: None
         """
         body = dict()
@@ -351,10 +376,12 @@ class CallControlsApi(ApiChild, base='telephony'):
             body['destination'] = destination
         if to_voicemail is not None:
             body['toVoicemail'] = to_voicemail
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/divert')
         super().post(url, json=body)
 
-    def hangup(self, call_id: str):
+    def hangup(self, call_id: str, line_owner_id: str = None):
         """
         Hangup
 
@@ -362,10 +389,15 @@ class CallControlsApi(ApiChild, base='telephony'):
 
         :param call_id: The call identifier of the call to hangup.
         :type call_id: str
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: None
         """
         body = dict()
         body['callId'] = call_id
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/hangup')
         super().post(url, json=body)
 
@@ -389,7 +421,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         r = TypeAdapter(list[CallHistoryRecord]).validate_python(data['items'])
         return r
 
-    def hold(self, call_id: str):
+    def hold(self, call_id: str, line_owner_id: str = None):
         """
         Hold
 
@@ -397,14 +429,19 @@ class CallControlsApi(ApiChild, base='telephony'):
 
         :param call_id: The call identifier of the call to hold.
         :type call_id: str
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: None
         """
         body = dict()
         body['callId'] = call_id
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/hold')
         super().post(url, json=body)
 
-    def mute(self, call_id: str):
+    def mute(self, call_id: str, line_owner_id: str = None):
         """
         Mute
 
@@ -413,14 +450,20 @@ class CallControlsApi(ApiChild, base='telephony'):
 
         :param call_id: The call identifier of the call to mute.
         :type call_id: str
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: None
         """
         body = dict()
         body['callId'] = call_id
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/mute')
         super().post(url, json=body)
 
-    def park(self, call_id: str, destination: str = None, is_group_park: bool = None) -> PartyInformation:
+    def park(self, call_id: str, destination: str = None, is_group_park: bool = None,
+             line_owner_id: str = None) -> PartyInformation:
         """
         Park
 
@@ -436,6 +479,9 @@ class CallControlsApi(ApiChild, base='telephony'):
         :param is_group_park: If set to`true`, the call is parked against an automatically selected member of the
             user's call park group and the destination parameter is ignored.
         :type is_group_park: bool
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: PartyInformation
         """
         body = dict()
@@ -444,12 +490,14 @@ class CallControlsApi(ApiChild, base='telephony'):
             body['destination'] = destination
         if is_group_park is not None:
             body['isGroupPark'] = is_group_park
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/park')
         data = super().post(url, json=body)
         r = PartyInformation.model_validate(data['parkedAgainst'])
         return r
 
-    def pauserecording(self, call_id: str = None):
+    def pauserecording(self, call_id: str = None, line_owner_id: str = None):
         """
         Pause Recording
 
@@ -458,15 +506,20 @@ class CallControlsApi(ApiChild, base='telephony'):
 
         :param call_id: The call identifier of the call to pause recording.
         :type call_id: str
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: None
         """
         body = dict()
         if call_id is not None:
             body['callId'] = call_id
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/pauseRecording')
         super().post(url, json=body)
 
-    def pickup(self, target: str = None, endpoint_id: str = None) -> BargeinResponse:
+    def pickup(self, target: str = None, endpoint_id: str = None, line_owner_id: str = None) -> BargeinResponse:
         """
         Pickup
 
@@ -483,6 +536,9 @@ class CallControlsApi(ApiChild, base='telephony'):
             the endpointIds returned by the `Get Preferred Answer Endpoint API
             <https://developer.webex.com/docs/api/v1/user-call-settings-2-2/get-preferred-answer-endpoint>`_.
         :type endpoint_id: str
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: :class:`BargeinResponse`
         """
         body = dict()
@@ -490,12 +546,41 @@ class CallControlsApi(ApiChild, base='telephony'):
             body['target'] = target
         if endpoint_id is not None:
             body['endpointId'] = endpoint_id
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/pickup')
         data = super().post(url, json=body)
         r = BargeinResponse.model_validate(data)
         return r
 
-    def push(self, call_id: str = None):
+    def pull(self, endpoint_id: str = None, line_owner_id: str = None) -> BargeinResponse:
+        """
+        Pull
+
+        Pull a call from one device to another. A temporary new call is initiated to perform the call pull in a similar
+        manner to the dial command. When a user answers an alerting device, the device is connected to the pulled call
+        and the new call created for the call pull is released.
+
+        :param endpoint_id: The ID of the device or application to use for the retrieval. The `endpointId` must be one
+            of the endpointIds returned by the `Get Preferred Answer Endpoint API
+            <https://developer.webex.com/docs/api/v1/user-call-settings-2-2/get-preferred-answer-endpoint>`_.
+        :type endpoint_id: str
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
+        :rtype: :class:`BargeinResponse`
+        """
+        body = dict()
+        if endpoint_id is not None:
+            body['endpointId'] = endpoint_id
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
+        url = self.ep('calls/pull')
+        data = super().post(url, json=body)
+        r = BargeinResponse.model_validate(data)
+        return r
+
+    def push(self, call_id: str = None, line_owner_id: str = None):
         """
         Push
 
@@ -504,15 +589,20 @@ class CallControlsApi(ApiChild, base='telephony'):
 
         :param call_id: The call identifier of the call to push.
         :type call_id: str
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: None
         """
         body = dict()
         if call_id is not None:
             body['callId'] = call_id
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/push')
         super().post(url, json=body)
 
-    def reject(self, call_id: str, action: RejectActionEnum = None):
+    def reject(self, call_id: str, action: RejectActionEnum = None, line_owner_id: str = None):
         """
         Reject
 
@@ -523,16 +613,21 @@ class CallControlsApi(ApiChild, base='telephony'):
         :param action: The rejection action to apply to the call. The busy action is applied if no specific action is
             provided.
         :type action: RejectActionEnum
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: None
         """
         body = dict()
         body['callId'] = call_id
         if action is not None:
             body['action'] = enum_str(action)
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/reject')
         super().post(url, json=body)
 
-    def resume(self, call_id: str):
+    def resume(self, call_id: str, line_owner_id: str = None):
         """
         Resume
 
@@ -540,14 +635,19 @@ class CallControlsApi(ApiChild, base='telephony'):
 
         :param call_id: The call identifier of the call to resume.
         :type call_id: str
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: None
         """
         body = dict()
         body['callId'] = call_id
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/resume')
         super().post(url, json=body)
 
-    def resumerecording(self, call_id: str = None):
+    def resumerecording(self, call_id: str = None, line_owner_id: str = None):
         """
         Resume Recording
 
@@ -556,15 +656,20 @@ class CallControlsApi(ApiChild, base='telephony'):
 
         :param call_id: The call identifier of the call to resume recording.
         :type call_id: str
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: None
         """
         body = dict()
         if call_id is not None:
             body['callId'] = call_id
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/resumeRecording')
         super().post(url, json=body)
 
-    def retrieve(self, destination: str = None, endpoint_id: str = None) -> BargeinResponse:
+    def retrieve(self, destination: str = None, endpoint_id: str = None, line_owner_id: str = None) -> BargeinResponse:
         """
         Retrieve
 
@@ -581,6 +686,9 @@ class CallControlsApi(ApiChild, base='telephony'):
             of the endpointIds returned by the `Get Preferred Answer Endpoint API
             <https://developer.webex.com/docs/api/v1/user-call-settings-2-2/get-preferred-answer-endpoint>`_.
         :type endpoint_id: str
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: :class:`BargeinResponse`
         """
         body = dict()
@@ -588,12 +696,14 @@ class CallControlsApi(ApiChild, base='telephony'):
             body['destination'] = destination
         if endpoint_id is not None:
             body['endpointId'] = endpoint_id
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/retrieve')
         data = super().post(url, json=body)
         r = BargeinResponse.model_validate(data)
         return r
 
-    def startrecording(self, call_id: str = None):
+    def startrecording(self, call_id: str = None, line_owner_id: str = None):
         """
         Start Recording
 
@@ -602,15 +712,20 @@ class CallControlsApi(ApiChild, base='telephony'):
 
         :param call_id: The call identifier of the call to start recording.
         :type call_id: str
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: None
         """
         body = dict()
         if call_id is not None:
             body['callId'] = call_id
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/startRecording')
         super().post(url, json=body)
 
-    def stoprecording(self, call_id: str = None):
+    def stoprecording(self, call_id: str = None, line_owner_id: str = None):
         """
         Stop Recording
 
@@ -619,15 +734,21 @@ class CallControlsApi(ApiChild, base='telephony'):
 
         :param call_id: The call identifier of the call to stop recording.
         :type call_id: str
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: None
         """
         body = dict()
         if call_id is not None:
             body['callId'] = call_id
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/stopRecording')
         super().post(url, json=body)
 
-    def transfer(self, call_id1: str = None, call_id2: str = None, destination: str = None) -> BargeinResponse:
+    def transfer(self, call_id1: str = None, call_id2: str = None, destination: str = None,
+                 line_owner_id: str = None) -> BargeinResponse:
         """
         Transfer
 
@@ -660,6 +781,9 @@ class CallControlsApi(ApiChild, base='telephony'):
             `sip:user@company.domain`. This parameter is mandatory if `callId1` is provided and `callId2` is not
             provided.
         :type destination: str
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: :class:`BargeinResponse`
         """
         body = dict()
@@ -669,12 +793,14 @@ class CallControlsApi(ApiChild, base='telephony'):
             body['callId2'] = call_id2
         if destination is not None:
             body['destination'] = destination
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/transfer')
         data = super().post(url, json=body)
         r = BargeinResponse.model_validate(data)
         return r
 
-    def transmitdtmf(self, call_id: str = None, dtmf: str = None):
+    def transmitdtmf(self, call_id: str = None, dtmf: str = None, line_owner_id: str = None):
         """
         Transmit DTMF
 
@@ -687,6 +813,9 @@ class CallControlsApi(ApiChild, base='telephony'):
             '1,234' the DTMF 1 digit is initially sent. After a pause, the DTMF 2, 3, and 4 digits are sent
             successively.
         :type dtmf: str
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: None
         """
         body = dict()
@@ -694,10 +823,12 @@ class CallControlsApi(ApiChild, base='telephony'):
             body['callId'] = call_id
         if dtmf is not None:
             body['dtmf'] = dtmf
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/transmitDtmf')
         super().post(url, json=body)
 
-    def unmute(self, call_id: str):
+    def unmute(self, call_id: str, line_owner_id: str = None):
         """
         Unmute
 
@@ -706,14 +837,19 @@ class CallControlsApi(ApiChild, base='telephony'):
 
         :param call_id: The call identifier of the call to unmute.
         :type call_id: str
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: None
         """
         body = dict()
         body['callId'] = call_id
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/unmute')
         super().post(url, json=body)
 
-    def getcalldetails(self, call_id: str) -> Call:
+    def getcalldetails(self, call_id: str, line_owner_id: str = None) -> Call:
         """
         Get Call Details
 
@@ -721,10 +857,16 @@ class CallControlsApi(ApiChild, base='telephony'):
 
         :param call_id: The call identifier of the call.
         :type call_id: str
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+            device owned by the user invoking the API.
+        :type line_owner_id: str
         :rtype: :class:`Call`
         """
+        params = {}
+        if line_owner_id is not None:
+            params['lineOwnerId'] = line_owner_id
         url = self.ep(f'calls/{call_id}')
-        data = super().get(url)
+        data = super().get(url, params=params)
         r = Call.model_validate(data)
         return r
 

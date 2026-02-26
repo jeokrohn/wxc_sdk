@@ -359,15 +359,15 @@ class UserSelectionObject(str, Enum):
     #: When this option is selected, `customName` is to be shown for this user.
     custom_name = 'CUSTOM_NAME'
     #: When this option is selected, `firstName` and `lastName` are to be shown for this user.
-    first_name_last_name = 'FIRST_NAME_LAST_NAME'
+    firstname_lastname = 'FIRSTNAME_LASTNAME'
     #: When this option is selected, `lastName` and `firstName` are to be shown for this user.
-    last_name_first_name = 'LAST_NAME_FIRST_NAME'
+    lastname_firstname = 'LASTNAME_FIRSTNAME'
     #: When this option is selected, `displayName` is to be shown for this user.
     display_name = 'DISPLAY_NAME'
 
 
 class DirectLineCallerIdNameObject(ApiModel):
-    #: The selection of the direct line caller ID name. Defaults to `FIRST_NAME_LAST_NAME`.
+    #: The selection of the direct line caller ID name. Defaults to `FIRSTNAME_LASTNAME`.
     selection: Optional[UserSelectionObject] = None
     #: The custom direct line caller ID name. Required if `selection` is set to `CUSTOM_NAME`.
     custom_name: Optional[str] = None
@@ -2005,6 +2005,8 @@ class UserCallSettings12Api(ApiChild, base='people'):
         Monitors the line status of specified people, places, virtual lines or call park extension. The line status
         indicates if a person, place or virtual line is on a call and if a call has been parked on that extension.
 
+        The number of monitored elements is limited to 50.
+
         This API requires a full or user administrator or location administrator auth token with the
         `spark-admin:people_write` scope.
 
@@ -2013,6 +2015,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :param enable_call_park_notification: Enable or disable call park notification.
         :type enable_call_park_notification: bool
         :param monitored_elements: Identifiers of monitored elements whose monitoring settings will be modified.
+            Maximum 50 elements.
         :type monitored_elements: list[str]
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization
             (such as partners) may use this parameter as the default is the same organization as the token used to

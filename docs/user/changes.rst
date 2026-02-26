@@ -1,6 +1,9 @@
 Release history
 ===============
 
+- feat: param line_owner_id for call control, conference control, and voicemail APIs
+- fix: DirectLineCallerIdNameSelection enum values
+
 1.28
 ----
 - fix: ignore status 400 for :meth:`api.telephony.location.number.add <wxc_sdk.telephony.location.numbers.LocationNumbersApi.add>`
