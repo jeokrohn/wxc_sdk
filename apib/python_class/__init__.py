@@ -365,6 +365,9 @@ class Endpoint:
                     r_type = self.result
                     if self.result_referenced_class:
                         class_names.add(self.result_referenced_class)
+                # use List instead of list
+                if r_type.startswith('list['):
+                    r_type = 'L' + r_type[1:]
                 param_line = f'{param_line}&->&{r_type}'
 
         # now write def with parameters to string
@@ -575,6 +578,9 @@ class Endpoint:
                 if not p.url_parameter:
                     continue
                 url = url.replace(f'{{{p.name}}}', f'{{{p.python_name}}}')
+                # also, if the parameter is an enum, we need enum_str(...)
+                if p.is_enum:
+                    url = url.replace(f'{{{p.python_name}}}', f'{{enum_str({p.python_name})}}')
             url = f"f'{url}'"
         else:
             if url:
@@ -797,7 +803,7 @@ class PythonAPI:
         """
         Generate API source for given class name. If class name is not given, then class name is derived from API
         title.
-        While generating sources collect name sof classes actually referenced by endpoints
+        While generating sources collect names of classes actually referenced by endpoints
         """
         class_name = class_name or f'{words_to_camel(self.title)}Api'
         # add API class name to referenced classes
