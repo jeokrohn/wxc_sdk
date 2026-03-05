@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, List
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -1433,7 +1433,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         super().put(url, params=params, json=body)
 
     def retrieve_agent_s_list_of_available_caller_ids(self, virtual_line_id: str,
-                                                      org_id: str = None) -> list[AvailableCallerIdObject]:
+                                                      org_id: str = None) -> List[AvailableCallerIdObject]:
         """
         Retrieve Agent's List of Available Caller IDs
 
@@ -2082,7 +2082,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         super().put(url, params=params, json=body)
 
     def get_list_of_dect_networks_handsets_for_a_virtual_line(self, virtual_line_id: str,
-                                                              org_id: str = None) -> list[DectNetwork]:
+                                                              org_id: str = None) -> List[DectNetwork]:
         """
         Get List of DECT Networks Handsets for a Virtual Line
 

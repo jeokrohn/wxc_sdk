@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, List
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter

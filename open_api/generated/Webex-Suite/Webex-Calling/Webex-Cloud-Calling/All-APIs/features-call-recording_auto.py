@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, List
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -459,7 +459,7 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         url = self.ep('callRecording/complianceAnnouncement')
         super().put(url, params=params, json=body)
 
-    def get_call_recording_regions(self, org_id: str = None) -> list[Regions]:
+    def get_call_recording_regions(self, org_id: str = None) -> List[Regions]:
         """
         Get Call Recording Regions
 

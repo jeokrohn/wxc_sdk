@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, List
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -319,7 +319,7 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
     """
 
     def retrieve_the_list_of_available_operating_modes_in_a_location(self, location_id: str,
-                                                                     org_id: str = None) -> list[LocationObject]:
+                                                                     org_id: str = None) -> List[LocationObject]:
         """
         Retrieve the List of Available Operating Modes in a Location
 

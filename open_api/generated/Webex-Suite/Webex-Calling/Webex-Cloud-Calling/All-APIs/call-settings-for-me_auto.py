@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, List
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -1233,7 +1233,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         r = UserProfileGetResponseObject.model_validate(data)
         return r
 
-    def get_announcement_languages_for_me(self) -> list[GetAnnouncementLanguagesForMeResponseLanguagesItem]:
+    def get_announcement_languages_for_me(self) -> List[GetAnnouncementLanguagesForMeResponseLanguagesItem]:
         """
         Get announcement languages for the authenticated user
 
@@ -1271,7 +1271,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         r = GetCountryTelephonyConfigRequirementsResponse.model_validate(data)
         return r
 
-    def get_my_endpoints_list(self) -> list[Endpoint]:
+    def get_my_endpoints_list(self) -> List[Endpoint]:
         """
         Read the List of My Endpoints
 
@@ -1331,7 +1331,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         url = self.ep(f'endpoints/{endpoint_id}')
         super().put(url, json=body)
 
-    def get_my_available_caller_idlist(self) -> list[SelectedCallerIdSettingsGetSelected]:
+    def get_my_available_caller_idlist(self) -> List[SelectedCallerIdSettingsGetSelected]:
         """
         Get My Available Caller ID List
 
@@ -1349,7 +1349,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         r = TypeAdapter(list[SelectedCallerIdSettingsGetSelected]).validate_python(data['availableCallerIds'])
         return r
 
-    def get_list_available_preferred_answer_endpoints(self) -> list[Endpoints]:
+    def get_list_available_preferred_answer_endpoints(self) -> List[Endpoints]:
         """
         Get List Available Preferred Answer Endpoints
 
@@ -1416,7 +1416,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         url = self.ep('settings/bargeIn')
         super().put(url, json=body)
 
-    def get_my_call_block_settings(self) -> list[Numbers]:
+    def get_my_call_block_settings(self) -> List[Numbers]:
         """
         Get My Call Block Settings
 
@@ -1966,7 +1966,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         url = self.ep('settings/executive/assistant')
         super().put(url, json=body)
 
-    def get_my_executive_available_assistants(self) -> list[AvailableAssistant]:
+    def get_my_executive_available_assistants(self) -> List[AvailableAssistant]:
         """
         Get My Executive Available Assistants
 
@@ -2280,7 +2280,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         url = self.ep('settings/executive/screening')
         super().put(url, json=body)
 
-    def get_my_feature_access_codes(self) -> list[FeatureAccessCode]:
+    def get_my_feature_access_codes(self) -> List[FeatureAccessCode]:
         """
         Get My Feature Access Codes
 
@@ -2473,7 +2473,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         url = self.ep('settings/queues')
         super().put(url, json=body)
 
-    def get_secondary_lines_available_preferred_answer_endpoint_list(self, line_owner_id: str) -> list[Endpoints]:
+    def get_secondary_lines_available_preferred_answer_endpoint_list(self, line_owner_id: str) -> List[Endpoints]:
         """
         Get My Secondary Line Owner's Available Preferred Answer Endpoint List
 
@@ -2548,7 +2548,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         super().put(url, json=body)
 
     def get_my_secondary_lines_available_caller_idlist(self,
-                                                       lineowner_id: str) -> list[SelectedCallerIdSettingsGetSelected]:
+                                                       lineowner_id: str) -> List[SelectedCallerIdSettingsGetSelected]:
         """
         Get My Secondary Line Owner's Available Caller ID List
 
@@ -2769,7 +2769,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         url = self.ep(f'settings/secondaryLines/{lineowner_id}/callerId')
         super().put(url, json=body)
 
-    def get_my_secondary_lines_feature_access_codes(self, lineowner_id: str) -> list[FeatureAccessCode]:
+    def get_my_secondary_lines_feature_access_codes(self, lineowner_id: str) -> List[FeatureAccessCode]:
         """
         Get My Feature Access Codes For Secondary Line Owner
 
@@ -2894,7 +2894,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         url = self.ep(f'settings/secondaryLines/{lineowner_id}/selectedCallerId')
         super().put(url, json=body)
 
-    def get_my_secondary_lines_calling_services_list(self, lineowner_id: str) -> list[ServicesEnum]:
+    def get_my_secondary_lines_calling_services_list(self, lineowner_id: str) -> List[ServicesEnum]:
         """
         Get My Secondary Line Owner Calling Services List
 
@@ -3043,7 +3043,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         url = self.ep('settings/selectedCallerId')
         super().put(url, json=body)
 
-    def get_my_calling_services_list(self) -> list[ServicesEnum]:
+    def get_my_calling_services_list(self) -> List[ServicesEnum]:
         """
         Get My Calling Services List
 

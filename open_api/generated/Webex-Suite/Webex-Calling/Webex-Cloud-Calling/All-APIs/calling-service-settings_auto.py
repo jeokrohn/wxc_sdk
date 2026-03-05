@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, List
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -128,7 +128,7 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
     query parameter.
     """
 
-    def read_the_list_of_announcement_languages(self) -> list[Language]:
+    def read_the_list_of_announcement_languages(self) -> List[Language]:
         """
         Read the List of Announcement Languages
 

@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, List
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -33,7 +33,7 @@ class HotDeskApi(ApiChild, base='hotdesk/sessions'):
     
     """
 
-    def list_sessions(self, person_id: str = None, workspace_id: str = None, org_id: str = None) -> list[HotDesk]:
+    def list_sessions(self, person_id: str = None, workspace_id: str = None, org_id: str = None) -> List[HotDesk]:
         """
         List Sessions
 

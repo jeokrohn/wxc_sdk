@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, List
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -399,7 +399,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         url = self.ep(f'{location_id}/internalDialing')
         super().put(url, params=params, json=body)
 
-    def get_location_outgoing_permission(self, location_id: str, org_id: str = None) -> list[CallingPermissionObject]:
+    def get_location_outgoing_permission(self, location_id: str, org_id: str = None) -> List[CallingPermissionObject]:
         """
         Get Location Outgoing Permission
 
@@ -657,7 +657,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         super().delete(url, params=params)
 
     def get_outgoing_permission_digit_pattern_for_a_location(self, location_id: str,
-                                                             org_id: str = None) -> list[LocationDigitPatternObject]:
+                                                             org_id: str = None) -> List[LocationDigitPatternObject]:
         """
         Get Outgoing Permission Digit Pattern for a Location
 

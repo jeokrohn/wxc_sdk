@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, List
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -298,7 +298,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
     """
 
     def get_the_list_of_dect_networks_for_an_organization(self, name: str = None, location_id: str = None,
-                                                          org_id: str = None) -> list[DECTNetworkDetail]:
+                                                          org_id: str = None) -> List[DECTNetworkDetail]:
         """
         Get the List of DECT Networks for an organization
 
@@ -556,7 +556,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         super().delete(url, params=params)
 
     def get_a_list_of_dect_network_base_stations(self, location_id: str, dect_network_id: str,
-                                                 org_id: str = None) -> list[BaseStationsResponse]:
+                                                 org_id: str = None) -> List[BaseStationsResponse]:
         """
         Get a list of DECT Network Base Stations
 
@@ -586,7 +586,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def create_multiple_base_stations(self, location_id: str, dect_network_id: str, base_station_macs: list[str],
-                                      org_id: str = None) -> list[BaseStationResponse]:
+                                      org_id: str = None) -> List[BaseStationResponse]:
         """
         Create Multiple Base Stations
 
@@ -802,7 +802,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
 
     def add_a_list_of_handsets_to_a_dect_network(self, location_id: str, dect_network_id: str,
                                                  items: list[AddDECTHandset],
-                                                 org_id: str = None) -> list[AddDECTHandsetBulkSuccessResponse]:
+                                                 org_id: str = None) -> List[AddDECTHandsetBulkSuccessResponse]:
         """
         Add a List of Handsets to a DECT Network
 
@@ -1067,7 +1067,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def get_list_of_dect_networks_associated_with_a_person(self, person_id: str,
-                                                           org_id: str = None) -> list[DECTNetworkItem]:
+                                                           org_id: str = None) -> List[DECTNetworkItem]:
         """
         GET List of DECT networks associated with a Person
 
@@ -1094,7 +1094,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def get_list_of_dect_networks_associated_with_a_workspace(self, workspace_id: str,
-                                                              org_id: str = None) -> list[DECTNetworkItem]:
+                                                              org_id: str = None) -> List[DECTNetworkItem]:
         """
         GET List of DECT networks associated with a workspace
 

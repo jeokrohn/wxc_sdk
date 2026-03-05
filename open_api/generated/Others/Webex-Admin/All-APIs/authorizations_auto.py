@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, List
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -107,7 +107,7 @@ class AuthorizationsApi(ApiChild, base='authorizations'):
         url = self.ep()
         super().delete(url, params=params)
 
-    def list_authorizations_for_user(self, person_id: str = None, person_email: str = None) -> list[Authorization]:
+    def list_authorizations_for_user(self, person_id: str = None, person_email: str = None) -> List[Authorization]:
         """
         List authorizations for a user
 

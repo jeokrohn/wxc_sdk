@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, List
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -237,7 +237,7 @@ class CallControlsApi(ApiChild, base='telephony'):
     support.
     """
 
-    def listcalls(self, line_owner_id: str = None) -> list[Call]:
+    def listcalls(self, line_owner_id: str = None) -> List[Call]:
         """
         List Calls
 
@@ -401,7 +401,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         url = self.ep('calls/hangup')
         super().post(url, json=body)
 
-    def listcallhistory(self, type: CallHistoryRecordTypeEnum = None) -> list[CallHistoryRecord]:
+    def listcallhistory(self, type: CallHistoryRecordTypeEnum = None) -> List[CallHistoryRecord]:
         """
         List Call History
 

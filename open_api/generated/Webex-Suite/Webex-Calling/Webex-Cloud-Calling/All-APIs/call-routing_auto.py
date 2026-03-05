@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, List
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -1935,7 +1935,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
 
     def modify_numbers_for_route_list(self, route_list_id: str, numbers: list[RouteListNumberPatch] = None,
                                       delete_all_numbers: bool = None,
-                                      org_id: str = None) -> list[RouteListNumberPatchResponse]:
+                                      org_id: str = None) -> List[RouteListNumberPatchResponse]:
         """
         Modify Numbers for Route List
 
@@ -2119,7 +2119,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         url = self.ep('premisePstn/trunks/actions/fqdnValidation/invoke')
         super().post(url, params=params, json=body)
 
-    def read_the_list_of_trunk_types(self, org_id: str = None) -> list[TrunkTypeWithDeviceType]:
+    def read_the_list_of_trunk_types(self, org_id: str = None) -> List[TrunkTypeWithDeviceType]:
         """
         Read the List of Trunk Types
 
@@ -2340,7 +2340,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         return self.session.follow_pagination(url=url, model=Customer, item_key='dialPlans', params=params)
 
     def get_locations_using_the_local_gateway_as_pstn_connection_routing(self, trunk_id: str,
-                                                                         org_id: str = None) -> list[Customer]:
+                                                                         org_id: str = None) -> List[Customer]:
         """
         Get Locations Using the Local Gateway as PSTN Connection Routing.
 
@@ -2366,7 +2366,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[Customer]).validate_python(data['locations'])
         return r
 
-    def get_route_groups_using_the_local_gateway(self, trunk_id: str, org_id: str = None) -> list[RouteGroup]:
+    def get_route_groups_using_the_local_gateway(self, trunk_id: str, org_id: str = None) -> List[RouteGroup]:
         """
         Get Route Groups Using the Local Gateway.
 

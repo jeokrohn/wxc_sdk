@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, List
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -49,7 +49,7 @@ class UCMProfileApi(ApiChild, base='telephony/config/callingProfiles'):
     query parameter.
     """
 
-    def read_the_list_of_uc_manager_profiles(self, org_id: str = None) -> list[GetManagerProfileObject]:
+    def read_the_list_of_uc_manager_profiles(self, org_id: str = None) -> List[GetManagerProfileObject]:
         """
         Read the List of UC Manager Profiles
 

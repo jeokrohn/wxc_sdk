@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, List
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -212,7 +212,7 @@ class PSTNApi(ApiChild, base='telephony/pstn'):
 
     def retrieve_pstn_connection_options_for_a_location(self, location_id: str,
                                                         service_types: list[AllowedServiceTypesFromHydra] = None,
-                                                        org_id: str = None) -> list[ConnectionOptionsResponse]:
+                                                        org_id: str = None) -> List[ConnectionOptionsResponse]:
         """
         Retrieve PSTN Connection Options for a Location
 
@@ -298,7 +298,7 @@ class PSTNApi(ApiChild, base='telephony/pstn'):
 
     def emergency_address_lookup(self, location_id: str, address1: str = None, address2: str = None, city: str = None,
                                  state: str = None, postal_code: str = None, country: str = None,
-                                 org_id: str = None) -> list[SuggestedEmergencyAddressObject]:
+                                 org_id: str = None) -> List[SuggestedEmergencyAddressObject]:
         """
         Emergency Address Lookup to Verify if Address is Valid
 

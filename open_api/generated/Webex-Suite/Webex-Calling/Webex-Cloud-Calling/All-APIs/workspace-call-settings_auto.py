@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, List
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -1080,7 +1080,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         url = self.ep(f'{workspace_id}/features/outgoingPermission/accessCodes')
         super().delete(url, params=params)
 
-    def retrieve_access_codes_for_a_workspace(self, workspace_id: str, org_id: str = None) -> list[AuthorizationCode]:
+    def retrieve_access_codes_for_a_workspace(self, workspace_id: str, org_id: str = None) -> List[AuthorizationCode]:
         """
         Retrieve Access codes for a Workspace.
 

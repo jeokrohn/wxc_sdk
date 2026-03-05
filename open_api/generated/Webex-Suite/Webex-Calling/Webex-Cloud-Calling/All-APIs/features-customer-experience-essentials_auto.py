@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, List
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -263,7 +263,7 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
         url = self.ep(f'cxEssentials/locations/{location_id}/queues/{queue_id}/wrapup/settings')
         super().put(url, json=body)
 
-    def list_wrap_up_reasons(self) -> list[WrapUpReasonObject]:
+    def list_wrap_up_reasons(self) -> List[WrapUpReasonObject]:
         """
         List Wrap Up Reasons
 
@@ -448,7 +448,7 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
         url = self.ep(f'cxEssentials/wrapup/reasons/{wrapup_reason_id}')
         super().put(url, json=body)
 
-    def read_available_queues(self, wrapup_reason_id: str) -> list[QueueObject]:
+    def read_available_queues(self, wrapup_reason_id: str) -> List[QueueObject]:
         """
         Read Available Queues
 
@@ -474,7 +474,7 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
         return r
 
     def list_available_agents(self, location_id: str, has_cx_essentials: bool = None,
-                              org_id: str = None) -> list[GetAvailableAgentsCallQueueObject]:
+                              org_id: str = None) -> List[GetAvailableAgentsCallQueueObject]:
         """
         List Available Agents
 

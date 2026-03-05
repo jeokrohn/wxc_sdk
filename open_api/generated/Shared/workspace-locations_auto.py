@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, List
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -72,7 +72,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
     """
 
     def list_workspace_locations(self, display_name: str = None, address: str = None, country_code: str = None,
-                                 city_name: str = None, org_id: str = None) -> list[Location]:
+                                 city_name: str = None, org_id: str = None) -> List[Location]:
         """
         List Workspace Locations
 
@@ -257,7 +257,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         r = Location.model_validate(data)
         return r
 
-    def list_workspace_location_floors(self, location_id: str) -> list[Floor]:
+    def list_workspace_location_floors(self, location_id: str) -> List[Floor]:
         """
         List Workspace Location Floors
 

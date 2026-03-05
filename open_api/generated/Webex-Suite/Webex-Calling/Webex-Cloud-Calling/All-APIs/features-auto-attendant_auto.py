@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, List
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -1078,7 +1078,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         super().put(url, params=params, json=body)
 
     def read_the_list_of_auto_attendant_announcement_files(self, location_id: str, auto_attendant_id: str,
-                                                           org_id: str = None) -> list[GetAnnouncementFileInfo]:
+                                                           org_id: str = None) -> List[GetAnnouncementFileInfo]:
         """
         Read the List of Auto Attendant Announcement Files
 

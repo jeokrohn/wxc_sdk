@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, List
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -1603,7 +1603,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         return self.session.follow_pagination(url=url, model=JobDetailsResponse, item_key='items', params=params)
 
     def validate_or_initiate_move_users_job(self, users_list: list[UsersListItem],
-                                            org_id: str = None) -> list[UserListItem]:
+                                            org_id: str = None) -> List[UserListItem]:
         """
         Validate or Initiate Move Users Job
 
@@ -2291,7 +2291,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         super().put(url, json=body)
 
     def retrieve_agents_list_of_available_caller_ids(self, person_id: str,
-                                                     org_id: str = None) -> list[AvailableCallerIdObject]:
+                                                     org_id: str = None) -> List[AvailableCallerIdObject]:
         """
         Retrieve Agent's List of Available Caller IDs
 
@@ -2838,7 +2838,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/executive/alert')
         super().put(url, params=params, json=body)
 
-    def get_person_executive_assigned_assistants(self, person_id: str, org_id: str = None) -> list[Assistant]:
+    def get_person_executive_assigned_assistants(self, person_id: str, org_id: str = None) -> List[Assistant]:
         """
         Get Person Executive Assigned Assistants
 
@@ -3579,7 +3579,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         return self.session.follow_pagination(url=url, model=UserModeManagementAvailableFeaturesObject, item_key='features', params=params)
 
     def get_list_of_features_assigned_to_auser_mode_management(self, person_id: str,
-                                                               org_id: str = None) -> list[UserModeManagementFeatureObject]:
+                                                               org_id: str = None) -> List[UserModeManagementFeatureObject]:
         """
         Retrieve the List of Features Assigned to a User for Mode Management
 
@@ -5349,7 +5349,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/voicemail/passcode')
         super().put(url, params=params, json=body)
 
-    def list_messages(self, line_owner_id: str = None) -> list[VoiceMessageDetails]:
+    def list_messages(self, line_owner_id: str = None) -> List[VoiceMessageDetails]:
         """
         List Messages
 

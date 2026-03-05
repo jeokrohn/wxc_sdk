@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, List
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -278,7 +278,7 @@ class LocationsApi(ApiChild, base='locations'):
         url = self.ep(f'{location_id}')
         super().put(url, params=params, json=body)
 
-    def list_location_floors(self, location_id: str) -> list[Floor]:
+    def list_location_floors(self, location_id: str) -> List[Floor]:
         """
         List location floors.
         Requires an administrator auth token with the `spark-admin:locations_read` scope.

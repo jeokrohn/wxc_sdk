@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, List
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -916,7 +916,7 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'jobs/locations/deleteCallingLocation/{job_id}/actions/resume/invoke')
         super().post(url, params=params)
 
-    def retrieve_errors_for_disable_calling_location_job(self, job_id: str, org_id: str = None) -> list[ErrorBean]:
+    def retrieve_errors_for_disable_calling_location_job(self, job_id: str, org_id: str = None) -> List[ErrorBean]:
         """
         Retrieve Errors for a Disable Calling Location Job
 
@@ -957,7 +957,7 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[ErrorBean]).validate_python(data['items'])
         return r
 
-    def get_a_list_of_update_routing_prefix_jobs(self, org_id: str = None) -> list[BatchResponse]:
+    def get_a_list_of_update_routing_prefix_jobs(self, org_id: str = None) -> List[BatchResponse]:
         """
         Get a List of Update Routing Prefix jobs
 
@@ -1758,7 +1758,7 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         super().put(url, params=params, json=body)
 
     def read_list_of_receptionist_contact_directories(self, location_id: str,
-                                                      org_id: str = None) -> list[LocationObject]:
+                                                      org_id: str = None) -> List[LocationObject]:
         """
         Read list of Receptionist Contact Directories
 
@@ -1847,7 +1847,7 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
                                                          search_criteria_mode_or: bool = None, first_name: str = None,
                                                          last_name: str = None, phone_number: str = None,
                                                          extension: str = None, person_id: str = None,
-                                                         org_id: str = None) -> list[ContactDetails]:
+                                                         org_id: str = None) -> List[ContactDetails]:
         """
         Get details for a Receptionist Contact Directory
 

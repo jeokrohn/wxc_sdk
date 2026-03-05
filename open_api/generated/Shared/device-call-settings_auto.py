@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, List
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -2184,7 +2184,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = ReadTheListOfBackgroundImagesResponse.model_validate(data)
         return r
 
-    def read_the_dect_device_type_list(self, org_id: str = None) -> list[DectDeviceList]:
+    def read_the_dect_device_type_list(self, org_id: str = None) -> List[DectDeviceList]:
         """
         Read the DECT device type list
 
@@ -2206,7 +2206,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[DectDeviceList]).validate_python(data['devices'])
         return r
 
-    def read_the_dect_device_type_list_deprecated(self, org_id: str = None) -> list[DectDeviceList]:
+    def read_the_dect_device_type_list_deprecated(self, org_id: str = None) -> List[DectDeviceList]:
         """
         Read the DECT device type list - Deprecated
 
@@ -2265,7 +2265,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = DeviceDynamicSettingsSettingsGroupsGet.model_validate(data)
         return r
 
-    def get_validation_schema(self, family_or_model_display_name: str = None, org_id: str = None) -> list[DeviceTag]:
+    def get_validation_schema(self, family_or_model_display_name: str = None, org_id: str = None) -> List[DeviceTag]:
         """
         Get Validation Schema
 
@@ -2290,7 +2290,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[DeviceTag]).validate_python(data['tags'])
         return r
 
-    def read_list_of_line_key_templates(self, org_id: str = None) -> list[LineKeyTemplatesResponse]:
+    def read_list_of_line_key_templates(self, org_id: str = None) -> List[LineKeyTemplatesResponse]:
         """
         Read the list of Line Key Templates
 
@@ -2866,7 +2866,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'devices/{device_id}/settings')
         super().put(url, params=params, json=body)
 
-    def get_list_of_apply_line_key_templates_jobs(self, org_id: str = None) -> list[ApplyLineKeyTemplateJobDetails]:
+    def get_list_of_apply_line_key_templates_jobs(self, org_id: str = None) -> List[ApplyLineKeyTemplateJobDetails]:
         """
         Get List of Apply Line Key Template jobs
 
@@ -3227,7 +3227,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'jobs/devices/dynamicDeviceSettings/{job_id}/errors')
         return self.session.follow_pagination(url=url, model=ItemObject, item_key='items', params=params)
 
-    def list_rebuild_phones_jobs(self, org_id: str = None) -> list[RebuildPhonesJob]:
+    def list_rebuild_phones_jobs(self, org_id: str = None) -> List[RebuildPhonesJob]:
         """
         List Rebuild Phones Jobs
 
@@ -3308,7 +3308,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = RebuildPhonesJob.model_validate(data)
         return r
 
-    def get_job_errors_for_arebuild_phones_job(self, job_id: str, org_id: str = None) -> list[ItemObject]:
+    def get_job_errors_for_arebuild_phones_job(self, job_id: str, org_id: str = None) -> List[ItemObject]:
         """
         Get Job Errors for a Rebuild Phones Job
 
