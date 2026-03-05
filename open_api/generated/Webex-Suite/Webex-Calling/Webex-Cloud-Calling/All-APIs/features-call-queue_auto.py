@@ -1720,6 +1720,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type location_id: str
         :param queue_id: Delete an announcement for the call queue with this identifier.
         :type queue_id: str
+        :param file_name: -
         :type file_name: str
         :param org_id: Delete call queue announcement from this organization.
         :type org_id: str
@@ -2616,6 +2617,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
 
         :param id: Identifier of the agent to be updated.
         :type id: str
+        :param settings: -
         :type settings: list[ModifyAgentsForCallQueueObjectSettingsItem]
         :param has_cx_essentials: Must be set to `true` to modify an agent that has Customer Experience Essentials
             license. This can otherwise be ommited or set to `false`.

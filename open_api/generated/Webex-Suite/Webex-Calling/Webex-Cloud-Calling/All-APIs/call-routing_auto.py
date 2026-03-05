@@ -2049,6 +2049,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type port: int
         :param max_concurrent_calls: Max Concurrent call. Required to create a static certificate based trunk.
         :type max_concurrent_calls: int
+        :param p_charge_info_support_policy: -
         :type p_charge_info_support_policy: PChargeInfoSupportPolicyType
         :param org_id: Organization to which the trunk belongs.
         :type org_id: str
@@ -2225,6 +2226,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type dual_identity_support_enabled: bool
         :param max_concurrent_calls: Max Concurrent call. Required to create a static certificate-based trunk.
         :type max_concurrent_calls: int
+        :param p_charge_info_support_policy: -
         :type p_charge_info_support_policy: PChargeInfoSupportPolicyType
         :param org_id: Organization to which trunk belongs.
         :type org_id: str

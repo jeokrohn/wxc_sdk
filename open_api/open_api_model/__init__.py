@@ -191,8 +191,9 @@ class OASchemaProperty(OABaseModel):
             return None
 
         # look for first enum value description
-        pattern = f'(:?(.*?)\n)?^ \* `.+?` -'
-        m = re.match(pattern, self.description, re.MULTILINE + re.DOTALL)
+        # look for the 1st line starting with "* "
+        pattern = re.compile(r'(.*?)^\s*\* ', re.MULTILINE + re.DOTALL)
+        m = pattern.match(self.description)
         if m:
             description = m.group(1) or ''
             return description.strip()

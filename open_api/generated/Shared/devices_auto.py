@@ -469,10 +469,11 @@ class DevicesApi(ApiChild, base='devices'):
 
         :param device_id: Unique identifier for the device.
         :type device_id: str
-        :param op: * `add` - Add all specified tags to the existing device tags list.
+        :param op: -
         :type op: Op
         :param path: Only the tags path is supported to patch.
         :type path: str
+        :param value: -
         :type value: list[str]
         :param org_id: The organization associated with the device. If left empty, the organization associated with the
             caller will be used.

@@ -107,7 +107,6 @@ class WorkspaceCalendarType(str, Enum):
 
 
 class WorkspaceCalendar(ApiModel):
-    #: * `none` - No calendar.
     type: Optional[WorkspaceCalendarType] = None
     #: Workspace email address. Will not be set when the calendar type is `none`.
     email_address: Optional[str] = None

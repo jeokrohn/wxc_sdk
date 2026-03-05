@@ -964,7 +964,6 @@ class ExecutiveScreeningGetAlertType(str, Enum):
 class ExecutiveScreeningGet(ApiModel):
     #: Indicates if executive screening is enabled.
     enabled: Optional[bool] = None
-    #: * `SILENT` - No audible alert is provided for executive screening.
     alert_type: Optional[ExecutiveScreeningGetAlertType] = None
     #: Indicates if alerts are enabled for Single Number Reach locations.
     alert_anywhere_location_enabled: Optional[bool] = None
@@ -1001,7 +1000,6 @@ class ExecutiveCallFilteringGetCriteriaItem(ApiModel):
     id: Optional[str] = None
     #: Name of the criteria.
     filter_name: Optional[str] = None
-    #: * `ANY_PHONE_NUMBER` - The criteria applies to any phone number.
     source: Optional[ExecutiveCallFilteringGetCriteriaItemSource] = None
     #: Controls whether this filter criteria is active. When `true`, the criteria is evaluated for incoming calls. When
     #: `false`, the criteria is completely ignored and has no effect on call filtering.
@@ -1015,7 +1013,6 @@ class ExecutiveCallFilteringGetCriteriaItem(ApiModel):
 class ExecutiveCallFilteringGet(ApiModel):
     #: Indicates if executive call filtering is enabled.
     enabled: Optional[bool] = None
-    #: * `CUSTOM_CALL_FILTERS` - Choose this option to ensure only specific calls are sent to the executive assistant.
     filter_type: Optional[ExecutiveCallFilteringGetFilterType] = None
     #: List of call filtering criteria configured for executive call filtering.
     criteria: Optional[list[ExecutiveCallFilteringGetCriteriaItem]] = None
@@ -1051,7 +1048,6 @@ class ExecutiveCallFilteringCriteriaGetCallsToNumbersItemType(str, Enum):
 
 
 class ExecutiveCallFilteringCriteriaGetCallsToNumbersItem(ApiModel):
-    #: * `PRIMARY` - Primary number to call.
     type: Optional[ExecutiveCallFilteringCriteriaGetCallsToNumbersItemType] = None
     #: The phone number to call.
     phone_number: Optional[str] = None
@@ -1064,11 +1060,8 @@ class ExecutiveCallFilteringCriteriaGet(ApiModel):
     filter_name: Optional[str] = None
     #: Name of the schedule associated with this criteria.
     schedule_name: Optional[str] = None
-    #: * `holidays` - The schedule is based on specific times.
     schedule_type: Optional[ExecutiveCallFilteringCriteriaGetScheduleType] = None
-    #: * `PEOPLE` - The schedule applies to the individual user.
     schedule_level: Optional[ExecutiveCallFilteringCriteriaGetScheduleLevel] = None
-    #: * `ANY_PHONE_NUMBER` - The criteria applies to any phone number.
     calls_from: Optional[ExecutiveCallFilteringGetCriteriaItemSource] = None
     #: Indicates if the criteria applies to anonymous callers.
     anonymous_callers_enabled: Optional[bool] = None
@@ -1092,7 +1085,6 @@ class ExecutiveCallFilteringCriteriaPatchCallsToNumbersItemType(str, Enum):
 
 
 class ExecutiveCallFilteringCriteriaPatchCallsToNumbersItem(ApiModel):
-    #: * `PRIMARY` - Primary number to call.
     type: Optional[ExecutiveCallFilteringCriteriaPatchCallsToNumbersItemType] = None
     #: The phone number to call.
     phone_number: Optional[str] = None
@@ -1134,7 +1126,6 @@ class ExecutiveAlertGetClidPhoneNumberMode(str, Enum):
 
 
 class ExecutiveAlertGet(ApiModel):
-    #: * `SEQUENTIAL` - Alerts assistants one at a time in the defined order.
     alerting_mode: Optional[ExecutiveAlertGetAlertingMode] = None
     #: Number of rings before alerting the next assistant when in sequential mode.
     next_assistant_number_of_rings: Optional[int] = None
@@ -1153,13 +1144,11 @@ class ExecutiveAlertGet(ApiModel):
     rollover_forward_to_phone_number: Optional[str] = None
     #: Time in seconds to wait before applying the rollover action.
     rollover_wait_time_in_secs: Optional[int] = None
-    #: * `EXECUTIVE_ORIGINATOR` - Display executive name followed by caller name.
     clid_name_mode: Optional[ExecutiveAlertGetClidNameMode] = None
     #: Custom caller ID name to display (deprecated).
     custom_clidname: Optional[str] = Field(alias='customCLIDName', default=None)
     #: Custom caller ID name in Unicode format.
     custom_clidname_in_unicode: Optional[str] = Field(alias='customCLIDNameInUnicode', default=None)
-    #: * `EXECUTIVE` - Display executive's phone number.
     clid_phone_number_mode: Optional[ExecutiveAlertGetClidPhoneNumberMode] = None
     #: Custom caller ID phone number to display.
     custom_clidphone_number: Optional[str] = Field(alias='customCLIDPhoneNumber', default=None)
@@ -1643,8 +1632,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
 
         This API requires a user auth token with a scope of `spark:telephony_config_write`.
 
-        :param connected_line_id_privacy_on_redirected_calls: * `NO_PRIVACY` - Caller sees the final destination's
-            identity when call is redirected.
+        :param connected_line_id_privacy_on_redirected_calls: -
         :type connected_line_id_privacy_on_redirected_calls: UserCallPoliciesGetConnectedLineIdPrivacyOnRedirectedCalls
         :rtype: None
         """
@@ -1811,7 +1799,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
 
         This API requires a user auth token with a scope of `spark:telephony_config_write`.
 
-        :param alerting_mode: * `SEQUENTIAL` - Alerts assistants one at a time in the defined order.
+        :param alerting_mode: -
         :type alerting_mode: ExecutiveAlertGetAlertingMode
         :param next_assistant_number_of_rings: Number of rings before alerting the next assistant when in sequential
             mode.
@@ -1832,13 +1820,13 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type rollover_forward_to_phone_number: str
         :param rollover_wait_time_in_secs: Time in seconds to wait before applying the rollover action.
         :type rollover_wait_time_in_secs: int
-        :param clid_name_mode: * `EXECUTIVE_ORIGINATOR` - Display executive name followed by caller name.
+        :param clid_name_mode: -
         :type clid_name_mode: ExecutiveAlertGetClidNameMode
         :param custom_clidname: Custom caller ID name to display (marked for deprecation in CALL-27214).
         :type custom_clidname: str
         :param custom_clidname_in_unicode: Custom caller ID name in Unicode format.
         :type custom_clidname_in_unicode: str
-        :param clid_phone_number_mode: * `EXECUTIVE` - Display executive's phone number.
+        :param clid_phone_number_mode: -
         :type clid_phone_number_mode: ExecutiveAlertGetClidPhoneNumberMode
         :param custom_clidphone_number: Custom caller ID phone number to display.
         :type custom_clidphone_number: str
@@ -2019,8 +2007,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
 
         :param enabled: Set to enable or disable executive call filtering.
         :type enabled: bool
-        :param filter_type: * `CUSTOM_CALL_FILTERS` - Choose this option to ensure only specific calls are sent to the
-            executive assistant.
+        :param filter_type: -
         :type filter_type: ExecutiveCallFilteringGetFilterType
         :param criteria_activation: List of criteria activation settings to update for executive call filtering.
         :type criteria_activation: list[ExecutiveCallFilteringPatchCriteriaActivationItem]
@@ -2059,11 +2046,11 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type filter_name: str
         :param schedule_name: Name of the schedule associated with this criteria.
         :type schedule_name: str
-        :param schedule_type: * `holidays` - The schedule is based on holidays.
+        :param schedule_type: -
         :type schedule_type: ExecutiveCallFilteringCriteriaGetScheduleType
-        :param schedule_level: * `PEOPLE` - The schedule applies to the individual user.
+        :param schedule_level: -
         :type schedule_level: ExecutiveCallFilteringCriteriaGetScheduleLevel
-        :param calls_from: * `ANY_PHONE_NUMBER` - The criteria applies to any phone number.
+        :param calls_from: -
         :type calls_from: ExecutiveCallFilteringGetCriteriaItemSource
         :param anonymous_callers_enabled: Set to enable or disable the criteria for anonymous callers.
         :type anonymous_callers_enabled: bool
@@ -2172,11 +2159,11 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type filter_name: str
         :param schedule_name: Name of the schedule associated with this criteria.
         :type schedule_name: str
-        :param schedule_type: * `holidays` - The schedule is based on holidays.
+        :param schedule_type: -
         :type schedule_type: ExecutiveCallFilteringCriteriaGetScheduleType
-        :param schedule_level: * `PEOPLE` - The schedule applies to the individual user.
+        :param schedule_level: -
         :type schedule_level: ExecutiveCallFilteringCriteriaGetScheduleLevel
-        :param calls_from: * `ANY_PHONE_NUMBER` - The criteria applies to any phone number.
+        :param calls_from: -
         :type calls_from: ExecutiveCallFilteringGetCriteriaItemSource
         :param anonymous_callers_enabled: Set to enable or disable the criteria for anonymous callers.
         :type anonymous_callers_enabled: bool
@@ -2255,7 +2242,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
 
         :param enabled: Set to enable or disable executive screening.
         :type enabled: bool
-        :param alert_type: * `SILENT` - No audible alert is provided for executive screening.
+        :param alert_type: -
         :type alert_type: ExecutiveScreeningGetAlertType
         :param alert_anywhere_location_enabled: Indicates if alerts are enabled for Single Number Reach locations.
         :type alert_anywhere_location_enabled: bool
@@ -2460,6 +2447,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
 
         This API requires a user auth token with a scope of `spark:telephony_config_write`.
 
+        :param agent_acdstate: -
         :type agent_acdstate: AgentACDStateType
         :param queues: Indicates a list of call centers the agent has joined or may join.
         :type queues: list[CallQueuePut]
@@ -2831,6 +2819,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
 
         :param lineowner_id: Unique identifier for the secondary line owner (applicable only for Virtual Lines).
         :type lineowner_id: str
+        :param agent_acdstate: -
         :type agent_acdstate: AgentACDStateType
         :param queues: Indicates a list of call centers the agent has joined or may join.
         :type queues: list[CallQueuePut]

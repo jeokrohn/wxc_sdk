@@ -76,19 +76,16 @@ class RecordingObject(ApiModel):
     #: clicked in the meeting.
     time_recorded: Optional[datetime] = None
     format_: Optional[RecordingObjectFormat] = None
-    #: * `calling` - Recording service type is Webex Call.
     service_type: Optional[RecordingObjectServiceType] = None
     #: The duration of the recording, in seconds.
     duration_seconds: Optional[int] = None
     #: The size of the recording file, in bytes.
     size_bytes: Optional[int] = None
-    #: * `available` - Recording is available.
     status: Optional[RecordingObjectStatus] = None
     #: Webex UUID for recording owner/host.
     owner_id: Optional[str] = None
     #: Webex email for recording owner/host.
     owner_email: Optional[str] = None
-    #: * `user` - Recording belongs to a user.
     owner_type: Optional[RecordingObjectOwnerType] = None
     #: Storage location for recording within Webex datacenters.
     storage_region: Optional[str] = None
@@ -143,7 +140,6 @@ class RecordingObjectWithDirectDownloadLinks(ApiModel):
     #: clicked in the meeting.
     time_recorded: Optional[datetime] = None
     format_: Optional[RecordingObjectFormat] = None
-    #: * `calling` - Recording service-type is calling.
     service_type: Optional[RecordingObjectServiceType] = None
     #: The duration of the recording in seconds.
     duration_seconds: Optional[int] = None
@@ -155,13 +151,11 @@ class RecordingObjectWithDirectDownloadLinks(ApiModel):
     #: available if the user is an admin with scope `spark-admin:recordings_read` or if **Prevent Downloading** has
     #: been turned on for the recording being requested.
     temporary_direct_download_links: Optional[RecordingObjectWithDirectDownloadLinksTemporaryDirectDownloadLinks] = None
-    #: * `available` - Recording is available.
     status: Optional[RecordingObjectWithDirectDownloadLinksStatus] = None
     #: Webex UUID for recording owner/host.
     owner_id: Optional[str] = None
     #: Webex email for recording owner/host.
     owner_email: Optional[str] = None
-    #: * `user` - Recording belongs to a user.
     owner_type: Optional[RecordingObjectOwnerType] = None
     #: Storage location for recording within Webex datacenters.
     storage_region: Optional[str] = None

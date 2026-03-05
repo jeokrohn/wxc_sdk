@@ -1126,6 +1126,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type location_id: str
         :param auto_attendant_id: Delete an announcement for the auto attendant with this identifier.
         :type auto_attendant_id: str
+        :param file_name: -
         :type file_name: str
         :param org_id: Delete auto attendant announcement from this organization.
         :type org_id: str

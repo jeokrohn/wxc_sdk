@@ -2195,6 +2195,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         Retrieving this list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
+        :param org_id: -
         :type org_id: str
         :rtype: list[DectDeviceList]
         """
@@ -2221,6 +2222,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         Retrieving this list requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
+        :param org_id: -
         :type org_id: str
         :rtype: list[DectDeviceList]
         """

@@ -3291,10 +3291,13 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         :type send_all_calls: DirectorySearchObject
         :param send_busy_calls: Settings for sending calls to voicemail when the line is busy.
         :type send_busy_calls: VoicemailPutSendBusyCalls
+        :param send_unanswered_calls: -
         :type send_unanswered_calls: VoicemailPutSendUnansweredCalls
         :param email_copy_of_message: Settings for sending a copy of the new voicemail message audio via email.
         :type email_copy_of_message: VoicemailInfoEmailCopyOfMessage
+        :param message_storage: -
         :type message_storage: VoicemailInfoMessageStorage
+        :param fax_message: -
         :type fax_message: VoicemailInfoFaxMessage
         :param org_id: ID of the organization in which the virtual line resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the

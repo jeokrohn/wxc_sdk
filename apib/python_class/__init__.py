@@ -103,7 +103,7 @@ class Parameter:
         # param lines:
         ' * 1st line has ":param <xyc>: '
         ' * following lines just have docstring lines'
-        yield from lines_for_docstring(docstring=self.docstring,
+        yield from lines_for_docstring(docstring=self.docstring or '-',
                                        text_prefix_for_1st_line=f':param {self.python_name}: ',
                                        indent=4,
                                        indent_first_line=0,

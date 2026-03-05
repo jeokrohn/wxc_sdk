@@ -417,6 +417,7 @@ class PSTNApi(ApiChild, base='telephony/pstn'):
 
         :param phone_number: Update the emergency address for this phone number.
         :type phone_number: str
+        :param emergency_address: -
         :type emergency_address: EmergencyAddressObject
         :param org_id: Update the emergency address of phone number in this organization.
         :type org_id: str

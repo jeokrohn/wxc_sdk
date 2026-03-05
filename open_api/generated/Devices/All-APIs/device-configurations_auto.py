@@ -146,7 +146,7 @@ class DeviceConfigurationsApi(ApiChild, base='deviceConfigurations'):
 
         :param device_id: Update device configurations by device ID.
         :type device_id: str
-        :param op: * `remove` - Remove the configured value and revert back to the default from schema, if present.
+        :param op: -
         :type op: Op
         :param path: Only paths ending in `/sources/configured/value` are supported.
         :type path: str
