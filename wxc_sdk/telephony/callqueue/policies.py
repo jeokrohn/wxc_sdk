@@ -263,7 +263,7 @@ class CQPolicyApi:
         """
         url = self._ep(location_id, queue_id, 'nightService')
         params = org_id and {'orgId': org_id} or None
-        body = update.model_dump_json(exclude={'business_hours_schedules'})
+        body = update.model_dump_json(exclude={'business_hour_schedules'})
         self._session.rest_put(url=url, params=params, data=body)
 
     def stranded_calls_details(self, location_id: str, queue_id: str, org_id: str = None) -> StrandedCalls:
