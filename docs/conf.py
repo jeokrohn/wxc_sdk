@@ -22,7 +22,8 @@ copyright = '2026, Johannes Krohn'
 author = 'Johannes Krohn'
 
 # The full version, including alpha/beta/rc tags
-release = '1.28'
+from importlib.metadata import version as meta_version
+release = meta_version('wxc_sdk')
 
 # -- General configuration ---------------------------------------------------
 
