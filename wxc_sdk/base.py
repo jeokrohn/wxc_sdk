@@ -1,15 +1,16 @@
 import base64
 import logging
 import os
+import re
 from datetime import datetime
-from typing import Optional, Union
+from typing import Optional, Union, Annotated
 
 from aenum import Enum, extend_enum
 from dateutil import tz
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel, ValidationError, BeforeValidator
 
 __all__ = ['StrOrDict', 'webex_id_to_uuid', 'to_camel', 'ApiModel', 'CodeAndReason', 'ApiModelWithErrors', 'plus1',
-           'dt_iso_str', 'SafeEnum', 'enum_str', 'RETRY_429_MAX_WAIT']
+           'dt_iso_str', 'SafeEnum', 'enum_str', 'RETRY_429_MAX_WAIT', 'E164Number']
 
 StrOrDict = Union[str, dict]
 
@@ -119,6 +120,14 @@ def plus1(v: Optional[str]) -> str:
     """
     return v and len(v) == 10 and v[0] != '+' and f'+1{v}' or v
 
+def e164(v:str)->str:
+    if not isinstance(v, str):
+        return v
+    v = re.sub(r"[^+\d]+", "", v)
+    return v
+
+# +E.164 string: all unwanted characters are removed
+E164Number = Annotated[str, BeforeValidator(e164)]
 
 def dt_iso_str(dt: datetime, with_msec: bool = True) -> str:
     """

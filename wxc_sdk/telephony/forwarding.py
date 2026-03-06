@@ -5,14 +5,16 @@ from dataclasses import dataclass
 from typing import Optional
 
 from pydantic import Field, field_validator
+from .operating_modes import OperatingModeSchedule
 
 from ..api_child import ApiChild
 from ..base import ApiModel
 from ..base import SafeEnum as Enum
 from ..common.schedules import ScheduleLevel
+from ..person_settings.mode_management import ExceptionType
 from ..rest import RestSession
 
-__all__ = ['ForwardingRule', 'ForwardingSetting', 'ForwardOperatingModesException', 'ModeType',
+__all__ = ['ForwardingRule', 'ForwardingSetting',
            'ModeDefaultForwardToSelection', 'ForwardToSelection', 'ModeForwardTo', 'ModeForward',
            'ForwardOperatingModes', 'CallForwarding', 'ForwardTo', 'ForwardFromSelection', 'CallForwardingNumber',
            'ForwardCallsTo', 'CustomNumbers', 'CallsFrom', 'ForwardingRuleDetails', 'FeatureSelector', 'ForwardingApi']
@@ -68,33 +70,6 @@ class ForwardingSetting(ApiModel):
                                  destination='')
 
 
-class ForwardOperatingModesException(str, Enum):
-    #: The mode was switched to or extended by the user for manual switch back and runs as an exception until the user
-    #: manual switches the feature back to normal operation or a different mode.
-    manual_switch_back = 'MANUAL_SWITCH_BACK'
-    #: The mode was switched to by the user before its start time and runs as an exception until its end time is
-    #: reached at which point it automatically switches the feature back to normal operation.
-    automatic_switch_back_early_start = 'AUTOMATIC_SWITCH_BACK_EARLY_START'
-    #: The current mode was extended by the user before its end time and runs as an exception until the extension end
-    #: time (mode's end time + extension of up to 12 hours) is reached at which point it automatically switches the
-    #: feature back to normal operation.
-    automatic_switch_back_extension = 'AUTOMATIC_SWITCH_BACK_EXTENSION'
-    #: The mode will remain the current operating mode for the feature until its normal end time is reached.
-    automatic_switch_back_standard = 'AUTOMATIC_SWITCH_BACK_STANDARD'
-
-
-class ModeType(str, Enum):
-    #: The operating mode is not scheduled.
-    none_ = 'NONE'
-    #: Single time duration for Monday-Friday and single time duration for Saturday-Sunday.
-    same_hours_daily = 'SAME_HOURS_DAILY'
-    #: Individual time durations for every day of the week.
-    different_hours_daily = 'DIFFERENT_HOURS_DAILY'
-    #: Holidays which have date durations spanning multiple days, as well as an optional yearly recurrence by day or
-    #: date.
-    holiday = 'HOLIDAY'
-
-
 class ModeDefaultForwardToSelection(str, Enum):
     #: When the rule matches, forward to the destination for this rule.
     forward_to_specified_number = 'FORWARD_TO_SPECIFIED_NUMBER'
@@ -132,7 +107,7 @@ class ModeForward(ApiModel):
     #: The name of the operating mode.
     name: Optional[str] = None
     #: The type of the operating mode.
-    type: Optional[ModeType] = None
+    type: Optional[OperatingModeSchedule] = None
     #: The level of the operating mode.
     level: Optional[ScheduleLevel] = None
     #: Forward to settings.
@@ -145,7 +120,7 @@ class ForwardOperatingModes(ApiModel):
     #: The ID of the current operating mode.
     current_operating_mode_id: Optional[str] = None
     #: The exception type.
-    exception_type: Optional[ForwardOperatingModesException] = None
+    exception_type: Optional[ExceptionType] = None
     #: Operating modes.
     modes: Optional[list[ModeForward]] = None
 

@@ -783,7 +783,7 @@ class TestCaseWithUsers(TestCaseWithLog):
             # pick the calling enabled users
             cls.users = [user
                          for user in users
-                         if (set(user.licenses) & calling_license_ids)]
+                         if (set(user.licenses) & calling_license_ids) and not user.invite_pending]
         else:
             # read users from cache
             user_cache = cls.users_from_cache()

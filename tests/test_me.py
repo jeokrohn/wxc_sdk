@@ -6,21 +6,15 @@ import base64
 import json
 from concurrent.futures.thread import ThreadPoolExecutor
 from random import choice
-from typing import Union
+from typing import Union, List
 
 from pydantic import TypeAdapter
 
 from tests.base import TestWithRandomUserApi, async_test
+from wxc_sdk.all_types import *
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.as_rest import AsRestError
-from wxc_sdk.me import ServicesEnum, MeProfile, UserCallCaptions
-from wxc_sdk.me.endpoints import MeEndpoint
-from wxc_sdk.people import Person
-from wxc_sdk.person_settings.call_policy import PrivacyOnRedirectedCalls
-from wxc_sdk.person_settings.dnd import DND
-from wxc_sdk.person_settings.forwarding import CallForwardingAlways
-from wxc_sdk.telephony import AnnouncementLanguage
 
 
 class TestMe(TestWithRandomUserApi):
@@ -992,6 +986,7 @@ class TestVoicemail(TestWithRandomUserApi):
 
 
 class TestCallCaptions(TestWithRandomUserApi):
+    # proxy = True
 
     @async_test
     async def test_settings(self):
@@ -1021,5 +1016,48 @@ class TestCallCaptions(TestWithRandomUserApi):
                 result: UserCallCaptions
                 print(f"call caption settings for {user.display_name}: ")
                 print(json.dumps(result.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
+        if err:
+            raise err
+
+
+class TestAvailableNumbersForLocation(TestWithRandomUserApi):
+    # proxy = True
+
+    @async_test
+    async def test_available_numbers_for_location(self):
+        """
+        Test available numbers for all calling users
+        :return:
+        """
+
+        async def get_settings(user: Person):
+            with self.user_api(user) as api:
+                async with self.as_webex_api(tokens=api.access_token) as as_api:
+                    as_api: AsWebexSimpleApi
+                    try:
+                        return await as_api.me.available_numbers_for_location()
+                    except AsRestError as e:
+                        raise e
+            # end of get_settings
+            return
+
+        users = [user
+                 for user in self.users
+                 if not user.display_name.startswith('admin@')]
+        results = await asyncio.gather(*[get_settings(user)
+                                         for user in users], return_exceptions=True)
+        err = None
+        for user, result in zip(users, results):
+            if isinstance(result, Exception):
+                err = err or result
+                print(f"Error available numbers for {user.display_name}: {result}")
+            elif result is not None:
+                result: List[LocationAssignedNumber]
+                print(f"Available Numbers for {user.display_name}: ")
+
+                print(json.dumps(
+                    TypeAdapter(List[LocationAssignedNumber]).dump_python(result, mode='json', exclude_unset=True,
+                                                                          exclude_none=True),
+                    indent=2))
         if err:
             raise err

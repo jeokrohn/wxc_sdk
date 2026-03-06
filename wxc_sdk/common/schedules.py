@@ -18,14 +18,11 @@ __all__ = ['ScheduleApi', 'ScheduleType', 'ScheduleMonth', 'ScheduleDay', 'Sched
 
 
 class ScheduleLevel(str, Enum):
-    """
-    Specifies whether the schedule mentioned in holidayScheduleName is org or location specific.
-    (Must be from holidaySchedules list)
-    """
     #: Specifies this Schedule is configured across location.
     location = 'LOCATION'
     #: Specifies this Schedule is configured across organisation.
     organization = 'ORGANIZATION'
+    people = 'PEOPLE'
 
 
 ScheduleTypeOrStr = Union[str, 'ScheduleType']
@@ -165,7 +162,7 @@ class Recurrence(ApiModel):
     recur_end_date: Optional[datetime.date] = None
     #: End recurrence after the event has repeated the specified number of times. Requires either
     #: recur_daily or recur_weekly to be specified. User schedules only.
-    recur_end_of_occurrence: Optional[int] = None
+    recur_end_occurrence: Optional[int] = None
     #: Specifies the number of days between the start of each recurrence and is not allowed with recurWeekly.
     #: Only allowed for user schedules
     recur_daily: Optional[RecurDaily] = None
@@ -246,6 +243,18 @@ class Event(ApiModel):
                      all_day_enabled=False,
                      recurrence=Recurrence.every_week(day=day))
 
+    def create_update(self, update: bool = False) -> dict:
+        """
+        JSON for create or update
+
+        :meta private:
+        """
+        data = self.model_dump(mode='json', by_alias=True, exclude_none=True,
+                               exclude={'event_id': True})
+        if update:
+            data['newName'] = self.new_name or self.name
+        return data
+
 
 class Schedule(ApiModel):
     #: Name for the schedule.
@@ -256,7 +265,7 @@ class Schedule(ApiModel):
     schedule_id: Optional[str] = Field(alias='id', default=None)
     #: listing user schedules returns user and location level schedules. This indicates the level. Can be USER or GROUP
     #: this attribute only exists when listing schedules at the user level
-    level: Optional[str] = None
+    level: Optional[ScheduleLevel] = None
     #: location name, only returned by list() for location schedules
     location_name: Optional[str] = None
     #: location id, only returned by list() for location schedules
@@ -320,7 +329,7 @@ class Schedule(ApiModel):
                                                        end_time=day_end))
         return schedule
 
-    def create_update(self, update: bool = False) -> str:
+    def create_update(self, update: bool = False) -> dict:
         """
         JSON for create or update
 
@@ -330,10 +339,11 @@ class Schedule(ApiModel):
         if update:
             for event in working_copy.events or []:
                 event.new_name = event.new_name or event.name
-        return working_copy.model_dump_json(exclude={'schedule_id': True,
-                                                     'location_name': True,
-                                                     'location_id': True,
-                                                     'events': {'__all__': {'event_id': True}}})
+        return working_copy.model_dump(mode='json', by_alias=True, exclude_none=True,
+                                       exclude={'schedule_id': True,
+                                                'location_name': True,
+                                                'location_id': True,
+                                                'events': {'__all__': {'event_id': True}}})
 
 
 class ScheduleApiBase(str, Enum):
@@ -472,7 +482,7 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         schedule_data = schedule.create_update()
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(obj_id=obj_id)
-        data = self.post(url, data=schedule_data, params=params)
+        data = self.post(url, json=schedule_data, params=params)
         result = data['id']
         return result
 
@@ -509,7 +519,7 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         schedule_data = schedule.create_update(update=True)
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(obj_id=obj_id, schedule_type=schedule_type, schedule_id=schedule_id)
-        data = self.put(url, data=schedule_data, params=params)
+        data = self.put(url, json=schedule_data, params=params)
         return data['id']
 
     def delete_schedule(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
@@ -605,8 +615,8 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(obj_id=obj_id, schedule_type=schedule_type, schedule_id=schedule_id,
                              event_id='')
-        data = event.model_dump_json(exclude={'event_id'})
-        data = self.post(url, data=data, params=params)
+        data = event.create_update()
+        data = self.post(url, json=data, params=params)
         return data['id']
 
     def event_update(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
@@ -644,8 +654,8 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(obj_id=obj_id, schedule_type=schedule_type, schedule_id=schedule_id,
                              event_id=event_id)
-        event_data = event.model_dump_json(exclude={'event_id'})
-        data = self.put(url, data=event_data, params=params)
+        event_data = event.create_update(update=True)
+        data = self.put(url, json=event_data, params=params)
         return data['id']
 
     def event_delete(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,

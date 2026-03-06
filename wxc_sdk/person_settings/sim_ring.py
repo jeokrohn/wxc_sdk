@@ -2,7 +2,7 @@ from typing import Optional
 
 from pydantic import model_validator
 
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, E164Number
 from wxc_sdk.common.selective import SelectiveCriteria, SelectiveCrit
 from wxc_sdk.person_settings.common import PersonSettingsApiChild
 
@@ -16,7 +16,7 @@ class SimRingCriteria(SelectiveCriteria):
 
 class SimRingNumber(ApiModel):
     #: Phone number set as the sequential number.
-    phone_number: Optional[str] = None
+    phone_number: Optional[E164Number] = None
     #: When set to `true` the called party is required to press 1 on the keypad to receive the call.
     answer_confirmation_required_enabled: Optional[bool] = None
 

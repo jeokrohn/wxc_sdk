@@ -2,10 +2,10 @@ from typing import Optional, ClassVar, Any
 
 from pydantic import model_validator
 
-from wxc_sdk.base import SafeEnum as Enum, ApiModel
+from wxc_sdk.base import SafeEnum as Enum, ApiModel, E164Number
 from wxc_sdk.common.schedules import ScheduleType
 
-__all__ = ['SelectiveScheduleLevel', 'SelectiveFrom', 'SelectiveCriteria', 'SelectiveSource', 'SelectiveCrit']
+__all__ = ['SelectiveScheduleLevel', 'SelectiveFrom', 'SelectiveCriteria', 'SelectiveCrit']
 
 
 class SelectiveScheduleLevel(str, Enum):
@@ -46,7 +46,7 @@ class SelectiveCriteria(ApiModel):
     unavailable_callers_enabled: Optional[bool] = None
     #: When callsFrom is set to `SELECT_PHONE_NUMBERS`, indicates a list of incoming phone numbers for which the
     #: criteria apply.
-    phone_numbers: Optional[list[str]] = None
+    phone_numbers: Optional[list[E164Number]] = None
     #: When set to `true` selective treatment enabled for calls that meet the current criteria. Criteria with
     #: `enabled` set to `false` take priority.
     enabled: Optional[bool] = None
@@ -102,7 +102,6 @@ class SelectiveCriteria(ApiModel):
         if 'phoneNumbers' in data:
             data[self._phone_numbers] = data.pop('phoneNumbers')
         return data
-
 
 class SelectiveSource(str, Enum):
     #: Criteria applies to all incoming numbers.

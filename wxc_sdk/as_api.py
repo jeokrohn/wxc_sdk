@@ -3,6 +3,7 @@ import json
 import logging
 import mimetypes
 import os
+import urllib.parse
 from collections.abc import AsyncGenerator
 from dataclasses import dataclass
 from datetime import datetime, date, timedelta
@@ -47,18 +48,21 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi',
            'AsLocationAccessCodesApi', 'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi',
            'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMSTeamsSettingApi',
-           'AsManageNumbersJobsApi', 'AsMeBargeApi', 'AsMeCallBlockApi', 'AsMeCallCenterApi', 'AsMeCallParkApi',
-           'AsMeCallPickupApi', 'AsMeCallPoliciesApi', 'AsMeCallerIdApi', 'AsMeDNDApi', 'AsMeEndpointsApi',
-           'AsMeExecutiveApi', 'AsMeForwardingApi', 'AsMePersonalAssistantApi', 'AsMeRecordingApi', 'AsMeSNRApi',
-           'AsMeSettingsApi', 'AsMeVoicemailApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi',
-           'AsMeetingInviteesApi', 'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi',
-           'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi',
-           'AsModeManagementApi', 'AsMonitoringApi', 'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi',
-           'AsOperatingModesApi', 'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi',
-           'AsOrganisationAccessCodesApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi',
-           'AsOrganizationContactsApi', 'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi',
-           'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPersonalAssistantApi',
-           'AsPlayListApi', 'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
+           'AsManageNumbersJobsApi', 'AsMeAnonCallsApi', 'AsMeBargeApi', 'AsMeCallBlockApi', 'AsMeCallCenterApi',
+           'AsMeCallNotifyApi', 'AsMeCallParkApi', 'AsMeCallPickupApi', 'AsMeCallPoliciesApi', 'AsMeCallWaitingApi',
+           'AsMeCallerIdApi', 'AsMeDNDApi', 'AsMeEndpointsApi', 'AsMeExecutiveApi', 'AsMeForwardingApi',
+           'AsMeModeManagementApi', 'AsMePersonalAssistantApi', 'AsMePriorityAlertApi', 'AsMeRecordingApi',
+           'AsMeSNRApi', 'AsMeSchedulesApi', 'AsMeSelectiveAcceptApi', 'AsMeSelectiveForwardApi',
+           'AsMeSelectiveRejectApi', 'AsMeSequentialRingApi', 'AsMeSettingsApi', 'AsMeSimRingApi', 'AsMeVoicemailApi',
+           'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
+           'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi',
+           'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsModeManagementApi', 'AsMonitoringApi',
+           'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOperatingModesApi',
+           'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi', 'AsOrganisationAccessCodesApi',
+           'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOrganizationContactsApi',
+           'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi',
+           'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPersonalAssistantApi', 'AsPlayListApi',
+           'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
            'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsQueueCallRecordingSettingsApi',
            'AsRebuildPhonesJobsApi', 'AsReceptionistApi', 'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi',
            'AsReportsApi', 'AsRestSession', 'AsRolesApi', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi',
@@ -4479,6 +4483,44 @@ class AsGoOverrideApi(AsApiChild, base='telephony/config/people/me/settings/webe
         await super().put(url, json=body)
 
 
+class AsMeAnonCallsApi(AsApiChild, base='telephony/config/people/me'):
+    async def get(self) -> bool:
+        """
+        Get Anonymous Call Rejection Settings for User
+
+        Get Anonymous Call Rejection Settings for the authenticated user.
+
+        Anonymous Call Rejection allows you to reject calls from anonymous callers.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: bool
+        """
+        url = self.ep('settings/anonymousCallReject')
+        data = await super().get(url)
+        r = data['enabled']
+        return r
+
+    async def modify(self, enabled: bool):
+        """
+        Modify Anonymous Call Rejection Settings for User
+
+        Update Anonymous Call Rejection Settings for the authenticated user.
+
+        Anonymous Call Rejection allows you to reject calls from anonymous callers.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param enabled: Indicates whether Anonymous Call Rejection is enabled or not.
+        :type enabled: bool
+        :rtype: None
+        """
+        body = dict()
+        body['enabled'] = enabled
+        url = self.ep('settings/anonymousCallReject')
+        await super().put(url, json=body)
+
+
 class AsMeBargeApi(AsApiChild, base='telephony/config/people/me'):
     async def get(self) -> BargeSettings:
         """
@@ -4634,6 +4676,132 @@ class AsMeCallCenterApi(AsApiChild, base='telephony/config/people/me'):
         await super().put(url, json=body)
 
 
+class AsMeCallNotifyApi(AsApiChild, base='telephony/config/people/me'):
+    async def get(self) -> CallNotify:
+        """
+        Get Call Notify Settings for User
+
+        Get Call Notify Settings for the authenticated user.
+
+        Call Notify allows you to set up a unique ringtone based on predefined criteria. This is helpful, when the user
+        wants to be quickly notified that a specific phone number is calling.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`CallNotify`
+        """
+        url = self.ep('settings/callNotify')
+        data = await super().get(url)
+        r = CallNotify.model_validate(data)
+        return r
+
+    async def update(self, enabled: bool, email_address: str = None):
+        """
+        Modify Call Notify Settings for User
+
+        Update Call Notify Settings for the authenticated user.
+
+        Call Notify allows you to set up a unique ringtone based on predefined criteria. This API allows modifying
+        attributes such as name, phoneNumbers etc for a particular criteria.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param enabled: Indicates whether the call notify feature should be enabled or disabled for the user.
+        :type enabled: bool
+        :param email_address: Email Address to which call notifications to be received.
+        :type email_address: str
+        :rtype: None
+        """
+        body = dict()
+        body['enabled'] = enabled
+        if email_address is not None:
+            body['emailAddress'] = email_address
+        url = self.ep('settings/callNotify')
+        await super().put(url, json=body)
+
+    async def criteria_create(self, criteria: CallNotifyCriteria) -> str:
+        """
+        Add a Call Notify Criteria
+
+        Create a Call Notify Criteria for the authenticated user.
+
+        Call Notify allows you to set up a unique ringtone based on predefined criteria. This is helpful,
+        when the user
+        wants to be quickly notified that a specific phone number is calling.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param criteria: Criteria to be created.
+        :rtype: str
+        """
+        body = criteria.update()
+        url = self.ep('settings/callNotify/criteria')
+        data = await super().post(url, json=body)
+        r = data['id']
+        return r
+
+    async def criteria_delete(self, id: str):
+        """
+        Delete a Call Notify Criteria
+
+        Delete a Call Notify criteria for the authenticated user.
+
+        Call Notify allows you to set up a unique ringtone based on predefined criteria. This API removes a specific
+        criteria rule by its unique identifier.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param id: The `id` parameter specifies the unique identifier for the call notify criteria.
+        :type id: str
+        :rtype: None
+        """
+        url = self.ep(f'settings/callNotify/criteria/{id}')
+        await super().delete(url)
+
+    async def criteria_get(self, id: str) -> CallNotifyCriteria:
+        """
+        Get Call Notify Criteria Settings
+
+        Get Call Notify Criteria Settings for the authenticated user.
+
+        Call Notify allows you to set up a unique ringtone based on predefined criteria. This is helpful, when the user
+        wants to be quickly notified that a specific phone number is calling.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param id: The `id` parameter specifies the unique identifier for the call notify criteria.
+        :type id: str
+        :rtype: :class:`CallNotifyCriteria`
+        """
+        url = self.ep(f'settings/callNotify/criteria/{id}')
+        data = await super().get(url)
+        r = CallNotifyCriteria.model_validate(data)
+        return r
+
+    async def criteria_update(self, criteria: CallNotifyCriteria, criteria_id: str=None):
+        """
+        Modify a Call Notify Criteria
+
+        Modify Call Notify Criteria Settings for the authenticated user.
+
+        Call Notify allows you to set up a unique ringtone based on predefined criteria. This API allows modifying
+        attributes such as name, phoneNumbers etc for a particular criteria.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param criteria: Criteria to be modified.
+        :type criteria: :class:`CallNotifyCriteria`
+        :param criteria_id: The `id` parameter specifies the unique identifier for the call notify criteria.
+            Default: id from criteria
+        :type criteria_id: str
+        :rtype: None
+        """
+        criteria_id = criteria_id or criteria.id
+        body = criteria.update()
+        url = self.ep(f'settings/callNotify/criteria/{criteria_id}')
+        await super().put(url, json=body)
+
+
 class AsMeCallParkApi(AsApiChild, base='telephony/config/people/me'):
     async def settings(self) -> MeGroupSettings:
         """
@@ -4718,6 +4886,46 @@ class AsMeCallPoliciesApi(AsApiChild, base='telephony/config/people/me'):
         if connected_line_id_privacy_on_redirected_calls is not None:
             body['connectedLineIdPrivacyOnRedirectedCalls'] = enum_str(connected_line_id_privacy_on_redirected_calls)
         url = self.ep('settings/callPolicies')
+        await super().put(url, json=body)
+
+
+class AsMeCallWaitingApi(AsApiChild, base='telephony/config/people/me'):
+    async def get(self) -> bool:
+        """
+        Get Call Waiting Settings for User
+
+        Get Call Waiting Settings for the authenticated user.
+
+        Call Waiting allows a user to receive multiple calls simultaneously. When the user is on an active call, they
+        can receive an incoming call and switch between the two calls.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: bool
+        """
+        url = self.ep('settings/callWaiting')
+        data = await super().get(url)
+        r = data['enabled']
+        return r
+
+    async def update(self, enabled: bool):
+        """
+        Modify Call Waiting Settings for User
+
+        Update Call Waiting Settings for the authenticated user.
+
+        Call Waiting allows a user to receive multiple calls simultaneously. When the user is on an active call, they
+        can receive an incoming call and switch between the two calls.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param enabled: Enable or disable Call Waiting for the user.
+        :type enabled: bool
+        :rtype: None
+        """
+        body = dict()
+        body['enabled'] = enabled
+        url = self.ep('settings/callWaiting')
         await super().put(url, json=body)
 
 
@@ -5373,6 +5581,236 @@ class AsMeForwardingApi(AsApiChild, base='telephony/config/people/me'):
         await super().put(url, json=body)
 
 
+class AsMeModeManagementApi(AsApiChild, base='telephony/config/people/me'):
+    async def get_features(self) -> List[ModeManagementFeature]:
+        """
+        Get Mode Management Features
+
+        Retrieves a list of all mode management features (Auto Attendants, Call Queues, and Hunt Groups) for which the
+        authenticated user has been designated as a mode manager. This API returns basic information about each
+        feature including its ID, name, and type.
+
+        Mode Management allows designated managers to switch features between different operational configurations
+        based on time schedules or manual triggers. This is useful for managing business hours, holidays, and
+        emergency scenarios.
+
+        This API requires a user auth token with the `spark:telephony_config_read` scope. The authenticated user must
+        be configured as a mode manager for at least one feature to receive results.
+
+        :rtype: list[ModeManagementFeature]
+        """
+        url = self.ep('settings/modeManagement/features')
+        data = await super().get(url)
+        r = TypeAdapter(list[ModeManagementFeature]).validate_python(data['features'])
+        return r
+
+    async def switch_mode_multiple_features(self, feature_ids: list[str], operating_mode_name: str):
+        """
+        Switch Mode for Multiple Features
+
+        Switches the operating mode for multiple features simultaneously by specifying a common mode name. This API
+        accepts a list of feature IDs and sets all of them to the specified operating mode, provided that mode exists
+        for all features.
+
+        This bulk operation is particularly useful for coordinating operational changes across an organization, such as
+        activating holiday modes, emergency procedures, or after-hours configurations across multiple Auto Attendants,
+        Call Queues, and Hunt Groups at once.
+
+        This API requires a user auth token with the `spark:telephony_config_write` scope. The authenticated user must
+        be a mode manager for all specified features.
+
+        :param feature_ids: List of feature IDs to switch mode
+        :type feature_ids: list[str]
+        :param operating_mode_name: Name of the common operating mode to be set as current operating mode
+        :type operating_mode_name: str
+        :rtype: None
+        """
+        body = dict()
+        body['featureIds'] = feature_ids
+        body['operatingModeName'] = operating_mode_name
+        url = self.ep('settings/modeManagement/features/actions/switchMode/invoke')
+        await super().post(url, json=body)
+
+    async def get_common_modes(self, feature_ids: list[str]) -> list[str]:
+        """
+        Get Common Modes
+
+        Retrieves a list of common operating mode names that are shared across multiple specified features. This API
+        accepts a list of feature IDs and returns only the mode names that exist in all of the specified features,
+        allowing managers to switch multiple features to the same mode simultaneously.
+
+        Common modes are useful when you need to coordinate operational changes across multiple features. For example,
+        switching an entire office to "Holiday" mode across all Auto Attendants and Call Queues at once.
+
+        This API requires a user auth token with the `spark:telephony_config_read` scope. The authenticated user must
+        be a mode manager for the specified features.
+
+        :param feature_ids: List of feature IDs (comma-separated) for auto attendants, call queues, or hunt groups
+        :type feature_ids: list[str]
+        :rtype: list[str]
+        """
+        params = {}
+        params['featureIds'] = ','.join(feature_ids)
+        url = self.ep('settings/modeManagement/features/commonModes')
+        data = await super().get(url, params=params)
+        r = data['commonModeNames']
+        return r
+
+    async def feature_get(self, feature_id: str) -> FeatureDetail:
+        """
+        Get Mode Management Feature
+
+        Retrieves detailed information about a specific mode management feature including its current operating mode
+        and exception status. This API provides the feature's ID, name, type, current operating mode ID, and whether
+        it is currently in an exception mode.
+
+        Exception mode indicates that the feature has been manually switched to a different mode than what its schedule
+        dictates. This information is critical for mode managers to understand the current state of their features.
+
+        This API requires a user auth token with the `spark:telephony_config_read` scope. The authenticated user must
+        be a mode manager for the specified feature.
+
+        :param feature_id: Unique identifier for the feature.
+        :type feature_id: str
+        :rtype: :class:`FeatureDetail`
+        """
+        url = self.ep(f'settings/modeManagement/features/{feature_id}')
+        data = await super().get(url)
+        r = FeatureDetail.model_validate(data)
+        return r
+
+    async def extend_mode(self, feature_id: str, operating_mode_id: str, extension_time: int = None):
+        """
+        Extend Current Operating Mode Duration
+
+        Extends the duration of the current operating mode by adding additional time before it expires or reverts to
+        scheduled operation. This API allows managers to prolong a temporary mode change without having to switch
+        modes again.
+
+        Extension time can be specified in 30-minute increments up to 720 minutes (12 hours). If no extension time is
+        provided, the mode is extended with a manual switchback exception, meaning it will remain active until
+        manually changed.
+
+        This API requires a user auth token with the `spark:telephony_config_write` scope. The authenticated user must
+        be a mode manager for the specified feature.
+
+        :param feature_id: Unique identifier for the feature.
+        :type feature_id: str
+        :param operating_mode_id: Unique identifier for the operating mode for which the extension is being configured.
+        :type operating_mode_id: str
+        :param extension_time: Extension time in minutes (must be multiple of 30). If not sent, mode is extended with
+            manual switch back exception
+        :type extension_time: int
+        :rtype: None
+        """
+        body = dict()
+        body['operatingModeId'] = operating_mode_id
+        if extension_time is not None:
+            body['extensionTime'] = extension_time
+        url = self.ep(f'settings/modeManagement/features/{feature_id}/actions/extendMode/invoke')
+        await super().post(url, json=body)
+
+    async def switch_mode_for_feature(self, feature_id: str, operating_mode_id: str,
+                                is_manual_switchback_enabled: bool = None):
+        """
+        Switch Mode for Single Feature
+
+        Switches the operating mode for a single feature to a specified mode, either temporarily or with manual
+        switchback. This API creates an exception to the feature's normal scheduled operation, allowing managers to
+        manually control the feature's behavior.
+
+        You can configure whether the mode switch is temporary (automatically reverts based on schedule) or requires
+        manual switchback. This is useful for handling unexpected situations like emergency closures, special events,
+        or unscheduled breaks.
+
+        This API requires a user auth token with the `spark:telephony_config_write` scope. The authenticated user must
+        be a mode manager for the specified feature.
+
+        :param feature_id: Unique identifier for the feature.
+        :type feature_id: str
+        :param operating_mode_id: Operating mode ID to switch to
+        :type operating_mode_id: str
+        :param is_manual_switchback_enabled: Determines if switch back will be manual (if true) or automatic (if false
+            or omitted from request)
+        :type is_manual_switchback_enabled: bool
+        :rtype: None
+        """
+        body = dict()
+        body['operatingModeId'] = operating_mode_id
+        if is_manual_switchback_enabled is not None:
+            body['isManualSwitchbackEnabled'] = is_manual_switchback_enabled
+        url = self.ep(f'settings/modeManagement/features/{feature_id}/actions/switchMode/invoke')
+        await super().post(url, json=body)
+
+    async def switch_to_normal_operation(self, feature_id: str):
+        """
+        Switch to Normal Operation
+
+        Switches the feature back to its normal scheduled operation mode, removing any manual exceptions or overrides
+        that may be active. This returns the feature to operating according to its configured time schedules.
+
+        This operation is useful when a temporary manual mode change (exception) is no longer needed and you want to
+        restore automatic schedule-based operation. It effectively cancels any active manual mode switches.
+
+        This API requires a user auth token with the `spark:telephony_config_write` scope. The authenticated user must
+        be a mode manager for the specified feature.
+
+        :param feature_id: Unique identifier for the feature.
+        :type feature_id: str
+        :rtype: None
+        """
+        url = self.ep(f'settings/modeManagement/features/{feature_id}/actions/switchToNormalOperation/invoke')
+        await super().post(url)
+
+    async def get_operating_mode(self, feature_id: str, mode_id: str) -> OperatingModeDetail:
+        """
+        Get Operating Mode
+
+        Retrieves detailed information about a specific operating mode for a feature, including the mode's ID and name.
+        This API allows managers to get the details of any operating mode configured for a feature.
+
+        Operating modes define different configurations for how a feature behaves (e.g., business hours routing vs.
+        after-hours routing). Each mode has a unique ID and a descriptive name that helps managers identify its
+        purpose.
+
+        This API requires a user auth token with the `spark:telephony_config_read` scope. The authenticated user must
+        be a mode manager for the specified feature.
+
+        :param feature_id: Unique identifier for the feature.
+        :type feature_id: str
+        :param mode_id: Unique identifier for the operating mode.
+        :type mode_id: str
+        :rtype: :class:`OperatingModeDetail`
+        """
+        url = self.ep(f'settings/modeManagement/features/{feature_id}/modes/{mode_id}')
+        data = await super().get(url)
+        r = OperatingModeDetail.model_validate(data)
+        return r
+
+    async def get_normal_operation_mode(self, feature_id: str) -> str:
+        """
+        Get Normal Operation Mode
+
+        Retrieves the current normal operating mode that the feature is scheduled to be in based on its time schedules.
+        This represents the mode the feature would be in if no manual exceptions or overrides were active.
+
+        The normal operation mode is determined by the feature's configured schedules and may differ from the actual
+        current operating mode if a manual exception has been applied. This API helps managers understand what the
+        scheduled behavior is versus the actual current state.
+
+        This API requires a user auth token with the `spark:telephony_config_read` scope. The authenticated user must
+        be a mode manager for the specified feature.
+
+        :param feature_id: Unique identifier for the feature.
+        :type feature_id: str
+        :rtype: str
+        """
+        url = self.ep(f'settings/modeManagement/features/{feature_id}/normalOperationMode')
+        data = await super().get(url)
+        r = data['operatingModeId']
+        return r
+
+
 class AsMePersonalAssistantApi(AsApiChild, base='telephony/config/people/me/settings/personalAssistant'):
     """
     Personal Assistant Settings For Me
@@ -5417,6 +5855,129 @@ class AsMePersonalAssistantApi(AsApiChild, base='telephony/config/people/me/sett
         """
         body = settings.model_dump(mode='json', exclude_unset=True, by_alias=True)
         url = self.ep()
+        await super().put(url, json=body)
+
+
+class AsMePriorityAlertApi(AsApiChild, base='telephony/config/people/me'):
+    async def get(self) -> PriorityAlert:
+        """
+        Get Priority Alert Settings
+
+        Get Priority Alert Settings for the authenticated user.
+
+        Priority alert allows you to set up a unique ringtone based on predefined criteria. This is helpful, when the
+        user wants to be quickly notified that a specific phone number is calling.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`PriorityAlert`
+        """
+        url = self.ep('settings/priorityAlert')
+        data = await super().get(url)
+        r = PriorityAlert.model_validate(data)
+        return r
+
+    async def update(self, enabled: bool):
+        """
+        Modify Priority Alert Settings for User
+
+        Update Priority Alert Settings for the authenticated user.
+
+        Priority alert allows you to set up a unique ringtone based on predefined criteria. This is helpful, when the
+        user wants to be quickly notified that a specific phone number is calling.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param enabled: Indicates whether the priority alert feature should be enabled or disabled for the user.
+        :type enabled: bool
+        :rtype: None
+        """
+        body = dict()
+        body['enabled'] = enabled
+        url = self.ep('settings/priorityAlert')
+        await super().put(url, json=body)
+
+    async def criteria_create(self, criteria: PriorityAlertCriteria) -> str:
+        """
+        Add a Priority Alert Criteria
+
+        Create a Priority Alert Criteria for the authenticated user.
+
+        Priority alert allows you to set up a unique ringtone based on predefined criteria. This is helpful, when the
+        user wants to be quickly notified that a specific phone number is calling.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param criteria: Priority Alert Criteria
+        :type criteria: :class:`PriorityAlertCriteria`
+        :rtype: str
+        """
+        body = criteria.update()
+        url = self.ep('settings/priorityAlert/criteria')
+        data = await super().post(url, json=body)
+        r = data['id']
+        return r
+
+    async def criteria_delete(self, criteria_id: str):
+        """
+        Delete a Priority Alert Criteria
+
+        Delete a Priority Alert criteria for the authenticated user.
+
+        Priority alert allows you to set up a unique ringtone based on predefined criteria. This API removes a specific
+        criteria rule by its unique identifier.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param criteria_id: The `criteria_id` parameter specifies the unique identifier for the priority alert
+            criteria.
+        :type criteria_id: str
+        :rtype: None
+        """
+        url = self.ep(f'settings/priorityAlert/criteria/{criteria_id}')
+        await super().delete(url)
+
+    async def criteria_get(self, criteria_id: str) -> PriorityAlertCriteria:
+        """
+        Get Priority Alert Criteria Settings
+
+        Get Priority Alert Criteria Settings for the authenticated user.
+
+        Priority alert allows you to set up a unique ringtone based on predefined criteria. This is helpful, when the
+        user wants to be quickly notified that a specific phone number is calling.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param criteria_id: The `criteria_id` parameter specifies the unique identifier for the priority alert criteria.
+        :type criteria_id: str
+        :rtype: :class:`PriorityAlertCriteria`
+        """
+        url = self.ep(f'settings/priorityAlert/criteria/{criteria_id}')
+        data = await super().get(url)
+        r = PriorityAlertCriteria.model_validate(data)
+        return r
+
+    async def criteria_update(self, criteria: PriorityAlertCriteria, criteria_id: str = None):
+        """
+        Modify Settings for a Priority Alert Criteria
+
+        Modify Priority Alert Criteria Settings for the authenticated user.
+
+        Priority alert allows you to set up a unique ringtone based on predefined criteria. This API allows modifying
+        attributes such as name, phoneNumbers etc for a particular criteria.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param criteria_id: The `criteria_id` parameter specifies the unique identifier for the priority alert criteria.
+            Default: id from criteria
+        :type criteria_id: str
+        :param criteria: Priority Alert Criteria
+        :type criteria: :class:`PriorityAlertCriteria`
+        :rtype: None
+        """
+        criteria_id = criteria_id or criteria.id
+        body = criteria.update()
+        url = self.ep(f'settings/priorityAlert/criteria/{criteria_id}')
         await super().put(url, json=body)
 
 
@@ -5548,6 +6109,876 @@ class AsMeSNRApi(AsApiChild, base='telephony/config/people/me'):
         await super().put(url, json=body)
 
 
+class AsMeSchedulesApi(AsApiChild, base='telephony/config/people/me'):
+    async def get_location_schedule(self, schedule_type: ScheduleType,
+                              schedule_id: str) -> Schedule:
+        """
+        Get User's Location Level Schedule
+
+        Get Location Schedule for Call Settings of the authenticated user.
+
+        Schedules are used to define specific time periods which can be applied to various Call Settings, such as
+        Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in
+        the schedule, making it more convenient for users to manage their calls.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param schedule_type: Type of the schedule.
+        :type schedule_type: ScheduleType
+        :param schedule_id: Retrieve the schedule with the matching ID.
+        :type schedule_id: str
+        :rtype: :class:`Schedule`
+        """
+        url = self.ep(f'locations/schedules/{schedule_type}/{schedule_id}')
+        data = await super().get(url)
+        r = Schedule.model_validate(data)
+        return r
+
+    async def list(self) -> list[Schedule]:
+        """
+        Get User (and Location) Schedules
+
+        Get Schedules for Call Settings for the authenticated user.
+
+        Schedules are used to define specific time periods which can be applied to various Call Settings, such as
+        Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in
+        the schedule, making it more convenient for users to manage their calls.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: list[UserSchedule]
+        """
+        url = self.ep('schedules')
+        data = await super().get(url)
+        r = TypeAdapter(list[Schedule]).validate_python(data['schedules'])
+        return r
+
+    async def create(self, schedule: Schedule) -> str:
+        """
+        Add a User level Schedule for Call Settings
+
+        Create a new Schedule for the authenticated user.
+
+        Schedules are used to define specific time periods which can be applied to various Call Settings, such as
+        Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in
+        the schedule, making it more convenient for users to manage their calls.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param schedule: Schedule details
+        :type schedule: Schedule
+        :rtype: str
+        """
+        body = schedule.create_update()
+        url = self.ep('schedules')
+        data = await super().post(url, json=body)
+        r = data['id']
+        return r
+
+    async def delete(self, schedule_type: ScheduleType, schedule_id: str):
+        """
+        Delete a User Schedule
+
+        Delete a specific schedule for the authenticated user.
+
+        Schedules are used to define specific time periods which can be applied to various Call Settings, such as
+        Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in
+        the schedule, making it more convenient for users to manage their calls.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param schedule_type: Type of the schedule.
+        :type schedule_type: ScheduleType
+        :param schedule_id: Delete the schedule with the matching ID.
+        :type schedule_id: str
+        :rtype: None
+        """
+        url = self.ep(f'schedules/{enum_str(schedule_type)}/{schedule_id}')
+        await super().delete(url)
+
+    async def get_user_schedule(self, schedule_type: ScheduleType, schedule_id: str) -> Schedule:
+        """
+        Get User Schedule
+
+        Get a Schedule details for Call Settings of the authenticated user.
+
+        Schedules are used to define specific time periods which can be applied to various Call Settings, such as
+        Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in
+        the schedule, making it more convenient for users to manage their calls.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param schedule_type: Type of the schedule.
+        :type schedule_type: ScheduleType
+        :param schedule_id: Retrieve the schedule with the matching ID.
+        :type schedule_id: str
+        :rtype: :class:`UserScheduleGetResponse`
+        """
+        url = self.ep(f'schedules/{enum_str(schedule_type)}/{schedule_id}')
+        data = await super().get(url)
+        r = Schedule.model_validate(data)
+        return r
+
+    async def update(self, schedule: Schedule, schedule_type: ScheduleType = None, schedule_id: str = None):
+        """
+        Modify User Schedule
+
+        Modify a Schedule details for Call Settings of the authenticated user.
+
+        Schedules are used to define specific time periods which can be applied to various Call Settings, such as
+        Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in
+        the schedule, making it more convenient for users to manage their calls.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param schedule: Schedule details
+        :type schedule: Schedule
+        :param schedule_type: Type of the schedule. Default: schedule_type from schedule
+        :type schedule_type: ScheduleType
+        :param schedule_id: Update the schedule with the matching ID. Default: schedule_id from schedule
+        :type schedule_id: str
+        :rtype: None
+        """
+        schedule_type = schedule_type or schedule.schedule_type
+        schedule_id = schedule_id or schedule.schedule_id
+        body = schedule.create_update(update=True)
+        url = self.ep(f'schedules/{enum_str(schedule_type)}/{schedule_id}')
+        await super().put(url, json=body)
+
+    async def event_create(self, schedule_type: ScheduleType, schedule_id: str, event: Event) -> str:
+        """
+        Add an event for a User Schedule
+
+        Create a new Event for the authenticated user's specified schedule.
+
+        Schedules are used to define specific time periods which can be applied to various Call Settings, such as
+        Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in
+        the schedule, making it more convenient for users to manage their calls.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param schedule_type: Type of the schedule.
+        :type schedule_type: ScheduleType
+        :param schedule_id: add an event for the specified schedule ID.
+        :type schedule_id: str
+        :param event: Event details
+        :type event: Event
+        :rtype: str
+        """
+        body = event.create_update()
+        url = self.ep(f'schedules/{enum_str(schedule_type)}/{schedule_id}/events')
+        data = await super().post(url, json=body)
+        r = data['id']
+        return r
+
+    async def event_delete(self, schedule_type: ScheduleType, schedule_id: str, event_id: str):
+        """
+        Delete User a Schedule Event
+
+        Delete a specific schedule event for the authenticated user.
+
+        Schedules are used to define specific time periods which can be applied to various Call Settings, such as
+        Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in
+        the schedule, making it more convenient for users to manage their calls.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param schedule_type: Type of the schedule.
+        :type schedule_type: ScheduleType
+        :param schedule_id: Delete an event for the specified schedule ID.
+        :type schedule_id: str
+        :param event_id: Delete the event with the matching ID.
+        :type event_id: str
+        :rtype: None
+        """
+        url = self.ep(f'schedules/{enum_str(schedule_type)}/{schedule_id}/events/{event_id}')
+        await super().delete(url)
+
+    async def event_get(self, schedule_type: ScheduleType, schedule_id: str,
+                  event_id: str) -> Event:
+        """
+        Get User Schedule Event
+
+        Get a Schedule Event details for Call Settings of the authenticated user.
+
+        Schedules are used to define specific time periods which can be applied to various Call Settings, such as
+        Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in
+        the schedule, making it more convenient for users to manage their calls.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param schedule_type: Type of the schedule.
+        * `businessHours` - Business hours schedule type.
+        * `holidays` - Holidays schedule type.
+        :type schedule_type: ScheduleType
+        :param schedule_id: Retrieve the schedule with the matching ID.
+        :type schedule_id: str
+        :param event_id: Retrieve the event with the matching ID.
+        :type event_id: str
+        :rtype: :class:`Event`
+        """
+        url = self.ep(f'schedules/{enum_str(schedule_type)}/{schedule_id}/events/{event_id}')
+        data = await super().get(url)
+        r = Event.model_validate(data)
+        return r
+
+    async def event_update(self, schedule_type: ScheduleType, schedule_id: str, event:Event, event_id: str=None):
+        """
+        Modify User Schedule Event
+
+        Modify a Schedule event details for Call Settings of the authenticated user.
+
+        Schedules are used to define specific time periods which can be applied to various Call Settings, such as
+        Sequential Ring, or Priority Alert. These call settings perform the defined actions based on the time frame in
+        the schedule, making it more convenient for users to manage their calls.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param schedule_type: Type of the schedule.
+        * `businessHours` - Business hours schedule type.
+        * `holidays` - Holidays schedule type.
+        :type schedule_type: ScheduleType
+        :param schedule_id: Update an event for the specified schedule ID.
+        :type schedule_id: str
+        :param event: Event details
+        :type event: Event
+        :param event_id: Update the event with the matching ID. Default: event id from event
+        :type event_id: str
+        :rtype: None
+        """
+        event_id = event_id or event.event_id
+        body = event.create_update(update=True)
+        url = self.ep(f'schedules/{enum_str(schedule_type)}/{schedule_id}/events/{event_id}')
+        await super().put(url, json=body)
+
+
+class AsMeSelectiveAcceptApi(AsApiChild, base='telephony/config/people/me'):
+    async def get(self) -> SelectiveAccept:
+        """
+        Get Selective Call Accept Settings for User
+
+        Get Selective Call Accept Settings for the authenticated user.
+
+        Selective Call Accept allows you to create customized rules to accept specific calls for users based on the
+        phone number,identity and the time or day of the call.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`SelectiveAccept`
+        """
+        url = self.ep('settings/selectiveAccept')
+        data = await super().get(url)
+        r = SelectiveAccept.model_validate(data)
+        return r
+
+    async def update(self, enabled: bool):
+        """
+        Modify Selective Call Accept Settings for User
+
+        Update Selective Call Accept Settings for the authenticated user.
+
+        Selective Call Accept allows you to create customized rules to accept specific calls for users based on the
+        phone number,identity and the time or day of the call.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param enabled: indicates whether selective accept is enabled or not.
+        :type enabled: bool
+        :rtype: None
+        """
+        body = dict()
+        body['enabled'] = enabled
+        url = self.ep('settings/selectiveAccept')
+        await super().put(url, json=body)
+
+    async def criteria_create(self, criteria: SelectiveAcceptCriteria) -> str:
+        """
+        Add User Selective Call Accept Criteria
+
+        Create a new Selective Call Accept Criteria for the authenticated user.
+
+        Selective Call Accept allows you to create customized rules to accept specific calls for users based on the
+        phone number,identity and the time or day of the call.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param criteria: Selective Call Accept Criteria settings
+        :type criteria: SelectiveAcceptCriteria
+        :rtype: str
+        """
+        body = criteria.update()
+        url = self.ep('settings/selectiveAccept/criteria')
+        data = await super().post(url, json=body)
+        r = data['id']
+        return r
+
+    async def criteria_delete(self, criteria_id: str):
+        """
+        Delete a Selective Call Accept Criteria
+
+        Delete a Selective Call Accept Criteria for the authenticated user.
+
+        Selective Call Accept allows you to create customized rules to accept specific calls for users based on the
+        phone number,identity and the time or day of the call.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param criteria_id: The `criteria_id` parameter specifies the unique identifier for the selective call accept
+            criteria.
+        :type criteria_id: str
+        :rtype: None
+        """
+        url = self.ep(f'settings/selectiveAccept/criteria/{criteria_id}')
+        await super().delete(url)
+
+    async def criteria_get(self, criteria_id: str) -> SelectiveAcceptCriteria:
+        """
+        Get Selective Call Accept Criteria Settings for User
+
+        Get Selective Call Accept Criteria Settings for the authenticated user.
+
+        Selective Call Accept allows you to create customized rules to accept specific calls for users based on the
+        phone number,identity and the time or day of the call.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param criteria_id: The `criteria_id` parameter specifies the unique identifier for the selective call accept
+            criteria.
+        :type criteria_id: str
+        :rtype: :class:`SelectiveAcceptCallCriteriaGet`
+        """
+        url = self.ep(f'settings/selectiveAccept/criteria/{criteria_id}')
+        data = await super().get(url)
+        r = SelectiveAcceptCriteria.model_validate(data)
+        return r
+
+    async def criteria_update(self, criteria: SelectiveAcceptCriteria, criteria_id: str=None):
+        """
+        Modify a Selective Call Accept Criteria
+
+        Modify Selective Call Accept Criteria Settings for the authenticated user.
+
+        Selective Call Accept allows you to create customized rules to accept specific calls for users based on the
+        phone number,identity and the time or day of the call.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param criteria: Selective Call Accept Criteria settings
+        :type criteria: SelectiveAcceptCriteria
+        :param criteria_id: Specifies the unique identifier for the selective call accept criteria.
+            Default: id from criteria
+        :type criteria_id: str
+        :rtype: None
+        """
+        criteria_id = criteria_id or criteria.id
+        body = criteria.update()
+        url = self.ep(f'settings/selectiveAccept/criteria/{criteria_id}')
+        await super().put(url, json=body)
+
+
+class AsMeSelectiveForwardApi(AsApiChild, base='telephony/config/people/me'):
+    async def get(self) -> SelectiveForward:
+        """
+        Get Selective Call Forward Settings for User
+
+        Get Selective Call Forward Settings for the authenticated user.
+
+        Selective Call Forward allows you to create customized rules to forward specific calls for users based on the
+        phone number,identity and the time or day of the call.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`SelectiveForward`
+        """
+        url = self.ep('settings/selectiveForward')
+        data = await super().get(url)
+        r = SelectiveForward.model_validate(data)
+        return r
+
+    async def update(self, forward: SelectiveForward) -> None:
+        """
+        Modify Selective Call Forward Settings for User
+
+        Update the Selective Call Forward Settings for the authenticated user.
+
+        Selective Call Accept allows you to create customized rules to accept specific calls for users based on the
+        phone number, identity, and the time or day of the call.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param forward: Selective Call Forward Settings
+        :type forward: SelectiveForward
+        :rtype: None
+        """
+        body = forward.update()
+        url = self.ep('settings/selectiveForward')
+        await super().put(url, json=body)
+
+    async def criteria_create(self, criteria: MeSelectiveForwardCriteria) -> str:
+        """
+        Add a Selective Call Forwarding Criteria
+
+        Create a Selective Call Forwarding Criteria for the authenticated user.
+
+        Selective Call Forward allows you to define rules that automatically forward incoming calls based on specific
+        criteria, such as the caller’s phone number, caller identity, and the time and day the call is received.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param criteria: Selective Call Forward Criteria settings
+        :type criteria: MeSelectiveForwardCriteria
+        :rtype: str
+        """
+        body = criteria.update()
+        url = self.ep('settings/selectiveForward/criteria')
+        data = await super().post(url, json=body)
+        r = data['id']
+        return r
+
+    async def criteria_delete(self, criteria_id: str):
+        """
+        Delete a Selective Call Forwarding Criteria
+
+        Delete a Selective Call Forwarding Criteria for the authenticated user.
+
+        Selective call forwarding allows you to define rules that automatically forward incoming calls based on
+        specific criteria. This API removes a specific criteria rule by its unique identifier.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param criteria_id: The `criteria_id` parameter specifies the unique identifier for the selective call
+            forwarding criteria.
+        :type criteria_id: str
+        :rtype: None
+        """
+        url = self.ep(f'settings/selectiveForward/criteria/{criteria_id}')
+        await super().delete(url)
+
+    async def criteria_get(self, criteria_id: str) -> MeSelectiveForwardCriteria:
+        """
+        Get Settings for a Selective Call Forwarding Criteria
+
+        Get settings for a Selective Call Forwarding Criteria for the authenticated user.
+
+        Selective Call Forward allows you to define rules that automatically forward incoming calls based on specific
+        criteria, such as the caller’s phone number, caller identity, and the time and day the call is received.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param criteria_id: The `criteria_id` parameter specifies the unique identifier for the selective call
+        forwarding criteria.
+        :type criteria_id: str
+        :rtype: :class:`MeSelectiveForwardCriteria`
+        """
+        url = self.ep(f'settings/selectiveForward/criteria/{criteria_id}')
+        data = await super().get(url)
+        r = MeSelectiveForwardCriteria.model_validate(data)
+        return r
+
+    async def criteria_update(self, criteria: MeSelectiveForwardCriteria, criteria_id: str):
+        """
+        Modify Settings for a Selective Call Forwarding Criteria
+
+        Modify settings for a Selective Call Forwarding Criteria for the authenticated user.
+
+        Selective Call Forward allows you to define rules that automatically forward incoming calls based on specific
+        criteria, such as the caller’s phone number, caller identity, and the time and day the call is received.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param criteria: Selective Call Forward Criteria settings
+        :type criteria: :class:`MeSelectiveForwardCriteria`
+        :param criteria_id: The `criteria_id` parameter specifies the unique identifier for the selective call
+            forwarding criteria. Default: id from criteria.
+            Example: `Y2lzY29zcGFyazovL3VzL0NSSVRFUklBL1oxNzU0MzgzODQzNTA5NzY`.
+        :type criteria_id: str
+        :rtype: None
+        """
+        criteria_id = criteria_id or criteria.id
+        body = criteria.update()
+        url = self.ep(f'settings/selectiveForward/criteria/{criteria_id}')
+        await super().put(url, json=body)
+
+
+class AsMeSelectiveRejectApi(AsApiChild, base='telephony/config/people/me'):
+    async def get(self) -> SelectiveReject:
+        """
+        Get Selective Call Reject Settings for User
+
+        Get Selective Call Reject Settings for the authenticated user.
+
+        Selective Call Reject allows you to create customized rules to reject specific calls for users based on the
+        phone number,identity and the time or day of the call.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`SelectiveReject`
+        """
+        url = self.ep('settings/selectiveReject')
+        data = await super().get(url)
+        r = SelectiveReject.model_validate(data)
+        return r
+
+    async def update(self, enabled: bool):
+        """
+        Modify Selective Call Reject Settings for User
+
+        Update Selective Call Reject Settings for the authenticated user.
+
+        Selective Call Reject allows you to create customized rules to reject specific calls for users based on the
+        phone number,identity and the time or day of the call.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param enabled: Indicates whether selective reject is enabled.
+        :type enabled: bool
+        :rtype: None
+        """
+        body = dict()
+        body['enabled'] = enabled
+        url = self.ep('settings/selectiveReject')
+        await super().put(url, json=body)
+
+    async def criteria_create(self, criteria: SelectiveRejectCriteria) -> str:
+        """
+        Add User Selective Call Reject Criteria
+
+        Create a new Selective Call Reject Criteria for the authenticated user.
+
+        Selective Call Reject allows you to create customized rules to reject specific calls for users based on the
+        phone number,identity and the time or day of the call.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param criteria: Selective Call Reject Criteria settings
+        :type criteria: SelectiveRejectCriteria
+        :rtype: str
+        """
+        body = criteria.update()
+        url = self.ep('settings/selectiveReject/criteria')
+        data = await super().post(url, json=body)
+        r = data['id']
+        return r
+
+    async def criteria_delete(self, criteria_id: str):
+        """
+        Delete a Selective Call Reject Criteria
+
+        Delete a Selective Call Reject Criteria for the authenticated user.
+
+        Selective Call Reject allows you to create customized rules to reject specific calls for users based on the
+        phone number,identity and the time or day of the call.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param criteria_id: The `criteria_id` parameter specifies the unique identifier for the selective call reject
+            criteria.
+        :type criteria_id: str
+        :rtype: None
+        """
+        url = self.ep(f'settings/selectiveReject/criteria/{criteria_id}')
+        await super().delete(url)
+
+    async def criteria_get(self, criteria_id: str) -> SelectiveRejectCriteria:
+        """
+        Get Selective Call Reject Criteria Settings for User
+
+        Get Selective Call Reject Criteria Settings for the authenticated user.
+
+        Selective Call Reject allows you to create customized rules to reject specific calls for users based on the
+        phone number,identity and the time or day of the call.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param criteria_id: The `criteria_id` parameter specifies the unique identifier for the selective call reject
+            criteria.
+        :type criteria_id: str
+        :rtype: :class:`SelectiveRejectCriteria`
+        """
+        url = self.ep(f'settings/selectiveReject/criteria/{id}')
+        data = await super().get(url)
+        r = SelectiveRejectCriteria.model_validate(data)
+        return r
+
+    async def criteria_update(self, criteria: SelectiveRejectCriteria, criteria_id: str = None):
+        """
+        Modify a Selective Call Reject Criteria
+
+        Modify Selective Call Reject Criteria Settings for the authenticated user.
+
+        Selective Call Reject allows you to create customized rules to reject specific calls for users based on the
+        phone number,identity and the time or day of the call.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param criteria: Selective Call Reject Criteria settings
+        :type criteria: SelectiveRejectCriteria
+
+        :param criteria_id: The `criteria_id` parameter specifies the unique identifier for the selective call
+            reject. Default: id from criteria.
+        :type criteria_id: str
+        :rtype: None
+        """
+        criteria_id = criteria_id or criteria.id
+        body = criteria.update()
+        url = self.ep(f'settings/selectiveReject/criteria/{criteria_id}')
+        await super().put(url, json=body)
+
+
+class AsMeSequentialRingApi(AsApiChild, base='telephony/config/people/me'):
+    async def get(self) -> SequentialRing:
+        """
+        Get Sequential Ring Settings for User
+
+        Get Sequential Ring Settings for the authenticated user.
+
+        Sequential Ring allows calls to ring additional phone numbers in sequence if the initial call is not answered.
+        This can be configured to ring up to five phone numbers with customizable ring patterns.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`SequentialRing`
+        """
+        url = self.ep('settings/sequentialRing')
+        data = await super().get(url)
+        r = SequentialRing.model_validate(data)
+        return r
+
+    async def update(self, settings: SequentialRing):
+        """
+        Modify Sequential Ring Settings for User
+
+        Update Sequential Ring Settings for the authenticated user.
+
+        Sequential Ring allows calls to ring additional phone numbers in sequence if the initial call is not answered.
+        This can be configured to ring up to five phone numbers with customizable ring patterns.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param settings: New sequential ring settings
+        :type settings: :class:`SequentialRing`
+        :rtype: None
+        """
+        body = settings.update()
+        url = self.ep('settings/sequentialRing')
+        await super().put(url, json=body)
+
+    async def criteria_create(self, criteria: SequentialRingCriteria) -> str:
+        """
+        Add User Sequential Ring Criteria
+
+        Create a new Sequential Ring Criteria for the authenticated user.
+
+        Sequential Ring criteria defines rules for when sequential ring should activate based on the caller and
+        schedule.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param criteria: New sequential ring criteria settings
+        :type criteria: :class:`SequentialRingCriteria`
+        :rtype: str
+        """
+        body = criteria.update()
+        url = self.ep('settings/sequentialRing/criteria')
+        data = await super().post(url, json=body)
+        r = data['id']
+        return r
+
+    async def criteria_delete(self, criteria_id: str):
+        """
+        Delete Sequential Ring Criteria
+
+        Delete a Sequential Ring Criteria for the authenticated user.
+
+        Sequential Ring criteria defines rules for when sequential ring should activate based on the caller and
+        schedule.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param criteria_id: The `criteria_id` parameter specifies the unique identifier for the sequential ring
+            criteria.
+        :type criteria_id: str
+        :rtype: None
+        """
+        url = self.ep(f'settings/sequentialRing/criteria/{criteria_id}')
+        await super().delete(url)
+
+    async def criteria_get(self, criteria_id: str) -> SequentialRingCriteria:
+        """
+        Get Sequential Ring Criteria Settings for User
+
+        Get Sequential Ring Criteria Settings for the authenticated user.
+
+        Sequential Ring criteria defines rules for when sequential ring should activate based on the caller and
+        schedule.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param criteria_id: The `criteria_id` parameter specifies the unique identifier for the sequential ring
+            criteria.
+        :type criteria_id: str
+        :rtype: :class:`SequentialRingCriteria`
+        """
+        url = self.ep(f'settings/sequentialRing/criteria/{criteria_id}')
+        data = await super().get(url)
+        r = SequentialRingCriteria.model_validate(data)
+        return r
+
+    async def criteria_update(self, criteria: SequentialRingCriteria, criteria_id: str=None):
+        """
+        Modify Sequential Ring Criteria Settings for User
+
+        Update Sequential Ring Criteria Settings for the authenticated user.
+
+        Sequential Ring criteria defines rules for when sequential ring should activate based on the caller and
+        schedule.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param criteria: New sequential ring criteria settings
+        :type criteria: :class:`SequentialRingCriteria`
+        :param criteria_id: The `criteria_id` parameter specifies the unique identifier for the sequential ring
+            criteria. Default: id from criteria
+        :type criteria_id: str
+        :rtype: None
+        """
+        criteria_id = criteria_id or criteria.id
+        body = criteria.update()
+        url = self.ep(f'settings/sequentialRing/criteria/{criteria_id}')
+        await super().put(url, json=body)
+
+
+class AsMeSimRingApi(AsApiChild, base='telephony/config/people/me'):
+    async def get(self) -> MeSimRing:
+        """
+        Retrieve My Simultaneous Ring Settings
+
+        Retrieve simultaneous ring settings for the authenticated user.
+
+        The Simultaneous Ring feature allows you to configure your office phone and other phones of your choice to ring
+        simultaneously. Schedules can also be set up to ring these phones during certain times of the day or days of
+        the week.
+
+        Retrieving settings requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`MeSimRing`
+        """
+        url = self.ep('settings/simultaneousRing')
+        data = await super().get(url)
+        r = MeSimRing.model_validate(data)
+        return r
+
+    async def update(self, settings: MeSimRing) -> None:
+        """
+        Modify My Simultaneous Ring Settings
+
+        Modify simultaneous ring settings for the authenticated user.
+
+        The Simultaneous Ring feature allows you to configure your office phone and other phones of your
+        choice to ring
+        simultaneously. Schedules can also be set up to ring these phones during certain times of the
+        day or days of
+        the week.
+
+        Modifying settings requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param settings: new sim ring settings
+        :rtype: None
+        """
+        body = settings.update()
+        url = self.ep('settings/simultaneousRing')
+        await super().put(url, json=body)
+
+    async def criteria_create(self, criteria: SimRingCriteria) -> str:
+       """
+       Create My Simultaneous Ring Criteria
+
+       Create simultaneous ring criteria settings for the authenticated user.
+
+       The Simultaneous Ring feature allows you to configure your office phone and other phones of your
+       choice to ring
+       simultaneously. Simultaneous Ring Criteria (Schedules) can also be set up to ring these phones
+       during certain
+       times of the day or days of the week.
+
+       Creating criteria requires a user auth token with a scope of `spark:telephony_config_write`.
+
+       :param criteria: new sim ring criteria
+       :type criteria: :class:`MeSimRingCriteria`
+       :rtype: str
+       """
+       body = criteria.update()
+       url = self.ep('settings/simultaneousRing/criteria')
+       data = await super().post(url, json=body)
+       r = data['id']
+       return r
+
+    async def criteria_delete(self, criteria_id: str):
+       """
+       Delete My Simultaneous Ring Criteria
+
+       Delete simultaneous ring criteria settings for the authenticated user.
+
+       The Simultaneous Ring feature allows you to configure your office phone and other phones of your
+       choice to ring simultaneously. Simultaneous Ring Criteria (Schedules) can also be set up to ring these phones
+       during certain times of the day or days of the week.
+
+       Deleting criteria requires a user auth token with a scope of `spark:telephony_config_write`.
+
+       :param criteria_id: Unique identifier for the criteria.
+       :type criteria_id: str
+       :rtype: None
+       """
+       url = self.ep(f'settings/simultaneousRing/criteria/{criteria_id}')
+       await super().delete(url)
+
+    async def criteria_get(self, criteria_id: str) -> SimRingCriteria:
+       """
+       Retrieve My Simultaneous Ring Criteria
+
+       Retrieve simultaneous ring criteria settings for the authenticated user.
+
+       The Simultaneous Ring feature allows you to configure your office phone and other phones of your
+       choice to ring simultaneously. Simultaneous Ring Criteria (Schedules) can also be set up to ring these phones
+       during certain times of the day or days of the week.
+
+       Retrieving criteria requires a user auth token with a scope of `spark:telephony_config_read`.
+
+       :param criteria_id: Unique identifier for the criteria.
+       :type criteria_id: str
+       :rtype: :class:`SimRingCriteria`
+       """
+       url = self.ep(f'settings/simultaneousRing/criteria/{criteria_id}')
+       data = await super().get(url)
+       r = SimRingCriteria.model_validate(data)
+       return r
+
+    async def criteria_update(self, criteria: SimRingCriteria, criteria_id: str=None):
+        """
+        Modify My Simultaneous Ring Criteria
+
+        Modify simultaneous ring criteria settings for the authenticated user.
+
+        The Simultaneous Ring feature allows you to configure your office phone and other phones of your
+        choice to ring
+        simultaneously. Simultaneous Ring Criteria (Schedules) can also be set up to ring these phones
+        during certain
+        times of the day or days of the week.
+
+        Modifying criteria requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param criteria: new settings
+        :type criteria: :class:`SimRingCriteria`
+        :param criteria_id: Unique identifier for the criteria. Default: id from criteria
+        :type criteria_id: str
+        :rtype: None
+        """
+        criteria_id = criteria_id or criteria.id
+        body = criteria.update()
+        url = self.ep(f'settings/simultaneousRing/criteria/{criteria_id}')
+        await super().put(url, json=body)
+
+
 class AsMeVoicemailApi(AsApiChild, base='telephony/config/people/me'):
     async def settings(self) -> VoicemailSettings:
         """
@@ -5592,6 +7023,87 @@ class AsMeVoicemailApi(AsApiChild, base='telephony/config/people/me'):
         url = self.ep('settings/voicemail')
         await super().put(url, json=body)
 
+    async def _configure_greeting(self, *, content: Union[BufferedReader, str],
+                            upload_as: str = None,
+                            greeting_key: str):
+        """
+        handle greeting upload
+
+        :param content: the file to be uploaded, can be a path to a file or a buffered reader (opened file); if a
+            reader referring to an open file is passed then make sure to open the file as binary b/c otherwise the
+            content length might be calculated wrong
+        :type content: Union[BufferedReader, str]
+        :param upload_as: filename for the content. Only required if content is a reader; has to be a .wav file name.
+        :type upload_as: str
+        :param greeting_key: 'busyGreetingUpload' or 'noAnswerGreetingUpload'
+        """
+        if isinstance(content, str):
+            upload_as = os.path.basename(content)
+            content = open(content, mode='rb')
+            must_close = True
+        else:
+            must_close = False
+            # an existing reader
+            if not upload_as:
+                raise ValueError('upload_as is required')
+        encoder = MultipartEncoder({'file': (upload_as, content, 'audio/wav')})
+        url = self.ep(f'settings/voicemail/actions/{greeting_key}/invoke')
+        try:
+            await self.post(url, data=encoder, headers={'Content-Type': encoder.content_type})
+        finally:
+            if must_close:
+                content.close()
+
+    def upload_busy_greeting(self, content: Union[BufferedReader, str],
+                             upload_as: str = None):
+        """
+        Upload Voicemail Busy Greeting
+
+        Uploads a new busy greeting audio file for the authenticated user's voicemail.
+
+        This endpoint is part of the voicemail greeting management capabilities provided by the Webex Calling platform
+        and is available when the `wxc-csg-hydra-call-184017-phase4` feature is enabled. The greeting must be in WAV
+        format and not exceed 5000 kilobytes.
+
+        Requires a user auth token with the `spark:telephony_config_write` scope. Only the authenticated user may
+        upload greetings for their own voicemail.
+
+        :param content: the file to be uploaded, can be a path to a file or a buffered reader (opened file); if a
+            reader referring to an open file is passed then make sure to open the file as binary b/c otherwise the
+            content length might be calculated wrong
+        :type content: Union[BufferedReader, str]
+        :param upload_as: filename for the content. Only required if content is a reader; has to be a .wav file name.
+        :type upload_as: str
+        :rtype: None
+        """
+        return self._configure_greeting(content=content, upload_as=upload_as,
+                                        greeting_key='busyGreetingUpload')
+
+    def upload_no_answer_greeting(self, content: Union[BufferedReader, str],
+                                  upload_as: str = None):
+        """
+        Upload Voicemail No Answer Greeting
+
+        Uploads a new no answer greeting audio file for the authenticated user's voicemail.
+
+        This endpoint is part of the voicemail greeting management capabilities provided by the Webex Calling platform
+        and is available when the `wxc-csg-hydra-call-184017-phase4` feature is enabled. The greeting must be in WAV
+        format and not exceed 5000 kilobytes.
+
+        Requires a user auth token with the `spark:telephony_config_write` scope. Only the authenticated user may
+        upload greetings for their own voicemail.
+
+        :param content: the file to be uploaded, can be a path to a file or a buffered reader (opened file); if a
+            reader referring to an open file is passed then make sure to open the file as binary b/c otherwise the
+            content length might be calculated wrong
+        :type content: Union[BufferedReader, str]
+        :param upload_as: filename for the content. Only required if content is a reader; has to be a .wav file name.
+        :type upload_as: str
+        :rtype: None
+        """
+        return self._configure_greeting(content=content, upload_as=upload_as,
+                                        greeting_key='noAnswerGreetingUpload')
+
 
 class AsMeSettingsApi(AsApiChild, base='telephony/config/people/me'):
     """
@@ -5603,20 +7115,31 @@ class AsMeSettingsApi(AsApiChild, base='telephony/config/people/me'):
 
     Configuring settings requires a user auth token with a scope of `spark:telephony_config_write`.
     """
+    anon_calls: AsMeAnonCallsApi
     barge: AsMeBargeApi
     call_block: AsMeCallBlockApi
     call_center: AsMeCallCenterApi
+    call_notify: AsMeCallNotifyApi
     call_park: AsMeCallParkApi
     call_pickup: AsMeCallPickupApi
     call_policies: AsMeCallPoliciesApi
+    call_waiting: AsMeCallWaitingApi
     caller_id: AsMeCallerIdApi
     dnd: AsMeDNDApi
     endpoints: AsMeEndpointsApi
     executive: AsMeExecutiveApi
     forwarding: AsMeForwardingApi
     go_override: AsGoOverrideApi
+    mode_management: AsMeModeManagementApi
     personal_assistant: AsMePersonalAssistantApi
+    priority_alert: AsMePriorityAlertApi
     recording: AsMeRecordingApi
+    schedules: AsMeSchedulesApi
+    selective_accept: AsMeSelectiveAcceptApi
+    selective_forward: AsMeSelectiveForwardApi
+    selective_reject: AsMeSelectiveRejectApi
+    sequential_ring: AsMeSequentialRingApi
+    sim_ring: AsMeSimRingApi
     snr: AsMeSNRApi
     voicemail: AsMeVoicemailApi
 
@@ -5626,20 +7149,31 @@ class AsMeSettingsApi(AsApiChild, base='telephony/config/people/me'):
         :meta private:
         """
         super().__init__(session=session)
+        self.anon_calls = AsMeAnonCallsApi(session=session)
         self.barge = AsMeBargeApi(session=session)
         self.call_block = AsMeCallBlockApi(session=session)
         self.call_center = AsMeCallCenterApi(session=session)
+        self.call_notify = AsMeCallNotifyApi(session=session)
         self.call_park = AsMeCallParkApi(session=session)
         self.call_pickup = AsMeCallPickupApi(session=session)
         self.call_policies = AsMeCallPoliciesApi(session=session)
+        self.call_waiting = AsMeCallWaitingApi(session=session)
         self.caller_id = AsMeCallerIdApi(session=session)
         self.dnd: AsMeDNDApi = AsMeDNDApi(session=session)
         self.endpoints = AsMeEndpointsApi(session=session)
         self.executive = AsMeExecutiveApi(session=session)
         self.forwarding = AsMeForwardingApi(session=session)
         self.go_override = AsGoOverrideApi(session=session)
+        self.mode_management = AsMeModeManagementApi(session=session)
         self.personal_assistant = AsMePersonalAssistantApi(session=session)
+        self.priority_alert = AsMePriorityAlertApi(session=session)
         self.recording = AsMeRecordingApi(session=session)
+        self.schedules = AsMeSchedulesApi(session=session)
+        self.selective_accept = AsMeSelectiveAcceptApi(session=session)
+        self.selective_forward = AsMeSelectiveForwardApi(session=session)
+        self.selective_reject = AsMeSelectiveRejectApi(session=session)
+        self.sequential_ring = AsMeSequentialRingApi(session=session)
+        self.sim_ring = AsMeSimRingApi(session=session)
         self.snr = AsMeSNRApi(session=session)
         self.voicemail = AsMeVoicemailApi(session=session)
 
@@ -5772,6 +7306,87 @@ class AsMeSettingsApi(AsApiChild, base='telephony/config/people/me'):
         url = self.ep('settings/callCaptions')
         data = await super().get(url)
         r = UserCallCaptions.model_validate(data)
+        return r
+
+    def available_numbers_for_location_gen(self, name: str = None, phone_number: str = None, extension: str = None,
+                                       order: str = None,
+                                       **params) -> AsyncGenerator[LocationAssignedNumber, None, None]:
+        """
+        Get Available Numbers for User's Location.
+
+        Fetch all the numbers available in User's location.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param name: List numbers whose owner name contains this string.
+        :type name: str
+        :param phone_number: List numbers whose phoneNumber contains this string.
+        :type phone_number: str
+        :param extension: List numbers whose extension contains this string.
+        :type extension: str
+        :param order: Sort the list of numbers based on `lastName`, `dn`, `extension` either asc or desc.
+        :type order: str
+        :return: Generator yielding :class:`LocationAssignedNumber` instances
+        """
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if extension is not None:
+            params['extension'] = extension
+        if order is not None:
+            params['order'] = order
+        url = self.ep('location/assignedNumbers')
+        return self.session.follow_pagination(url=url, model=LocationAssignedNumber, item_key='phoneNumbers',
+                                              params=params)
+
+    async def available_numbers_for_location(self, name: str = None, phone_number: str = None, extension: str = None,
+                                       order: str = None,
+                                       **params) -> List[LocationAssignedNumber]:
+        """
+        Get Available Numbers for User's Location.
+
+        Fetch all the numbers available in User's location.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param name: List numbers whose owner name contains this string.
+        :type name: str
+        :param phone_number: List numbers whose phoneNumber contains this string.
+        :type phone_number: str
+        :param extension: List numbers whose extension contains this string.
+        :type extension: str
+        :param order: Sort the list of numbers based on `lastName`, `dn`, `extension` either asc or desc.
+        :type order: str
+        :return: Generator yielding :class:`LocationAssignedNumber` instances
+        """
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if extension is not None:
+            params['extension'] = extension
+        if order is not None:
+            params['order'] = order
+        url = self.ep('location/assignedNumbers')
+        return [o async for o in self.session.follow_pagination(url=url, model=LocationAssignedNumber, item_key='phoneNumbers',
+                                              params=params)]
+
+    async def guest_calling_numbers(self) -> list[GuestCallingNumber]:
+        """
+        Retrieve My Guest Calling Numbers
+
+        Retrieve available guest calling numbers for the authenticated user.
+
+        This API returns a list of phone numbers that can be used for guest calling purposes.
+
+        Retrieving guest calling numbers requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: list[GuestCallingNumber]
+        """
+        url = self.ep('settings/guestCalling/numbers')
+        data = await super().get(url)
+        r = TypeAdapter(list[GuestCallingNumber]).validate_python(data['phoneNumbers'])
         return r
 
 
@@ -14147,7 +15762,7 @@ class AsScheduleApi(AsApiChild, base='telephony/config/locations'):
         schedule_data = schedule.create_update()
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(obj_id=obj_id)
-        data = await self.post(url, data=schedule_data, params=params)
+        data = await self.post(url, json=schedule_data, params=params)
         result = data['id']
         return result
 
@@ -14184,7 +15799,7 @@ class AsScheduleApi(AsApiChild, base='telephony/config/locations'):
         schedule_data = schedule.create_update(update=True)
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(obj_id=obj_id, schedule_type=schedule_type, schedule_id=schedule_id)
-        data = await self.put(url, data=schedule_data, params=params)
+        data = await self.put(url, json=schedule_data, params=params)
         return data['id']
 
     async def delete_schedule(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
@@ -14280,8 +15895,8 @@ class AsScheduleApi(AsApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(obj_id=obj_id, schedule_type=schedule_type, schedule_id=schedule_id,
                              event_id='')
-        data = event.model_dump_json(exclude={'event_id'})
-        data = await self.post(url, data=data, params=params)
+        data = event.create_update()
+        data = await self.post(url, json=data, params=params)
         return data['id']
 
     async def event_update(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
@@ -14319,8 +15934,8 @@ class AsScheduleApi(AsApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(obj_id=obj_id, schedule_type=schedule_type, schedule_id=schedule_id,
                              event_id=event_id)
-        event_data = event.model_dump_json(exclude={'event_id'})
-        data = await self.put(url, data=event_data, params=params)
+        event_data = event.create_update(update=True)
+        data = await self.put(url, json=event_data, params=params)
         return data['id']
 
     async def event_delete(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
@@ -15243,8 +16858,8 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        self._configure_greeting(entity_id=entity_id, content=content, upload_as=upload_as, org_id=org_id,
-                                 greeting_key='uploadBusyGreeting')
+        return self._configure_greeting(entity_id=entity_id, content=content, upload_as=upload_as, org_id=org_id,
+                                        greeting_key='uploadBusyGreeting')
 
     def configure_no_answer_greeting(self, entity_id: str, content: Union[BufferedReader, str],
                                      upload_as: str = None, org_id: str = None):
@@ -15271,8 +16886,8 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        self._configure_greeting(entity_id=entity_id, content=content, upload_as=upload_as, org_id=org_id,
-                                 greeting_key='uploadNoAnswerGreeting')
+        return self._configure_greeting(entity_id=entity_id, content=content, upload_as=upload_as, org_id=org_id,
+                                        greeting_key='uploadNoAnswerGreeting')
 
     async def modify_passcode(self, entity_id: str, passcode: str, org_id: str = None):
         """
@@ -19402,7 +21017,7 @@ class AsCQPolicyApi:
         """
         url = self._ep(location_id, queue_id, 'nightService')
         params = org_id and {'orgId': org_id} or None
-        body = update.model_dump_json(exclude={'business_hours_schedules'})
+        body = update.model_dump_json(exclude={'business_hour_schedules'})
         await self._session.rest_put(url=url, params=params, data=body)
 
     async def stranded_calls_details(self, location_id: str, queue_id: str, org_id: str = None) -> StrandedCalls:

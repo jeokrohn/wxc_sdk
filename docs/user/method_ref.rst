@@ -209,6 +209,8 @@ The method name is a link to the method documentation.
         Update a Location Floor
    * - :meth:`api.me.announcement_languages <wxc_sdk.me.MeSettingsApi.announcement_languages>`
         Retrieve announcement languages for the authenticated user
+   * - :meth:`api.me.available_numbers_for_location <wxc_sdk.me.MeSettingsApi.available_numbers_for_location>`
+        Get Available Numbers for User's Location
    * - :meth:`api.me.call_captions_settings <wxc_sdk.me.MeSettingsApi.call_captions_settings>`
         Get my call captions settings
    * - :meth:`api.me.calling_services_list <wxc_sdk.me.MeSettingsApi.calling_services_list>`
@@ -219,8 +221,14 @@ The method name is a link to the method documentation.
         Get My Own Details
    * - :meth:`api.me.feature_access_codes <wxc_sdk.me.MeSettingsApi.feature_access_codes>`
         Get My Feature Access Codes
+   * - :meth:`api.me.guest_calling_numbers <wxc_sdk.me.MeSettingsApi.guest_calling_numbers>`
+        Retrieve My Guest Calling Numbers
    * - :meth:`api.me.monitoring_settings <wxc_sdk.me.MeSettingsApi.monitoring_settings>`
         Get My Monitoring Settings
+   * - :meth:`api.me.anon_calls.get <wxc_sdk.me.anon_calls.MeAnonCallsApi.get>`
+        Get Anonymous Call Rejection Settings for User
+   * - :meth:`api.me.anon_calls.modify <wxc_sdk.me.anon_calls.MeAnonCallsApi.modify>`
+        Modify Anonymous Call Rejection Settings for User
    * - :meth:`api.me.barge.configure <wxc_sdk.me.barge.MeBargeApi.configure>`
         Configure Barge-In Settings
    * - :meth:`api.me.barge.get <wxc_sdk.me.barge.MeBargeApi.get>`
@@ -237,6 +245,18 @@ The method name is a link to the method documentation.
         Modify My Call Center Settings
    * - :meth:`api.me.call_center.settings <wxc_sdk.me.callcenter.MeCallCenterApi.settings>`
         Get My Call Center Settings
+   * - :meth:`api.me.call_notify.criteria_create <wxc_sdk.me.call_notify.MeCallNotifyApi.criteria_create>`
+        Add a Call Notify Criteria
+   * - :meth:`api.me.call_notify.criteria_delete <wxc_sdk.me.call_notify.MeCallNotifyApi.criteria_delete>`
+        Delete a Call Notify Criteria
+   * - :meth:`api.me.call_notify.criteria_get <wxc_sdk.me.call_notify.MeCallNotifyApi.criteria_get>`
+        Get Call Notify Criteria Settings
+   * - :meth:`api.me.call_notify.criteria_update <wxc_sdk.me.call_notify.MeCallNotifyApi.criteria_update>`
+        Modify a Call Notify Criteria
+   * - :meth:`api.me.call_notify.get <wxc_sdk.me.call_notify.MeCallNotifyApi.get>`
+        Get Call Notify Settings for User
+   * - :meth:`api.me.call_notify.update <wxc_sdk.me.call_notify.MeCallNotifyApi.update>`
+        Modify Call Notify Settings for User
    * - :meth:`api.me.call_park.settings <wxc_sdk.me.callpark.MeCallParkApi.settings>`
         Get My Call Park Settings
    * - :meth:`api.me.call_pickup.settings <wxc_sdk.me.callpickup.MeCallPickupApi.settings>`
@@ -245,6 +265,10 @@ The method name is a link to the method documentation.
         Get Call Policies Settings for User
    * - :meth:`api.me.call_policies.update <wxc_sdk.me.callpolicy.MeCallPoliciesApi.update>`
         Modify Call Policies Settings for User
+   * - :meth:`api.me.call_waiting.get <wxc_sdk.me.call_waiting.MeCallWaitingApi.get>`
+        Get Call Waiting Settings for User
+   * - :meth:`api.me.call_waiting.update <wxc_sdk.me.call_waiting.MeCallWaitingApi.update>`
+        Modify Call Waiting Settings for User
    * - :meth:`api.me.caller_id.available_caller_id_list <wxc_sdk.me.callerid.MeCallerIdApi.available_caller_id_list>`
         Get My Available Caller ID List
    * - :meth:`api.me.caller_id.get_selected_caller_id_settings <wxc_sdk.me.callerid.MeCallerIdApi.get_selected_caller_id_settings>`
@@ -309,12 +333,122 @@ The method name is a link to the method documentation.
         Get My WebexGoOverride Settings
    * - :meth:`api.me.go_override.update <wxc_sdk.me.go_override.GoOverrideApi.update>`
         Modify My WebexGoOverride Settings
+   * - :meth:`api.me.mode_management.extend_mode <wxc_sdk.me.mode_management.MeModeManagementApi.extend_mode>`
+        Extend Current Operating Mode Duration
+   * - :meth:`api.me.mode_management.feature_get <wxc_sdk.me.mode_management.MeModeManagementApi.feature_get>`
+        Get Mode Management Feature
+   * - :meth:`api.me.mode_management.get_common_modes <wxc_sdk.me.mode_management.MeModeManagementApi.get_common_modes>`
+        Get Common Modes
+   * - :meth:`api.me.mode_management.get_features <wxc_sdk.me.mode_management.MeModeManagementApi.get_features>`
+        Get Mode Management Features
+   * - :meth:`api.me.mode_management.get_normal_operation_mode <wxc_sdk.me.mode_management.MeModeManagementApi.get_normal_operation_mode>`
+        Get Normal Operation Mode
+   * - :meth:`api.me.mode_management.get_operating_mode <wxc_sdk.me.mode_management.MeModeManagementApi.get_operating_mode>`
+        Get Operating Mode
+   * - :meth:`api.me.mode_management.switch_mode_for_feature <wxc_sdk.me.mode_management.MeModeManagementApi.switch_mode_for_feature>`
+        Switch Mode for Single Feature
+   * - :meth:`api.me.mode_management.switch_mode_multiple_features <wxc_sdk.me.mode_management.MeModeManagementApi.switch_mode_multiple_features>`
+        Switch Mode for Multiple Features
+   * - :meth:`api.me.mode_management.switch_to_normal_operation <wxc_sdk.me.mode_management.MeModeManagementApi.switch_to_normal_operation>`
+        Switch to Normal Operation
    * - :meth:`api.me.personal_assistant.get <wxc_sdk.me.personal_assistant.MePersonalAssistantApi.get>`
         Get My Personal Assistant
    * - :meth:`api.me.personal_assistant.update <wxc_sdk.me.personal_assistant.MePersonalAssistantApi.update>`
         Modify My Personal Assistant
+   * - :meth:`api.me.priority_alert.criteria_create <wxc_sdk.me.priority_alert.MePriorityAlertApi.criteria_create>`
+        Add a Priority Alert Criteria
+   * - :meth:`api.me.priority_alert.criteria_delete <wxc_sdk.me.priority_alert.MePriorityAlertApi.criteria_delete>`
+        Delete a Priority Alert Criteria
+   * - :meth:`api.me.priority_alert.criteria_get <wxc_sdk.me.priority_alert.MePriorityAlertApi.criteria_get>`
+        Get Priority Alert Criteria Settings
+   * - :meth:`api.me.priority_alert.criteria_update <wxc_sdk.me.priority_alert.MePriorityAlertApi.criteria_update>`
+        Modify Settings for a Priority Alert Criteria
+   * - :meth:`api.me.priority_alert.get <wxc_sdk.me.priority_alert.MePriorityAlertApi.get>`
+        Get Priority Alert Settings
+   * - :meth:`api.me.priority_alert.update <wxc_sdk.me.priority_alert.MePriorityAlertApi.update>`
+        Modify Priority Alert Settings for User
    * - :meth:`api.me.recording.settings <wxc_sdk.me.recording.MeRecordingApi.settings>`
         Get My Call Recording Settings
+   * - :meth:`api.me.schedules.create <wxc_sdk.me.schedules.MeSchedulesApi.create>`
+        Add a User level Schedule for Call Settings
+   * - :meth:`api.me.schedules.delete <wxc_sdk.me.schedules.MeSchedulesApi.delete>`
+        Delete a User Schedule
+   * - :meth:`api.me.schedules.event_create <wxc_sdk.me.schedules.MeSchedulesApi.event_create>`
+        Add an event for a User Schedule
+   * - :meth:`api.me.schedules.event_delete <wxc_sdk.me.schedules.MeSchedulesApi.event_delete>`
+        Delete User a Schedule Event
+   * - :meth:`api.me.schedules.event_get <wxc_sdk.me.schedules.MeSchedulesApi.event_get>`
+        Get User Schedule Event
+   * - :meth:`api.me.schedules.event_update <wxc_sdk.me.schedules.MeSchedulesApi.event_update>`
+        Modify User Schedule Event
+   * - :meth:`api.me.schedules.get_location_schedule <wxc_sdk.me.schedules.MeSchedulesApi.get_location_schedule>`
+        Get User's Location Level Schedule
+   * - :meth:`api.me.schedules.get_user_schedule <wxc_sdk.me.schedules.MeSchedulesApi.get_user_schedule>`
+        Get User Schedule
+   * - :meth:`api.me.schedules.list <wxc_sdk.me.schedules.MeSchedulesApi.list>`
+        Get User (and Location) Schedules
+   * - :meth:`api.me.schedules.update <wxc_sdk.me.schedules.MeSchedulesApi.update>`
+        Modify User Schedule
+   * - :meth:`api.me.selective_accept.criteria_create <wxc_sdk.me.selective_accept.MeSelectiveAcceptApi.criteria_create>`
+        Add User Selective Call Accept Criteria
+   * - :meth:`api.me.selective_accept.criteria_delete <wxc_sdk.me.selective_accept.MeSelectiveAcceptApi.criteria_delete>`
+        Delete a Selective Call Accept Criteria
+   * - :meth:`api.me.selective_accept.criteria_get <wxc_sdk.me.selective_accept.MeSelectiveAcceptApi.criteria_get>`
+        Get Selective Call Accept Criteria Settings for User
+   * - :meth:`api.me.selective_accept.criteria_update <wxc_sdk.me.selective_accept.MeSelectiveAcceptApi.criteria_update>`
+        Modify a Selective Call Accept Criteria
+   * - :meth:`api.me.selective_accept.get <wxc_sdk.me.selective_accept.MeSelectiveAcceptApi.get>`
+        Get Selective Call Accept Settings for User
+   * - :meth:`api.me.selective_accept.update <wxc_sdk.me.selective_accept.MeSelectiveAcceptApi.update>`
+        Modify Selective Call Accept Settings for User
+   * - :meth:`api.me.selective_forward.criteria_create <wxc_sdk.me.selective_forward.MeSelectiveForwardApi.criteria_create>`
+        Add a Selective Call Forwarding Criteria
+   * - :meth:`api.me.selective_forward.criteria_delete <wxc_sdk.me.selective_forward.MeSelectiveForwardApi.criteria_delete>`
+        Delete a Selective Call Forwarding Criteria
+   * - :meth:`api.me.selective_forward.criteria_get <wxc_sdk.me.selective_forward.MeSelectiveForwardApi.criteria_get>`
+        Get Settings for a Selective Call Forwarding Criteria
+   * - :meth:`api.me.selective_forward.criteria_update <wxc_sdk.me.selective_forward.MeSelectiveForwardApi.criteria_update>`
+        Modify Settings for a Selective Call Forwarding Criteria
+   * - :meth:`api.me.selective_forward.get <wxc_sdk.me.selective_forward.MeSelectiveForwardApi.get>`
+        Get Selective Call Forward Settings for User
+   * - :meth:`api.me.selective_forward.update <wxc_sdk.me.selective_forward.MeSelectiveForwardApi.update>`
+        Modify Selective Call Forward Settings for User
+   * - :meth:`api.me.selective_reject.criteria_create <wxc_sdk.me.selective_reject.MeSelectiveRejectApi.criteria_create>`
+        Add User Selective Call Reject Criteria
+   * - :meth:`api.me.selective_reject.criteria_delete <wxc_sdk.me.selective_reject.MeSelectiveRejectApi.criteria_delete>`
+        Delete a Selective Call Reject Criteria
+   * - :meth:`api.me.selective_reject.criteria_get <wxc_sdk.me.selective_reject.MeSelectiveRejectApi.criteria_get>`
+        Get Selective Call Reject Criteria Settings for User
+   * - :meth:`api.me.selective_reject.criteria_update <wxc_sdk.me.selective_reject.MeSelectiveRejectApi.criteria_update>`
+        Modify a Selective Call Reject Criteria
+   * - :meth:`api.me.selective_reject.get <wxc_sdk.me.selective_reject.MeSelectiveRejectApi.get>`
+        Get Selective Call Reject Settings for User
+   * - :meth:`api.me.selective_reject.update <wxc_sdk.me.selective_reject.MeSelectiveRejectApi.update>`
+        Modify Selective Call Reject Settings for User
+   * - :meth:`api.me.sequential_ring.criteria_create <wxc_sdk.me.sequential_ring.MeSequentialRingApi.criteria_create>`
+        Add User Sequential Ring Criteria
+   * - :meth:`api.me.sequential_ring.criteria_delete <wxc_sdk.me.sequential_ring.MeSequentialRingApi.criteria_delete>`
+        Delete Sequential Ring Criteria
+   * - :meth:`api.me.sequential_ring.criteria_get <wxc_sdk.me.sequential_ring.MeSequentialRingApi.criteria_get>`
+        Get Sequential Ring Criteria Settings for User
+   * - :meth:`api.me.sequential_ring.criteria_update <wxc_sdk.me.sequential_ring.MeSequentialRingApi.criteria_update>`
+        Modify Sequential Ring Criteria Settings for User
+   * - :meth:`api.me.sequential_ring.get <wxc_sdk.me.sequential_ring.MeSequentialRingApi.get>`
+        Get Sequential Ring Settings for User
+   * - :meth:`api.me.sequential_ring.update <wxc_sdk.me.sequential_ring.MeSequentialRingApi.update>`
+        Modify Sequential Ring Settings for User
+   * - :meth:`api.me.sim_ring.criteria_create <wxc_sdk.me.sim_ring.MeSimRingApi.criteria_create>`
+        Create My Simultaneous Ring Criteria
+   * - :meth:`api.me.sim_ring.criteria_delete <wxc_sdk.me.sim_ring.MeSimRingApi.criteria_delete>`
+        Delete My Simultaneous Ring Criteria
+   * - :meth:`api.me.sim_ring.criteria_get <wxc_sdk.me.sim_ring.MeSimRingApi.criteria_get>`
+        Retrieve My Simultaneous Ring Criteria
+   * - :meth:`api.me.sim_ring.criteria_update <wxc_sdk.me.sim_ring.MeSimRingApi.criteria_update>`
+        Modify My Simultaneous Ring Criteria
+   * - :meth:`api.me.sim_ring.get <wxc_sdk.me.sim_ring.MeSimRingApi.get>`
+        Retrieve My Simultaneous Ring Settings
+   * - :meth:`api.me.sim_ring.update <wxc_sdk.me.sim_ring.MeSimRingApi.update>`
+        Modify My Simultaneous Ring Settings
    * - :meth:`api.me.snr.create_snr <wxc_sdk.me.snr.MeSNRApi.create_snr>`
         Add phone number as User's Single Number Reach
    * - :meth:`api.me.snr.delete_snr <wxc_sdk.me.snr.MeSNRApi.delete_snr>`
@@ -329,6 +463,10 @@ The method name is a link to the method documentation.
         Configure Voicemail Settings for a Person
    * - :meth:`api.me.voicemail.settings <wxc_sdk.me.voicemail.MeVoicemailApi.settings>`
         Read Voicemail Settings for a Person
+   * - :meth:`api.me.voicemail.upload_busy_greeting <wxc_sdk.me.voicemail.MeVoicemailApi.upload_busy_greeting>`
+        Upload Voicemail Busy Greeting
+   * - :meth:`api.me.voicemail.upload_no_answer_greeting <wxc_sdk.me.voicemail.MeVoicemailApi.upload_no_answer_greeting>`
+        Upload Voicemail No Answer Greeting
    * - :meth:`api.meetings.create <wxc_sdk.meetings.MeetingsApi.create>`
         Creates a new meeting
    * - :meth:`api.meetings.delete <wxc_sdk.meetings.MeetingsApi.delete>`

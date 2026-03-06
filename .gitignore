@@ -182,3 +182,4 @@ cython_debug/
 /examples/*.csv
 /open_api/generated/Customer-Experience/
 /open_api/generated/Webex-Suite/Webex-Calling/Webex-Calling-Beta/
+/user_tokens.yml

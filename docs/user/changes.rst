@@ -3,6 +3,7 @@ Release history
 
 - feat: param line_owner_id for call control, conference control, and voicemail APIs
 - fix: DirectLineCallerIdNameSelection enum values
+- feat: significant enhancements :class:`api.me.MeSettingsApi <wxc_sdk.me.MeSettingsApi>`: new childs schedules, selective_accept, selective_forward, selective_reject, sequential_ring, sim_ring
 
 1.28
 ----

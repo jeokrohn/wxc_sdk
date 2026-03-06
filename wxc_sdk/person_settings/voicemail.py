@@ -90,6 +90,7 @@ class VoicemailSettings(ApiModel):
         """
         return self.model_dump(mode='json',
                                by_alias=True,
+                               exclude_unset=True,
                                exclude={'send_busy_calls': {'greeting_uploaded': True},
                                         'send_unanswered_calls': {'system_max_number_of_rings': True,
                                                                   'greeting_uploaded': True},
@@ -213,8 +214,8 @@ class VoicemailApi(PersonSettingsApiChild):
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        self._configure_greeting(entity_id=entity_id, content=content, upload_as=upload_as, org_id=org_id,
-                                 greeting_key='uploadBusyGreeting')
+        return self._configure_greeting(entity_id=entity_id, content=content, upload_as=upload_as, org_id=org_id,
+                                        greeting_key='uploadBusyGreeting')
 
     def configure_no_answer_greeting(self, entity_id: str, content: Union[BufferedReader, str],
                                      upload_as: str = None, org_id: str = None):
@@ -241,8 +242,8 @@ class VoicemailApi(PersonSettingsApiChild):
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        self._configure_greeting(entity_id=entity_id, content=content, upload_as=upload_as, org_id=org_id,
-                                 greeting_key='uploadNoAnswerGreeting')
+        return self._configure_greeting(entity_id=entity_id, content=content, upload_as=upload_as, org_id=org_id,
+                                        greeting_key='uploadNoAnswerGreeting')
 
     def modify_passcode(self, entity_id: str, passcode: str, org_id: str = None):
         """

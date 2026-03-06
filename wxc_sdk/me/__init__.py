@@ -4,16 +4,18 @@ Call Settings For Me
 Call settings for me APIs allow a person to read or modify their settings.
 """
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Generator
 
 from pydantic import TypeAdapter
-
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
-from wxc_sdk.common import PrimaryOrShared, UserType
+from wxc_sdk.common import PrimaryOrShared, UserType, NumberState, NumberOwner
 from wxc_sdk.locations import LocationAddress
+from wxc_sdk.me.anon_calls import MeAnonCallsApi
 from wxc_sdk.me.barge import MeBargeApi
+from wxc_sdk.me.call_notify import MeCallNotifyApi
+from wxc_sdk.me.call_waiting import MeCallWaitingApi
 from wxc_sdk.me.callblock import MeCallBlockApi
 from wxc_sdk.me.callcenter import MeCallCenterApi
 from wxc_sdk.me.callerid import MeCallerIdApi
@@ -25,18 +27,26 @@ from wxc_sdk.me.endpoints import MeEndpointsApi
 from wxc_sdk.me.executive import MeExecutiveApi
 from wxc_sdk.me.forwarding import MeForwardingApi
 from wxc_sdk.me.go_override import GoOverrideApi
+from wxc_sdk.me.mode_management import MeModeManagementApi
 from wxc_sdk.me.personal_assistant import MePersonalAssistantApi
+from wxc_sdk.me.priority_alert import MePriorityAlertApi
 from wxc_sdk.me.recording import MeRecordingApi
+from wxc_sdk.me.schedules import MeSchedulesApi
+from wxc_sdk.me.selective_accept import MeSelectiveAcceptApi
+from wxc_sdk.me.selective_forward import MeSelectiveForwardApi
+from wxc_sdk.me.selective_reject import MeSelectiveRejectApi
+from wxc_sdk.me.sequential_ring import MeSequentialRingApi
+from wxc_sdk.me.sim_ring import MeSimRingApi
 from wxc_sdk.me.snr import MeSNRApi
 from wxc_sdk.me.voicemail import MeVoicemailApi
 from wxc_sdk.person_settings import DeviceActivationState, UserCallCaptions
 from wxc_sdk.rest import RestSession
+from wxc_sdk.telephony import AnnouncementLanguage, NameAndCode, NumberListPhoneNumberType
 
 __all__ = ['MeSettingsApi', 'MeProfile', 'MeNumber', 'MeOwner', 'MeDevice',
            'LocationNameAddress', 'CountryTelephonyConfigRequirements',
-           'FeatureAccessCode', 'MeMonitoringSettings', 'MeMonitoredElement', 'MonitoredElementType', 'ServicesEnum']
-
-from wxc_sdk.telephony import AnnouncementLanguage, NameAndCode
+           'FeatureAccessCode', 'MeMonitoringSettings', 'MeMonitoredElement', 'MonitoredElementType', 'ServicesEnum',
+           'LocationAssignedNumber', 'GuestCallingNumber']
 
 
 class MeNumber(ApiModel):
@@ -299,6 +309,31 @@ class ServicesEnum(str, Enum):
     executive_assistant = 'Executive-Assistant'
 
 
+class LocationAssignedNumber(ApiModel):
+    #: The phone number in E.164 format.
+    phone_number: Optional[str] = None
+    #: The extension.
+    extension: Optional[str] = None
+    #: * `ACTIVE` - Phone number is in the active state.
+    state: Optional[NumberState] = None
+    #: * `PRIMARY` - A direct phone number.
+    #: * `ALTERNATE` - An alternate phone number.
+    #: * `FAX` - A FAX number.
+    phone_number_type: Optional[NumberListPhoneNumberType] = None
+    #: Indicate if the number is toll free.
+    toll_free_number: Optional[bool] = None
+    #: The owner details.
+    owner: Optional[NumberOwner] = None
+
+
+class GuestCallingNumber(ApiModel):
+    #: Phone number available for guest calling.
+    phone_number: Optional[str] = None
+    state: Optional[NumberState] = None
+    #: Indicates whether this is the location's main number.
+    is_main_number: Optional[bool] = None
+
+
 @dataclass(init=False, repr=False)
 class MeSettingsApi(ApiChild, base='telephony/config/people/me'):
     """
@@ -310,20 +345,31 @@ class MeSettingsApi(ApiChild, base='telephony/config/people/me'):
 
     Configuring settings requires a user auth token with a scope of `spark:telephony_config_write`.
     """
+    anon_calls: MeAnonCallsApi
     barge: MeBargeApi
     call_block: MeCallBlockApi
     call_center: MeCallCenterApi
+    call_notify: MeCallNotifyApi
     call_park: MeCallParkApi
     call_pickup: MeCallPickupApi
     call_policies: MeCallPoliciesApi
+    call_waiting: MeCallWaitingApi
     caller_id: MeCallerIdApi
     dnd: MeDNDApi
     endpoints: MeEndpointsApi
     executive: MeExecutiveApi
     forwarding: MeForwardingApi
     go_override: GoOverrideApi
+    mode_management: MeModeManagementApi
     personal_assistant: MePersonalAssistantApi
+    priority_alert: MePriorityAlertApi
     recording: MeRecordingApi
+    schedules: MeSchedulesApi
+    selective_accept: MeSelectiveAcceptApi
+    selective_forward: MeSelectiveForwardApi
+    selective_reject: MeSelectiveRejectApi
+    sequential_ring: MeSequentialRingApi
+    sim_ring: MeSimRingApi
     snr: MeSNRApi
     voicemail: MeVoicemailApi
 
@@ -333,20 +379,31 @@ class MeSettingsApi(ApiChild, base='telephony/config/people/me'):
         :meta private:
         """
         super().__init__(session=session)
+        self.anon_calls = MeAnonCallsApi(session=session)
         self.barge = MeBargeApi(session=session)
         self.call_block = MeCallBlockApi(session=session)
         self.call_center = MeCallCenterApi(session=session)
+        self.call_notify = MeCallNotifyApi(session=session)
         self.call_park = MeCallParkApi(session=session)
         self.call_pickup = MeCallPickupApi(session=session)
         self.call_policies = MeCallPoliciesApi(session=session)
+        self.call_waiting = MeCallWaitingApi(session=session)
         self.caller_id = MeCallerIdApi(session=session)
         self.dnd: MeDNDApi = MeDNDApi(session=session)
         self.endpoints = MeEndpointsApi(session=session)
         self.executive = MeExecutiveApi(session=session)
         self.forwarding = MeForwardingApi(session=session)
         self.go_override = GoOverrideApi(session=session)
+        self.mode_management = MeModeManagementApi(session=session)
         self.personal_assistant = MePersonalAssistantApi(session=session)
+        self.priority_alert = MePriorityAlertApi(session=session)
         self.recording = MeRecordingApi(session=session)
+        self.schedules = MeSchedulesApi(session=session)
+        self.selective_accept = MeSelectiveAcceptApi(session=session)
+        self.selective_forward = MeSelectiveForwardApi(session=session)
+        self.selective_reject = MeSelectiveRejectApi(session=session)
+        self.sequential_ring = MeSequentialRingApi(session=session)
+        self.sim_ring = MeSimRingApi(session=session)
         self.snr = MeSNRApi(session=session)
         self.voicemail = MeVoicemailApi(session=session)
 
@@ -479,4 +536,53 @@ class MeSettingsApi(ApiChild, base='telephony/config/people/me'):
         url = self.ep('settings/callCaptions')
         data = super().get(url)
         r = UserCallCaptions.model_validate(data)
+        return r
+
+    def available_numbers_for_location(self, name: str = None, phone_number: str = None, extension: str = None,
+                                       order: str = None,
+                                       **params) -> Generator[LocationAssignedNumber, None, None]:
+        """
+        Get Available Numbers for User's Location.
+
+        Fetch all the numbers available in User's location.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param name: List numbers whose owner name contains this string.
+        :type name: str
+        :param phone_number: List numbers whose phoneNumber contains this string.
+        :type phone_number: str
+        :param extension: List numbers whose extension contains this string.
+        :type extension: str
+        :param order: Sort the list of numbers based on `lastName`, `dn`, `extension` either asc or desc.
+        :type order: str
+        :return: Generator yielding :class:`LocationAssignedNumber` instances
+        """
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if extension is not None:
+            params['extension'] = extension
+        if order is not None:
+            params['order'] = order
+        url = self.ep('location/assignedNumbers')
+        return self.session.follow_pagination(url=url, model=LocationAssignedNumber, item_key='phoneNumbers',
+                                              params=params)
+
+    def guest_calling_numbers(self) -> list[GuestCallingNumber]:
+        """
+        Retrieve My Guest Calling Numbers
+
+        Retrieve available guest calling numbers for the authenticated user.
+
+        This API returns a list of phone numbers that can be used for guest calling purposes.
+
+        Retrieving guest calling numbers requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: list[GuestCallingNumber]
+        """
+        url = self.ep('settings/guestCalling/numbers')
+        data = super().get(url)
+        r = TypeAdapter(list[GuestCallingNumber]).validate_python(data['phoneNumbers'])
         return r
