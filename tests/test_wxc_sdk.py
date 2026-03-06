@@ -5,4 +5,7 @@ from wxc_sdk import __version__
 
 class TestVersion(TestCase):
     def test_version(self):
-        assert __version__ == '1.28'
+        from importlib.metadata import version as meta_version
+        version = meta_version('wxc_sdk')
+        print(f'{version=}')
+        assert __version__ == meta_version('wxc_sdk')

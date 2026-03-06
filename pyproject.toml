@@ -137,5 +137,8 @@ name = "cz_conventional_commits"
 version_provider = "uv"   # reads/writes version in [project] table
 tag_format = "$version"
 update_changelog_on_bump = true
+version_files = [
+    "wxc_sdk/__init__.py"
+]
 
 
