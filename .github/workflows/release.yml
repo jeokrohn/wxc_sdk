@@ -1,10 +1,16 @@
 # build packaage and publish to Pypi
 name: Release
 
+# use this if the release process should be triggered by each push to master
 on:
   push:
-    tags:
-      - "[0-9]*"
+    branches: [master]
+
+# this is to trigger on a push with a new numeric tag
+#on:
+#  push:
+#    tags:
+#      - "[0-9]*"
 
 jobs:
   release:
@@ -24,22 +30,24 @@ jobs:
       - name: Install deps
         run: uv sync --frozen
 
-#      - name: Run commitizen bump
-#        id: bump
-#        run: |
-#          git config user.name "github-actions[bot]"
-#          git config user.email "github-actions[bot]@users.noreply.github.com"
-#          uv run cz bump --yes 2>&1 | tee bump_output.txt
-#          echo "bumped=$(grep -c 'tag to' bump_output.txt || echo 0)" >> $GITHUB_OUTPUT
-#
-#      - name: Push changes and tags
-#        if: steps.bump.outputs.bumped != '0'
-#        run: git push --follow-tags
+# only run this if the action is run for every push
+
+      - name: Run commitizen bump
+        id: bump
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          uv run cz bump --yes 2>&1 | tee bump_output.txt
+          echo "bumped=$(grep -c 'tag to' bump_output.txt || echo 0)" >> $GITHUB_OUTPUT
+
+      - name: Push changes and tags
+        if: steps.bump.outputs.bumped != '0'
+        run: git push --tags
 
       - name: Build
-#        if: steps.bump.outputs.bumped != '0'
+        if: steps.bump.outputs.bumped != '0'
         run: uv build
 
       - name: Publish to PyPI
-#        if: steps.bump.outputs.bumped != '0'
+        if: steps.bump.outputs.bumped != '0'
         uses: pypa/gh-action-pypi-publish@release/v1
