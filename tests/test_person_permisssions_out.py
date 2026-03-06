@@ -123,7 +123,7 @@ class TestUnknownCallTypes(PermissionsOutMixin):
                 continue
             print(f'Call type "{call_type}": {permission}')
             if call_type in cant_update:
-                print(f'  was not updated')
+                print('  was not updated')
                 continue
             if permission == ctp:
                 continue

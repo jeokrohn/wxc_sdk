@@ -46,7 +46,7 @@ class TestHar(TestCase):
 
     def test_parse_all_in_downloads(self):
         for har_path in self.all_hars_in_downloads:
-            har = HAR.from_file(har_path)
+            HAR.from_file(har_path)
             print(f'{har_path}: ok')
 
     def test_requests_with_postdata(self):

@@ -249,7 +249,7 @@ class TestCreate(TestWithLocations):
         settings = Workspace.create(display_name=name)
         settings.notes = 'test_001_trivial: no calling location, room devices'
         workspace = ws.create(settings=settings)
-        print(f'new workspace:')
+        print('new workspace:')
         print(json.dumps(json.loads(workspace.model_dump_json()), indent=2))
         self.assertEqual(name, workspace.display_name)
 
@@ -263,7 +263,7 @@ class TestCreate(TestWithLocations):
         settings = Workspace(display_name=name, calling=WorkspaceCalling(type=CallingType.edge_for_devices),
                              notes='test_002_edge_for_devices: edge for devices')
         workspace = ws.create(settings=settings)
-        print(f'new workspace:')
+        print('new workspace:')
         print(json.dumps(json.loads(workspace.model_dump_json()), indent=2))
         self.assertEqual(name, workspace.display_name)
 
@@ -383,7 +383,7 @@ class TestCreate(TestWithLocations):
                   f'calling, tried to upgrade to calling in location "{target_location.name}"')
         workspace = self.api.workspaces.create(settings=new_workspace)
         try:
-            print(f'new workspace:')
+            print('new workspace:')
             print(json.dumps(json.loads(workspace.model_dump_json()), indent=2))
 
             # get details and try to upgrade to calling
@@ -398,7 +398,7 @@ class TestCreate(TestWithLocations):
             print(f'Updating workspace "{name}" in location "{target_location.name}" to WxC w/ extension {extension}')
             after = self.api.workspaces.update(workspace_id=workspace.workspace_id,
                                                settings=update)
-            print(f'after update:')
+            print('after update:')
             print(json.dumps(json.loads(after.model_dump_json()), indent=2))
 
             # also as a side effect the workspace location id should get set
@@ -506,7 +506,7 @@ class TestCreate(TestWithLocations):
                     extension=extension,
                     location_id=target_location.location_id)))
         workspace = self.api.workspaces.create(settings=new_workspace)
-        print(f'new workspace:')
+        print('new workspace:')
         print(json.dumps(json.loads(workspace.model_dump_json()), indent=2))
 
         # get details and try to downgrade to free calling
@@ -517,7 +517,7 @@ class TestCreate(TestWithLocations):
         print(f'Updating workspace "{name}" in location "{target_location.name}" ')
         after = self.api.workspaces.update(workspace_id=workspace.workspace_id,
                                            settings=update)
-        print(f'after update:')
+        print('after update:')
         print(json.dumps(json.loads(after.model_dump_json()), indent=2))
 
         # the workspace location id should still be set
@@ -559,7 +559,7 @@ class TestCreate(TestWithLocations):
                     extension=extension,
                     location_id=target_location.location_id)))
         workspace = self.api.workspaces.create(settings=new_workspace)
-        print(f'new workspace:')
+        print('new workspace:')
         print(json.dumps(json.loads(workspace.model_dump_json()), indent=2))
 
         # get details and try to downgrade to free calling

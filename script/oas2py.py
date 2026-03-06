@@ -93,7 +93,7 @@ def main():
         if oas_basename == '**':
             # a given basename of "**" means all files
             oas_basename = '**/spec.json'
-        if not "*" in oas_basename:
+        if "*" not in oas_basename:
             # a given basename is interpreted as the name of an API
             # and API specs are stored in dir structure like:
             # /<some hierarchy>/<name>/v1/spec.json
@@ -125,7 +125,7 @@ def main():
                      if not re_exclude.match(basename(p))]
 
     if not oas_files:
-        print(f'No input OAS file(s)',
+        print('No input OAS file(s)',
               file=sys.stderr)
         exit(1)
 

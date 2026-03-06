@@ -694,7 +694,7 @@ class TestScimAndCalling(TestWithScimToken, TestCaseWithUsers):
             # check phone number
             work = next((pn.value for pn in user.phone_numbers if pn.number_type == 'work'), None)
             if work != number.phone_number:
-                print(f'************ phone number mismatch!!')
+                print('************ phone number mismatch!!')
 
             # check extension
             work_extension = next((pn.value for pn in user.phone_numbers if pn.number_type == 'work_extension'), None)
@@ -1019,7 +1019,7 @@ class TestUsersAndGroups(TestScimCreate):
         # user after with group info can only be fetched by searching
         user_after = next(self.api.scim.users.search_all(org_id=self.org_id, filter=f'id eq "{target.id}"',
                                                          include_group_details=True))
-        print(f'Updated user')
+        print('Updated user')
         print(json.dumps(user_after.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
 
         # get updated group

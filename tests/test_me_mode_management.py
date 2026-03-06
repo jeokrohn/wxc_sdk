@@ -3,7 +3,6 @@ import json
 from typing import List, Tuple, Union
 
 from pydantic import TypeAdapter
-from selenium.webdriver.common.devtools.v144.runtime import await_promise
 from tests.base import TestWithRandomUserApi, async_test
 from wxc_sdk.all_types import *
 from wxc_sdk.as_api import AsWebexSimpleApi

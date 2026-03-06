@@ -42,7 +42,8 @@ cd "$(dirname "$0")/.."
 # Lint the source code
 if [ ${default} ] || [ ${lint} ]; then
     echo "==> Linting the source code"
-    flake8 --ignore=E501,F405,F403 --exclude="as_api.py *_auto.py auto.py open_api developer.webex.com .venv .git .idea"
+    # flake8 --ignore=E501,F405,F403 --exclude="as_api.py *_auto.py auto.py open_api developer.webex.com .venv .git .idea"
+    uv run ruff check
 fi
 
 # Run the test suite

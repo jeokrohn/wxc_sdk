@@ -4,7 +4,7 @@ import random
 
 from tests.base import TestWithLocations, async_test
 from wxc_sdk.base import webex_id_to_uuid
-from wxc_sdk.common import UserType, OwnerType
+from wxc_sdk.common import OwnerType
 from wxc_sdk.locations import Location
 from wxc_sdk.person_settings.available_numbers import AvailableNumber
 from wxc_sdk.telephony.location import CallBackSelected, LocationECBN
@@ -116,7 +116,7 @@ class Test(TestWithLocations):
                 err = err or e
             try:
                 self.assertEqual(after.location_member_info.member_id, number.owner.owner_id)
-            except AssertionError:
+            except AssertionError as e:
                 print(f'Expected {base64.b64decode(number.owner.owner_id+"==").decode()} got '
                       f'{base64.b64decode(after.location_member_info.member_id+"==").decode()}')
                 err = err or e

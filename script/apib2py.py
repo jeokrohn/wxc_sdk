@@ -82,7 +82,7 @@ def main():
                       if not re_exclude.match(basename(p))]
 
     if not apib_files:
-        print(f'No input APIB file(s)',
+        print('No input APIB file(s)',
               file=sys.stderr)
         exit(1)
 

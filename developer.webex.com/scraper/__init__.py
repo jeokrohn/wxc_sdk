@@ -234,7 +234,7 @@ def break_lines(line: str, line_start: str, first_line_prefix: str = None) -> Ge
             start_of_line = line_start
             if star_line:
                 # increased indent of enumerations (star lines) starting with 2nd line
-                star_indent = f'    '
+                star_indent = '    '
             # ... and the line_start is considered for line break determination
             line_prefix = line_start
         # append word to current line

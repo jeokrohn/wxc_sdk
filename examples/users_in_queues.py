@@ -6,20 +6,16 @@ import asyncio
 import logging
 import os
 from collections import defaultdict
-from functools import reduce
-from itertools import chain
 from typing import Optional
 
 from dotenv import load_dotenv
-
-from wxc_sdk.tokens import Tokens
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.common import UserType
 from wxc_sdk.integration import Integration
 from wxc_sdk.people import Person
 from wxc_sdk.scopes import parse_scopes
 from wxc_sdk.telephony.callqueue import CallQueue
-from wxc_sdk.telephony.hg_and_cq import Agent
+from wxc_sdk.tokens import Tokens
 
 
 def env_path() -> str:
@@ -89,17 +85,6 @@ async def main():
             location_id=q.location_id,
             queue_id=q.id) for q in queues])
 
-        # group all queue members by member type
-        AgentsByType = dict[UserType, list[str]]
-        agents_by_type: AgentsByType
-
-        def agents_by_type_reduce(reduced: AgentsByType, element: Agent) -> AgentsByType:
-            reduced[element.user_type].append(element.agent_id)
-            return reduced
-
-        agents_by_type = reduce(agents_by_type_reduce,
-                                chain.from_iterable(qd.agents for qd in queue_details),
-                                defaultdict(list))
         # get details for all agent types
         # - people: api.people details
         # - place: api.workspace.details

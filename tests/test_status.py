@@ -1,3 +1,5 @@
+import json
+
 from tests.base import TestCaseWithLog
 
 
@@ -5,10 +7,13 @@ class TestStatus(TestCaseWithLog):
     def test_001_test_status_summary(self):
         api = self.api.status
         summary = api.summary()
+        print(json.dumps(summary.model_dump(mode='json', by_alias=True), indent=2))
 
     def test_002_test_status(self):
         api = self.api.status
         status = api.status()
+        print(f'{status=}')
+        f = 1
 
     def test_003_test_components(self):
         api = self.api.status

@@ -415,13 +415,13 @@ class CreateDevice(TestWithLocations):
         if created_device is None:
             errs.append('Device not found in list of devices')
         else:
-            print(f'New device found in devices.list(person_id)')
+            print('New device found in devices.list(person_id)')
         device_list = self.api.person_settings.devices(person_id=target_user.person_id)
         created_device = next((d for d in device_list.devices if d.mac == mac), None)
         if created_device is None:
             errs.append('Device not found in list of user devices')
         else:
-            print(f'New device found in person_settings.devices(person_id)')
+            print('New device found in person_settings.devices(person_id)')
 
         self.assertTrue(not errs, ', '.join(errs))
 
@@ -452,4 +452,4 @@ class TestDelete(TestCaseWithLog):
                                          for device in targets],
                                        return_exceptions=True)
         failed = any(isinstance(r, Exception) for r in results)
-        self.assertFalse(failed, f'failed to delete devices')
+        self.assertFalse(failed, 'failed to delete devices')

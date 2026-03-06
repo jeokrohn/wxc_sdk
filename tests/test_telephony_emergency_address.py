@@ -74,7 +74,7 @@ class TestEmergencyAddress(TestWithLocations):
     """
     target: Location = None
 
-    proxy = True
+    # proxy = True
 
     @classmethod
     def setUpClass(cls) -> None:

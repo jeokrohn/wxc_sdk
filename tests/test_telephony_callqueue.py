@@ -147,7 +147,7 @@ class TestCreate(TestWithLocations, TestCaseWithUsers):
             details.id = target_queue_details.id
             try:
                 self.assertEqual(target_queue_details, details)
-            except AssertionError as e:
+            except AssertionError:
                 details.queue_settings.comfort_message_bypass = \
                     target_queue_details.queue_settings.comfort_message_bypass
                 if target_queue_details == details:

@@ -68,7 +68,7 @@ class TestEmergencyServices(TestWithLocations):
         with self.no_log():
             settings_list = await self.get_all_location_settings(return_exceptions=False)
         candidates = [(loc, setting) for loc, setting in zip(self.locations, settings_list)
-                      if (setting.emergency_call_notification_enabled == False)]
+                      if (setting.emergency_call_notification_enabled == False)]  # noqa: E712
         if not candidates:
             self.skipTest('No locations with emergency call notification disabled')
         target, setting = random.choice(candidates)

@@ -235,20 +235,23 @@ class PhoneNumbersAndExtensions(TestCaseWithUsers, TestWithLocations):
 
             if self.new_tn:
                 # after deleting the user it might take some time until we can delete the TN again
+                err = None
                 for i in range(3):
                     try:
                         self.api.telephony.location.number.remove(location_id=self.target_location.location_id,
                                                                   phone_numbers=[self.new_tn])
                     except RestError as e:
+                        err = e
                         if e.response.status_code == 502:
                             print(f'Removing {self.new_tn} failed. Wait for some time and retry...')
                             sleep(10)
                             continue
                     else:
                         print(f'Removed {self.new_tn} from "{self.target_location.name}"')
+                        err = None
                         break
-                else:
-                    raise e
+                if err:
+                    raise err
         finally:
             super().tearDown()
 

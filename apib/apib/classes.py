@@ -3,10 +3,9 @@ from collections import defaultdict
 from itertools import chain
 from typing import Literal, Any, Optional, Union, ClassVar, Generator, NamedTuple
 
-from pydantic import BaseModel, Extra, model_validator, Field, field_validator, TypeAdapter, \
-    ValidationError
-
 from apib.apib import is_element
+from apib.tools import words_to_camel
+from pydantic import BaseModel, model_validator, Field, field_validator, TypeAdapter, ValidationError
 
 __all__ = ['ApibParseResult', 'ApibElement', 'ApibCopy', 'ApibResource', 'ApibModel', 'ApibDatastructure',
            'ApibCategory', 'ApibAnnotation', 'ApibKeyValue', 'ApibWithCopy', 'ApibTransition', 'ApibMember',
@@ -16,7 +15,6 @@ __all__ = ['ApibParseResult', 'ApibElement', 'ApibCopy', 'ApibResource', 'ApibMo
            'AbibSourceMapNumberArray', 'ApibObject', 'ApibSourceMapEntry', 'ApibOption',
            'ApibSelect']
 
-from apib.tools import words_to_camel
 
 log = logging.getLogger(__name__)
 

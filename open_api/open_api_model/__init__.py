@@ -125,7 +125,7 @@ class OASchemaProperty(OABaseModel):
         """
         data = validation.data
         if data['type'] != 'string':
-            raise ValueError(f"enum is only valid for type 'string'")
+            raise ValueError("enum is only valid for type 'string'")
         return v
 
     @model_validator(mode='after')
@@ -154,7 +154,6 @@ class OASchemaProperty(OABaseModel):
             return None
         if self.description is None:
             return None
-        r = []
         # we want to look for the enum values in the description and need a regex that matches the enum values
         # the regex looks for lines that start with * `enum_value` - description
         # and captures the enum value and description

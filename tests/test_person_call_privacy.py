@@ -107,7 +107,7 @@ class TestUpdate(TestCaseWithUsers):
         new_user_ids = set(user.person_id for user in to_add)
         try:
             self.assertEqual(new_user_ids, after_agent_ids & new_user_ids)
-        except AssertionError as e:
+        except AssertionError:
             new_ids_missing = new_user_ids - after_agent_ids
             for new_id in new_ids_missing:
                 print(f'New ID missing: {new_id}, {base64.b64decode(new_id + "==").decode()}')

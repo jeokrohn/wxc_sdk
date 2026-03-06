@@ -2,7 +2,7 @@ import asyncio
 import json
 import os.path
 import random
-from typing import List, Tuple, Union
+from typing import List
 
 from tests.base import TestWithRandomUserApi, async_test
 from wxc_sdk.all_types import *
@@ -92,10 +92,10 @@ class TestMeVoicemail(TestWithRandomUserApi):
                     send_busy_calls=VoicemailEnabledWithGreeting(enabled=True, greeting=Greeting.custom))
                 vm_api.configure(new_settings)
                 after = vm_api.settings()
-                print(f'Before:')
+                print('Before:')
                 print(json.dumps(before.model_dump(mode='json', exclude_none=True, by_alias=True),
                                  indent=2))
-                print(f'After:')
+                print('After:')
                 print(json.dumps(after.model_dump(mode='json', exclude_none=True, by_alias=True),
                                  indent=2))
                 self.assertTrue(after.send_busy_calls.greeting_uploaded)
@@ -148,10 +148,10 @@ class TestMeVoicemail(TestWithRandomUserApi):
                     send_busy_calls=VoicemailEnabledWithGreeting(enabled=True, greeting=Greeting.custom))
                 vm_api.configure(new_settings)
                 after = vm_api.settings()
-                print(f'Before:')
+                print('Before:')
                 print(json.dumps(before.model_dump(mode='json', exclude_none=True, by_alias=True),
                                  indent=2))
-                print(f'After:')
+                print('After:')
                 print(json.dumps(after.model_dump(mode='json', exclude_none=True, by_alias=True),
                                  indent=2))
                 self.assertTrue(after.send_busy_calls.greeting_uploaded)

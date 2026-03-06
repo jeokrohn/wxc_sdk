@@ -15,7 +15,7 @@ from typing import ClassVar, NamedTuple, Any
 from unittest import skip
 
 from pydantic import TypeAdapter
-from test_helper.randomlocation import RandomLocation, NpaInfo, Address
+from test_helper.randomlocation import RandomLocation
 
 from tests.base import TestCaseWithLog, async_test, TestWithLocations
 from tests.testutil import as_available_tns, create_random_wsl, LocationSettings
@@ -33,7 +33,6 @@ from wxc_sdk.telephony.huntgroup import HuntGroup
 from wxc_sdk.telephony.location import TelephonyLocation, PSTNConnection, CallingLineId
 from wxc_sdk.telephony.location.internal_dialing import InternalDialing
 from wxc_sdk.telephony.paging import Paging
-from wxc_sdk.telephony.prem_pstn.route_group import RouteGroup
 from wxc_sdk.telephony.prem_pstn.trunk import Trunk
 from wxc_sdk.telephony.virtual_line import VirtualLine
 from wxc_sdk.telephony.voicemail_groups import VoicemailGroup

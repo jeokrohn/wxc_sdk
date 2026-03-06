@@ -53,7 +53,7 @@ class TestDetails(TestWithLocations):
                                if agents)
             user_type_len = max(len(agent.user_type) for agent in chain.from_iterable(available_agents))
         except ValueError:
-            print(f'No available agents in any location')
+            print('No available agents in any location')
             return
 
         # print location name and available agent

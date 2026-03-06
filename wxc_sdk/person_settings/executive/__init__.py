@@ -2,7 +2,7 @@ from typing import Optional, List
 
 from pydantic import Field, TypeAdapter
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, enum_str
+from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 from wxc_sdk.common import IdAndName, PrimaryOrSecondary
 from wxc_sdk.common.schedules import ScheduleType

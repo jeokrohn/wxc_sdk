@@ -12,7 +12,7 @@ class TestRules(TestCaseWithLog):
     def test_001_read(self):
         vmr = self.api.telephony.voicemail_rules
         settings = vmr.read()
-        print(f'Got VM rules')
+        print('Got VM rules')
         print(json.dumps(json.loads(settings.model_dump_json()), indent=2))
 
     def test_002_update(self):

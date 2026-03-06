@@ -278,7 +278,7 @@ class APIMethod:
             # if only a single attribute is returned then we might have a list of something
             # if the single attribute is not a list then we might as well just return that thing
             if not self.response_class.base and len(self.response_class.attributes) == 1:
-                if m := re.match(r'^array\[(.+)]$', self.response_class.attributes[0].type):
+                if re.match(r'^array\[(.+)]$', self.response_class.attributes[0].type):
                     # the only return attribute is a list
                     if self.response_class.attributes[0].param_class:
                         base_type = self.response_class.attributes[0].param_class.name

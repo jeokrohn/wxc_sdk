@@ -62,7 +62,7 @@ class TestLocationDelete(TestWithLocations):
             job = self.api.jobs.disable_calling_location.status(job.id)
         print(f'Final execution status: {job.latest_execution_status}')
         errors = self.api.telephony.jobs.disable_calling_location.errors(job.id)
-        print(f'Errors:')
+        print('Errors:')
         print(json.dumps(TypeAdapter(list[JobErrorItem]).dump_python(errors, mode='json', exclude_none=True,
                                                                      by_alias=True),
                          indent=2))

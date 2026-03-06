@@ -4740,7 +4740,7 @@ class AsMeCallNotifyApi(AsApiChild, base='telephony/config/people/me'):
         r = data['id']
         return r
 
-    async def criteria_delete(self, id: str):
+    async def criteria_delete(self, criteria_id: str):
         """
         Delete a Call Notify Criteria
 
@@ -4751,14 +4751,14 @@ class AsMeCallNotifyApi(AsApiChild, base='telephony/config/people/me'):
 
         This API requires a user auth token with a scope of `spark:telephony_config_write`.
 
-        :param id: The `id` parameter specifies the unique identifier for the call notify criteria.
-        :type id: str
+        :param criteria_id: The `criteria_id` parameter specifies the unique identifier for the call notify criteria.
+        :type criteria_id: str
         :rtype: None
         """
-        url = self.ep(f'settings/callNotify/criteria/{id}')
+        url = self.ep(f'settings/callNotify/criteria/{criteria_id}')
         await super().delete(url)
 
-    async def criteria_get(self, id: str) -> CallNotifyCriteria:
+    async def criteria_get(self, criteria_id: str) -> CallNotifyCriteria:
         """
         Get Call Notify Criteria Settings
 
@@ -4769,16 +4769,16 @@ class AsMeCallNotifyApi(AsApiChild, base='telephony/config/people/me'):
 
         This API requires a user auth token with a scope of `spark:telephony_config_read`.
 
-        :param id: The `id` parameter specifies the unique identifier for the call notify criteria.
-        :type id: str
+        :param criteria_id: The `id` parameter specifies the unique identifier for the call notify criteria.
+        :type criteria_id: str
         :rtype: :class:`CallNotifyCriteria`
         """
-        url = self.ep(f'settings/callNotify/criteria/{id}')
+        url = self.ep(f'settings/callNotify/criteria/{criteria_id}')
         data = await super().get(url)
         r = CallNotifyCriteria.model_validate(data)
         return r
 
-    async def criteria_update(self, criteria: CallNotifyCriteria, criteria_id: str=None):
+    async def criteria_update(self, criteria: CallNotifyCriteria, criteria_id: str = None):
         """
         Modify a Call Notify Criteria
 

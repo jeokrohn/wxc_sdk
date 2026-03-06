@@ -135,7 +135,7 @@ def break_line(line: str, width: int = None, prefix: str = '',
     if line:
         try:
             yield from links_to_rst(''.join(line), prefix_first_line=prefix_first_line, prefix=prefix)
-        except TypeError as e:
+        except TypeError:
             foo = 1
 
     # while line:

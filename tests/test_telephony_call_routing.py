@@ -65,7 +65,7 @@ class DpContext:
 
         print('Dial Plan Context:')
         print(f'  Location: {self.location.name}')
-        print(f'  Location Users:')
+        print('  Location Users:')
         print('\n'.join(user_info(user) for user in sorted(self.location_users, key=attrgetter("display_name"))))
         print(f'  Trunk: {self.trunk.name}')
         print(f'  Dial Plan: {self.dial_plan.name}')
@@ -1560,9 +1560,9 @@ class TestHostedFeature(TestCallRouting):
 
                 print('=' * 80)
                 print('Service instance id mismatch')
-                print(f'Expected service instance id:')
+                print('Expected service instance id:')
                 print_service_instance_id(expected.hosted_feature.service_instance_id)
-                print(f'Actual service instance id:')
+                print('Actual service instance id:')
                 print_service_instance_id(result.hosted_feature.service_instance_id)
 
             # check whether there is anything else wrong (other than the service instance id)
@@ -1992,7 +1992,7 @@ class TestTranslationPattern(TestCallRouting):
                 if delete_req:
                     print(f'  Delete request: {delete_req}')
                 else:
-                    print(f'  No delete request found')
+                    print('  No delete request found')
 
         self.assertEqual(len(list_before), len(list_after), 'Some TPs not deleted')
 

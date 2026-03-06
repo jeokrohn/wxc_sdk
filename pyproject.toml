@@ -118,3 +118,16 @@ exclude = [
     "open_api/generated",
     "wxc_sdk/as_api.py"
 ]
+
+[tool.ruff.lint]
+ignore = ["E741"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["E722", "E741", "F403", "F405", "F841", "F842"]
+"apib/**" = ["F403", "F841", "E731", "F821"]
+"examples/*" = ["F403", "F405"]
+"open_api/tests/*" = ["F841"]
+"script/*" = ["E402"]
+"tests/base.py" = ["E402"]
+"examples/queue_agents.py" = ["F842"]
+

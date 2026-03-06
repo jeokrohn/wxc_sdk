@@ -145,7 +145,7 @@ class WithParsedOpenApiSpecs(WithOpenApiSpecInfos):
                 data = json.load(f)
             try:
                 parsed_spec = OASpec.model_validate(data)
-            except ValidationError as e:
+            except ValidationError:
                 logging.error(f'Error parsing {spec_info.api_name} {spec_info.version} {spec_info.spec_path}')
                 print(f'Error parsing {spec_info.api_name} {spec_info.version} {spec_info.spec_path}')
                 parsed_spec = None

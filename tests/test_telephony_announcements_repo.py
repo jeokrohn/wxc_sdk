@@ -155,7 +155,7 @@ class Repo(TestWithLocations):
                 if isinstance(detail, Exception):
                     print(f'{detail}')
                 else:
-                    print(f'no issues')
+                    print('no issues')
             raise err
         print(f'Got details for {len(details)} announcements')
 

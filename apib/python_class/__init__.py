@@ -383,7 +383,7 @@ class Endpoint:
         Write Python source for the docstring after the def line
         """
         # now to the docstring
-        source.print(f'"""')
+        source.print('"""')
         if self.title:
             # suppress title if title is repeated in 1st line of docstring.
             skip_title = False
@@ -421,7 +421,7 @@ class Endpoint:
                 source.print(f':rtype: :class:`{self.result_referenced_class}`')
             else:
                 source.print(f':rtype: {self.result}')
-        source.print(f'"""')
+        source.print('"""')
 
     def body_validator(self, module) -> Callable[[dict], Any]:
         """
@@ -536,7 +536,7 @@ class Endpoint:
                                 source.print(f"r = {sra.python_type}.model_validate(data['{sra.name}'])")
                             else:
                                 source.print(f"r = TypeAdapter({sra.python_type}).validate_python(data['{sra.name}'])")
-                source.print(f'return r')
+                source.print('return r')
 
     def source(self, base: str, class_names: set[str]) -> str:
         """
