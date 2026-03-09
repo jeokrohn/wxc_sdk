@@ -2,7 +2,7 @@
 # Copyright (c) 2022 Johannes Krohn <jkrohn@cisco.com>
 # License: MIT
 
-.PHONY: all package docs types async methref apib oas clean
+.PHONY: all package docs types async methref apib oas clean rst
 
 # Default target builds everything
 all: clean types methref async docs package
@@ -22,6 +22,10 @@ methref:
 async:
 	@echo "==> Creating as_api.py"
 	script/async_gen.py
+
+rst:
+	@echo "==> Building RST files"
+	uv run sphinx-apidoc -o docs/apidoc -f -e -M wxc_sdk 'wxc_sdk/all_types.py'
 
 docs:
 	@echo "==> Building the Docs"

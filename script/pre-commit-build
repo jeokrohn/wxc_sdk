@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -e
+
+# Check if any files under wxc_sdk/ are staged
+if ! git diff --cached --name-only | grep -q '^wxc_sdk/.*\.py$'; then
+    echo "==> No wxc_sdk changes staged, skipping build"
+    exit 0
+fi
+
+# Run your build script
+echo "==> Running build script..."
+make types async methref
+
+@echo "==> Building RST files"
+uv run sphinx-apidoc -o docs/apidoc -f -e -M wxc_sdk 'wxc_sdk/all_types.py'
+

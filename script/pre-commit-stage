@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+set -e
+
+# Define the files to conditionally stage
+FILES=(
+    "wxc_sdk/all_types.py"
+    "wxc_sdk/as_api.py"
+    "docs/user/method_ref.rst"
+)
+
+# Helper: stage file if it has content changes (vs HEAD or index) or is untracked
+stage_if_changed() {
+    local file="$1"
+    if git ls-files --error-unmatch "$file" &>/dev/null; then
+        # File is tracked - check for actual content changes vs HEAD
+        if ! git diff --quiet HEAD "$file" 2>/dev/null; then
+            echo "==> Staging modified file: $file"
+            git add "$file"
+        fi
+    else
+        # File is untracked - stage it
+        echo "==> Staging new file: $file"
+        git add "$file"
+    fi
+}
+
+# conditionally stage files
+for file in "${FILES[@]}"; do
+    stage_if_changed "$file"
+done
+
+# Stage any modified or new .rst files in docs/apidoc/
+echo "==> Checking docs/apidoc for modified or new .rst files... in docs/apidoc/"
+while IFS= read -r -d '' file; do
+    echo "==> Staging: $file"
+    git add "$file"
+done < <(git diff --name-only docs/apidoc/*.rst 2>/dev/null | tr '\n' '\0')
+
+# Also catch untracked (new) .rst files in docs/apidoc/
+while IFS= read -r -d '' file; do
+    echo "==> Staging new file: $file"
+    git add "$file"
+done < <(git ls-files --others --exclude-standard docs/apidoc/*.rst 2>/dev/null | tr '\n' '\0')
