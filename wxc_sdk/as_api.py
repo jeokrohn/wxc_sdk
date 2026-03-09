@@ -10741,8 +10741,11 @@ class AsMembershipApi(AsApiChild, base='memberships'):
     to decode and recode the team ID using the new prefix. Below is a command-line example for this process. Note that
     the final sed replacement is used to remove padding characters.
 
-    Example: echo "Y2lzY29zcGFyazovL3VzL1RFQU0vYjQ5ODhmODAtN2QzMS0xMWVkLTk4Y2MtNWY5MTFhZWU1OTA0" | base64 -d | sed
-    's/TEAM/ROOM/' | base64 | sed 's/\=.//'
+    Example:
+
+        echo "Y2lzY29zcGFyazovL3VzL1RFQU0vYjQ5ODhmODAtN2QzMS0xMWVkLTk4Y2MtNWY5MTFhZWU1OTA0" | base64 -d | sed
+        's/TEAM/ROOM/' | base64 | sed 's/=.//'
+
     """
 
     def list_gen(self, room_id: str = None, person_id: str = None, person_email: str = None,
