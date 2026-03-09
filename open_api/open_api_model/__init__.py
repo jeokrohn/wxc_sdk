@@ -161,7 +161,7 @@ class OASchemaProperty(OABaseModel):
         try:
             match_enum_values = '|'.join(f'(?:{re.escape(enum_value)})' for enum_value in self.enum
                                          if enum_value is not None)
-            match_descriptions = f'^\s*\* `({match_enum_values})`\s*-\s*'
+            match_descriptions = f'^\\s*\* `({match_enum_values})`\\s*-\\s*'
         except:
             raise
         matches = list(re.finditer(match_descriptions, self.description, re.MULTILINE + re.DOTALL))
