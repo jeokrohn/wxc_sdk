@@ -30328,6 +30328,54 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=AvailableMember, params=params, item_key='members')]
 
+    async def get_count_of_members(self, device_id: str, member_name: str = None, phone_number: str = None,
+                             location_id: str = None, extension: str = None, usage_type: UsageType = None,
+                             org_id: str = None) -> int:
+        """
+        Get Count of Members
+
+        Get the count of members that can be assigned to the device.
+
+        A device member can be either a person or a workspace.
+
+        This requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param device_id: Unique identifier for the device.
+        :type device_id: str
+        :param member_name: Search (Contains) numbers based on member name.
+        :type member_name: str
+        :param phone_number: Search (Contains) based on number.
+        :type phone_number: str
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param extension: Search (Contains) based on extension.
+        :type extension: str
+        :param usage_type: Search for members eligible to become the owner of the device, or share line on the device.
+        * `DEVICE_OWNER` - Search for members eligible to become the owner of the device.
+        * `SHARED_LINE` - Search for members eligible to share line on the device.
+        :type usage_type: UsageType
+        :param org_id: Retrieves the count of available members on the device in this organization.
+        :type org_id: str
+        :rtype: int
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if member_name is not None:
+            params['memberName'] = member_name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if location_id is not None:
+            params['locationId'] = location_id
+        if extension is not None:
+            params['extension'] = extension
+        if usage_type is not None:
+            params['usageType'] = enum_str(usage_type)
+        url = self.ep(f'devices/{device_id}/availableMembers/count')
+        data = await super().get(url, params=params)
+        r = data['totalCount']
+        return r
+
     async def apply_changes(self, device_id: str, org_id: str = None):
         """
         Apply Changes for a specific device
@@ -30423,6 +30471,62 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         url = self.ep(f'devices/{device_id}/settings')
         body = customization.model_dump_json(include={'customizations', 'custom_enabled'})
         await self.put(url=url, params=params, data=body)
+
+    async def get_count_of_available_members(self, member_name: str = None, phone_number: str = None,
+                                       location_id: str = None, extension: str = None, usage_type: UsageType = None,
+                                       exclude_virtual_line: bool = None, device_location_id: str = None,
+                                       org_id: str = None) -> int:
+        """
+        Get Count of Available Members
+
+        Get the count of members that can be assigned to devices.
+
+        A device member can be either a person or a workspace.
+
+        This requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param member_name: Search (Contains) numbers based on member name.
+        :type member_name: str
+        :param phone_number: Search (Contains) based on number.
+        :type phone_number: str
+        :param location_id: Unique identifier for the location.
+        :type location_id: str
+        :param extension: Search (Contains) based on extension.
+        :type extension: str
+        :param usage_type: Search for members eligible to become the owner of the device, or share line on the device.
+        * `DEVICE_OWNER` - Search for members eligible to become the owner of the device.
+        * `SHARED_LINE` - Search for members eligible to share line on the device.
+        :type usage_type: UsageType
+        :param exclude_virtual_line: If true, filters out virtual lines from the available members list.
+        :type exclude_virtual_line: bool
+        :param device_location_id: Unique identifier for the device's location. When specified, filters available
+            members to those in the same location as the device.
+        :type device_location_id: str
+        :param org_id: Retrieves the count of available members in this organization.
+        :type org_id: str
+        :rtype: int
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if member_name is not None:
+            params['memberName'] = member_name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if location_id is not None:
+            params['locationId'] = location_id
+        if extension is not None:
+            params['extension'] = extension
+        if usage_type is not None:
+            params['usageType'] = enum_str(usage_type)
+        if exclude_virtual_line is not None:
+            params['excludeVirtualLine'] = str(exclude_virtual_line).lower()
+        if device_location_id is not None:
+            params['deviceLocationId'] = device_location_id
+        url = self.ep('devices/availableMembers/count')
+        data = await super().get(url, params=params)
+        r = data['totalCount']
+        return r
 
     async def validate_macs(self, macs: list[str], org_id: str = None) -> MACValidationResponse:
         """

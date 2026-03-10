@@ -1,6 +1,8 @@
 Release history
 ===============
 
+- feat: new :meth:`api.telephony.devices.get_count_of_available_members <wxc_sdk.telephony.devices.TelephonyDevicesApi.get_count_of_available_members>`, :meth:`api.telephony.devices.get_count_of_members <wxc_sdk.telephony.devices.TelephonyDevicesApi.get_count_of_members>`
+
 1.29.0
 ------
 - feat: param line_owner_id for call control, conference control, and voicemail APIs

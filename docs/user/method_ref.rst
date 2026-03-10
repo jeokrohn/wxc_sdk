@@ -1405,6 +1405,10 @@ The method name is a link to the method documentation.
         Get Webex Calling Device Details
    * - :meth:`api.telephony.devices.device_settings <wxc_sdk.telephony.devices.TelephonyDevicesApi.device_settings>`
         Get override settings for a device
+   * - :meth:`api.telephony.devices.get_count_of_available_members <wxc_sdk.telephony.devices.TelephonyDevicesApi.get_count_of_available_members>`
+        Get Count of Available Members
+   * - :meth:`api.telephony.devices.get_count_of_members <wxc_sdk.telephony.devices.TelephonyDevicesApi.get_count_of_members>`
+        Get Count of Members
    * - :meth:`api.telephony.devices.get_device_layout <wxc_sdk.telephony.devices.TelephonyDevicesApi.get_device_layout>`
         Get Device Layout by Device ID
    * - :meth:`api.telephony.devices.get_person_device_settings <wxc_sdk.telephony.devices.TelephonyDevicesApi.get_person_device_settings>`
