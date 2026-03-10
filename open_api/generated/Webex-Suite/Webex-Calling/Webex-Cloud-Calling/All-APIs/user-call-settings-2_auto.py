@@ -1291,7 +1291,6 @@ class ExecutiveCallFilteringGetCriteriaItem(ApiModel):
     id: Optional[str] = None
     #: Name of the criteria.
     filter_name: Optional[str] = None
-    #: * `ANY_PHONE_NUMBER` - The criteria applies to any phone number.
     source: Optional[CallsFromSelectiveReject] = None
     #: Controls whether this filter criteria is active. When `true`, the criteria is evaluated for incoming calls. When
     #: `false`, the criteria is completely ignored and has no effect on call filtering.
@@ -1307,8 +1306,6 @@ class ExecutiveCallFilteringGetCriteriaItem(ApiModel):
 class ExecutiveCallFilteringGet(ApiModel):
     #: Indicates whether executive call filtering is enabled.
     enabled: Optional[bool] = None
-    #: * `CUSTOM_CALL_FILTERS` - Choose this option to ensure that only specific calls are sent to the executive
-    #: assistant.
     filter_type: Optional[ExecutiveCallFilteringGetFilterType] = None
     #: The list of call filtering criteria configured for executive call filtering.
     criteria: Optional[list[ExecutiveCallFilteringGetCriteriaItem]] = None
@@ -1330,7 +1327,6 @@ class ExecutiveCallFilteringCriteriaGetCallsToNumbersItemType(str, Enum):
 
 
 class ExecutiveCallFilteringCriteriaGetCallsToNumbersItem(ApiModel):
-    #: * `PRIMARY` - Number is assigned as primary to executive.
     type: Optional[ExecutiveCallFilteringCriteriaGetCallsToNumbersItemType] = None
     #: The phone number assigned to the executive that will be used to match criteria.
     phone_number: Optional[str] = None
@@ -1343,11 +1339,8 @@ class ExecutiveCallFilteringCriteriaGet(ApiModel):
     filter_name: Optional[str] = None
     #: Name of the schedule associated with this criteria.
     schedule_name: Optional[str] = None
-    #: * `businessHours` - The schedule type that specifies the business or working hours during the day.
     schedule_type: Optional[ScheduleType] = None
-    #: * `PEOPLE` - The schedule level that specifies that criteria is of People level.
     schedule_level: Optional[ScheduleLevel] = None
-    #: * `ANY_PHONE_NUMBER` - The criteria applies to any phone number.
     calls_from: Optional[CallsFromSelectiveReject] = None
     #: Indicates if the criteria applies to anonymous callers.
     anonymous_callers_enabled: Optional[bool] = None
@@ -1411,7 +1404,6 @@ class ExecutiveAlertGetClidPhoneNumberMode(str, Enum):
 
 
 class ExecutiveAlertGet(ApiModel):
-    #: * `SEQUENTIAL` - Alerts assistants one at a time in the defined order.
     alerting_mode: Optional[ExecutiveAlertGetAlertingMode] = None
     #: Number of rings before alerting the next assistant when `alertingMode` is `SEQUENTIAL`.
     next_assistant_number_of_rings: Optional[int] = None
@@ -1508,7 +1500,6 @@ class ExecutiveScreeningGetAlertType(str, Enum):
 class ExecutiveScreeningGet(ApiModel):
     #: Indicates if executive screening is enabled.
     enabled: Optional[bool] = None
-    #: * `SILENT` - No audible alert is provided for executive screening.
     alert_type: Optional[ExecutiveScreeningGetAlertType] = None
     #: Indicates if alerts are enabled for Single Number Reach locations.
     alert_anywhere_location_enabled: Optional[bool] = None
@@ -2400,6 +2391,49 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/applications/availableMembers')
         return self.session.follow_pagination(url=url, model=AvailableSharedLineMemberItem, item_key='members', params=params)
 
+    def get_count_of_shared_line_appearance_members_new(self, person_id: str, location_id: str = None,
+                                                        member_name: str = None, phone_number: str = None,
+                                                        extension: str = None, org_id: str = None) -> int:
+        """
+        Get Count of Shared-Line Appearance Members
+
+        Get the count of members available for shared-line assignment to Webex Calling Apps.
+
+        Shared-line appearance allows multiple devices or applications to share a single line for call handling.
+
+        This API requires a full, user, or location administrator auth token with the
+        `spark-admin:telephony_config_read` scope.
+
+        :param person_id: A unique identifier for the person.
+        :type person_id: str
+        :param location_id: Location ID for the person.
+        :type location_id: str
+        :param member_name: Search for people with names that match the query.
+        :type member_name: str
+        :param phone_number: Search for people with numbers that match the query.
+        :type phone_number: str
+        :param extension: Search for people with extensions that match the query.
+        :type extension: str
+        :param org_id: Organization ID for the person.
+        :type org_id: str
+        :rtype: int
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if member_name is not None:
+            params['memberName'] = member_name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if extension is not None:
+            params['extension'] = extension
+        url = self.ep(f'telephony/config/people/{person_id}/applications/availableMembers/count')
+        data = super().get(url, params=params)
+        r = data['totalCount']
+        return r
+
     def get_shared_line_appearance_members_new(self, person_id: str) -> GetSharedLineMemberList:
         """
         Get Shared-Line Appearance Members New
@@ -2521,6 +2555,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type person_id: str
         :param application_id: A unique identifier for the application.
         :type application_id: str
+        :param members: -
         :type members: list[PutSharedLineMemberItem]
         :rtype: None
         """
@@ -2776,7 +2811,7 @@ class UserCallSettings22Api(ApiChild, base=''):
 
         :param person_id: A unique identifier for the person.
         :type person_id: str
-        :param alerting_mode: * `SEQUENTIAL` - Alerts assistants one at a time in the defined order.
+        :param alerting_mode: -
         :type alerting_mode: ExecutiveAlertGetAlertingMode
         :param next_assistant_number_of_rings: Number of rings before alerting the next assistant when `alertingMode`
             is `SEQUENTIAL`.
@@ -3044,8 +3079,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type person_id: str
         :param enabled: Set to `true` to enable executive call filtering or `false` to disable it.
         :type enabled: bool
-        :param filter_type: * `CUSTOM_CALL_FILTERS` - Choose this option to ensure that only specific calls are sent to
-            the executive assistant.
+        :param filter_type: -
         :type filter_type: ExecutiveCallFilteringGetFilterType
         :param criteria_activation: The list of criteria activation settings to update for executive call filtering.
         :type criteria_activation: list[ExecutiveCallFilteringPatchCriteriaActivationItem]
@@ -3091,7 +3125,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type person_id: str
         :param filter_name: Name of the criteria.
         :type filter_name: str
-        :param calls_from: * `ANY_PHONE_NUMBER` - The criteria applies to any phone number.
+        :param calls_from: -
         :type calls_from: CallsFrom
         :param filter_enabled: Controls the action when this criteria matches a call. When `true`, matching calls are
             filtered and will alert the executive's assistants. When `false`, matching calls are not filtered and will
@@ -3101,10 +3135,9 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type filter_enabled: bool
         :param schedule_name: Name of the schedule associated with this criteria.
         :type schedule_name: str
-        :param schedule_type: * `businessHours` - The schedule type that specifies the business or working hours during
-            the day.
+        :param schedule_type: -
         :type schedule_type: ScheduleType
-        :param schedule_level: * `PEOPLE` - The schedule level that specifies that criteria is of People level.
+        :param schedule_level: -
         :type schedule_level: ScheduleLevel
         :param anonymous_callers_enabled: Set to enable or disable the criteria for anonymous callers.
         :type anonymous_callers_enabled: bool
@@ -3234,12 +3267,11 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type id: str
         :param schedule_name: Name of the schedule associated with this criteria.
         :type schedule_name: str
-        :param schedule_type: * `businessHours` - The schedule type that specifies the business or working hours during
-            the day.
+        :param schedule_type: -
         :type schedule_type: ScheduleType
-        :param schedule_level: * `PEOPLE` - The schedule level that specifies that criteria is of People level.
+        :param schedule_level: -
         :type schedule_level: ScheduleLevel
-        :param calls_from: * `ANY_PHONE_NUMBER` - The criteria applies to any phone number.
+        :param calls_from: -
         :type calls_from: CallsFrom
         :param anonymous_callers_enabled: Set to enable or disable the criteria for anonymous callers.
         :type anonymous_callers_enabled: bool
@@ -3338,7 +3370,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type person_id: str
         :param enabled: Set to enable or disable executive screening.
         :type enabled: bool
-        :param alert_type: * `SILENT` - No audible alert is provided for executive screening.
+        :param alert_type: -
         :type alert_type: ExecutiveScreeningGetAlertType
         :param alert_anywhere_location_enabled: Indicates if alerts are enabled for Single Number Reach locations.
         :type alert_anywhere_location_enabled: bool

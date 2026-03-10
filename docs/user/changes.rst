@@ -4,6 +4,8 @@ Release history
 - feat: new :meth:`api.telephony.devices.get_count_of_available_members <wxc_sdk.telephony.devices.TelephonyDevicesApi.get_count_of_available_members>`, :meth:`api.telephony.devices.get_count_of_members <wxc_sdk.telephony.devices.TelephonyDevicesApi.get_count_of_members>`
 - feat: new :meth:`api.telephony.get_large_organization_status <wxc_sdk.telephony.TelephonyApi.get_large_organization_status>`
 - feat: new cdr fields interaction_id, wx_cc_consult_merge_status
+- feat: new :meth:`api.person_settings.app_shared_line.members_count <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.members_count>`
+
 
 1.29.0
 ------

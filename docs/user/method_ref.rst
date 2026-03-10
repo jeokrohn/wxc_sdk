@@ -651,9 +651,9 @@ The method name is a link to the method documentation.
         Retrieve Agent's Caller ID Information
    * - :meth:`api.person_settings.app_shared_line.get_members <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.get_members>`
         Get Shared-Line Appearance Members
+   * - :meth:`api.person_settings.app_shared_line.members_count <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.members_count>`
+        Get Count of Shared-Line Appearance Members
    * - :meth:`api.person_settings.app_shared_line.search_members <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.search_members>`
-        Search Shared-Line Appearance Members
-   * - :meth:`api.person_settings.app_shared_line.search_members_old <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.search_members_old>`
         Search Shared-Line Appearance Members
    * - :meth:`api.person_settings.app_shared_line.update_members <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.update_members>`
         Put Shared-Line Appearance Members New
@@ -663,9 +663,9 @@ The method name is a link to the method documentation.
         Retrieve a person's Application Services Settings New
    * - :meth:`api.person_settings.appservices.shared_line.get_members <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.get_members>`
         Get Shared-Line Appearance Members
+   * - :meth:`api.person_settings.appservices.shared_line.members_count <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.members_count>`
+        Get Count of Shared-Line Appearance Members
    * - :meth:`api.person_settings.appservices.shared_line.search_members <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.search_members>`
-        Search Shared-Line Appearance Members
-   * - :meth:`api.person_settings.appservices.shared_line.search_members_old <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.search_members_old>`
         Search Shared-Line Appearance Members
    * - :meth:`api.person_settings.appservices.shared_line.update_members <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.update_members>`
         Put Shared-Line Appearance Members New

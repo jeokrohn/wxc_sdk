@@ -61,57 +61,48 @@ class AppSharedLineApi(ApiChild, base='telephony/config/people'):
         return self.session.follow_pagination(url=url, model=AvailableMember,
                                               item_key='members', params=params)
 
-    def search_members_old(self, person_id: str, application_id: str, max_: str = None,
-                           start: str = None, location: str = None, name: str = None,
-                           number: str = None, order: str = None,
-                           extension: str = None, **params) -> Generator[AvailableMember, None, None]:
+    def members_count(self, person_id: str, location_id: str = None,
+                      member_name: str = None, phone_number: str = None,
+                      extension: str = None, org_id: str = None) -> int:
         """
-        Search Shared-Line Appearance Members
+        Get Count of Shared-Line Appearance Members
 
-        Get members available for shared-line assignment to a Webex Calling Apps Desktop device.
+        Get the count of members available for shared-line assignment to Webex Calling Apps.
 
-        Deprecated: This operation has been marked as deprecated, which means it could be removed at some point in the
-        future.
+        Shared-line appearance allows multiple devices or applications to share a single line for call handling.
 
-        This API requires a full or user administrator or location administrator auth token with
-        the `spark-admin:people_read` scope.
+        This API requires a full, user, or location administrator auth token with the
+        `spark-admin:telephony_config_read` scope.
 
         :param person_id: A unique identifier for the person.
         :type person_id: str
-        :param application_id: A unique identifier for the application.
-        :type application_id: str
-        :param max_: Number of records per page.
-        :type max_: str
-        :param start: Page number.
-        :type start: str
-        :param location: Location ID for the user.
-        :type location: str
-        :param name: Search for users with names that match the query.
-        :type name: str
-        :param number: Search for users with numbers that match the query.
-        :type number: str
-        :param order: Sort by first name (`fname`) or last name (`lname`).
-        :type order: str
-        :param extension: Search for users with extensions that match the query.
+        :param location_id: Location ID for the person.
+        :type location_id: str
+        :param member_name: Search for people with names that match the query.
+        :type member_name: str
+        :param phone_number: Search for people with numbers that match the query.
+        :type phone_number: str
+        :param extension: Search for people with extensions that match the query.
         :type extension: str
-        :return: Generator yielding :class:`AvailableMember` instances
+        :param org_id: Organization ID for the person.
+        :type org_id: str
+        :rtype: int
         """
-        if max_ is not None:
-            params['max'] = max_
-        if start is not None:
-            params['start'] = start
-        if location is not None:
-            params['location'] = location
-        if name is not None:
-            params['name'] = name
-        if number is not None:
-            params['number'] = number
-        if order is not None:
-            params['order'] = order
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if member_name is not None:
+            params['memberName'] = member_name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
         if extension is not None:
             params['extension'] = extension
-        url = self.f_ep(person_id=person_id, application_id=application_id, path='availableMembers')
-        return self.session.follow_pagination(url, model=AvailableMember, params=params, item_key='members')
+        url = self.ep(f'telephony/config/people/{person_id}/applications/availableMembers/count')
+        data = super().get(url, params=params)
+        r = data['totalCount']
+        return r
 
     def get_members(self, person_id: str) -> DeviceMembersResponse:
         """
