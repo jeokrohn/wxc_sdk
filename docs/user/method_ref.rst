@@ -1127,6 +1127,16 @@ The method name is a link to the method documentation.
         Update Call Forwarding Settings for a feature
    * - :meth:`api.telephony.auto_attendant.forwarding.update_call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.update_call_forwarding_rule>`
         Update a Selective Call Forwarding Rule's settings for the designated feature
+   * - :meth:`api.telephony.call_controls_members.answer <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.answer>`
+        Answer by Member ID
+   * - :meth:`api.telephony.call_controls_members.dial <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.dial>`
+        Dial by Member ID
+   * - :meth:`api.telephony.call_controls_members.get_call_details <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.get_call_details>`
+        Get Call Details by Member ID
+   * - :meth:`api.telephony.call_controls_members.hangup <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.hangup>`
+        Hangup by Member ID
+   * - :meth:`api.telephony.call_controls_members.list_calls <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.list_calls>`
+        List Calls by Member ID
    * - :meth:`api.telephony.call_intercept.configure <wxc_sdk.telephony.location.intercept.LocationInterceptApi.configure>`
         Put Location Intercept
    * - :meth:`api.telephony.call_intercept.read <wxc_sdk.telephony.location.intercept.LocationInterceptApi.read>`

@@ -11,6 +11,7 @@ from wxc_sdk.telephony.emergency_address import EmergencyAddressApi
 from .access_codes import LocationAccessCodesApi
 from .announcements_repo import AnnouncementsRepositoryApi
 from .autoattendant import AutoAttendantApi
+from .call_contols_members import CallControlsMembersApi
 from .call_recording import CallRecordingSettingsApi
 from .call_routing import CallRoutingApi
 from .callpark import CallParkApi
@@ -565,6 +566,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     announcements_repo: AnnouncementsRepositoryApi
     auto_attendant: AutoAttendantApi
     #: location call intercept settings
+    call_controls_members: CallControlsMembersApi
     call_intercept: LocationInterceptApi
     call_routing: CallRoutingApi
     calls: CallsApi
@@ -617,6 +619,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         self.access_codes = LocationAccessCodesApi(session=session)
         self.announcements_repo = AnnouncementsRepositoryApi(session=session)
         self.auto_attendant = AutoAttendantApi(session=session)
+        self.call_controls_members = CallControlsMembersApi(session=session)
         self.call_intercept = LocationInterceptApi(session=session)
         self.call_routing = CallRoutingApi(session=session)
         self.call_recording = CallRecordingSettingsApi(session=session)
