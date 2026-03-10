@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, List
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -296,7 +296,7 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{location_id}/schedules/{type}/{schedule_id}')
+        url = self.ep(f'{location_id}/schedules/{enum_str(type)}/{schedule_id}')
         super().delete(url, params=params)
 
     def get_details_for_a_schedule(self, location_id: str, type: GetScheduleObjectType, schedule_id: str,
@@ -325,7 +325,7 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{location_id}/schedules/{type}/{schedule_id}')
+        url = self.ep(f'{location_id}/schedules/{enum_str(type)}/{schedule_id}')
         data = super().get(url, params=params)
         r = GetScheduleObject.model_validate(data)
         return r
@@ -366,7 +366,7 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         body['name'] = name
         if events is not None:
             body['events'] = TypeAdapter(list[ModifyScheduleEventListObject]).dump_python(events, mode='json', by_alias=True, exclude_none=True)
-        url = self.ep(f'{location_id}/schedules/{type}/{schedule_id}')
+        url = self.ep(f'{location_id}/schedules/{enum_str(type)}/{schedule_id}')
         data = super().put(url, params=params, json=body)
         r = data['id']
         return r
@@ -426,7 +426,7 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
             body['allDayEnabled'] = all_day_enabled
         if recurrence is not None:
             body['recurrence'] = recurrence.model_dump(mode='json', by_alias=True, exclude_none=True)
-        url = self.ep(f'{location_id}/schedules/{type}/{schedule_id}/events')
+        url = self.ep(f'{location_id}/schedules/{enum_str(type)}/{schedule_id}/events')
         data = super().post(url, params=params, json=body)
         r = data['id']
         return r
@@ -459,7 +459,7 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{location_id}/schedules/{type}/{schedule_id}/events/{event_id}')
+        url = self.ep(f'{location_id}/schedules/{enum_str(type)}/{schedule_id}/events/{event_id}')
         super().delete(url, params=params)
 
     def get_details_for_a_schedule_event(self, location_id: str, type: GetScheduleObjectType, schedule_id: str,
@@ -490,7 +490,7 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{location_id}/schedules/{type}/{schedule_id}/events/{event_id}')
+        url = self.ep(f'{location_id}/schedules/{enum_str(type)}/{schedule_id}/events/{event_id}')
         data = super().get(url, params=params)
         r = GetScheduleEventObject.model_validate(data)
         return r
