@@ -16,6 +16,8 @@ stage_if_changed() {
         if ! git diff --quiet HEAD "$file" 2>/dev/null; then
             echo "==> Staging modified file: $file"
             git add "$file"
+        else
+            echo "==> Unmodified: $file"
         fi
     else
         # File is untracked - stage it
