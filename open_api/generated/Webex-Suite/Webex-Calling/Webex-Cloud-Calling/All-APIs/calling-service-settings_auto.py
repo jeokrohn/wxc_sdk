@@ -16,7 +16,7 @@ __all__ = ['CallingServiceSettingsApi', 'GetCallCaptionsObject', 'GetVoicemailRu
            'GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockContiguousSequences',
            'GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockRepeatedDigits',
            'GetVoicemailRulesObjectDefaultVoicemailPinRulesLength', 'GetVoicemailRulesObjectExpirePasscode',
-           'GetVoicemailSettingsObject', 'Language']
+           'GetVoicemailSettingsObject', 'Language', 'OrganizationStatusGetObject']
 
 
 class GetVoicemailRulesObjectDefaultVoicemailPinRulesBlockRepeatedDigits(ApiModel):
@@ -111,6 +111,14 @@ class GetCallCaptionsObject(ApiModel):
     org_transcripts_enabled: Optional[bool] = None
 
 
+class OrganizationStatusGetObject(ApiModel):
+    #: `true` if the organization is categorized as large organization.
+    is_large_org: Optional[bool] = None
+    #: The threshold percentage represents the percentage of the threshold reached to categorize an organization as a
+    #: large organization.
+    large_org_threshold_percentage: Optional[int] = None
+
+
 class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
     """
     Calling Service Settings
@@ -198,6 +206,30 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
             body['orgTranscriptsEnabled'] = org_transcripts_enabled
         url = self.ep('callCaptions')
         super().put(url, params=params, json=body)
+
+    def get_large_organization_status(self, org_id: str = None) -> OrganizationStatusGetObject:
+        """
+        Get Large Organization Status
+
+        Get the large organization status for a customer.
+
+        Large organization status indicates whether an organization is categorized as a large organization based on the
+        threshold percentage.
+
+        This API requires a full or read-only administrator auth token with the `spark-admin:telephony_config_read`
+        scope.
+
+        :param org_id: Retrieves large organization status for this organization.
+        :type org_id: str
+        :rtype: :class:`OrganizationStatusGetObject`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('largeOrgStatus')
+        data = super().get(url, params=params)
+        r = OrganizationStatusGetObject.model_validate(data)
+        return r
 
     def get_the_organization_music_on_hold_configuration(self, org_id: str = None) -> str:
         """

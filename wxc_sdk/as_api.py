@@ -35085,6 +35085,30 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         url = self.ep('callCaptions')
         await super().put(url, params=params, json=body)
 
+    async def get_large_organization_status(self, org_id: str = None) -> LargeOrgStatus:
+        """
+        Get Large Organization Status
+
+        Get the large organization status for a customer.
+
+        Large organization status indicates whether an organization is categorized as a large organization based on the
+        threshold percentage.
+
+        This API requires a full or read-only administrator auth token with the `spark-admin:telephony_config_read`
+        scope.
+
+        :param org_id: Retrieves large organization status for this organization.
+        :type org_id: str
+        :rtype: :class:`LargeOrgStatus`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('largeOrgStatus')
+        data = await super().get(url, params=params)
+        r = LargeOrgStatus.model_validate(data)
+        return r
+
 
 class AsWebhookApi(AsApiChild, base='webhooks'):
     """

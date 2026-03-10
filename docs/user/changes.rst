@@ -2,6 +2,7 @@ Release history
 ===============
 
 - feat: new :meth:`api.telephony.devices.get_count_of_available_members <wxc_sdk.telephony.devices.TelephonyDevicesApi.get_count_of_available_members>`, :meth:`api.telephony.devices.get_count_of_members <wxc_sdk.telephony.devices.TelephonyDevicesApi.get_count_of_members>`
+- feat: new :meth:`api.telephony.get_large_organization_status <wxc_sdk.telephony.TelephonyApi.get_large_organization_status>`
 
 1.29.0
 ------

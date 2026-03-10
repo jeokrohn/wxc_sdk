@@ -159,11 +159,12 @@ from wxc_sdk.teams import Team
 from wxc_sdk.telephony import AnnouncementLanguage, AppliedService, AppliedServiceTranslationPattern, \
     CallInterceptDetails, CallInterceptDetailsPermission, CallSourceInfo, CallSourceType, CallingPlanReason, \
     ConfigurationLevel, DestinationType, EmergencyDestination, FeatureAccessCodeDestination, \
-    HostedFeatureDestination, HostedUserDestination, LocationAndNumbers, MoHConfig, MoHTheme, NameAndCode, \
-    NumberDetails, NumberListPhoneNumber, NumberListPhoneNumberType, NumberType, OrgCallCaptions, OriginatorType, \
-    OutgoingCallingPlanPermissionsByDigitPattern, OutgoingCallingPlanPermissionsByType, PbxUserDestination, \
-    PstnNumberDestination, RouteListDestination, ServiceType, TelephonyType, TestCallRoutingResult, \
-    TranslationPatternConfigurationLevel, TrunkDestination, UCMProfile, VirtualExtensionDestination
+    HostedFeatureDestination, HostedUserDestination, LargeOrgStatus, LocationAndNumbers, MoHConfig, MoHTheme, \
+    NameAndCode, NumberDetails, NumberListPhoneNumber, NumberListPhoneNumberType, NumberType, OrgCallCaptions, \
+    OriginatorType, OutgoingCallingPlanPermissionsByDigitPattern, OutgoingCallingPlanPermissionsByType, \
+    PbxUserDestination, PstnNumberDestination, RouteListDestination, ServiceType, TelephonyType, \
+    TestCallRoutingResult, TranslationPatternConfigurationLevel, TrunkDestination, UCMProfile, \
+    VirtualExtensionDestination
 from wxc_sdk.telephony.announcements_repo import FeatureReference, RepoAnnouncement, RepositoryUsage
 from wxc_sdk.telephony.autoattendant import ActionToBePerformed, ActionToBePerformedAction, AutoAttendant, \
     AutoAttendantAction, AutoAttendantKeyConfiguration, AutoAttendantMenu, CallTreatment, CallTreatmentRetry, \
@@ -357,25 +358,25 @@ __all__ = ['AcdCustomization', 'Action', 'ActionToBePerformed', 'ActionToBePerfo
            'InterceptSettingIncoming', 'InterceptSettingOutgoing', 'InterceptTypeIncoming', 'InterceptTypeOutgoing',
            'InternalDialing', 'InterpreterForSimultaneousInterpretation', 'Invitee', 'InviteeForCreateMeeting',
            'JobError', 'JobErrorItem', 'JobErrorMessage', 'JobExecutionStatus', 'JoinMeetingBody',
-           'JoinMeetingResponse', 'KemKey', 'KemModuleType', 'LayoutMode', 'License', 'LicenseProperties',
-           'LicenseRequest', 'LicenseRequestOperation', 'LicenseUser', 'LicenseUserType', 'Lifecycle',
-           'LineKeyLabelSelection', 'LineKeyLedPattern', 'LineKeyTemplate', 'LineKeyTemplateAdvisoryTypes',
-           'LineKeyType', 'LinkRelation', 'Location', 'LocationAddress', 'LocationAndNumbers',
-           'LocationAssignedNumber', 'LocationCallCaptions', 'LocationCallNotificationOrganization',
-           'LocationCallParkSettings', 'LocationComplianceAnnouncement', 'LocationDeleteStatus', 'LocationECBN',
-           'LocationECBNLocation', 'LocationECBNLocationMember', 'LocationEmergencyCallNotification',
-           'LocationMoHGreetingType', 'LocationMoHSetting', 'LocationNameAddress', 'LocationVoiceMailSettings',
-           'LoggingLevel', 'MACState', 'MACStatus', 'MACValidationResponse', 'MSTeamsSettings', 'MaintenanceMode',
-           'ManagedBy', 'ManagedGroup', 'ManagedOrg', 'ManagerObject', 'MeCallCenterSettings', 'MeCallQueue',
-           'MeCallerIdSettings', 'MeDevice', 'MeEndpoint', 'MeGroupMember', 'MeGroupSettings', 'MeHost', 'MeMobility',
-           'MeMonitoredElement', 'MeMonitoringSettings', 'MeNumber', 'MeOwner', 'MeProfile', 'MeRecordingSettings',
-           'MeRecordingVendor', 'MeSNRSettings', 'MeSecondaryLine', 'MeSelectedCallerId',
-           'MeSelectiveForwardCriteria', 'MeSimRing', 'MeSimRingNumber', 'MediaFile', 'MediaFileType',
-           'MediaSessionQuality', 'Meeting', 'MeetingCallType', 'MeetingDevice', 'MeetingOptions',
-           'MeetingPreferenceDetails', 'MeetingService', 'MeetingState', 'MeetingTelephony', 'MeetingType',
-           'MeetingsSite', 'MemberCommon', 'Membership', 'MembershipsData', 'MenuKey', 'Message', 'MessageAttachment',
-           'MessageSummary', 'MessagesData', 'Meta', 'MetaObjectResourceType', 'MoHConfig', 'MoHTheme',
-           'ModeDefaultForwardToSelection', 'ModeForward', 'ModeForwardTo', 'ModeManagementFeature',
+           'JoinMeetingResponse', 'KemKey', 'KemModuleType', 'LargeOrgStatus', 'LayoutMode', 'License',
+           'LicenseProperties', 'LicenseRequest', 'LicenseRequestOperation', 'LicenseUser', 'LicenseUserType',
+           'Lifecycle', 'LineKeyLabelSelection', 'LineKeyLedPattern', 'LineKeyTemplate',
+           'LineKeyTemplateAdvisoryTypes', 'LineKeyType', 'LinkRelation', 'Location', 'LocationAddress',
+           'LocationAndNumbers', 'LocationAssignedNumber', 'LocationCallCaptions',
+           'LocationCallNotificationOrganization', 'LocationCallParkSettings', 'LocationComplianceAnnouncement',
+           'LocationDeleteStatus', 'LocationECBN', 'LocationECBNLocation', 'LocationECBNLocationMember',
+           'LocationEmergencyCallNotification', 'LocationMoHGreetingType', 'LocationMoHSetting',
+           'LocationNameAddress', 'LocationVoiceMailSettings', 'LoggingLevel', 'MACState', 'MACStatus',
+           'MACValidationResponse', 'MSTeamsSettings', 'MaintenanceMode', 'ManagedBy', 'ManagedGroup', 'ManagedOrg',
+           'ManagerObject', 'MeCallCenterSettings', 'MeCallQueue', 'MeCallerIdSettings', 'MeDevice', 'MeEndpoint',
+           'MeGroupMember', 'MeGroupSettings', 'MeHost', 'MeMobility', 'MeMonitoredElement', 'MeMonitoringSettings',
+           'MeNumber', 'MeOwner', 'MeProfile', 'MeRecordingSettings', 'MeRecordingVendor', 'MeSNRSettings',
+           'MeSecondaryLine', 'MeSelectedCallerId', 'MeSelectiveForwardCriteria', 'MeSimRing', 'MeSimRingNumber',
+           'MediaFile', 'MediaFileType', 'MediaSessionQuality', 'Meeting', 'MeetingCallType', 'MeetingDevice',
+           'MeetingOptions', 'MeetingPreferenceDetails', 'MeetingService', 'MeetingState', 'MeetingTelephony',
+           'MeetingType', 'MeetingsSite', 'MemberCommon', 'Membership', 'MembershipsData', 'MenuKey', 'Message',
+           'MessageAttachment', 'MessageSummary', 'MessagesData', 'Meta', 'MetaObjectResourceType', 'MoHConfig',
+           'MoHTheme', 'ModeDefaultForwardToSelection', 'ModeForward', 'ModeForwardTo', 'ModeManagementFeature',
            'MohMessageSetting', 'MonitoredElement', 'MonitoredElementMember', 'MonitoredElementType',
            'MonitoredMember', 'Monitoring', 'Month', 'MoveCounts', 'MoveNumberCounts', 'MoveUser',
            'MoveUserJobDetails', 'MoveUsersList', 'MppCustomization', 'MppVlanDevice', 'Multicast', 'MusicOnHold',

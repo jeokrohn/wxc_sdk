@@ -67,7 +67,7 @@ __all__ = ['NumberListPhoneNumberType', 'TelephonyType',
            'CallInterceptDetailsPermission', 'CallInterceptDetails', 'CallingPlanReason',
            'OutgoingCallingPlanPermissionsByType', 'OutgoingCallingPlanPermissionsByDigitPattern', 'AppliedService',
            'AnnouncementLanguage', 'TelephonyApi',
-           'MoHTheme', 'MoHConfig', 'NameAndCode', 'OrgCallCaptions']
+           'MoHTheme', 'MoHConfig', 'NameAndCode', 'OrgCallCaptions', 'LargeOrgStatus']
 
 
 class NumberListPhoneNumberType(str, Enum):
@@ -546,6 +546,13 @@ class OrgCallCaptions(ApiModel):
         :meta private:
         """
         return self.model_dump(mode='json', by_alias=True, exclude_unset=True, exclude_none=True)
+
+class LargeOrgStatus(ApiModel):
+    #: `true` if the organization is categorized as large organization.
+    is_large_org: Optional[bool] = None
+    #: The threshold percentage represents the percentage of the threshold reached to categorize an organization as a
+    #: large organization.
+    large_org_threshold_percentage: Optional[int] = None
 
 
 @dataclass(init=False, repr=False)
@@ -1073,3 +1080,27 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         body = settings.update()
         url = self.ep('callCaptions')
         super().put(url, params=params, json=body)
+
+    def get_large_organization_status(self, org_id: str = None) -> LargeOrgStatus:
+        """
+        Get Large Organization Status
+
+        Get the large organization status for a customer.
+
+        Large organization status indicates whether an organization is categorized as a large organization based on the
+        threshold percentage.
+
+        This API requires a full or read-only administrator auth token with the `spark-admin:telephony_config_read`
+        scope.
+
+        :param org_id: Retrieves large organization status for this organization.
+        :type org_id: str
+        :rtype: :class:`LargeOrgStatus`
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('largeOrgStatus')
+        data = super().get(url, params=params)
+        r = LargeOrgStatus.model_validate(data)
+        return r

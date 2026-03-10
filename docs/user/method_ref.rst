@@ -1045,6 +1045,8 @@ The method name is a link to the method documentation.
         Get device override settings for an organization
    * - :meth:`api.telephony.get_call_captions_settings <wxc_sdk.telephony.TelephonyApi.get_call_captions_settings>`
         Get the organization call captions settings
+   * - :meth:`api.telephony.get_large_organization_status <wxc_sdk.telephony.TelephonyApi.get_large_organization_status>`
+        Get Large Organization Status
    * - :meth:`api.telephony.phone_number_details <wxc_sdk.telephony.TelephonyApi.phone_number_details>`
         get summary (counts) of phone numbers
    * - :meth:`api.telephony.phone_numbers <wxc_sdk.telephony.TelephonyApi.phone_numbers>`
