@@ -1139,7 +1139,8 @@ class AsDetailedCDRApi(AsApiChild, base=''):
     """
 
     def get_cdr_history_gen(self, start_time: Union[str, datetime] = None, end_time: Union[datetime, str] = None,
-                        locations: list[str] = None, host:str = 'analytics-calling.webexapis.com', stream: bool = False,
+                        locations: list[str] = None, host: str = 'analytics-calling.webexapis.com',
+                        stream: bool = False,
                         **params) -> AsyncGenerator[CDR, None, None]:
         """
         Provides Webex Calling Detailed Call History data for your organization.
@@ -1191,7 +1192,8 @@ class AsDetailedCDRApi(AsApiChild, base=''):
         return self.session.follow_pagination(url=url, model=CDR, params=params, item_key='items')
 
     async def get_cdr_history(self, start_time: Union[str, datetime] = None, end_time: Union[datetime, str] = None,
-                        locations: list[str] = None, host:str = 'analytics-calling.webexapis.com', stream: bool = False,
+                        locations: list[str] = None, host: str = 'analytics-calling.webexapis.com',
+                        stream: bool = False,
                         **params) -> List[CDR]:
         """
         Provides Webex Calling Detailed Call History data for your organization.

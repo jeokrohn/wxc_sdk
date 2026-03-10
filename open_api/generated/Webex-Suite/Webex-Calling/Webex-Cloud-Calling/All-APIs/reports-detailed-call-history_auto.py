@@ -594,6 +594,22 @@ class CDR(ApiModel):
     #: value provided by the caller reputation provider in the call analysis request. If the score couldn’t be
     #: obtained from the provider due to error conditions, then the score reason specifies the particular error.
     caller_reputation_score_reason: Optional[str] = Field(alias='Caller Reputation Score Reason', default=None)
+    #: A unique identifier used to tie together multiple call patterns linked by a service interaction.
+    #: 
+    #: Example for consult and transfer call flow— When a user places an active call on hold, initiates another call
+    #: from the same app or device, and then transfers the original call, both calls share the same Interaction ID.
+    interaction_id: Optional[str] = Field(alias='Interaction ID', default=None)
+    #: This field specifies whether Webex Contact Center (WxCC) has performed a transfer or conference operation on a
+    #: consultative call, indicating that the consulted party was connected to the customer call.
+    #: 
+    #: If the value is set to "No", the call was initiated by WxCC as part of an agent's consult action, but the
+    #: consulted leg was not transferred or conferenced into the customer call leg.
+    #: 
+    #: If the value is set to "Yes", the call was initiated by WxCC as part of an agent's consult action, and the
+    #: consulted leg was transferred or conferenced into the customer call leg.
+    #: 
+    #: If the value is set to "NA", the call leg is not associated with an agent consultative call.
+    wx_cc_consult_merge_status: Optional[str] = Field(alias='WxCC consult merge status', default=None)
 
 
 class ReportsDetailedCallHistoryApi(ApiChild, base='cdr_feed'):
