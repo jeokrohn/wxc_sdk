@@ -11,6 +11,6 @@ fi
 echo "==> Running build script..."
 make types async methref
 
-@echo "==> Building RST files"
+echo "==> Building RST files"
 uv run sphinx-apidoc -o docs/apidoc -f -e -M wxc_sdk 'wxc_sdk/all_types.py'
 
