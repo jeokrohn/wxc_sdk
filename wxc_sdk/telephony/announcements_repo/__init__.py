@@ -196,11 +196,11 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
 
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write .
 
-        :param name: Announcement name
+        :param name: The announcement file name (e.g., "greeting.wav"). This is a required field.
         :type name: str
         :param file: the file to be uploaded, can be a path to a file or a buffered reader (opened file); if a
             reader referring to an open file is passed then make sure to open the file as binary b/c otherwise the
-            content length might be calculated wrong
+            content length might be calculated wrong. Must be in WAV format
         :type file: Union[BufferedReader, str]
         :param upload_as: filename for the content. Only required if content is a reader; has to be a .wav file name.
         :type upload_as: str

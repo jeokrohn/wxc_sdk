@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
-from typing import Optional, Union, Any
+from typing import Optional, Union, Any, List
 
 from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
@@ -185,7 +185,8 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         url = self.ep('announcements')
         return self.session.follow_pagination(url=url, model=AnnouncementsListResponse, item_key='announcements', params=params)
 
-    def upload_a_binary_announcement_greeting_at_organization_level(self, org_id: str = None) -> str:
+    def upload_a_binary_announcement_greeting_at_organization_level(self, name: str, file: str = None,
+                                                                    org_id: str = None) -> str:
         """
         Upload a binary announcement greeting at organization level
 
@@ -196,8 +197,15 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         Your request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav`
         Content-Type.
 
+        **Note:** The `name` parameter is required as a form field and should contain the announcement file name (e.g.,
+        "greeting.wav"). Refer to the example below for the complete request structure.
+
         This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write` .
 
+        :param name: The announcement file name (e.g., "greeting.wav"). This is a required field.
+        :type name: str
+        :param file: The binary audio file to upload. Must be in WAV format.
+        :type file: str
         :param org_id: Create an announcement in this organization.
         :type org_id: str
         :rtype: str
@@ -205,8 +213,12 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        if file is not None:
+            body['file'] = file
         url = self.ep('announcements')
-        data = super().post(url, params=params)
+        data = super().post(url, params=params, json=body)
         r = data['id']
         return r
 
@@ -304,7 +316,8 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         url = self.ep(f'announcements/{announcement_id}')
         super().put(url, params=params)
 
-    def upload_a_binary_announcement_greeting_at_the_location_level(self, location_id: str, org_id: str = None) -> str:
+    def upload_a_binary_announcement_greeting_at_the_location_level(self, location_id: str, name: str,
+                                                                    file: str = None, org_id: str = None) -> str:
         """
         Upload a binary announcement greeting at the location level
 
@@ -315,11 +328,18 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         Your request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav`
         Content-Type.
 
+        **Note:** The `name` parameter is required as a form field and should contain the announcement file name (e.g.,
+        "greeting.wav"). Refer to the example below for the complete request structure.
+
         This API requires a full administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_write` .
 
         :param location_id: Unique identifier of a location where an announcement is being created.
         :type location_id: str
+        :param name: The announcement file name (e.g., "greeting.wav"). This is a required field.
+        :type name: str
+        :param file: The binary audio file to upload. Must be in WAV format.
+        :type file: str
         :param org_id: Create an announcement for location in this organization.
         :type org_id: str
         :rtype: str
@@ -327,8 +347,12 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        body = dict()
+        body['name'] = name
+        if file is not None:
+            body['file'] = file
         url = self.ep(f'locations/{location_id}/announcements')
-        data = super().post(url, params=params)
+        data = super().post(url, params=params, json=body)
         r = data['id']
         return r
 
