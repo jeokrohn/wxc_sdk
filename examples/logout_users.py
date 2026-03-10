@@ -14,6 +14,18 @@
       --appname APPNAME  regular expression matching authorization application names. When missing authorizations for
                          all client ids defined in the script are revoked
       --test             test run only
+
+
+    The script uses a service app to access the authorization APIs:
+    https://developer.webex.com/admin/docs/api/v1/authorizations
+
+    The service app needs these scopes: identity:tokens_write identity:tokens_read spark-admin:people_read
+
+    Service app details are read from "logout_users.env":
+
+        SERVICE_APP_CLIENT_ID=<client id>>
+        SERVICE_APP_CLIENT_SECRET=<client secret>>
+        SERVICE_APP_REFRESH_TOKEN=<service app refresh token>>
 """
 import asyncio
 import logging
@@ -254,8 +266,8 @@ async def main() -> int:
 if __name__ == '__main__':
     root_logger = logging.getLogger()
     h = logging.StreamHandler(stream=sys.stderr)
-    h.setLevel(logging.INFO)
-    root_logger.setLevel(logging.INFO)
+    h.setLevel(logging.DEBUG)
+    root_logger.setLevel(logging.DEBUG)
     root_logger.addHandler(h)
 
     # log REST API interactions to file
