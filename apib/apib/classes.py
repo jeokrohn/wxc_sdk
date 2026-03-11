@@ -6,7 +6,7 @@ from typing import Any, ClassVar, Literal, NamedTuple, Optional, Union
 
 from pydantic import BaseModel, Field, TypeAdapter, ValidationError, field_validator, model_validator
 
-from apib.apib import is_element
+from apib.apib.helper import is_element
 from apib.tools import words_to_camel
 
 __all__ = ['ApibParseResult', 'ApibElement', 'ApibCopy', 'ApibResource', 'ApibModel', 'ApibDatastructure',

@@ -5,7 +5,7 @@ Pydantic models to deserialize OpenAPI specs
 import logging
 import re
 from collections.abc import Generator
-from typing import Any, List, Optional, Tuple, Union
+from typing import Any, Optional, Union
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 from pydantic_core.core_schema import ValidationInfo
@@ -94,10 +94,10 @@ class OASchemaProperty(OABaseModel):
     # ref for array items if type == 'array'
     items: Optional['OASchemaProperty'] = None
     # enum values if type == 'string'
-    enum: Optional[List[Optional[str]]] = None
+    enum: Optional[list[Optional[str]]] = None
     # properties if type == 'object'
     properties: Optional[dict[str, 'OASchemaProperty']] = None
-    required: Optional[List[str]] = Field(default_factory=list)
+    required: Optional[list[str]] = Field(default_factory=list)
     nullable: Optional[bool] = None
     # list of possible types
     any_of: Optional[list['OASchemaProperty']] = None
@@ -131,17 +131,17 @@ class OASchemaProperty(OABaseModel):
         return v
 
     @model_validator(mode='after')
-    def remove_none_from_enum(self, data: 'OASchemaProperty') -> 'OASchemaProperty':
+    def remove_none_from_enum(self: 'OASchemaProperty') -> 'OASchemaProperty':
         """
         remove None from enum values. None represents the null value and is not a valid enum value.
         """
-        if data.enum and any(enum_value is None for enum_value in data.enum):
-            log.warning(f'Remove None from Enum values: {", ".join(map(str, data.enum))}')
-            data.enum = [enum_value for enum_value in data.enum if enum_value is not None]
-        return data
+        if self.enum and any(enum_value is None for enum_value in self.enum):
+            log.warning(f'Remove None from Enum values: {", ".join(map(str, self.enum))}')
+            self.enum = [enum_value for enum_value in self.enum if enum_value is not None]
+        return self
 
     @property
-    def enum_details(self) -> Optional[List[Tuple[str, str]]]:
+    def enum_details(self) -> Optional[list[tuple[str, str]]]:
         """
         Documentation of enum values is pushed into the description
 
@@ -286,32 +286,32 @@ class OAOperation(OABaseModel):
     summary: str
     operation_id: Optional[str] = None
     description: str
-    parameters: Optional[List[OAParameter]] = Field(default_factory=list)
+    parameters: Optional[list[OAParameter]] = Field(default_factory=list)
     request_body: Optional[OARequestBody] = None
     security: Optional[Any] = None
     responses: dict[str, OAResponse]
-    tags: Optional[List[str]] = Field(default_factory=list)
+    tags: Optional[list[str]] = Field(default_factory=list)
     deprecated: Optional[bool] = None
     external_docs: Optional[ExternalDocs] = None
 
     @property
-    def path_parameters(self) -> List[OAParameter]:
+    def path_parameters(self) -> list[OAParameter]:
         return [param for param in self.parameters if param.in_ == 'path']
 
     @property
-    def query_parameters(self) -> List[OAParameter]:
+    def query_parameters(self) -> list[OAParameter]:
         return [param for param in self.parameters if param.in_ == 'query']
 
 
 class OASpecSchema(OABaseModel):
     title: Optional[str] = None
     type: Optional[str] = None
-    required: Optional[List[str]] = Field(default_factory=list)
+    required: Optional[list[str]] = Field(default_factory=list)
     properties: dict[str, OASchemaProperty] = Field(default_factory=dict)
     # all_of can exist on its own
-    all_of: Optional[List[Any]] = None
+    all_of: Optional[list[Any]] = None
     # if schema is an enum, then these are the possible values
-    enum: Optional[List[Optional[str]]] = None
+    enum: Optional[list[Optional[str]]] = None
 
 
 class OAComponents(OABaseModel):
@@ -335,11 +335,11 @@ class OASpec(OABaseModel):
 
     openapi: str
     info: OAInfo
-    servers: Optional[List[OAServer]] = None
+    servers: Optional[list[OAServer]] = None
     paths: dict[str, dict[str, OAOperation]]
     components: OAComponents
     tags: Optional[list[Tag]] = None
-    security: Optional[List[Any]] = None
+    security: Optional[list[Any]] = None
     external_docs: Optional[ExternalDocs] = None
 
     def operations(self) -> Generator[tuple[str, str, OAOperation], None, None]:
