@@ -36,13 +36,13 @@ class WorkSpaceType(str, Enum):
     workspace type
     """
     #: No workspace type set.
-    notSet = 'notSet'
+    not_set = 'notSet'
     #: High concentration.
     focus = 'focus'
     #: Brainstorm/collaboration.
     huddle = 'huddle'
     #: Dedicated meeting space.
-    meetingRoom = 'meetingRoom'
+    meeting_room = 'meetingRoom'
     #: Dedicated meeting space.
     open = 'open'
     #: Individual.
