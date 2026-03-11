@@ -13,7 +13,8 @@ from functools import reduce
 from itertools import chain, zip_longest
 from operator import attrgetter
 from random import randint
-from typing import Generator, Literal, Optional, Union
+from typing import Literal, Optional, Union
+from collections.abc import Generator
 
 from test_helper.digittree import DigitTree
 from test_helper.randomlocation import Address, NpaInfo, RandomLocation

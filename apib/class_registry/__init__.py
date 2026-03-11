@@ -7,7 +7,8 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from functools import partial
 from itertools import chain
-from typing import Generator, Iterable, Optional, Union
+from typing import Optional, Union
+from collections.abc import Generator, Iterable
 
 from apib.apib import (
     ApibArray,

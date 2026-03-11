@@ -145,6 +145,7 @@ select = [
 "tests/base.py" = ["E402"]
 "examples/queue_agents.py" = ["F842"]
 "docs/conf.py" = ["E402"]
+"wxc_sdk/all_types.py" = ['I001']
 
 [tool.commitizen]
 name = "cz_conventional_commits"

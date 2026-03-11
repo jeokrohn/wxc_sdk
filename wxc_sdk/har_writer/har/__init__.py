@@ -5,10 +5,11 @@ import base64
 import json
 import re
 import urllib.parse
+from collections.abc import Mapping
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from json import JSONDecodeError
-from typing import Annotated, Any, Literal, Mapping, Optional, TextIO, Union
+from typing import Annotated, Any, Literal, Optional, TextIO, Union
 
 import requests_toolbelt
 from pydantic import (
