@@ -1,6 +1,7 @@
 """
 Tests for outgoing permissions for locations, persons, workspaces, and virtual lines
 """
+
 import asyncio
 import json
 import random
@@ -43,13 +44,18 @@ class TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly(TestLocationsUsersWo
     def setUpClass(cls) -> None:
         super().setUpClass()
         # filter out hotdesk-only workspaces
-        cls.workspaces = [ws for ws in cls.workspaces
-                          if not (ws.hotdesking_status == HotdeskingStatus.on and
-                                  ws.calling and
-                                  ws.calling.type == CallingType.webex and
-                                  ws.calling.webex_calling and
-                                  ws.calling.webex_calling.extension is None and
-                                  ws.calling.webex_calling.phone_number is None)]
+        cls.workspaces = [
+            ws
+            for ws in cls.workspaces
+            if not (
+                ws.hotdesking_status == HotdeskingStatus.on
+                and ws.calling
+                and ws.calling.type == CallingType.webex
+                and ws.calling.webex_calling
+                and ws.calling.webex_calling.extension is None
+                and ws.calling.webex_calling.phone_number is None
+            )
+        ]
 
 
 class TestOutgoingPermissions(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
@@ -69,9 +75,11 @@ class TestOutgoingPermissions(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskO
         """
         target = random.choice(self.locations)
         target: Location
-        self.read(entity=f'location "{target.name}"/{target.location_id}',
-                  entity_id=target.location_id,
-                  api=self.api.telephony.permissions_out)
+        self.read(
+            entity=f'location "{target.name}"/{target.location_id}',
+            entity_id=target.location_id,
+            api=self.api.telephony.permissions_out,
+        )
 
     def test_user_read(self):
         """
@@ -79,9 +87,11 @@ class TestOutgoingPermissions(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskO
         """
         target = random.choice(self.users)
         target: Person
-        self.read(entity=f'User {target.display_name}({target.emails[0]})/{target.person_id}',
-                  entity_id=target.person_id,
-                  api=self.api.person_settings.permissions_out)
+        self.read(
+            entity=f'User {target.display_name}({target.emails[0]})/{target.person_id}',
+            entity_id=target.person_id,
+            api=self.api.person_settings.permissions_out,
+        )
 
     def test_workspace_read(self):
         """
@@ -89,9 +99,11 @@ class TestOutgoingPermissions(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskO
         """
         target = random.choice(self.workspaces)
         target: Workspace
-        self.read(entity=f'Workspace {target.display_name}/{target.workspace_id}',
-                  entity_id=target.workspace_id,
-                  api=self.api.workspace_settings.permissions_out)
+        self.read(
+            entity=f'Workspace {target.display_name}/{target.workspace_id}',
+            entity_id=target.workspace_id,
+            api=self.api.workspace_settings.permissions_out,
+        )
 
     def test_virtual_line_read(self):
         """
@@ -99,12 +111,13 @@ class TestOutgoingPermissions(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskO
         """
         target = random.choice(self.virtual_lines)
         target: VirtualLine
-        self.read(entity=f'Virtual Line {target.display_name}/{target.id}',
-                  entity_id=target.id,
-                  api=self.api.telephony.virtual_lines.permissions_out)
+        self.read(
+            entity=f'Virtual Line {target.display_name}/{target.id}',
+            entity_id=target.id,
+            api=self.api.telephony.virtual_lines.permissions_out,
+        )
 
-    def test_location_update(self):
-        ...
+    def test_location_update(self): ...
 
 
 class TestAccessCodes(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
@@ -132,9 +145,11 @@ class TestAccessCodes(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
         """
         target = random.choice(self.locations)
         target: Location
-        self.read(entity=f'location "{target.name}"/{target.location_id}',
-                  entity_id=target.location_id,
-                  api=self.api.telephony.permissions_out)
+        self.read(
+            entity=f'location "{target.name}"/{target.location_id}',
+            entity_id=target.location_id,
+            api=self.api.telephony.permissions_out,
+        )
 
     def test_user_read(self):
         """
@@ -142,9 +157,11 @@ class TestAccessCodes(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
         """
         target = random.choice(self.users)
         target: Person
-        self.read(entity=f'User {target.display_name}({target.emails[0]})/{target.person_id}',
-                  entity_id=target.person_id,
-                  api=self.api.person_settings.permissions_out)
+        self.read(
+            entity=f'User {target.display_name}({target.emails[0]})/{target.person_id}',
+            entity_id=target.person_id,
+            api=self.api.person_settings.permissions_out,
+        )
 
     def test_workspace_read(self):
         """
@@ -152,9 +169,11 @@ class TestAccessCodes(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
         """
         target = random.choice(self.workspaces)
         target: Workspace
-        self.read(entity=f'Workspace {target.display_name}/{target.workspace_id}',
-                  entity_id=target.workspace_id,
-                  api=self.api.workspace_settings.permissions_out)
+        self.read(
+            entity=f'Workspace {target.display_name}/{target.workspace_id}',
+            entity_id=target.workspace_id,
+            api=self.api.workspace_settings.permissions_out,
+        )
 
     def test_virtual_line_read(self):
         """
@@ -162,9 +181,11 @@ class TestAccessCodes(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
         """
         target = random.choice(self.virtual_lines)
         target: VirtualLine
-        self.read(entity=f'Virtual Line {target.display_name}/{target.id}',
-                  entity_id=target.id,
-                  api=self.api.telephony.virtual_lines.permissions_out)
+        self.read(
+            entity=f'Virtual Line {target.display_name}/{target.id}',
+            entity_id=target.id,
+            api=self.api.telephony.virtual_lines.permissions_out,
+        )
 
     def create(self, entity: str, entity_id: str, api: OutgoingPermissionsApi):
         def location_read():
@@ -181,21 +202,19 @@ class TestAccessCodes(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
             reader = read
         codes = reader()
         existing = set(ac.code for ac in codes)
-        new_codes = (code for i in range(9000, 10000)
-                     if (code := f'{i}') not in existing)
+        new_codes = (code for i in range(9000, 10000) if (code := f'{i}') not in existing)
 
         # create new code
         new_code = next(new_codes)
         print(f'{entity}/{entity_id}: creating access code {new_code}')
         description = f'test_{new_code}'
         if for_location:
-            self.api.telephony.access_codes.create(location_id=entity_id,
-                                                   access_codes=[AuthCode(code=new_code,
-                                                                          description=description,
-                                                                          level=AuthCodeLevel.location)])
+            self.api.telephony.access_codes.create(
+                location_id=entity_id,
+                access_codes=[AuthCode(code=new_code, description=description, level=AuthCodeLevel.location)],
+            )
         else:
-            api.access_codes.create(entity_id=entity_id, code=new_code,
-                                    description=description)
+            api.access_codes.create(entity_id=entity_id, code=new_code, description=description)
 
         # verify that the code exists
         codes_after = reader()
@@ -221,9 +240,11 @@ class TestAccessCodes(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
         """
         target = random.choice(self.locations)
         target: Location
-        self.create(entity=f'location "{target.name}"/{target.location_id}',
-                    entity_id=target.location_id,
-                    api=self.api.telephony.permissions_out)
+        self.create(
+            entity=f'location "{target.name}"/{target.location_id}',
+            entity_id=target.location_id,
+            api=self.api.telephony.permissions_out,
+        )
 
     def test_user_create(self):
         """
@@ -231,9 +252,11 @@ class TestAccessCodes(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
         """
         target = random.choice(self.users)
         target: Person
-        self.create(entity=f'User {target.display_name}({target.emails[0]})/{target.person_id}',
-                    entity_id=target.person_id,
-                    api=self.api.person_settings.permissions_out)
+        self.create(
+            entity=f'User {target.display_name}({target.emails[0]})/{target.person_id}',
+            entity_id=target.person_id,
+            api=self.api.person_settings.permissions_out,
+        )
 
     def test_workspace_create(self):
         """
@@ -241,9 +264,11 @@ class TestAccessCodes(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
         """
         target = random.choice(self.workspaces)
         target: Workspace
-        self.create(entity=f'Workspace {target.display_name}/{target.workspace_id}',
-                    entity_id=target.workspace_id,
-                    api=self.api.workspace_settings.permissions_out)
+        self.create(
+            entity=f'Workspace {target.display_name}/{target.workspace_id}',
+            entity_id=target.workspace_id,
+            api=self.api.workspace_settings.permissions_out,
+        )
 
     def test_virtual_line_create(self):
         """
@@ -251,9 +276,11 @@ class TestAccessCodes(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
         """
         target = random.choice(self.virtual_lines)
         target: VirtualLine
-        self.create(entity=f'Virtual Line {target.display_name}/{target.id}',
-                    entity_id=target.id,
-                    api=self.api.telephony.virtual_lines.permissions_out)
+        self.create(
+            entity=f'Virtual Line {target.display_name}/{target.id}',
+            entity_id=target.id,
+            api=self.api.telephony.virtual_lines.permissions_out,
+        )
 
     async def create_check_1000(self, entity: str, entity_id: str, api: AsOutgoingPermissionsApi):
         """
@@ -268,13 +295,13 @@ class TestAccessCodes(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
 
         # we want to check that we can create 500 patterns and get an error on the 501st
         codes_to_create = [next(new_codes) for _ in range(1001 - len(existing))]
-        tasks = [api.access_codes.create(entity_id=entity_id, code=code, description=f'test_{code}')
-                 for code in codes_to_create]
+        tasks = [
+            api.access_codes.create(entity_id=entity_id, code=code, description=f'test_{code}')
+            for code in codes_to_create
+        ]
         print(f'Creating {len(codes_to_create)} access codes')
         results = await asyncio.gather(*tasks, return_exceptions=True)
-        failed = [(code, result)
-                  for code, result in zip(codes_to_create, results)
-                  if isinstance(result, Exception)]
+        failed = [(code, result) for code, result in zip(codes_to_create, results) if isinstance(result, Exception)]
         try:
             self.assertEqual(1, len(failed), f'Failed to create {len(failed)} access codes')
             # try to add the failed pattern again
@@ -289,11 +316,10 @@ class TestAccessCodes(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
                 await api.access_codes.modify(entity_id=entity_id, delete_codes=[code for code in codes_to_create])
 
         # find the error response
-        failed_request = next((request
-                               for request in self.requests(method='POST',
-                                                            url_filter='.+/accessCodes')
-                               if request.status != 201),
-                              None)
+        failed_request = next(
+            (request for request in self.requests(method='POST', url_filter='.+/accessCodes') if request.status != 201),
+            None,
+        )
         self.assertIsNotNone(failed_request, 'No failed request found')
 
         print(failed_request.record.message)
@@ -305,8 +331,7 @@ class TestAccessCodes(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
 
         # finally, the number of patterns should be the same as before
         after = await api.access_codes.read(entity_id=entity_id)
-        self.assertEqual(len(access_codes.access_codes), len(after.access_codes),
-                         'Number of access codes changed')
+        self.assertEqual(len(access_codes.access_codes), len(after.access_codes), 'Number of access codes changed')
 
     @async_test
     async def test_location_create_1000(self):
@@ -315,9 +340,11 @@ class TestAccessCodes(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
         """
         target = random.choice(self.locations)
         target: Location
-        await self.create_check_1000(entity=f'location "{target.name}"/{target.location_id}',
-                                     entity_id=target.location_id,
-                                     api=self.async_api.telephony.permissions_out)
+        await self.create_check_1000(
+            entity=f'location "{target.name}"/{target.location_id}',
+            entity_id=target.location_id,
+            api=self.async_api.telephony.permissions_out,
+        )
 
     @async_test
     async def test_user_create_1000(self):
@@ -326,9 +353,11 @@ class TestAccessCodes(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
         """
         target = random.choice(self.users)
         target: Person
-        await self.create_check_1000(entity=f'User {target.display_name}({target.emails[0]})/{target.person_id}',
-                                     entity_id=target.person_id,
-                                     api=self.async_api.person_settings.permissions_out)
+        await self.create_check_1000(
+            entity=f'User {target.display_name}({target.emails[0]})/{target.person_id}',
+            entity_id=target.person_id,
+            api=self.async_api.person_settings.permissions_out,
+        )
 
     @async_test
     async def test_workspace_create_1000(self):
@@ -337,9 +366,11 @@ class TestAccessCodes(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
         """
         target = random.choice(self.workspaces)
         target: Workspace
-        await self.create_check_1000(entity=f'Workspace {target.display_name}/{target.workspace_id}',
-                                     entity_id=target.workspace_id,
-                                     api=self.async_api.workspace_settings.permissions_out)
+        await self.create_check_1000(
+            entity=f'Workspace {target.display_name}/{target.workspace_id}',
+            entity_id=target.workspace_id,
+            api=self.async_api.workspace_settings.permissions_out,
+        )
 
     @async_test
     async def test_virtual_line_create_1000(self):
@@ -348,9 +379,11 @@ class TestAccessCodes(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
         """
         target = random.choice(self.virtual_lines)
         target: VirtualLine
-        await self.create_check_1000(entity=f'Virtual Line {target.display_name}/{target.id}',
-                                     entity_id=target.id,
-                                     api=self.async_api.telephony.virtual_lines.permissions_out)
+        await self.create_check_1000(
+            entity=f'Virtual Line {target.display_name}/{target.id}',
+            entity_id=target.id,
+            api=self.async_api.telephony.virtual_lines.permissions_out,
+        )
 
 
 class TestDigitPatterns(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
@@ -361,11 +394,11 @@ class TestDigitPatterns(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
         """
         api = self.async_api.telephony.permissions_out.digit_patterns
 
-        location_patterns = await asyncio.gather(*[api.get_digit_patterns(entity_id=loc.location_id)
-                                                   for loc in self.locations],
-                                                 return_exceptions=True)
+        location_patterns = await asyncio.gather(
+            *[api.get_digit_patterns(entity_id=loc.location_id) for loc in self.locations], return_exceptions=True
+        )
         print(f'Got patterns for {len(location_patterns)} locations')
-        errors = sum((1 for lp in location_patterns if isinstance(lp, Exception)))
+        errors = sum(1 for lp in location_patterns if isinstance(lp, Exception))
         self.assertEqual(0, errors, f'Got {errors} errors')
         location_len = max(len(loc.name) for loc in self.locations)
         for location, patterns in zip(self.locations, location_patterns):
@@ -385,9 +418,12 @@ class TestDigitPatterns(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
         new_patterns = (p for i in range(1000) if (p := f'9{i:03}') not in existing)
 
         new_pattern = next(new_patterns)
-        api.create(entity_id=target_location.location_id,
-                   pattern=DigitPattern(name=f'test_{new_pattern}', pattern=new_pattern, action=Action.block,
-                                        transfer_enabled=False))
+        api.create(
+            entity_id=target_location.location_id,
+            pattern=DigitPattern(
+                name=f'test_{new_pattern}', pattern=new_pattern, action=Action.block, transfer_enabled=False
+            ),
+        )
 
         # check whether the pattern was created
         after = api.get_digit_patterns(entity_id=target_location.location_id)
@@ -406,45 +442,64 @@ class TestDigitPatterns(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
 
         # we want to check that we can create 500 patterns and get an error on the 501st
         patterns_to_create = [next(new_patterns) for _ in range(501 - len(existing))]
-        tasks = [api.create(entity_id=entity_id,
-                            pattern=DigitPattern(name=f'test_{pattern}', pattern=pattern, action=Action.block,
-                                                 transfer_enabled=False))
-                 for pattern in patterns_to_create]
+        tasks = [
+            api.create(
+                entity_id=entity_id,
+                pattern=DigitPattern(
+                    name=f'test_{pattern}', pattern=pattern, action=Action.block, transfer_enabled=False
+                ),
+            )
+            for pattern in patterns_to_create
+        ]
         with time_it(f'Creating {len(patterns_to_create)} patterns'):
             print(f'Creating {len(patterns_to_create)} patterns')
             results = await asyncio.gather(*tasks, return_exceptions=True)
-        failed = [(pattern, result)
-                  for pattern, result in zip(patterns_to_create, results)
-                  if isinstance(result, Exception)]
+        failed = [
+            (pattern, result) for pattern, result in zip(patterns_to_create, results) if isinstance(result, Exception)
+        ]
         try:
             # get all patterns
             after = await api.get_digit_patterns(entity_id=entity_id)
             existing_patterns_by_name = set(p.name for p in after.digit_patterns)
-            patterns_not_added = [pattern for pattern in patterns_to_create if
-                                  f'test_{pattern}' not in existing_patterns_by_name]
-            self.assertEqual(len(failed), len(patterns_not_added),
-                             f'Failed to create {len(patterns_not_added)} patterns; expected: {len(failed)}')
+            patterns_not_added = [
+                pattern for pattern in patterns_to_create if f'test_{pattern}' not in existing_patterns_by_name
+            ]
+            self.assertEqual(
+                len(failed),
+                len(patterns_not_added),
+                f'Failed to create {len(patterns_not_added)} patterns; expected: {len(failed)}',
+            )
             self.assertEqual(1, len(failed), f'Failed to create {len(failed)} patterns; expected: 1')
             # try to add the failed pattern again
             pattern = failed[0][0]
             with self.assertRaises(AsRestError) as exc:
-                await api.create(entity_id=entity_id,
-                                 pattern=DigitPattern(name=f'test_{pattern}', pattern=pattern, action=Action.block,
-                                                      transfer_enabled=False))
+                await api.create(
+                    entity_id=entity_id,
+                    pattern=DigitPattern(
+                        name=f'test_{pattern}', pattern=pattern, action=Action.block, transfer_enabled=False
+                    ),
+                )
             rest_error: AsRestError = exc.exception
             self.assertEqual(400, rest_error.status, 'Invalid status code')
         finally:
             # delete patterns again
-            await asyncio.gather(*[api.delete(entity_id=entity_id, digit_pattern_id=dp_id)
-                                   for dp_id in results
-                                   if not isinstance(dp_id, Exception)])
+            await asyncio.gather(
+                *[
+                    api.delete(entity_id=entity_id, digit_pattern_id=dp_id)
+                    for dp_id in results
+                    if not isinstance(dp_id, Exception)
+                ]
+            )
 
         # find the error response
-        failed_request = next((request
-                               for request in self.requests(method='POST',
-                                                            url_filter='.+/digitPatterns')
-                               if request.status != 201),
-                              None)
+        failed_request = next(
+            (
+                request
+                for request in self.requests(method='POST', url_filter='.+/digitPatterns')
+                if request.status != 201
+            ),
+            None,
+        )
         self.assertIsNotNone(failed_request, 'No failed request found')
 
         print(failed_request.record.message)
@@ -465,8 +520,11 @@ class TestDigitPatterns(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
         """
         target_location = random.choice(self.locations)
         entity = f'Location: {target_location.name}'
-        await self.create_check_500(entity=entity, entity_id=target_location.location_id,
-                                    api=self.async_api.telephony.permissions_out.digit_patterns)
+        await self.create_check_500(
+            entity=entity,
+            entity_id=target_location.location_id,
+            api=self.async_api.telephony.permissions_out.digit_patterns,
+        )
 
     @async_test
     async def test_user_create_check_500(self):
@@ -476,8 +534,11 @@ class TestDigitPatterns(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
         target_user = random.choice(self.users)
         target_user: Person
         entity = f'User: {target_user.display_name} ({target_user.emails[0]})'
-        await self.create_check_500(entity=entity, entity_id=target_user.person_id,
-                                    api=self.async_api.person_settings.permissions_out.digit_patterns)
+        await self.create_check_500(
+            entity=entity,
+            entity_id=target_user.person_id,
+            api=self.async_api.person_settings.permissions_out.digit_patterns,
+        )
 
     # @skip('Virtual lines don\'t have outgoing permissions yet')
     @async_test
@@ -491,23 +552,28 @@ class TestDigitPatterns(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
         target_vl = random.choice(virtual_lines)
         target_vl: VirtualLine
         entity = f'Virtual Line: {target_vl.display_name} in location "{target_vl.location.name}"'
-        await self.create_check_500(entity=entity, entity_id=target_vl.id,
-                                    api=self.async_api.telephony.virtual_lines.permissions_out.digit_patterns)
+        await self.create_check_500(
+            entity=entity,
+            entity_id=target_vl.id,
+            api=self.async_api.telephony.virtual_lines.permissions_out.digit_patterns,
+        )
 
     @async_test
     async def test_workspace_create_check_500(self):
         """
         Try to create 501 patterns for random workspace and check that we get a proper error
         """
-        workspaces = [ws for ws in self.api.workspaces.list()
-                      if ws.calling and ws.calling.type == CallingType.webex]
+        workspaces = [ws for ws in self.api.workspaces.list() if ws.calling and ws.calling.type == CallingType.webex]
         if not workspaces:
             self.skipTest('No calling workspaces found')
         target_ws = random.choice(workspaces)
         target_ws: Workspace
         entity = f'Workspace: {target_ws.display_name}"'
-        await self.create_check_500(entity=entity, entity_id=target_ws.workspace_id,
-                                    api=self.async_api.workspace_settings.permissions_out.digit_patterns)
+        await self.create_check_500(
+            entity=entity,
+            entity_id=target_ws.workspace_id,
+            api=self.async_api.workspace_settings.permissions_out.digit_patterns,
+        )
 
     @async_test
     async def test_location_delete_all(self):
@@ -523,56 +589,71 @@ class TestDigitPatterns(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
 
         # determine existing patterns
         existing = set(p.pattern for p in patterns.digit_patterns)
-        available_patterns = (p for i in range(1000)
-                              if (p := f'9{i:03}') not in existing)
+        available_patterns = (p for i in range(1000) if (p := f'9{i:03}') not in existing)
         # available patterns
         new_patterns = [next(available_patterns) for _ in range(10)]
 
         # create 10 new patterns
-        tasks = [api.create(entity_id=target_location.location_id,
-                            pattern=DigitPattern(name=f'test_{pattern}', pattern=pattern, action=Action.block,
-                                                 transfer_enabled=False))
-                 for pattern in new_patterns]
+        tasks = [
+            api.create(
+                entity_id=target_location.location_id,
+                pattern=DigitPattern(
+                    name=f'test_{pattern}', pattern=pattern, action=Action.block, transfer_enabled=False
+                ),
+            )
+            for pattern in new_patterns
+        ]
         await asyncio.gather(*tasks, return_exceptions=True)
         after_creation = await api.get_digit_patterns(entity_id=target_location.location_id)
         try:
-            self.assertEqual(len(patterns.digit_patterns) + len(new_patterns), len(after_creation.digit_patterns),
-                             'Number of patterns after creation')
+            self.assertEqual(
+                len(patterns.digit_patterns) + len(new_patterns),
+                len(after_creation.digit_patterns),
+                'Number of patterns after creation',
+            )
             # try to delete all patterns
             await api.delete_all(entity_id=target_location.location_id)
             after_delete = await api.get_digit_patterns(entity_id=target_location.location_id)
             self.assertEqual(0, len(after_delete.digit_patterns), 'Number of patterns after deletion')
         finally:
             # restore all patterns that existed before
-            await asyncio.gather(*[api.create(entity_id=target_location.location_id, pattern=p)
-                                   for p in patterns.digit_patterns], return_exceptions=True)
+            await asyncio.gather(
+                *[api.create(entity_id=target_location.location_id, pattern=p) for p in patterns.digit_patterns],
+                return_exceptions=True,
+            )
             after_restore = await api.get_digit_patterns(entity_id=target_location.location_id)
-            self.assertEqual(len(patterns.digit_patterns), len(after_restore.digit_patterns),
-                             'Number of patterns after restore')
+            self.assertEqual(
+                len(patterns.digit_patterns), len(after_restore.digit_patterns), 'Number of patterns after restore'
+            )
 
     @skip('Keep test patterns for now')
     @async_test
     async def test_delete_all_patterns(self):
         async def delete_all_xx(*, id_list: list[str], api: AsOutgoingPermissionsApi):
             patterns_list = await asyncio.gather(*[api.digit_patterns.get_digit_patterns(id) for id in id_list])
-            id_and_pattern = list(chain.from_iterable(((id, pattern.id)
-                                                       for pattern in patterns.digit_patterns
-                                                       if pattern.name.startswith('test_'))
-                                                      for id, patterns in zip(id_list, patterns_list)))
+            id_and_pattern = list(
+                chain.from_iterable(
+                    ((id, pattern.id) for pattern in patterns.digit_patterns if pattern.name.startswith('test_'))
+                    for id, patterns in zip(id_list, patterns_list)
+                )
+            )
             print(f'Delete {len(id_and_pattern)} patterns')
-            await asyncio.gather(*[api.digit_patterns.delete(id, pattern_id)
-                                   for id, pattern_id in id_and_pattern],
-                                 return_exceptions=True)
+            await asyncio.gather(
+                *[api.digit_patterns.delete(id, pattern_id) for id, pattern_id in id_and_pattern],
+                return_exceptions=True,
+            )
             ...
 
         location_ids = list(map(attrgetter('location_id'), self.locations))
         user_ids = list(map(attrgetter('person_id'), self.users))
         vl_ids = list(map(attrgetter('id'), self.virtual_lines))
         ws_ids = list(map(attrgetter('workspace_id'), self.workspaces))
-        await asyncio.gather(delete_all_xx(id_list=location_ids, api=self.async_api.telephony.permissions_out),
-                             delete_all_xx(id_list=user_ids, api=self.async_api.person_settings.permissions_out),
-                             delete_all_xx(id_list=vl_ids, api=self.async_api.telephony.virtual_lines.permissions_out),
-                             delete_all_xx(id_list=ws_ids, api=self.async_api.workspace_settings.permissions_out))
+        await asyncio.gather(
+            delete_all_xx(id_list=location_ids, api=self.async_api.telephony.permissions_out),
+            delete_all_xx(id_list=user_ids, api=self.async_api.person_settings.permissions_out),
+            delete_all_xx(id_list=vl_ids, api=self.async_api.telephony.virtual_lines.permissions_out),
+            delete_all_xx(id_list=ws_ids, api=self.async_api.workspace_settings.permissions_out),
+        )
 
 
 @dataclass
@@ -580,6 +661,7 @@ class TestUser:
     """
     Helper class for test users
     """
+
     id: str
     extension: str
     user: Person = field(init=False)
@@ -593,6 +675,7 @@ class TestBetweenUsers(TestCaseWithLog):
     """
     Test calls between users
     """
+
     location: ClassVar[IdAndName]
     user_a: ClassVar[TestUser]
     user_b: ClassVar[TestUser]
@@ -638,35 +721,33 @@ class TestBetweenUsers(TestCaseWithLog):
         # verify that A can call B
         print('Verifying that A can call B')
         routing_result = self.api.telephony.test_call_routing(
-            originator_id=self.user_a.id, originator_type=OriginatorType.user,
+            originator_id=self.user_a.id,
+            originator_type=OriginatorType.user,
             destination=self.user_b.extension,
             originator_number=self.user_a.extension,
-            include_applied_services=True)
-        self.assertFalse(routing_result.is_rejected,
-                         'Call should be accepted')
-        self.assertEqual(DestinationType.hosted_agent, routing_result.destination_type,
-                         'Unexpected destination type')
-        self.assertEqual(self.user_b.id, routing_result.hosted_user.hu_id,
-                         'Wrong destination')
+            include_applied_services=True,
+        )
+        self.assertFalse(routing_result.is_rejected, 'Call should be accepted')
+        self.assertEqual(DestinationType.hosted_agent, routing_result.destination_type, 'Unexpected destination type')
+        self.assertEqual(self.user_b.id, routing_result.hosted_user.hu_id, 'Wrong destination')
         return routing_result
 
     def a_cant_call_b(self) -> TestCallRoutingResult:
         # verify that A can no longer call B
         print('Verifying that A can no longer call B')
         routing_result = self.api.telephony.test_call_routing(
-            originator_id=self.user_a.id, originator_type=OriginatorType.user,
+            originator_id=self.user_a.id,
+            originator_type=OriginatorType.user,
             destination=self.user_b.extension,
             originator_number=self.user_a.extension,
-            include_applied_services=True)
-        self.assertTrue(routing_result.is_rejected,
-                        'Call should be rejected')
+            include_applied_services=True,
+        )
+        self.assertTrue(routing_result.is_rejected, 'Call should be rejected')
         # routing result has to reflect the block
-        self.assertEqual(1, len(routing_result.applied_services),
-                         'Number of applied services')
+        self.assertEqual(1, len(routing_result.applied_services), 'Number of applied services')
         service = routing_result.applied_services[0]
         ocp_by_digit_pattern = service.outgoing_calling_plan_permissions_by_digit_pattern
-        self.assertIsNotNone(ocp_by_digit_pattern,
-                             'Outgoing calling plan permissions by digit pattern missing')
+        self.assertIsNotNone(ocp_by_digit_pattern, 'Outgoing calling plan permissions by digit pattern missing')
         self.assertEqual(Action.block, ocp_by_digit_pattern.permission, 'Permission incorrect')
         self.assertEqual(self.user_b.extension, ocp_by_digit_pattern.pattern, 'Digit pattern incorrect')
         self.assertEqual(self.user_b.extension, ocp_by_digit_pattern.number, 'Number incorrect')
@@ -676,38 +757,46 @@ class TestBetweenUsers(TestCaseWithLog):
     @contextmanager
     def block_b_at_location_level(self):
         # block B's extension at the location level
-        print(f'Blocking B\'s extension ({self.user_b.extension}) at the location level')
+        print(f"Blocking B's extension ({self.user_b.extension}) at the location level")
         pattern_id = self.api.telephony.permissions_out.digit_patterns.create(
             entity_id=self.location.id,
-            pattern=DigitPattern(name=f'test_b_{self.user_b.extension}',
-                                 pattern=self.user_b.extension,
-                                 action=Action.block,
-                                 transfer_enabled=False))
+            pattern=DigitPattern(
+                name=f'test_b_{self.user_b.extension}',
+                pattern=self.user_b.extension,
+                action=Action.block,
+                transfer_enabled=False,
+            ),
+        )
         try:
             yield None
         finally:
             # unblock B's extension at the location level
-            print(f'Unblocking B\'s extension ({self.user_b.extension}) at the location level')
-            self.api.telephony.permissions_out.digit_patterns.delete(entity_id=self.location.id,
-                                                                     digit_pattern_id=pattern_id)
+            print(f"Unblocking B's extension ({self.user_b.extension}) at the location level")
+            self.api.telephony.permissions_out.digit_patterns.delete(
+                entity_id=self.location.id, digit_pattern_id=pattern_id
+            )
 
     @contextmanager
     def block_b_at_user_a(self, block: bool = True):
         # block B's extension at user A
-        print(f'Blocking B\'s extension ({self.user_b.extension}) at user A')
+        print(f"Blocking B's extension ({self.user_b.extension}) at user A")
         pattern_id = self.api.person_settings.permissions_out.digit_patterns.create(
             entity_id=self.user_a.id,
-            pattern=DigitPattern(name=f'test_b_{self.user_b.extension}',
-                                 pattern=self.user_b.extension,
-                                 action=Action.block if block else Action.allow,
-                                 transfer_enabled=False))
+            pattern=DigitPattern(
+                name=f'test_b_{self.user_b.extension}',
+                pattern=self.user_b.extension,
+                action=Action.block if block else Action.allow,
+                transfer_enabled=False,
+            ),
+        )
         try:
             yield None
         finally:
             # unblock B's extension at the user level
-            print(f'Unblocking B\'s extension ({self.user_b.extension}) at user A')
-            self.api.person_settings.permissions_out.digit_patterns.delete(entity_id=self.user_a.id,
-                                                                           digit_pattern_id=pattern_id)
+            print(f"Unblocking B's extension ({self.user_b.extension}) at user A")
+            self.api.person_settings.permissions_out.digit_patterns.delete(
+                entity_id=self.user_a.id, digit_pattern_id=pattern_id
+            )
 
 
 class TestCallRouting(TestBetweenUsers):
@@ -721,8 +810,9 @@ class TestCallRouting(TestBetweenUsers):
             # routing result has to reflect the block at location level
             service = routing_result.applied_services[0]
             ocp_by_digit_pattern = service.outgoing_calling_plan_permissions_by_digit_pattern
-            self.assertEqual(ConfigurationLevel.location, ocp_by_digit_pattern.configuration_level,
-                             'Configuration level wrong')
+            self.assertEqual(
+                ConfigurationLevel.location, ocp_by_digit_pattern.configuration_level, 'Configuration level wrong'
+            )
 
     def test_block_extension_on_user_level(self):
         """
@@ -734,8 +824,9 @@ class TestCallRouting(TestBetweenUsers):
             # routing result has to reflect the block at user level
             service = routing_result.applied_services[0]
             ocp_by_digit_pattern = service.outgoing_calling_plan_permissions_by_digit_pattern
-            self.assertEqual(ConfigurationLevel.people, ocp_by_digit_pattern.configuration_level,
-                             'Configuration level wrong')
+            self.assertEqual(
+                ConfigurationLevel.people, ocp_by_digit_pattern.configuration_level, 'Configuration level wrong'
+            )
 
     def test_block_extension_at_location_level_and_allow_at_user_level(self):
         """

@@ -14,6 +14,7 @@ options:
   -l LOG_PATH, --logfile LOG_PATH
                         Write detailed logs to this file.
 """
+
 # TODO: check/fix private_network_connect
 # TODO: enums in url parameters need to be converted to string values
 import argparse
@@ -50,8 +51,7 @@ from pydantic import Field, TypeAdapter
 """
 
 
-def setup_logging(console_level: int = logging.INFO,
-                  log_path: Optional[str] = None):
+def setup_logging(console_level: int = logging.INFO, log_path: Optional[str] = None):
     """
     Setup logging
 
@@ -98,19 +98,19 @@ class APIMethod:
 {code}
 '''
 
-    EP_URL = '''        url = self.ep({url_path})'''
-    PARAM_DOC = '''
+    EP_URL = """        url = self.ep({url_path})"""
+    PARAM_DOC = """
         :param {p_name}: {p_doc}
-        :type {p_name}: {p_type}'''
-    PARAM_INIT = '''
+        :type {p_name}: {p_type}"""
+    PARAM_INIT = """
         if {p_name} is not None:
-            params['{p_name_camel}'] = {p_value}'''
-    PARAM_INIT_REQUIRED = '''
-        params['{p_name_camel}'] = {p_value}'''
+            params['{p_name_camel}'] = {p_value}"""
+    PARAM_INIT_REQUIRED = """
+        params['{p_name_camel}'] = {p_value}"""
 
-    BODY_INIT = '''
+    BODY_INIT = """
         if {p_name} is not None:
-            body.{p_name} = {p_name}'''
+            body.{p_name} = {p_name}"""
 
     @property
     def is_paginated(self) -> bool:
@@ -142,28 +142,32 @@ class APIMethod:
             # in paginated methods we want to get rid of "max" and "start"
             if not self.is_paginated or p_name not in {'start', 'max'}:
                 param_list.append(for_param_list)
-                p_doc = '\n'.join(break_lines(param.doc,
-                                              # 2nd line and following start with three indentations
-                                              line_start=' ' * 12,
-                                              # 1str line starts with this string, consider this for line breaks of
-                                              # 1st line
-                                              first_line_prefix=f'        :param {p_name}: '))
-                param_docs.append(self.PARAM_DOC.format(p_name=p_name,
-                                                        p_type=p_type,
-                                                        p_doc=p_doc).strip('\n'))
+                p_doc = '\n'.join(
+                    break_lines(
+                        param.doc,
+                        # 2nd line and following start with three indentations
+                        line_start=' ' * 12,
+                        # 1str line starts with this string, consider this for line breaks of
+                        # 1st line
+                        first_line_prefix=f'        :param {p_name}: ',
+                    )
+                )
+                param_docs.append(self.PARAM_DOC.format(p_name=p_name, p_type=p_type, p_doc=p_doc).strip('\n'))
                 if is_query:
                     # query parameters need special treatment
                     # * bools need to be transformed to true/false
                     # TODO: enums need to be conditionally transformed to strings
                     p_value = p_name
                     if p_type == 'bool':
-                        p_value = f"str({p_name}).lower()"
+                        p_value = f'str({p_name}).lower()'
                     if param.required:
-                        param_code.append(self.PARAM_INIT_REQUIRED.format(p_name=p_name, p_value=p_value,
-                                                                          p_name_camel=param.name))
+                        param_code.append(
+                            self.PARAM_INIT_REQUIRED.format(p_name=p_name, p_value=p_value, p_name_camel=param.name)
+                        )
                     else:
-                        param_code.append(self.PARAM_INIT.format(p_name=p_name, p_value=p_value,
-                                                                 p_name_camel=param.name))
+                        param_code.append(
+                            self.PARAM_INIT.format(p_name=p_name, p_value=p_value, p_name_camel=param.name)
+                        )
             if is_body:
                 body_params.append(self.BODY_INIT.format(p_name=p_name))
 
@@ -188,7 +192,8 @@ class APIMethod:
         if query_parameters:
             mandatory.extend(ParameterInfo(p=p, is_query=True, is_body=False) for p in query_parameters if p.required)
             optional.extend(
-                ParameterInfo(p=p, is_query=True, is_body=False) for p in query_parameters if not p.required)
+                ParameterInfo(p=p, is_query=True, is_body=False) for p in query_parameters if not p.required
+            )
 
         # ... finally we need the request body
         if self.body_class:
@@ -202,12 +207,15 @@ class APIMethod:
         for param in optional:
             add_param(param.p, is_query=param.is_query, is_body=param.is_body)
 
-        method_doc = '\n'.join(chain.from_iterable(
-            break_lines(line=line, line_start=' ' * 8) for line in self.methods_details.doc.splitlines()))
+        method_doc = '\n'.join(
+            chain.from_iterable(
+                break_lines(line=line, line_start=' ' * 8) for line in self.methods_details.doc.splitlines()
+            )
+        )
         if method_doc:
             method_doc = method_doc + '\n'
         if param_docs:
-            param_docs = '\n'.join((p for pd in param_docs if (p := pd.strip('\n'))))
+            param_docs = '\n'.join(p for pd in param_docs if (p := pd.strip('\n')))
             method_doc = '\n'.join((method_doc, param_docs))
         method_doc = method_doc.strip('\n')
 
@@ -242,13 +250,11 @@ class APIMethod:
         # first create line to get EP
         url = self.methods_details.documentation.endpoint
         if common_prefix:
-            url = url[len(common_prefix):].strip('/')
+            url = url[len(common_prefix) :].strip('/')
         if uri_parameters:
             url_path = f"f'{url}'"
             # find parameters in url and replace with snail_case names
-            url_path, _ = re.subn('\{(\w+)}',
-                                  lambda m: f'{{{underscore(m.group(1))}}}',
-                                  url_path)
+            url_path, _ = re.subn(r'\{(\w+)}', lambda m: f'{{{underscore(m.group(1))}}}', url_path)
         else:
             url_path = url and f"'{url}'"
         print(self.EP_URL.format(url_path=url_path), file=method_body)
@@ -271,8 +277,10 @@ class APIMethod:
                 item_key = ''
             else:
                 item_key = f"item_key='{item_key}', "
-            result = f'return self.session.follow_pagination(url=url, model={result_type}, {item_key}' \
-                     f'params=params{json_param})'
+            result = (
+                f'return self.session.follow_pagination(url=url, model={result_type}, {item_key}'
+                f'params=params{json_param})'
+            )
             rest_call = ''
         elif self.response_class:
             # if only a single attribute is returned then we might have a list of something
@@ -284,8 +292,10 @@ class APIMethod:
                         base_type = self.response_class.attributes[0].param_class.name
                         # we need to deserialize a list fo something
                         return_type = python_type(base_type)
-                        result = f'return TypeAdapter(list[{return_type}].validate_python(data["' \
-                                 f'{to_camel(self.response_class.attributes[0].name)}"])'
+                        result = (
+                            f'return TypeAdapter(list[{return_type}].validate_python(data["'
+                            f'{to_camel(self.response_class.attributes[0].name)}"])'
+                        )
                         return_type = f'list[{return_type}]'
                     else:
                         return_type = python_type(self.response_class.attributes[0].type)
@@ -311,8 +321,9 @@ class APIMethod:
             if http_method == 'get':
                 # that is weird. a GET method w/o any return?
                 # force a syntax error
-                result = f'return $!$!$!   # this is weird. ' \
-                         f'Check the spec at {self.methods_details.documentation.doc_link}'
+                result = (
+                    f'return $!$!$!   # this is weird. Check the spec at {self.methods_details.documentation.doc_link}'
+                )
             else:
                 result = 'return'
             return_type = ''
@@ -323,10 +334,14 @@ class APIMethod:
         print(f'        {result}', file=method_body)
 
         # return something
-        yield self.METHOD.format(method_name=transform_name(name), param_list=param_list, return_type=return_type,
-                                 method_doc=method_doc,
-                                 doc_url=self.methods_details.documentation.doc_link,
-                                 code=method_body.getvalue()).strip('\n')
+        yield self.METHOD.format(
+            method_name=transform_name(name),
+            param_list=param_list,
+            return_type=return_type,
+            method_doc=method_doc,
+            doc_url=self.methods_details.documentation.doc_link,
+            code=method_body.getvalue(),
+        ).strip('\n')
         return
 
 
@@ -335,6 +350,7 @@ class API:
     """
     Representation of an APi object
     """
+
     section: str
     doc: Optional[str] = None
     methods: list[APIMethod] = field(default_factory=list)
@@ -352,7 +368,7 @@ class API:
         type_str = type_str.strip()
         if type_str.startswith('array['):
             type_str = type_str[6:-1]
-        type_str = "".join(type_str.split())
+        type_str = ''.join(type_str.split())
         return type_str
 
     @staticmethod
@@ -393,7 +409,7 @@ class API:
         header = header.replace(' the ', '')
         header = header.replace("'", '')
 
-        result = "".join(map(cap, header.split()))
+        result = ''.join(map(cap, header.split()))
         # print(f'{header} -> {result}')
         return result
 
@@ -410,8 +426,10 @@ class API:
         # catch a situation where a class is to be created with only attributes that are quoted strings
         # there is at least one occurrence on developer.webex.com where this schema is used to define an enum
         quoted_string = re.compile(r"^'(\w+)'$")
-        if all(quoted_string.match(a.name) and a.type == 'string' and not a.param_attrs and not a.param_object
-               for a in attributes):
+        if all(
+            quoted_string.match(a.name) and a.type == 'string' and not a.param_attrs and not a.param_object
+            for a in attributes
+        ):
             as_enum = True
             # update names (remove quotes)
             for attr in attributes:
@@ -423,8 +441,9 @@ class API:
             # an attribute with just "true" and "false" as childs is a bool
             attr_names = set(a.name for a in chain(attribute.param_attrs, attribute.param_object))
             if attr_names == {'true', 'false'}:
-                log.debug(f'{class_name}.{attribute.name}: type set to "boolean" b/c the only childs are "true" '
-                          f'and "false"')
+                log.debug(
+                    f'{class_name}.{attribute.name}: type set to "boolean" b/c the only childs are "true" and "false"'
+                )
                 # TODO: move doc string from child attributes up to this attribute
                 attribute.type = 'boolean'
                 attribute.param_object = list()
@@ -463,22 +482,28 @@ class API:
 
             is_enum = attribute.type == 'enum'
             # if name ends in "Enum" and all attributes are simple strings then we also treat this as an enum
-            if attribute.type.endswith('Enum') and all(a.type == 'string' and not any((a.param_object, a.param_attrs))
-                                                       for a in chain(attribute.param_attrs, attribute.param_object)):
+            if attribute.type.endswith('Enum') and all(
+                a.type == 'string' and not any((a.param_object, a.param_attrs))
+                for a in chain(attribute.param_attrs, attribute.param_object)
+            ):
                 is_enum = True
             if is_enum and not attr_names:
                 # an enum without childs is just a string
-                log.debug(f'{class_name}.{attribute.name}: type set to "string" instead of "enum" b/c there are no '
-                          f'child attributes')
+                log.debug(
+                    f'{class_name}.{attribute.name}: type set to "string" instead of "enum" b/c there are no '
+                    f'child attributes'
+                )
                 attribute.type = 'string'
 
             if attribute.param_attrs:
-                new_class = self.create_class(class_name=self.class_name(attribute), attributes=attribute.param_attrs,
-                                              as_enum=is_enum)
+                new_class = self.create_class(
+                    class_name=self.class_name(attribute), attributes=attribute.param_attrs, as_enum=is_enum
+                )
                 attribute.param_class = new_class
             if attribute.param_object:
-                new_class = self.create_class(class_name=self.class_name(attribute), attributes=attribute.param_object,
-                                              as_enum=is_enum)
+                new_class = self.create_class(
+                    class_name=self.class_name(attribute), attributes=attribute.param_object, as_enum=is_enum
+                )
                 attribute.param_class = new_class
             # if
         # for
@@ -489,8 +514,7 @@ class API:
         class_name = re.sub(r'\W', '', class_name)
 
         new_class = Class(name=class_name, attributes=attributes, is_enum=as_enum)
-        log.debug(
-            f'create class: {new_class.name} - {", ".join(f"{attr.name}({attr.type})" for attr in attributes)}')
+        log.debug(f'create class: {new_class.name} - {", ".join(f"{attr.name}({attr.type})" for attr in attributes)}')
         return new_class
 
     def add_method(self, method_details: MethodDetails):
@@ -505,10 +529,11 @@ class API:
             body_class = self.create_class(class_name=f'{method_name}Body', attributes=body)
         if response := method_details.parameters_and_response.get('Response Properties'):
             response_class = self.create_class(class_name=f'{method_name}Response', attributes=response)
-        self.methods.append(APIMethod(name=method_name,
-                                      methods_details=method_details,
-                                      body_class=body_class,
-                                      response_class=response_class))
+        self.methods.append(
+            APIMethod(
+                name=method_name, methods_details=method_details, body_class=body_class, response_class=response_class
+            )
+        )
         return
 
     @property
@@ -533,19 +558,21 @@ class {class_name}(ApiChild, base='{base}'):
         # determine common base of all methods in this API
         endpoints = [m.methods_details.documentation.endpoint for m in self.methods]
         # look for the 1st index where the set of letters is larger than one or a URL parameter starts
-        common_index = next((i for i, letters in enumerate(zip(*endpoints))
-                             if len(ls := set(letters)) > 1 or ls == {'{'}),
-                            min(map(len, endpoints)))
+        common_index = next(
+            (i for i, letters in enumerate(zip(*endpoints)) if len(ls := set(letters)) > 1 or ls == {'{'}),
+            min(map(len, endpoints)),
+        )
         common_prefix = endpoints[0][:common_index]
         webex_prefix = 'https://webexapis.com/v1/'
         if common_prefix.startswith(webex_prefix):
-            base = common_prefix[len(webex_prefix):]
+            base = common_prefix[len(webex_prefix) :]
         else:
             base = ''
             common_prefix = ''
         if self.doc:
-            doc = '\n'.join(chain.from_iterable(break_lines(line=line, line_start='    ')
-                                                for line in self.doc.splitlines()))
+            doc = '\n'.join(
+                chain.from_iterable(break_lines(line=line, line_start='    ') for line in self.doc.splitlines())
+            )
         else:
             doc = ''
         yield self.API_HEADER.format(class_name=class_name, base=base, class_name_doc=doc).strip('\n')
@@ -615,7 +642,7 @@ class ClassGenerator:
         """
         parts = url.split('/')
         parts.reverse()
-        return next((p for p in parts if not p.startswith('{'))).capitalize()
+        return next(p for p in parts if not p.startswith('{')).capitalize()
 
     def from_methods(self, section: str, doc: str, method_list: list[MethodDetails]):
         Class.registry.clear()
@@ -694,9 +721,9 @@ class ClassGenerator:
         names = sorted(names)
         first_line_prefix = '__all__ = ['
         line = f"""{', '.join(f"'{n}'" for n in names)}]"""
-        line = '\n'.join(break_lines(line=line,
-                                     line_start=' ' * len(first_line_prefix),
-                                     first_line_prefix=first_line_prefix))
+        line = '\n'.join(
+            break_lines(line=line, line_start=' ' * len(first_line_prefix), first_line_prefix=first_line_prefix)
+        )
         return f'{first_line_prefix}{line}'
 
     def run(self):
@@ -715,23 +742,37 @@ def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('api_spec')
-    parser.add_argument('-o', '--output', dest='output_path', action='store', required=False, type=str,
-                        help='Write output to given file.')
+    parser.add_argument(
+        '-o',
+        '--output',
+        dest='output_path',
+        action='store',
+        required=False,
+        type=str,
+        help='Write output to given file.',
+    )
     # enable debug output to stderr
     parser.add_argument('-d', '--debug', action='store_true', help='show debugs on console')
 
     # write detailed logs (debug level) to a file
-    parser.add_argument('-l', '--logfile', dest='log_path', action='store', required=False, type=str,
-                        help='Write detailed logs to this file.')
+    parser.add_argument(
+        '-l',
+        '--logfile',
+        dest='log_path',
+        action='store',
+        required=False,
+        type=str,
+        help='Write detailed logs to this file.',
+    )
 
     # limit output to a single section
-    parser.add_argument('--section', type=str,
-                        help='Limit output to a single section. Example --section "Meeting chats"')
+    parser.add_argument(
+        '--section', type=str, help='Limit output to a single section. Example --section "Meeting chats"'
+    )
 
     args = parser.parse_args()
 
-    setup_logging(console_level=logging.DEBUG if args.debug else logging.INFO,
-                  log_path=args.log_path)
+    setup_logging(console_level=logging.DEBUG if args.debug else logging.INFO, log_path=args.log_path)
 
     @contextmanager
     def output_file():

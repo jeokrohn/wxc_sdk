@@ -52,6 +52,7 @@ optional arguments:
 
 Example: workspace_w_3rd_party.py input.csv output.csv --log-file log.har
 """
+
 import argparse
 import asyncio
 import csv
@@ -91,6 +92,7 @@ class CSVRow:
     """
     CSV row with workspace and location name
     """
+
     workspace_name: str
     location_name: str
     extension: str
@@ -169,14 +171,17 @@ def setup_logging(args: argparse.Namespace, api: AsWebexSimpleApi):
 ValidationResult = list[tuple[int, str]]
 
 
-async def validate_extensions(*, api: AsWebexSimpleApi, location: TelephonyLocation,
-                              indexed_rows: list[tuple[int, CSVRow]]) -> ValidationResult:
+async def validate_extensions(
+    *, api: AsWebexSimpleApi, location: TelephonyLocation, indexed_rows: list[tuple[int, CSVRow]]
+) -> ValidationResult:
     """
     Make sure that extensions are unique; if no extension is provided, generate a new one
     """
-    extensions_in_location = {number.extension for number in
-                              await api.telephony.phone_numbers(location_id=location.location_id)
-                              if number.extension is not None}
+    extensions_in_location = {
+        number.extension
+        for number in await api.telephony.phone_numbers(location_id=location.location_id)
+        if number.extension is not None
+    }
     errors = []
     for row_index, csv_row in indexed_rows:
         if csv_row.extension:
@@ -184,22 +189,26 @@ async def validate_extensions(*, api: AsWebexSimpleApi, location: TelephonyLocat
                 errors.append((row_index, f'Duplicate extension "{csv_row.extension}" in location "{location.name}"'))
         else:
             # generate new extension
-            csv_row.extension = next((str(ext) for ext in range(2000, 10000)
-                                      if str(ext) not in extensions_in_location))
+            csv_row.extension = next(str(ext) for ext in range(2000, 10000) if str(ext) not in extensions_in_location)
             print(f'Row {row_index}: Generated new extension "{csv_row.extension}"')
         extensions_in_location.add(csv_row.extension)
 
     return errors
 
 
-async def generate_passwords(*, api: AsWebexSimpleApi, location: TelephonyLocation,
-                             indexed_rows: list[tuple[int, CSVRow]]) -> ValidationResult:
+async def generate_passwords(
+    *, api: AsWebexSimpleApi, location: TelephonyLocation, indexed_rows: list[tuple[int, CSVRow]]
+) -> ValidationResult:
     """
     Generate random passwords for rows without a password
     """
-    new_passwords = await asyncio.gather(*[api.telephony.location.generate_password(location_id=location.location_id)
-                                           for _, csv_row in indexed_rows
-                                           if not csv_row.password])
+    new_passwords = await asyncio.gather(
+        *[
+            api.telephony.location.generate_password(location_id=location.location_id)
+            for _, csv_row in indexed_rows
+            if not csv_row.password
+        ]
+    )
 
     for row_index, csv_row in indexed_rows:
         if not csv_row.password:
@@ -209,15 +218,15 @@ async def generate_passwords(*, api: AsWebexSimpleApi, location: TelephonyLocati
     return []
 
 
-async def validate_locations_and_extensions(*, api: AsWebexSimpleApi, csv_rows: list[CSVRow],
-                                            cleanup: bool) -> ValidationResult:
+async def validate_locations_and_extensions(
+    *, api: AsWebexSimpleApi, csv_rows: list[CSVRow], cleanup: bool
+) -> ValidationResult:
     """
     Locations must exist and extensions must be unique
     """
     if cleanup:
         return []
-    locations = {location.name: location
-                 for location in await api.telephony.locations.list()}
+    locations = {location.name: location for location in await api.telephony.locations.list()}
     errors = []
     for row_index, csv_row in enumerate(csv_rows, 1):
         location = locations.get(csv_row.location_name)
@@ -230,12 +239,15 @@ async def validate_locations_and_extensions(*, api: AsWebexSimpleApi, csv_rows: 
     for row_index, csv_row in enumerate(csv_rows, 1):
         if csv_row.location_name in locations:
             csv_rows_by_location[csv_row.location_name].append((row_index, csv_row))
-    tasks = [validate_extensions(api=api, location=locations[l_name],
-                                 indexed_rows=indexed_rows)
-             for l_name, indexed_rows in csv_rows_by_location.items()]
+    tasks = [
+        validate_extensions(api=api, location=locations[l_name], indexed_rows=indexed_rows)
+        for l_name, indexed_rows in csv_rows_by_location.items()
+    ]
     # also generate passwords for rows without a password
-    tasks.extend(generate_passwords(api=api, location=locations[l_name], indexed_rows=indexed_rows)
-                 for l_name, indexed_rows in csv_rows_by_location.items())
+    tasks.extend(
+        generate_passwords(api=api, location=locations[l_name], indexed_rows=indexed_rows)
+        for l_name, indexed_rows in csv_rows_by_location.items()
+    )
     location_results = await asyncio.gather(*tasks)
     errors.extend(chain.from_iterable(location_results))
     return errors
@@ -245,16 +257,12 @@ async def assign_new_mac_addresses(*, api: AsWebexSimpleApi, csv_rows: list[CSVR
     """
     Get new MAC addresses for rows where no MAC address is provided
     """
-    number_of_missing_mac_addresses = sum(1
-                                          for csv_row in csv_rows
-                                          if not csv_row.mac_address)
+    number_of_missing_mac_addresses = sum(1 for csv_row in csv_rows if not csv_row.mac_address)
 
     if not number_of_missing_mac_addresses:
         return []
     mac_prefix = 'DEADDEAD'
-    mac_addresses_in_csv = {csv_row.mac_address
-                            for csv_row in csv_rows
-                            if csv_row.mac_address}
+    mac_addresses_in_csv = {csv_row.mac_address for csv_row in csv_rows if csv_row.mac_address}
 
     def mac_candidates() -> Generator[str, None, None]:
         for v in range(0, 65536):
@@ -273,10 +281,8 @@ async def assign_new_mac_addresses(*, api: AsWebexSimpleApi, csv_rows: list[CSVR
     batches = zip_longest(*batch_args)
     for batch in batches:
         validation_result = await api.telephony.devices.validate_macs(macs=list(batch))
-        errored_macs = set(ms.mac
-                           for ms in (validation_result.mac_status or [])
-                           if ms.state != MACState.available)
-        new_mac_addresses.extend((mac for mac in batch if mac not in errored_macs))
+        errored_macs = set(ms.mac for ms in (validation_result.mac_status or []) if ms.state != MACState.available)
+        new_mac_addresses.extend(mac for mac in batch if mac not in errored_macs)
         if len(new_mac_addresses) >= number_of_missing_mac_addresses:
             break
     for row_index, csv_row in enumerate(csv_rows, 1):
@@ -297,17 +303,18 @@ async def mac_addresses_available(*, api: AsWebexSimpleApi, csv_rows: list[CSVRo
         return []
 
     # validate in batches
-    batches = [mac_addresses[i:i + MAC_VALIDATION_BATCH_SIZE]
-               for i in range(0, len(mac_addresses), MAC_VALIDATION_BATCH_SIZE)]
-    results = await asyncio.gather(*[api.telephony.devices.validate_macs(macs=batch)
-                                     for batch in batches])
+    batches = [
+        mac_addresses[i : i + MAC_VALIDATION_BATCH_SIZE]
+        for i in range(0, len(mac_addresses), MAC_VALIDATION_BATCH_SIZE)
+    ]
+    results = await asyncio.gather(*[api.telephony.devices.validate_macs(macs=batch) for batch in batches])
     results: list[MACValidationResponse]
 
     errored_macs: dict[str, str] = dict()
     for result in results:
-        errored_macs.update((ms.mac, f'{ms.state}, {ms.message}')
-                            for ms in (result.mac_status or [])
-                            if ms.state != MACState.available)
+        errored_macs.update(
+            (ms.mac, f'{ms.state}, {ms.message}') for ms in (result.mac_status or []) if ms.state != MACState.available
+        )
 
     if not errored_macs:
         return []
@@ -317,8 +324,7 @@ async def mac_addresses_available(*, api: AsWebexSimpleApi, csv_rows: list[CSVRo
     return errors
 
 
-async def validate_mac_addresses(*, api: AsWebexSimpleApi, csv_rows: list[CSVRow],
-                                 cleanup: bool) -> ValidationResult:
+async def validate_mac_addresses(*, api: AsWebexSimpleApi, csv_rows: list[CSVRow], cleanup: bool) -> ValidationResult:
     """
     mac addresses must be unique and available
     """
@@ -333,14 +339,16 @@ async def validate_mac_addresses(*, api: AsWebexSimpleApi, csv_rows: list[CSVRow
                 errors.append((row_index, f'Duplicate MAC address "{csv_row.mac_address}"'))
             mac_addresses.add(csv_row.mac_address)
 
-    results = await asyncio.gather(assign_new_mac_addresses(api=api, csv_rows=csv_rows),
-                                   mac_addresses_available(api=api, csv_rows=csv_rows))
+    results = await asyncio.gather(
+        assign_new_mac_addresses(api=api, csv_rows=csv_rows), mac_addresses_available(api=api, csv_rows=csv_rows)
+    )
     errors.extend(chain.from_iterable(results))
     return errors
 
 
-async def validate_workspaces_and_licenses(*, api: AsWebexSimpleApi, csv_rows: list[CSVRow],
-                                           cleanup: bool) -> ValidationResult:
+async def validate_workspaces_and_licenses(
+    *, api: AsWebexSimpleApi, csv_rows: list[CSVRow], cleanup: bool
+) -> ValidationResult:
     """
     Workspaces should not exist, also get license for new workspaces
     """
@@ -355,15 +363,13 @@ async def validate_workspaces_and_licenses(*, api: AsWebexSimpleApi, csv_rows: l
         licenses = results[1]
     workspace_list: list[Workspace]
     licenses: list[License]
-    workspaces = {ws.display_name: ws
-                  for ws in workspace_list}
+    workspaces = {ws.display_name: ws for ws in workspace_list}
 
     def calling_license_id() -> Generator[str, None, None]:
         """
         calling license id for license with available entitlement
         """
-        candidate_licenses = [lic for lic in licenses
-                              if lic.webex_calling_workspaces or lic.webex_calling_professional]
+        candidate_licenses = [lic for lic in licenses if lic.webex_calling_workspaces or lic.webex_calling_professional]
         # make sure to consume workspace licenses first
         candidate_licenses.sort(key=lambda x: x.name, reverse=True)
         for lic in candidate_licenses:
@@ -403,9 +409,11 @@ async def validate_and_prepare(*, api: AsWebexSimpleApi, csv_rows: list[CSVRow],
         * workspace names are unique
         * no devices in the workspace
     """
-    results = await asyncio.gather(validate_locations_and_extensions(api=api, csv_rows=csv_rows, cleanup=cleanup),
-                                   validate_mac_addresses(api=api, csv_rows=csv_rows, cleanup=cleanup),
-                                   validate_workspaces_and_licenses(api=api, csv_rows=csv_rows, cleanup=cleanup))
+    results = await asyncio.gather(
+        validate_locations_and_extensions(api=api, csv_rows=csv_rows, cleanup=cleanup),
+        validate_mac_addresses(api=api, csv_rows=csv_rows, cleanup=cleanup),
+        validate_workspaces_and_licenses(api=api, csv_rows=csv_rows, cleanup=cleanup),
+    )
     errors = list(chain.from_iterable(results))
     errors: ValidationResult
     errors.sort(key=lambda x: x[0])
@@ -430,9 +438,7 @@ async def delete_workspaces(*, api: AsWebexSimpleApi, csv_rows: list[CSVRow], dr
             print(f'Deleted workspace "{workspace.display_name}"')
         return
 
-    await asyncio.gather(*[delete_one_workspace(csv_row.workspace)
-                           for csv_row in csv_rows
-                           if csv_row.workspace])
+    await asyncio.gather(*[delete_one_workspace(csv_row.workspace) for csv_row in csv_rows if csv_row.workspace])
 
 
 async def provision_row(*, api: AsWebexSimpleApi, csv_row: CSVRow) -> None:
@@ -440,25 +446,32 @@ async def provision_row(*, api: AsWebexSimpleApi, csv_row: CSVRow) -> None:
     Provision a single row
     """
     # create workspace
-    settings = Workspace(location_id=csv_row.location.location_id,
-                         display_name=csv_row.workspace_name,
-                         type=WorkspaceType.desk,
-                         capacity=1,
-                         supported_devices=WorkspaceSupportedDevices.phones,
-                         device_platform=DevicePlatform.cisco,
-                         calling=WorkspaceCalling(type=CallingType.webex,
-                                                  webex_calling=WorkspaceWebexCalling(
-                                                      licenses=[csv_row.calling_license_id],
-                                                      extension=csv_row.extension,
-                                                      location_id=csv_row.location.location_id)))
+    settings = Workspace(
+        location_id=csv_row.location.location_id,
+        display_name=csv_row.workspace_name,
+        type=WorkspaceType.desk,
+        capacity=1,
+        supported_devices=WorkspaceSupportedDevices.phones,
+        device_platform=DevicePlatform.cisco,
+        calling=WorkspaceCalling(
+            type=CallingType.webex,
+            webex_calling=WorkspaceWebexCalling(
+                licenses=[csv_row.calling_license_id],
+                extension=csv_row.extension,
+                location_id=csv_row.location.location_id,
+            ),
+        ),
+    )
     workspace = await api.workspaces.create(settings=settings)
     print(f'Provisioned workspace "{workspace.display_name}"')
 
     # create device
-    device = await api.devices.create_by_mac_address(mac=csv_row.mac_address,
-                                                     workspace_id=workspace.workspace_id,
-                                                     model='Generic IPPhone Customer Managed',
-                                                     password=csv_row.password)
+    device = await api.devices.create_by_mac_address(
+        mac=csv_row.mac_address,
+        workspace_id=workspace.workspace_id,
+        model='Generic IPPhone Customer Managed',
+        password=csv_row.password,
+    )
 
     details = await api.telephony.devices.details(device_id=device.device_id)
     print(f'Provisioned device in workspace "{workspace.display_name}"')
@@ -484,19 +497,36 @@ def main():
                 if args.dry_run:
                     print('Dry run, not provisioning anything')
                     return
-                await asyncio.gather(*[provision_row(api=api, csv_row=csv_row)
-                                       for csv_row in csv_rows])
+                await asyncio.gather(*[provision_row(api=api, csv_row=csv_row) for csv_row in csv_rows])
                 # write output
                 if args.output:
                     with open(args.output, 'w', newline='') as output:
                         writer = csv.writer(output)
-                        writer.writerow(['workspace_name', 'location_name', 'extension', 'mac_address',
-                                         'password', 'outbound_proxy', 'sip_user_name', 'line_port'])
+                        writer.writerow(
+                            [
+                                'workspace_name',
+                                'location_name',
+                                'extension',
+                                'mac_address',
+                                'password',
+                                'outbound_proxy',
+                                'sip_user_name',
+                                'line_port',
+                            ]
+                        )
                         for csv_row in csv_rows:
-                            writer.writerow([csv_row.workspace_name, csv_row.location_name,
-                                             csv_row.extension, csv_row.mac_address,
-                                             csv_row.password, csv_row.outbound_proxy,
-                                             csv_row.sip_user_name, csv_row.line_port])
+                            writer.writerow(
+                                [
+                                    csv_row.workspace_name,
+                                    csv_row.location_name,
+                                    csv_row.extension,
+                                    csv_row.mac_address,
+                                    csv_row.password,
+                                    csv_row.outbound_proxy,
+                                    csv_row.sip_user_name,
+                                    csv_row.line_port,
+                                ]
+                            )
                     # for
                 # with open
             # with setup_logging
@@ -505,21 +535,29 @@ def main():
 
     # parse arguments
     parser = argparse.ArgumentParser(
-        description="Provision workspaces with 3rd party devices.",
-        epilog='Example: %(prog)s input.csv output.csv --log-file log.har')
-    parser.add_argument('csv', type=str, help="""CSV with workspaces to provision. CSV has the following columns:
+        description='Provision workspaces with 3rd party devices.',
+        epilog='Example: %(prog)s input.csv output.csv --log-file log.har',
+    )
+    parser.add_argument(
+        'csv',
+        type=str,
+        help="""CSV with workspaces to provision. CSV has the following columns:
     * workspace name: the workspace will be created
     * location name: must be an existing location
     * extension (optional); if missing a new extension will be generated starting at 2000
     * MAC address; if empty a new (dummy) MAC address will be generated as DEAD-DEAD-XXXX
-    * password (optional); if missing a new (random password will be generated""")
-    parser.add_argument('output', nargs='?', type=str,
-                        help='Output CSV with the provisioning results. Not required in dry-run mode')
-    parser.add_argument('--token',
-                        help=f'Access token can be provided using --token argument, set in '
-                             f'WEBEX_ACCESS_TOKEN environment variable or can be a service app token. For '
-                             f'the latter set environment variables {SERVICE_APP_ENVS}. Environment '
-                             f'variables can also be set in {env_path()}')
+    * password (optional); if missing a new (random password will be generated""",
+    )
+    parser.add_argument(
+        'output', nargs='?', type=str, help='Output CSV with the provisioning results. Not required in dry-run mode'
+    )
+    parser.add_argument(
+        '--token',
+        help=f'Access token can be provided using --token argument, set in '
+        f'WEBEX_ACCESS_TOKEN environment variable or can be a service app token. For '
+        f'the latter set environment variables {SERVICE_APP_ENVS}. Environment '
+        f'variables can also be set in {env_path()}',
+    )
     parser.add_argument('--dry-run', action='store_true', help='Dry run, do not provision anything')
     parser.add_argument('--log-file', help='Log file. If extension is .har, log in HAR format')
     parser.add_argument('--cleanup', action='store_true', help='remove workspaces')
@@ -540,7 +578,9 @@ def main():
         print(
             f'Access token can be provided using --token argument, set in WEBEX_ACCESS_TOKEN environment variable '
             f'or can be a service app token. For the latter set environment variables {SERVICE_APP_ENVS}. Environment '
-            f'variables can also be set in {env_path()}', file=sys.stderr)
+            f'variables can also be set in {env_path()}',
+            file=sys.stderr,
+        )
         exit(1)
 
     asyncio.run(as_main())

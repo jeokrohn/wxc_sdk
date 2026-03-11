@@ -30,23 +30,18 @@ class TestMeVoicemail(TestWithRandomUserApi):
             # end of get_settings
             return
 
-        users = [user
-                 for user in self.users
-                 if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_settings(user)
-                                         for user in users], return_exceptions=True)
+        users = [user for user in self.users if not user.display_name.startswith('admin@')]
+        results = await asyncio.gather(*[get_settings(user) for user in users], return_exceptions=True)
         err = None
         for user, result in zip(users, results):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error voicemail settings for {user.display_name}: {result}")
+                print(f'Error voicemail settings for {user.display_name}: {result}')
             elif result is not None:
                 result: VoicemailSettings
-                print(f"voicemail settings for {user.display_name}: ")
+                print(f'voicemail settings for {user.display_name}: ')
 
-                print(json.dumps(result.model_dump(mode='json', exclude_unset=True,
-                                                   exclude_none=True),
-                                 indent=2))
+                print(json.dumps(result.model_dump(mode='json', exclude_unset=True, exclude_none=True), indent=2))
         if err:
             raise err
 
@@ -67,11 +62,8 @@ class TestMeVoicemail(TestWithRandomUserApi):
             return
 
         # get settings for all users
-        users = [user
-                 for user in self.users
-                 if not user.display_name.startswith('admin@')]
-        settings = await asyncio.gather(*[get_settings(user)
-                                          for user in users])
+        users = [user for user in self.users if not user.display_name.startswith('admin@')]
+        settings = await asyncio.gather(*[get_settings(user) for user in users])
         settings: List[VoicemailSettings]
 
         # pick a random user
@@ -89,15 +81,14 @@ class TestMeVoicemail(TestWithRandomUserApi):
                 with open(wav_path, 'rb') as f:
                     vm_api.upload_busy_greeting(content=f, upload_as='sample.wav')
                 new_settings = VoicemailSettings(
-                    send_busy_calls=VoicemailEnabledWithGreeting(enabled=True, greeting=Greeting.custom))
+                    send_busy_calls=VoicemailEnabledWithGreeting(enabled=True, greeting=Greeting.custom)
+                )
                 vm_api.configure(new_settings)
                 after = vm_api.settings()
                 print('Before:')
-                print(json.dumps(before.model_dump(mode='json', exclude_none=True, by_alias=True),
-                                 indent=2))
+                print(json.dumps(before.model_dump(mode='json', exclude_none=True, by_alias=True), indent=2))
                 print('After:')
-                print(json.dumps(after.model_dump(mode='json', exclude_none=True, by_alias=True),
-                                 indent=2))
+                print(json.dumps(after.model_dump(mode='json', exclude_none=True, by_alias=True), indent=2))
                 self.assertTrue(after.send_busy_calls.greeting_uploaded)
                 self.assertTrue(after.send_busy_calls.greeting == Greeting.custom)
                 self.assertEqual(after.send_busy_calls.audio_file.media_type, 'WAV')
@@ -122,11 +113,8 @@ class TestMeVoicemail(TestWithRandomUserApi):
             return
 
         # get settings for all users
-        users = [user
-                 for user in self.users
-                 if not user.display_name.startswith('admin@')]
-        settings = await asyncio.gather(*[get_settings(user)
-                                          for user in users])
+        users = [user for user in self.users if not user.display_name.startswith('admin@')]
+        settings = await asyncio.gather(*[get_settings(user) for user in users])
         settings: List[VoicemailSettings]
 
         # pick a random user
@@ -145,15 +133,14 @@ class TestMeVoicemail(TestWithRandomUserApi):
                     with open(wav_path, 'rb') as f:
                         await as_api.me.voicemail.upload_busy_greeting(content=f, upload_as='sample.wav')
                 new_settings = VoicemailSettings(
-                    send_busy_calls=VoicemailEnabledWithGreeting(enabled=True, greeting=Greeting.custom))
+                    send_busy_calls=VoicemailEnabledWithGreeting(enabled=True, greeting=Greeting.custom)
+                )
                 vm_api.configure(new_settings)
                 after = vm_api.settings()
                 print('Before:')
-                print(json.dumps(before.model_dump(mode='json', exclude_none=True, by_alias=True),
-                                 indent=2))
+                print(json.dumps(before.model_dump(mode='json', exclude_none=True, by_alias=True), indent=2))
                 print('After:')
-                print(json.dumps(after.model_dump(mode='json', exclude_none=True, by_alias=True),
-                                 indent=2))
+                print(json.dumps(after.model_dump(mode='json', exclude_none=True, by_alias=True), indent=2))
                 self.assertTrue(after.send_busy_calls.greeting_uploaded)
                 self.assertTrue(after.send_busy_calls.greeting == Greeting.custom)
                 self.assertEqual(after.send_busy_calls.audio_file.media_type, 'WAV')

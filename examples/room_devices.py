@@ -1,49 +1,50 @@
 #!/usr/bin/env python
 """
-    usage: room_devices.py [-h] [--location LOCATION] [--wsnames WSNAMES] [--test] {show,clear}
+usage: room_devices.py [-h] [--location LOCATION] [--wsnames WSNAMES] [--test] {show,clear}
 
-    CLI tool to manage room device calling entitlements
+CLI tool to manage room device calling entitlements
 
-    positional arguments:
-      {show,clear}         show: show all room devices with their calling settings, clear: remove calling
-                           license from devices
+positional arguments:
+  {show,clear}         show: show all room devices with their calling settings, clear: remove calling
+                       license from devices
 
-    optional arguments:
-      -h, --help           show this help message and exit
-      --location LOCATION  work on devices in given location
-      --wsnames WSNAMES    file name of a file with workspace names to operate on; one name per line
-      --test               test run only
+optional arguments:
+  -h, --help           show this help message and exit
+  --location LOCATION  work on devices in given location
+  --wsnames WSNAMES    file name of a file with workspace names to operate on; one name per line
+  --test               test run only
 
-    The tool reads environment variables from room_devices.env:
-        SERVICE_APP_CLIENT_ID=<clients id of a service app created on developer.webex.com>
-        SERVICE_APP_CLIENT_SECRET=<clients secret of a service app created on developer.webex.com>
-        SERVICE_APP_REFRESH_TOKEN=<refresh token of the service app obtained after the service app has been
-                                        authorized for an org>
+The tool reads environment variables from room_devices.env:
+    SERVICE_APP_CLIENT_ID=<clients id of a service app created on developer.webex.com>
+    SERVICE_APP_CLIENT_SECRET=<clients secret of a service app created on developer.webex.com>
+    SERVICE_APP_REFRESH_TOKEN=<refresh token of the service app obtained after the service app has been
+                                    authorized for an org>
 
-    This information is used to obtain an access token required to authorize API access
+This information is used to obtain an access token required to authorize API access
 
-    This is a super-set of the scopes the service app needs:
-        * spark-admin:workspaces_write
-        * Identity:one_time_password
-        * identity:placeonetimepassword_create
-        * spark:people_read
-        * spark-admin:workspace_locations_read
-        * spark-admin:workspaces_read
-        * spark:devices_write
-        * spark:devices_read
-        * spark:kms
-        * spark-admin:devices_read
-        * spark-admin:workspace_locations_write
-        * spark-admin:licenses_read
-        * spark-admin:telephony_config_read
-        * spark-admin:telephony_config_write
-        * spark-admin:devices_write
-        * spark-admin:people_read
+This is a super-set of the scopes the service app needs:
+    * spark-admin:workspaces_write
+    * Identity:one_time_password
+    * identity:placeonetimepassword_create
+    * spark:people_read
+    * spark-admin:workspace_locations_read
+    * spark-admin:workspaces_read
+    * spark:devices_write
+    * spark:devices_read
+    * spark:kms
+    * spark-admin:devices_read
+    * spark-admin:workspace_locations_write
+    * spark-admin:licenses_read
+    * spark-admin:telephony_config_read
+    * spark-admin:telephony_config_write
+    * spark-admin:devices_write
+    * spark-admin:people_read
 
-    More service app details: https://developer.webex.com/docs/service-apps
+More service app details: https://developer.webex.com/docs/service-apps
 
-    Tokens get persisted in room_devices.yml.
+Tokens get persisted in room_devices.yml.
 """
+
 import asyncio
 import logging
 import sys
@@ -93,7 +94,7 @@ def read_tokens_from_file() -> Optional[Tokens]:
     if not isfile(path):
         return None
     try:
-        with open(path, mode='r') as f:
+        with open(path) as f:
             data = safe_load(f)
         tokens = Tokens.model_validate(data)
     except Exception:
@@ -114,9 +115,12 @@ def get_access_token() -> Tokens:
     Get a new access token using refresh token, service app client id, service app client secret
     """
     tokens = Tokens(refresh_token=getenv('SERVICE_APP_REFRESH_TOKEN'))
-    integration = Integration(client_id=getenv('SERVICE_APP_CLIENT_ID'),
-                              client_secret=getenv('SERVICE_APP_CLIENT_SECRET'),
-                              scopes=[], redirect_url=None)
+    integration = Integration(
+        client_id=getenv('SERVICE_APP_CLIENT_ID'),
+        client_secret=getenv('SERVICE_APP_CLIENT_SECRET'),
+        scopes=[],
+        redirect_url=None,
+    )
     integration.refresh(tokens=tokens)
     write_tokens_to_file(tokens)
     return tokens
@@ -142,12 +146,15 @@ def main() -> int:
     """
     # parse args
     parser = ArgumentParser(prog=basename(__file__), description='CLI tool to manage room device calling entitlements')
-    parser.add_argument('operation', choices=['show', 'clear'], help='show: show all room devices with their calling '
-                                                                     'settings, clear: remove calling license from '
-                                                                     'devices')
+    parser.add_argument(
+        'operation',
+        choices=['show', 'clear'],
+        help='show: show all room devices with their calling settings, clear: remove calling license from devices',
+    )
     parser.add_argument('--location', type=str, help='work on devices in given location')
-    parser.add_argument('--wsnames', type=str, help='file name of a file with workspace names to operate on; '
-                                                    'one name per line')
+    parser.add_argument(
+        '--wsnames', type=str, help='file name of a file with workspace names to operate on; one name per line'
+    )
     parser.add_argument('--test', action='store_true', help='test run only')
     args = parser.parse_args()
     operation = args.operation
@@ -195,11 +202,10 @@ def main() -> int:
             log('done')
 
         async with AsWebexSimpleApi(tokens=tokens) as api:
-
             # get list of locations and workspace locations
             ws_location_list, location_list = await asyncio.gather(
-                api.workspace_locations.list(display_name=location),
-                api.locations.list(name=location))
+                api.workspace_locations.list(display_name=location), api.locations.list(name=location)
+            )
             location_list: list[Location]
             ws_location_list: list[WorkspaceLocation]
 
@@ -217,25 +223,27 @@ def main() -> int:
             # get workspaces, numbers, and devices (in target location)
             workspaces, numbers, devices = await asyncio.gather(
                 api.workspaces.list(workspace_location_id=target_ws_location and target_ws_location.id),
-                api.telephony.phone_numbers(location_id=target_location and target_location.location_id,
-                                            owner_type=OwnerType.place),
-                api.devices.list(workspace_location_id=target_ws_location and target_ws_location.id,
-                                 product_type='roomdesk')
+                api.telephony.phone_numbers(
+                    location_id=target_location and target_location.location_id, owner_type=OwnerType.place
+                ),
+                api.devices.list(
+                    workspace_location_id=target_ws_location and target_ws_location.id, product_type='roomdesk'
+                ),
             )
             workspaces: list[Workspace]
             numbers: list[NumberListPhoneNumber]
             devices: list[Device]
 
             # only workspaces supporting desk devices
-            workspaces = [ws for ws in workspaces
-                          if ws.supported_devices == WorkspaceSupportedDevices.collaboration_devices]
+            workspaces = [
+                ws for ws in workspaces if ws.supported_devices == WorkspaceSupportedDevices.collaboration_devices
+            ]
 
             # if a path to a file with workspace names was given, then filter based on the file contents
             if ws_names:
-                with open(ws_names, mode='r') as f:
+                with open(ws_names) as f:
                     workspace_names = set(s_line for line in f if (s_line := line.strip()))
-                workspaces = [ws for ws in workspaces
-                              if ws.display_name in workspace_names]
+                workspaces = [ws for ws in workspaces if ws.display_name in workspace_names]
             if not workspaces:
                 print('No workspaces', file=sys.stderr)
                 return 1
@@ -246,18 +254,21 @@ def main() -> int:
             # prepare some lookups
             workspace_locations_by_id: dict[str, WorkspaceLocation] = {wsl.id: wsl for wsl in ws_location_list}
             numbers_by_workspace_uuid: dict[str, list[NumberListPhoneNumber]] = reduce(
-                lambda r, el: r[webex_id_to_uuid(el.owner.owner_id)].append(el) or r,
-                numbers,
-                defaultdict(list))
+                lambda r, el: r[webex_id_to_uuid(el.owner.owner_id)].append(el) or r, numbers, defaultdict(list)
+            )
             devices_by_workspace_id: dict[str, list[Device]] = reduce(
-                lambda r, el: r[el.workspace_id].append(el) or r,
-                devices,
-                defaultdict(list))
+                lambda r, el: r[el.workspace_id].append(el) or r, devices, defaultdict(list)
+            )
 
             # sort workspaces by workspace location name and workspace name; workspace location can be unset
-            workspaces.sort(key=lambda ws: ('' if not ws.workspace_location_id else
-                                            workspace_locations_by_id[ws.workspace_location_id].display_name,
-                                            ws.display_name))
+            workspaces.sort(
+                key=lambda ws: (
+                    ''
+                    if not ws.workspace_location_id
+                    else workspace_locations_by_id[ws.workspace_location_id].display_name,
+                    ws.display_name,
+                )
+            )
             # some field lengths for nicer output
             wsl_name_len = max(len(wsl.display_name) for wsl in ws_location_list)
             ws_name_len = max(len(ws.display_name) for ws in workspaces)
@@ -272,15 +283,19 @@ def main() -> int:
                     wsl_name = ''
                 else:
                     wsl_name = workspace_locations_by_id[workspace.workspace_location_id].display_name
-                print(f'workspace location "{wsl_name:{wsl_name_len}}", '
-                      f'workspace "{workspace.display_name:{ws_name_len}}"')
+                print(
+                    f'workspace location "{wsl_name:{wsl_name_len}}", '
+                    f'workspace "{workspace.display_name:{ws_name_len}}"'
+                )
 
                 # are there any numbers in that workspace?
                 numbers = numbers_by_workspace_uuid.get(webex_id_to_uuid(workspace.workspace_id))
                 if numbers:
                     for number in numbers:
-                        print(f'  number: {number.phone_number or "-" * pn_len:{pn_len}}/'
-                              f'{number.extension or "-" * ext_len:{ext_len}}')
+                        print(
+                            f'  number: {number.phone_number or "-" * pn_len:{pn_len}}/'
+                            f'{number.extension or "-" * ext_len:{ext_len}}'
+                        )
                 devices = devices_by_workspace_id.get(workspace.workspace_id)
                 if devices:
                     for device in devices:

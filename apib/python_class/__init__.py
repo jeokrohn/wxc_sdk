@@ -52,6 +52,7 @@ class Parameter:
     """
     One Parameter
     """
+
     name: str
     python_type: str
     referenced_class: Optional[str]
@@ -110,11 +111,13 @@ class Parameter:
         # param lines:
         ' * 1st line has ":param <xyc>: '
         ' * following lines just have docstring lines'
-        yield from lines_for_docstring(docstring=self.docstring or '-',
-                                       text_prefix_for_1st_line=f':param {self.python_name}: ',
-                                       indent=4,
-                                       indent_first_line=0,
-                                       width=112)
+        yield from lines_for_docstring(
+            docstring=self.docstring or '-',
+            text_prefix_for_1st_line=f':param {self.python_name}: ',
+            indent=4,
+            indent_first_line=0,
+            width=112,
+        )
         # for datetime: str or datetime
         python_type = self.python_type
         if python_type == 'datetime':
@@ -136,7 +139,7 @@ class Parameter:
             python_val = f"','.join({self.python_name})"
         elif self.is_enum:
             # body['{name}'] = enum_str({python_name})
-            python_val = f"enum_str({self.python_name})"
+            python_val = f'enum_str({self.python_name})'
         else:
             if self.python_type == 'datetime':
                 # datetime parameters in URLs are something like:
@@ -147,8 +150,7 @@ class Parameter:
             python_val = f'{self.python_name}'
         lines.append(f"params['{self.name}'] = {python_val}")
         if self.optional:
-            lines = chain([f'if {self.python_name} is not None:'],
-                          (f'    {l}' for l in lines))
+            lines = chain([f'if {self.python_name} is not None:'], (f'    {l}' for l in lines))
         return lines
 
     def source_for_body_init(self) -> Generator[str, None, None]:
@@ -172,11 +174,15 @@ class Parameter:
             return
         if self.python_type == self.referenced_class:
             # body['{name}'] = {python_name}.model_dump(mode='json', by_alias=True, exclude_none=True)
-            yield (f"{indent}body['{self.name}'] = {self.python_name}.model_dump(mode='json', "
-                   f"by_alias=True, exclude_none=True)")
+            yield (
+                f"{indent}body['{self.name}'] = {self.python_name}.model_dump(mode='json', "
+                f'by_alias=True, exclude_none=True)'
+            )
             return
-        yield (f"{indent}body['{self.name}'] = TypeAdapter({self.python_type}).dump_python({self.python_name}, "
-               f"mode='json', by_alias=True, exclude_none=True)")
+        yield (
+            f"{indent}body['{self.name}'] = TypeAdapter({self.python_type}).dump_python({self.python_name}, "
+            f"mode='json', by_alias=True, exclude_none=True)"
+        )
 
 
 class SourceIO(StringIO):
@@ -233,9 +239,7 @@ class Endpoint:
           * has "max" query parameters
         """
         pag_parameters = {'max'}
-        pagination_parameters = set(p.name
-                                    for p in self.href_parameter
-                                    if p.name in pag_parameters)
+        pagination_parameters = set(p.name for p in self.href_parameter if p.name in pag_parameters)
         if pagination_parameters != pag_parameters:
             return None
         if self.result_referenced_class and self.result == self.result_referenced_class:
@@ -297,12 +301,9 @@ class Endpoint:
         #   * mandatory parameters; href before body
         #   * optional parameters; href before body w/o orgId
         #   * orgId if present
-        yield from (p for p in chain(self.href_parameters_filtered(),
-                                     self.body_parameter)
-                    if not p.optional)
+        yield from (p for p in chain(self.href_parameters_filtered(), self.body_parameter) if not p.optional)
         org_id = None
-        for p in chain(self.href_parameters_filtered(),
-                       self.body_parameter):
+        for p in chain(self.href_parameters_filtered(), self.body_parameter):
             if not p.optional:
                 # skip mandatory parameters; already covered
                 continue
@@ -318,7 +319,7 @@ class Endpoint:
     @property
     def params_required(self) -> bool:
         # do we need to pass 'params'?
-        return self.paginated or any((not p.url_parameter for p in self.href_parameters_filtered()))
+        return self.paginated or any(not p.url_parameter for p in self.href_parameters_filtered())
 
     @property
     def single_result_attribute(self) -> Optional['Attribute']:
@@ -346,9 +347,12 @@ class Endpoint:
         def_lines_prefix = ' ' * (4 + len(def_line))
 
         # comma separated list of all parameters
-        param_line = ', '.join(chain(['self'],
-                                     (parameter.source_for_arg_list(class_names=class_names)
-                                      for parameter in self.parameters_for_args())))
+        param_line = ', '.join(
+            chain(
+                ['self'],
+                (parameter.source_for_arg_list(class_names=class_names) for parameter in self.parameters_for_args()),
+            )
+        )
 
         # for methods with pagination we want to add a **params parameter
         if paginated := self.paginated:
@@ -382,8 +386,7 @@ class Endpoint:
 
         # add lines to source and remove the "&" placeholders
         for line in break_line(def_line, prefix=def_lines_prefix, prefix_first_line=' ' * 4):
-            print(line.replace('&', ' '),
-                  file=source)
+            print(line.replace('&', ' '), file=source)
 
     def source_docstring(self, source: SourceIO):
         """
@@ -403,8 +406,7 @@ class Endpoint:
                 source.print(f'{self.title}')
                 print(file=source)
         if self.docstring:
-            for line in lines_for_docstring(docstring=self.docstring,
-                                            width=112):
+            for line in lines_for_docstring(docstring=self.docstring, width=112):
                 source.print(line)
             source.print()
         # parameter docstrings
@@ -414,11 +416,18 @@ class Endpoint:
         # also add a return: line
         if paginated := self.paginated:
             if not paginated.referenced_class:
-                list(map(source.print, lines_for_docstring(docstring=paginated.docstring,
-                                                           text_prefix_for_1st_line=':return: ',
-                                                           indent=4,
-                                                           indent_first_line=0,
-                                                           width=112)))
+                list(
+                    map(
+                        source.print,
+                        lines_for_docstring(
+                            docstring=paginated.docstring,
+                            text_prefix_for_1st_line=':return: ',
+                            indent=4,
+                            indent_first_line=0,
+                            width=112,
+                        ),
+                    )
+                )
             else:
                 source.print(f':return: Generator yielding :class:`{paginated.referenced_class}` instances')
         else:
@@ -453,8 +462,7 @@ class Endpoint:
             return validate
         if self.result != self.result_referenced_class:
             # complex return type -> need to use TypeAdapter
-            for_ta = self.result.replace(self.result_referenced_class,
-                                         f"module.{self.result_referenced_class}")
+            for_ta = self.result.replace(self.result_referenced_class, f'module.{self.result_referenced_class}')
             ta = eval(f'TypeAdapter({for_ta})')
             validator = ta.validate_python
         else:
@@ -479,10 +487,9 @@ class Endpoint:
                         else:
                             validator = model.model_validate
                     else:
-                        python_type = sra.python_type.replace(sra.referenced_class,
-                                                              f"module.{sra.referenced_class}")
+                        python_type = sra.python_type.replace(sra.referenced_class, f'module.{sra.referenced_class}')
                         try:
-                            ta = eval(f"TypeAdapter({python_type})")
+                            ta = eval(f'TypeAdapter({python_type})')
                         except NameError as e:
                             raise ValueError(f'Failed to find class "{sra.referenced_class}" in module') from e
                         validator = ta.validate_python
@@ -499,8 +506,9 @@ class Endpoint:
         """
         if pa := self.paginated:
             # return self.session.follow_pagination(url=ep, model=Person, params=params)
-            call_line = f"return self.session.follow_pagination(url=url, model={pa.referenced_class}, item_key='" \
-                        f"{pa.name}'"
+            call_line = (
+                f"return self.session.follow_pagination(url=url, model={pa.referenced_class}, item_key='{pa.name}'"
+            )
             if self.params_required:
                 call_line = f'{call_line}, params=params'
             if self.body_parameter:
@@ -576,7 +584,7 @@ class Endpoint:
 
         # code to determine URL (make sure to set URL parameters)
         # we only need the part of the endpoint URL after the common base URL
-        url = self.url[len(base):].strip('/')
+        url = self.url[len(base) :].strip('/')
         if any(p.url_parameter for p in self.href_parameter):
             # generate Python code that uses an f-string to determine the URL
             # for that we have to replace href parameter names in URL with python names
@@ -592,7 +600,7 @@ class Endpoint:
         else:
             if url:
                 url = f"'{url}'"
-        url_line = f"url = self.ep({url})"
+        url_line = f'url = self.ep({url})'
         source.print(url_line)
 
         # call the method
@@ -608,6 +616,7 @@ class Attribute:
     """
     one datastructure attribute
     """
+
     name: str
     python_type: str
     docstring: Optional[str] = None
@@ -616,10 +625,16 @@ class Attribute:
     optional: bool = field(default=False)
 
     def __post_init__(self):
-        if (self.sample and isinstance(self.sample, str) and self.sample.lower() in {'true', 'false'} and
-                self.python_type != 'bool'):
-            log.warning(f'attribute "{self.name}" has sample value `{self.sample}` but is a {self.python_type} '
-                        f'instead of a bool')
+        if (
+            self.sample
+            and isinstance(self.sample, str)
+            and self.sample.lower() in {'true', 'false'}
+            and self.python_type != 'bool'
+        ):
+            log.warning(
+                f'attribute "{self.name}" has sample value `{self.sample}` but is a {self.python_type} '
+                f'instead of a bool'
+            )
             self.sample = self.sample == 'true'
             self.python_type = 'bool'
             self.referenced_class = None
@@ -631,13 +646,17 @@ class Attribute:
         Generator for attributes from an ApibEnum
         """
         for e in enum_element.enumerations:
-            yield Attribute(name=e.content, python_type=simple_python_type(e.element),
-                            docstring=e.description, sample=None, referenced_class=None)
+            yield Attribute(
+                name=e.content,
+                python_type=simple_python_type(e.element),
+                docstring=e.description,
+                sample=None,
+                referenced_class=None,
+            )
 
     @property
     def name_for_source(self) -> str:
-        name_map = {'*': 'star',
-                    '#': 'hash'}
+        name_map = {'*': 'star', '#': 'hash'}
 
         attr_name = self.name.strip('"')
         attr_name = attr_name.strip("'")
@@ -710,6 +729,7 @@ class PythonClass:
     """
     Information about a Python class
     """
+
     name: str
     attributes: Optional[list[Attribute]] = field(default_factory=list)
     description: Optional[str] = None
@@ -746,20 +766,23 @@ class PythonClass:
         if not self.attributes:
             attribute_sources = ('...',)
         else:
-            attribute_sources = chain.from_iterable(map(str.splitlines,
-                                                        (f'{a.source(self.is_enum, with_example)}'
-                                                         for a in self.attributes)))
+            attribute_sources = chain.from_iterable(
+                map(str.splitlines, (f'{a.source(self.is_enum, with_example)}' for a in self.attributes))
+            )
         if not (self.description and CLASSES_WITH_DESCRIPTION):
             desc_source = ''
         else:
             # break description into lines
-            desc_source = '\n'.join(chain.from_iterable(break_line(line, prefix=' ' * 4)
-                                                        for line in self.description.splitlines()))
+            desc_source = '\n'.join(
+                chain.from_iterable(break_line(line, prefix=' ' * 4) for line in self.description.splitlines())
+            )
             desc_source = DESC_TEMPLATE.format(docstring=desc_source)
-        result = CLASS_TEMPLATE.format(class_name=self.name,
-                                       baseclass=baseclass,
-                                       desc=desc_source,
-                                       attributes='\n'.join(f'    {line}' for line in attribute_sources)).strip()
+        result = CLASS_TEMPLATE.format(
+            class_name=self.name,
+            baseclass=baseclass,
+            desc=desc_source,
+            attributes='\n'.join(f'    {line}' for line in attribute_sources),
+        ).strip()
         return result
 
 
@@ -768,6 +791,7 @@ class PythonAPI:
     """
     One API with multiple Endpoints
     """
+
     title: str
     docstring: str
     host: str
@@ -826,16 +850,14 @@ class PythonAPI:
         base = re.sub(r'/\w*$', '', base)
         doc_lines = chain([self.title, ''], self.cleaned_doc_string.splitlines())
         docstring = '\n'.join(chain.from_iterable(break_line(line, prefix=' ' * 4) for line in doc_lines))
-        class_head = self.class_template.format(class_name=class_name,
-                                                base=base.lstrip('/'),
-                                                docstring=docstring)
+        class_head = self.class_template.format(class_name=class_name, base=base.lstrip('/'), docstring=docstring)
 
         # full API source is head followed by source for each endpoint
-        full_api_source = '\n'.join(s
-                                    for s in chain([class_head],
-                                                   (ep.source(base=base, class_names=class_names)
-                                                    for ep in self.endpoints))
-                                    if s)
+        full_api_source = '\n'.join(
+            s
+            for s in chain([class_head], (ep.source(base=base, class_names=class_names) for ep in self.endpoints))
+            if s
+        )
         return full_api_source
 
 

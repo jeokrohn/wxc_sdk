@@ -123,6 +123,9 @@ exclude = [
     "wxc_sdk/as_api.py"
 ]
 
+[tool.ruff.format]
+quote-style = "single"
+
 [tool.ruff.lint]
 ignore = ["E741"]
 select = [

@@ -1,6 +1,7 @@
 """
 Generic helper for test cases
 """
+
 import asyncio
 import os
 import random
@@ -31,13 +32,35 @@ from wxc_sdk.people import Person
 from wxc_sdk.rest import RestError
 from wxc_sdk.telephony import NumberListPhoneNumber, NumberType
 
-__all__ = ['as_available_tns', 'available_tns', 'available_extensions', 'LocationInfo', 'us_location_info',
-           'calling_users', 'available_numbers', 'available_extensions_gen', 'get_or_create_holiday_schedule',
-           'get_or_create_business_schedule', 'random_users', 'create_call_park_extension',
-           'as_available_extensions_gen', 'create_random_wsl', 'available_mac_address', 'new_workspace_names',
-           'TEST_WORKSPACES_PREFIX', 'create_workspace_with_webex_calling', 'get_calling_license',
-           'create_calling_user', 'create_random_calling_user', 'create_cxe_queue', 'create_simple_call_queue',
-           'new_operating_mode_names', 'create_operating_mode', 'new_aa_names', 'LocationSettings']
+__all__ = [
+    'as_available_tns',
+    'available_tns',
+    'available_extensions',
+    'LocationInfo',
+    'us_location_info',
+    'calling_users',
+    'available_numbers',
+    'available_extensions_gen',
+    'get_or_create_holiday_schedule',
+    'get_or_create_business_schedule',
+    'random_users',
+    'create_call_park_extension',
+    'as_available_extensions_gen',
+    'create_random_wsl',
+    'available_mac_address',
+    'new_workspace_names',
+    'TEST_WORKSPACES_PREFIX',
+    'create_workspace_with_webex_calling',
+    'get_calling_license',
+    'create_calling_user',
+    'create_random_calling_user',
+    'create_cxe_queue',
+    'create_simple_call_queue',
+    'new_operating_mode_names',
+    'create_operating_mode',
+    'new_aa_names',
+    'LocationSettings',
+]
 
 from wxc_sdk.telephony.callqueue import CallQueue, CallQueueCallPolicies, QueueSettings
 from wxc_sdk.telephony.devices import MACState
@@ -71,8 +94,7 @@ def available_numbers(numbers: Iterable[str], seed: str = None) -> Generator[str
     :return:
     """
     # group numbers by len
-    by_len: dict[int, list[str]] = reduce(lambda red, pn: red[len(pn)].append(pn) or red,
-                                          numbers, defaultdict(list))
+    by_len: dict[int, list[str]] = reduce(lambda red, pn: red[len(pn)].append(pn) or red, numbers, defaultdict(list))
     if by_len:
         ext_len = max(by_len)
         numbers = by_len[ext_len]
@@ -101,7 +123,7 @@ async def as_available_tns(*, as_api: AsWebexSimpleApi, tn_prefix: str, tns_requ
         # we only got an NPA make sure to only look at NXX 555 01XX
         tn_prefix = f'{tn_prefix}55501'
     digits_to_fill = 12 - len(tn_prefix)
-    numbers_to_scan = 10 ** digits_to_fill
+    numbers_to_scan = 10**digits_to_fill
 
     # generator for numbers to scan for availability
     scan = (f'{tn_prefix}{i:0{digits_to_fill}}' for i in range(1, numbers_to_scan))
@@ -119,8 +141,7 @@ async def as_available_tns(*, as_api: AsWebexSimpleApi, tn_prefix: str, tns_requ
             failed = set()
         else:
             # get set of numbers which are not available for provisioning
-            failed = set(result.phone_number for result in validation.phone_numbers
-                         if not result.ok)
+            failed = set(result.phone_number for result in validation.phone_numbers if not result.ok)
         # add available numbers in batch to list of TNs
         tns.extend(number for number in batch if number not in failed)
         if len(tns) >= tns_requested:
@@ -149,24 +170,26 @@ def available_tns(*, api: WebexSimpleApi, tn_prefix: str, tns_requested: int = 1
 
 
 def available_extensions_gen(*, api: WebexSimpleApi, location_id: str, seed: str = None) -> Generator[str, None, None]:
-    extensions = [pn.extension for pn in api.telephony.phone_numbers(location_id=location_id)
-                  if pn.extension]
+    extensions = [pn.extension for pn in api.telephony.phone_numbers(location_id=location_id) if pn.extension]
     extensions.extend(cpe.extension for cpe in api.telephony.callpark_extension.list(location_id=location_id))
     return available_numbers(numbers=extensions, seed=seed)
 
 
-async def as_available_extensions_gen(*, api: AsWebexSimpleApi,
-                                      location_id: str, seed: str = None) -> Generator[str, None, None]:
-    phone_numbers, cpe_list = await asyncio.gather(api.telephony.phone_numbers(location_id=location_id),
-                                                   api.telephony.callpark_extension.list(location_id=location_id))
-    extensions = [pn.extension for pn in phone_numbers
-                  if pn.extension]
+async def as_available_extensions_gen(
+    *, api: AsWebexSimpleApi, location_id: str, seed: str = None
+) -> Generator[str, None, None]:
+    phone_numbers, cpe_list = await asyncio.gather(
+        api.telephony.phone_numbers(location_id=location_id),
+        api.telephony.callpark_extension.list(location_id=location_id),
+    )
+    extensions = [pn.extension for pn in phone_numbers if pn.extension]
     extensions.extend(cpe.extension for cpe in cpe_list)
     return available_numbers(numbers=extensions, seed=seed)
 
 
-def available_extensions(*, api: WebexSimpleApi, location_id: str, ext_requested: int = 1,
-                         seed: str = None) -> list[str]:
+def available_extensions(
+    *, api: WebexSimpleApi, location_id: str, ext_requested: int = 1, seed: str = None
+) -> list[str]:
     """
     Get some available extensions in given location
     :param api:
@@ -195,8 +218,7 @@ def us_location_info(*, api: WebexSimpleApi) -> list[LocationInfo]:
     Get information about US location with numbers
     :param api:
     """
-    us_locations = [loc for loc in api.locations.list()
-                    if loc.address.country == 'US']
+    us_locations = [loc for loc in api.locations.list() if loc.address.country == 'US']
 
     def safe_tel_location_details(location_id: str) -> Optional[TelephonyLocation]:
         try:
@@ -208,8 +230,7 @@ def us_location_info(*, api: WebexSimpleApi) -> list[LocationInfo]:
         tel_locations = list(pool.map(safe_tel_location_details, (loc.location_id for loc in us_locations)))
 
     # only consider locations with telephony
-    us_locations, tel_locations = zip(*((loc, tel_loc) for loc, tel_loc in zip(us_locations, tel_locations)
-                                        if tel_loc))
+    us_locations, tel_locations = zip(*((loc, tel_loc) for loc, tel_loc in zip(us_locations, tel_locations) if tel_loc))
     numbers = list(api.telephony.phone_numbers(number_type=NumberType.number))
     # group numbers by location id
     numbers_by_location: dict[str, list[NumberListPhoneNumber]] = defaultdict(list)
@@ -225,13 +246,13 @@ def us_location_info(*, api: WebexSimpleApi) -> list[LocationInfo]:
             continue
 
         # determine main number of location
-        main_number = next((n for n in loc_numbers
-                            if n.main_number), None)
+        main_number = next((n for n in loc_numbers if n.main_number), None)
         if not main_number:
             # skip locations w/o main number
             continue
-        result.append(LocationInfo(location=loc, tel_location=tel_loc, main_number=main_number.phone_number,
-                                   numbers=loc_numbers))
+        result.append(
+            LocationInfo(location=loc, tel_location=tel_loc, main_number=main_number.phone_number, numbers=loc_numbers)
+        )
     return result
 
 
@@ -242,11 +263,11 @@ def calling_users(*, api: WebexSimpleApi) -> list[Person]:
     :return: list of users
     """
 
-    calling_license_ids = set(lic.license_id for lic in api.licenses.list()
-                              if lic.webex_calling)
+    calling_license_ids = set(lic.license_id for lic in api.licenses.list() if lic.webex_calling)
     # user is a calling user if any of the user's licenses is a calling license
-    users = [user for user in api.people.list()
-             if any(license_id in calling_license_ids for license_id in user.licenses)]
+    users = [
+        user for user in api.people.list() if any(license_id in calling_license_ids for license_id in user.licenses)
+    ]
     return users
 
 
@@ -256,8 +277,7 @@ def get_calling_license(*, api: WebexSimpleApi, prefer_basic: bool = True) -> Op
     """
     licenses = [lic for lic in api.licenses.list() if lic.webex_calling and not lic.webex_calling_workspaces]
     licenses.sort(key=attrgetter('webex_calling_professional'), reverse=not prefer_basic)
-    licence = next((lic for lic in licenses
-                    if lic.consumed_units < lic.total_units), None)
+    licence = next((lic for lic in licenses if lic.consumed_units < lic.total_units), None)
     return licence and licence.license_id
 
 
@@ -279,18 +299,21 @@ def get_or_create_holiday_schedule(*, api: WebexSimpleApi, location_id: str) -> 
         # get national holidays for specified year
         holidays = CalendarifiyApi().holidays(country='US', year=year, holiday_type='national')
         today = date.today()
-        events.extend((Event(name=f'{holiday.name} {holiday.date.year}',
-                             start_date=holiday.date,
-                             end_date=holiday.date,
-                             all_day_enabled=True)
-                       for holiday in holidays
-                       if holiday.date >= today and holiday.date.weekday() != 6))
-    schedule = Schedule(name='National Holidays',
-                        schedule_type=ScheduleType.holidays,
-                        events=events)
+        events.extend(
+            Event(
+                name=f'{holiday.name} {holiday.date.year}',
+                start_date=holiday.date,
+                end_date=holiday.date,
+                all_day_enabled=True,
+            )
+            for holiday in holidays
+            if holiday.date >= today and holiday.date.weekday() != 6
+        )
+    schedule = Schedule(name='National Holidays', schedule_type=ScheduleType.holidays, events=events)
     schedule_id = api.telephony.schedules.create(obj_id=location_id, schedule=schedule)
-    return api.telephony.schedules.details(obj_id=location_id, schedule_type=ScheduleType.holidays,
-                                           schedule_id=schedule_id)
+    return api.telephony.schedules.details(
+        obj_id=location_id, schedule_type=ScheduleType.holidays, schedule_id=schedule_id
+    )
 
 
 def get_or_create_business_schedule(*, api: WebexSimpleApi, location_id: str) -> Schedule:
@@ -306,12 +329,14 @@ def get_or_create_business_schedule(*, api: WebexSimpleApi, location_id: str) ->
     # create a new schedule
     schedule = Schedule.business(name='Business hours')
     schedule_id = api.telephony.schedules.create(obj_id=location_id, schedule=schedule)
-    return api.telephony.schedules.details(obj_id=location_id, schedule_type=ScheduleType.business_hours,
-                                           schedule_id=schedule_id)
+    return api.telephony.schedules.details(
+        obj_id=location_id, schedule_type=ScheduleType.business_hours, schedule_id=schedule_id
+    )
 
 
 Inc = Literal[
-    'gender', 'name', 'location', 'email', 'login', 'registered', 'dob', 'phone', 'cell', 'id', 'picture', 'nat']
+    'gender', 'name', 'location', 'email', 'login', 'registered', 'dob', 'phone', 'cell', 'id', 'picture', 'nat'
+]
 
 
 async def random_users(api: AsWebexSimpleApi, user_count: int = 1, inc: Union[Inc, list[Inc]] = 'name') -> list[User]:
@@ -341,8 +366,7 @@ def create_call_park_extension(*, api: WebexSimpleApi, location_id: str) -> str:
 
     # get name for new CPE
     cpes = list(cp.list(location_id=location_id))
-    new_names = (name for i in range(1000)
-                 if (name := f'CPE {i:03d}') not in set(cpe.name for cpe in cpes))
+    new_names = (name for i in range(1000) if (name := f'CPE {i:03d}') not in set(cpe.name for cpe in cpes))
     new_name = next(new_names)
 
     # we need an available extension in that location
@@ -379,15 +403,20 @@ def create_random_wsl(api: WebexSimpleApi) -> WorkspaceLocation:
     display_name_prefix = f'{address.city}, {address.address1}'
     wsl_list = api.workspace_locations.list()
     display_names = set(wsl.display_name for wsl in wsl_list)
-    display_name = next(dpn
-                        for suffix in chain([''],
-                                            (f'_{i:02}'
-                                             for i in range(1, 99)))
-                        if (dpn := f'{display_name_prefix}{suffix}') not in display_names)
+    display_name = next(
+        dpn
+        for suffix in chain([''], (f'_{i:02}' for i in range(1, 99)))
+        if (dpn := f'{display_name_prefix}{suffix}') not in display_names
+    )
 
-    wsl = api.workspace_locations.create(display_name=display_name, address=str(address),
-                                         country_code='US', longitude=address.geo_location.lon,
-                                         latitude=address.geo_location.lat, city_name=address.city)
+    wsl = api.workspace_locations.create(
+        display_name=display_name,
+        address=str(address),
+        country_code='US',
+        longitude=address.geo_location.lon,
+        latitude=address.geo_location.lat,
+        city_name=address.city,
+    )
     return wsl
 
 
@@ -403,9 +432,7 @@ def available_mac_address(*, api: WebexSimpleApi) -> Generator[str, None, None]:
     batches = zip_longest(*batch_args)
     for batch in batches:
         validation_result = api.telephony.devices.validate_macs(macs=list(batch))
-        errored_macs = set(ms.mac
-                           for ms in (validation_result.mac_status or [])
-                           if ms.state != MACState.available)
+        errored_macs = set(ms.mac for ms in (validation_result.mac_status or []) if ms.state != MACState.available)
         yield from (mac for mac in batch if mac not in errored_macs)
 
 
@@ -415,24 +442,25 @@ TEST_WORKSPACES_PREFIX = 'workspace test '
 def new_workspace_names(api: WebexSimpleApi) -> Generator[str, None, None]:
     ws_list = list(api.workspaces.list())
     ws_names = set(w.display_name for w in ws_list)
-    new_gen = (name for i in range(1000)
-               if (name := f'{TEST_WORKSPACES_PREFIX}{i:03}') not in ws_names)
+    new_gen = (name for i in range(1000) if (name := f'{TEST_WORKSPACES_PREFIX}{i:03}') not in ws_names)
     return new_gen
 
 
-def create_workspace_with_webex_calling(api: WebexSimpleApi, target_location: Location,
-                                        supported_devices: WorkspaceSupportedDevices,
-                                        license: License = None,
-                                        phone_number: str = None,
-                                        extension: str = None,
-                                        **kwargs) -> Workspace:
+def create_workspace_with_webex_calling(
+    api: WebexSimpleApi,
+    target_location: Location,
+    supported_devices: WorkspaceSupportedDevices,
+    license: License = None,
+    phone_number: str = None,
+    extension: str = None,
+    **kwargs,
+) -> Workspace:
     """
     create a workspace with webex calling in given location
     """
     # get an extension in location if none given
     if extension is None:
-        extension = next(available_extensions_gen(api=api,
-                                                  location_id=target_location.location_id))
+        extension = next(available_extensions_gen(api=api, location_id=target_location.location_id))
     # set to None if empty string -> no extension will be set
     extension = extension or None
 
@@ -441,23 +469,28 @@ def create_workspace_with_webex_calling(api: WebexSimpleApi, target_location: Lo
 
     # create workspace with that extension
     webex_calling = WorkspaceWebexCalling(
-        extension=extension,
-        location_id=target_location.location_id,
-        phone_number=phone_number)
+        extension=extension, location_id=target_location.location_id, phone_number=phone_number
+    )
     if license is not None:
         webex_calling.licenses = [license.license_id]
     new_workspace = Workspace(
         display_name=name,
-        calling=WorkspaceCalling(
-            type=CallingType.webex,
-            webex_calling=webex_calling),
-        supported_devices=supported_devices, **kwargs)
+        calling=WorkspaceCalling(type=CallingType.webex, webex_calling=webex_calling),
+        supported_devices=supported_devices,
+        **kwargs,
+    )
     workspace = api.workspaces.create(settings=new_workspace)
     return workspace
 
 
-def create_calling_user(api: WebexSimpleApi, user: User, location_id: str, calling_license_id: str,
-                        extension: str = None, phone_number: str = None) -> Person:
+def create_calling_user(
+    api: WebexSimpleApi,
+    user: User,
+    location_id: str,
+    calling_license_id: str,
+    extension: str = None,
+    phone_number: str = None,
+) -> Person:
     """
     Create a calling enabled user
 
@@ -473,23 +506,27 @@ def create_calling_user(api: WebexSimpleApi, user: User, location_id: str, calli
         raise ValueError('extension or phone_number required')
     # create user
     new_user = api.people.create(
-        settings=Person(emails=[user.email],
-                        display_name=user.display_name,
-                        first_name=user.name.first,
-                        last_name=user.name.last))
+        settings=Person(
+            emails=[user.email], display_name=user.display_name, first_name=user.name.first, last_name=user.name.last
+        )
+    )
 
     api.licenses.assign_licenses_to_users(
         person_id=new_user.person_id,
-        licenses=[LicenseRequest(id=calling_license_id,
-                                 properties=LicenseProperties(location_id=location_id,
-                                                              extension=extension,
-                                                              phone_number=phone_number))])
+        licenses=[
+            LicenseRequest(
+                id=calling_license_id,
+                properties=LicenseProperties(location_id=location_id, extension=extension, phone_number=phone_number),
+            )
+        ],
+    )
     new_user = api.people.details(person_id=new_user.person_id, calling_data=True)
     return new_user
 
 
-def create_random_calling_user(api: WebexSimpleApi, location_id: str, calling_license_id: str = None,
-                               with_tn: bool = False) -> Person:
+def create_random_calling_user(
+    api: WebexSimpleApi, location_id: str, calling_license_id: str = None, with_tn: bool = False
+) -> Person:
     """
     create a random calling users in given location
     :param api:
@@ -508,8 +545,7 @@ def create_random_calling_user(api: WebexSimpleApi, location_id: str, calling_li
 
     if with_tn:
         # figure out the NPA for phone numbers in target location
-        existing_tns = api.telephony.phone_numbers(location_id=location_id,
-                                                   number_type=NumberType.number)
+        existing_tns = api.telephony.phone_numbers(location_id=location_id, number_type=NumberType.number)
 
         # take the NPA from the 1st phone number
         npa = next((n.phone_number[2:5] for n in existing_tns), None)
@@ -518,23 +554,28 @@ def create_random_calling_user(api: WebexSimpleApi, location_id: str, calling_li
 
         phone_number = (available_tns(api=api, tn_prefix=npa))[0]
         # add phone number to location
-        api.telephony.location.number.add(location_id=location_id,
-                                          phone_numbers=[phone_number],
-                                          state=NumberState.active)
+        api.telephony.location.number.add(
+            location_id=location_id, phone_numbers=[phone_number], state=NumberState.active
+        )
     else:
         phone_number = None
     extension = available_extensions(api=api, location_id=location_id)[0]
     if calling_license_id is None:
-        calling_licenses = [lic for lic in api.licenses.list() if
-                            lic.webex_calling_basic or lic.webex_calling_professional]
+        calling_licenses = [
+            lic for lic in api.licenses.list() if lic.webex_calling_basic or lic.webex_calling_professional
+        ]
         calling_licenses.sort(key=attrgetter('name'), reverse=True)
 
-        calling_license = next((lic for lic in calling_licenses
-                                if lic.consumed_units < lic.total_units), None)
+        calling_license = next((lic for lic in calling_licenses if lic.consumed_units < lic.total_units), None)
         calling_license_id = calling_license.license_id
-    return create_calling_user(api=api, user=random_user, location_id=location_id,
-                               calling_license_id=calling_license_id, extension=extension,
-                               phone_number=phone_number)
+    return create_calling_user(
+        api=api,
+        user=random_user,
+        location_id=location_id,
+        calling_license_id=calling_license_id,
+        extension=extension,
+        phone_number=phone_number,
+    )
 
 
 def create_cxe_queue(api: WebexSimpleApi) -> CallQueue:
@@ -558,18 +599,20 @@ def create_cxe_queue(api: WebexSimpleApi) -> CallQueue:
     # create the new queue
     extension = next(available_extensions_gen(api=api, location_id=target_location.location_id))
     settings = CallQueue.create(name=new_name, agents=[], queue_size=5, extension=extension)
-    queue_id = api.telephony.callqueue.create(location_id=target_location.location_id, settings=settings,
-                                              has_cx_essentials=True)
+    queue_id = api.telephony.callqueue.create(
+        location_id=target_location.location_id, settings=settings, has_cx_essentials=True
+    )
 
     # ... and get the queue details
-    queue = api.telephony.callqueue.details(location_id=target_location.location_id,
-                                            queue_id=queue_id,
-                                            has_cx_essentials=True)
+    queue = api.telephony.callqueue.details(
+        location_id=target_location.location_id, queue_id=queue_id, has_cx_essentials=True
+    )
     return queue
 
 
-def create_simple_call_queue(*, api: WebexSimpleApi, no_log, locations: list[TelephonyLocation],
-                             users: list[Person] = None) -> CallQueue:
+def create_simple_call_queue(
+    *, api: WebexSimpleApi, no_log, locations: list[TelephonyLocation], users: list[Person] = None
+) -> CallQueue:
     """
     Create a call queue
     """
@@ -581,8 +624,7 @@ def create_simple_call_queue(*, api: WebexSimpleApi, no_log, locations: list[Tel
     # pick available CQ name in location
     cq_list = list(tcq.list(location_id=target_location.location_id))
     queue_names = set(queue.name for queue in cq_list)
-    new_name = next(name for i in range(1000)
-                    if (name := f'cq_{i:03}') not in queue_names)
+    new_name = next(name for i in range(1000) if (name := f'cq_{i:03}') not in queue_names)
     with no_log():
         extension = next(available_extensions_gen(api=api, location_id=target_location.location_id))
 
@@ -593,20 +635,20 @@ def create_simple_call_queue(*, api: WebexSimpleApi, no_log, locations: list[Tel
         members = []
 
     # settings for new call queue
-    settings = CallQueue(name=new_name,
-                         extension=extension,
-                         calling_line_id_policy=CallingLineIdPolicy.location_number,
-                         call_policies=CallQueueCallPolicies.default(),
-                         queue_settings=QueueSettings.default(queue_size=10),
-                         phone_number_for_outgoing_calls_enabled=True,
-                         agents=[Agent(id=user.person_id) for user in members])
+    settings = CallQueue(
+        name=new_name,
+        extension=extension,
+        calling_line_id_policy=CallingLineIdPolicy.location_number,
+        call_policies=CallQueueCallPolicies.default(),
+        queue_settings=QueueSettings.default(queue_size=10),
+        phone_number_for_outgoing_calls_enabled=True,
+        agents=[Agent(id=user.person_id) for user in members],
+    )
     # create new queue
-    queue_id = tcq.create(location_id=target_location.location_id,
-                          settings=settings)
+    queue_id = tcq.create(location_id=target_location.location_id, settings=settings)
 
     # and get details of new queue using the queue id
-    details = tcq.details(location_id=target_location.location_id,
-                          queue_id=queue_id)
+    details = tcq.details(location_id=target_location.location_id, queue_id=queue_id)
     return details
 
 
@@ -618,27 +660,35 @@ def new_operating_mode_names(api: WebexSimpleApi) -> Generator[str, None, None]:
     return (name for i in range(1, 1000) if (name := f'test_{i:03}') not in names)
 
 
-def create_operating_mode(api: WebexSimpleApi, location: TelephonyLocation = None,
-                          holidays: list[OperatingModeHoliday] = None) -> OperatingMode:
+def create_operating_mode(
+    api: WebexSimpleApi, location: TelephonyLocation = None, holidays: list[OperatingModeHoliday] = None
+) -> OperatingMode:
     """
     create operating mode
     """
     today = date.today()
     tomorrow = today + timedelta(days=1)
     if holidays is None:
-        holidays = [OperatingModeHoliday(name='today', all_day_enabled=False, start_date=today, end_date=today,
-                                         start_time='09:00',
-                                         end_time='17:00',
-                                         recurrence=OperatingModeRecurrence(
-                                             recur_yearly_by_date=OperatingModeRecurYearlyByDate(
-                                                 day_of_month=today.day, month=Month.from_date(today)))),
-                    OperatingModeHoliday(name='tomorrow', all_day_enabled=True, start_date=tomorrow,
-                                         end_date=tomorrow)]
+        holidays = [
+            OperatingModeHoliday(
+                name='today',
+                all_day_enabled=False,
+                start_date=today,
+                end_date=today,
+                start_time='09:00',
+                end_time='17:00',
+                recurrence=OperatingModeRecurrence(
+                    recur_yearly_by_date=OperatingModeRecurYearlyByDate(
+                        day_of_month=today.day, month=Month.from_date(today)
+                    )
+                ),
+            ),
+            OperatingModeHoliday(name='tomorrow', all_day_enabled=True, start_date=tomorrow, end_date=tomorrow),
+        ]
     new_name = next(new_operating_mode_names(api=api))
-    settings = OperatingMode(name=new_name,
-                             type=OperatingModeSchedule.holiday,
-                             level=ScheduleLevel.organization,
-                             holidays=holidays)
+    settings = OperatingMode(
+        name=new_name, type=OperatingModeSchedule.holiday, level=ScheduleLevel.organization, holidays=holidays
+    )
     if location:
         settings.level = ScheduleLevel.location
         settings.location = IdAndName(id=location.location_id)
@@ -678,7 +728,8 @@ class LocationSettings:
                 async_api.telephony.prem_pstn.trunk.list(),
                 async_api.telephony.prem_pstn.route_group.list(),
                 async_api.locations.list(),
-                random_location.load_npa_data())
+                random_location.load_npa_data(),
+            )
             phone_numbers: list[NumberListPhoneNumber]
             trunks: list[Trunk]
             route_groups: list[RouteGroup]
@@ -686,60 +737,65 @@ class LocationSettings:
             npa_data: list[NpaInfo]
 
             # active NPAs in US
-            us_npa_list = [npa.npa for npa in npa_data
-                           if npa.country == 'US' and npa.in_service]
+            us_npa_list = [npa.npa for npa in npa_data if npa.country == 'US' and npa.in_service]
 
             # NPAs used in existing phone numbers
-            used_npa_list = set(number.phone_number[2:5] for number in phone_numbers
-                                if number.phone_number.startswith('+1'))
+            used_npa_list = set(
+                number.phone_number[2:5] for number in phone_numbers if number.phone_number.startswith('+1')
+            )
 
             # active NPAs not currently in use
-            available_npa_list = [npa for npa in us_npa_list
-                                  if npa not in used_npa_list]
+            available_npa_list = [npa for npa in us_npa_list if npa not in used_npa_list]
 
             # pick a random NPA and get an address and an available number in that NPA
             random.shuffle(available_npa_list)
             address = None
             while address is None:
                 npa = available_npa_list.pop(0)
-                address, tn_list = await asyncio.gather(random_location.npa_random_address(npa=npa),
-                                                        as_available_tns(as_api=async_api, tn_prefix=npa,
-                                                                         tns_requested=5))
+                address, tn_list = await asyncio.gather(
+                    random_location.npa_random_address(npa=npa),
+                    as_available_tns(as_api=async_api, tn_prefix=npa, tns_requested=5),
+                )
             address: Address
             tn_list: list[str]
 
             # determine routing prefixes
             location_details = await asyncio.gather(
-                *[async_api.telephony.location.details(location_id=loc.location_id)
-                  for loc in locations],
-                return_exceptions=True)
+                *[async_api.telephony.location.details(location_id=loc.location_id) for loc in locations],
+                return_exceptions=True,
+            )
 
             # ignore locations for which we can't get telephony location details
-            location_details = [ld for ld in location_details
-                                if not isinstance(ld, Exception)]
+            location_details = [ld for ld in location_details if not isinstance(ld, Exception)]
             location_details: list[TelephonyLocation]
-            routing_prefixes = set(ld.routing_prefix for ld in location_details
-                                   if ld.routing_prefix)
+            routing_prefixes = set(ld.routing_prefix for ld in location_details if ld.routing_prefix)
 
             # pick an available routing prefix
-            routing_prefix = next(prefix for i in chain([int(npa)], range(1, 1000))
-                                  if (prefix := f'8{i:03}') not in routing_prefixes)
+            routing_prefix = next(
+                prefix for i in chain([int(npa)], range(1, 1000)) if (prefix := f'8{i:03}') not in routing_prefixes
+            )
 
         # get name for location
         location_names = set(loc.name for loc in locations)
         # name like {city} {npa}-dd (suffix only present if there is already a location with that name
-        location_name = next(name for suffix in chain([''], (f'-{i:02}' for i in range(1, 100)))
-                             if (name := f'{address.city} {npa}{suffix}') not in location_names)
+        location_name = next(
+            name
+            for suffix in chain([''], (f'-{i:02}' for i in range(1, 100)))
+            if (name := f'{address.city} {npa}{suffix}') not in location_names
+        )
 
         # create name for a trunk in that location
-        trunk_name = next(name for suffix in chain([''], (f'-{i:02}'
-                                                          for i in range(1, 100)))
-                          if (name := f'{address.city}{suffix}') not in set(trunk.name for trunk in trunks))
+        trunk_name = next(
+            name
+            for suffix in chain([''], (f'-{i:02}' for i in range(1, 100)))
+            if (name := f'{address.city}{suffix}') not in set(trunk.name for trunk in trunks)
+        )
 
-
-        return cls(name=location_name,
-                   address=address,
-                   npa=npa,
-                   tn_list=tn_list,
-                   trunk_name=trunk_name,
-                   routing_prefix=routing_prefix)
+        return cls(
+            name=location_name,
+            address=address,
+            npa=npa,
+            tn_list=tn_list,
+            trunk_name=trunk_name,
+            routing_prefix=routing_prefix,
+        )

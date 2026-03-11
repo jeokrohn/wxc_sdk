@@ -1,6 +1,7 @@
 """
 Test for calling behavior settings
 """
+
 import random
 from asyncio import gather
 from contextlib import contextmanager
@@ -13,7 +14,6 @@ from wxc_sdk.all_types import *
 
 
 class TestRead(TestCaseWithUsers):
-
     @async_test
     async def test_001_read_one(self):
         """
@@ -34,10 +34,10 @@ class TestRead(TestCaseWithUsers):
         """
         cb = self.async_api.person_settings.calling_behavior
 
-        settings = await gather(*[cb.read(person_id=user.person_id) for user in self.users],
-                                return_exceptions=True)
-        failed: list[tuple[Person, Exception]] = [(user, error) for user, error in zip(self.users, settings)
-                                                  if isinstance(error, Exception)]
+        settings = await gather(*[cb.read(person_id=user.person_id) for user in self.users], return_exceptions=True)
+        failed: list[tuple[Person, Exception]] = [
+            (user, error) for user, error in zip(self.users, settings) if isinstance(error, Exception)
+        ]
         if failed:
             print(f'Reading calling behavior failed for {len(failed)} users:')
             print('\n'.join(f'  {user.display_name}: {error}' for user, error in failed))
@@ -47,9 +47,10 @@ class TestRead(TestCaseWithUsers):
 
         print(f'Got calling behavior for {len(settings_ok)} users')
         print('\n'.join(s.model_dump_json(exclude_none=False) for s in settings_ok))
-        self.assertTrue(all(isinstance(s, CallingBehavior) and s.effective_behavior_type is not None
-                            for s in settings),
-                        'invalid/incomplete calling behavior for at least one user')
+        self.assertTrue(
+            all(isinstance(s, CallingBehavior) and s.effective_behavior_type is not None for s in settings),
+            'invalid/incomplete calling behavior for at least one user',
+        )
 
 
 @dataclass(init=False, repr=False)
@@ -89,10 +90,8 @@ class TestUpdate(TestCaseWithLog):
             self.assertIsNotNone(before.effective_behavior_type, 'Invalid calling behavior')
             behavior_types = list(BehaviorType)
             random.shuffle(behavior_types)
-            new_behavior = next((b for b in behavior_types
-                                 if before.behavior_type is None or before.behavior_type != b))
+            new_behavior = next(b for b in behavior_types if before.behavior_type is None or before.behavior_type != b)
             settings = CallingBehavior(behavior_type=new_behavior)
             cba.configure(person_id=user.person_id, settings=settings)
             after = cba.read(person_id=user.person_id)
-        self.assertEqual(settings.behavior_type,
-                         after.behavior_type)
+        self.assertEqual(settings.behavior_type, after.behavior_type)

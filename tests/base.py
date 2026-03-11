@@ -60,10 +60,23 @@ from wxc_sdk.workspaces import CallingType, Workspace, WorkspaceSupportedDevices
 
 log = logging.getLogger(__name__)
 
-__all__ = ['TestCaseWithTokens', 'TestCaseWithLog', 'gather', 'TestWithLocations', 'TestCaseWithUsers', 'get_tokens',
-           'async_test', 'LoggedRequest', 'TestCaseWithUsersAndSpaces', 'WithIntegrationTokens',
-           'TestLocationsUsersWorkspacesVirtualLines', 'TestWithTarget', 'TestWithProfessionalWorkspace', 'UserTokens',
-           'TestWithRandomUserApi']
+__all__ = [
+    'TestCaseWithTokens',
+    'TestCaseWithLog',
+    'gather',
+    'TestWithLocations',
+    'TestCaseWithUsers',
+    'get_tokens',
+    'async_test',
+    'LoggedRequest',
+    'TestCaseWithUsersAndSpaces',
+    'WithIntegrationTokens',
+    'TestLocationsUsersWorkspacesVirtualLines',
+    'TestWithTarget',
+    'TestWithProfessionalWorkspace',
+    'UserTokens',
+    'TestWithRandomUserApi',
+]
 
 SKIP_TESTS_WITH_EXISTING_LOGS = False
 
@@ -105,13 +118,15 @@ class AdminIntegration(Integration):
         client_secret = os.getenv('ADMIN_CLIENT_SECRET')
         scopes = parse_scopes(os.getenv('ADMIN_CLIENT_SCOPES'))
         if not all((client_id, client_secret, scopes)):
-            raise ValueError('ADMIN_CLIENT_ID, ADMIN_CLIENT_SECRET, and ADMIN_CLIENT_SCOPES environment variables '
-                             'required')
+            raise ValueError(
+                'ADMIN_CLIENT_ID, ADMIN_CLIENT_SECRET, and ADMIN_CLIENT_SCOPES environment variables required'
+            )
         super().__init__(
             client_id=client_id,
             client_secret=client_secret,
             scopes=scopes,
-            redirect_url='http://localhost:6001/redirect')
+            redirect_url='http://localhost:6001/redirect',
+        )
 
 
 def get_tokens() -> Optional[Tokens]:
@@ -137,7 +152,7 @@ def get_tokens() -> Optional[Tokens]:
     # read tokens from file
     integration = AdminIntegration()
     try:
-        with open(yml_path(), mode='r') as f:
+        with open(yml_path()) as f:
             data = safe_load(f)
             tokens = Tokens.model_validate(data)
     except Exception as e:
@@ -165,6 +180,7 @@ class TestCaseWithTokens(TestCase):
     """
     A test case that requires access tokens to run
     """
+
     api: ClassVar[WebexSimpleApi]
     me: ClassVar[Person]
     tokens: ClassVar[Tokens]
@@ -246,8 +262,9 @@ class WithIntegrationTokens(TestCase):
         """
         read integration parameters from environment variables and create an integration
         """
-        path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                            f'{cls.integration_token_identifier.lower()}.env')
+        path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), f'{cls.integration_token_identifier.lower()}.env'
+        )
         load_dotenv(path)
 
         client_id = os.getenv(f'{cls.integration_token_identifier}_CLIENT_ID')
@@ -256,8 +273,7 @@ class WithIntegrationTokens(TestCase):
         redirect_url = 'http://localhost:6001/redirect'
         if not all((client_id, client_secret, scopes)):
             raise ValueError('failed to get integration parameters from environment')
-        return Integration(client_id=client_id, client_secret=client_secret, scopes=scopes,
-                           redirect_url=redirect_url)
+        return Integration(client_id=client_id, client_secret=client_secret, scopes=scopes, redirect_url=redirect_url)
 
     @classmethod
     def get_integration_tokens(cls) -> Optional[Tokens]:
@@ -270,8 +286,9 @@ class WithIntegrationTokens(TestCase):
         """
 
         integration = cls.build_integration()
-        path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                            f'{cls.integration_token_identifier.lower()}.yml')
+        path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)), f'{cls.integration_token_identifier.lower()}.yml'
+        )
         tokens = integration.get_cached_tokens_from_yml(yml_path=path)
         return tokens
 
@@ -308,13 +325,16 @@ class LoggedRequest(BaseModel):
     record: logging.LogRecord
 
     # regular expressions to match on reqeust record
-    request_record: ClassVar[re.Pattern] = re.compile(r"""
+    request_record: ClassVar[re.Pattern] = re.compile(
+        r"""
         ^Request\s              # keyword at start of line
         (?P<status>\d{3})       # three digti status code
         \[(?P<response>[\w\s]+)]    # HTTP response string in squared brackets
         \s*\((?P<time_ms>\d+\.\d+)\sms\):\s     # response time in ms
         (?P<method>\w+)\s       # HTTP methods
-        (?P<url>\S+)$           # url is the rest of the line""", re.VERBOSE + re.MULTILINE)
+        (?P<url>\S+)$           # url is the rest of the line""",
+        re.VERBOSE + re.MULTILINE,
+    )
     header_line: ClassVar[re.Pattern] = re.compile(r'\s+(?P<header>.+): (?P<value>.+)$')
     response_line: ClassVar[re.Pattern] = re.compile(r'^\s+Response')
     body_line: ClassVar[re.Pattern] = re.compile(r'\s*-+\s*response body')
@@ -338,7 +358,7 @@ class LoggedRequest(BaseModel):
         # skip 1st line (already parsed)
         next(lines)
         headers = {}
-        while header := cls.header_line.match((line := next(lines))):
+        while header := cls.header_line.match(line := next(lines)):
             headers[header['header'].capitalize()] = header['value']
         values['headers'] = headers
 
@@ -347,27 +367,26 @@ class LoggedRequest(BaseModel):
             # collect everything until Response line
             ct = headers['Content-type']
             if ct.startswith('application/json'):
-                body = '\n'.join(takewhile(lambda l: not cls.response_line.match(l),
-                                           lines))
+                body = '\n'.join(takewhile(lambda l: not cls.response_line.match(l), lines))
                 values['request_body'] = json.loads(body)
             elif ct.startswith('application/x-www-form-urlencoded'):
-                values['request_body'] = {header['header']: header['value']
-                                          for line in takewhile(lambda l: not cls.response_line.match(l),
-                                                                lines)
-                                          if (header := cls.header_line.match(line))}
+                values['request_body'] = {
+                    header['header']: header['value']
+                    for line in takewhile(lambda l: not cls.response_line.match(l), lines)
+                    if (header := cls.header_line.match(line))
+                }
             else:
-                values['request_body'] = '\n'.join(takewhile(lambda l: not cls.response_line.match(l),
-                                                             lines))
+                values['request_body'] = '\n'.join(takewhile(lambda l: not cls.response_line.match(l), lines))
 
         # now we are at the response line
-        values['response_headers'] = {header['header'].capitalize(): header['value']
-                                      for line in takewhile(lambda l: not cls.body_line.match(l),
-                                                            lines)
-                                      if (header := cls.header_line.match(line))}
+        values['response_headers'] = {
+            header['header'].capitalize(): header['value']
+            for line in takewhile(lambda l: not cls.body_line.match(l), lines)
+            if (header := cls.header_line.match(line))
+        }
 
         # there might be a response body
-        body = '\n'.join(takewhile(lambda l: not cls.end_line.match(l),
-                                   lines))
+        body = '\n'.join(takewhile(lambda l: not cls.end_line.match(l), lines))
         if body:
             try:
                 body = json.loads(body)
@@ -378,8 +397,9 @@ class LoggedRequest(BaseModel):
         return values
 
     @classmethod
-    def from_records(cls, records: list[logging.LogRecord], method: str = None,
-                     url_filter: Union[str, re.Pattern] = None) -> Generator['LoggedRequest', None, None]:
+    def from_records(
+        cls, records: list[logging.LogRecord], method: str = None, url_filter: Union[str, re.Pattern] = None
+    ) -> Generator['LoggedRequest', None, None]:
         """
         Generate LoggedRequest objects from a list of LogRecords
         :param records:
@@ -393,15 +413,15 @@ class LoggedRequest(BaseModel):
         url_filter = isinstance(url_filter, str) and re.compile(url_filter) or url_filter
 
         for record in records:
-            if not (request := cls.request_record.match(record.message)) or \
-                    (method and method != request['method']) or \
-                    (url_filter and not (url := url_filter.match(request['url']))):
+            if (
+                not (request := cls.request_record.match(record.message))
+                or (method and method != request['method'])
+                or (url_filter and not (url := url_filter.match(request['url'])))
+            ):
                 # not a request, wrong method or url doesn't match
                 continue
             # noinspection PyUnboundLocalVariable
-            yield LoggedRequest(**request.groupdict(),
-                                record=record,
-                                url_dict=url_filter and url.groupdict())
+            yield LoggedRequest(**request.groupdict(), record=record, url_dict=url_filter and url.groupdict())
 
 
 class RecordHandler(logging.Handler):
@@ -416,8 +436,9 @@ class RecordHandler(logging.Handler):
     def emit(self, record: logging.LogRecord) -> None:
         self.records.append(record)
 
-    def requests(self, method: str = None,
-                 url_filter: Union[str, re.Pattern] = None) -> Generator[LoggedRequest, None, None]:
+    def requests(
+        self, method: str = None, url_filter: Union[str, re.Pattern] = None
+    ) -> Generator[LoggedRequest, None, None]:
         """
         Generator for logged requests
         :param method:
@@ -432,6 +453,7 @@ class TestCaseWithLog(TestCaseWithTokens):
     """
     Test case with automatic logging
     """
+
     log_path: str = field(default=None)
     file_log_handler: logging.Handler = field(default=None)
     record_log_handler: RecordHandler = field(default=None)
@@ -466,9 +488,7 @@ class TestCaseWithLog(TestCaseWithTokens):
         logs_re = re.compile(r'rest_(?P<index>\d{4})_(?P<test_id>.+).log')
         logs.sort()
         # noinspection PyShadowingNames
-        logs = [log
-                for log in logs
-                if logs_re.match(log)]
+        logs = [log for log in logs if logs_re.match(log)]
 
         existing_test_ids = set(logs_re.match(log).group('test_id') for log in logs)
         env_skip_tests = os.getenv('SKIP_TESTS_WITH_EXISTING_LOG')
@@ -488,8 +508,7 @@ class TestCaseWithLog(TestCaseWithTokens):
 
         # build the log file name
         # noinspection PyShadowingNames
-        log = os.path.join(base_dir,
-                           f'{prefix}_{next_log_index:04d}_{test_case_id}.log')
+        log = os.path.join(base_dir, f'{prefix}_{next_log_index:04d}_{test_case_id}.log')
         return log
 
     def setUp(self) -> None:
@@ -511,8 +530,7 @@ class TestCaseWithLog(TestCaseWithTokens):
         # also create a HAR file?
         self.async_api_reg_id = None
         if self.with_har:
-            self.har_writer = HarWriter(path=self.log_path.replace('.log', '.har'),
-                                        api=self.api)
+            self.har_writer = HarWriter(path=self.log_path.replace('.log', '.har'), api=self.api)
 
         # enable debug logging on the REST loggers
         for rest_logger_name in self.rest_logger_names:
@@ -604,8 +622,9 @@ class TestCaseWithLog(TestCaseWithTokens):
             if har_active_before is not None:
                 self.har_writer.active = har_active_before
 
-    def requests(self, method: str = None,
-                 url_filter: Union[str, re.Pattern] = None) -> Generator[LoggedRequest, None, None]:
+    def requests(
+        self, method: str = None, url_filter: Union[str, re.Pattern] = None
+    ) -> Generator[LoggedRequest, None, None]:
         """
         Generator for requests logged during the test
         :param method: request method, GET, POST, ...
@@ -625,8 +644,7 @@ class TestCaseWithLog(TestCaseWithTokens):
             url = long_word.sub('', url)
             return url.split('?')[0]
 
-        url_counters = Counter((url_key(request.url), request.method, request.status)
-                               for request in self.requests())
+        url_counters = Counter((url_key(request.url), request.method, request.status) for request in self.requests())
 
         for url_and_method in sorted(url_counters, key=lambda k: url_counters[k]):
             print(f'{url_and_method}: {url_counters[url_and_method]} requests')
@@ -684,6 +702,7 @@ class TestWithLocations(TestCaseWithLog):
     """
     Test cases with existing locations
     """
+
     locations: ClassVar[list[Location]]
     telephony_locations: ClassVar[list[TelephonyLocation]]
 
@@ -696,18 +715,18 @@ class TestWithLocations(TestCaseWithLog):
 
         async def get_calling_locations() -> list[Location]:
             async with cls.as_webex_api(tokens=cls.tokens) as api:
-                locations = [loc for loc in await api.locations.list()
-                             if loc.address.country == 'US']
+                locations = [loc for loc in await api.locations.list() if loc.address.country == 'US']
                 # figure out which locations are calling locations
-                details = await asyncio.gather(*[api.telephony.location.details(location_id=loc.location_id)
-                                                 for loc in locations], return_exceptions=True)
+                details = await asyncio.gather(
+                    *[api.telephony.location.details(location_id=loc.location_id) for loc in locations],
+                    return_exceptions=True,
+                )
             validation_error = next((d for d in details if isinstance(d, ValidationError)), None)
             if validation_error is not None:
                 raise validation_error
 
             # the calling locations are the ones for which we can actually get calling details
-            result = [(loc, detail) for loc, detail in zip(locations, details)
-                      if not isinstance(detail, Exception)]
+            result = [(loc, detail) for loc, detail in zip(locations, details) if not isinstance(detail, Exception)]
             cls.locations, cls.telephony_locations = list(zip(*result))
             return
 
@@ -752,7 +771,7 @@ class TestCaseWithUsers(TestCaseWithLog):
     @classmethod
     def users_from_cache(cls) -> UserCache:
         try:
-            with open(cls.user_cache_path(), mode='r') as f:
+            with open(cls.user_cache_path()) as f:
                 cache = TypeAdapter(UserCache).validate_python(yaml.safe_load(f))
             return cache
         except (FileNotFoundError, ValidationError, ScannerError):
@@ -777,14 +796,12 @@ class TestCaseWithUsers(TestCaseWithLog):
         if not USE_CACHE:
             users = list(cls.api.people.list(calling_data=True))
             licenses = list(cls.api.licenses.list())
-            calling_license_ids = set(lic.license_id
-                                      for lic in licenses
-                                      if lic.webex_calling)
+            calling_license_ids = set(lic.license_id for lic in licenses if lic.webex_calling)
 
             # pick the calling enabled users
-            cls.users = [user
-                         for user in users
-                         if (set(user.licenses) & calling_license_ids) and not user.invite_pending]
+            cls.users = [
+                user for user in users if (set(user.licenses) & calling_license_ids) and not user.invite_pending
+            ]
         else:
             # read users from cache
             user_cache = cls.users_from_cache()
@@ -796,8 +813,9 @@ class TestCaseWithUsers(TestCaseWithLog):
                 user_dict: dict[str, Person]
 
                 # all users from cache still exist and licenses have not changed?
-                if user_cache.users and all((user := user_dict.get(cu.person_id)) and user.licenses == cu.licenses
-                                            for cu in user_cache.users):
+                if user_cache.users and all(
+                    (user := user_dict.get(cu.person_id)) and user.licenses == cu.licenses for cu in user_cache.users
+                ):
                     pass
                 else:
                     # update cache
@@ -805,23 +823,23 @@ class TestCaseWithUsers(TestCaseWithLog):
                         # maybe getting details for all users is faster than listing...
                         with ThreadPoolExecutor() as pool:
                             user_cache.users = list(
-                                pool.map(lambda user: cls.api.people.details(person_id=user.person_id,
-                                                                             calling_data=True),
-                                         user_dict.values()))
+                                pool.map(
+                                    lambda user: cls.api.people.details(person_id=user.person_id, calling_data=True),
+                                    user_dict.values(),
+                                )
+                            )
                     else:
                         # bite the bullet: list users with calling data --> slooooooowww
                         user_cache.users = list(cls.api.people.list(calling_data=True))
             cls.dump_users(cache=user_cache)
 
             # select users with a webex calling license
-            calling_license_ids = set(lic.license_id
-                                      for lic in user_cache.licenses
-                                      if lic.webex_calling)
+            calling_license_ids = set(lic.license_id for lic in user_cache.licenses if lic.webex_calling)
 
             # pick the calling enabled users
-            cls.users = [user
-                         for user in user_cache.users
-                         if any(lic_id in calling_license_ids for lic_id in user.licenses)]
+            cls.users = [
+                user for user in user_cache.users if any(lic_id in calling_license_ids for lic_id in user.licenses)
+            ]
         print(f'got {len(cls.users)} users')
 
     def setUp(self) -> None:
@@ -840,8 +858,7 @@ class TestCaseWithUsersAndSpaces(TestCaseWithLog):
         super().setUpClass()
         me = cls.api.people.me()
         cls.users = [u for u in cls.api.people.list() if u.person_id != me.person_id]
-        cls.spaces = [r for r in cls.api.rooms.list()
-                      if re.match(r'Test Space \d{3}', r.title)]
+        cls.spaces = [r for r in cls.api.rooms.list() if re.match(r'Test Space \d{3}', r.title)]
 
     def setUp(self) -> None:
         super().setUp()
@@ -873,11 +890,11 @@ class TestLocationsUsersWorkspacesVirtualLines(TestWithLocations, TestCaseWithUs
 
         async def setup():
             async with AsWebexSimpleApi(tokens=cls.api.session.access_token) as api:
-                cls.workspaces, cls.virtual_lines = await asyncio.gather(api.workspaces.list(),
-                                                                         api.telephony.virtual_lines.list())
+                cls.workspaces, cls.virtual_lines = await asyncio.gather(
+                    api.workspaces.list(), api.telephony.virtual_lines.list()
+                )
             # find calling workspaces
-            cls.workspaces = [ws for ws in cls.workspaces
-                              if ws.calling and ws.calling.type == CallingType.webex]
+            cls.workspaces = [ws for ws in cls.workspaces if ws.calling and ws.calling.type == CallingType.webex]
 
         asyncio.run(setup())
 
@@ -929,9 +946,9 @@ class TestWithTarget(TestWithLocations):
             finally:
                 with self.no_log():
                     print('deleting temporary schedule')
-                    self.api.telephony.schedules.delete_schedule(self.location_id,
-                                                                 schedule_type=ScheduleType.business_hours,
-                                                                 schedule_id=schedule_id)
+                    self.api.telephony.schedules.delete_schedule(
+                        self.location_id, schedule_type=ScheduleType.business_hours, schedule_id=schedule_id
+                    )
         return
 
 
@@ -940,6 +957,7 @@ class TestWithProfessionalWorkspace(TestWithTarget):
     """
     Tests for workspace settings using a temporary professional workspace
     """
+
     # temporary workspace with professional license
     workspace: ClassVar[Workspace] = None
     location: ClassVar[Location] = None
@@ -950,23 +968,28 @@ class TestWithProfessionalWorkspace(TestWithTarget):
         Create a temporary workspace with professional license
         """
         # get pro license
-        pro_license = next((lic
-                            for lic in cls.api.licenses.list()
-                            if lic.webex_calling_professional and lic.consumed_units < lic.total_units),
-                           None)
+        pro_license = next(
+            (
+                lic
+                for lic in cls.api.licenses.list()
+                if lic.webex_calling_professional and lic.consumed_units < lic.total_units
+            ),
+            None,
+        )
         if pro_license:
             pro_license: License
             # create WS in random location
             location = random.choice(cls.locations)
             cls.location_id = location.location_id
             cls.location = location
-            workspace = create_workspace_with_webex_calling(api=cls.api,
-                                                            target_location=location,
-                                                            # workspace_location_id=wsl.id,
-                                                            supported_devices=WorkspaceSupportedDevices.phones,
-                                                            notes=f'temp location for professional workspace tests, '
-                                                                  f'location "{location.name}"',
-                                                            license=pro_license)
+            workspace = create_workspace_with_webex_calling(
+                api=cls.api,
+                target_location=location,
+                # workspace_location_id=wsl.id,
+                supported_devices=WorkspaceSupportedDevices.phones,
+                notes=f'temp location for professional workspace tests, location "{location.name}"',
+                license=pro_license,
+            )
             cls.workspace = workspace
             cls.target_id = workspace.workspace_id
 
@@ -1038,8 +1061,9 @@ class UserTokens(TestCaseWithLog):
 
         # also get the scopes
         scopes = parse_scopes(scopes)
-        integration = Integration(client_id=client_id, client_secret=client_secret, scopes=scopes,
-                                  redirect_url=redirect_uri)
+        integration = Integration(
+            client_id=client_id, client_secret=client_secret, scopes=scopes, redirect_url=redirect_uri
+        )
         return integration
 
     @classmethod
@@ -1054,7 +1078,7 @@ class UserTokens(TestCaseWithLog):
         Read token cache from file and validate tokens
         """
         try:
-            with open(cls._cache_file, 'r') as f:
+            with open(cls._cache_file) as f:
                 data = yaml.safe_load(f)
                 cls._token_cache = TokenCache.validate_python(data)
         except FileNotFoundError:
@@ -1129,8 +1153,7 @@ class UserTokens(TestCaseWithLog):
                     log.debug('serve_redirect: shutdown of local web server requested')
                     threading.Thread(target=server.shutdown, daemon=True).start()
 
-            httpd = http.server.HTTPServer(server_address=('', 6001),
-                                           RequestHandlerClass=RedirectRequestHandler)
+            httpd = http.server.HTTPServer(server_address=('', 6001), RequestHandlerClass=RedirectRequestHandler)
             log.debug('serve_redirect: starting local web server for redirect URI')
             httpd.serve_forever()
             httpd.server_close()
@@ -1152,25 +1175,30 @@ class UserTokens(TestCaseWithLog):
 
             # wait for "Sign In" button
             sign_in = WebDriverWait(driver=web_driver, timeout=10).until(
-                method=EC.element_to_be_clickable((By.ID, 'IDButton2')))
+                method=EC.element_to_be_clickable((By.ID, 'IDButton2'))
+            )
             sign_in.click()
             password = WebDriverWait(driver=web_driver, timeout=10).until(
-                method=EC.visibility_of_element_located((By.ID, 'IDToken2')))
+                method=EC.visibility_of_element_located((By.ID, 'IDToken2'))
+            )
             password.send_keys(cred_password)
 
             # wait for "Sign In" button
             sign_in = WebDriverWait(driver=web_driver, timeout=10).until(
-                method=EC.element_to_be_clickable((By.ID, 'Button1')))
+                method=EC.element_to_be_clickable((By.ID, 'Button1'))
+            )
             sign_in.click()
 
             # unselect userGrantCheckBox
             user_grant_checkbox = WebDriverWait(driver=web_driver, timeout=10).until(
-                method=EC.element_to_be_clickable((By.ID, 'userGrantCheckBox')))
+                method=EC.element_to_be_clickable((By.ID, 'userGrantCheckBox'))
+            )
             user_grant_checkbox.click()
 
             # click "Accept" button
             accept = WebDriverWait(driver=web_driver, timeout=10).until(
-                method=EC.element_to_be_clickable((By.NAME, 'accept')))
+                method=EC.element_to_be_clickable((By.NAME, 'accept'))
+            )
             accept.click()
             return
 

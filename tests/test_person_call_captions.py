@@ -13,9 +13,12 @@ class Test(TestCaseWithUsers):
         Read person call captions settings for all users
         """
         settings = await asyncio.gather(
-            *[self.async_api.person_settings.get_call_captions_settings(person_id=user.person_id)
-              for user in self.users],
-            return_exceptions=True)
+            *[
+                self.async_api.person_settings.get_call_captions_settings(person_id=user.person_id)
+                for user in self.users
+            ],
+            return_exceptions=True,
+        )
         for user, setting in zip(self.users, settings):
             if isinstance(setting, Exception):
                 print(f'Error getting call captions settings for user {user.display_name}: {setting}')

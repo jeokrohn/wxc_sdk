@@ -38,6 +38,7 @@ Add TNs to a locations.
  Example: ./add_numbers.py add_numbers.csv --log-file add_numbers.har --dry-run
 
 """
+
 import asyncio
 import csv
 import logging
@@ -105,7 +106,7 @@ def read_csv(file: str) -> dict[str, list[str]]:
         exit(1)
     err = False
     locations_and_tns: dict[str, list[str]] = defaultdict(list)
-    with open(file, mode='r') as f:
+    with open(file) as f:
         reader = csv.reader(f)
         for row in reader:
             if not row:
@@ -128,10 +129,9 @@ async def verify_location(api: AsWebexSimpleApi, location_name: str) -> Optional
     Verify that a location exists and return location id
     """
     try:
-        location = next((l
-                         for l in await api.telephony.locations.list(name=location_name)
-                         if l.name == location_name),
-                        None)
+        location = next(
+            (l for l in await api.telephony.locations.list(name=location_name) if l.name == location_name), None
+        )
         return location and location.location_id
     except Exception as e:
         logging.error(f'Failed to get location {location_name}: {e}')
@@ -153,8 +153,9 @@ async def validate_tns(api: AsWebexSimpleApi, tns: list[str]) -> bool:
 
     # validate numbers in batches
     try:
-        validations = await asyncio.gather(*[api.telephony.validate_phone_numbers(tns[i:i + BATCH_SIZE])
-                                             for i in range(0, len(tns), BATCH_SIZE)])
+        validations = await asyncio.gather(
+            *[api.telephony.validate_phone_numbers(tns[i : i + BATCH_SIZE]) for i in range(0, len(tns), BATCH_SIZE)]
+        )
     except Exception as e:
         logging.error(f'Failed to validate TNs: {e}')
         return False
@@ -177,10 +178,14 @@ async def add_tns(api: AsWebexSimpleApi, location_id: str, tns: list[str], inact
     number_state = NumberState.inactive if inactive else NumberState.active
     try:
         # add TNs in batches
-        await asyncio.gather(*[api.telephony.location.number.add(location_id=location_id,
-                                                                 phone_numbers=tns[i:i + BATCH_SIZE],
-                                                                 state=number_state)
-                               for i in range(0, len(tns), BATCH_SIZE)])
+        await asyncio.gather(
+            *[
+                api.telephony.location.number.add(
+                    location_id=location_id, phone_numbers=tns[i : i + BATCH_SIZE], state=number_state
+                )
+                for i in range(0, len(tns), BATCH_SIZE)
+            ]
+        )
     except Exception as e:
         logging.error(f'Failed to add TNs: {e}')
         return False
@@ -198,38 +203,43 @@ def async_command(f):
 app = typer.Typer()
 
 
-@app.command(epilog=f'Example: {sys.argv[0]} add_numbers.csv --log-file add_numbers.har --dry-run',
-             help='Add TNs to Webex Calling locations')
+@app.command(
+    epilog=f'Example: {sys.argv[0]} add_numbers.csv --log-file add_numbers.har --dry-run',
+    help='Add TNs to Webex Calling locations',
+)
 @async_command
-async def add_numbers(file: Path = typer.Argument(exists=True,
-                                                  help='CSV file with location names and TNs'),
-                      dry_run: bool = typer.Option(False, '--dry-run',
-                                                   help='Do not make any changes'),
-                      verbose: bool = typer.Option(False, '--verbose',
-                                                   help='Print debug information'),
-                      log_file: Optional[Path] = typer.Option(None, '--log-file',
-                                                              help='Log file. If extension is .har, log in HAR format'),
-                      token: Optional[str] = typer.Option(None, '--token',
-                                                          help=f'Access token can be provided using --token argument, '
-                                                               f'set in WEBEX_ACCESS_TOKEN environment variable or '
-                                                               f'can be a service app token. For the latter set '
-                                                               f'environment variables {SERVICE_APP_ENVS}. '
-                                                               f'Environment variables can also be set in '
-                                                               f'{env_path()}'),
-                      inactive: bool = typer.Option(False, '--inactive',
-                                                    help='Add TNs as inactive')
-
-                      ):
+async def add_numbers(
+    file: Path = typer.Argument(exists=True, help='CSV file with location names and TNs'),
+    dry_run: bool = typer.Option(False, '--dry-run', help='Do not make any changes'),
+    verbose: bool = typer.Option(False, '--verbose', help='Print debug information'),
+    log_file: Optional[Path] = typer.Option(
+        None, '--log-file', help='Log file. If extension is .har, log in HAR format'
+    ),
+    token: Optional[str] = typer.Option(
+        None,
+        '--token',
+        help=f'Access token can be provided using --token argument, '
+        f'set in WEBEX_ACCESS_TOKEN environment variable or '
+        f'can be a service app token. For the latter set '
+        f'environment variables {SERVICE_APP_ENVS}. '
+        f'Environment variables can also be set in '
+        f'{env_path()}',
+    ),
+    inactive: bool = typer.Option(False, '--inactive', help='Add TNs as inactive'),
+):
     """
     Add TNs to Webex Calling locations
     """
     load_dotenv(env_path(), override=True)
     tokens = get_tokens() if token is None else Tokens(access_token=token)
     if tokens is None:
-        print(f'Access token can be provided using --token argument, set in WEBEX_ACCESS_TOKEN environment variable or '
-              f'can be a service app token. For the latter set environment variables {SERVICE_APP_ENVS}. Environment '
-              f'variables can '
-              f'also be set in {env_path()}', file=sys.stderr)
+        print(
+            f'Access token can be provided using --token argument, set in WEBEX_ACCESS_TOKEN environment variable or '
+            f'can be a service app token. For the latter set environment variables {SERVICE_APP_ENVS}. Environment '
+            f'variables can '
+            f'also be set in {env_path()}',
+            file=sys.stderr,
+        )
         exit(1)
 
     async with AsWebexSimpleApi(tokens=tokens) as api:
@@ -247,8 +257,9 @@ async def add_numbers(file: Path = typer.Argument(exists=True,
 
             # validate the location names
             logging.info('Validating location names...')
-            location_ids = await asyncio.gather(*[verify_location(api, location)
-                                                  for location in locations_and_tns.keys()])
+            location_ids = await asyncio.gather(
+                *[verify_location(api, location) for location in locations_and_tns.keys()]
+            )
             if not all(location_ids):
                 for location_name, location_id in zip(locations_and_tns.keys(), location_ids):
                     if not location_id:
@@ -265,9 +276,12 @@ async def add_numbers(file: Path = typer.Argument(exists=True,
             # add TNs to the locations
             if not dry_run:
                 logging.info('Adding TNs...')
-                results = await asyncio.gather(*[add_tns(api, location_id, tns, inactive)
-                                                 for location_id, tns in zip(location_ids,
-                                                                             locations_and_tns.values())])
+                results = await asyncio.gather(
+                    *[
+                        add_tns(api, location_id, tns, inactive)
+                        for location_id, tns in zip(location_ids, locations_and_tns.values())
+                    ]
+                )
                 if not all(results):
                     exit(1)
             #

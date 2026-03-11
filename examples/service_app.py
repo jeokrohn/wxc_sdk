@@ -9,6 +9,7 @@
 """
 Demo for Webex service app: using service APP tokens to access a API endpoints
 """
+
 import inspect
 import logging
 import os
@@ -56,7 +57,7 @@ def read_tokens_from_file(*, client_id: str) -> Optional[Tokens]:
     if not os.path.isfile(path):
         return None
     try:
-        with open(path, mode='r') as f:
+        with open(path) as f:
             data = yaml.safe_load(f)
         tokens = Tokens.model_validate(data)
     except Exception:
@@ -77,9 +78,7 @@ def get_access_token(*, client_id: str, client_secret: str, refresh: str) -> Tok
     Get a new access token using refresh token, service app client id, service app client secret
     """
     tokens = Tokens(refresh_token=refresh)
-    integration = Integration(client_id=client_id,
-                              client_secret=client_secret,
-                              scopes=[], redirect_url=None)
+    integration = Integration(client_id=client_id, client_secret=client_secret, scopes=[], redirect_url=None)
     integration.refresh(tokens=tokens)
     write_tokens_to_file(client_id=client_id, tokens=tokens)
     return tokens
@@ -116,7 +115,8 @@ def service_app():
         print(
             f'{", ".join(SERVICE_APP_ENVS)} environment variables need to be defined in '
             f'environment or in "{env_path()}"',
-            file=sys.stderr)
+            file=sys.stderr,
+        )
         exit(1)
 
     # get tokens and dump to console
@@ -129,7 +129,6 @@ def service_app():
 
     # use tokens to access APIs
     with WebexSimpleApi(tokens=tokens) as api:
-
         users = list(api.people.list())
         print(f'{len(users)} users')
 

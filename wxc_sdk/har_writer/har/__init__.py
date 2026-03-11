@@ -1,6 +1,7 @@
 """
 HAR file format models, based on the HAR 1.2 spec, http://www.softwareishard.com/blog/har-12-spec/
 """
+
 import base64
 import json
 import re
@@ -33,14 +34,16 @@ __all__ = ['HAR', 'HARLog', 'HAREntry', 'HARRequest', 'HARResponse', 'HARCreator
 
 def tz_is_utc(dt: datetime) -> datetime:
     if dt.tzinfo is None or timezone.utc.utcoffset(dt).total_seconds() != 0:
-        raise ValueError(f"Expected UTC time, got {dt}")
+        raise ValueError(f'Expected UTC time, got {dt}')
     return dt
 
 
 # UTCDateTime is a datetime that is a TZ aware datetime in UTC timezone, serialized as ISO 8601 string w/ msec precision
 UTCDateTime = Annotated[
-    AwareDatetime, AfterValidator(tz_is_utc), PlainSerializer(lambda x: f"{x.strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3]}Z",
-                                                              return_type=str)]
+    AwareDatetime,
+    AfterValidator(tz_is_utc),
+    PlainSerializer(lambda x: f'{x.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3]}Z', return_type=str),
+]
 
 
 class HARModel(BaseModel):
@@ -52,19 +55,20 @@ class HARModel(BaseModel):
         extra = 'allow'
 
     def model_dump(
-            self,
-            *,
-            mode: Literal['json', 'python'] = 'json',
-            exclude_unset: bool = False,
-            exclude_none: bool = True,
-            by_alias: bool = True,
-            **kwargs
+        self,
+        *,
+        mode: Literal['json', 'python'] = 'json',
+        exclude_unset: bool = False,
+        exclude_none: bool = True,
+        by_alias: bool = True,
+        **kwargs,
     ) -> dict[str, Any]:
         """
         different defaults than BaseModel.model_dump()
         """
-        return super().model_dump(mode=mode, by_alias=by_alias, exclude_unset=exclude_unset, exclude_none=exclude_none,
-                                  **kwargs)
+        return super().model_dump(
+            mode=mode, by_alias=by_alias, exclude_unset=exclude_unset, exclude_none=exclude_none, **kwargs
+        )
 
 
 class NameValue(HARModel):
@@ -80,8 +84,8 @@ class NameValue(HARModel):
         if isinstance(v, Mapping):
             v = CaseInsensitiveDict(v.items())
         else:
-            l: list['NameValue'] = TypeAdapter(list['NameValue']).validate_python(v)
-            v = CaseInsensitiveDict(((e.name, e.value) for e in l))
+            l: list[NameValue] = TypeAdapter(list['NameValue']).validate_python(v)
+            v = CaseInsensitiveDict((e.name, e.value) for e in l)
         return v
 
     @staticmethod
@@ -105,8 +109,11 @@ class NameValue(HARModel):
 # a dictionary representation in a HAR file; actually a CaseInsensitiveDict
 # serialized as list of name/value tuples
 HARDict = Annotated[
-    dict[str, str], BeforeValidator(NameValue.list_to_dict), PlainValidator(NameValue.plain_to_dict), PlainSerializer(
-        NameValue.dict_to_list)]
+    dict[str, str],
+    BeforeValidator(NameValue.list_to_dict),
+    PlainValidator(NameValue.plain_to_dict),
+    PlainSerializer(NameValue.dict_to_list),
+]
 
 
 class PostData(HARModel):
@@ -154,6 +161,7 @@ class HARRequest(HARModel):
     """
     Request data in a HAR file entry
     """
+
     method: str
     url: str
     httpVersion: str
@@ -224,7 +232,7 @@ class HARRequest(HARModel):
                         body = ''
                         for values, headers, _ in pd._fields:
                             body += f'--{boundary}\r\n'
-                            cd_values = "; ".join(f'{k}="{v}"' for k, v in values.items())
+                            cd_values = '; '.join(f'{k}="{v}"' for k, v in values.items())
                             body += 'Content-Disposition: form-data; ' + cd_values + '\r\n'
                             body += "'\r\n".join(f'{k}: {v}' for k, v in headers.items())
                             body += '\r\n\r\n'
@@ -257,6 +265,7 @@ class HARResponse(HARModel):
     """
     Response data in a HAR file entry
     """
+
     status: int
     statusText: str
     httpVersion: str
@@ -316,9 +325,12 @@ class HARResponse(HARModel):
                     content_str = content_str.encode()
                 except AttributeError:
                     pass
-                self.content = HARContent(size=len(content_str),
-                                          text=base64.b64encode(content_str).decode(),
-                                          encoding='base64', mimeType=self.headers['Content-Type'])
+                self.content = HARContent(
+                    size=len(content_str),
+                    text=base64.b64encode(content_str).decode(),
+                    encoding='base64',
+                    mimeType=self.headers['Content-Type'],
+                )
             else:
                 self.content = None
 
@@ -369,6 +381,7 @@ class HAR(HARModel):
     """
     The HAR file format is a JSON format that stands for HTTP Archive.
     """
+
     log: HARLog
 
     @classmethod
@@ -383,7 +396,7 @@ class HAR(HARModel):
         @contextmanager
         def open_file():
             if isinstance(file, str):
-                with open(file, 'r') as tio:
+                with open(file) as tio:
                     yield tio
             else:
                 yield file
@@ -391,11 +404,9 @@ class HAR(HARModel):
         with open_file() as f:
             return cls.model_validate_json(f.read())
 
-    def model_dump(self, *,
-                   mode: Literal['json', 'python'] = 'json',
-                   exclude_none: bool = True,
-                   by_alias: bool = True,
-                   **kwargs) -> dict[str, Any]:
+    def model_dump(
+        self, *, mode: Literal['json', 'python'] = 'json', exclude_none: bool = True, by_alias: bool = True, **kwargs
+    ) -> dict[str, Any]:
         """
         Dump the HAR to a dictionary
 

@@ -66,16 +66,19 @@ class TestHar(TestCase):
 
         r: HAREntry
         paths = ['~/Downloads', '~/Documents/workspace/wxc_sdk/tests/logs']
-        all_hars = sorted(har
-                          for har, _ in chain.from_iterable(self.get_all_hars(os.path.expanduser(path))
-                                                            for path in paths))
-        requests_with_postdata = [(r.request.postData, r) for r in chain.from_iterable(HAR.from_file(hp).log.entries
-                                                                                       for hp in all_hars)
-                                  if r.request.postData]
+        all_hars = sorted(
+            har for har, _ in chain.from_iterable(self.get_all_hars(os.path.expanduser(path)) for path in paths)
+        )
+        requests_with_postdata = [
+            (r.request.postData, r)
+            for r in chain.from_iterable(HAR.from_file(hp).log.entries for hp in all_hars)
+            if r.request.postData
+        ]
         by_post_data_mime_type: dict[str, list[tuple[bool, PostData, dict, HAREntry]]] = defaultdict(list)
         for pd, har_entry in requests_with_postdata:
             by_post_data_mime_type[pd.mimeType.split(';')[0]].append(
-                (has_base64_encoded_text(pd), pd, pd.model_dump(), har_entry))
+                (has_base64_encoded_text(pd), pd, pd.model_dump(), har_entry)
+            )
 
         foo = 1
 
@@ -86,7 +89,7 @@ class TestHar(TestCase):
 
     def test_latest_in_logs_from_file(self):
         latest = self.get_latest_har(os.path.expanduser('~/Documents/workspace/wxc_sdk/tests/logs'))
-        with open(latest, 'r') as f:
+        with open(latest) as f:
             har = HAR.from_file(f)
         print(f'Loaded HAR file: {latest} with {len(har.log.entries)} entries')
 

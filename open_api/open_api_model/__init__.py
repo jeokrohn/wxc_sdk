@@ -1,6 +1,7 @@
 """
 Pydantic models to deserialize OpenAPI specs
 """
+
 import logging
 import re
 from collections.abc import Generator
@@ -135,7 +136,7 @@ class OASchemaProperty(OABaseModel):
         remove None from enum values. None represents the null value and is not a valid enum value.
         """
         if data.enum and any(enum_value is None for enum_value in data.enum):
-            log.warning(f"Remove None from Enum values: {', '.join(map(str, data.enum))}")
+            log.warning(f'Remove None from Enum values: {", ".join(map(str, data.enum))}')
             data.enum = [enum_value for enum_value in data.enum if enum_value is not None]
         return data
 
@@ -160,9 +161,10 @@ class OASchemaProperty(OABaseModel):
         # and captures the enum value and description
         # the regex is multiline, so we need to use re.MULTILINE
         try:
-            match_enum_values = '|'.join(f'(?:{re.escape(enum_value)})' for enum_value in self.enum
-                                         if enum_value is not None)
-            match_descriptions = f'^\\s*\* `({match_enum_values})`\\s*-\\s*'
+            match_enum_values = '|'.join(
+                f'(?:{re.escape(enum_value)})' for enum_value in self.enum if enum_value is not None
+            )
+            match_descriptions = f'^\\s*\\* `({match_enum_values})`\\s*-\\s*'
         except:
             raise
         matches = list(re.finditer(match_descriptions, self.description, re.MULTILINE + re.DOTALL))
@@ -176,8 +178,7 @@ class OASchemaProperty(OABaseModel):
             desc = self.description[desc_start:desc_end]
             enum_value = match.group(1)
             details[enum_value] = desc.strip()
-        return [(enum_value, d if (d := details.get(enum_value)) else '')
-                for enum_value in self.enum]
+        return [(enum_value, d if (d := details.get(enum_value)) else '') for enum_value in self.enum]
 
     @property
     def enum_description(self) -> Optional[str]:
@@ -218,7 +219,7 @@ class OASchemaProperty(OABaseModel):
         object_item = next((item for item in plist if item.type == 'object'), None)
         # if there is an object item, it must not have properties
         if object_item and object_item.properties:
-            raise ValueError(f"Object schema {object_item} has properties, cannot return a reference")
+            raise ValueError(f'Object schema {object_item} has properties, cannot return a reference')
         ref_item = next((item for item in plist if item.ref is not None), None)
         return ref_item and ref_item.ref
 
@@ -375,4 +376,4 @@ class OASpec(OABaseModel):
         elif component_type == 'responses':
             return self.components.responses[component_name]
         else:
-            raise ValueError(f"Unknown component type: {component_type}")
+            raise ValueError(f'Unknown component type: {component_type}')

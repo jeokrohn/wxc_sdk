@@ -1,6 +1,7 @@
 """
 Unit test for Schedules
 """
+
 import asyncio
 
 # TODO: testcase for event update
@@ -29,8 +30,9 @@ class TestScheduleList(TestWithLocations):
         :return: list of schedules
         """
         with ThreadPoolExecutor() as pool:
-            lists = pool.map(lambda loc: list(self.api.telephony.schedules.list(obj_id=loc.location_id)),
-                             self.locations)
+            lists = pool.map(
+                lambda loc: list(self.api.telephony.schedules.list(obj_id=loc.location_id)), self.locations
+            )
             schedules = list(chain.from_iterable(lists))
         return schedules
 
@@ -47,15 +49,17 @@ class TestScheduleList(TestWithLocations):
         Try to list by name
         """
         with ThreadPoolExecutor() as pool:
-            lists = pool.map(lambda loc: self.api.telephony.schedules.list(obj_id=loc.location_id,
-                                                                           name='Germany 2'),
-                             self.locations)
+            lists = pool.map(
+                lambda loc: self.api.telephony.schedules.list(obj_id=loc.location_id, name='Germany 2'), self.locations
+            )
             schedules = list(chain.from_iterable(lists))
             schedules: list[Schedule]
             print(f'got {len(schedules)} schedules')
             print('\n'.join(f'{s}' for s in schedules))
-            self.assertTrue(all(schedule.name.startswith('Germany 2') for schedule in schedules),
-                            'Not all schedule names start with the expected string')
+            self.assertTrue(
+                all(schedule.name.startswith('Germany 2') for schedule in schedules),
+                'Not all schedule names start with the expected string',
+            )
 
     def test_003_list_business_hours(self):
         """
@@ -63,15 +67,19 @@ class TestScheduleList(TestWithLocations):
         """
         with ThreadPoolExecutor() as pool:
             lists = pool.map(
-                lambda loc: list(self.api.telephony.schedules.list(obj_id=loc.location_id,
-                                                                   schedule_type=ScheduleType.business_hours)),
-                self.locations)
+                lambda loc: list(
+                    self.api.telephony.schedules.list(obj_id=loc.location_id, schedule_type=ScheduleType.business_hours)
+                ),
+                self.locations,
+            )
             schedules = list(chain.from_iterable(lists))
         schedules: list[Schedule]
         print(f'got {len(schedules)} schedules')
         print('\n'.join(f'{s}' for s in schedules))
-        self.assertTrue(all(schedule.schedule_type == ScheduleType.business_hours for schedule in schedules),
-                        'Schedule type mismatch')
+        self.assertTrue(
+            all(schedule.schedule_type == ScheduleType.business_hours for schedule in schedules),
+            'Schedule type mismatch',
+        )
 
     def test_004_all_detail(self):
         """
@@ -80,10 +88,11 @@ class TestScheduleList(TestWithLocations):
         schedules = self.all_schedules()
         with ThreadPoolExecutor() as pool:
             details = pool.map(
-                lambda schedule: self.api.telephony.schedules.details(obj_id=schedule.location_id,
-                                                                      schedule_type=schedule.schedule_type,
-                                                                      schedule_id=schedule.schedule_id),
-                schedules)
+                lambda schedule: self.api.telephony.schedules.details(
+                    obj_id=schedule.location_id, schedule_type=schedule.schedule_type, schedule_id=schedule.schedule_id
+                ),
+                schedules,
+            )
             details = list(details)
         print(f'Got details for {len(details)} schedules')
 
@@ -101,25 +110,26 @@ class TestScheduleList(TestWithLocations):
             :return: list of schedules
             """
             details = self.api.telephony.schedules.details(
-                obj_id=schedule.location_id,
-                schedule_type=schedule.schedule_type,
-                schedule_id=schedule.schedule_id)
+                obj_id=schedule.location_id, schedule_type=schedule.schedule_type, schedule_id=schedule.schedule_id
+            )
             details: Schedule
             if not details.events:
                 return list()
             with ThreadPoolExecutor() as pool:
                 event_details = pool.map(
-                    lambda event: self.api.telephony.schedules.event_details(obj_id=schedule.location_id,
-                                                                             schedule_type=schedule.schedule_type,
-                                                                             schedule_id=schedule.schedule_id,
-                                                                             event_id=event.event_id),
-                    details.events)
+                    lambda event: self.api.telephony.schedules.event_details(
+                        obj_id=schedule.location_id,
+                        schedule_type=schedule.schedule_type,
+                        schedule_id=schedule.schedule_id,
+                        event_id=event.event_id,
+                    ),
+                    details.events,
+                )
                 event_details = list(event_details)
             return event_details
 
         with ThreadPoolExecutor() as pool:
-            event_details = pool.map(lambda schedule: schedule_event_details(schedule),
-                                     schedules)
+            event_details = pool.map(lambda schedule: schedule_event_details(schedule), schedules)
             event_details = list(chain.from_iterable(event_details))
         print(f'Got details of {len(event_details)} events in {len(schedules)} schedules.')
 
@@ -129,6 +139,7 @@ class TestWithTestSchedules(TestWithLocations):
     """
     Base class for tests with test schedules (test_xxx)
     """
+
     test_schedules: ClassVar[list[Schedule]]
 
     @classmethod
@@ -143,14 +154,12 @@ class TestWithTestSchedules(TestWithLocations):
             return
 
         with ThreadPoolExecutor() as pool:
-            tasks = pool.map(lambda loc: list(cls.api.telephony.schedules.list(obj_id=loc.location_id,
-                                                                               name='test_')),
-                             cls.locations)
+            tasks = pool.map(
+                lambda loc: list(cls.api.telephony.schedules.list(obj_id=loc.location_id, name='test_')), cls.locations
+            )
             cls.test_schedules = list(chain.from_iterable(tasks))
         cls.test_schedules: list[Schedule]
-        cls.test_schedules = [schedule
-                              for schedule in cls.test_schedules
-                              if re.match(r'test_\d{3}', schedule.name)]
+        cls.test_schedules = [schedule for schedule in cls.test_schedules if re.match(r'test_\d{3}', schedule.name)]
 
 
 class TestCreate(TestWithTestSchedules):
@@ -168,13 +177,12 @@ class TestCreate(TestWithTestSchedules):
 
         schedules = list(self.api.telephony.schedules.list(obj_id=target_location.location_id))
         schedule_names = set(sched.name for sched in schedules)
-        schedule_name = next((name for i in range(1000)
-                              if (name := f'test_{i:03d}') not in schedule_names))
+        schedule_name = next(name for i in range(1000) if (name := f'test_{i:03d}') not in schedule_names)
         schedule = Schedule.business(name=schedule_name)
         schedule_id = self.api.telephony.schedules.create(obj_id=target_location.location_id, schedule=schedule)
-        details = self.api.telephony.schedules.details(obj_id=target_location.location_id,
-                                                       schedule_type=schedule.schedule_type,
-                                                       schedule_id=schedule_id)
+        details = self.api.telephony.schedules.details(
+            obj_id=target_location.location_id, schedule_type=schedule.schedule_type, schedule_id=schedule_id
+        )
         print(f'created schedule: {target_location.name}/{schedule_name}/{schedule_id}')
         self.assertEqual(len(schedule.events), len(details.events))
         self.assertEqual(schedule.name, details.name)
@@ -187,26 +195,34 @@ class TestCreate(TestWithTestSchedules):
             self.skipTest('Need at least one test schedule (test_xxx)')
 
         target_schedule = random.choice(self.test_schedules)
-        details = self.api.telephony.schedules.details(obj_id=target_schedule.location_id,
-                                                       schedule_type=target_schedule.schedule_type,
-                                                       schedule_id=target_schedule.schedule_id)
+        details = self.api.telephony.schedules.details(
+            obj_id=target_schedule.location_id,
+            schedule_type=target_schedule.schedule_type,
+            schedule_id=target_schedule.schedule_id,
+        )
         # add an event
         event_names = set(event.name for event in details.events)
-        event_name = next(name for i in range(1000)
-                          if (name := f'today_{i:03d}') not in event_names)
-        event = Event(name=event_name,
-                      all_day_enabled=True,
-                      start_date=datetime.date.today(),
-                      end_date=datetime.date.today(),
-                      recurrence=Recurrence(recur_for_ever=True,
-                                            recur_yearly_by_date=RecurYearlyByDate.from_date(datetime.date.today())))
-        event_id = self.api.telephony.schedules.event_create(obj_id=target_schedule.location_id,
-                                                             schedule_type=target_schedule.schedule_type,
-                                                             schedule_id=target_schedule.schedule_id,
-                                                             event=event)
-        details_after = self.api.telephony.schedules.details(obj_id=target_schedule.location_id,
-                                                             schedule_type=target_schedule.schedule_type,
-                                                             schedule_id=target_schedule.schedule_id)
+        event_name = next(name for i in range(1000) if (name := f'today_{i:03d}') not in event_names)
+        event = Event(
+            name=event_name,
+            all_day_enabled=True,
+            start_date=datetime.date.today(),
+            end_date=datetime.date.today(),
+            recurrence=Recurrence(
+                recur_for_ever=True, recur_yearly_by_date=RecurYearlyByDate.from_date(datetime.date.today())
+            ),
+        )
+        event_id = self.api.telephony.schedules.event_create(
+            obj_id=target_schedule.location_id,
+            schedule_type=target_schedule.schedule_type,
+            schedule_id=target_schedule.schedule_id,
+            event=event,
+        )
+        details_after = self.api.telephony.schedules.details(
+            obj_id=target_schedule.location_id,
+            schedule_type=target_schedule.schedule_type,
+            schedule_id=target_schedule.schedule_id,
+        )
         self.assertEqual(len(details.events) + 1, len(details_after.events))
         self.assertEqual(event_name, details_after.events[-1].name)
         self.assertEqual(event_id, details_after.events[-1].event_id)
@@ -227,30 +243,35 @@ class TestUpdateSchedule(TestWithTestSchedules):
         test to update a schedule name
         """
         target_schedule = random.choice(self.test_schedules)
-        details = self.api.telephony.schedules.details(obj_id=target_schedule.location_id,
-                                                       schedule_type=target_schedule.schedule_type,
-                                                       schedule_id=target_schedule.schedule_id)
-        schedule_names = set(schedule.name
-                             for schedule in self.test_schedules
-                             if schedule.location_id == target_schedule.location_id)
+        details = self.api.telephony.schedules.details(
+            obj_id=target_schedule.location_id,
+            schedule_type=target_schedule.schedule_type,
+            schedule_id=target_schedule.schedule_id,
+        )
+        schedule_names = set(
+            schedule.name for schedule in self.test_schedules if schedule.location_id == target_schedule.location_id
+        )
         old_name = target_schedule.name
-        new_name = next(name for i in range(1000)
-                        if (name := f'test_{i:03d}') not in schedule_names)
+        new_name = next(name for i in range(1000) if (name := f'test_{i:03d}') not in schedule_names)
         details.name = new_name
 
-        new_id = self.api.telephony.schedules.update(schedule=details,
-                                                     obj_id=target_schedule.location_id,
-                                                     schedule_type=target_schedule.schedule_type,
-                                                     schedule_id=target_schedule.schedule_id)
-        after = self.api.telephony.schedules.details(obj_id=target_schedule.location_id,
-                                                     schedule_type=target_schedule.schedule_type,
-                                                     schedule_id=new_id)
+        new_id = self.api.telephony.schedules.update(
+            schedule=details,
+            obj_id=target_schedule.location_id,
+            schedule_type=target_schedule.schedule_type,
+            schedule_id=target_schedule.schedule_id,
+        )
+        after = self.api.telephony.schedules.details(
+            obj_id=target_schedule.location_id, schedule_type=target_schedule.schedule_type, schedule_id=new_id
+        )
         # restore old name
         details.name = old_name
-        self.api.telephony.schedules.update(schedule=details,
-                                            obj_id=target_schedule.location_id,
-                                            schedule_type=target_schedule.schedule_type,
-                                            schedule_id=new_id)
+        self.api.telephony.schedules.update(
+            schedule=details,
+            obj_id=target_schedule.location_id,
+            schedule_type=target_schedule.schedule_type,
+            schedule_id=new_id,
+        )
 
         self.assertEqual(new_name, after.name)
         self.assertEqual(details.events, after.events)
@@ -261,31 +282,37 @@ class TestUpdateSchedule(TestWithTestSchedules):
         """
         target_schedule = random.choice(self.test_schedules)
         # get details; we need the eventy
-        details = self.api.telephony.schedules.details(obj_id=target_schedule.location_id,
-                                                       schedule_type=target_schedule.schedule_type,
-                                                       schedule_id=target_schedule.schedule_id)
+        details = self.api.telephony.schedules.details(
+            obj_id=target_schedule.location_id,
+            schedule_type=target_schedule.schedule_type,
+            schedule_id=target_schedule.schedule_id,
+        )
 
         # change all event names: add a leading 'U'
         update = details.model_copy(deep=True)
         for event in update.events:
             event.new_name = f'U{event.name}'
-        new_id = self.api.telephony.schedules.update(schedule=update,
-                                                     obj_id=target_schedule.location_id,
-                                                     schedule_type=target_schedule.schedule_type,
-                                                     schedule_id=target_schedule.schedule_id)
-        after = self.api.telephony.schedules.details(obj_id=target_schedule.location_id,
-                                                     schedule_type=target_schedule.schedule_type,
-                                                     schedule_id=new_id)
+        new_id = self.api.telephony.schedules.update(
+            schedule=update,
+            obj_id=target_schedule.location_id,
+            schedule_type=target_schedule.schedule_type,
+            schedule_id=target_schedule.schedule_id,
+        )
+        after = self.api.telephony.schedules.details(
+            obj_id=target_schedule.location_id, schedule_type=target_schedule.schedule_type, schedule_id=new_id
+        )
 
         # restore old settings
         restore = update.model_copy(deep=True)
         # update names back to original: swap new name and name for each event
         for event in restore.events:
             event.name, event.new_name = event.new_name, event.name
-        self.api.telephony.schedules.update(schedule=restore,
-                                            obj_id=target_schedule.location_id,
-                                            schedule_type=target_schedule.schedule_type,
-                                            schedule_id=new_id)
+        self.api.telephony.schedules.update(
+            schedule=restore,
+            obj_id=target_schedule.location_id,
+            schedule_type=target_schedule.schedule_type,
+            schedule_id=new_id,
+        )
         # number of events should not have changed
         self.assertEqual(len(details.events), len(after.events))
 
@@ -311,16 +338,21 @@ class TestAllDetails(TestWithLocations):
     @async_test
     async def test_all_details(self):
         sapi = self.async_api.telephony.schedules
-        schedule_lists = await asyncio.gather(*[sapi.list(obj_id=loc.location_id)
-                                                for loc in self.locations])
+        schedule_lists = await asyncio.gather(*[sapi.list(obj_id=loc.location_id) for loc in self.locations])
         schedule_lists: list[list[Schedule]]
         # get details for all schedules
         sched_list: list[Schedule]
-        schedule_lists = await asyncio.gather(*[asyncio.gather(*[sapi.details(loc.location_id,
-                                                                              schedule_type=sched.schedule_type,
-                                                                              schedule_id=sched.schedule_id)
-                                                                 for sched in sched_list])
-                                                for loc, sched_list in zip(self.locations, schedule_lists)])
+        schedule_lists = await asyncio.gather(
+            *[
+                asyncio.gather(
+                    *[
+                        sapi.details(loc.location_id, schedule_type=sched.schedule_type, schedule_id=sched.schedule_id)
+                        for sched in sched_list
+                    ]
+                )
+                for loc, sched_list in zip(self.locations, schedule_lists)
+            ]
+        )
         for location, schedule_list in zip(self.locations, schedule_lists):
             print(f'{location.name}: {len(schedule_list)} schedules')
             print(' ', end='')

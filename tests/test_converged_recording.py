@@ -33,6 +33,7 @@ class WithRecordingServiceApp(TestCaseWithLog):
         * spark-admin:people_read
         * spark-compliance:recordings_write
     """
+
     test_api: ClassVar[WebexSimpleApi]
     token_identifier: ClassVar[str] = 'RECORDING_SERVICE_APP'
     recording_service_tokens: ClassVar[Tokens]
@@ -68,7 +69,7 @@ class WithRecordingServiceApp(TestCaseWithLog):
             if not os.path.isfile(path):
                 return None
             try:
-                with open(path, mode='r') as f:
+                with open(path) as f:
                     data = yaml.safe_load(f)
                 tokens = Tokens.model_validate(data)
             except Exception:
@@ -87,9 +88,12 @@ class WithRecordingServiceApp(TestCaseWithLog):
             Get a new access token using refresh token, service app client id, service app client secret
             """
             tokens = Tokens(refresh_token=os.getenv(f'{env_var_prefix}_REFRESH_TOKEN'))
-            integration = Integration(client_id=os.getenv(f'{env_var_prefix}_CLIENT_ID'),
-                                      client_secret=os.getenv(f'{env_var_prefix}_CLIENT_SECRET'),
-                                      scopes=[], redirect_url=None)
+            integration = Integration(
+                client_id=os.getenv(f'{env_var_prefix}_CLIENT_ID'),
+                client_secret=os.getenv(f'{env_var_prefix}_CLIENT_SECRET'),
+                scopes=[],
+                redirect_url=None,
+            )
             integration.refresh(tokens=tokens)
             write_tokens_to_file(tokens)
             return tokens
@@ -138,8 +142,11 @@ class TestConvergedRecording(WithRecordingServiceApp, WithIntegrationTokens):
     def test_list(self):
         api = self.recording_service_api
         recordings = list(api.converged_recordings.list())
-        print(json.dumps(TypeAdapter(list[ConvergedRecording]).dump_python(recordings, mode='json', by_alias=True),
-                         indent=2))
+        print(
+            json.dumps(
+                TypeAdapter(list[ConvergedRecording]).dump_python(recordings, mode='json', by_alias=True), indent=2
+            )
+        )
 
     def test_list_admin_or_compliance(self):
         """
@@ -147,8 +154,11 @@ class TestConvergedRecording(WithRecordingServiceApp, WithIntegrationTokens):
         """
         api = self.integration_api
         recordings = list(api.converged_recordings.list_for_admin_or_compliance_officer(max=100))
-        print(json.dumps(TypeAdapter(list[ConvergedRecording]).dump_python(recordings, mode='json', by_alias=True),
-                         indent=2))
+        print(
+            json.dumps(
+                TypeAdapter(list[ConvergedRecording]).dump_python(recordings, mode='json', by_alias=True), indent=2
+            )
+        )
 
     def test_metadata(self):
         """
@@ -162,6 +172,9 @@ class TestConvergedRecording(WithRecordingServiceApp, WithIntegrationTokens):
         with ThreadPoolExecutor(max_workers=10) as executor:
             results = list(executor.map(api.converged_recordings.metadata, (r.id for r in recordings)))
 
-        print(json.dumps(TypeAdapter(list[ConvergedRecordingMeta]).dump_python(results, mode='json', by_alias=True),
-                         indent=2))
+        print(
+            json.dumps(
+                TypeAdapter(list[ConvergedRecordingMeta]).dump_python(results, mode='json', by_alias=True), indent=2
+            )
+        )
         print(f'Got metadata for {len(results)} recordings')

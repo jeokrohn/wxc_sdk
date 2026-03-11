@@ -4,6 +4,7 @@ Example Script
 Modifying number of rings configuration in voicemail settings
 Run -> python3 modify_voicemail.py modify_voicemail.csv
 """
+
 import csv
 import sys
 import traceback
@@ -30,13 +31,12 @@ def update_vm_settings():
     # using wxc_sdk.people.PeopleApi.list to iterate over persons
     # Parameter calling_data needs to be set to true to gat calling specific information
     # calling users have the attribute location_id set
-    calling_users = [user for user in api.people.list(calling_data=True)
-                     if user.location_id]
+    calling_users = [user for user in api.people.list(calling_data=True) if user.location_id]
     print(f'{len(calling_users)} users:')
     print('\n'.join(user.display_name for user in calling_users))
 
     # get CSV file name from command line
-    with open(str(sys.argv[1]), 'r') as csv_file:
+    with open(str(sys.argv[1])) as csv_file:
         reader = csv.DictReader(csv_file)
         # read all records from CSV. Ony consider records w/o error
         for col in reader:
@@ -49,9 +49,9 @@ def update_vm_settings():
     # work on calling users that have an email address that we read from the CSV
     filteredUsers = [d for d in calling_users if d.emails[0] in mail_ids]
 
-    print("\nCalling Users in CI  - Count ", len(calling_users))
-    print("Mail IDs from input file after removing error columns - Count ", len(mail_ids))
-    print("FilteredUsers Users -  Count", len(filteredUsers))
+    print('\nCalling Users in CI  - Count ', len(calling_users))
+    print('Mail IDs from input file after removing error columns - Count ', len(mail_ids))
+    print('FilteredUsers Users -  Count', len(filteredUsers))
 
     def set_number_of_rings(user: Person):
         """
@@ -75,19 +75,18 @@ def update_vm_settings():
             final_report.append((user.display_name, 'SUCCESS'))
         except Exception as e:
             final_report.append((user.display_name, 'FAILURE'))
-            print("type error: " + str(e))
+            print('type error: ' + str(e))
             print(traceback.format_exc())
         return
 
     # Modify settings for the filtered users
     with ThreadPoolExecutor() as pool:
-        list(pool.map(lambda user: set_number_of_rings(user),
-                      filteredUsers))
+        list(pool.map(lambda user: set_number_of_rings(user), filteredUsers))
 
     print(final_report)
     with open('output.csv', 'w') as f:
         write = csv.writer(f)
-        write.writerow(["USERNAME", "STATUS"])
+        write.writerow(['USERNAME', 'STATUS'])
         write.writerows(final_report)
 
 

@@ -82,17 +82,21 @@ async def leave_spaces(api: AsWebexSimpleApi, spaces: Iterable[Room]):
 async def as_main():
     # parse args
     parser = ArgumentParser(description='leave spaces with no activity')
-    parser.add_argument('--days', '-d', type=int, required=False, default=3 * 365,
-                        help=f'days since last activity; default: {3 * 365}')
-    parser.add_argument('--token', type=str, required=False,
-                        help='Personal access token to use. If not provided script will try to read token from '
-                             'WEBEX_ACCESS_TOKEN environment variable.')
-    parser.add_argument('--no_test', action='store_true', required=False,
-                        help='Don\'t test; actually leave the spaces')
-    parser.add_argument('--no_messages', action='store_true', required=False,
-                        help='Only leave spaces that have no messages')
-    parser.add_argument('--keep', '-k', type=str, required=False,
-                        help='file with list of spaces to keep')
+    parser.add_argument(
+        '--days', '-d', type=int, required=False, default=3 * 365, help=f'days since last activity; default: {3 * 365}'
+    )
+    parser.add_argument(
+        '--token',
+        type=str,
+        required=False,
+        help='Personal access token to use. If not provided script will try to read token from '
+        'WEBEX_ACCESS_TOKEN environment variable.',
+    )
+    parser.add_argument('--no_test', action='store_true', required=False, help="Don't test; actually leave the spaces")
+    parser.add_argument(
+        '--no_messages', action='store_true', required=False, help='Only leave spaces that have no messages'
+    )
+    parser.add_argument('--keep', '-k', type=str, required=False, help='file with list of spaces to keep')
     args = parser.parse_args()
 
     load_dotenv(override=True)
@@ -103,7 +107,7 @@ async def as_main():
     cutoff = datetime.now(tz=tz.UTC) - timedelta(days=args.days)
     if args.keep:
         try:
-            with open(args.keep, mode='r') as f:
+            with open(args.keep) as f:
                 keep = set(l.strip() for l in f if l)
         except FileNotFoundError:
             print(f'file "{args.keep}" not found', file=sys.stderr)
@@ -153,8 +157,10 @@ async def as_main():
 
             # if only spaces with no messages should be considered and we have a message in the space then don't leave
             if args.no_messages and latest_message is not None:
-                print(f'Space "{space.title}" has messages, latest is {latest_message.created:%Y.%m.%d %H:%M:%S}, '
-                      f'last activity is {space.last_activity:%Y.%m.%d %H:%M:%S} - not leaving')
+                print(
+                    f'Space "{space.title}" has messages, latest is {latest_message.created:%Y.%m.%d %H:%M:%S}, '
+                    f'last activity is {space.last_activity:%Y.%m.%d %H:%M:%S} - not leaving'
+                )
                 continue
 
             # if no latest message or latest message is older than cutoff, consider leaving
@@ -162,19 +168,22 @@ async def as_main():
                 latest_messages: Message
                 validated_leave.append((space, latest_message and latest_message.created))
                 continue
-            print(f'Latest message in "{space.title}" is {latest_message.created:%Y.%m.%d %H:%M:%S}, '
-                  f'last activity is {space.last_activity:%Y.%m.%d %H:%M:%S} - not leaving')
+            print(
+                f'Latest message in "{space.title}" is {latest_message.created:%Y.%m.%d %H:%M:%S}, '
+                f'last activity is {space.last_activity:%Y.%m.%d %H:%M:%S} - not leaving'
+            )
         print()
         print(f'Found {len(validated_leave)} spaces to leave:')
 
         # sort spaces by latest activity or latest message
-        validated_leave.sort(key=lambda x: max(x[0].last_activity, x[1]) if x[1] else x[0].last_activity,
-                             reverse=False)
+        validated_leave.sort(key=lambda x: max(x[0].last_activity, x[1]) if x[1] else x[0].last_activity, reverse=False)
 
         for space, latest in validated_leave:
             print(f'Leave "{space.title}"')
-            print(f'   last activity {space.last_activity:%Y.%m.%d %H:%M:%S}, latest message '
-                  f'{f"{latest:%Y.%m.%d %H:%M:%S}" if latest else "none"}')
+            print(
+                f'   last activity {space.last_activity:%Y.%m.%d %H:%M:%S}, latest message '
+                f'{f"{latest:%Y.%m.%d %H:%M:%S}" if latest else "none"}'
+            )
 
         if args.no_test:
             # actually try to leave the spaces

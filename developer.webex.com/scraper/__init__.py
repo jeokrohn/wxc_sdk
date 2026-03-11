@@ -20,9 +20,21 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from yaml import safe_dump, safe_load
 
-__all__ = ['MethodDoc', 'SectionDoc', 'AttributeInfo', 'Parameter', 'MethodDetails', 'DocMethodDetails',
-           'DevWebexComScraper', 'Credentials', 'SectionAndMethodDetails', 'Class', 'python_type', 'SectionDetails',
-           'break_lines']
+__all__ = [
+    'MethodDoc',
+    'SectionDoc',
+    'AttributeInfo',
+    'Parameter',
+    'MethodDetails',
+    'DocMethodDetails',
+    'DevWebexComScraper',
+    'Credentials',
+    'SectionAndMethodDetails',
+    'Class',
+    'python_type',
+    'SectionDetails',
+    'break_lines',
+]
 
 # "Standard" menu titles we want to ignore when pull method details from submenus on the left
 IGNORE_MENUS = {
@@ -34,13 +46,11 @@ IGNORE_MENUS = {
     'Video Mesh',
     'Wholesale Billing Reports',
     'Wholesale Customers',
-    'Wholesale Subscribers'
+    'Wholesale Subscribers',
 }
 
 # set this to limit scraping to a subset of menus; mainly for debugging
-RELEVANT_MENUS = {
-    'Call Controls'
-}
+RELEVANT_MENUS = {'Call Controls'}
 
 log = logging.getLogger(__name__)
 
@@ -61,20 +71,18 @@ def div_repr(d) -> str:
     assert d.name == 'div'
     classes = d.attrs.get('class', None)
     if classes:
-        class_str = f" class={' '.join(classes)}"
+        class_str = f' class={" ".join(classes)}'
     else:
         class_str = ''
     return f'<div{class_str}>'
 
 
 @overload
-def python_type(type_str: str) -> str:
-    ...
+def python_type(type_str: str) -> str: ...
 
 
 @overload
-def python_type(type_str: str, for_list: bool) -> tuple[str, str]:
-    ...
+def python_type(type_str: str, for_list: bool) -> tuple[str, str]: ...
 
 
 def python_type(type_str: str, for_list: bool = False) -> Union[str, tuple[str, str]]:
@@ -86,7 +94,7 @@ def python_type(type_str: str, for_list: bool = False) -> Union[str, tuple[str, 
     :return:
     """
     # transform "Some Class" to "SomeClass"
-    type_str, _ = re.subn(r'\s([A-Z])', '\g<1>', type_str)
+    type_str, _ = re.subn(r'\s([A-Z])', r'\g<1>', type_str)
     if type_str == 'number':
         return 'int'
     elif type_str == 'boolean':
@@ -98,16 +106,13 @@ def python_type(type_str: str, for_list: bool = False) -> Union[str, tuple[str, 
         return f'List[{python_type(m.group(1))}]'
     elif type_str == 'array' or type_str == 'string array':
         return 'List[str]'
-    if (referenced_class := Class.registry.get(type_str)) and referenced_class.base and \
-            not referenced_class.attributes:
+    if (referenced_class := Class.registry.get(type_str)) and referenced_class.base and not referenced_class.attributes:
         # if the referenced class has a base class and no attributes then use the name of the base class instead
         return python_type(referenced_class.base)
     if for_list:
         # need to find an attribute that is a list
         assert referenced_class
-        list_attr = next((a
-                          for a in referenced_class.attributes
-                          if (m := re.match(r'array\[(.+)]', a.type))), None)
+        list_attr = next((a for a in referenced_class.attributes if (m := re.match(r'array\[(.+)]', a.type))), None)
         if list_attr:
             if list_attr.param_class:
                 # if we have a class then the name of the class
@@ -144,6 +149,7 @@ class SectionDoc(BaseModel):
 
     For example for Calling/Reference/Locations
     """
+
     #: menu text from the menu at the left under Reference linking to the page with the list of methods
     menu_text: str
     #: header from the section page on the right
@@ -272,7 +278,7 @@ class Class:
     @name.setter
     def name(self, new_name: str) -> None:
         if isinstance(new_name, property):
-            raise TypeError('missing mandatory parameter: ''name''')
+            raise TypeError('missing mandatory parameter: name')
         if self._name is not None:
             # unregister old name
             self.registry.pop(self._name, None)
@@ -287,8 +293,7 @@ class Class:
         # we want to make sure that Class names are unique
         if self.registry.get(self._name) is not None:
             # suffix an index and pick the 1st name not taken
-            new_name = next(name for i in range(1, 100)
-                            if self.registry.get(name := f'{self._name}{i}') is None)
+            new_name = next(name for i in range(1, 100) if self.registry.get(name := f'{self._name}{i}') is None)
             self._name = new_name
         self.registry[self._name] = self
 
@@ -356,16 +361,18 @@ class Class:
 
         def handle_starting_digit(name: str) -> str:
             if name[0] in '0123456789':
-                digit_name = {'0': 'zero',
-                              '1': 'one',
-                              '2': 'two',
-                              '3': 'three',
-                              '4': 'four',
-                              '5': 'five',
-                              '6': 'six',
-                              '7': 'seven',
-                              '8': 'eight',
-                              '9': 'nine'}[name[0]]
+                digit_name = {
+                    '0': 'zero',
+                    '1': 'one',
+                    '2': 'two',
+                    '3': 'three',
+                    '4': 'four',
+                    '5': 'five',
+                    '6': 'six',
+                    '7': 'seven',
+                    '8': 'eight',
+                    '9': 'nine',
+                }[name[0]]
                 name = f'{digit_name}_{name[1:].strip("_")}'
             return name
 
@@ -378,8 +385,7 @@ class Class:
             return
 
         # 1st generate sources for all classes of any attributes
-        child_classes = (attr.param_class for attr in self.attributes
-                         if attr.param_class)
+        child_classes = (attr.param_class for attr in self.attributes if attr.param_class)
         for child_class in child_classes:
             yield from child_class.sources()
 
@@ -407,7 +413,7 @@ class Class:
             for line in attr.doc.strip('\n').splitlines():
                 print('\n'.join(break_lines(line, '    #: ')), file=source)
             if self.is_enum:
-                print(f'    {handle_starting_digit(enum_name(attr.name))} = \'{attr.name}\'', file=source)
+                print(f"    {handle_starting_digit(enum_name(attr.name))} = '{attr.name}'", file=source)
             else:
                 # determine whether we need an alias
                 if re.search(r'\s', attr.name):
@@ -417,8 +423,10 @@ class Class:
                 else:
                     attr_name = attr.name
                     alias = ''
-                print(f'    {handle_starting_digit(underscore(attr_name))}: Optional[{type_for_source(attr)}]{alias}',
-                      file=source)
+                print(
+                    f'    {handle_starting_digit(underscore(attr_name))}: Optional[{type_for_source(attr)}]{alias}',
+                    file=source,
+                )
         self.source_generated = True
         yield source.getvalue()
         return
@@ -516,8 +524,7 @@ class Class:
                 class_a.base = class_b._name
                 # ... and we can remove all common attributes from class_a
                 names = {a.name for a in common}
-                class_a.attributes = [a for a in class_a.attributes
-                                      if a.name not in names]
+                class_a.attributes = [a for a in class_a.attributes if a.name not in names]
             # if
         # for
         return
@@ -548,8 +555,7 @@ class MethodDetails(BaseModel):
             return False
         if not response_attributes[0].type.startswith('array['):
             return False
-        p_names = set(p.name
-                      for p in self.parameters_and_response.get('Query Parameters', []))
+        p_names = set(p.name for p in self.parameters_and_response.get('Query Parameters', []))
         return 'max' in p_names
 
 
@@ -558,16 +564,22 @@ class SectionAndMethodDetails(NamedTuple):
     method_details: MethodDetails
 
     def __lt__(self, other: 'SectionAndMethodDetails'):
-        return self.section < other.section or self.section == other.section and (
-                self.method_details.documentation.endpoint < other.method_details.documentation.endpoint or
-                self.method_details.documentation.endpoint == other.method_details.documentation.endpoint and
-                self.method_details.documentation.http_method < other.method_details.documentation.http_method)
+        return (
+            self.section < other.section
+            or self.section == other.section
+            and (
+                self.method_details.documentation.endpoint < other.method_details.documentation.endpoint
+                or self.method_details.documentation.endpoint == other.method_details.documentation.endpoint
+                and self.method_details.documentation.http_method < other.method_details.documentation.http_method
+            )
+        )
 
 
 class SectionDetails(BaseModel):
     """
     Details for a section: header, doc and list of methods
     """
+
     header: Optional[str]
     doc: Optional[str]
     methods: list[MethodDetails]
@@ -577,6 +589,7 @@ class DocMethodDetails(BaseModel):
     """
     Container for all information; interface to YML file
     """
+
     info: Optional[str]
     #: dictionary indexed by menu text with list of methods in that section
     docs: dict[str, SectionDetails] = Field(default_factory=dict)
@@ -601,7 +614,7 @@ class DocMethodDetails(BaseModel):
 
     @staticmethod
     def from_yml(path: str):
-        with open(path, mode='r') as f:
+        with open(path) as f:
             return DocMethodDetails.model_validate(safe_load(f))
 
     def to_yml(self, path: Optional[str] = None) -> Optional[str]:
@@ -644,9 +657,15 @@ class DevWebexComScraper:
     # ignore sections not part of the "core": the ones listed in IGNORE_MENUS
     ignore_non_core: bool
 
-    def __init__(self, credentials: Credentials = None, baseline: DocMethodDetails = None,
-                 new_only: bool = True, section: str = None, tabs: Union[str, list[str]] = None,
-                 ignore_non_core: bool = True):
+    def __init__(
+        self,
+        credentials: Credentials = None,
+        baseline: DocMethodDetails = None,
+        new_only: bool = True,
+        section: str = None,
+        tabs: Union[str, list[str]] = None,
+        ignore_non_core: bool = True,
+    ):
         self.driver = webdriver.Chrome()
         self.logger = logging.getLogger(f'{__name__}.{self.__class__.__name__}')
         self.credentials = credentials
@@ -683,8 +702,9 @@ class DevWebexComScraper:
         :raises:
             StopIteration: if no element can be found
         """
-        return next((element for element in find_in.find_elements(by=By.CLASS_NAME, value=class_name)
-                     if element.text == text))
+        return next(
+            element for element in find_in.find_elements(by=By.CLASS_NAME, value=class_name) if element.text == text
+        )
 
     def login(self):
         """
@@ -707,15 +727,18 @@ class DevWebexComScraper:
 
         # wait for "Sign In" button
         sign_in = WebDriverWait(driver=self.driver, timeout=10).until(
-            method=EC.element_to_be_clickable((By.ID, 'IDButton2')))
+            method=EC.element_to_be_clickable((By.ID, 'IDButton2'))
+        )
         sign_in.click()
         password = WebDriverWait(driver=self.driver, timeout=10).until(
-            method=EC.visibility_of_element_located((By.ID, 'IDToken2')))
+            method=EC.visibility_of_element_located((By.ID, 'IDToken2'))
+        )
         password.send_keys(self.credentials.password)
 
         # wait for "Sign In" button
         sign_in = WebDriverWait(driver=self.driver, timeout=10).until(
-            method=EC.element_to_be_clickable((By.ID, 'Button1')))
+            method=EC.element_to_be_clickable((By.ID, 'Button1'))
+        )
         sign_in.click()
 
         return
@@ -731,8 +754,9 @@ class DevWebexComScraper:
         classes = set(tag.attrs.get('class', []))
         return classes & {'params-type-non-object', 'params-type-object'}
 
-    def methods_from_api_reference_container(self, container: BeautifulSoup,
-                                             header: str) -> Generator[MethodDoc, None, None]:
+    def methods_from_api_reference_container(
+        self, container: BeautifulSoup, header: str
+    ) -> Generator[MethodDoc, None, None]:
         """
         Yield method documentation instances for each method parsed from an API reference container on the right
 
@@ -769,8 +793,7 @@ class DevWebexComScraper:
         """
 
         def log(text: str, level: int = logging.DEBUG):
-            self.log(f'    methods_from_api_reference_container("{header}"): {text}',
-                     level=level)
+            self.log(f'    methods_from_api_reference_container("{header}"): {text}', level=level)
 
         log('start')
         rows = container.div.div.find_all('div', recursive=False)[1].find_all('div', recursive=False)
@@ -797,7 +820,7 @@ class DevWebexComScraper:
         for soup_row in rows[1:]:
             method = soup_row.div.div.span.text
             endpoint = soup_row.div.div.a.text
-            doc_link = f"https://developer.webex.com{soup_row.div.div.a.get('href')}"
+            doc_link = f'https://developer.webex.com{soup_row.div.div.a.get("href")}'
             doc = soup_row.div.find_all('div')[1].text
 
             log(f'{doc}', level=logging.INFO)
@@ -813,8 +836,7 @@ class DevWebexComScraper:
         """
 
         def log(text: str, level: int = logging.DEBUG):
-            self.log(f'  endpoints_from_submenu_items({submenu.text}): {text}',
-                     level=level)
+            self.log(f'  endpoints_from_submenu_items({submenu.text}): {text}', level=level)
 
         prev_container_header = None
 
@@ -838,9 +860,7 @@ class DevWebexComScraper:
                 if target:
                     target: WebElement
                     # header selector: div.api_reference_entry__container > div > div:nth-of-type(1) > h3
-                    container_header = target.find_element(
-                        by=By.CSS_SELECTOR,
-                        value='div > div:nth-of-type(1) > h3')
+                    container_header = target.find_element(by=By.CSS_SELECTOR, value='div > div:nth-of-type(1) > h3')
 
                     header_text = container_header.text
                     log(f'prev container header: {prev_container_header}, header: {header_text}')
@@ -875,8 +895,7 @@ class DevWebexComScraper:
                 # .. skip
                 log('skipping', level=logging.INFO)
                 # .. but yield an empty list, so that we at least have a marker for that section
-                yield SectionDoc(menu_text=submenu_text,
-                                 methods=list())
+                yield SectionDoc(menu_text=submenu_text, methods=list())
                 continue
 
             log(f'Extracting methods from "{submenu_text}" menu', level=logging.INFO)
@@ -892,7 +911,8 @@ class DevWebexComScraper:
                 for i in range(3):
                     try:
                         api_reference_container, header = WebDriverWait(driver=self.driver, timeout=10).until(
-                            method=wait_for_new_api_reference_container())
+                            method=wait_for_new_api_reference_container()
+                        )
                     except StaleElementReferenceException:
                         if i < 2:
                             continue
@@ -914,12 +934,12 @@ class DevWebexComScraper:
             soup = BeautifulSoup(api_reference_container.get_attribute('outerHTML'), 'html.parser')
             header = soup.div.div.h3.text
             doc = '\n'.join(p.text for p in soup.div.div.find_all('p'))
-            yield SectionDoc(menu_text=submenu.text,
-                             header=header,
-                             doc=doc,
-                             methods=list(self.methods_from_api_reference_container(
-                                 container=soup,
-                                 header=submenu.text)))
+            yield SectionDoc(
+                menu_text=submenu.text,
+                header=header,
+                doc=doc,
+                methods=list(self.methods_from_api_reference_container(container=soup, header=submenu.text)),
+            )
             log('end')
         return
 
@@ -973,7 +993,8 @@ class DevWebexComScraper:
         try:
             # wait for button to accept cookies to be steady
             accept_cookies = WebDriverWait(driver=self.driver, timeout=10).until(
-                method=steady((By.ID, 'onetrust-consent-sdk')))
+                method=steady((By.ID, 'onetrust-consent-sdk'))
+            )
         except TimeoutException:
             # if there is no accept cookies button after 10 seconds then we are probably ok
             log('No popup to accept cookies', level=logging.WARNING)
@@ -988,8 +1009,9 @@ class DevWebexComScraper:
                 pass
             if button is None:
                 try:
-                    button = accept_cookies.find_element(by=By.XPATH,
-                                                         value='//*[@id="onetrust-close-btn-container"]/button')
+                    button = accept_cookies.find_element(
+                        by=By.XPATH, value='//*[@id="onetrust-close-btn-container"]/button'
+                    )
                 except NoSuchElementException:
                     pass
             if button is not None:
@@ -1015,34 +1037,35 @@ class DevWebexComScraper:
             self.login()
 
         log(f'looking for "{self.section}"')
-        section = self.by_class_and_text(find_in=self.driver,
-                                         class_name='md-list-item__center',
-                                         text=self.section)
+        section = self.by_class_and_text(find_in=self.driver, class_name='md-list-item__center', text=self.section)
         log(f'clicking on "{self.section}"')
         section.click()
 
         if self.section == 'Full API Reference':
             # wait for a sidebar group to be present
             reference_nav_group = WebDriverWait(driver=self.driver, timeout=10).until(
-                method=EC.presence_of_element_located((By.CLASS_NAME, 'md-sidebar-nav__group--expanded')))
+                method=EC.presence_of_element_located((By.CLASS_NAME, 'md-sidebar-nav__group--expanded'))
+            )
         else:
             # after clicking on section an expanded nav group exists
             log('looking for expanded sidebar nav group')
             section_nav_group = WebDriverWait(driver=self.driver, timeout=10).until(
-                method=EC.presence_of_element_located((By.CLASS_NAME, 'md-sidebar-nav__group--expanded')))
+                method=EC.presence_of_element_located((By.CLASS_NAME, 'md-sidebar-nav__group--expanded'))
+            )
 
             # in that nav group we want to click on "Reference"
             log('looking for "Reference" in expanded sidebar group')
-            reference = self.by_class_and_text(find_in=section_nav_group,
-                                               class_name='md-list-item__center',
-                                               text='Reference')
+            reference = self.by_class_and_text(
+                find_in=section_nav_group, class_name='md-list-item__center', text='Reference'
+            )
             log('clicking on "Reference"')
             reference.click()
 
             # After clicking on "Reference" a new expanded nav group should exist
             log('Looking for expanded sidebar nav group under "Calling"')
-            reference_nav_group = next(iter(section_nav_group.find_elements(by=By.CLASS_NAME,
-                                                                            value='md-sidebar-nav__group--expanded')))
+            reference_nav_group = next(
+                iter(section_nav_group.find_elements(by=By.CLASS_NAME, value='md-sidebar-nav__group--expanded'))
+            )
         log('Collecting menu items in "Reference" sidebar group')
         reference_items = reference_nav_group.find_elements(by=By.CLASS_NAME, value='md-submenu__item')
         log(f"""menu items in "Reference" sidebar group: {', '.join(f'"{smi.text}"' for smi in reference_items)}""")
@@ -1064,9 +1087,8 @@ class DevWebexComScraper:
 
         def log(msg: str, div: Tag = None, log_level: int = logging.DEBUG):
             div = div or param_div
-            name_str = name and f'"{name}", ' or ""
-            self.log(f'      {" " * level}param_parser({path}{div_repr(div)}): {name_str}{msg}',
-                     level=log_level)
+            name_str = name and f'"{name}", ' or ''
+            self.log(f'      {" " * level}param_parser({path}{div_repr(div)}): {name_str}{msg}', level=log_level)
 
         def div_generator(div_list: list[Tag]) -> Generator[Tag, None, None]:
             """
@@ -1131,8 +1153,9 @@ class DevWebexComScraper:
                             </div>
                         </div>
                     """
-                    if (childs := div.find_all('div', recursive=False)) and all(child.attrs.get('class', None) is None
-                                                                                for child in childs):
+                    if (childs := div.find_all('div', recursive=False)) and all(
+                        child.attrs.get('class', None) is None for child in childs
+                    ):
                         log('div_generator: list of classless child divs -> yield divs from childs')
                         for child in childs:
                             child: Tag
@@ -1152,8 +1175,7 @@ class DevWebexComScraper:
             if param_div.attrs.get('class', None) is None:
                 # yield members of classless div
                 all_divs = param_div.find_all('div', recursive=False)
-                yield from self.param_parser(all_divs,
-                                             level=level)
+                yield from self.param_parser(all_divs, level=level)
                 # and then continue with the next
                 param_div = next(div_iter, None)
                 continue
@@ -1162,9 +1184,7 @@ class DevWebexComScraper:
             if not param_div.find_all('div', recursive=False):
                 spans = param_div.find_all('span', recursive=False)
                 if len(spans) == 2:
-                    yield Parameter(name=spans[0].text,
-                                    type='',
-                                    doc=f'{spans[0].text}{spans[1].text}')
+                    yield Parameter(name=spans[0].text, type='', doc=f'{spans[0].text}{spans[1].text}')
                 param_div = next(div_iter, None)
                 continue
 
@@ -1229,7 +1249,7 @@ class DevWebexComScraper:
                                 ul_child: Tag
                                 if ul_child.name != 'li':
                                     raise KeyError(f'Unexpected child of <ul>: {ul_child.name}')
-                                yield f"* {' '.join(ul_child.strings)}"
+                                yield f'* {" ".join(ul_child.strings)}'
                         else:
                             break
                     return
@@ -1244,11 +1264,16 @@ class DevWebexComScraper:
                 # for an enum the second div can have a list of enum values
                 child_divs = p_spec_div.find_all('div', recursive=False)
                 if child_divs:
-                    log(f'divs in second div of parameter parsed ({len(child_divs)}): '
-                        f'{", ".join(map(div_repr, child_divs))}')
+                    log(
+                        f'divs in second div of parameter parsed ({len(child_divs)}): '
+                        f'{", ".join(map(div_repr, child_divs))}'
+                    )
                     param_attrs = list(self.param_parser(child_divs, level=level + 1)) or None
-                    if param_attrs and len(param_attrs) == 1 and not any(
-                            (param_attrs[0].param_attrs, param_attrs[0].param_object)):
+                    if (
+                        param_attrs
+                        and len(param_attrs) == 1
+                        and not any((param_attrs[0].param_attrs, param_attrs[0].param_object))
+                    ):
                         # a single child attribute without childs doesn't make any sense
                         # instead add something to the doc string
                         doc_line = param_attrs[0].doc.strip()
@@ -1294,8 +1319,7 @@ class DevWebexComScraper:
 
                 # the next div has a list of paragraphs with the documentation
                 # <div class="Sj3x8PGVKM_DQu1MaOpF"><p>Flag to indicate if the number is primary or not.</p></div>
-                doc = '\n'.join(p.text
-                                for p in next(childs).find_all('p', recursive=False))
+                doc = '\n'.join(p.text for p in next(childs).find_all('p', recursive=False))
                 log(f'got doc "{doc[:30]}..."')
 
                 # there might be one more div
@@ -1310,10 +1334,11 @@ class DevWebexComScraper:
                     common_classes = div_classes & param_div_classes
                     if common_classes:
                         attr_divs = [div] + list(childs)
-                        log(f'parsing remaining {len(attr_divs)} child divs as parameter attributes: '
-                            f'{",".join(map(div_repr, attr_divs))}')
-                        param_attrs = list(self.param_parser(attr_divs,
-                                                             level=level + 1)) or None
+                        log(
+                            f'parsing remaining {len(attr_divs)} child divs as parameter attributes: '
+                            f'{",".join(map(div_repr, attr_divs))}'
+                        )
+                        param_attrs = list(self.param_parser(attr_divs, level=level + 1)) or None
                     elif spans := div.find_all('span', recursive=False):
                         # ... with a list of spans; add the text in these spans to the doc
                         spans = iter(spans)
@@ -1338,8 +1363,9 @@ class DevWebexComScraper:
                 if classes := self.obj_class(param_div):
                     log(f'parsing next div ({next(iter(classes))}) as part of this parameter')
                     # this enhances the current parameter
-                    obj_attributes = list(self.param_parser(param_div.find_all('div', recursive=False),
-                                                            level=level + 1)) or None
+                    obj_attributes = (
+                        list(self.param_parser(param_div.find_all('div', recursive=False), level=level + 1)) or None
+                    )
                     if 'params-type-non-object' in classes:
                         assert param_attrs is None
                         param_attrs = obj_attributes
@@ -1365,15 +1391,19 @@ class DevWebexComScraper:
                 log('type "enum" without attributes transformed to "string"')
                 param_type = 'string'
 
-            log(f'yield type={param_type}, type_spec={type_spec}, '
+            log(
+                f'yield type={param_type}, type_spec={type_spec}, '
                 f'param_attrs={param_attrs and len(param_attrs) or 0}, '
-                f'param_object={param_object and len(param_object) or 0}')
-            yield Parameter(name=name,
-                            type=param_type,
-                            type_spec=type_spec,
-                            doc=doc,
-                            param_attrs=param_attrs,
-                            param_object=param_object)
+                f'param_object={param_object and len(param_object) or 0}'
+            )
+            yield Parameter(
+                name=name,
+                type=param_type,
+                type_spec=type_spec,
+                doc=doc,
+                param_attrs=param_attrs,
+                param_object=param_object,
+            )
         # while
         return
 
@@ -1402,15 +1432,17 @@ class DevWebexComScraper:
             headers = div.find_all(name='h6', recursive=False)
             parameter_groups = div.find_all(class_='vertical-up', recursive=False)
             assert len(headers) == len(parameter_groups)
-            log(f"""{div_repr(div)}: headers({len(headers)}): {", ".join(map(lambda h: f'"{h.text}"', headers))}""")
+            log(f"""{div_repr(div)}: headers({len(headers)}): {', '.join(map(lambda h: f'"{h.text}"', headers))}""")
 
             for header, parameters in zip(headers, parameter_groups):
                 if False and debugger() and header.text != 'Body Parameters':
                     continue
                 # each parameter spec is in one child div
                 child_divs = parameters.find_all(name='div', recursive=False)
-                log(f'{div_repr(div)}, header("{header.text}"). child divs({len(child_divs)}): '
-                    f'{", ".join(map(div_repr, child_divs))}')
+                log(
+                    f'{div_repr(div)}, header("{header.text}"). child divs({len(child_divs)}): '
+                    f'{", ".join(map(div_repr, child_divs))}'
+                )
                 # parsed_params = list(map(self.parse_param, child_divs))
                 parsed_params = list(self.param_parser(child_divs))
                 result[header.text] = parsed_params
@@ -1426,8 +1458,7 @@ class DevWebexComScraper:
         """
 
         def log(msg: str, level: int = logging.DEBUG):
-            self.log(f'  get_method_details("{method_doc.doc}"): {msg}',
-                     level=level)
+            self.log(f'  get_method_details("{method_doc.doc}"): {msg}', level=level)
 
         if False and debugger() and method_doc.doc != "Retrieve a person's Outgoing Calling Permissions Settings":
             # skip
@@ -1463,8 +1494,7 @@ class DevWebexComScraper:
             """
             if not api_ref_descr:
                 if doc_link.endswith('.'):
-                    log(f'GET {doc_link} failed. Retry w/o trailing "."',
-                        level=logging.WARNING)
+                    log(f'GET {doc_link} failed. Retry w/o trailing "."', level=logging.WARNING)
                     doc_link = doc_link.strip('.')
                     continue
                 log('GET failed? API reference description not found on page', level=logging.ERROR)
@@ -1475,8 +1505,7 @@ class DevWebexComScraper:
         try:
             header = api_ref_descr.div.h4.text
         except AttributeError:
-            log('Failed o parse header from api spec',
-                level=logging.ERROR)
+            log('Failed o parse header from api spec', level=logging.ERROR)
             return None
 
         log(f'header from API reference description: "{header}"')
@@ -1494,9 +1523,8 @@ class DevWebexComScraper:
 
         log(f'child divs for parameters and response: {", ".join(map(div_repr, divs))}')
         params_and_response = self.params_and_response_from_divs(divs)
-        result = MethodDetails(header=header,
-                               doc=long_doc_string,
-                               parameters_and_response=params_and_response,
-                               documentation=method_doc)
+        result = MethodDetails(
+            header=header, doc=long_doc_string, parameters_and_response=params_and_response, documentation=method_doc
+        )
         log('end')
         return result

@@ -1,6 +1,7 @@
 """
 An OAuth integration
 """
+
 import concurrent.futures
 import http.server
 import json
@@ -30,6 +31,7 @@ class Integration:
     """
     An OAuth integration
     """
+
     #: integration's client id, obtained from developer.webex.com
     client_id: str
 
@@ -51,11 +53,17 @@ class Integration:
     #: callback to initiate auth flow
     initiate_flow_callback: Callable[[str], None]
 
-    def __init__(self, *, client_id: str, client_secret: str, scopes: Union[str, list[str]],
-                 redirect_url: str,
-                 auth_service: str = None,
-                 token_service: str = None,
-                 initiate_flow_callback: Callable[[str], None] = None):
+    def __init__(
+        self,
+        *,
+        client_id: str,
+        client_secret: str,
+        scopes: Union[str, list[str]],
+        redirect_url: str,
+        auth_service: str = None,
+        token_service: str = None,
+        initiate_flow_callback: Callable[[str], None] = None,
+    ):
         """
 
         :param client_id: integration's client id, obtained from developer.webex.com
@@ -99,7 +107,7 @@ class Integration:
             'response_type': 'code',
             'redirect_uri': self.redirect_url,
             'scope': scopes,
-            'state': state
+            'state': state,
         }
         full_url = f'{self.auth_service}?{urllib.parse.urlencode(params)}'
         return full_url
@@ -119,7 +127,7 @@ class Integration:
             'client_id': self.client_id,
             'client_secret': self.client_secret,
             'code': code,
-            'redirect_uri': self.redirect_url
+            'redirect_uri': self.redirect_url,
         }
         with requests.Session() as session:
             response = session.post(url=url, data=data)
@@ -143,7 +151,7 @@ class Integration:
             'grant_type': 'refresh_token',
             'client_id': self.client_id,
             'client_secret': self.client_secret,
-            'refresh_token': tokens.refresh_token
+            'refresh_token': tokens.refresh_token,
         }
         try:
             url = self.token_service
@@ -230,8 +238,7 @@ class Integration:
                     log.debug('serve_redirect: shutdown of local web server requested')
                     threading.Thread(target=server.shutdown, daemon=True).start()
 
-            httpd = http.server.HTTPServer(server_address=('', 6001),
-                                           RequestHandlerClass=RedirectRequestHandler)
+            httpd = http.server.HTTPServer(server_address=('', 6001), RequestHandlerClass=RedirectRequestHandler)
             log.debug('serve_redirect: starting local web server for redirect URI')
             httpd.serve_forever()
             httpd.server_close()
@@ -271,9 +278,12 @@ class Integration:
             return None
         return new_tokens
 
-    def get_cached_tokens(self, read_from_cache: Callable[[], Optional[Tokens]],
-                          write_to_cache: Callable[[Tokens], None],
-                          force_new: bool = False) -> Optional[Tokens]:
+    def get_cached_tokens(
+        self,
+        read_from_cache: Callable[[], Optional[Tokens]],
+        write_to_cache: Callable[[Tokens], None],
+        force_new: bool = False,
+    ) -> Optional[Tokens]:
         """
         Get tokens.
 
@@ -328,7 +338,7 @@ class Integration:
 
         def read_tokens() -> Optional[Tokens]:
             try:
-                with open(yml_path, mode='r') as f:
+                with open(yml_path) as f:
                     data = yaml.safe_load(f)
                     tokens_read = Tokens.model_validate(data)
             except Exception as e:
@@ -336,5 +346,4 @@ class Integration:
                 tokens_read = None
             return tokens_read
 
-        return self.get_cached_tokens(read_from_cache=read_tokens, write_to_cache=write_tokens,
-                                      force_new=force_new)
+        return self.get_cached_tokens(read_from_cache=read_tokens, write_to_cache=write_tokens, force_new=force_new)

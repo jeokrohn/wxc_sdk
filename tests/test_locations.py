@@ -43,7 +43,6 @@ from wxc_sdk.workspaces import Workspace
 
 
 class TestLocationSimple(TestCaseWithLog):
-
     @async_test
     async def test_001_list_all(self):
         """
@@ -51,12 +50,9 @@ class TestLocationSimple(TestCaseWithLog):
         """
         # list locations and telephony locations
         location_list, telephony_location_list = await asyncio.gather(
-            self.async_api.locations.list(),
-            self.async_api.telephony.location.list(),
-            return_exceptions=True
+            self.async_api.locations.list(), self.async_api.telephony.location.list(), return_exceptions=True
         )
-        self.assertTrue(all(not isinstance(l, Exception)
-                            for l in (location_list, telephony_location_list)))
+        self.assertTrue(all(not isinstance(l, Exception) for l in (location_list, telephony_location_list)))
         print(f'Got {len(location_list)} locations')
         print(f'Got {len(telephony_location_list)} telephony locations')
 
@@ -69,10 +65,15 @@ class TestLocationSimple(TestCaseWithLog):
             locations = list(self.api.locations.list())
         # get location details and telephony details for each location
         details, telephony_details = await asyncio.gather(
-            asyncio.gather(*[self.async_api.locations.details(location_id=location.location_id)
-                             for location in locations], return_exceptions=True),
-            asyncio.gather(*[self.async_api.telephony.location.details(location_id=loc.location_id)
-                             for loc in locations], return_exceptions=True))
+            asyncio.gather(
+                *[self.async_api.locations.details(location_id=location.location_id) for location in locations],
+                return_exceptions=True,
+            ),
+            asyncio.gather(
+                *[self.async_api.telephony.location.details(location_id=loc.location_id) for loc in locations],
+                return_exceptions=True,
+            ),
+        )
         exception = None
         for location, detail, telephony_detail in zip(locations, details, telephony_details):
             print(f'{location.name}')
@@ -87,7 +88,6 @@ class TestLocationSimple(TestCaseWithLog):
 
 
 class TestLocation(TestWithLocations):
-
     @async_test
     async def test_003_create_location(self):
         """
@@ -103,46 +103,52 @@ class TestLocation(TestWithLocations):
         print(f'Creating location: {ls.npa=}, {ls.address=}')
 
         # TODO: looks like announcement_language and time_zone can't be set here?
-        location_id = self.api.locations.create(name=ls.name,
-                                                time_zone='America/Chicago',
-                                                announcement_language=None,
-                                                preferred_language='de_de',
-                                                address1=ls.address.address1,
-                                                city=ls.address.city,
-                                                state=ls.address.state_or_province_abbr,
-                                                postal_code=ls.address.zip_or_postal_code,
-                                                country='US')
+        location_id = self.api.locations.create(
+            name=ls.name,
+            time_zone='America/Chicago',
+            announcement_language=None,
+            preferred_language='de_de',
+            address1=ls.address.address1,
+            city=ls.address.city,
+            state=ls.address.state_or_province_abbr,
+            postal_code=ls.address.zip_or_postal_code,
+            country='US',
+        )
 
         # check that details for new location can be read
         await self.async_api.locations.details(location_id=location_id)
 
         # enable location for webex calling
-        location = Location(location_id=location_id,
-                            name=ls.name,
-                            time_zone='America/Chicago',
-                            announcement_language='de_de',
-                            preferred_language='de_de',
-                            address=LocationAddress(address1=ls.address.address1,
-                                                    city=ls.address.city,
-                                                    state=ls.address.state_or_province_abbr,
-                                                    postal_code=ls.address.zip_or_postal_code,
-                                                    country='US'))
+        location = Location(
+            location_id=location_id,
+            name=ls.name,
+            time_zone='America/Chicago',
+            announcement_language='de_de',
+            preferred_language='de_de',
+            address=LocationAddress(
+                address1=ls.address.address1,
+                city=ls.address.city,
+                state=ls.address.state_or_province_abbr,
+                postal_code=ls.address.zip_or_postal_code,
+                country='US',
+            ),
+        )
         tel_location_id = self.api.telephony.location.enable_for_calling(location=location)
         print(f'New location id: {location_id}/{b64decode(location_id + "==").decode()}')
 
         # add trunk
         password = self.api.telephony.location.generate_password(location_id=location_id)
         print(f'Creating trunk "{ls.trunk_name}" in location "{ls.name}"')
-        trunk_id = self.api.telephony.prem_pstn.trunk.create(name=ls.trunk_name,
-                                                             location_id=location_id,
-                                                             password=password)
+        trunk_id = self.api.telephony.prem_pstn.trunk.create(
+            name=ls.trunk_name, location_id=location_id, password=password
+        )
 
         # set PSTN choice for location to trunk
         print(f'Setting new trunk "{ls.trunk_name}" as PSTN choice for location "{ls.name}"')
-        self.api.telephony.location.update(location_id=location_id,
-                                           settings=TelephonyLocation(
-                                               connection=PSTNConnection(type=RouteType.trunk,
-                                                                         id=trunk_id)))
+        self.api.telephony.location.update(
+            location_id=location_id,
+            settings=TelephonyLocation(connection=PSTNConnection(type=RouteType.trunk, id=trunk_id)),
+        )
 
         # add number to location
         self.api.telephony.location.number.add(location_id=location_id, phone_numbers=[ls.tn_list[0]])
@@ -150,25 +156,28 @@ class TestLocation(TestWithLocations):
         # finally set that number as main number and set site code
         # also enable unknown extension dialing to the trunk we just defined
         await asyncio.gather(
-            self.async_api.telephony.location.update(location_id=location_id,
-                                                     settings=TelephonyLocation(
-                                                         calling_line_id=CallingLineId(
-                                                             phone_number=ls.tn_list[0]),
-                                                         routing_prefix=ls.routing_prefix,
-                                                         outside_dial_digit='9',
-                                                         external_caller_id_name=ls.address.city)),
+            self.async_api.telephony.location.update(
+                location_id=location_id,
+                settings=TelephonyLocation(
+                    calling_line_id=CallingLineId(phone_number=ls.tn_list[0]),
+                    routing_prefix=ls.routing_prefix,
+                    outside_dial_digit='9',
+                    external_caller_id_name=ls.address.city,
+                ),
+            ),
             self.async_api.telephony.location.internal_dialing.update(
                 location_id=location_id,
                 update=InternalDialing(
                     enable_unknown_extension_route_policy=True,
-                    unknown_extension_route_identity=RouteIdentity(
-                        route_id=trunk_id,
-                        route_type=RouteType.trunk))))
+                    unknown_extension_route_identity=RouteIdentity(route_id=trunk_id, route_type=RouteType.trunk),
+                ),
+            ),
+        )
 
         # get location details
         location_details, telephony_details = await asyncio.gather(
             self.async_api.locations.details(location_id=location_id),
-            self.async_api.telephony.location.details(location_id=location_id)
+            self.async_api.telephony.location.details(location_id=location_id),
         )
         location_details: Location
         telephony_details: TelephonyLocation
@@ -185,15 +194,17 @@ class TestLocation(TestWithLocations):
         l_names = set(l.name for l in self.api.locations.list('TEST'))
         location_name = next((name for i in range(100) if (name := f'TEST_{i:03}') not in l_names), None)
         print(f'Creating location "{location_name}"')
-        location_id = self.api.locations.create(name=location_name,
-                                                time_zone='Europe/Berlin',
-                                                announcement_language='de_de',
-                                                preferred_language='de_de',
-                                                address1='strasse 1',
-                                                city='Darmstadt',
-                                                state=None,
-                                                postal_code='64291',
-                                                country='DE')
+        location_id = self.api.locations.create(
+            name=location_name,
+            time_zone='Europe/Berlin',
+            announcement_language='de_de',
+            preferred_language='de_de',
+            address1='strasse 1',
+            city='Darmstadt',
+            state=None,
+            postal_code='64291',
+            country='DE',
+        )
         details = self.api.locations.details(location_id=location_id)
         self.assertEqual('de_de', details.preferred_language)
         self.assertEqual('Europe/Berlin', details.time_zone)
@@ -208,28 +219,35 @@ class TestLocation(TestWithLocations):
             address1 = await random_location.random_address()
         # determine a name for the new randon location
         location_names = set(loc.name for loc in self.api.locations.list())
-        new_location_name = next((name
-                                  for i in range(1, 100)
-                                  if (name := f'{address.city} {i:02d}') not in location_names))
-        new_location_id = self.api.locations.create(name=new_location_name,
-                                                    time_zone='America/Chicago',
-                                                    preferred_language='en_us',
-                                                    announcement_language='en_us',
-                                                    address1=address.address1,
-                                                    city=address.city,
-                                                    state=address.state_or_province_abbr,
-                                                    postal_code=address.zip_or_postal_code,
-                                                    country='US',
-                                                    address2=address.address2,
-                                                    latitude=address.geo_location.lat,
-                                                    longitude=address.geo_location.lon,
-                                                    notes='auto generated')
+        new_location_name = next(
+            name for i in range(1, 100) if (name := f'{address.city} {i:02d}') not in location_names
+        )
+        new_location_id = self.api.locations.create(
+            name=new_location_name,
+            time_zone='America/Chicago',
+            preferred_language='en_us',
+            announcement_language='en_us',
+            address1=address.address1,
+            city=address.city,
+            state=address.state_or_province_abbr,
+            postal_code=address.zip_or_postal_code,
+            country='US',
+            address2=address.address2,
+            latitude=address.geo_location.lat,
+            longitude=address.geo_location.lon,
+            notes='auto generated',
+        )
         location_details = self.api.locations.details(location_id=new_location_id)
         # try to update the location
         update = location_details.model_copy(deep=True)
-        new_address = LocationAddress(address1=address1.address1, address2=address1.address2, city=address1.city,
-                                      state=address1.state_or_province_abbr, postal_code=address1.zip_or_postal_code,
-                                      country='US')
+        new_address = LocationAddress(
+            address1=address1.address1,
+            address2=address1.address2,
+            city=address1.city,
+            state=address1.state_or_province_abbr,
+            postal_code=address1.zip_or_postal_code,
+            country='US',
+        )
         update.address = new_address
         update.longitude = address1.geo_location.lon
         update.latitude = address1.geo_location.lat
@@ -300,9 +318,8 @@ class TestUnifiedLocations(TestCaseWithLog):
             return '/'.join(s.split('/')[2:4])
 
         locations, workspace_locations, me = await asyncio.gather(
-            self.async_api.locations.list(),
-            self.async_api.workspace_locations.list(),
-            self.async_api.people.me())
+            self.async_api.locations.list(), self.async_api.workspace_locations.list(), self.async_api.people.me()
+        )
         locations: list[Location]
         workspace_locations: list[WorkspaceLocation]
         me: Person
@@ -316,18 +333,20 @@ class TestUnifiedLocations(TestCaseWithLog):
         self.assertEqual(1, len(decoded_wsl_id_prefixes))
         decoded_location_id_prefix = next(iter(decoded_location_id_prefixes))
 
-        wsl_ids = set((webex_id_to_uuid(wsl.id).split('#')[-1] for wsl in workspace_locations))
+        wsl_ids = set(webex_id_to_uuid(wsl.id).split('#')[-1] for wsl in workspace_locations)
         wsl_id_1st_part = set(webex_id_to_uuid(wsl.id).split('#')[0] for wsl in workspace_locations)
-        location_ids = set((webex_id_to_uuid(loc.location_id) for loc in locations))
+        location_ids = set(webex_id_to_uuid(loc.location_id) for loc in locations)
         # location ids and the part of the WSL id after the "#" really identical?
         location_by_uuid = {webex_id_to_uuid(location.location_id): location for location in locations}
         err = False
         for wsl in workspace_locations:
-            location_uuid = webex_id_to_uuid(wsl.id).split("#")[-1]
+            location_uuid = webex_id_to_uuid(wsl.id).split('#')[-1]
             location = location_by_uuid.get(location_uuid)
             if location is None:
-                print(f'Workspace location "{wsl.display_name}" with id {webex_id_to_uuid(wsl.id)}: '
-                      f'couldn\'t find location with uuid {location_uuid}')
+                print(
+                    f'Workspace location "{wsl.display_name}" with id {webex_id_to_uuid(wsl.id)}: '
+                    f"couldn't find location with uuid {location_uuid}"
+                )
                 err = True
         self.assertFalse(err)
 
@@ -348,8 +367,9 @@ class TestUnifiedLocations(TestCaseWithLog):
         """
         locations = await self.async_api.locations.list()
         calling_details = await asyncio.gather(
-            *[self.async_api.telephony.location.details(location_id=loc.location_id) for loc in
-              locations], return_exceptions=True)
+            *[self.async_api.telephony.location.details(location_id=loc.location_id) for loc in locations],
+            return_exceptions=True,
+        )
         # we either get calling details or the call leads to 404 AsRestError
         name_len = max(map(len, (loc.name for loc in locations)))
         err = False
@@ -375,8 +395,7 @@ class TestUnifiedLocations(TestCaseWithLog):
         new_location = None
         try:
             locations = list(self.api.locations.list())
-            new_location = next((loc for loc in locations
-                                 if loc.location_id_uuid == new_wsl.id_uuid), None)
+            new_location = next((loc for loc in locations if loc.location_id_uuid == new_wsl.id_uuid), None)
             if new_location is None:
                 err.append('New WSL not found in locations')
         finally:
@@ -387,8 +406,10 @@ class TestUnifiedLocations(TestCaseWithLog):
             err = []
             if next((wsl for wsl in wsl_list if wsl.id == new_wsl.id), None) is not None:
                 err.append('Workspace location not deleted')
-            if new_location and next((loc for loc in locations if loc.location_id == new_location.location_id),
-                                     None) is not None:
+            if (
+                new_location
+                and next((loc for loc in locations if loc.location_id == new_location.location_id), None) is not None
+            ):
                 err.append('Location not deleted')
         self.assertTrue(not err, '\n'.join(err))
 
@@ -400,20 +421,20 @@ class TestUnifiedLocations(TestCaseWithLog):
         :return:
         """
         locations, workspace_locations = await asyncio.gather(
-            self.async_api.locations.list(),
-            self.async_api.workspace_locations.list())
+            self.async_api.locations.list(), self.async_api.workspace_locations.list()
+        )
         locations: list[Location]
         workspace_locations: list[WorkspaceLocation]
         location_uuid_list = set(loc.location_id_uuid for loc in locations)
-        workspace_locations_wo_location = [wsl for wsl in workspace_locations
-                                           if wsl.id_uuid not in location_uuid_list]
+        workspace_locations_wo_location = [wsl for wsl in workspace_locations if wsl.id_uuid not in location_uuid_list]
         if not workspace_locations_wo_location:
             self.skipTest('No workspace locations w/o location')
 
         # delete them
         delete_results = await asyncio.gather(
-            *[self.async_api.workspace_locations.delete(location_id=wsl.id)
-              for wsl in workspace_locations_wo_location], return_exceptions=True)
+            *[self.async_api.workspace_locations.delete(location_id=wsl.id) for wsl in workspace_locations_wo_location],
+            return_exceptions=True,
+        )
 
         # any issues deleting?
         for wsl, result in zip(workspace_locations_wo_location, delete_results):
@@ -428,8 +449,7 @@ class TestUnifiedLocations(TestCaseWithLog):
         """
         new_wsl = create_random_wsl(api=self.api)
         print(f'Created WSL: {new_wsl.display_name}')
-        new_location = next((loc for loc in self.api.locations.list()
-                             if loc.location_id_uuid == new_wsl.id_uuid), None)
+        new_location = next((loc for loc in self.api.locations.list() if loc.location_id_uuid == new_wsl.id_uuid), None)
         self.assertIsNotNone(new_location, 'WSL created, but no location found')
 
         # postal_code and state are missing
@@ -460,8 +480,7 @@ class TestUpdate(TestWithLocations):
         try:
             yield target.model_copy(deep=True)
         finally:
-            await self.async_api.locations.update(location_id=target.location_id,
-                                                  settings=target)
+            await self.async_api.locations.update(location_id=target.location_id, settings=target)
             restored = await self.async_api.locations.details(location_id=target.location_id)
             self.assertEqual(details, restored)
 
@@ -515,8 +534,7 @@ class TestUpdate(TestWithLocations):
             locations = await self.async_api.locations.list()
 
         locations: list[Location]
-        targets = [loc for loc in locations
-                   if loc.address.address2 == 'whatever']
+        targets = [loc for loc in locations if loc.address.address2 == 'whatever']
         if not targets:
             return
 
@@ -525,23 +543,24 @@ class TestUpdate(TestWithLocations):
             update.address.address2 = None
             return update
 
-        await asyncio.gather(*[self.async_api.locations.update(location_id=loc.location_id,
-                                                               settings=location_update(loc))
-                               for loc in targets])
+        await asyncio.gather(
+            *[
+                self.async_api.locations.update(location_id=loc.location_id, settings=location_update(loc))
+                for loc in targets
+            ]
+        )
 
 
 @skip('Not an actual test')
 class ClearAddress2(TestCaseWithLog):
     @async_test
     async def test_clear_address2(self):
-        targets = [loc for loc in await self.async_api.locations.list()
-                   if loc.address.address2 is not None]
+        targets = [loc for loc in await self.async_api.locations.list() if loc.address.address2 is not None]
 
         async def clear_address2(location: Location):
             address = location.address.model_copy(deep=True)
             address.address2 = None
-            await self.async_api.locations.update(location_id=location.location_id,
-                                                  settings=Location(address=address))
+            await self.async_api.locations.update(location_id=location.location_id, settings=Location(address=address))
 
         await asyncio.gather(*[clear_address2(loc) for loc in targets])
 
@@ -551,11 +570,11 @@ class TestUpdateTelephony(TestCaseWithLog):
     """
     Tests updating location telephony settings
     """
+
     locations: ClassVar[list[TelephonyLocation]] = None
 
     async def update_and_wait_for_job(self, location_id: str, settings: Location):
-        batch_job_id = await self.async_api.telephony.location.update(location_id=location_id,
-                                                                      settings=settings)
+        batch_job_id = await self.async_api.telephony.location.update(location_id=location_id, settings=settings)
         if batch_job_id:
             # wait for job to complete
             while True:
@@ -575,14 +594,14 @@ class TestUpdateTelephony(TestCaseWithLog):
                 locations = await self.async_api.locations.list()
                 # some location are getting created as workspace locations. These locations don't have preferred
                 # language and we ignore them as candidates for these tests
-                us_locations = [loc for loc in locations
-                                if loc.address.country == 'US' and loc.preferred_language]
+                us_locations = [loc for loc in locations if loc.address.country == 'US' and loc.preferred_language]
                 if not us_locations:
                     self.skipTest('Need some US locations to run test')
-                details = await asyncio.gather(*[self.async_api.telephony.location.details(location_id=loc.location_id)
-                                                 for loc in us_locations], return_exceptions=True)
-                details = [d for d in details
-                           if not isinstance(d, Exception)]
+                details = await asyncio.gather(
+                    *[self.async_api.telephony.location.details(location_id=loc.location_id) for loc in us_locations],
+                    return_exceptions=True,
+                )
+                details = [d for d in details if not isinstance(d, Exception)]
                 self.__class__.locations = details
         target = choice(self.locations)
         details = await self.async_api.telephony.location.details(location_id=target.location_id)
@@ -601,8 +620,9 @@ class TestUpdateTelephony(TestCaseWithLog):
             restored = await self.async_api.telephony.location.details(location_id=target.location_id)
             self.assertEqual(details, restored)
 
-    async def update_and_verify(self, *, target: TelephonyLocation, update: TelephonyLocation,
-                                expected: TelephonyLocation):
+    async def update_and_verify(
+        self, *, target: TelephonyLocation, update: TelephonyLocation, expected: TelephonyLocation
+    ):
         """
         Apply an update to a location and verify expected result
         :param target:
@@ -636,8 +656,11 @@ class TestUpdateTelephony(TestCaseWithLog):
         """
         async with self.target_location() as target:
             target: TelephonyLocation
-            prefixes = [loc.routing_prefix for loc in self.locations
-                        if loc.routing_prefix and loc.routing_prefix != target.routing_prefix]
+            prefixes = [
+                loc.routing_prefix
+                for loc in self.locations
+                if loc.routing_prefix and loc.routing_prefix != target.routing_prefix
+            ]
             if not prefixes:
                 self.skipTest('Need another location with routing prefix to run test')
             prefix = choice(prefixes)
@@ -686,16 +709,18 @@ class TestUpdateTelephony(TestCaseWithLog):
             async with self.target_location() as target:
                 target: TelephonyLocation
 
-                numbers = await self.async_api.telephony.phone_numbers(location_id=target.location_id,
-                                                                       number_type=NumberType.number)
+                numbers = await self.async_api.telephony.phone_numbers(
+                    location_id=target.location_id, number_type=NumberType.number
+                )
                 main_number = next((n for n in numbers if n.main_number), None)
                 if main_number is None:
                     self.skipTest(f'Location "{target.name}" has no main number set')
                 # get a new number in the same range
                 tn_list = await as_available_tns(as_api=self.async_api, tn_prefix=main_number.phone_number[:5])
                 # add that number to location
-                await self.async_api.telephony.location.number.add(location_id=target.location_id,
-                                                                   phone_numbers=[tn_list[0]])
+                await self.async_api.telephony.location.number.add(
+                    location_id=target.location_id, phone_numbers=[tn_list[0]]
+                )
                 tn = tn_list[0]
                 # set calling line id to new number
                 update = TelephonyLocation(calling_line_id=CallingLineId(phone_number=tn))
@@ -706,8 +731,9 @@ class TestUpdateTelephony(TestCaseWithLog):
         finally:
             # remove TN from location again
             if tn:
-                await self.async_api.telephony.location.number.remove(location_id=target.location_id,
-                                                                      phone_numbers=[tn])
+                await self.async_api.telephony.location.number.remove(
+                    location_id=target.location_id, phone_numbers=[tn]
+                )
 
     @async_test
     async def test_006_calling_line_id_name(self):
@@ -717,8 +743,9 @@ class TestUpdateTelephony(TestCaseWithLog):
         async with self.target_location() as target:
             target: TelephonyLocation
             name = f'{target.calling_line_id.name or ""}xyz'
-            update = TelephonyLocation(calling_line_id=CallingLineId(name=name,
-                                                                     phone_number=target.calling_line_id.phone_number))
+            update = TelephonyLocation(
+                calling_line_id=CallingLineId(name=name, phone_number=target.calling_line_id.phone_number)
+            )
             expected = target.model_copy(deep=True)
             expected.calling_line_id.name = name
             await self.update_and_verify(target=target, update=update, expected=expected)
@@ -774,9 +801,12 @@ class LocationInfo:
     @property
     def ok(self) -> bool:
         location_uuid = self.location and webex_id_to_uuid(self.location.location_id)
-        return self.location is not None and self.workspace is not None and \
-            location_uuid == webex_id_to_uuid(self.workspace.id).split('#')[-1] and \
-            (self.calling is None or location_uuid == webex_id_to_uuid(self.calling.location_id))
+        return (
+            self.location is not None
+            and self.workspace is not None
+            and location_uuid == webex_id_to_uuid(self.workspace.id).split('#')[-1]
+            and (self.calling is None or location_uuid == webex_id_to_uuid(self.calling.location_id))
+        )
 
 
 class TestLocationConsistency(TestCaseWithLog):
@@ -803,8 +833,7 @@ class TestLocationConsistency(TestCaseWithLog):
         Get locations, calling location details, workspace locations and compare...
         """
         location_info = self.get_location_info()
-        location_id_set = set(li.location.location_id for li in location_info.values()
-                              if li.location)
+        location_id_set = set(li.location.location_id for li in location_info.values() if li.location)
 
         for name in sorted(location_info):
             info = location_info[name]
@@ -814,7 +843,8 @@ class TestLocationConsistency(TestCaseWithLog):
                 print(f'            location id: {webex_id_to_uuid(info.location.location_id)}')
                 print(
                     f'         ws location id: {webex_id_to_uuid(info.workspace.id)} '
-                    f'{base64.b64decode(info.workspace.id + "==").decode()}')
+                    f'{base64.b64decode(info.workspace.id + "==").decode()}'
+                )
                 print(f'  telephony location id: {info.calling and webex_id_to_uuid(info.calling.location_id)}')
                 continue
             print(f'!!!!!!!!! {name} with issues:')
@@ -824,16 +854,17 @@ class TestLocationConsistency(TestCaseWithLog):
                 print(f'                             workspace id: {webex_id_to_uuid(info.workspace.id)}')
             if info.calling is not None:
                 print(f'  location id in calling location details: {webex_id_to_uuid(info.calling.location_id)}')
-                print(f'    location id {webex_id_to_uuid(info.calling.location_id)} '
-                      f'does{"" if info.calling.location_id in location_id_set else " not"} exist in location list ')
+                print(
+                    f'    location id {webex_id_to_uuid(info.calling.location_id)} '
+                    f'does{"" if info.calling.location_id in location_id_set else " not"} exist in location list '
+                )
         self.assertTrue(all(li.ok for li in location_info.values()))
 
     def test_002_users_no_calling(self):
         """
         try to find users w/o calling
         """
-        users_wo_calling = [user for user in self.api.people.list(callingData=True)
-                            if user.location_id is None]
+        users_wo_calling = [user for user in self.api.people.list(callingData=True) if user.location_id is None]
         print('\n'.join(sorted(u.display_name for u in users_wo_calling)))
 
     def test_003_users_by_location(self):
@@ -881,21 +912,23 @@ class TestLocationConsistency(TestCaseWithLog):
                 for number in numbers:
                     print(f'  {number.phone_number or "":12} {number.extension or ""}')
 
-        numbers_in_unknown_location = list(chain.from_iterable(numbers
-                                                               for location_id, numbers in numbers_by_location.items()
-                                                               if location_id not in covered))
+        numbers_in_unknown_location = list(
+            chain.from_iterable(
+                numbers for location_id, numbers in numbers_by_location.items() if location_id not in covered
+            )
+        )
         if not numbers_in_unknown_location:
             return
 
         # what is the longest location name in any number in an unknown location?
-        loc_len = max(len(n.location.name)
-                      for n in numbers_in_unknown_location)
+        loc_len = max(len(n.location.name) for n in numbers_in_unknown_location)
 
         for number in numbers_in_unknown_location:
             print(
                 f'number in unknown location "{number.location.name:{loc_len}}"('
                 f'{webex_id_to_uuid(number.location.id)}): '
-                f'{number.phone_number or "":12} {number.extension or ""}')
+                f'{number.phone_number or "":12} {number.extension or ""}'
+            )
         self.assertTrue(not numbers_in_unknown_location, 'Found numbers in unknown locations')
 
     def test_005_trunks_and_locations(self):
@@ -918,9 +951,11 @@ class TestLocationConsistency(TestCaseWithLog):
                 for trunk in trunks:
                     print(f'  {trunk.name}')
 
-        trunks_in_unknown_location = list(chain.from_iterable(trunks
-                                                              for location_id, trunks in trunks_by_location.items()
-                                                              if location_id not in covered))
+        trunks_in_unknown_location = list(
+            chain.from_iterable(
+                trunks for location_id, trunks in trunks_by_location.items() if location_id not in covered
+            )
+        )
         if not trunks_in_unknown_location:
             return
 
@@ -933,9 +968,11 @@ class TestLocationConsistency(TestCaseWithLog):
                 continue
             err = True
             for trunk in trunks:
-                print(f'trunk in unknown location: location "{trunk.location.name:{loc_len}}" '
-                      f'({webex_id_to_uuid(trunk.location.id)}), trunk "{trunk.name:{t_len}}" '
-                      f'({webex_id_to_uuid(trunk.trunk_id)})')
+                print(
+                    f'trunk in unknown location: location "{trunk.location.name:{loc_len}}" '
+                    f'({webex_id_to_uuid(trunk.location.id)}), trunk "{trunk.name:{t_len}}" '
+                    f'({webex_id_to_uuid(trunk.trunk_id)})'
+                )
         self.assertFalse(err, 'Found trunks in unknown locations')
 
     def test_006_number_ownership(self):
@@ -943,9 +980,13 @@ class TestLocationConsistency(TestCaseWithLog):
         check consistency of number ownerships
         """
 
-        def check_exists(number_key: NumberListPhoneNumber, cache: dict[str, Any],
-                         list_call: Callable[[], Generator[Any, None, None]],
-                         key_attr: Callable[[Any], str], entity: str):
+        def check_exists(
+            number_key: NumberListPhoneNumber,
+            cache: dict[str, Any],
+            list_call: Callable[[], Generator[Any, None, None]],
+            key_attr: Callable[[Any], str],
+            entity: str,
+        ):
             owner_webex_id = number_key.owner.owner_id
             decoded_owner_webex_id = base64.b64decode(owner_webex_id + '==').decode()
             # we use the UUID for the lookup
@@ -979,14 +1020,22 @@ class TestLocationConsistency(TestCaseWithLog):
             except RestError:
                 vm_settings = None
             if vm_settings is None:
-                return f'failed to get voiceportal settings for location "{number_key.location.name}" ' \
-                       f'{webex_id_to_uuid(number_key.location.id)}'
-            if number_key.extension and number_key.extension != vm_settings.extension or number_key.phone_number and \
-                    number_key.phone_number != vm_settings.phone_number:
-                return f'voiceportal setting mismatch for location "{number_key.location.name}" ' \
-                       f'{webex_id_to_uuid(number_key.location.id)}: ' \
-                       f'extension {number_key.extension or ""}/{vm_settings.extension or ""} ' \
-                       f'phone number {number_key.phone_number or ""}/{vm_settings.phone_number or ""}'
+                return (
+                    f'failed to get voiceportal settings for location "{number_key.location.name}" '
+                    f'{webex_id_to_uuid(number_key.location.id)}'
+                )
+            if (
+                number_key.extension
+                and number_key.extension != vm_settings.extension
+                or number_key.phone_number
+                and number_key.phone_number != vm_settings.phone_number
+            ):
+                return (
+                    f'voiceportal setting mismatch for location "{number_key.location.name}" '
+                    f'{webex_id_to_uuid(number_key.location.id)}: '
+                    f'extension {number_key.extension or ""}/{vm_settings.extension or ""} '
+                    f'phone number {number_key.phone_number or ""}/{vm_settings.phone_number or ""}'
+                )
             return ''
 
         # noinspection PyShadowingNames
@@ -1003,16 +1052,18 @@ class TestLocationConsistency(TestCaseWithLog):
                 decoded_owner_id = base64.b64decode(owner_id + '==').decode()
 
                 # try to find a number with this owner_id
-                number = next((number for number in numbers
-                               if number.owner and number.owner.owner_id == owner_id),
-                              None)
+                number = next(
+                    (number for number in numbers if number.owner and number.owner.owner_id == owner_id), None
+                )
                 if number:
                     continue
                 err = True
-                print(f'device "{device.display_name}" no owner found for '
-                      f'{"workspace" if device.workspace_id else "person"}_id: '
-                      f'{owner_id}, {decoded_owner_id}'
-                      f'{", might be a room device w/o calling" if device.product_type == ProductType.roomdesk else ""}')
+                print(
+                    f'device "{device.display_name}" no owner found for '
+                    f'{"workspace" if device.workspace_id else "person"}_id: '
+                    f'{owner_id}, {decoded_owner_id}'
+                    f'{", might be a room device w/o calling" if device.product_type == ProductType.roomdesk else ""}'
+                )
             return err
 
         class ValidatorCache(NamedTuple):
@@ -1025,42 +1076,76 @@ class TestLocationConsistency(TestCaseWithLog):
             vm_groups: dict[str, VoicemailGroup]
             group_paging: dict[str, Paging]
 
-        validator_cache = ValidatorCache(users=dict(),
-                                         auto_attendants=dict(),
-                                         virtual_lines=dict(),
-                                         call_queues=dict(),
-                                         places=dict(),
-                                         hunt_groups=dict(),
-                                         vm_groups=dict(),
-                                         group_paging=dict())
+        validator_cache = ValidatorCache(
+            users=dict(),
+            auto_attendants=dict(),
+            virtual_lines=dict(),
+            call_queues=dict(),
+            places=dict(),
+            hunt_groups=dict(),
+            vm_groups=dict(),
+            group_paging=dict(),
+        )
 
         # dict of validators for each owner type
         validators = {
-            OwnerType.people: partial(check_exists, cache=validator_cache.users,
-                                      list_call=partial(self.api.people.list, callingData=True),
-                                      key_attr=attrgetter('person_id'), entity='user'),
-            OwnerType.auto_attendant: partial(check_exists, cache=validator_cache.auto_attendants,
-                                              list_call=self.api.telephony.auto_attendant.list,
-                                              key_attr=attrgetter('auto_attendant_id'), entity='auto attendant'),
-            OwnerType.virtual_line: partial(check_exists, cache=validator_cache.virtual_lines,
-                                            list_call=self.api.telephony.virtual_lines.list,
-                                            key_attr=attrgetter('id'), entity='virtual line'),
-            OwnerType.call_queue: partial(check_exists, cache=validator_cache.call_queues,
-                                          list_call=self.api.telephony.callqueue.list,
-                                          key_attr=attrgetter('id'), entity='call queue'),
-            OwnerType.place: partial(check_exists, cache=validator_cache.places,
-                                     list_call=self.api.workspaces.list,
-                                     key_attr=attrgetter('workspace_id'), entity='workspace'),
-            OwnerType.hunt_group: partial(check_exists, cache=validator_cache.hunt_groups,
-                                          list_call=self.api.telephony.huntgroup.list,
-                                          key_attr=attrgetter('id'), entity='huntgroup'),
+            OwnerType.people: partial(
+                check_exists,
+                cache=validator_cache.users,
+                list_call=partial(self.api.people.list, callingData=True),
+                key_attr=attrgetter('person_id'),
+                entity='user',
+            ),
+            OwnerType.auto_attendant: partial(
+                check_exists,
+                cache=validator_cache.auto_attendants,
+                list_call=self.api.telephony.auto_attendant.list,
+                key_attr=attrgetter('auto_attendant_id'),
+                entity='auto attendant',
+            ),
+            OwnerType.virtual_line: partial(
+                check_exists,
+                cache=validator_cache.virtual_lines,
+                list_call=self.api.telephony.virtual_lines.list,
+                key_attr=attrgetter('id'),
+                entity='virtual line',
+            ),
+            OwnerType.call_queue: partial(
+                check_exists,
+                cache=validator_cache.call_queues,
+                list_call=self.api.telephony.callqueue.list,
+                key_attr=attrgetter('id'),
+                entity='call queue',
+            ),
+            OwnerType.place: partial(
+                check_exists,
+                cache=validator_cache.places,
+                list_call=self.api.workspaces.list,
+                key_attr=attrgetter('workspace_id'),
+                entity='workspace',
+            ),
+            OwnerType.hunt_group: partial(
+                check_exists,
+                cache=validator_cache.hunt_groups,
+                list_call=self.api.telephony.huntgroup.list,
+                key_attr=attrgetter('id'),
+                entity='huntgroup',
+            ),
             OwnerType.voice_messaging: vm_exists,
-            OwnerType.voicemail_group: partial(check_exists, cache=validator_cache.vm_groups,
-                                               list_call=self.api.telephony.voicemail_groups.list,
-                                               key_attr=attrgetter('group_id'), entity='voicemail group'),
-            OwnerType.paging_group: partial(check_exists, cache=validator_cache.group_paging,
-                                            list_call=self.api.telephony.paging.list,
-                                            key_attr=attrgetter('paging_id'), entity='paging group')
+            OwnerType.voicemail_group: partial(
+                check_exists,
+                cache=validator_cache.vm_groups,
+                list_call=self.api.telephony.voicemail_groups.list,
+                key_attr=attrgetter('group_id'),
+                entity='voicemail group',
+            ),
+            OwnerType.paging_group: partial(
+                check_exists,
+                cache=validator_cache.group_paging,
+                list_call=self.api.telephony.paging.list,
+                key_attr=attrgetter('paging_id'),
+                entity='paging group',
+            ),
         }
 
         numbers = list(self.api.telephony.phone_numbers())
@@ -1078,12 +1163,14 @@ class TestLocationConsistency(TestCaseWithLog):
             if not result:
                 continue
             err = True
-            print(f'tn:{number.phone_number or "":12}/ext:{number.extension or "":4} '
-                  f'in "{number.location.name}"({webex_id_to_uuid(number.location.id)})'
-                  f'{", main number " if number.main_number else " "}'
-                  f'{number.owner.owner_type} '
-                  f'"{number.owner.first_name}"/"{number.owner.last_name}"'
-                  f'({webex_id_to_uuid(number.owner.owner_id)}): {result}')
+            print(
+                f'tn:{number.phone_number or "":12}/ext:{number.extension or "":4} '
+                f'in "{number.location.name}"({webex_id_to_uuid(number.location.id)})'
+                f'{", main number " if number.main_number else " "}'
+                f'{number.owner.owner_type} '
+                f'"{number.owner.first_name}"/"{number.owner.last_name}"'
+                f'({webex_id_to_uuid(number.owner.owner_id)}): {result}'
+            )
 
         # also there seems to be an issue with owner IDs for workspaces in the numbers response
         numbers_in_workspaces = [n for n in numbers if n.owner and n.owner.owner_type == OwnerType.place]

@@ -19,6 +19,7 @@ from wxc_sdk.workspaces import CallingType, Workspace, WorkspaceSupportedDevices
 
 # TODO: validate all new endpoint signatures
 
+
 class TestDevice(TestCaseWithLog):
     def test_001_list(self):
         """
@@ -26,25 +27,28 @@ class TestDevice(TestCaseWithLog):
         """
         devices = list(self.api.devices.list())
         print(f'Got {len(devices)} devices.')
-        dn_len = max((len(d.display_name) for d in devices))
-        prod_len = max((len(d.product) for d in devices))
-        print('\n'.join(f'{d.display_name:{dn_len}}, {d.product:{prod_len}}, '
-                        f'{"personal" if d.person_id else "workspace"}'
-                        for d in devices))
+        dn_len = max(len(d.display_name) for d in devices)
+        prod_len = max(len(d.product) for d in devices)
+        print(
+            '\n'.join(
+                f'{d.display_name:{dn_len}}, {d.product:{prod_len}}, {"personal" if d.person_id else "workspace"}'
+                for d in devices
+            )
+        )
 
     @async_test
     async def test_002_list_validate_workspace_id(self):
         """
         List all devices and get workspace details
         """
-        devices = [d for d in self.api.devices.list()
-                   if d.workspace_id]
+        devices = [d for d in self.api.devices.list() if d.workspace_id]
         print(f'Got {len(devices)} devices with workspace IDs')
         if not devices:
             self.skipTest('No devices with workspace ids')
         workspace_ids = set(d.workspace_id for d in devices)
-        workspaces = await asyncio.gather(*[self.async_api.workspaces.details(workspace_id=ws_id)
-                                            for ws_id in workspace_ids])
+        workspaces = await asyncio.gather(
+            *[self.async_api.workspaces.details(workspace_id=ws_id) for ws_id in workspace_ids]
+        )
         print(f'Got details for {len(workspaces)} workspaces.')
 
     @async_test
@@ -57,16 +61,19 @@ class TestDevice(TestCaseWithLog):
             self.skipTest('no devices with product type')
 
         # get list of devices for each product type
-        device_lists = await asyncio.gather(*[self.async_api.devices.list(product_type=pt) for pt in product_types],
-                                            return_exceptions=True)
+        device_lists = await asyncio.gather(
+            *[self.async_api.devices.list(product_type=pt) for pt in product_types], return_exceptions=True
+        )
 
         # check each list
         err = False
         for product_type, device_list in zip(product_types, device_lists):
             listed_types = set(device.product_type for device in device_list)
             if len(listed_types) > 1:
-                print(f'list for product type "{product_type}" has devices '
-                      f'with product types: {", ".join(sorted(listed_types))}')
+                print(
+                    f'list for product type "{product_type}" has devices '
+                    f'with product types: {", ".join(sorted(listed_types))}'
+                )
                 err = True
             if product_type not in listed_types:
                 print(f'list for product type "{product_type}" has no devices of that type')
@@ -78,12 +85,12 @@ class TestDevice(TestCaseWithLog):
         """
         See if list with mac parameter returns the expected result
         """
-        devices_with_mac = [d for d in await self.async_api.devices.list()
-                            if d.mac]
+        devices_with_mac = [d for d in await self.async_api.devices.list() if d.mac]
         if not devices_with_mac:
             self.skipTest('No devices with MAC address')
-        mac_searches = await asyncio.gather(*[self.async_api.devices.list(mac=d.mac) for d in devices_with_mac],
-                                            return_exceptions=True)
+        mac_searches = await asyncio.gather(
+            *[self.async_api.devices.list(mac=d.mac) for d in devices_with_mac], return_exceptions=True
+        )
         err = None
         for device, result in zip(devices_with_mac, mac_searches):
             try:
@@ -149,8 +156,9 @@ class TestDevice(TestCaseWithLog):
         devices = list(self.api.devices.list())
         if not devices:
             self.skipTest('No devices')
-        details = await asyncio.gather(*[self.async_api.devices.details(device_id=device.device_id)
-                                         for device in devices])
+        details = await asyncio.gather(
+            *[self.async_api.devices.details(device_id=device.device_id) for device in devices]
+        )
         print(json.dumps(TypeAdapter(list[Device]).dump_python(details, mode='json', by_alias=True), indent=2))
         print(f'Got details for {len(details)} devices')
 
@@ -162,8 +170,9 @@ class TestDevice(TestCaseWithLog):
         devices = list(self.api.devices.list())
         if not devices:
             self.skipTest('No devices')
-        details_list = await asyncio.gather(*[self.async_api.devices.details(device_id=device.device_id)
-                                              for device in devices])
+        details_list = await asyncio.gather(
+            *[self.async_api.devices.details(device_id=device.device_id) for device in devices]
+        )
         for device in details_list:
             print(f'{device.display_name}: ')
             fields = ['device_id', 'calling_device_id', 'webex_device_id']
@@ -199,8 +208,7 @@ class TestDevice(TestCaseWithLog):
             tags = target.tags
             # add three random tags
             new_tags = [str(uuid.uuid4()) for _ in range(3)]
-            self.api.devices.modify_device_tags(device_id=target.device_id,
-                                                op=TagOp.add, value=new_tags)
+            self.api.devices.modify_device_tags(device_id=target.device_id, op=TagOp.add, value=new_tags)
             details = self.api.devices.details(device_id=target.device_id)
             tags_after = details.tags
             self.assertEqual(set(tags + new_tags), set(tags_after), 'tags not added')
@@ -211,14 +219,12 @@ class TestDevice(TestCaseWithLog):
             tags = target.tags
             # add three random tags
             new_tags = [str(uuid.uuid4()) for _ in range(3)]
-            self.api.devices.modify_device_tags(device_id=target.device_id,
-                                                op=TagOp.add, value=new_tags)
+            self.api.devices.modify_device_tags(device_id=target.device_id, op=TagOp.add, value=new_tags)
             details = self.api.devices.details(device_id=target.device_id)
             tags_after = details.tags
             self.assertEqual(set(tags + new_tags), set(tags_after), 'tags not added')
             # try to remove one of the tags
-            self.api.devices.modify_device_tags(device_id=target.device_id,
-                                                op=TagOp.remove)
+            self.api.devices.modify_device_tags(device_id=target.device_id, op=TagOp.remove)
             details = self.api.devices.details(device_id=target.device_id)
             tags_after = details.tags
             self.assertFalse(tags_after, 'tags not (correctly) removed')
@@ -229,16 +235,14 @@ class TestDevice(TestCaseWithLog):
             tags = target.tags
             # add three random tags
             new_tags = [str(uuid.uuid4()) for _ in range(3)]
-            self.api.devices.modify_device_tags(device_id=target.device_id,
-                                                op=TagOp.add, value=new_tags)
+            self.api.devices.modify_device_tags(device_id=target.device_id, op=TagOp.add, value=new_tags)
             details = self.api.devices.details(device_id=target.device_id)
             tags_after = details.tags
             self.assertEqual(set(tags + new_tags), set(tags_after), 'tags not added')
 
             # replace tags with some other tags
             new_tags = [str(uuid.uuid4()) for _ in range(3)]
-            self.api.devices.modify_device_tags(device_id=target.device_id,
-                                                op=TagOp.replace, value=new_tags)
+            self.api.devices.modify_device_tags(device_id=target.device_id, op=TagOp.replace, value=new_tags)
             details = self.api.devices.details(device_id=target.device_id)
             self.assertEqual(set(new_tags), set(details.tags), 'tags not (correctly) replaced')
 
@@ -247,6 +251,7 @@ class CreateDevice(TestWithLocations):
     """
     Various tests to create devices
     """
+
     workspaces: list[Workspace] = Field(default_factory=list)
 
     def setUp(self) -> None:
@@ -255,26 +260,29 @@ class CreateDevice(TestWithLocations):
             self.workspaces = list(self.api.workspaces.list())
 
     def workspaces_w_calling(self) -> list[Workspace]:
-        result = [w for w in self.workspaces
-                  if w.calling and w.calling.type == CallingType.webex]
+        result = [w for w in self.workspaces if w.calling and w.calling.type == CallingType.webex]
         return result
 
-    def get_or_create_calling_workspace_wo_devices(self,
-                                                   supported_devices: WorkspaceSupportedDevices = None) -> Workspace:
+    def get_or_create_calling_workspace_wo_devices(
+        self, supported_devices: WorkspaceSupportedDevices = None
+    ) -> Workspace:
         """
         Get or create a calling enabled workspace with no devices. This workspace can then be used for device creation
         tests
         """
         supported_devices = supported_devices or WorkspaceSupportedDevices.phones
-        workspace_w_devices = set(device.workspace_id for device in self.api.devices.list()
-                                  if device.workspace_id)
-        workspaces = [w for w in self.workspaces_w_calling()
-                      if w.supported_devices == supported_devices and w.workspace_id not in workspace_w_devices]
+        workspace_w_devices = set(device.workspace_id for device in self.api.devices.list() if device.workspace_id)
+        workspaces = [
+            w
+            for w in self.workspaces_w_calling()
+            if w.supported_devices == supported_devices and w.workspace_id not in workspace_w_devices
+        ]
         if workspaces:
             return choice(workspaces)
         location = choice(self.locations)
-        workspace = create_workspace_with_webex_calling(api=self.api, target_location=location,
-                                                        supported_devices=supported_devices)
+        workspace = create_workspace_with_webex_calling(
+            api=self.api, target_location=location, supported_devices=supported_devices
+        )
         return workspace
 
     def test_001_activation_code_workspace_room(self):
@@ -282,10 +290,13 @@ class CreateDevice(TestWithLocations):
         Try to create an activation code for a workspace room device
         """
         target = self.get_or_create_calling_workspace_wo_devices(
-            supported_devices=WorkspaceSupportedDevices.collaboration_devices)
+            supported_devices=WorkspaceSupportedDevices.collaboration_devices
+        )
         ac_result = self.api.devices.activation_code(workspace_id=target.workspace_id)
-        print(f'Workspace "{target.display_name}", new activation code "{ac_result.code}" '
-              f'valid until {ac_result.expiry_time}')
+        print(
+            f'Workspace "{target.display_name}", new activation code "{ac_result.code}" '
+            f'valid until {ac_result.expiry_time}'
+        )
 
     def test_001_activation_code_workspace_mpp(self):
         """
@@ -295,8 +306,10 @@ class CreateDevice(TestWithLocations):
         target = self.get_or_create_calling_workspace_wo_devices(supported_devices=WorkspaceSupportedDevices.phones)
         ac_result = self.api.devices.activation_code(workspace_id=target.workspace_id, model=model)
         print(json.dumps(json.loads(ac_result.model_dump_json()), indent=2))
-        print(f'Workspace "{target.display_name}", new activation code "{ac_result.code}" '
-              f'valid until {ac_result.expiry_time}')
+        print(
+            f'Workspace "{target.display_name}", new activation code "{ac_result.code}" '
+            f'valid until {ac_result.expiry_time}'
+        )
 
     def test_002_activation_code_user_room(self):
         """
@@ -317,8 +330,7 @@ class CreateDevice(TestWithLocations):
         users = calling_users(api=self.api)
         target_user = choice(users)
         print(f'Trying to create an MPP activation code for: {target_user.display_name}')
-        ac_result = self.api.devices.activation_code(person_id=target_user.person_id,
-                                                     model='DMS Cisco 8851')
+        ac_result = self.api.devices.activation_code(person_id=target_user.person_id, model='DMS Cisco 8851')
         print(json.dumps(json.loads(ac_result.model_dump_json()), indent=2))
 
     def test_003_mac_user(self):
@@ -334,9 +346,9 @@ class CreateDevice(TestWithLocations):
         print(f'Trying to create an MPP with mac {mac} for user: {target_user.display_name}')
 
         # add device by MAC
-        result = self.api.devices.create_by_mac_address(mac=mac,
-                                                        person_id=target_user.person_id,
-                                                        model='DMS Cisco 8851')
+        result = self.api.devices.create_by_mac_address(
+            mac=mac, person_id=target_user.person_id, model='DMS Cisco 8851'
+        )
         print(json.dumps(json.loads(result.model_dump_json()), indent=2))
         self.assertIsNotNone(result.created, '"created" not set')
 
@@ -352,9 +364,9 @@ class CreateDevice(TestWithLocations):
         print(f'Trying to create an MPP with mac {mac} for workspace: {target.display_name}')
 
         # add device by MAC
-        result = self.api.devices.create_by_mac_address(mac=mac,
-                                                        workspace_id=target.workspace_id,
-                                                        model='DMS Cisco 8851')
+        result = self.api.devices.create_by_mac_address(
+            mac=mac, workspace_id=target.workspace_id, model='DMS Cisco 8851'
+        )
         print(json.dumps(json.loads(result.model_dump_json()), indent=2))
 
     def test_005_mac_workspace_3rd_party(self):
@@ -374,10 +386,9 @@ class CreateDevice(TestWithLocations):
         print(f'Trying to create an MPP with mac {mac} for workspace: {target.display_name}, {password=}')
 
         # add device by MAC
-        result = self.api.devices.create_by_mac_address(mac=mac,
-                                                        workspace_id=target.workspace_id,
-                                                        model='Generic IPPhone Customer Managed',
-                                                        password=password)
+        result = self.api.devices.create_by_mac_address(
+            mac=mac, workspace_id=target.workspace_id, model='Generic IPPhone Customer Managed', password=password
+        )
         print(json.dumps(result.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
         details = self.api.telephony.devices.details(device_id=result.device_id)
         print(json.dumps(details.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
@@ -389,8 +400,7 @@ class CreateDevice(TestWithLocations):
         # get all device types
         with self.no_log():
             supported_devices = self.api.telephony.supported_devices()
-            desk_phones = [device for device in supported_devices.devices
-                           if device.device_type == device_type]
+            desk_phones = [device for device in supported_devices.devices if device.device_type == device_type]
             model = random.choice(desk_phones).model
 
             # pick a random user
@@ -402,9 +412,7 @@ class CreateDevice(TestWithLocations):
         print(f'Trying to create an {model} with mac {mac} for user: {target_user.display_name}')
 
         # add device by MAC
-        result = self.api.devices.create_by_mac_address(mac=mac,
-                                                        person_id=target_user.person_id,
-                                                        model=model)
+        result = self.api.devices.create_by_mac_address(mac=mac, person_id=target_user.person_id, model=model)
         errs = []
         if result is None:
             errs.append('Empty response when creating desk phone device')
@@ -441,14 +449,19 @@ class TestDelete(TestCaseWithLog):
         """
         Delete MPPs with DEADDEAD mac addresses or stll in 'activating"
         """
-        targets = [device for device in self.api.devices.list(product_type='phone')
-                   if device.mac and device.mac.startswith('DEADDEAD') or
-                   device.connection_status and device.connection_status == 'activating']
+        targets = [
+            device
+            for device in self.api.devices.list(product_type='phone')
+            if device.mac
+            and device.mac.startswith('DEADDEAD')
+            or device.connection_status
+            and device.connection_status == 'activating'
+        ]
         if not targets:
             self.skipTest('No targets')
         print(f'Deleting {len(targets)} devices')
-        results = await asyncio.gather(*[self.async_api.devices.delete(device_id=device.device_id)
-                                         for device in targets],
-                                       return_exceptions=True)
+        results = await asyncio.gather(
+            *[self.async_api.devices.delete(device_id=device.device_id) for device in targets], return_exceptions=True
+        )
         failed = any(isinstance(r, Exception) for r in results)
         self.assertFalse(failed, 'failed to delete devices')

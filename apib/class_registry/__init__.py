@@ -1,6 +1,7 @@
 """
 Class Python class registry for code generation
 """
+
 import re
 from _operator import attrgetter
 from collections import defaultdict
@@ -78,9 +79,7 @@ class PythonClassRegistry:
         qualident = self.qualified_class_name(sanitize_class_name(pc.name))
         if qualident in self._classes:
             log.warning(f'python class name "{pc.name}" already registered')
-            qualident = next((name
-                              for i in range(1, 100)
-                              if (name := f'{qualident}{i}') not in self._classes))
+            qualident = next(name for i in range(1, 100) if (name := f'{qualident}{i}') not in self._classes)
             log.warning(f'class name "{pc.name}" not unique using qualident "{qualident}" instead')
         pc.name = qualident
         self._classes[pc.name] = pc
@@ -130,9 +129,7 @@ class PythonClassRegistry:
         Generator of endpoints defined in the APIB
         yields tuples of APIB key and Endpoint instance
         """
-        return chain.from_iterable(((apib_key, ep)
-                                    for ep in api.endpoints)
-                                   for apib_key, api in self.apis())
+        return chain.from_iterable(((apib_key, ep) for ep in api.endpoints) for apib_key, api in self.apis())
 
     def _python_class_attributes(self, basename: str, members: list[ApibMember]) -> list[Attribute]:
         attributes = []
@@ -151,8 +148,9 @@ class PythonClassRegistry:
         if member.element == 'select':
             sample = None
             options: list[ApibOption] = [option for option in member.content]
-            python_types = [simple_python_type(option.content.value.element, option.content.value.content) for option in
-                            options]
+            python_types = [
+                simple_python_type(option.content.value.element, option.content.value.content) for option in options
+            ]
             python_type = f'Union[{", ".join(python_types)}]'
             docstring = None
             referenced_class = None
@@ -181,14 +179,19 @@ class PythonClassRegistry:
                 else:
                     array_element_type = value.content[0].element
                     el_content = value.content[0].content
-                    if (array_element_type == 'string' and el_content and isinstance(el_content, str) and
-                            re.match(r'^\w+: ', el_content)):
+                    if (
+                        array_element_type == 'string'
+                        and el_content
+                        and isinstance(el_content, str)
+                        and re.match(r'^\w+: ', el_content)
+                    ):
                         raise ValueError(
                             f'{class_name}.{name}: is this really an array of strings or are we missing an (object) '
-                            f'definition?')
+                            f'definition?'
+                        )
                 if array_element_type == 'string':
                     python_type = 'list[str]'
-                    sample = ", ".join(f"'{c.content}'" for c in value.content if c.content is not None)
+                    sample = ', '.join(f"'{c.content}'" for c in value.content if c.content is not None)
                     sample = sample and f'[{sample}]'
                 elif array_element_type == 'number':
                     content = value.content[0]
@@ -200,10 +203,14 @@ class PythonClassRegistry:
                         raise ValueError(f'Well, this is unexpected: {value.content}')
                     content: ApibObject = value.content[0]
                     referenced_class = f'{class_name}{name[0].upper()}{name[1:]}'
-                    class_attributes = self._python_class_attributes(basename=referenced_class,
-                                                                     members=content.content)
-                    new_class = PythonClass(name=referenced_class, attributes=class_attributes,
-                                            description=value.description, is_enum=False, baseclass=None)
+                    class_attributes = self._python_class_attributes(basename=referenced_class, members=content.content)
+                    new_class = PythonClass(
+                        name=referenced_class,
+                        attributes=class_attributes,
+                        description=value.description,
+                        is_enum=False,
+                        baseclass=None,
+                    )
 
                     self._add_class(new_class)
                     python_type = f'list[{new_class.name}]'
@@ -215,8 +222,13 @@ class PythonClassRegistry:
                     content: ApibEnum = value.content[0]
                     referenced_class = f'{class_name}{name[0].upper()}{name[1:]}'
                     class_attributes = list(Attribute.from_enum(content))
-                    new_class = PythonClass(name=referenced_class, attributes=class_attributes,
-                                            description=value.description, is_enum=True, baseclass=None)
+                    new_class = PythonClass(
+                        name=referenced_class,
+                        attributes=class_attributes,
+                        description=value.description,
+                        is_enum=True,
+                        baseclass=None,
+                    )
                     self._add_class(new_class)
                     python_type = f'list[{new_class.name}]'
                 else:
@@ -235,8 +247,13 @@ class PythonClassRegistry:
                 referenced_class = python_type
                 class_attributes = self._python_class_attributes(basename=referenced_class, members=value.content)
                 if class_attributes:
-                    new_class = PythonClass(name=referenced_class, attributes=class_attributes,
-                                            description=value.description, is_enum=False, baseclass=None)
+                    new_class = PythonClass(
+                        name=referenced_class,
+                        attributes=class_attributes,
+                        description=value.description,
+                        is_enum=False,
+                        baseclass=None,
+                    )
                     self._add_class(new_class)
                     python_type = new_class.name
                 else:
@@ -262,8 +279,13 @@ class PythonClassRegistry:
                 sample = value.content and value.content.content
                 referenced_class = python_type
                 class_attributes = list(Attribute.from_enum(value))
-                new_class = PythonClass(name=referenced_class, attributes=class_attributes,
-                                        description=value.description, is_enum=True, baseclass=None)
+                new_class = PythonClass(
+                    name=referenced_class,
+                    attributes=class_attributes,
+                    description=value.description,
+                    is_enum=True,
+                    baseclass=None,
+                )
                 self._add_class(new_class)
                 python_type = new_class.name
                 referenced_class = new_class.name
@@ -281,8 +303,14 @@ class PythonClassRegistry:
                     sample = None
             if referenced_class:
                 referenced_class = self.qualified_class_name(referenced_class)
-        return Attribute(name=name, python_type=python_type, docstring=docstring, sample=sample,
-                         referenced_class=referenced_class, optional=optional)
+        return Attribute(
+            name=name,
+            python_type=python_type,
+            docstring=docstring,
+            sample=sample,
+            referenced_class=referenced_class,
+            optional=optional,
+        )
 
     def _add_classes_from_data_structure(self, ds: ApibDatastructure, class_name: str = None) -> PythonClass:
         """
@@ -301,21 +329,21 @@ class PythonClassRegistry:
         elif content_element == 'object':
             content: ApibObject
             # get attributes from object content
-            attributes = self._python_class_attributes(basename=class_name,
-                                                       members=content.content)
-            pc = PythonClass(name=class_name, attributes=attributes, description=None, is_enum=False,
-                             baseclass=baseclass)
+            attributes = self._python_class_attributes(basename=class_name, members=content.content)
+            pc = PythonClass(
+                name=class_name, attributes=attributes, description=None, is_enum=False, baseclass=baseclass
+            )
 
         elif content_element == 'enum':
             content: ApibEnum
             attributes = list(Attribute.from_enum(content))
             pc = PythonClass(name=class_name, attributes=attributes, is_enum=True)
         else:
-            attributes = self._python_class_attributes(basename=class_name,
-                                                       members=content.content)
+            attributes = self._python_class_attributes(basename=class_name, members=content.content)
             baseclass = self.qualified_class_name(baseclass)
-            pc = PythonClass(name=class_name, attributes=attributes, description=None, is_enum=False,
-                             baseclass=baseclass)
+            pc = PythonClass(
+                name=class_name, attributes=attributes, description=None, is_enum=False, baseclass=baseclass
+            )
         self._add_class(pc)
         return pc
 
@@ -350,8 +378,9 @@ class PythonClassRegistry:
         if class_name != attribute.referenced_class:
             # clean up the python type and referenced class on the fly
             new_python_type = attribute.python_type.replace(attribute.referenced_class, class_name)
-            log.debug(f'update attribute {attribute.name}: '
-                      f'python_type "{attribute.python_type}" -> "{new_python_type}"')
+            log.debug(
+                f'update attribute {attribute.name}: python_type "{attribute.python_type}" -> "{new_python_type}"'
+            )
             attribute.referenced_class = class_name
             attribute.python_type = new_python_type
         return attribute.python_type
@@ -390,8 +419,9 @@ class PythonClassRegistry:
                 raise ValueError('equal class names should imply class equality!')
             if not pc1.is_enum:
                 # if these are not enums then we actually have to compare the attributes
-                for attr1, attr2 in zip(sorted(pc1.attributes, key=attrgetter('name')),
-                                        sorted(pc2.attributes, key=attrgetter('name'))):
+                for attr1, attr2 in zip(
+                    sorted(pc1.attributes, key=attrgetter('name')), sorted(pc2.attributes, key=attrgetter('name'))
+                ):
                     attr1: Attribute
                     attr2: Attribute
                     attr1_type = self._attribute_python_type(attr1)
@@ -442,7 +472,7 @@ class PythonClassRegistry:
             # check all candidates but the last ...
             for i, candidate1 in enumerate(candidates[:-1]):
                 # ... against all candidates further down the line for equivalency
-                list(map(partial(classes_equivalent, candidate1), candidates[i + 1:]))
+                list(map(partial(classes_equivalent, candidate1), candidates[i + 1 :]))
                 if candidate1.is_enum:
                     # in this case the 1st iteration should already have covered everything
                     # ... b/c for enums only the attribute_key matters and all candidates have the same
@@ -466,7 +496,7 @@ class PythonClassRegistry:
             if class1.baseclass and not class1.attributes:
                 continue
             attr1 = set(a.name for a in class1.attributes)
-            for class2 in p_classes[i + 1:]:
+            for class2 in p_classes[i + 1 :]:
                 if class2.baseclass and not class2.attributes:
                     continue
                 attr2 = set(a.name for a in class2.attributes)
@@ -479,7 +509,7 @@ class PythonClassRegistry:
                 if len(common_attr) < 3:
                     continue
                 if common_attr:
-                    common_key = "/".join(sorted(common_attr))
+                    common_key = '/'.join(sorted(common_attr))
                     class_dict = common_attributes[len(common_attr)][common_key]
                     class_dict[class1.name] = class1
                     class_dict[class2.name] = class2
@@ -543,8 +573,11 @@ class PythonClassRegistry:
         for qualident, pc in self._classes.items():
             python_name = words_to_camel(pc.name.split('%')[-1])
             # disambiguate class names by appending an index
-            python_name = next((pn for suffix in chain([''], (str(i) for i in range(1, 100)))
-                                if (pn := f'{python_name}{suffix}') not in python_names))
+            python_name = next(
+                pn
+                for suffix in chain([''], (str(i) for i in range(1, 100)))
+                if (pn := f'{python_name}{suffix}') not in python_names
+            )
             # keep record of the Python class name
             python_names.add(python_name)
             qualident_to_python_name[qualident] = python_name
@@ -587,14 +620,15 @@ class PythonClassRegistry:
                 try:
                     python_name = qualident_to_python_name[endpoint.result_referenced_class]
                 except KeyError:
-                    err_txt = (f'"{endpoint.result_referenced_class}" not found in qualident_to_python_name '
-                               f'endpoint: {endpoint.name}')
+                    err_txt = (
+                        f'"{endpoint.result_referenced_class}" not found in qualident_to_python_name '
+                        f'endpoint: {endpoint.name}'
+                    )
                     log.error(err_txt)
                     raise KeyError(err_txt)
 
                 python_name, _ = self._dereferenced_class(python_name)
-                endpoint.result = endpoint.result.replace(endpoint.result_referenced_class,
-                                                          python_name)
+                endpoint.result = endpoint.result.replace(endpoint.result_referenced_class, python_name)
                 endpoint.result_referenced_class = python_name
 
             if endpoint.body_class_name:
@@ -677,10 +711,11 @@ class PythonClassRegistry:
                     # The object should have all attributes
                     body_content: ApibObject
                     # ApibObject has a list of members
-                    body_parameters = [self._param_from_member_or_select(endpoint_name=name, member=member)
-                                       for member in body_content.content]
-                elif isinstance(body_content, ApibElement) and not any((body_content.content,
-                                                                        body_content.meta)):
+                    body_parameters = [
+                        self._param_from_member_or_select(endpoint_name=name, member=member)
+                        for member in body_content.content
+                    ]
+                elif isinstance(body_content, ApibElement) and not any((body_content.content, body_content.meta)):
                     # this might be a class name
                     class_name_base = sanitize_class_name(body_content.element)
                     class_name = self.qualified_class_name(class_name_base)
@@ -690,26 +725,35 @@ class PythonClassRegistry:
                     optional = False
                     if body_content.attributes:
                         if set(body_content.attributes) != {'typeAttributes'}:
-                            raise KeyError(f'Only typeAttributes are acceptable, got: '
-                                           f'{", ".join(sorted(body_content.attributes))}')
+                            raise KeyError(
+                                f'Only typeAttributes are acceptable, got: {", ".join(sorted(body_content.attributes))}'
+                            )
                         type_attributes = set(ta.content for ta in body_content.attributes['typeAttributes'].content)
                         optional = 'required' not in type_attributes
                     # .. and that class should exist
                     if python_class := self.get(class_name):
                         # attributes of the class -> parameters
                         if python_class.attributes:
-                            body_parameters = [Parameter(name=attr.name, python_type=attr.python_type,
-                                                         docstring=attr.docstring, sample=attr.sample,
-                                                         optional=attr.optional, referenced_class=attr.referenced_class,
-                                                         registry=self)
-                                               for attr in python_class.attributes]
+                            body_parameters = [
+                                Parameter(
+                                    name=attr.name,
+                                    python_type=attr.python_type,
+                                    docstring=attr.docstring,
+                                    sample=attr.sample,
+                                    optional=attr.optional,
+                                    referenced_class=attr.referenced_class,
+                                    registry=self,
+                                )
+                                for attr in python_class.attributes
+                            ]
                         else:
                             raise NotImplementedError('No attributes')
                     else:
                         raise ValueError(f'Unknown body class name "{class_name_base}" for "{name}()"')
                 else:
-                    raise NotImplementedError(f'http request body datastructure '
-                                              f'with unexpected content: "{body_content.element}"')
+                    raise NotImplementedError(
+                        f'http request body datastructure with unexpected content: "{body_content.element}"'
+                    )
 
             result = None
             referenced_class = None
@@ -727,7 +771,8 @@ class PythonClassRegistry:
                             # create a new response class
                             response_class = self._add_classes_from_data_structure(
                                 ds=response_datastructure,
-                                class_name=f'{" ".join(map(str.capitalize, name.split("_")))} Response')
+                                class_name=f'{" ".join(map(str.capitalize, name.split("_")))} Response',
+                            )
                             result = response_class.name
                         elif response_ds_content.element == 'array':
                             array_content_class_name = sanitize_class_name(response_ds_content.content[0].element)
@@ -735,8 +780,9 @@ class PythonClassRegistry:
                             result = f'list[{array_content_class_name}]'
                             referenced_class = array_content_class_name
                         else:
-                            raise ValueError(f'Unexpected response datastructure content element: '
-                                             f'"{response_ds_content.element}"')
+                            raise ValueError(
+                                f'Unexpected response datastructure content element: "{response_ds_content.element}"'
+                            )
 
                     else:
                         # .. or the datastructure content doesn't have content
@@ -748,16 +794,21 @@ class PythonClassRegistry:
                             raise KeyError(f'class "{result}" not found')
             referenced_class = referenced_class or result
             response_body = response and response.message_body
-            endpoint = Endpoint(name=name, method=method, host=host, url=url,
-                                title=transition.title,
-                                docstring=transition.docstring,
-                                href_parameter=href_parameters,
-                                body_parameter=body_parameters,
-                                body_class_name=body_class_name,
-                                response_body=response_body,
-                                result=result,
-                                result_referenced_class=referenced_class,
-                                registry=self)
+            endpoint = Endpoint(
+                name=name,
+                method=method,
+                host=host,
+                url=url,
+                title=transition.title,
+                docstring=transition.docstring,
+                href_parameter=href_parameters,
+                body_parameter=body_parameters,
+                body_class_name=body_class_name,
+                response_body=response_body,
+                result=result,
+                result_referenced_class=referenced_class,
+                registry=self,
+            )
             # register endpoint on API
             python_api.add_endpoint(endpoint)
         return
@@ -772,17 +823,29 @@ class PythonClassRegistry:
             name = member.option_key
             docstring = member.description
             # collect all types
-            types = [simple_python_type(option.content.value.element, option.content.value.content)
-                     for option in member.content]
+            types = [
+                simple_python_type(option.content.value.element, option.content.value.content)
+                for option in member.content
+            ]
             python_type = f'Union[{", ".join(sorted(set(types)))}]'
-            text_of_options = '\n'.join(f'{option.content.value.content} ({t})'
-                                        for option, t in zip(member.content, types))
-            docstring = '\n'.join(l for l in chain((docstring, 'One of:'),
-                                                   (f'  * {tl}' for tl in text_of_options.splitlines()))
-                                  if l is not None)
+            text_of_options = '\n'.join(
+                f'{option.content.value.content} ({t})' for option, t in zip(member.content, types)
+            )
+            docstring = '\n'.join(
+                l
+                for l in chain((docstring, 'One of:'), (f'  * {tl}' for tl in text_of_options.splitlines()))
+                if l is not None
+            )
 
-            parameter = Parameter(name=name, python_type=python_type, docstring=docstring, referenced_class=None,
-                                  optional=False, sample=None, registry=self)
+            parameter = Parameter(
+                name=name,
+                python_type=python_type,
+                docstring=docstring,
+                referenced_class=None,
+                optional=False,
+                sample=None,
+                registry=self,
+            )
             return parameter
 
         # determine parameter name,
@@ -819,8 +882,9 @@ class PythonClassRegistry:
                 enum_name = ''.join(map(str.capitalize, endpoint_name.split('_')))
                 enum_name = f'{enum_name}{name[0].upper()}{name[1:]}'
                 enum_attributes = list(Attribute.from_enum(sample))
-                enum_class = PythonClass(name=enum_name, description=docstring, is_enum=True,
-                                         attributes=enum_attributes)
+                enum_class = PythonClass(
+                    name=enum_name, description=docstring, is_enum=True, attributes=enum_attributes
+                )
                 # and register that
                 self._add_class(enum_class)
                 enum_name = enum_class.name
@@ -837,11 +901,11 @@ class PythonClassRegistry:
                 class_name = f'{class_name}{name[0].upper()}{name[1:]}'
                 class_attributes = []
                 for sample_member in sample.content:
-                    attribute = self._attribute_from_member(class_name=class_name,
-                                                            member=sample_member)
+                    attribute = self._attribute_from_member(class_name=class_name, member=sample_member)
                     class_attributes.append(attribute)
-                new_class = PythonClass(name=class_name, description=docstring, is_enum=False,
-                                        attributes=class_attributes)
+                new_class = PythonClass(
+                    name=class_name, description=docstring, is_enum=False, attributes=class_attributes
+                )
                 # and register that
                 self._add_class(new_class)
                 sample = ''
@@ -855,7 +919,7 @@ class PythonClassRegistry:
                 if python_type:
                     # simple type
                     python_type = f'list[{python_type}]'
-                    sample = ", ".join(f"'{e.content}'" for e in sample.content)
+                    sample = ', '.join(f"'{e.content}'" for e in sample.content)
                     sample = f'[{sample}]'
                 else:
                     # hopefully we can figure out the type of the array elements. For this we expect the
@@ -871,11 +935,11 @@ class PythonClassRegistry:
                         class_name = f'{class_name}{name[0].upper()}{name[1:]}'
                         class_attributes = []
                         for sample_member in arr_element.content:
-                            attribute = self._attribute_from_member(class_name=class_name,
-                                                                    member=sample_member)
+                            attribute = self._attribute_from_member(class_name=class_name, member=sample_member)
                             class_attributes.append(attribute)
-                        new_class = PythonClass(name=class_name, description=docstring, is_enum=False,
-                                                attributes=class_attributes)
+                        new_class = PythonClass(
+                            name=class_name, description=docstring, is_enum=False, attributes=class_attributes
+                        )
                         # and register that
                         self._add_class(new_class)
                         class_name = new_class.name
@@ -906,11 +970,12 @@ class PythonClassRegistry:
                     referenced_class = class_name
                     if sample.meta:
                         raise NotImplementedError()
-                    if (sample.attributes and
-                            (unexpected_attributes := set(sample.attributes) - {'typeAttributes', 'default',
-                                                                                'enumerations'})):
-                        raise NotImplementedError(f'Unexpected sample attributes: '
-                                                  f'{", ".join(sorted(unexpected_attributes))}')
+                    if sample.attributes and (
+                        unexpected_attributes := set(sample.attributes) - {'typeAttributes', 'default', 'enumerations'}
+                    ):
+                        raise NotImplementedError(
+                            f'Unexpected sample attributes: {", ".join(sorted(unexpected_attributes))}'
+                        )
                     if sample.content:
                         sample = sample.content.content
                     else:
@@ -966,8 +1031,15 @@ class PythonClassRegistry:
             else:
                 raise NotImplementedError(f'unexpected type hint: "{type_hint_lower}"')
         if not python_type:
-            raise ValueError('Well, that\'s embarrassing!')
+            raise ValueError("Well, that's embarrassing!")
 
-        parameter = Parameter(name=name, python_type=python_type, docstring=docstring, sample=sample,
-                              optional=optional, referenced_class=referenced_class, registry=self)
+        parameter = Parameter(
+            name=name,
+            python_type=python_type,
+            docstring=docstring,
+            sample=sample,
+            optional=optional,
+            referenced_class=referenced_class,
+            registry=self,
+        )
         return parameter

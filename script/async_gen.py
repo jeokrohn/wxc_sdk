@@ -76,26 +76,32 @@ CALLING_DATA_TIMEOUT_PROTECTION = False
 """
 
 # identify sync calls to be translated to "await .." calls
-RE_SYNC_CALLS = re.compile(r"""
+RE_SYNC_CALLS = re.compile(
+    r"""
     (?:(?:self\.(?:(?:_)?session\.)?)|  # self., self._session., self.session.
                                         # ... or
        (?:super\(\)\.))                 # super().
                                         # followed by these methods and an opening bracket:
     (?:rest_)?(?:get|put|post|delete|patch|close|list)\(""",
-                           flags=re.VERBOSE)
+    flags=re.VERBOSE,
+)
 
 # start of a class until the 1st method
-RE_CLASS_START = re.compile(r"""
+RE_CLASS_START = re.compile(
+    r"""
     (?:^@\w+(?:\(.+\))?$\n)?            # optional decorator before the class definition with optinal parameters
     ^class\s(?P<class_name>\w+).*:$     # the 1st line of the class including the class name
     (?s:.*?)                            # non greedy match on arbitrary characters
                                         # modfier ?s: -> matches on \n, ? at the end -> non greedy
     \n+                                 # a sequence of empty lines, end of class_start
     (?=^[ ]+(?:def)|@)                  # a line starting with spaces and "def" -> 1st method
-    """, flags=re.VERBOSE + re.MULTILINE)
+    """,
+    flags=re.VERBOSE + re.MULTILINE,
+)
 
 # source of method
-RE_METHOD = re.compile(r"""
+RE_METHOD = re.compile(
+    r"""
     (?:^[ ]+@\w+(?:\(.+\))?$\n)?    # optional decorator
     (?P<indent>^[ ]+)def            # start of line with "def"
     \s+(?P<method_name>\S+)         # white space(s) followed by non white spaces (method name)
@@ -108,21 +114,29 @@ RE_METHOD = re.compile(r"""
             ^(?P=indent)def|         # ... line with def with same indent as initial def
             # (?P=indent)@|           # ... or line starting with @ with same indent as initial def
             ^[ ]*@))                # .. or just a line starting with a @ indicating the start of a decoration
-    """, flags=re.VERBOSE + re.MULTILINE)
+    """,
+    flags=re.VERBOSE + re.MULTILINE,
+)
 
 # method def
-RE_METHOD_DEF = re.compile(r"""
+RE_METHOD_DEF = re.compile(
+    r"""
     def         # def
     \s+\S+?     # followed by white spaces and non-greedy sequence of non-whitespaces
     \(      # ..until opening bracket
-    """, flags=re.VERBOSE)
+    """,
+    flags=re.VERBOSE,
+)
 
 # Generator return annotation
 RE_GENERATOR = re.compile(r'->\s*Generator\[(?P<gen_type>\w+)(?P<post>.+)')
 
-RE_FOLLOW_PAGINATION = re.compile("""
+RE_FOLLOW_PAGINATION = re.compile(
+    r"""
     return\s(?P<follow>\S+?follow_pagination\((?s:.+)?\))
-""", flags=re.VERBOSE)
+""",
+    flags=re.VERBOSE,
+)
 
 # block comment with async code to put in for method
 RE_ASYNC_SOURCE = re.compile("'''async(.*?)$(?P<async_source>.+?)'''", flags=re.VERBOSE + re.DOTALL + re.MULTILINE)
@@ -155,7 +169,7 @@ class Module:
         parts = list(self.abs_path.parts)
         parts.reverse()
         # forget the parts before the project root directory
-        parts = parts[:parts.index('wxc_sdk') + 1]
+        parts = parts[: parts.index('wxc_sdk') + 1]
         self.proj_path = Path(os.path.join(*(reversed(parts))))
 
         self.module_name = self.module_name_from_path(path=self.abs_path)
@@ -194,14 +208,14 @@ class Module:
         parts = list(path.parts)
         parts.reverse()
         # forget the parts before the project root directory
-        parts = parts[:parts.index('wxc_sdk') + 1]
+        parts = parts[: parts.index('wxc_sdk') + 1]
         # remove the file extension from the last part
         parts[0] = os.path.splitext(parts[0])[0]
         # __init__ takes the package name
         if parts[0] == '__init__':
             parts = parts[1:]
         mod_name = '.'.join(reversed(parts))
-        log.debug(f'_module_name_from_path(\'{path}\'): {mod_name}')
+        log.debug(f"_module_name_from_path('{path}'): {mod_name}")
         return mod_name
 
     def source(self) -> str:
@@ -209,7 +223,7 @@ class Module:
         Get Python source of module
         :return: source
         """
-        with open(self.abs_path, mode='r') as f:
+        with open(self.abs_path) as f:
             return f.read()
 
     def imported(self) -> Generator['Import', None, None]:
@@ -277,6 +291,7 @@ class Import:
     """
     an imported item
     """
+
     #: module the item was imported from
     module_name: str
     #: name of imported item
@@ -327,8 +342,7 @@ def source_paths() -> list[Path]:
     py_files = list(Path(project_root).rglob('*.py'))
     py_files.sort()
     # don't look at the file we are about to create
-    py_files = [path for path in py_files
-                if os.path.basename(path) != AS_API_SOURCE]
+    py_files = [path for path in py_files if os.path.basename(path) != AS_API_SOURCE]
     py_files = [path for path in py_files if 'har_writer' not in str(path)]
     return py_files
 
@@ -356,18 +370,23 @@ class ClassDef:
             if skip_super or base.class_name in visited:
                 return
             visited.add(base.class_name)
-            yield from chain.from_iterable(visit(base=self.registry[class_name])
-                                           for class_name in base.is_base_of)
+            yield from chain.from_iterable(visit(base=self.registry[class_name]) for class_name in base.is_base_of)
 
         return visit(base=self, skip_super=True)
 
     @classmethod
-    def register_class(cls, *, class_name: str, module_name: str = None, decorator: Optional[str] = None,
-                       bases: Optional[str] = None, source: str = None) -> 'ClassDef':
+    def register_class(
+        cls,
+        *,
+        class_name: str,
+        module_name: str = None,
+        decorator: Optional[str] = None,
+        bases: Optional[str] = None,
+        source: str = None,
+    ) -> 'ClassDef':
         cd = cls.registry.get(class_name)
         if cd is None:
-            cd = ClassDef(class_name=class_name, decorator=decorator, module_name=module_name,
-                          source=source)
+            cd = ClassDef(class_name=class_name, decorator=decorator, module_name=module_name, source=source)
             cls.registry[class_name] = cd
         cd.source = cd.source or source
         cd.decorator = cd.decorator or decorator
@@ -395,10 +414,12 @@ class ClassDef:
 
     @classmethod
     def from_path(cls, path: Union[str, Path]) -> Generator['ClassDef', None, None]:
-        class_re = re.compile(r'(?:^@(?P<decorator>\w+).*$\n)?^class\s+(?P<class_name>\w+)(?:\((?P<bases>.+)\))?:\s*$('
-                              r'?:\n^(?:\W.*)?$)+',
-                              flags=re.MULTILINE)
-        with open(path, mode='r') as f:
+        class_re = re.compile(
+            r'(?:^@(?P<decorator>\w+).*$\n)?^class\s+(?P<class_name>\w+)(?:\((?P<bases>.+)\))?:\s*$('
+            r'?:\n^(?:\W.*)?$)+',
+            flags=re.MULTILINE,
+        )
+        with open(path) as f:
             source = f.read()
         module_name = Module.module_name_from_path(path=path)
         for m in class_re.finditer(source):
@@ -481,8 +502,11 @@ def class_sources(*, target: type) -> Generator[str, None, None]:
         depends_on_class_names.update(bases)
 
         # make sure to cover the classes we depend on 1st
-        yield from chain.from_iterable(map(lambda class_name: act_on(target_class_name=class_name, level=level + 1),
-                                           sorted(depends_on_class_names)))
+        yield from chain.from_iterable(
+            map(
+                lambda class_name: act_on(target_class_name=class_name, level=level + 1), sorted(depends_on_class_names)
+            )
+        )
 
         logger('dependencies addressed')
 
@@ -520,9 +544,9 @@ class ClassTransform:
         :return:
         """
         log.debug(f'New ClassTransform: {class_name} -> As{class_name}')
-        return ClassTransform(class_name=class_name,
-                              regex=re.compile(f'(\\b){class_name}(\\b)'),
-                              replacement=f'\g<1>As{class_name}\g<2>')
+        return ClassTransform(
+            class_name=class_name, regex=re.compile(f'(\\b){class_name}(\\b)'), replacement=rf'\g<1>As{class_name}\g<2>'
+        )
 
     @classmethod
     def appy_all(cls, *, source: str) -> tuple[str, int]:
@@ -562,14 +586,16 @@ def transform_classes_to_async(sources: Iterable[str]) -> Generator[str, None, N
             return async_code
 
         # see if there is a call that "smells" like async
-        source, subs = RE_SYNC_CALLS.subn(repl='await \g<0>', string=source)
+        source, subs = RE_SYNC_CALLS.subn(repl=r'await \g<0>', string=source)
         if subs:
-            log.debug(f'transform_method ({class_name}.{method_name}): async call added, change method to "async '
-                      f'def {method_name}"')
+            log.debug(
+                f'transform_method ({class_name}.{method_name}): async call added, change method to "async '
+                f'def {method_name}"'
+            )
             # found a sync call --> also need to change the method signature to "async"
-            source = re.sub(r'(^[ ]+)def', '\g<1>async def', source)
+            source = re.sub(r'(^[ ]+)def', r'\g<1>async def', source)
 
-        source, subs = re.subn(r'(?:async )?def __(enter|exit)__', 'async def __a\g<1>__', source)
+        source, subs = re.subn(r'(?:async )?def __(enter|exit)__', r'async def __a\g<1>__', source)
         if subs:
             log.debug(f'transform_method ({class_name}.{method_name}): converted enter/exit to __aenter__/__aexit__')
 
@@ -584,7 +610,7 @@ def transform_classes_to_async(sources: Iterable[str]) -> Generator[str, None, N
             #       * to: return [o async for o in self.session.follow_pagination(url=ep, model=Person, params=params)]
 
             # switch Generator[ to AsyncGenerator for async generator
-            gen_source, subs = RE_GENERATOR.subn('-> AsyncGenerator[\g<gen_type>\g<post>', source)
+            gen_source, subs = RE_GENERATOR.subn(r'-> AsyncGenerator[\g<gen_type>\g<post>', source)
             if not subs:
                 raise ValueError(f'Changing "Generator" to "AsyncGenerator" failed for {class_name}.{method_name}')
 
@@ -597,17 +623,14 @@ def transform_classes_to_async(sources: Iterable[str]) -> Generator[str, None, N
             # now change signature to 'async def'
             source, subs = RE_METHOD_DEF.subn(f'async def {method_name}(', source, count=1)
             if not subs:
-                raise ValueError(f'creating "async def {method_name}" failed for'
-                                 f' {class_name}.{method_name}')
+                raise ValueError(f'creating "async def {method_name}" failed for {class_name}.{method_name}')
             # update return signature
-            source, subs = RE_GENERATOR.subn('-> List[\g<gen_type>]:', source)
+            source, subs = RE_GENERATOR.subn(r'-> List[\g<gen_type>]:', source)
             if not subs:
-                raise ValueError(f'updating return signature to "-> list[..]"failed for'
-                                 f' {class_name}.{method_name}')
-            source, subs = RE_FOLLOW_PAGINATION.subn('return [o async for o in \g<follow>]', source)
+                raise ValueError(f'updating return signature to "-> list[..]"failed for {class_name}.{method_name}')
+            source, subs = RE_FOLLOW_PAGINATION.subn(r'return [o async for o in \g<follow>]', source)
             if not subs:
-                raise ValueError(f'updating return return failed for'
-                                 f' {class_name}.{method_name}')
+                raise ValueError(f'updating return return failed for {class_name}.{method_name}')
             log.debug(f'transform_method ({class_name}.{method_name}): created {class_name}.{method_name} -> list[...')
             source = '\n\n'.join((gen_source, source))
         return source
@@ -640,13 +663,14 @@ def transform_classes_to_async(sources: Iterable[str]) -> Generator[str, None, N
 
         # get all methods
         method_matches = list(RE_METHOD.finditer(source))
-        log.debug(f'transform_class({class_name}): methods: '
-                  f'{", ".join(m.group("method_name") for m in method_matches)}')
+        log.debug(
+            f'transform_class({class_name}): methods: {", ".join(m.group("method_name") for m in method_matches)}'
+        )
 
         # new source: transformed class start followed by transformed methods
-        transformed_methods = "\n\n".join(map(lambda m: transform_method(class_name=class_name,
-                                                                         method_match=m),
-                                              method_matches))
+        transformed_methods = '\n\n'.join(
+            map(lambda m: transform_method(class_name=class_name, method_match=m), method_matches)
+        )
         source = f'{class_start}{transformed_methods}'
         return source
 
@@ -695,8 +719,7 @@ if __name__ == '__main__':
     uses_rest = set(m.module_name for m in Module.registry['wxc_sdk.rest'].dependants_gen())
 
     # modules depending on rest
-    mo = list(m for m in Module.module_order()
-              if m.module_name in uses_rest)
+    mo = list(m for m in Module.module_order() if m.module_name in uses_rest)
 
     for module in Module.registry.values():
         imported = import_module(module.module_name)

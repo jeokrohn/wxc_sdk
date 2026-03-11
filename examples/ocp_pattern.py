@@ -28,6 +28,7 @@ optional arguments:
 
 Example: ocp_pattern.py all ocp_pattern.txt --log-file ocp_pattern.har --dry-run
 """
+
 import argparse
 import asyncio
 import logging
@@ -46,19 +47,19 @@ from wxc_sdk.telephony.location import TelephonyLocation
 from wxc_sdk.tokens import Tokens
 
 
-async def work_on_one_location(api: AsWebexSimpleApi, location: TelephonyLocation, pattern_list: list[str],
-                               dry_run: bool):
+async def work_on_one_location(
+    api: AsWebexSimpleApi, location: TelephonyLocation, pattern_list: list[str], dry_run: bool
+):
     """
     Work on one location, create, update or remove patterns
     """
 
     async def create(pattern: str):
         try:
-            await dapi.create(location.location_id,
-                              DigitPattern(pattern=pattern,
-                                           name=f'ocp-{pattern}',
-                                           action=Action.allow,
-                                           transfer_enabled=True))
+            await dapi.create(
+                location.location_id,
+                DigitPattern(pattern=pattern, name=f'ocp-{pattern}', action=Action.allow, transfer_enabled=True),
+            )
             print(f'{location.name}: created pattern {pattern}')
         except AsRestError as e:
             print(f'{location.name}: failed to create pattern {pattern}, error: {e}')
@@ -74,11 +75,12 @@ async def work_on_one_location(api: AsWebexSimpleApi, location: TelephonyLocatio
 
     async def update(pattern: DigitPattern):
         try:
-            await dapi.update(location.location_id,
-                              DigitPattern(pattern=pattern.pattern,
-                                           name=f'ocp-{pattern.pattern}',
-                                           action=Action.allow,
-                                           transfer_enabled=True))
+            await dapi.update(
+                location.location_id,
+                DigitPattern(
+                    pattern=pattern.pattern, name=f'ocp-{pattern.pattern}', action=Action.allow, transfer_enabled=True
+                ),
+            )
             print(f'{location.name}: updated pattern {pattern.pattern}')
         except AsRestError as e:
             print(f'{location.name}: failed to update pattern {pattern.pattern}, error: {e}')
@@ -90,13 +92,19 @@ async def work_on_one_location(api: AsWebexSimpleApi, location: TelephonyLocatio
     # get ocp patterns for location
     location_digit_patterns = await dapi.get_digit_patterns(location.location_id)
 
-    existing_patterns = [pattern for pattern in location_digit_patterns.digit_patterns
-                         if pattern.pattern in pattern_set]
-    missing_patterns = [pattern
-                        for pattern in pattern_list
-                        if pattern not in set(map(lambda p: p.pattern, location_digit_patterns.digit_patterns))]
-    to_be_removed = [pattern for pattern in location_digit_patterns.digit_patterns
-                     if pattern.name.startswith('ocp-') and pattern.pattern not in pattern_set]
+    existing_patterns = [
+        pattern for pattern in location_digit_patterns.digit_patterns if pattern.pattern in pattern_set
+    ]
+    missing_patterns = [
+        pattern
+        for pattern in pattern_list
+        if pattern not in set(map(lambda p: p.pattern, location_digit_patterns.digit_patterns))
+    ]
+    to_be_removed = [
+        pattern
+        for pattern in location_digit_patterns.digit_patterns
+        if pattern.name.startswith('ocp-') and pattern.pattern not in pattern_set
+    ]
     tasks = []
 
     # remove patterns
@@ -163,19 +171,27 @@ def setup_logging(args: argparse.Namespace, api: AsWebexSimpleApi):
 
 async def main():
     parser = argparse.ArgumentParser(
-        description="Provision OCP patterns for one or all locations",
-        epilog='Example: %(prog)s all ocp_pattern.txt --log-file ocp_pattern.har --dry-run')
-    parser.add_argument('location', type=str, help='Location to provision OCP patterns for. Use "all" to '
-                                                   'provision for all locations')
-    parser.add_argument('patterns', type=str, help='File with patterns to provision. File has one pattern '
-                                                   'per line. Use "remove" to remove all patterns previously '
-                                                   'provisioned '
-                                                   'by the script')
-    parser.add_argument('--token',
-                        help=f'Access token can be provided using --token argument, set in '
-                             f'WEBEX_ACCESS_TOKEN environment variable or can be a service app token. For '
-                             f'the latter set environment variables {SERVICE_APP_ENVS}. Environment '
-                             f'variables can also be set in {env_path()}')
+        description='Provision OCP patterns for one or all locations',
+        epilog='Example: %(prog)s all ocp_pattern.txt --log-file ocp_pattern.har --dry-run',
+    )
+    parser.add_argument(
+        'location', type=str, help='Location to provision OCP patterns for. Use "all" to provision for all locations'
+    )
+    parser.add_argument(
+        'patterns',
+        type=str,
+        help='File with patterns to provision. File has one pattern '
+        'per line. Use "remove" to remove all patterns previously '
+        'provisioned '
+        'by the script',
+    )
+    parser.add_argument(
+        '--token',
+        help=f'Access token can be provided using --token argument, set in '
+        f'WEBEX_ACCESS_TOKEN environment variable or can be a service app token. For '
+        f'the latter set environment variables {SERVICE_APP_ENVS}. Environment '
+        f'variables can also be set in {env_path()}',
+    )
     parser.add_argument('--dry-run', action='store_true', help='Dry run, do not provision anything')
     parser.add_argument('--verbose', action='store_true', help='Print debug information')
     parser.add_argument('--log-file', help='Log file. If extension is .har, log in HAR format')
@@ -195,7 +211,9 @@ async def main():
             f'or '
             f'can be a service app token. For the latter set environment variables {SERVICE_APP_ENVS}. Environment '
             f'variables can '
-            f'also be set in {env_path()}', file=sys.stderr)
+            f'also be set in {env_path()}',
+            file=sys.stderr,
+        )
         exit(1)
     async with AsWebexSimpleApi(tokens=tokens, concurrent_requests=100) as api:
         with setup_logging(args, api):
@@ -206,9 +224,9 @@ async def main():
                 location_list.sort(key=lambda loc: loc.name)
             else:
                 # single location
-                location_list = [loc
-                                 for loc in await api.telephony.locations.list(name=location_name)
-                                 if loc.name == location_name]
+                location_list = [
+                    loc for loc in await api.telephony.locations.list(name=location_name) if loc.name == location_name
+                ]
                 if not location_list:
                     print(f'Location {location_name} not found', file=sys.stderr)
                     exit(1)
@@ -219,17 +237,15 @@ async def main():
                 pattern_list = []
             else:
                 try:
-                    with open(pattern_file, mode='r') as f:
-                        pattern_list = [ps for p in f.readlines()
-                                        if (ps := p.strip()) and not p.startswith('#')]
+                    with open(pattern_file) as f:
+                        pattern_list = [ps for p in f.readlines() if (ps := p.strip()) and not p.startswith('#')]
                 except FileNotFoundError:
                     print(f'File {pattern_file} not found', file=sys.stderr)
                     exit(1)
 
             # apply changes to all locations
             print(f'Working on {len(location_list)} location(s), {len(pattern_list)} patterns')
-            await asyncio.gather(*[work_on_one_location(api, loc, pattern_list, dry_run)
-                                   for loc in location_list])
+            await asyncio.gather(*[work_on_one_location(api, loc, pattern_list, dry_run) for loc in location_list])
     return
 
 

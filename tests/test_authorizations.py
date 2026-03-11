@@ -15,9 +15,9 @@ class AuthTest(TestCaseWithLog):
         """
         users = await self.async_api.people.list()
         users.sort(key=attrgetter('display_name'))
-        auth_lists = await asyncio.gather(*[self.async_api.authorizations.list(person_id=user.person_id)
-                                            for user in users],
-                                          return_exceptions=True)
+        auth_lists = await asyncio.gather(
+            *[self.async_api.authorizations.list(person_id=user.person_id) for user in users], return_exceptions=True
+        )
         err = None
         for user, authorizations in zip(users, auth_lists):
             user: Person
@@ -62,4 +62,4 @@ class AuthTest(TestCaseWithLog):
     def test_get_token_expiration_status(self):
         r = self.api.authorizations.get_token_expiration_status()
         print(r)
-        print(datetime.datetime.fromtimestamp(r/1000))
+        print(datetime.datetime.fromtimestamp(r / 1000))

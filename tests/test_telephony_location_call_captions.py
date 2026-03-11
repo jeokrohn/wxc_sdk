@@ -13,8 +13,12 @@ class Test(TestWithLocations):
         get call captions settings for all locations
         """
         settings = await asyncio.gather(
-            *[self.async_api.telephony.location.get_call_captions_settings(location_id=loc.location_id)
-              for loc in self.telephony_locations], return_exceptions=True)
+            *[
+                self.async_api.telephony.location.get_call_captions_settings(location_id=loc.location_id)
+                for loc in self.telephony_locations
+            ],
+            return_exceptions=True,
+        )
         for loc, setting in zip(self.telephony_locations, settings):
             if isinstance(setting, Exception):
                 self.fail(f'Failed to get call captions settings for location "{loc.name}": {setting}')
