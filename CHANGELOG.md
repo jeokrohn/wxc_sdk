@@ -1,3 +1,21 @@
+## 1.30.0 (2026-03-11)
+
+### Feat
+
+- new api api.telephony.caller_reputation_provider
+- new endpoint api.me.contact_center_extensions
+- new endpoint api.telephony.playlist.usage
+- new api api.telephony.call_controls_members
+- new method api.person_settings.app_shared_line.members_count
+- new cdr fields interaction_id, wx_cc_consult_merge_status
+- new method api.telephony.get_large_organization_status
+- new methods api.telephony.devices.get_count_of_available_members, api.telephony.devices.get_count_of_members
+
+### Fix
+
+- updated enums WorkSpaceType not_set, meeting_room; slight chance of breaking code
+- changed attribute "routingPrefix" to "routing_prefix" in some places; slight chance of breaking existing code
+
 ## 1.29.1 (2026-03-06)
 
 ### Fix
