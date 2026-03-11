@@ -7391,6 +7391,29 @@ class AsMeSettingsApi(AsApiChild, base='telephony/config/people/me'):
         r = TypeAdapter(list[GuestCallingNumber]).validate_python(data['phoneNumbers'])
         return r
 
+    async def contact_center_extensions(self) -> CCExtensions:
+        """
+        Read the Contact Center Extensions
+
+        Retrieves the Contact Center phone number, extension, virtual numbers, endpoints, and endpoints registration
+        status associated with the authenticated user. This API returns all primary and secondary endpoints, the hot
+        desk guest profiles currently hosted on the agent's own devices, if any, and registration status of those
+        endpoints. Only virtual line extensions hosted exclusively on the agent's devices and the registration status
+        of those virtual line endpoints will be retrieved. Any virtual lines shared with devices not owned by the
+        current user will be excluded.
+
+        A Webex Calling Contact Center extension is a calling extension assigned to a user or device within the Webex
+        Contact Center for internal dialing.
+
+        This API requires a user auth token with a scope of spark:telephony_config_read.
+
+        :rtype: :class:`CCExtensions`
+        """
+        url = self.ep()
+        data = await super().get(url)
+        r = CCExtensions.model_validate(data)
+        return r
+
 
 class AsMeetingChatsApi(AsApiChild, base='meetings/postMeetingChats'):
     """

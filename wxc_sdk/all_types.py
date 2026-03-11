@@ -40,9 +40,10 @@ from wxc_sdk.guests import Guest
 from wxc_sdk.licenses import License, LicenseProperties, LicenseRequest, LicenseRequestOperation, LicenseUser, \
     LicenseUserType, SiteAccountType, SiteResponse, SiteType, SiteUrlsRequest, UserLicensesResponse
 from wxc_sdk.locations import Floor, Location, LocationAddress
-from wxc_sdk.me import CountryTelephonyConfigRequirements, FeatureAccessCode, GuestCallingNumber, \
-    LocationAssignedNumber, LocationNameAddress, MeDevice, MeMonitoredElement, MeMonitoringSettings, MeNumber, \
-    MeOwner, MeProfile, MonitoredElementType, ServicesEnum
+from wxc_sdk.me import CCExtensions, CountryTelephonyConfigRequirements, EndpointStatus, FeatureAccessCode, \
+    GuestCallingNumber, LocationAssignedNumber, LocationNameAddress, MeDevice, MeMonitoredElement, \
+    MeMonitoringSettings, MeNumber, MeOwner, MeProfile, MonitoredElementType, ServicesEnum, UserEndpoint, \
+    UserEndpointType, UserExtension
 from wxc_sdk.me.call_notify import CallNotify, CallNotifyCriteria
 from wxc_sdk.me.callblock import CallBlockNumber
 from wxc_sdk.me.callcenter import AgentACDState, MeCallCenterSettings, MeCallQueue
@@ -297,15 +298,15 @@ __all__ = ['AcdCustomization', 'Action', 'ActionToBePerformed', 'ActionToBePerfo
            'BaseStationsResponse', 'BehaviorType', 'BlockContiguousSequences', 'BlockPreviousPasscodes',
            'BlockRepeatedDigits', 'BlockingDisableCalling', 'BlockingUnlessForced', 'BluetoothMode',
            'BluetoothSetting', 'BreakoutSession', 'BulkErrorResponse', 'BulkMethod', 'BulkOperation', 'BulkResponse',
-           'BulkResponseOperation', 'BusinessContinuity', 'CCSnippet', 'CDR', 'CDRCallType', 'CDRClientType',
-           'CDRDirection', 'CDROriginalReason', 'CDRRedirectReason', 'CDRRelatedReason', 'CDRUserType',
-           'CPActionType', 'CQHolidaySchedule', 'CQRoutingType', 'Calendar', 'CalendarType', 'CallBackSelected',
-           'CallBlockNumber', 'CallBounce', 'CallBridgeSetting', 'CallForwardExpandedSoftKey', 'CallForwarding',
-           'CallForwardingAlways', 'CallForwardingCommon', 'CallForwardingNoAnswer', 'CallForwardingNumber',
-           'CallForwardingPerson', 'CallHistoryMethod', 'CallHistoryRecord', 'CallInNumber', 'CallInNumbers',
-           'CallInfo', 'CallInterceptDetails', 'CallInterceptDetailsPermission', 'CallNotify', 'CallNotifyCriteria',
-           'CallPark', 'CallParkExtension', 'CallParkRecall', 'CallParkSettings', 'CallPickup', 'CallQueue',
-           'CallQueueAgent', 'CallQueueAgentDetail', 'CallQueueAgentQueue', 'CallQueueCallPolicies',
+           'BulkResponseOperation', 'BusinessContinuity', 'CCExtensions', 'CCSnippet', 'CDR', 'CDRCallType',
+           'CDRClientType', 'CDRDirection', 'CDROriginalReason', 'CDRRedirectReason', 'CDRRelatedReason',
+           'CDRUserType', 'CPActionType', 'CQHolidaySchedule', 'CQRoutingType', 'Calendar', 'CalendarType',
+           'CallBackSelected', 'CallBlockNumber', 'CallBounce', 'CallBridgeSetting', 'CallForwardExpandedSoftKey',
+           'CallForwarding', 'CallForwardingAlways', 'CallForwardingCommon', 'CallForwardingNoAnswer',
+           'CallForwardingNumber', 'CallForwardingPerson', 'CallHistoryMethod', 'CallHistoryRecord', 'CallInNumber',
+           'CallInNumbers', 'CallInfo', 'CallInterceptDetails', 'CallInterceptDetailsPermission', 'CallNotify',
+           'CallNotifyCriteria', 'CallPark', 'CallParkExtension', 'CallParkRecall', 'CallParkSettings', 'CallPickup',
+           'CallQueue', 'CallQueueAgent', 'CallQueueAgentDetail', 'CallQueueAgentQueue', 'CallQueueCallPolicies',
            'CallQueueSettings', 'CallRecordingInfo', 'CallRecordingJobCounts', 'CallRecordingJobStatus',
            'CallRecordingLocationVendors', 'CallRecordingRegion', 'CallRecordingSetting',
            'CallRecordingTermsOfService', 'CallRecordingVendors', 'CallSourceInfo', 'CallSourceType', 'CallState',
@@ -337,11 +338,11 @@ __all__ = ['AcdCustomization', 'Action', 'ActionToBePerformed', 'ActionToBePerfo
            'DisplayNameSelection', 'DistinctiveRing', 'DynamicSettingsGroups', 'DynamicSettingsUpdateJobItem',
            'E164Number', 'ECBNDefault', 'ECBNDependencies', 'ECBNEffectiveLevel', 'ECBNLocationEffectiveLevel',
            'ECBNLocationMember', 'ECBNQuality', 'ECBNSelection', 'EmailObject', 'EmailObjectType', 'EmailType',
-           'EmergencyAddress', 'EmergencyDestination', 'EnabledAndNumberOfDays', 'EnabledAndValue', 'EndpointType',
-           'EnhancedMulticast', 'EnterpriseUser', 'EntryAndExitTone', 'Event', 'EventData', 'EventResource',
-           'EventType', 'ExceptionType', 'ExecAlert', 'ExecAlertClidNameMode', 'ExecAlertClidPhoneNumberMode',
-           'ExecAlertRolloverAction', 'ExecAlertingMode', 'ExecAssistantType', 'ExecCallFilterType',
-           'ExecCallFiltering', 'ExecCallFilteringCriteria', 'ExecCallFilteringCriteriaItem',
+           'EmergencyAddress', 'EmergencyDestination', 'EnabledAndNumberOfDays', 'EnabledAndValue', 'EndpointStatus',
+           'EndpointType', 'EnhancedMulticast', 'EnterpriseUser', 'EntryAndExitTone', 'Event', 'EventData',
+           'EventResource', 'EventType', 'ExceptionType', 'ExecAlert', 'ExecAlertClidNameMode',
+           'ExecAlertClidPhoneNumberMode', 'ExecAlertRolloverAction', 'ExecAlertingMode', 'ExecAssistantType',
+           'ExecCallFilterType', 'ExecCallFiltering', 'ExecCallFilteringCriteria', 'ExecCallFilteringCriteriaItem',
            'ExecCallFilteringScheduleLevel', 'ExecCallFilteringToNumber', 'ExecOrAssistant', 'ExecScreening',
            'ExecScreeningAlertType', 'ExecuteCommandResponse', 'ExpirePasscode', 'ExternalCallerIdNamePolicy',
            'ExternalTransfer', 'ExternalVoicemailMwiAction', 'FailedAttempts', 'FailureBehavior', 'FeatureAccessCode',
@@ -444,14 +445,15 @@ __all__ = ['AcdCustomization', 'Action', 'ActionToBePerformed', 'ActionToBePerfo
            'UpdateMeetingInviteeBody', 'UpdateNumbersResponse', 'UpdateParticipantBody', 'UpdateParticipantResponse',
            'UpdatePersonNumbers', 'UpdatePersonPhoneNumber', 'UpdatePersonalMeetingRoomOptionsBody',
            'UpdateTranscriptSnippetBody', 'UpdateWorkspacePhoneNumber', 'UsageRouteLists', 'UsageType',
-           'UsbPortsObject', 'UserAddress', 'UserBase', 'UserCallCaptions', 'UserDeviceCount',
-           'UserFeatureAccessSettings', 'UserLicenseType', 'UserLicensesResponse', 'UserManager', 'UserNumber',
-           'UserPhoneNumber', 'UserType', 'UserTypeObject', 'ValidateExtensionStatus', 'ValidateExtensionStatusState',
-           'ValidateExtensionsResponse', 'ValidatePhoneNumber', 'ValidatePhoneNumberStatus',
-           'ValidatePhoneNumberStatusState', 'ValidatePhoneNumbersResponse', 'ValidateVirtualExtensionRange',
-           'ValidateVirtualExtensionStatus', 'ValidationRule', 'ValidationRules', 'ValidationStatus', 'Video',
-           'VideoDevice', 'VideoIn', 'VideoOptions', 'VideoState', 'VirtualExtension', 'VirtualExtensionDestination',
-           'VirtualExtensionLevel', 'VirtualExtensionMode', 'VirtualExtensionRange', 'VirtualExtensionRangeAction',
+           'UsbPortsObject', 'UserAddress', 'UserBase', 'UserCallCaptions', 'UserDeviceCount', 'UserEndpoint',
+           'UserEndpointType', 'UserExtension', 'UserFeatureAccessSettings', 'UserLicenseType',
+           'UserLicensesResponse', 'UserManager', 'UserNumber', 'UserPhoneNumber', 'UserType', 'UserTypeObject',
+           'ValidateExtensionStatus', 'ValidateExtensionStatusState', 'ValidateExtensionsResponse',
+           'ValidatePhoneNumber', 'ValidatePhoneNumberStatus', 'ValidatePhoneNumberStatusState',
+           'ValidatePhoneNumbersResponse', 'ValidateVirtualExtensionRange', 'ValidateVirtualExtensionStatus',
+           'ValidationRule', 'ValidationRules', 'ValidationStatus', 'Video', 'VideoDevice', 'VideoIn', 'VideoOptions',
+           'VideoState', 'VirtualExtension', 'VirtualExtensionDestination', 'VirtualExtensionLevel',
+           'VirtualExtensionMode', 'VirtualExtensionRange', 'VirtualExtensionRangeAction',
            'VirtualExtensionRangeValidationResult', 'VirtualExtensionValidationStatus', 'VirtualLine',
            'VirtualLineDevices', 'VirtualLineLocation', 'VirtualLineNumberPhoneNumber', 'VlanSetting',
            'VoiceMailPartyInformation', 'VoiceMailRules', 'VoiceMessageDetails', 'VoicePortalSettings',

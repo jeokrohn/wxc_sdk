@@ -12,7 +12,7 @@ from pydantic import TypeAdapter
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
-from wxc_sdk.common import NumberOwner, NumberState, PrimaryOrShared, UserType
+from wxc_sdk.common import NumberOwner, NumberState, PrimaryOrSecondary, PrimaryOrShared, UserType
 from wxc_sdk.locations import LocationAddress
 from wxc_sdk.me.anon_calls import MeAnonCallsApi
 from wxc_sdk.me.barge import MeBargeApi
@@ -25,7 +25,7 @@ from wxc_sdk.me.callpark import MeCallParkApi
 from wxc_sdk.me.callpickup import MeCallPickupApi
 from wxc_sdk.me.callpolicy import MeCallPoliciesApi
 from wxc_sdk.me.dnd import MeDNDApi
-from wxc_sdk.me.endpoints import MeEndpointsApi
+from wxc_sdk.me.endpoints import EndpointType, MeEndpointsApi
 from wxc_sdk.me.executive import MeExecutiveApi
 from wxc_sdk.me.forwarding import MeForwardingApi
 from wxc_sdk.me.go_override import GoOverrideApi
@@ -48,7 +48,8 @@ from wxc_sdk.telephony import AnnouncementLanguage, NameAndCode, NumberListPhone
 __all__ = ['MeSettingsApi', 'MeProfile', 'MeNumber', 'MeOwner', 'MeDevice',
            'LocationNameAddress', 'CountryTelephonyConfigRequirements',
            'FeatureAccessCode', 'MeMonitoringSettings', 'MeMonitoredElement', 'MonitoredElementType', 'ServicesEnum',
-           'LocationAssignedNumber', 'GuestCallingNumber']
+           'LocationAssignedNumber', 'GuestCallingNumber', 'UserEndpointType', 'UserExtension', 'EndpointStatus',
+           'UserEndpoint', 'CCExtensions']
 
 
 class MeNumber(ApiModel):
@@ -336,6 +337,55 @@ class GuestCallingNumber(ApiModel):
     is_main_number: Optional[bool] = None
 
 
+class UserEndpointType(ApiModel):
+    #: Unique identifier of the endpoint.
+    id: Optional[str] = None
+    #: Type of the endpoint.
+    type: Optional[EndpointType] = None
+
+
+class UserExtension(ApiModel):
+    #: Direct number of the user.
+    direct_number: Optional[str] = None
+    #: Extension of the user.
+    extension: Optional[str] = None
+    #: Type of User Extension.
+    type: Optional[PrimaryOrSecondary] = None
+    #: Type of the line owner. Indicates whether the line is owned by a person, workspace, or virtual line.
+    line_owner_type: Optional[UserType] = None
+    #: Unique identifier of the line owner.
+    line_owner_id: Optional[str] = None
+    #: Unique identifier of the set preferred answering endpoint.
+    preferred_answering_end_point_id: Optional[str] = None
+    #: List of user endpoints with type.
+    endpoints: Optional[list[UserEndpointType]] = None
+
+
+class EndpointStatus(str, Enum):
+    #: Device is connected.
+    connected = 'CONNECTED'
+    #: Device is not connected.
+    not_connected = 'NOT_CONNECTED'
+
+
+class UserEndpoint(ApiModel):
+    #: Unique identifier of the endpoint.
+    id: Optional[str] = None
+    #: Type of the endpoint.
+    type: Optional[EndpointType] = None
+    #: Name of the endpoint.
+    name: Optional[str] = None
+    #: SIP Registration status of the device.
+    status: Optional[EndpointStatus] = None
+
+
+class CCExtensions(ApiModel):
+    #: List of user extensions.
+    cc_extensions: Optional[list[UserExtension]] = None
+    #: List of user endpoints details.
+    endpoints: Optional[list[UserEndpoint]] = None
+
+
 @dataclass(init=False, repr=False)
 class MeSettingsApi(ApiChild, base='telephony/config/people/me'):
     """
@@ -587,4 +637,27 @@ class MeSettingsApi(ApiChild, base='telephony/config/people/me'):
         url = self.ep('settings/guestCalling/numbers')
         data = super().get(url)
         r = TypeAdapter(list[GuestCallingNumber]).validate_python(data['phoneNumbers'])
+        return r
+
+    def contact_center_extensions(self) -> CCExtensions:
+        """
+        Read the Contact Center Extensions
+
+        Retrieves the Contact Center phone number, extension, virtual numbers, endpoints, and endpoints registration
+        status associated with the authenticated user. This API returns all primary and secondary endpoints, the hot
+        desk guest profiles currently hosted on the agent's own devices, if any, and registration status of those
+        endpoints. Only virtual line extensions hosted exclusively on the agent's devices and the registration status
+        of those virtual line endpoints will be retrieved. Any virtual lines shared with devices not owned by the
+        current user will be excluded.
+
+        A Webex Calling Contact Center extension is a calling extension assigned to a user or device within the Webex
+        Contact Center for internal dialing.
+
+        This API requires a user auth token with a scope of spark:telephony_config_read.
+
+        :rtype: :class:`CCExtensions`
+        """
+        url = self.ep()
+        data = super().get(url)
+        r = CCExtensions.model_validate(data)
         return r

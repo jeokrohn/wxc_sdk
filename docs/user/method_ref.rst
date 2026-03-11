@@ -215,6 +215,8 @@ The method name is a link to the method documentation.
         Get my call captions settings
    * - :meth:`api.me.calling_services_list <wxc_sdk.me.MeSettingsApi.calling_services_list>`
         Get My Calling Services List
+   * - :meth:`api.me.contact_center_extensions <wxc_sdk.me.MeSettingsApi.contact_center_extensions>`
+        Read the Contact Center Extensions
    * - :meth:`api.me.country_telephony_config_requirements <wxc_sdk.me.MeSettingsApi.country_telephony_config_requirements>`
         Retrieve country-specific telephony configuration requirements
    * - :meth:`api.me.details <wxc_sdk.me.MeSettingsApi.details>`

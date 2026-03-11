@@ -1,12 +1,13 @@
 Release history
 ===============
 
-- feat: new endpoints :meth:`api.telephony.devices.get_count_of_available_members <wxc_sdk.telephony.devices.TelephonyDevicesApi.get_count_of_available_members>`, :meth:`api.telephony.devices.get_count_of_members <wxc_sdk.telephony.devices.TelephonyDevicesApi.get_count_of_members>`
-- feat: new endpoint :meth:`api.telephony.get_large_organization_status <wxc_sdk.telephony.TelephonyApi.get_large_organization_status>`
-- feat: new cdr fields interaction_id, wx_cc_consult_merge_status
-- feat: new endpoint :meth:`api.person_settings.app_shared_line.members_count <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.members_count>`
-- feat: new api :attr:`api.telephony.call_controls_members <wxc_sdk.telephony.TelephonyApi.call_controls_members>`
+- feat: new endpoint :meth:`api.me.contact_center_extensions <wxc_sdk.me.MeSettingsApi.contact_center_extensions>`
 - feat: new endpoint :meth:`api.telephony.playlist.usage <wxc_sdk.telephony.playlists.PlayListApi.usage>`
+- feat: new api :attr:`api.telephony.call_controls_members <wxc_sdk.telephony.TelephonyApi.call_controls_members>`
+- feat: new endpoint :meth:`api.person_settings.app_shared_line.members_count <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.members_count>`
+- feat: new cdr fields interaction_id, wx_cc_consult_merge_status
+- feat: new endpoint :meth:`api.telephony.get_large_organization_status <wxc_sdk.telephony.TelephonyApi.get_large_organization_status>`
+- feat: new endpoints :meth:`api.telephony.devices.get_count_of_available_members <wxc_sdk.telephony.devices.TelephonyDevicesApi.get_count_of_available_members>`, :meth:`api.telephony.devices.get_count_of_members <wxc_sdk.telephony.devices.TelephonyDevicesApi.get_count_of_members>`
 
 1.29.0
 ------
