@@ -31,7 +31,7 @@ class PagingAgent(ApiModel):
     #: Agents extension. Minimum length is 2. Maximum length is 10. Either phoneNumber or extension is mandatory.
     extension: Optional[str] = None
     #: Routing prefix of location.
-    routingPrefix: Optional[str] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     esn: Optional[str] = None
 

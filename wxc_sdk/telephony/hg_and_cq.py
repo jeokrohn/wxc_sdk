@@ -75,7 +75,7 @@ class HGandCQ(ApiModel):
     #: Extension
     extension: Optional[str] = None
     #: Routing prefix of location.
-    routingPrefix: Optional[str] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     esn: Optional[str] = None
     #: Which type of Calling LineID Policy Selected for Call Queue.

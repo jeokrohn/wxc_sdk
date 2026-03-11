@@ -224,7 +224,7 @@ class MemberCommon(ApiModel):
     #: Extension of a person or workspace.
     extension: Optional[str] = None
     #: Routing prefix of location.
-    routingPrefix: Optional[str] = None
+    routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     esn: Optional[str] = None
     #: T.38 Fax Compression setting and is available only for ATA Devices. Choose T.38 fax compression if the device
