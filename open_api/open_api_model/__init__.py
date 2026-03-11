@@ -7,7 +7,7 @@ import re
 from collections.abc import Generator
 from typing import Any, Optional, Union
 
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, Field, ValidationError, field_validator, model_validator
 from pydantic_core.core_schema import ValidationInfo
 
 from wxc_sdk.base import to_camel
@@ -285,7 +285,7 @@ class ExternalDocs(OABaseModel):
 class OAOperation(OABaseModel):
     summary: str
     operation_id: Optional[str] = None
-    description: str
+    description: Optional[str] = ''
     parameters: Optional[list[OAParameter]] = Field(default_factory=list)
     request_body: Optional[OARequestBody] = None
     security: Optional[Any] = None
