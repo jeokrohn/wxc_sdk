@@ -4,11 +4,11 @@ Class Python class registry for code generation
 import re
 from _operator import attrgetter
 from collections import defaultdict
+from collections.abc import Generator, Iterable
 from dataclasses import dataclass, field
 from functools import partial
 from itertools import chain
 from typing import Optional, Union
-from collections.abc import Generator, Iterable
 
 from apib.apib import (
     ApibArray,

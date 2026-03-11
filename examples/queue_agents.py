@@ -28,9 +28,9 @@ import asyncio
 import logging
 import os
 import sys
+from collections.abc import Iterable
 from contextlib import contextmanager
 from typing import List, Optional
-from collections.abc import Iterable
 
 import yaml
 from dotenv import load_dotenv

@@ -3,9 +3,9 @@ Call Settings For Me
 
 Call settings for me APIs allow a person to read or modify their settings.
 """
+from collections.abc import Generator
 from dataclasses import dataclass
 from typing import Optional
-from collections.abc import Generator
 
 from pydantic import TypeAdapter
 

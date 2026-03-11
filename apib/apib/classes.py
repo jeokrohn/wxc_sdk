@@ -1,8 +1,8 @@
 import logging
 from collections import defaultdict
+from collections.abc import Generator
 from itertools import chain
 from typing import Any, ClassVar, Literal, NamedTuple, Optional, Union
-from collections.abc import Generator
 
 from pydantic import BaseModel, Field, TypeAdapter, ValidationError, field_validator, model_validator
 

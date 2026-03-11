@@ -5,7 +5,7 @@ import asyncio
 import os
 import random
 from collections import defaultdict
-from collections.abc import Iterable
+from collections.abc import Generator, Iterable
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import date, timedelta
@@ -14,7 +14,6 @@ from itertools import chain, zip_longest
 from operator import attrgetter
 from random import randint
 from typing import Literal, Optional, Union
-from collections.abc import Generator
 
 from test_helper.digittree import DigitTree
 from test_helper.randomlocation import Address, NpaInfo, RandomLocation
