@@ -1183,6 +1183,16 @@ The method name is a link to the method documentation.
         Retrieve a list of Translation Patterns
    * - :meth:`api.telephony.call_routing.tp.update <wxc_sdk.telephony.call_routing.translation_pattern.TranslationPatternsApi.update>`
         Modify a Translation Pattern
+   * - :meth:`api.telephony.caller_reputation_provider.get <wxc_sdk.telephony.caller_reputation.CallerReputationProviderApi.get>`
+        Get Caller Reputation Provider Service Settings
+   * - :meth:`api.telephony.caller_reputation_provider.providers <wxc_sdk.telephony.caller_reputation.CallerReputationProviderApi.providers>`
+        Get Caller Reputation Provider Providers
+   * - :meth:`api.telephony.caller_reputation_provider.status <wxc_sdk.telephony.caller_reputation.CallerReputationProviderApi.status>`
+        Get Caller Reputation Provider Status
+   * - :meth:`api.telephony.caller_reputation_provider.unlock <wxc_sdk.telephony.caller_reputation.CallerReputationProviderApi.unlock>`
+        Unlock Caller Reputation Provider
+   * - :meth:`api.telephony.caller_reputation_provider.update <wxc_sdk.telephony.caller_reputation.CallerReputationProviderApi.update>`
+        Update Caller Reputation Provider Service Settings
    * - :meth:`api.telephony.callpark.available_agents <wxc_sdk.telephony.callpark.CallParkApi.available_agents>`
         Get available agents from Call Parks
    * - :meth:`api.telephony.callpark.available_recalls <wxc_sdk.telephony.callpark.CallParkApi.available_recalls>`

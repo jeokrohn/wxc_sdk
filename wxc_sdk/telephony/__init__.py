@@ -8,6 +8,7 @@ from typing import Optional
 from pydantic import Field, TypeAdapter, field_validator
 
 from wxc_sdk.telephony.emergency_address import EmergencyAddressApi
+from .caller_reputation import CallerReputationProviderApi
 
 from ..api_child import ApiChild
 from ..base import ApiModel, enum_str, plus1, to_camel
@@ -580,6 +581,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     call_controls_members: CallControlsMembersApi
     call_intercept: LocationInterceptApi
     call_routing: CallRoutingApi
+    caller_reputation_provider: CallerReputationProviderApi
     calls: CallsApi
     callpark: CallParkApi
     callpark_extension: CallparkExtensionApi
@@ -634,6 +636,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         self.call_intercept = LocationInterceptApi(session=session)
         self.call_routing = CallRoutingApi(session=session)
         self.call_recording = CallRecordingSettingsApi(session=session)
+        self.caller_reputation_provider = CallerReputationProviderApi(session=session)
         self.calls = CallsApi(session=session)
         self.callpark = CallParkApi(session=session)
         self.callpark_extension = CallparkExtensionApi(session=session)

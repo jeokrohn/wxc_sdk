@@ -37,22 +37,22 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsAvailableNumbersApi', 'AsBargeApi', 'AsCQPolicyApi', 'AsCallBridgeApi', 'AsCallControlsMembersApi',
            'AsCallInterceptApi', 'AsCallParkApi', 'AsCallPickupApi', 'AsCallPolicyApi', 'AsCallQueueAgentsApi',
            'AsCallQueueApi', 'AsCallRecordingApi', 'AsCallRecordingJobsApi', 'AsCallRecordingSettingsApi',
-           'AsCallRoutingApi', 'AsCallWaitingApi', 'AsCallerIdApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi',
-           'AsCallsApi', 'AsConferenceControlsApi', 'AsConvergedRecordingsApi', 'AsCustomerExperienceEssentialsApi',
-           'AsDECTDevicesApi', 'AsDetailedCDRApi', 'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi',
-           'AsDevicesApi', 'AsDevicesDynamicSettingsApi', 'AsDialPlanApi', 'AsDigitPatternsApi',
-           'AsDisableCallingLocationJobsApi', 'AsDndApi', 'AsECBNApi', 'AsEmergencyAddressApi', 'AsEventsApi',
-           'AsExecAssistantApi', 'AsExecutiveSettingsApi', 'AsFeatureAccessApi', 'AsFeatureSelector',
-           'AsForwardingApi', 'AsGoOverrideApi', 'AsGroupsApi', 'AsGuestCallingApi', 'AsGuestManagementApi',
-           'AsHotDeskApi', 'AsHotDeskingSigninViaVoicePortalApi', 'AsHotelingApi', 'AsHuntGroupApi',
-           'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi',
-           'AsLocationAccessCodesApi', 'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi',
-           'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMSTeamsSettingApi',
-           'AsManageNumbersJobsApi', 'AsMeAnonCallsApi', 'AsMeBargeApi', 'AsMeCallBlockApi', 'AsMeCallCenterApi',
-           'AsMeCallNotifyApi', 'AsMeCallParkApi', 'AsMeCallPickupApi', 'AsMeCallPoliciesApi', 'AsMeCallWaitingApi',
-           'AsMeCallerIdApi', 'AsMeDNDApi', 'AsMeEndpointsApi', 'AsMeExecutiveApi', 'AsMeForwardingApi',
-           'AsMeModeManagementApi', 'AsMePersonalAssistantApi', 'AsMePriorityAlertApi', 'AsMeRecordingApi',
-           'AsMeSNRApi', 'AsMeSchedulesApi', 'AsMeSelectiveAcceptApi', 'AsMeSelectiveForwardApi',
+           'AsCallRoutingApi', 'AsCallWaitingApi', 'AsCallerIdApi', 'AsCallerReputationProviderApi',
+           'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi', 'AsConferenceControlsApi',
+           'AsConvergedRecordingsApi', 'AsCustomerExperienceEssentialsApi', 'AsDECTDevicesApi', 'AsDetailedCDRApi',
+           'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDevicesDynamicSettingsApi',
+           'AsDialPlanApi', 'AsDigitPatternsApi', 'AsDisableCallingLocationJobsApi', 'AsDndApi', 'AsECBNApi',
+           'AsEmergencyAddressApi', 'AsEventsApi', 'AsExecAssistantApi', 'AsExecutiveSettingsApi',
+           'AsFeatureAccessApi', 'AsFeatureSelector', 'AsForwardingApi', 'AsGoOverrideApi', 'AsGroupsApi',
+           'AsGuestCallingApi', 'AsGuestManagementApi', 'AsHotDeskApi', 'AsHotDeskingSigninViaVoicePortalApi',
+           'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi',
+           'AsLicensesApi', 'AsLocationAccessCodesApi', 'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi',
+           'AsLocationMoHApi', 'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi',
+           'AsMSTeamsSettingApi', 'AsManageNumbersJobsApi', 'AsMeAnonCallsApi', 'AsMeBargeApi', 'AsMeCallBlockApi',
+           'AsMeCallCenterApi', 'AsMeCallNotifyApi', 'AsMeCallParkApi', 'AsMeCallPickupApi', 'AsMeCallPoliciesApi',
+           'AsMeCallWaitingApi', 'AsMeCallerIdApi', 'AsMeDNDApi', 'AsMeEndpointsApi', 'AsMeExecutiveApi',
+           'AsMeForwardingApi', 'AsMeModeManagementApi', 'AsMePersonalAssistantApi', 'AsMePriorityAlertApi',
+           'AsMeRecordingApi', 'AsMeSNRApi', 'AsMeSchedulesApi', 'AsMeSelectiveAcceptApi', 'AsMeSelectiveForwardApi',
            'AsMeSelectiveRejectApi', 'AsMeSequentialRingApi', 'AsMeSettingsApi', 'AsMeSimRingApi', 'AsMeVoicemailApi',
            'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
            'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi',
@@ -22934,6 +22934,111 @@ class AsCallRoutingApi(AsApiChild, base='telephony/config'):
         self.tp = AsTranslationPatternsApi(session=session)
 
 
+class AsCallerReputationProviderApi(AsApiChild, base='telephony/config/serviceSettings/callerReputationProvider'):
+    """
+    Webex Calling Integration with calling reputation provider
+
+    Webex Calling integrates with telephony Calling Reputation Providers to enhance call security and reduce unwanted
+    or fraudulent calls.
+
+    Webex Calling offers a comprehensive, secure, and reliable cloud PBX solution with several features that support
+    call quality and security.
+    """
+
+    async def get(self, organization_id: str = None) -> ReputationProviderSettings:
+        """
+        Get Caller Reputation Provider Service Settings
+
+        Retrieves the configuration and status of the caller reputation provider service for Webex Calling.
+
+        :param organization_id: Unique identifier for the organization.
+        :type organization_id: str
+        :rtype: :class:`ReputationProviderSettings`
+        """
+        params = {}
+        if organization_id is not None:
+            params['organizationId'] = organization_id
+        url = self.ep()
+        data = await super().get(url, params=params)
+        r = ReputationProviderSettings.model_validate(data)
+        return r
+
+    async def update(self, settings: ReputationProviderSettings, organization_id: str = None):
+        """
+        Update Caller Reputation Provider Service Settings
+
+        Updates the configuration of the caller reputation provider service for Webex Calling.
+
+        :param settings: New settings for caller reputation provider service
+        :type settings: :class:`ReputationProviderSettings`
+        :param organization_id: Unique identifier for the organization.
+        :type organization_id: str
+        :rtype: None
+        """
+        params = {}
+        if organization_id is not None:
+            params['organizationId'] = organization_id
+        body = settings.update()
+        url = self.ep()
+        await super().put(url, params=params, json=body)
+
+    async def unlock(self, rep_id: str, organization_id: str = None):
+        """
+        Unlock Caller Reputation Provider
+
+        Unlocks the caller reputation provider for Webex Calling.
+
+        :param rep_id: Unique identifier for the reputation provider.
+        :type rep_id: str
+        :param organization_id: Unique identifier for the organization.
+        :type organization_id: str
+        :rtype: None
+        """
+        params = {}
+        if organization_id is not None:
+            params['organizationId'] = organization_id
+        body = dict()
+        body['id'] = rep_id
+        url = self.ep('actions/unlock/invoke')
+        await super().post(url, params=params, json=body)
+
+    async def providers(self, organization_id: str = None) -> list[CallerReputationProviderProvider]:
+        """
+        Get Caller Reputation Provider Providers
+
+        Retrieves the list of available caller reputation providers and their regions for Webex Calling.
+
+        :param organization_id: Unique identifier for the organization.
+        :type organization_id: str
+        :rtype: list[CallerReputationProviderProvider]
+        """
+        params = {}
+        if organization_id is not None:
+            params['organizationId'] = organization_id
+        url = self.ep('providers')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[CallerReputationProviderProvider]).validate_python(data['providers'])
+        return r
+
+    async def status(self, organization_id: str = None) -> ReputationProviderStatus:
+        """
+        Get Caller Reputation Provider Status
+
+        Retrieves the current status of the caller reputation provider integration for Webex Calling.
+
+        :param organization_id: Unique identifier for the organization.
+        :type organization_id: str
+        :rtype: :class:`ReputationProviderStatus`
+        """
+        params = {}
+        if organization_id is not None:
+            params['organizationId'] = organization_id
+        url = self.ep('status')
+        data = await super().get(url, params=params)
+        r = ReputationProviderStatus.model_validate(data)
+        return r
+
+
 class AsCallparkExtensionApi(AsApiChild, base='telephony'):
     """
     Call Park Extension API
@@ -34607,6 +34712,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     call_controls_members: AsCallControlsMembersApi
     call_intercept: AsLocationInterceptApi
     call_routing: AsCallRoutingApi
+    caller_reputation_provider: AsCallerReputationProviderApi
     calls: AsCallsApi
     callpark: AsCallParkApi
     callpark_extension: AsCallparkExtensionApi
@@ -34661,6 +34767,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         self.call_intercept = AsLocationInterceptApi(session=session)
         self.call_routing = AsCallRoutingApi(session=session)
         self.call_recording = AsCallRecordingSettingsApi(session=session)
+        self.caller_reputation_provider = AsCallerReputationProviderApi(session=session)
         self.calls = AsCallsApi(session=session)
         self.callpark = AsCallParkApi(session=session)
         self.callpark_extension = AsCallparkExtensionApi(session=session)

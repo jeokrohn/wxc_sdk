@@ -16,6 +16,7 @@ Subpackages
    wxc_sdk.telephony.call_contols_members
    wxc_sdk.telephony.call_recording
    wxc_sdk.telephony.call_routing
+   wxc_sdk.telephony.caller_reputation
    wxc_sdk.telephony.callqueue
    wxc_sdk.telephony.conference
    wxc_sdk.telephony.cx_essentials

@@ -1,6 +1,7 @@
 Release history
 ===============
 
+- feat: new api :attr:`api.telephony.caller_reputation_provider <wxc_sdk.telephony.TelephonyApi.caller_reputation_provider>`
 - feat: new endpoint :meth:`api.me.contact_center_extensions <wxc_sdk.me.MeSettingsApi.contact_center_extensions>`
 - feat: new endpoint :meth:`api.telephony.playlist.usage <wxc_sdk.telephony.playlists.PlayListApi.usage>`
 - feat: new api :attr:`api.telephony.call_controls_members <wxc_sdk.telephony.TelephonyApi.call_controls_members>`
