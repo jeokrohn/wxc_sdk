@@ -1,13 +1,20 @@
 from typing import Optional
 
 from pydantic import TypeAdapter
+
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 
 __all__ = ['AssignedAssistants', 'MeExecutiveApi']
 
-from wxc_sdk.person_settings.executive import ExecAlert, ExecOrAssistant, AssistantSettings, ExecCallFiltering, \
-    ExecCallFilteringCriteria, ExecScreening
+from wxc_sdk.person_settings.executive import (
+    AssistantSettings,
+    ExecAlert,
+    ExecCallFiltering,
+    ExecCallFilteringCriteria,
+    ExecOrAssistant,
+    ExecScreening,
+)
 
 
 class AssignedAssistants(ApiModel):

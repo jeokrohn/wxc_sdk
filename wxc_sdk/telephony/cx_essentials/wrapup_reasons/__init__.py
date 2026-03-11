@@ -1,7 +1,7 @@
 """
 Customer Experience Essentials Wrap Up Reasons API
 """
-from typing import Optional, List
+from typing import List, Optional
 
 from pydantic import TypeAdapter
 

@@ -3,9 +3,9 @@ Person PTT settings API
 """
 from typing import Optional, Union
 
-from .common import PersonSettingsApiChild
 from ..base import ApiModel
 from ..base import SafeEnum as Enum
+from .common import PersonSettingsApiChild
 
 __all__ = ['PTTConnectionType', 'PushToTalkAccessType', 'PushToTalkSettings', 'PushToTalkApi']
 

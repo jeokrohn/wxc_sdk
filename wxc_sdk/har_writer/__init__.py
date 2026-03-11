@@ -4,7 +4,7 @@ import re
 from collections.abc import Callable
 from dataclasses import dataclass
 from io import TextIOBase
-from typing import Union, Optional
+from typing import Optional, Union
 
 from aiohttp import ClientResponse
 from requests import Response
@@ -12,7 +12,7 @@ from requests import Response
 import wxc_sdk
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsWebexSimpleApi
-from wxc_sdk.har_writer.har import HAREntry, HARRequest, HARResponse, HARLog, HARCreator, HAR
+from wxc_sdk.har_writer.har import HAR, HARCreator, HAREntry, HARLog, HARRequest, HARResponse
 
 __all__ = ['HarWriter']
 

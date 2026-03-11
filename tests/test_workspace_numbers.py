@@ -6,8 +6,8 @@ import random
 from dataclasses import dataclass
 from typing import ClassVar
 
-from tests.base import TestCaseWithLog, async_test, TestWithLocations
-from tests.testutil import create_workspace_with_webex_calling, as_available_tns
+from tests.base import TestCaseWithLog, TestWithLocations, async_test
+from tests.testutil import as_available_tns, create_workspace_with_webex_calling
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.common import PatternAction
 from wxc_sdk.locations import Location

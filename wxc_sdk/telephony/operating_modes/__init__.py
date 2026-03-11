@@ -1,8 +1,8 @@
 from collections.abc import Generator
-from datetime import time, date
-from typing import Optional, List, Annotated
+from datetime import date, time
+from typing import Annotated, List, Optional
 
-from pydantic import TypeAdapter, PlainSerializer
+from pydantic import PlainSerializer, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel

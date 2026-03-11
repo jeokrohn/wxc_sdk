@@ -18,7 +18,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from ..api_child import ApiChild
-from ..base import to_camel, ApiModel, webex_id_to_uuid
+from ..base import ApiModel, to_camel, webex_id_to_uuid
 from ..rest import RestSession
 
 

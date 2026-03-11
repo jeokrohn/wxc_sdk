@@ -1,7 +1,7 @@
 import re
 from typing import Optional
 
-from pydantic import TypeAdapter, Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum

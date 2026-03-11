@@ -1,7 +1,7 @@
 import asyncio
 
 from tests.base import TestCaseWithLog, async_test
-from tests.testutil import us_location_info, as_available_tns
+from tests.testutil import as_available_tns, us_location_info
 from wxc_sdk.as_api import AsWebexSimpleApi
 
 

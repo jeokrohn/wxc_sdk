@@ -4,7 +4,7 @@ from typing import Optional
 from pydantic import TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel, to_camel, SafeEnum
+from wxc_sdk.base import ApiModel, SafeEnum, to_camel
 
 __all__ = ['Authorization', 'AuthorizationType', 'AuthorizationsApi']
 

@@ -8,7 +8,7 @@ from pydantic import Field
 
 from ...base import ApiModel
 from ...base import SafeEnum as Enum
-from ...common import Greeting, AnnAudioFile
+from ...common import AnnAudioFile, Greeting
 from ...common.schedules import ScheduleLevel
 from ...rest import RestSession
 

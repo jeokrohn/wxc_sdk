@@ -3,12 +3,12 @@ Webhook types and API
 """
 import datetime
 from collections.abc import Generator
-from typing import Optional, Union, ClassVar
+from typing import ClassVar, Optional, Union
 
-from pydantic import Field, Extra, model_validator
+from pydantic import Extra, Field, model_validator
 
 from ..api_child import ApiChild
-from ..base import ApiModel, webex_id_to_uuid, enum_str
+from ..base import ApiModel, enum_str, webex_id_to_uuid
 from ..base import SafeEnum as Enum
 
 __all__ = ['WebhookEventType', 'WebhookResource', 'WebhookStatus', 'Webhook', 'WebhookEventData',

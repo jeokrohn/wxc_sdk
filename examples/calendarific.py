@@ -5,7 +5,7 @@ To use the API you need an API key. There are various pricing models: https://ca
 """
 import os
 from datetime import date
-from typing import Literal, List, Union, Any
+from typing import Any, List, Literal, Union
 
 import requests
 from pydantic import BaseModel, Field, TypeAdapter, field_validator

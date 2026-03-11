@@ -4,13 +4,13 @@ Paging group API
 """
 import json
 from collections.abc import Generator
-from typing import Optional, List, Dict
+from typing import Dict, List, Optional
 
 from pydantic import Field
 
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel
-from ..common import UserType, DirectLineCallerIdName
+from ..common import DirectLineCallerIdName, UserType
 
 __all__ = ['PagingApi', 'Paging', 'PagingAgent']
 

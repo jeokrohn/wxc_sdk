@@ -41,7 +41,7 @@ from examples.service_app import SERVICE_APP_ENVS, env_path, get_tokens
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.as_rest import AsRestError
 from wxc_sdk.har_writer import HarWriter
-from wxc_sdk.person_settings.permissions_out import DigitPattern, Action
+from wxc_sdk.person_settings.permissions_out import Action, DigitPattern
 from wxc_sdk.telephony.location import TelephonyLocation
 from wxc_sdk.tokens import Tokens
 

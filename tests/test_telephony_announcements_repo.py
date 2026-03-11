@@ -10,14 +10,14 @@ from contextlib import contextmanager
 from itertools import chain
 from unittest import skip
 
-from tests.base import async_test, TestWithLocations
+from tests.base import TestWithLocations, async_test
 from wxc_sdk.as_rest import AsRestError
-from wxc_sdk.common import AnnAudioFile, Greeting, AnnouncementLevel
+from wxc_sdk.common import AnnAudioFile, AnnouncementLevel, Greeting
 from wxc_sdk.locations import Location
 from wxc_sdk.telephony.announcements_repo import RepoAnnouncement
 from wxc_sdk.telephony.autoattendant import AutoAttendant
 from wxc_sdk.telephony.callqueue import CallQueue
-from wxc_sdk.telephony.location.moh import LocationMoHSetting, LocationMoHGreetingType
+from wxc_sdk.telephony.location.moh import LocationMoHGreetingType, LocationMoHSetting
 
 
 @skip('Asked to stop testing by Bob Russel')

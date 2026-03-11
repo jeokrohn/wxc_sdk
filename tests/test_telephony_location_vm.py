@@ -4,8 +4,8 @@ Test cases for location voicemail settings
 import random
 from concurrent.futures import ThreadPoolExecutor
 
-from wxc_sdk.telephony.location.vm import LocationVoiceMailSettings
 from tests.base import TestWithLocations
+from wxc_sdk.telephony.location.vm import LocationVoiceMailSettings
 
 
 class Test(TestWithLocations):

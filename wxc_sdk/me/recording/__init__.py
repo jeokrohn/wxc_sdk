@@ -5,7 +5,7 @@ from wxc_sdk.api_child import ApiChild
 __all__ = ['MeRecordingApi', 'MeRecordingSettings', 'MeRecordingVendor']
 
 from wxc_sdk.base import ApiModel
-from wxc_sdk.person_settings.call_recording import Record, NotificationType
+from wxc_sdk.person_settings.call_recording import NotificationType, Record
 
 
 class MeRecordingVendor(ApiModel):

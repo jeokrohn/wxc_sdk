@@ -10,26 +10,26 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import date, timedelta
 from functools import reduce
-from itertools import zip_longest, chain
+from itertools import chain, zip_longest
 from operator import attrgetter
 from random import randint
-from typing import Generator, Optional, Union, Literal
+from typing import Generator, Literal, Optional, Union
 
 from test_helper.digittree import DigitTree
-from test_helper.randomlocation import RandomLocation, Address, NpaInfo
+from test_helper.randomlocation import Address, NpaInfo, RandomLocation
 from test_helper.randomuser import User
 from test_helper.randomuserutil import RandomUserUtil
 
 from examples.calendarific import CalendarifiyApi
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsWebexSimpleApi
-from wxc_sdk.common import NumberState, IdAndName
-from wxc_sdk.common.schedules import ScheduleType, Schedule, Event, ScheduleLevel
-from wxc_sdk.licenses import LicenseRequest, LicenseProperties, License
+from wxc_sdk.common import IdAndName, NumberState
+from wxc_sdk.common.schedules import Event, Schedule, ScheduleLevel, ScheduleType
+from wxc_sdk.licenses import License, LicenseProperties, LicenseRequest
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person
 from wxc_sdk.rest import RestError
-from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
+from wxc_sdk.telephony import NumberListPhoneNumber, NumberType
 
 __all__ = ['as_available_tns', 'available_tns', 'available_extensions', 'LocationInfo', 'us_location_info',
            'calling_users', 'available_numbers', 'available_extensions_gen', 'get_or_create_holiday_schedule',
@@ -40,18 +40,27 @@ __all__ = ['as_available_tns', 'available_tns', 'available_extensions', 'Locatio
            'new_operating_mode_names', 'create_operating_mode', 'new_aa_names', 'LocationSettings']
 
 from wxc_sdk.telephony.callqueue import CallQueue, CallQueueCallPolicies, QueueSettings
-
 from wxc_sdk.telephony.devices import MACState
 from wxc_sdk.telephony.hg_and_cq import Agent, CallingLineIdPolicy
 from wxc_sdk.telephony.location import TelephonyLocation
-from wxc_sdk.telephony.operating_modes import OperatingModeHoliday, OperatingModeRecurrence, \
-    OperatingModeRecurYearlyByDate, Month, OperatingMode, OperatingModeSchedule
+from wxc_sdk.telephony.operating_modes import (
+    Month,
+    OperatingMode,
+    OperatingModeHoliday,
+    OperatingModeRecurrence,
+    OperatingModeRecurYearlyByDate,
+    OperatingModeSchedule,
+)
 from wxc_sdk.telephony.prem_pstn.route_group import RouteGroup
 from wxc_sdk.telephony.prem_pstn.trunk import Trunk
-
 from wxc_sdk.workspace_locations import WorkspaceLocation
-from wxc_sdk.workspaces import Workspace, WorkspaceCalling, CallingType, WorkspaceWebexCalling, \
-    WorkspaceSupportedDevices
+from wxc_sdk.workspaces import (
+    CallingType,
+    Workspace,
+    WorkspaceCalling,
+    WorkspaceSupportedDevices,
+    WorkspaceWebexCalling,
+)
 
 
 def available_numbers(numbers: Iterable[str], seed: str = None) -> Generator[str, None, None]:

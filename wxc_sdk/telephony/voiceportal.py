@@ -7,14 +7,13 @@ from typing import Optional
 
 from pydantic import Field
 
-from .vm_rules import BlockPreviousPasscodes, BlockRepeatedDigits, BlockContiguousSequences, PinLength
 from ..api_child import ApiChild
 from ..base import ApiModel
+from .vm_rules import BlockContiguousSequences, BlockPreviousPasscodes, BlockRepeatedDigits, PinLength
 
 __all__ = ['VoicePortalSettings', 'FailedAttempts', 'ExpirePasscode', 'PasscodeRules', 'VoicePortalApi']
 
 from ..common import DirectLineCallerIdName
-
 from ..person_settings.available_numbers import AvailableNumber
 
 

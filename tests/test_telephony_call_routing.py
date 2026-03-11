@@ -2,8 +2,8 @@ import asyncio
 import base64
 import random
 import re
-from collections import defaultdict, Counter
-from collections.abc import Generator, Callable
+from collections import Counter, defaultdict
+from collections.abc import Callable, Generator
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from dataclasses import dataclass, field
@@ -11,26 +11,47 @@ from functools import reduce
 from itertools import chain
 from json import dumps, loads
 from operator import attrgetter
-from random import shuffle, choice, randint
+from random import choice, randint, shuffle
 from time import sleep
-from typing import ClassVar, Optional, Union, NamedTuple
+from typing import ClassVar, NamedTuple, Optional, Union
 from unittest import skip
 
 from tests.base import TestCaseWithLog, async_test
-from tests.testutil import calling_users, us_location_info, LocationInfo, available_extensions, available_tns, \
-    as_available_tns, random_users, available_numbers, create_calling_user
+from tests.testutil import (
+    LocationInfo,
+    as_available_tns,
+    available_extensions,
+    available_numbers,
+    available_tns,
+    calling_users,
+    create_calling_user,
+    random_users,
+    us_location_info,
+)
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.as_rest import AsRestError
 from wxc_sdk.base import webex_id_to_uuid
-from wxc_sdk.common import RouteType, RouteIdentity, UserType, NumberState, PatternAction, OwnerType
+from wxc_sdk.common import NumberState, OwnerType, PatternAction, RouteIdentity, RouteType, UserType
 from wxc_sdk.common.schedules import Schedule, ScheduleType
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person, PhoneNumber, PhoneNumberType
-from wxc_sdk.person_settings.permissions_out import DigitPattern, Action, OutgoingPermissions, CallTypePermission
+from wxc_sdk.person_settings.permissions_out import Action, CallTypePermission, DigitPattern, OutgoingPermissions
 from wxc_sdk.rest import RestError
-from wxc_sdk.telephony import OriginatorType, DestinationType, NumberType, CallSourceType, TestCallRoutingResult, \
-    HostedFeatureDestination, ServiceType, HostedUserDestination, CallSourceInfo, PbxUserDestination, \
-    NumberListPhoneNumber, TranslationPatternConfigurationLevel, NumberListPhoneNumberType
+from wxc_sdk.telephony import (
+    CallSourceInfo,
+    CallSourceType,
+    DestinationType,
+    HostedFeatureDestination,
+    HostedUserDestination,
+    NumberListPhoneNumber,
+    NumberListPhoneNumberType,
+    NumberType,
+    OriginatorType,
+    PbxUserDestination,
+    ServiceType,
+    TestCallRoutingResult,
+    TranslationPatternConfigurationLevel,
+)
 from wxc_sdk.telephony.autoattendant import AutoAttendant, AutoAttendantMenu
 from wxc_sdk.telephony.call_routing.translation_pattern import TranslationPattern, TranslationPatternLevel
 from wxc_sdk.telephony.callqueue import CallQueue
@@ -38,8 +59,8 @@ from wxc_sdk.telephony.huntgroup import HuntGroup
 from wxc_sdk.telephony.location import TelephonyLocation
 from wxc_sdk.telephony.location.internal_dialing import InternalDialing
 from wxc_sdk.telephony.prem_pstn.dial_plan import DialPlan, PatternAndAction
-from wxc_sdk.telephony.prem_pstn.route_group import RouteGroup, RGTrunk
-from wxc_sdk.telephony.prem_pstn.route_list import RouteList, NumberAndAction
+from wxc_sdk.telephony.prem_pstn.route_group import RGTrunk, RouteGroup
+from wxc_sdk.telephony.prem_pstn.route_list import NumberAndAction, RouteList
 from wxc_sdk.telephony.prem_pstn.trunk import TrunkDetail
 
 

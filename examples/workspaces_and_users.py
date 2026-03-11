@@ -11,7 +11,7 @@ from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.common import UserType
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings import TelephonyDevice
-from wxc_sdk.telephony.devices import DeviceMembersResponse, DeviceMember
+from wxc_sdk.telephony.devices import DeviceMember, DeviceMembersResponse
 
 
 async def update_members(api: AsWebexSimpleApi, device: TelephonyDevice, members: list[DeviceMember], user: Person):

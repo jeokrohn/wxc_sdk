@@ -11,12 +11,12 @@ from datetime import date
 from threading import Lock
 from typing import List
 
+from calendarific import CalendarifiyApi, Holiday
 from dotenv import load_dotenv
 
-from calendarific import CalendarifiyApi, Holiday
 from wxc_sdk import WebexSimpleApi
+from wxc_sdk.all_types import Event, Schedule, ScheduleType
 from wxc_sdk.locations import Location
-from wxc_sdk.all_types import ScheduleType, Event, Schedule
 
 log = logging.getLogger(__name__)
 

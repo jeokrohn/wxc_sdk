@@ -10,7 +10,7 @@ from unittest import skip
 
 from dotenv import load_dotenv
 
-from tests.base import TestCaseWithLog, async_test, TestWithLocations
+from tests.base import TestCaseWithLog, TestWithLocations, async_test
 from tests.testutil import calling_users, create_random_calling_user
 from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import RouteType

@@ -8,7 +8,7 @@ from contextlib import asynccontextmanager
 from functools import reduce
 from json import dumps, loads
 from random import shuffle
-from time import sleep, perf_counter
+from time import perf_counter, sleep
 from typing import NamedTuple
 
 from dateutil import tz
@@ -16,7 +16,7 @@ from dateutil import tz
 from tests.base import TestCaseWithLog, TestWithLocations
 from tests.testutil import as_available_tns
 from wxc_sdk.common import NumberState
-from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
+from wxc_sdk.telephony import NumberListPhoneNumber, NumberType
 from wxc_sdk.telephony.jobs import NumberItem, NumberJob
 from wxc_sdk.telephony.location import TelephonyLocation
 

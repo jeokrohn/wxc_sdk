@@ -8,10 +8,10 @@ from typing import Optional, Union
 from pydantic import Field
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 
-from .common import PersonSettingsApiChild
 from ..base import ApiModel
 from ..base import SafeEnum as Enum
 from ..common import Greeting
+from .common import PersonSettingsApiChild
 
 __all__ = ['InterceptTypeIncoming', 'InterceptNumber', 'InterceptAnnouncements', 'InterceptSettingIncoming',
            'InterceptTypeOutgoing', 'InterceptSettingOutgoing', 'InterceptSetting', 'CallInterceptApi']

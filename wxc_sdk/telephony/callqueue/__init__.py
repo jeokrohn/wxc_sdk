@@ -1,19 +1,20 @@
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import Optional, List
+from typing import List, Optional
 
 from pydantic import Field
-from .agents import CallQueueAgentsApi
-from .announcement import AnnouncementApi
-from .policies import CQPolicyApi
-from ..forwarding import ForwardingApi, FeatureSelector
-from ..hg_and_cq import HGandCQ, Policy, Agent
+
 from ...api_child import ApiChild
 from ...base import ApiModel
 from ...base import SafeEnum as Enum
-from ...common import RingPattern, Greeting, AnnAudioFile, IdAndName, UserNumber, UserType
+from ...common import AnnAudioFile, Greeting, IdAndName, RingPattern, UserNumber, UserType
 from ...person_settings.available_numbers import AvailableNumber
 from ...rest import RestSession
+from ..forwarding import FeatureSelector, ForwardingApi
+from ..hg_and_cq import Agent, HGandCQ, Policy
+from .agents import CallQueueAgentsApi
+from .announcement import AnnouncementApi
+from .policies import CQPolicyApi
 
 __all__ = ['CallBounce', 'DistinctiveRing', 'CallQueueCallPolicies', 'OverflowAction', 'OverflowSetting', 'WaitMode',
            'WaitMessageSetting', 'AudioSource', 'WelcomeMessageSetting', 'ComfortMessageSetting', 'MohMessageSetting',

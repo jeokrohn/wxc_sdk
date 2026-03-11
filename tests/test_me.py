@@ -6,13 +6,13 @@ import base64
 import json
 from concurrent.futures.thread import ThreadPoolExecutor
 from random import choice
-from typing import Union, List
+from typing import List, Union
 
 from pydantic import TypeAdapter
 
 from tests.base import TestWithRandomUserApi, async_test
-from wxc_sdk.all_types import *
 from wxc_sdk import WebexSimpleApi
+from wxc_sdk.all_types import *
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.as_rest import AsRestError
 

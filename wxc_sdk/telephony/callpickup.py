@@ -1,5 +1,5 @@
 from collections.abc import Generator
-from typing import Optional, Literal
+from typing import Literal, Optional
 
 from pydantic import Field
 

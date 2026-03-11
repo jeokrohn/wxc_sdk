@@ -2,7 +2,7 @@ from typing import Optional
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
-from wxc_sdk.common.selective import SelectiveCriteria, SelectiveCrit
+from wxc_sdk.common.selective import SelectiveCrit, SelectiveCriteria
 
 __all__ = ['MeCallNotifyApi', 'CallNotify', 'CallNotifyCriteria']
 

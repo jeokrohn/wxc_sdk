@@ -1,13 +1,13 @@
 """
 Person numbers API
 """
-from typing import Optional, Literal
+from typing import Literal, Optional
 
 from pydantic import Field
 
-from .common import PersonSettingsApiChild
 from ..base import ApiModel
-from ..common import RingPattern, PatternAction
+from ..common import PatternAction, RingPattern
+from .common import PersonSettingsApiChild
 
 __all__ = ['PersonPhoneNumber', 'PersonNumbers', 'UpdatePersonPhoneNumber', 'UpdatePersonNumbers', 'NumbersApi']
 

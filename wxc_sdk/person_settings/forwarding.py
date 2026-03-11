@@ -3,8 +3,8 @@ Call forwarding API
 """
 from typing import Optional
 
-from .common import PersonSettingsApiChild
 from ..base import ApiModel
+from .common import PersonSettingsApiChild
 
 __all__ = ['CallForwardingCommon', 'CallForwardingAlways', 'CallForwardingNoAnswer', 'CallForwardingPerson',
            'PersonForwardingSetting', 'PersonForwardingApi']

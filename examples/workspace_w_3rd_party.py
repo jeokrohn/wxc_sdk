@@ -62,7 +62,7 @@ from collections import defaultdict
 from collections.abc import Generator
 from contextlib import contextmanager
 from dataclasses import dataclass, field
-from itertools import zip_longest, chain
+from itertools import chain, zip_longest
 
 from dotenv import load_dotenv
 
@@ -75,8 +75,13 @@ from wxc_sdk.licenses import License
 from wxc_sdk.telephony.devices import MACState, MACValidationResponse
 from wxc_sdk.telephony.location import TelephonyLocation
 from wxc_sdk.tokens import Tokens
-from wxc_sdk.workspaces import Workspace, WorkspaceSupportedDevices, WorkspaceCalling, CallingType, \
-    WorkspaceWebexCalling
+from wxc_sdk.workspaces import (
+    CallingType,
+    Workspace,
+    WorkspaceCalling,
+    WorkspaceSupportedDevices,
+    WorkspaceWebexCalling,
+)
 
 MAC_VALIDATION_BATCH_SIZE = 100
 

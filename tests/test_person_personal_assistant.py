@@ -5,8 +5,11 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from tests.base import TestCaseWithUsers, async_test
-from wxc_sdk.person_settings.personal_assistant import PersonalAssistant, PersonalAssistantPresence, \
-    PersonalAssistantAlerting
+from wxc_sdk.person_settings.personal_assistant import (
+    PersonalAssistant,
+    PersonalAssistantAlerting,
+    PersonalAssistantPresence,
+)
 
 
 class TestPersonalAssistant(TestCaseWithUsers):

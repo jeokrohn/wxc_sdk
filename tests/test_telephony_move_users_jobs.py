@@ -5,7 +5,7 @@ from time import sleep
 from tests.base import TestCaseWithUsers
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person
-from wxc_sdk.telephony.jobs import MoveUsersList, MoveUser
+from wxc_sdk.telephony.jobs import MoveUser, MoveUsersList
 
 
 @dataclass(init=False, repr=False)

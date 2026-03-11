@@ -14,7 +14,7 @@ from requests_toolbelt import MultipartEncoder
 
 from ...api_child import ApiChild
 from ...base import ApiModel
-from ...common import IdAndName, MediaFileType, AnnouncementLevel
+from ...common import AnnouncementLevel, IdAndName, MediaFileType
 
 __all__ = ['RepoAnnouncement', 'AnnouncementsRepositoryApi', 'RepositoryUsage', 'FeatureReference']
 

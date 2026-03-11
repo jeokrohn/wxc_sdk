@@ -3,17 +3,17 @@ Auto attendant data types and API
 """
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import Optional, List
+from typing import List, Optional
 
 from pydantic import Field, TypeAdapter
 
-from .forwarding import ForwardingApi, FeatureSelector
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel
 from ..base import SafeEnum as Enum
-from ..common import Greeting, AlternateNumber, MediaFileType, AnnAudioFile, DirectLineCallerIdName
+from ..common import AlternateNumber, AnnAudioFile, DirectLineCallerIdName, Greeting, MediaFileType
 from ..person_settings.available_numbers import AvailableNumber
 from ..rest import RestSession
+from .forwarding import FeatureSelector, ForwardingApi
 
 __all__ = ['Dialing', 'MenuKey', 'AutoAttendantAction', 'AutoAttendantKeyConfiguration',
            'AutoAttendantMenu', 'AutoAttendant', 'AutoAttendantApi', 'CallTreatmentRetry', 'ActionToBePerformed',

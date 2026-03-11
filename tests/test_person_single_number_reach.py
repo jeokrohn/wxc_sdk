@@ -4,7 +4,7 @@ from concurrent.futures.thread import ThreadPoolExecutor
 from contextlib import contextmanager
 from random import choice
 
-from tests.base import TestWithLocations, async_test, TestCaseWithUsers
+from tests.base import TestCaseWithUsers, TestWithLocations, async_test
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings.single_number_reach import SingleNumberReachNumber
 

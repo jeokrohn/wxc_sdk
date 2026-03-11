@@ -11,26 +11,26 @@ from itertools import chain
 from json import dumps, loads
 from operator import attrgetter
 from random import choice
-from typing import ClassVar, NamedTuple, Any
+from typing import Any, ClassVar, NamedTuple
 from unittest import skip
 
 from pydantic import TypeAdapter
 from test_helper.randomlocation import RandomLocation
 
-from tests.base import TestCaseWithLog, async_test, TestWithLocations
-from tests.testutil import as_available_tns, create_random_wsl, LocationSettings
+from tests.base import TestCaseWithLog, TestWithLocations, async_test
+from tests.testutil import LocationSettings, as_available_tns, create_random_wsl
 from wxc_sdk.as_rest import AsRestError
-from wxc_sdk.base import webex_id_to_uuid, ApiModel
-from wxc_sdk.common import RouteType, RouteIdentity
+from wxc_sdk.base import ApiModel, webex_id_to_uuid
+from wxc_sdk.common import RouteIdentity, RouteType
 from wxc_sdk.devices import ProductType
 from wxc_sdk.locations import Location, LocationAddress
 from wxc_sdk.people import Person
 from wxc_sdk.rest import RestError
-from wxc_sdk.telephony import NumberType, NumberListPhoneNumber, OwnerType
+from wxc_sdk.telephony import NumberListPhoneNumber, NumberType, OwnerType
 from wxc_sdk.telephony.autoattendant import AutoAttendant
 from wxc_sdk.telephony.callqueue import CallQueue
 from wxc_sdk.telephony.huntgroup import HuntGroup
-from wxc_sdk.telephony.location import TelephonyLocation, PSTNConnection, CallingLineId
+from wxc_sdk.telephony.location import CallingLineId, PSTNConnection, TelephonyLocation
 from wxc_sdk.telephony.location.internal_dialing import InternalDialing
 from wxc_sdk.telephony.paging import Paging
 from wxc_sdk.telephony.prem_pstn.trunk import Trunk
@@ -38,7 +38,6 @@ from wxc_sdk.telephony.virtual_line import VirtualLine
 from wxc_sdk.telephony.voicemail_groups import VoicemailGroup
 from wxc_sdk.workspace_locations import WorkspaceLocation
 from wxc_sdk.workspaces import Workspace
-
 
 # TODO: add test cases for floors etc. (see WorksspaceLocations test cases)
 

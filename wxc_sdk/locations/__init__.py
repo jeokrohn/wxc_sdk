@@ -9,7 +9,7 @@ spark-admin:people_read and spark-admin:people_write or spark-admin:device_read 
 combinations.
 """
 from collections.abc import Generator
-from typing import Optional, List
+from typing import List, Optional
 
 from pydantic import Field, TypeAdapter
 

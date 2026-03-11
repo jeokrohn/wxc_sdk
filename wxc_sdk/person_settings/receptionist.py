@@ -6,9 +6,9 @@ from typing import Optional, Union
 
 from pydantic import Field
 
-from .common import PersonSettingsApiChild
 from ..base import ApiModel
 from ..common import MonitoredMember
+from .common import PersonSettingsApiChild
 
 __all__ = ['ReceptionistApi', 'ReceptionistSettings']
 

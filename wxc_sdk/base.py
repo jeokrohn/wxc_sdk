@@ -3,11 +3,11 @@ import logging
 import os
 import re
 from datetime import datetime
-from typing import Optional, Union, Annotated
+from typing import Annotated, Optional, Union
 
 from aenum import Enum, extend_enum
 from dateutil import tz
-from pydantic import BaseModel, ValidationError, BeforeValidator
+from pydantic import BaseModel, BeforeValidator, ValidationError
 
 __all__ = ['StrOrDict', 'webex_id_to_uuid', 'to_camel', 'ApiModel', 'CodeAndReason', 'ApiModelWithErrors', 'plus1',
            'dt_iso_str', 'SafeEnum', 'enum_str', 'RETRY_429_MAX_WAIT', 'E164Number']

@@ -14,9 +14,8 @@ from tests.base import TestCaseWithLog, TestWithLocations, async_test
 from tests.testutil import available_mac_address, calling_users, create_workspace_with_webex_calling
 from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import DeviceType
-from wxc_sdk.devices import TagOp, Device
-from wxc_sdk.workspaces import Workspace, CallingType, WorkspaceSupportedDevices
-
+from wxc_sdk.devices import Device, TagOp
+from wxc_sdk.workspaces import CallingType, Workspace, WorkspaceSupportedDevices
 
 # TODO: validate all new endpoint signatures
 

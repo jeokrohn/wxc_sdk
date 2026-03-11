@@ -3,6 +3,7 @@ Tests for auto attendants
 """
 import asyncio
 import json
+
 # TODO: additional tests
 import random
 from contextlib import contextmanager
@@ -15,8 +16,12 @@ from wxc_sdk.common import AnnouncementLevel
 from wxc_sdk.common.schedules import Schedule
 from wxc_sdk.locations import Location
 from wxc_sdk.telephony.announcements_repo import RepoAnnouncement
-from wxc_sdk.telephony.autoattendant import AutoAttendantMenu, AutoAttendantKeyConfiguration, MenuKey, \
-    AutoAttendantAction
+from wxc_sdk.telephony.autoattendant import (
+    AutoAttendantAction,
+    AutoAttendantKeyConfiguration,
+    AutoAttendantMenu,
+    MenuKey,
+)
 from wxc_sdk.telephony.location import TelephonyLocation
 
 

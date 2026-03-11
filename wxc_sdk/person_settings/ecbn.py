@@ -13,7 +13,6 @@ __all__ = ['ECBNApi', 'ECBNQuality',
            'ECBNLocationEffectiveLevel']
 
 from wxc_sdk.common import UserType
-
 from wxc_sdk.person_settings.common import PersonSettingsApiChild
 
 

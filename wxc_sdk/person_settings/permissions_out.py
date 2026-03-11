@@ -13,11 +13,11 @@ from typing import Optional, Union
 
 from pydantic import field_validator, model_validator
 
-from .common import PersonSettingsApiChild, ApiSelector
 from ..base import ApiModel
 from ..base import SafeEnum as Enum
 from ..common import AuthCode
 from ..rest import RestSession
+from .common import ApiSelector, PersonSettingsApiChild
 
 __all__ = ['OutgoingPermissionCallType', 'Action', 'CallTypePermission', 'CallingPermissions',
            'OutgoingPermissions', 'AutoTransferNumbers', 'DigitPattern', 'DigitPatterns', 'DigitPatternsApi',

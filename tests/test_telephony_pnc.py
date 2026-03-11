@@ -4,8 +4,8 @@ Tests for location PNC settings
 import random
 from concurrent.futures import ThreadPoolExecutor
 
-from wxc_sdk.telephony.pnc import NetworkConnectionType
 from tests.base import TestWithLocations
+from wxc_sdk.telephony.pnc import NetworkConnectionType
 
 
 class TestPNC(TestWithLocations):

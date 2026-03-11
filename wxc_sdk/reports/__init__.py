@@ -6,7 +6,7 @@ import io
 import zipfile
 from collections.abc import Generator, Iterable
 from dataclasses import dataclass
-from datetime import datetime, date
+from datetime import date, datetime
 from typing import Optional
 
 from pydantic import Field, TypeAdapter

@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsWebexSimpleApi
-from wxc_sdk.as_rest import retry_request, AsRestSession
+from wxc_sdk.as_rest import AsRestSession, retry_request
 from wxc_sdk.common import RoomType
 
 SPACE_NAME = "Not so secret Sushi"

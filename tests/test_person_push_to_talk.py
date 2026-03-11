@@ -6,8 +6,8 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from dataclasses import dataclass
 
-from wxc_sdk.all_types import *
 from tests.base import TestCaseWithUsers
+from wxc_sdk.all_types import *
 
 
 class TestRead(TestCaseWithUsers):

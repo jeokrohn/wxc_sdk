@@ -7,7 +7,7 @@ from pydantic import Field
 from ..api_child import ApiChild
 from ..base import ApiModel
 from ..base import SafeEnum as Enum
-from ..common import RingPattern, PersonPlaceAgent, CallParkExtension
+from ..common import CallParkExtension, PersonPlaceAgent, RingPattern
 
 __all__ = ['CallParkRecall', 'RecallHuntGroup', 'AvailableRecallHuntGroup',
            'CallPark', 'CallParkSettings', 'LocationCallParkSettings', 'CallParkApi']

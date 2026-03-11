@@ -1,13 +1,13 @@
 import logging
 import re
 from collections import Counter
-from collections.abc import Generator, Iterable, Callable
+from collections.abc import Callable, Generator, Iterable
 from dataclasses import dataclass, field
 from io import StringIO
 from itertools import chain
 from os.path import commonprefix
-from re import subn, sub
-from typing import Any, Optional, Union, Type
+from re import sub, subn
+from typing import Any, Optional, Type, Union
 from urllib.parse import urljoin
 
 import dateutil.parser
@@ -15,9 +15,16 @@ from pydantic import TypeAdapter
 
 from apib.apib import ApibEnum
 from apib.apib.classes import ApibApi
-from apib.tools import break_line, snake_case, words_to_camel, \
-    remove_html_comments, remove_div, lines_for_docstring, simple_python_type
-from wxc_sdk.base import to_camel, ApiModel
+from apib.tools import (
+    break_line,
+    lines_for_docstring,
+    remove_div,
+    remove_html_comments,
+    simple_python_type,
+    snake_case,
+    words_to_camel,
+)
+from wxc_sdk.base import ApiModel, to_camel
 
 __all__ = ['PythonClass', 'Attribute', 'Endpoint', 'Parameter', 'PythonAPI']
 

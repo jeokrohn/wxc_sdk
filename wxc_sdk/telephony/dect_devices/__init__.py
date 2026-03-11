@@ -1,12 +1,12 @@
 from collections.abc import Generator
 from typing import Optional
 
-from pydantic import TypeAdapter, Field
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel, enum_str
 from wxc_sdk.base import SafeEnum as Enum
-from wxc_sdk.common import IdAndName, UserType, AssignedDectNetwork, UsageType
+from wxc_sdk.common import AssignedDectNetwork, IdAndName, UsageType, UserType
 from wxc_sdk.telephony.devices import AvailableMember
 
 __all__ = ['DECTNetworkModel', 'DECTNetworkDetail', 'BaseStationResult', 'BaseStationResponse', 'BaseStationsResponse',

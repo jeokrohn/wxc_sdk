@@ -2,8 +2,8 @@
 Person barge settings API
 """
 
-from .common import PersonSettingsApiChild
 from ..base import ApiModel
+from .common import PersonSettingsApiChild
 
 __all__ = ['BargeSettings', 'BargeApi']
 

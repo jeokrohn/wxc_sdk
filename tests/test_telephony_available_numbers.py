@@ -2,7 +2,7 @@ import asyncio
 from dataclasses import dataclass
 from typing import ClassVar
 
-from tests.base import TestCaseWithLog, async_test, TestCaseWithUsers
+from tests.base import TestCaseWithLog, TestCaseWithUsers, async_test
 from wxc_sdk.telephony.virtual_line import VirtualLine
 from wxc_sdk.workspaces import CallingType, Workspace
 

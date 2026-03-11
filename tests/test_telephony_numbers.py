@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from typing import ClassVar, Optional
 
 from tests.base import TestCaseWithLog, TestCaseWithUsers
-from tests.testutil import LocationInfo, us_location_info, available_tns
+from tests.testutil import LocationInfo, available_tns, us_location_info
 from wxc_sdk.all_types import *
 from wxc_sdk.telephony import TelephonyType
 

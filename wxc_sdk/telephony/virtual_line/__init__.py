@@ -6,16 +6,16 @@ from pydantic import TypeAdapter
 
 from ...api_child import ApiChild
 from ...base import ApiModel
-from ...common import PrimaryOrShared, AssignedDectNetwork, UserNumber
+from ...common import AssignedDectNetwork, PrimaryOrShared, UserNumber
 from ...locations import LocationAddress
-from ...person_settings import TelephonyDevice, AvailableNumbersApi, DndApi
+from ...person_settings import AvailableNumbersApi, DndApi, TelephonyDevice
 from ...person_settings.agent_caller_id import AgentCallerIdApi
 from ...person_settings.barge import BargeApi
 from ...person_settings.call_intercept import CallInterceptApi
 from ...person_settings.call_recording import CallRecordingApi
 from ...person_settings.call_waiting import CallWaitingApi
 from ...person_settings.callbridge import CallBridgeApi
-from ...person_settings.caller_id import ExternalCallerIdNamePolicy, CallerIdApi
+from ...person_settings.caller_id import CallerIdApi, ExternalCallerIdNamePolicy
 from ...person_settings.common import ApiSelector
 from ...person_settings.ecbn import ECBNApi
 from ...person_settings.forwarding import PersonForwardingApi

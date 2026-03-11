@@ -3,9 +3,9 @@ Calling behavior API
 """
 from typing import Optional
 
-from .common import PersonSettingsApiChild
 from ..base import ApiModel
 from ..base import SafeEnum as Enum
+from .common import PersonSettingsApiChild
 
 __all__ = ['BehaviorType', 'CallingBehavior', 'CallingBehaviorApi']
 

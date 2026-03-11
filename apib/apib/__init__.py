@@ -1,3 +1,3 @@
-from .reader import *
-from .helper import *
 from .classes import *
+from .helper import *
+from .reader import *

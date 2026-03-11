@@ -5,9 +5,9 @@ from typing import Optional, Union
 
 from pydantic import Field
 
-from .common import PersonSettingsApiChild
 from ..base import ApiModel, webex_id_to_uuid
-from ..common import MonitoredMember, CallParkExtension
+from ..common import CallParkExtension, MonitoredMember
+from .common import PersonSettingsApiChild
 
 __all__ = ['MonitoredElementMember', 'MonitoredElement', 'Monitoring',
            'MonitoringApi']

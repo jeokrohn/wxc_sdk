@@ -1,8 +1,9 @@
-from typing import Optional, ClassVar, Any
+from typing import Any, ClassVar, Optional
 
 from pydantic import model_validator
 
-from wxc_sdk.base import SafeEnum as Enum, ApiModel, E164Number
+from wxc_sdk.base import ApiModel, E164Number
+from wxc_sdk.base import SafeEnum as Enum
 from wxc_sdk.common.schedules import ScheduleType
 
 __all__ = ['SelectiveScheduleLevel', 'SelectiveFrom', 'SelectiveCriteria', 'SelectiveCrit']

@@ -1,11 +1,12 @@
 from typing import List
 
 from pydantic import TypeAdapter
+
 from wxc_sdk.api_child import ApiChild
 
 __all__ = ['CallControlsMembersApi']
 
-from wxc_sdk.telephony.calls import TelephonyCall, CallInfo
+from wxc_sdk.telephony.calls import CallInfo, TelephonyCall
 
 
 class CallControlsMembersApi(ApiChild, base='telephony/calls/members'):

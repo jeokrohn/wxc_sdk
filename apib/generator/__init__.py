@@ -4,9 +4,9 @@ from dataclasses import dataclass
 from itertools import chain
 from typing import NamedTuple
 
-from apib.apib import read_api_blueprint, ApibParseResult
-from apib.python_class import Endpoint
+from apib.apib import ApibParseResult, read_api_blueprint
 from apib.class_registry import PythonClassRegistry
+from apib.python_class import Endpoint
 from apib.tools import break_line
 
 PREAMBLE = """from collections.abc import Generator

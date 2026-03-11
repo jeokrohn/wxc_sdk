@@ -6,7 +6,7 @@ partners manage the amount of licenses provided to administrators and users. Thi
 only by an admin.
 """
 from collections.abc import Generator
-from typing import Optional, List
+from typing import List, Optional
 
 from pydantic import Field, TypeAdapter
 

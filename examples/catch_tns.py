@@ -25,7 +25,7 @@ from typing import Optional, Union
 from dotenv import load_dotenv
 
 from wxc_sdk.as_api import AsWebexSimpleApi
-from wxc_sdk.common import IdAndName, AlternateNumber, RingPattern
+from wxc_sdk.common import AlternateNumber, IdAndName, RingPattern
 from wxc_sdk.integration import Integration
 from wxc_sdk.scopes import parse_scopes
 from wxc_sdk.telephony import NumberListPhoneNumber

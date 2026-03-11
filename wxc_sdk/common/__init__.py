@@ -2,7 +2,7 @@
 Common date types and APIs
 """
 from datetime import datetime
-from typing import Optional, Any, Union
+from typing import Any, Optional, Union
 
 from pydantic import Field, field_validator, model_validator
 

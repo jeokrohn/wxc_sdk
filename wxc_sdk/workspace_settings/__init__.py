@@ -4,23 +4,21 @@ Workspace settings, mostly identical to user settings
 """
 from dataclasses import dataclass
 
-from .devices import WorkspaceDevicesApi
-from .numbers import WorkspaceNumbersApi
 from ..api_child import ApiChild
 from ..person_settings.anon_calls import AnonCallsApi
 from ..person_settings.available_numbers import AvailableNumbersApi
 from ..person_settings.barge import BargeApi
-from ..person_settings.callbridge import CallBridgeApi
 from ..person_settings.call_intercept import CallInterceptApi
 from ..person_settings.call_policy import CallPolicyApi
 from ..person_settings.call_waiting import CallWaitingApi
+from ..person_settings.callbridge import CallBridgeApi
 from ..person_settings.caller_id import CallerIdApi
 from ..person_settings.common import ApiSelector
 from ..person_settings.dnd import DndApi
 from ..person_settings.ecbn import ECBNApi
 from ..person_settings.forwarding import PersonForwardingApi
-from ..person_settings.monitoring import MonitoringApi
 from ..person_settings.moh import MusicOnHoldApi
+from ..person_settings.monitoring import MonitoringApi
 from ..person_settings.permissions_in import IncomingPermissionsApi
 from ..person_settings.permissions_out import OutgoingPermissionsApi
 from ..person_settings.priority_alert import PriorityAlertApi
@@ -33,6 +31,8 @@ from ..person_settings.sequential_ring import SequentialRingApi
 from ..person_settings.sim_ring import SimRingApi
 from ..person_settings.voicemail import VoicemailApi
 from ..rest import RestSession
+from .devices import WorkspaceDevicesApi
+from .numbers import WorkspaceNumbersApi
 
 __all__ = ['WorkspaceSettingsApi']
 

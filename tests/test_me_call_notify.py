@@ -4,6 +4,7 @@ import random
 from typing import List, Tuple
 
 from pydantic import TypeAdapter
+
 from tests.base import TestWithRandomUserApi, async_test
 from wxc_sdk.all_types import *
 from wxc_sdk.as_api import AsWebexSimpleApi

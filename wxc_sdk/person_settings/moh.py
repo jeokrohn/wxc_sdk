@@ -1,7 +1,7 @@
 from typing import Optional
 
 from wxc_sdk.base import ApiModel
-from wxc_sdk.common import Greeting, AnnAudioFile
+from wxc_sdk.common import AnnAudioFile, Greeting
 from wxc_sdk.person_settings.common import PersonSettingsApiChild
 
 __all__ = ['MusicOnHold', 'MusicOnHoldApi']

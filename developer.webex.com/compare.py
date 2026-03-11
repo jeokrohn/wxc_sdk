@@ -16,15 +16,15 @@ import argparse
 import logging
 import os.path
 from collections import defaultdict
-from collections.abc import Generator, Callable
+from collections.abc import Callable, Generator
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from functools import reduce
 from itertools import chain
 from sys import stderr, stdout
-from typing import NamedTuple, ClassVar
+from typing import ClassVar, NamedTuple
 
-from scraper import DocMethodDetails, SectionAndMethodDetails, Parameter
+from scraper import DocMethodDetails, Parameter, SectionAndMethodDetails
 
 log = logging.getLogger(__name__)
 

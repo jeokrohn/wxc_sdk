@@ -7,12 +7,24 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from functools import partial
 from itertools import chain
-from typing import Optional, Iterable, Generator, Union
+from typing import Generator, Iterable, Optional, Union
 
-from apib.apib import ApibMember, ApibOption, ApibObject, ApibEnum, ApibDatastructure, ApibParseResult, ApibElement, \
-    ApibSelect, ApibString, ApibBool, ApibNumber, ApibArray
-from apib.python_class import PythonClass, PythonAPI, log, Endpoint, Attribute, guess_datetime_or_int, Parameter
-from apib.tools import sanitize_class_name, words_to_camel, snake_case, simple_python_type
+from apib.apib import (
+    ApibArray,
+    ApibBool,
+    ApibDatastructure,
+    ApibElement,
+    ApibEnum,
+    ApibMember,
+    ApibNumber,
+    ApibObject,
+    ApibOption,
+    ApibParseResult,
+    ApibSelect,
+    ApibString,
+)
+from apib.python_class import Attribute, Endpoint, Parameter, PythonAPI, PythonClass, guess_datetime_or_int, log
+from apib.tools import sanitize_class_name, simple_python_type, snake_case, words_to_camel
 
 
 @dataclass(init=False, repr=False)

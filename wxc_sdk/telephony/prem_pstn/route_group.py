@@ -1,11 +1,11 @@
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import Optional, Dict
+from typing import Dict, Optional
 
 from pydantic import Field
 
 from ...api_child import ApiChild
-from ...base import to_camel, ApiModel
+from ...base import ApiModel, to_camel
 from ...common import Customer, IdAndName
 
 __all__ = ['RGTrunk', 'RouteGroup', 'RouteGroupUsage', 'UsageRouteLists', 'RouteGroupApi']

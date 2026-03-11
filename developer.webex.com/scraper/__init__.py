@@ -6,19 +6,19 @@ from collections.abc import Generator, Iterable
 from dataclasses import dataclass, field
 from io import StringIO
 from itertools import chain
-from typing import Union, Optional, NamedTuple, ClassVar, overload
+from typing import ClassVar, NamedTuple, Optional, Union, overload
 
 from bs4 import BeautifulSoup, ResultSet, Tag
 from inflection import underscore
-from pydantic import BaseModel, Field, model_validator, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 from selenium import webdriver
-from selenium.common import TimeoutException, StaleElementReferenceException, NoSuchElementException
+from selenium.common import NoSuchElementException, StaleElementReferenceException, TimeoutException
 from selenium.webdriver.chromium.webdriver import ChromiumDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from yaml import safe_load, safe_dump
+from yaml import safe_dump, safe_load
 
 __all__ = ['MethodDoc', 'SectionDoc', 'AttributeInfo', 'Parameter', 'MethodDetails', 'DocMethodDetails',
            'DevWebexComScraper', 'Credentials', 'SectionAndMethodDetails', 'Class', 'python_type', 'SectionDetails',

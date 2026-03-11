@@ -6,11 +6,11 @@ from functools import reduce
 from itertools import chain
 from typing import Union
 
-from tests.base import TestWithLocations, async_test, TestCaseWithUsers
+from tests.base import TestCaseWithUsers, TestWithLocations, async_test
 from wxc_sdk.common import OwnerType
 from wxc_sdk.people import Person
-from wxc_sdk.person_settings.ecbn import PersonECBN, ECBNDependencies, SelectedECBN
-from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
+from wxc_sdk.person_settings.ecbn import ECBNDependencies, PersonECBN, SelectedECBN
+from wxc_sdk.telephony import NumberListPhoneNumber, NumberType
 from wxc_sdk.telephony.location import TelephonyLocation
 from wxc_sdk.telephony.location.emergency_services import LocationEmergencyCallNotification
 

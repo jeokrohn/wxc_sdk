@@ -2,15 +2,22 @@
 Voicemail groups API
 """
 from collections.abc import Generator
-from typing import Optional, List
+from typing import List, Optional
 
 from pydantic import Field
 
 from ..api_child import ApiChild
-from ..base import to_camel, ApiModel
-from ..common import Greeting, VoicemailMessageStorage, VoicemailNotifications, VoicemailFax, \
-    VoicemailTransferToNumber, \
-    VoicemailCopyOfMessage, StorageType, DirectLineCallerIdName
+from ..base import ApiModel, to_camel
+from ..common import (
+    DirectLineCallerIdName,
+    Greeting,
+    StorageType,
+    VoicemailCopyOfMessage,
+    VoicemailFax,
+    VoicemailMessageStorage,
+    VoicemailNotifications,
+    VoicemailTransferToNumber,
+)
 
 __all__ = ['VoicemailGroup', 'VoicemailGroupDetail', 'VoicemailGroupsApi']
 

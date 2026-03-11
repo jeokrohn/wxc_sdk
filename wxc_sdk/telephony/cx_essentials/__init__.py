@@ -1,6 +1,6 @@
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import Optional, Any
+from typing import Any, Optional
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel

@@ -10,8 +10,7 @@ from operator import attrgetter
 from os.path import splitext
 
 import yaml
-
-from private.api_blueprint import read_api_blueprint, ParseResult
+from private.api_blueprint import ParseResult, read_api_blueprint
 
 
 def analyze_content(data: dict, level=0, pre: str = ''):

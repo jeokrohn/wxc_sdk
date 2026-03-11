@@ -7,21 +7,25 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from typing import ClassVar
 
-from tests.base import TestCaseWithLog, async_test, TestWithProfessionalWorkspace, TestWithTarget
+from tests.base import TestCaseWithLog, TestWithProfessionalWorkspace, TestWithTarget, async_test
 from wxc_sdk.common.schedules import Schedule
 from wxc_sdk.common.selective import SelectiveFrom, SelectiveScheduleLevel
 from wxc_sdk.person_settings import TelephonyDevice
 from wxc_sdk.person_settings.call_policy import PrivacyOnRedirectedCalls
-from wxc_sdk.person_settings.priority_alert import PriorityAlertApi, PriorityAlertCriteria, PriorityAlert
-from wxc_sdk.person_settings.selective_accept import SelectiveAcceptApi, SelectiveAcceptCriteria, SelectiveAccept
-from wxc_sdk.person_settings.selective_forward import SelectiveForwardApi, SelectiveForwardCriteria, SelectiveForward
-from wxc_sdk.person_settings.selective_reject import SelectiveRejectApi, SelectiveRejectCriteria, SelectiveReject
-from wxc_sdk.person_settings.sequential_ring import SequentialRing, SequentialRingNumber, SequentialRingCriteria, \
-    SequentialRingApi
-from wxc_sdk.person_settings.sim_ring import SimRingCriteria, SimRing, SimRingNumber, SimRingApi
+from wxc_sdk.person_settings.priority_alert import PriorityAlert, PriorityAlertApi, PriorityAlertCriteria
+from wxc_sdk.person_settings.selective_accept import SelectiveAccept, SelectiveAcceptApi, SelectiveAcceptCriteria
+from wxc_sdk.person_settings.selective_forward import SelectiveForward, SelectiveForwardApi, SelectiveForwardCriteria
+from wxc_sdk.person_settings.selective_reject import SelectiveReject, SelectiveRejectApi, SelectiveRejectCriteria
+from wxc_sdk.person_settings.sequential_ring import (
+    SequentialRing,
+    SequentialRingApi,
+    SequentialRingCriteria,
+    SequentialRingNumber,
+)
+from wxc_sdk.person_settings.sim_ring import SimRing, SimRingApi, SimRingCriteria, SimRingNumber
 from wxc_sdk.telephony import NumberType
 from wxc_sdk.workspace_settings.numbers import WorkspaceNumbers
-from wxc_sdk.workspaces import Workspace, CallingType
+from wxc_sdk.workspaces import CallingType, Workspace
 
 
 class TestWorkspaceSettings(TestCaseWithLog):

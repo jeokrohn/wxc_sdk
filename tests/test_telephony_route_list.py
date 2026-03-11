@@ -7,12 +7,12 @@ from random import choice
 from typing import ClassVar
 
 from tests.base import TestCaseWithLog, async_test
-from tests.testutil import us_location_info, LocationInfo
+from tests.testutil import LocationInfo, us_location_info
 from wxc_sdk.common import RouteType
 from wxc_sdk.locations import Location
 from wxc_sdk.rest import RestError
-from wxc_sdk.telephony import OwnerType, NumberListPhoneNumber, NumberType
-from wxc_sdk.telephony.prem_pstn.route_group import RouteGroup, RGTrunk
+from wxc_sdk.telephony import NumberListPhoneNumber, NumberType, OwnerType
+from wxc_sdk.telephony.prem_pstn.route_group import RGTrunk, RouteGroup
 from wxc_sdk.telephony.prem_pstn.route_list import NumberAndAction, RouteList
 from wxc_sdk.telephony.prem_pstn.trunk import Trunk, TrunkType
 

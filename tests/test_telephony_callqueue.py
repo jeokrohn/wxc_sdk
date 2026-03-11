@@ -11,15 +11,26 @@ from typing import ClassVar
 
 from pydantic import TypeAdapter
 
-from tests.base import TestCaseWithLog, async_test, TestWithLocations, TestCaseWithUsers
-from tests.testutil import available_extensions_gen, get_or_create_holiday_schedule, get_or_create_business_schedule, \
-    create_simple_call_queue
+from tests.base import TestCaseWithLog, TestCaseWithUsers, TestWithLocations, async_test
+from tests.testutil import (
+    available_extensions_gen,
+    create_simple_call_queue,
+    get_or_create_business_schedule,
+    get_or_create_holiday_schedule,
+)
 from wxc_sdk.all_types import *
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.rest import RestError
-from wxc_sdk.telephony.callqueue import CQRoutingType, CallQueueSettings
-from wxc_sdk.telephony.callqueue.policies import HolidayService, CPActionType, ScheduleLevel, NightService, \
-    StrandedCalls, StrandedCallsAction, ForcedForward
+from wxc_sdk.telephony.callqueue import CallQueueSettings, CQRoutingType
+from wxc_sdk.telephony.callqueue.policies import (
+    CPActionType,
+    ForcedForward,
+    HolidayService,
+    NightService,
+    ScheduleLevel,
+    StrandedCalls,
+    StrandedCallsAction,
+)
 from wxc_sdk.telephony.hg_and_cq import CallingLineIdPolicy
 
 # number of call queues to create by create many test

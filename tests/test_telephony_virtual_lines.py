@@ -10,7 +10,7 @@ from math import ceil
 from random import choice
 from typing import ClassVar
 
-from tests.base import async_test, TestWithLocations, TestCaseWithLog
+from tests.base import TestCaseWithLog, TestWithLocations, async_test
 from tests.testutil import as_available_extensions_gen
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsWebexSimpleApi
@@ -22,7 +22,7 @@ from wxc_sdk.person_settings import TelephonyDevice
 from wxc_sdk.person_settings.call_recording import CallRecordingSetting
 from wxc_sdk.person_settings.caller_id import ExternalCallerIdNamePolicy
 from wxc_sdk.person_settings.forwarding import CallForwardingAlways
-from wxc_sdk.person_settings.permissions_out import OutgoingPermissions, Action, CallTypePermission, DigitPattern
+from wxc_sdk.person_settings.permissions_out import Action, CallTypePermission, DigitPattern, OutgoingPermissions
 from wxc_sdk.rest import RestError
 from wxc_sdk.telephony.virtual_line import VirtualLine, VirtualLineDevices
 

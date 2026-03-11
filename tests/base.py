@@ -17,21 +17,21 @@ import time
 import urllib.parse
 import uuid
 from collections import Counter
-from collections.abc import Iterable, Generator
+from collections.abc import Generator, Iterable
 from concurrent.futures import ThreadPoolExecutor
-from contextlib import contextmanager, asynccontextmanager
+from contextlib import asynccontextmanager, contextmanager
 from dataclasses import dataclass, field
 from datetime import datetime
 from functools import wraps
 from itertools import takewhile
-from typing import Optional, Any, Union, ClassVar
+from typing import Any, ClassVar, Optional, Union
 from unittest import TestCase
 
 import requests
 import yaml
 from dateutil import tz
 from dotenv import load_dotenv
-from pydantic import ValidationError, BaseModel, Field, model_validator, TypeAdapter
+from pydantic import BaseModel, Field, TypeAdapter, ValidationError, model_validator
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -56,7 +56,7 @@ from wxc_sdk.scopes import parse_scopes
 from wxc_sdk.telephony.location import TelephonyLocation
 from wxc_sdk.telephony.virtual_line import VirtualLine
 from wxc_sdk.tokens import Tokens
-from wxc_sdk.workspaces import Workspace, CallingType, WorkspaceSupportedDevices
+from wxc_sdk.workspaces import CallingType, Workspace, WorkspaceSupportedDevices
 
 log = logging.getLogger(__name__)
 

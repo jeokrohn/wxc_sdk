@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import ClassVar
 
 from tests.base import TestWithTarget
-from tests.test_workspace_settings import SelectiveAcceptTest, SelectiveRejectTest, SelectiveForwardTest
+from tests.test_workspace_settings import SelectiveAcceptTest, SelectiveForwardTest, SelectiveRejectTest
 from tests.testutil import create_random_calling_user
 from wxc_sdk.people import Person
 from wxc_sdk.telephony.location import TelephonyLocation

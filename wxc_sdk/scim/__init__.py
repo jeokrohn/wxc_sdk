@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from wxc_sdk.rest import RestSession
 from wxc_sdk.api_child import ApiChild
+from wxc_sdk.rest import RestSession
 from wxc_sdk.scim.bulk import SCIM2BulkApi
 from wxc_sdk.scim.groups import SCIM2GroupsApi
 from wxc_sdk.scim.users import SCIM2UsersApi

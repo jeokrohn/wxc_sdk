@@ -5,9 +5,9 @@ import random
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 
+from tests.base import TestWithLocations
 from wxc_sdk.locations import Location
 from wxc_sdk.person_settings.call_intercept import InterceptSetting
-from tests.base import TestWithLocations
 
 
 class TestIntercept(TestWithLocations):

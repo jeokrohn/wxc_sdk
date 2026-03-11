@@ -6,7 +6,7 @@ import logging
 import os
 import re
 from collections import Counter, defaultdict
-from collections.abc import Generator, Callable
+from collections.abc import Callable, Generator
 from dataclasses import dataclass
 from functools import reduce
 from typing import ClassVar, Union
@@ -17,8 +17,8 @@ from pydantic import ValidationError
 
 from open_api.open_api_class_registry import OpenApiPythonClassRegistry
 from open_api.open_api_code_generator import OACodeGenerator
-from open_api.open_api_model import OASpec, OASchemaProperty, OAOperation, OAParameter
-from open_api.open_api_sources import open_api_specs, OpenApiSpecInfo
+from open_api.open_api_model import OAOperation, OAParameter, OASchemaProperty, OASpec
+from open_api.open_api_sources import OpenApiSpecInfo, open_api_specs
 
 
 def read_one_spec_from_file(spec: OpenApiSpecInfo) -> OASpec:

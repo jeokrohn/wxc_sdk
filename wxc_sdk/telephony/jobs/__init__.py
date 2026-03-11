@@ -5,13 +5,13 @@ import json
 from collections.abc import Generator
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional, List, Union
+from typing import List, Optional, Union
 
 from pydantic import Field, TypeAdapter
 
 from ...api_child import ApiChild
 from ...base import ApiModel, enum_str
-from ...common import DeviceCustomization, ApplyLineKeyTemplateAction, SetOrClear
+from ...common import ApplyLineKeyTemplateAction, DeviceCustomization, SetOrClear
 from ...rest import RestSession
 
 __all__ = ['StepExecutionStatus', 'JobExecutionStatus', 'StartJobResponse', 'JobErrorMessage', 'JobError',

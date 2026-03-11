@@ -2,6 +2,7 @@
 Unit test for person schedules
 """
 import asyncio
+
 # TODO: testcase for event update
 # TODO test case for event delete
 # TODO test case for schedule delete
@@ -15,7 +16,7 @@ from functools import reduce
 from itertools import chain
 from typing import NamedTuple
 
-from tests.base import TestCaseWithUsers, async_test, TestWithLocations
+from tests.base import TestCaseWithUsers, TestWithLocations, async_test
 from wxc_sdk.all_types import *
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.rest import RestError

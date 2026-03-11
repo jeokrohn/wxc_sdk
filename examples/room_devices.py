@@ -52,12 +52,12 @@ from argparse import ArgumentParser
 from collections import defaultdict
 from functools import reduce
 from itertools import chain
-from os import getenv, getcwd
-from os.path import splitext, basename, isfile, join
+from os import getcwd, getenv
+from os.path import basename, isfile, join, splitext
 from typing import Optional
 
 from dotenv import load_dotenv
-from yaml import safe_load, safe_dump
+from yaml import safe_dump, safe_load
 
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.base import webex_id_to_uuid
@@ -68,7 +68,7 @@ from wxc_sdk.locations import Location
 from wxc_sdk.telephony import NumberListPhoneNumber
 from wxc_sdk.tokens import Tokens
 from wxc_sdk.workspace_locations import WorkspaceLocation
-from wxc_sdk.workspaces import Workspace, WorkspaceSupportedDevices, CallingType, WorkspaceCalling
+from wxc_sdk.workspaces import CallingType, Workspace, WorkspaceCalling, WorkspaceSupportedDevices
 
 
 def yml_path() -> str:

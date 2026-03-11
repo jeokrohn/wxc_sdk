@@ -5,7 +5,6 @@ from dataclasses import dataclass
 from typing import Optional
 
 from pydantic import Field, field_validator
-from .operating_modes import OperatingModeSchedule
 
 from ..api_child import ApiChild
 from ..base import ApiModel
@@ -13,6 +12,7 @@ from ..base import SafeEnum as Enum
 from ..common.schedules import ScheduleLevel
 from ..person_settings.mode_management import ExceptionType
 from ..rest import RestSession
+from .operating_modes import OperatingModeSchedule
 
 __all__ = ['ForwardingRule', 'ForwardingSetting',
            'ModeDefaultForwardToSelection', 'ForwardToSelection', 'ModeForwardTo', 'ModeForward',

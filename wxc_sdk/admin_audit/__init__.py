@@ -1,6 +1,6 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional, Union, Any
+from typing import Any, Optional, Union
 
 from dateutil.parser import isoparse
 

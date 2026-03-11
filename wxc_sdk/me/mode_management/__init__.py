@@ -1,13 +1,18 @@
 from typing import List, Optional
 
 from pydantic import TypeAdapter
+
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.common.schedules import ScheduleLevel
-from wxc_sdk.person_settings.mode_management import ModeManagementFeature, ExceptionType
+from wxc_sdk.person_settings.mode_management import ExceptionType, ModeManagementFeature
 from wxc_sdk.telephony.forwarding import ForwardToSelection
-from wxc_sdk.telephony.operating_modes import (OperatingModeSchedule, OperatingModeHoliday, DifferentHoursDaily,
-                                               SameHoursDaily)
+from wxc_sdk.telephony.operating_modes import (
+    DifferentHoursDaily,
+    OperatingModeHoliday,
+    OperatingModeSchedule,
+    SameHoursDaily,
+)
 
 __all__ = ['MeModeManagementApi', 'FeatureDetail', 'FeatureMode', 'FeatureModeForwardTo', 'OperatingModeDetail',
            'OperatingModeForwardTo']

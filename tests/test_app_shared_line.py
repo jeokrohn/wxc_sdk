@@ -6,7 +6,7 @@ from pydantic import TypeAdapter
 
 from tests.base import TestCaseWithUsers, async_test
 from wxc_sdk.people import Person
-from wxc_sdk.telephony.devices import DeviceMembersResponse, AvailableMember
+from wxc_sdk.telephony.devices import AvailableMember, DeviceMembersResponse
 
 
 class TestAppSharedLine(TestCaseWithUsers):

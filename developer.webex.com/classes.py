@@ -21,18 +21,18 @@ import json
 import logging
 import re
 from collections import Counter
-from collections.abc import Generator, Callable
+from collections.abc import Callable, Generator
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from io import StringIO
 from itertools import chain
 from json import JSONDecodeError
 from sys import stderr, stdout
-from typing import TextIO, Optional, NamedTuple
+from typing import NamedTuple, Optional, TextIO
 
 from inflection import underscore
+from scraper import Class, DocMethodDetails, MethodDetails, Parameter, break_lines, python_type
 
-from scraper import DocMethodDetails, Parameter, Class, MethodDetails, python_type, break_lines
 from wxc_sdk.base import to_camel
 
 collected_types = list()

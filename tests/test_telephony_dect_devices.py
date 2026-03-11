@@ -16,8 +16,14 @@ from tests.base import TestWithLocations, async_test
 from wxc_sdk.common import UserType
 from wxc_sdk.locations import Location
 from wxc_sdk.rest import RestError
-from wxc_sdk.telephony.dect_devices import DECTNetworkModel, DECTNetworkDetail, BaseStationResponse, \
-    BaseStationsResponse, DECTHandsetItem, DectDevice
+from wxc_sdk.telephony.dect_devices import (
+    BaseStationResponse,
+    BaseStationsResponse,
+    DectDevice,
+    DECTHandsetItem,
+    DECTNetworkDetail,
+    DECTNetworkModel,
+)
 from wxc_sdk.telephony.devices import AvailableMember
 from wxc_sdk.telephony.virtual_line import VirtualLine
 

@@ -2,7 +2,7 @@ import json
 import os
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
-from typing import Optional, ClassVar
+from typing import ClassVar, Optional
 
 import yaml
 from dotenv import load_dotenv

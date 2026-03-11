@@ -12,10 +12,10 @@ from collections import defaultdict
 from datetime import date
 from typing import List
 
+from calendarific import CalendarifiyApi, Holiday
 from dotenv import load_dotenv
 
-from calendarific import CalendarifiyApi, Holiday
-from wxc_sdk.all_types import ScheduleType, Event, Schedule
+from wxc_sdk.all_types import Event, Schedule, ScheduleType
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.locations import Location
 

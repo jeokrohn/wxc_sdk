@@ -2,14 +2,14 @@ import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta
 from itertools import chain
-from math import log, ceil
+from math import ceil, log
 from typing import Union
 
 from dateutil import tz
 
 from tests.base import TestCaseWithLog
 from wxc_sdk.as_api import AsWebexSimpleApi
-from wxc_sdk.events import EventResource, ComplianceEvent
+from wxc_sdk.events import ComplianceEvent, EventResource
 from wxc_sdk.rest import RestError
 
 

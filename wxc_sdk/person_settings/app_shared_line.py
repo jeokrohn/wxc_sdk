@@ -2,7 +2,7 @@ from collections.abc import Generator
 from typing import Union
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.telephony.devices import AvailableMember, DeviceMembersResponse, DeviceMember
+from wxc_sdk.telephony.devices import AvailableMember, DeviceMember, DeviceMembersResponse
 
 __all__ = ['AppSharedLineApi']
 

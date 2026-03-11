@@ -6,9 +6,9 @@ import random
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 
+from tests.base import TestCaseWithUsers
 from wxc_sdk.all_types import *
 from wxc_sdk.rest import RestError
-from tests.base import TestCaseWithUsers
 
 
 class PermissionsOutMixin(TestCaseWithUsers):

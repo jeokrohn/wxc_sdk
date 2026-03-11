@@ -10,7 +10,7 @@ from pydantic import TypeAdapter
 
 from tests.base import TestWithLocations, async_test
 from wxc_sdk.telephony.jobs import JobErrorItem
-from wxc_sdk.telephony.location import SafeDeleteCheckResponse, LocationDeleteStatus
+from wxc_sdk.telephony.location import LocationDeleteStatus, SafeDeleteCheckResponse
 
 
 class TestLocationDelete(TestWithLocations):

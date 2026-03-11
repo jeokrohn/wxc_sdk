@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from functools import reduce
 from sys import stdout
 
-from scraper import DocMethodDetails, MethodDetails, AttributeInfo
+from scraper import AttributeInfo, DocMethodDetails, MethodDetails
 
 
 @dataclass(init=False, repr=False)

@@ -12,13 +12,13 @@ from re import match
 from statistics import mean
 from typing import Union
 
+from tests.base import TestWithLocations, async_test
+from tests.testutil import available_numbers
 from wxc_sdk.as_rest import AsRestError
 from wxc_sdk.locations import Location
 from wxc_sdk.rest import RestError
 from wxc_sdk.telephony import NumberListPhoneNumber
-from wxc_sdk.telephony.voicemail_groups import VoicemailGroupDetail, VoicemailGroup
-from tests.base import async_test, TestWithLocations
-from tests.testutil import available_numbers
+from wxc_sdk.telephony.voicemail_groups import VoicemailGroup, VoicemailGroupDetail
 
 
 class TestVmGroup(TestWithLocations):

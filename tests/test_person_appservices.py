@@ -7,8 +7,8 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from unittest import skip
 
-from wxc_sdk.all_types import Person, AppServicesSettings
 from tests.base import TestCaseWithUsers, async_test
+from wxc_sdk.all_types import AppServicesSettings, Person
 
 
 class TestRead(TestCaseWithUsers):

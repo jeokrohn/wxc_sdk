@@ -1,12 +1,12 @@
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import Optional, List
+from typing import List, Optional
 
 from pydantic import Field, TypeAdapter
 
 from ...api_child import ApiChild
 from ...base import ApiModel, to_camel
-from ...common import RouteType, DialPatternValidate, Customer, PatternAction
+from ...common import Customer, DialPatternValidate, PatternAction, RouteType
 
 __all__ = ['DialPlan', 'CreateResponse', 'PatternAndAction', 'DialPlanApi']
 

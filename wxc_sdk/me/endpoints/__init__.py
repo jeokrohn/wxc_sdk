@@ -1,14 +1,13 @@
 """
 API for /me/endpoints
 """
-from typing import Optional, List
+from typing import List, Optional
 
 from pydantic import TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
-
 from wxc_sdk.common import UserType
 
 __all__ = ['MeEndpointsApi', 'MeEndpoint', 'MeSecondaryLine', 'MeMobility',

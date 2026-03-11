@@ -4,10 +4,10 @@ app services settings API
 from dataclasses import dataclass
 from typing import Optional
 
-from . import AppSharedLineApi
 from ..api_child import ApiChild
 from ..base import ApiModel
 from ..rest import RestSession
+from . import AppSharedLineApi
 
 __all__ = ['AppServicesSettings', 'AppServicesApi']
 

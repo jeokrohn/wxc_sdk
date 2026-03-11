@@ -7,6 +7,7 @@ import random_address
 import requests
 from lxml import etree
 from pydantic import BaseModel, Field
+
 from tests.base import TestWithLocations
 from tests.testutil import available_tns
 from wxc_sdk.locations import Location

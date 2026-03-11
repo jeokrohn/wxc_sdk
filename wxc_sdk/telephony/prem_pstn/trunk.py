@@ -1,12 +1,12 @@
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import List, Any, Optional
+from typing import Any, List, Optional
 
 from pydantic import Field, TypeAdapter
 
 from ...api_child import ApiChild
-from ...base import SafeEnum as Enum, enum_str
-from ...base import to_camel, ApiModel
+from ...base import ApiModel, enum_str, to_camel
+from ...base import SafeEnum as Enum
 from ...common import Customer, IdAndName
 
 __all__ = ['TrunkType', 'Trunk', 'TrunkDeviceType', 'TrunkTypeWithDeviceType', 'DeviceStatus',

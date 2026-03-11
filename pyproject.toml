@@ -113,6 +113,8 @@ exclude = [
 ]
 
 [tool.ruff]
+line-length = 120
+
 # exclude some directories
 exclude = [
     "developer.webex.com/generated",
@@ -123,6 +125,16 @@ exclude = [
 
 [tool.ruff.lint]
 ignore = ["E741"]
+select = [
+    "E",   # pycodestyle errors (flake8 core)
+    "W",   # pycodestyle warnings (flake8 core)
+    "F",   # pyflakes (flake8 core)
+    "C90", # mccabe complexity (flake8-mccabe)
+    "I",   # isort (flake8-isort)
+    "N",   # pep8-naming (flake8-pep8-naming)
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["E722", "E741", "F403", "F405", "F841", "F842"]

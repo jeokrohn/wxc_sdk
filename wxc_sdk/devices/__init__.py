@@ -4,13 +4,13 @@ Devices represent cloud-registered Webex RoomOS devices and Webex Calling phones
 from collections.abc import Generator
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional, Any, List
+from typing import Any, List, Optional
 
-from pydantic import Field, model_validator, field_validator
+from pydantic import Field, field_validator, model_validator
 
 from ..api_child import ApiChild
-from ..base import ApiModel
-from ..base import SafeEnum as Enum, enum_str
+from ..base import ApiModel, enum_str
+from ..base import SafeEnum as Enum
 from ..common import DevicePlatform, MaintenanceMode
 from ..rest import RestSession
 from ..telephony.devices import DeviceManagedBy

@@ -4,7 +4,7 @@ Pydantic models to deserialize OpenAPI specs
 import logging
 import re
 from collections.abc import Generator
-from typing import List, Optional, Any, Union, Tuple
+from typing import Any, List, Optional, Tuple, Union
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 from pydantic_core.core_schema import ValidationInfo

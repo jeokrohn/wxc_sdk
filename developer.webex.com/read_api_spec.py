@@ -33,8 +33,7 @@ from sys import stderr
 from typing import Optional
 
 from dotenv import load_dotenv
-
-from scraper import DevWebexComScraper, DocMethodDetails, Credentials, SectionDetails
+from scraper import Credentials, DevWebexComScraper, DocMethodDetails, SectionDetails
 
 
 def setup_logging(console_level: int = logging.INFO,

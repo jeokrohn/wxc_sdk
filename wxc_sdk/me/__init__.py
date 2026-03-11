@@ -4,13 +4,14 @@ Call Settings For Me
 Call settings for me APIs allow a person to read or modify their settings.
 """
 from dataclasses import dataclass
-from typing import Optional, Generator
+from typing import Generator, Optional
 
 from pydantic import TypeAdapter
+
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
-from wxc_sdk.common import PrimaryOrShared, UserType, NumberState, NumberOwner
+from wxc_sdk.common import NumberOwner, NumberState, PrimaryOrShared, UserType
 from wxc_sdk.locations import LocationAddress
 from wxc_sdk.me.anon_calls import MeAnonCallsApi
 from wxc_sdk.me.barge import MeBargeApi

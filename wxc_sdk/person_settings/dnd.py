@@ -3,8 +3,8 @@ Person DND settings API
 """
 from typing import Optional
 
-from .common import PersonSettingsApiChild
 from ..base import ApiModel
+from .common import PersonSettingsApiChild
 
 __all__ = ['DND', 'DndApi']
 

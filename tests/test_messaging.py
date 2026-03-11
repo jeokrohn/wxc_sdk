@@ -15,7 +15,7 @@ from unittest import skip
 
 from pydantic import TypeAdapter
 
-from tests.base import TestCaseWithUsersAndSpaces, TestCaseWithLog
+from tests.base import TestCaseWithLog, TestCaseWithUsersAndSpaces
 from wxc_sdk.common import RoomType
 from wxc_sdk.messages import MessageAttachment
 from wxc_sdk.people import Person

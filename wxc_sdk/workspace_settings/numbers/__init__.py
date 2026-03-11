@@ -7,7 +7,7 @@ from pydantic import TypeAdapter
 
 from ...api_child import ApiChild
 from ...base import ApiModel
-from ...common import IdAndName, UserNumber, IdOnly, PatternAction, RingPattern
+from ...common import IdAndName, IdOnly, PatternAction, RingPattern, UserNumber
 
 __all__ = ['WorkspaceNumbers', 'UpdateWorkspacePhoneNumber', 'WorkspaceNumbersApi']
 

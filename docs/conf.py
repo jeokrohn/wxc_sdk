@@ -23,6 +23,7 @@ author = 'Johannes Krohn'
 
 # The full version, including alpha/beta/rc tags
 from importlib.metadata import version as meta_version
+
 release = meta_version('wxc_sdk')
 
 # -- General configuration ---------------------------------------------------

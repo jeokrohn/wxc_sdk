@@ -16,7 +16,7 @@ from itertools import chain, zip_longest
 from re import Pattern
 from typing import Union
 
-from tests.base import get_tokens, WithIntegrationTokens
+from tests.base import WithIntegrationTokens, get_tokens
 from tests.testutil import calling_users
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsWebexSimpleApi
@@ -25,7 +25,7 @@ from wxc_sdk.common import NumberState
 from wxc_sdk.har_writer import HarWriter
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings.permissions_out import DigitPattern
-from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
+from wxc_sdk.telephony import NumberListPhoneNumber, NumberType
 from wxc_sdk.telephony.callqueue import CallQueue
 from wxc_sdk.telephony.location import TelephonyLocation
 from wxc_sdk.workspaces import CallingType

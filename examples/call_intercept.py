@@ -43,8 +43,8 @@ from typing import Optional
 import typer
 from dotenv import load_dotenv
 from email_validator import validate_email
-
 from service_app import SERVICE_APP_ENVS, env_path, get_tokens
+
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.person_settings.call_intercept import InterceptSetting
 from wxc_sdk.rest import RestError

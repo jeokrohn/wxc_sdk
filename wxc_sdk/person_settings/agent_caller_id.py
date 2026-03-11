@@ -4,11 +4,11 @@ API to manage call queue agent caller ID information
 import json
 from typing import Optional
 
-from pydantic import model_validator, TypeAdapter
+from pydantic import TypeAdapter, model_validator
 
-from .common import PersonSettingsApiChild
 from ..base import ApiModel
 from ..base import SafeEnum as Enum
+from .common import PersonSettingsApiChild
 
 __all__ = ['AvailableCallerIdType', 'AgentCallerId', 'AgentCallerIdApi']
 

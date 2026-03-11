@@ -31,7 +31,7 @@ from typing import Optional
 from pydantic import Field
 
 from ..api_child import ApiChild
-from ..base import ApiModel, to_camel, webex_id_to_uuid, ApiModelWithErrors
+from ..base import ApiModel, ApiModelWithErrors, to_camel, webex_id_to_uuid
 from ..base import SafeEnum as Enum
 
 __all__ = ['PhoneNumberType', 'PhoneNumber', 'SipType', 'SipAddress', 'PeopleStatus', 'PersonType', 'PersonAddress',

@@ -1,7 +1,7 @@
 from pydantic import TypeAdapter
 
-from wxc_sdk.base import enum_str
 from wxc_sdk.base import SafeEnum as Enum
+from wxc_sdk.base import enum_str
 from wxc_sdk.person_settings.common import PersonSettingsApiChild
 
 __all__ = ['CallPolicyApi', 'PrivacyOnRedirectedCalls']

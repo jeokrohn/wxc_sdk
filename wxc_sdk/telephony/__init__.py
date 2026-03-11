@@ -6,8 +6,28 @@ from dataclasses import dataclass
 from typing import Optional
 
 from pydantic import Field, TypeAdapter, field_validator
+
 from wxc_sdk.telephony.emergency_address import EmergencyAddressApi
 
+from ..api_child import ApiChild
+from ..base import ApiModel, enum_str, plus1, to_camel
+from ..base import SafeEnum as Enum
+from ..common import (
+    DeviceCustomization,
+    IdAndName,
+    NumberOwner,
+    NumberState,
+    OwnerType,
+    RouteIdentity,
+    UserType,
+    ValidateExtensionsResponse,
+    ValidatePhoneNumbersResponse,
+)
+from ..common.schedules import ScheduleApi, ScheduleApiBase
+from ..person_settings.common import ApiSelector
+from ..person_settings.msteams import OrgMSTeamsSettingApi
+from ..person_settings.permissions_out import Action, OutgoingPermissionsApi
+from ..rest import RestSession
 from .access_codes import LocationAccessCodesApi
 from .announcements_repo import AnnouncementsRepositoryApi
 from .autoattendant import AutoAttendantApi
@@ -22,7 +42,7 @@ from .calls import CallsApi
 from .conference import ConferenceControlsApi
 from .cx_essentials import CustomerExperienceEssentialsApi
 from .dect_devices import DECTDevicesApi
-from .devices import TelephonyDevicesApi, SupportedDevices
+from .devices import SupportedDevices, TelephonyDevicesApi
 from .emergency_services import OrgEmergencyServicesApi
 from .guest_calling import GuestCallingApi
 from .hotdesk import HotDeskApi
@@ -46,16 +66,6 @@ from .vm_rules import VoicemailRulesApi
 from .voice_messaging import VoiceMessagingApi
 from .voicemail_groups import VoicemailGroupsApi
 from .voiceportal import VoicePortalApi
-from ..api_child import ApiChild
-from ..base import ApiModel, to_camel, plus1, enum_str
-from ..base import SafeEnum as Enum
-from ..common import UserType, RouteIdentity, NumberState, ValidateExtensionsResponse, ValidatePhoneNumbersResponse, \
-    DeviceCustomization, IdAndName, OwnerType, NumberOwner
-from ..common.schedules import ScheduleApi, ScheduleApiBase
-from ..person_settings.common import ApiSelector
-from ..person_settings.msteams import OrgMSTeamsSettingApi
-from ..person_settings.permissions_out import OutgoingPermissionsApi, Action
-from ..rest import RestSession
 
 __all__ = ['NumberListPhoneNumberType', 'TelephonyType',
            'NumberListPhoneNumber',

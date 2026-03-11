@@ -8,18 +8,18 @@ import uuid
 from collections.abc import Generator
 from dataclasses import dataclass
 from functools import wraps
-from io import TextIOBase, StringIO
+from io import StringIO, TextIOBase
 from json import JSONDecodeError
 from threading import Semaphore
-from typing import Tuple, Type, Optional, ClassVar, Callable, Union
+from typing import Callable, ClassVar, Optional, Tuple, Type, Union
 from urllib.parse import parse_qsl
 
-from pydantic import BaseModel, ValidationError, Field
+from pydantic import BaseModel, Field, ValidationError
 from requests import HTTPError, Response, Session
 from requests.adapters import HTTPAdapter
 from requests.models import PreparedRequest
 
-from .base import ApiModel, StrOrDict, RETRY_429_MAX_WAIT
+from .base import RETRY_429_MAX_WAIT, ApiModel, StrOrDict
 from .tokens import Tokens
 
 __all__ = ['SingleError', 'ErrorDetail', 'RestError', 'RestSession', 'dump_response']

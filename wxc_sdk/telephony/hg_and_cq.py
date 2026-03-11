@@ -8,7 +8,7 @@ from pydantic import Field
 
 from ..base import ApiModel, webex_id_to_uuid
 from ..base import SafeEnum as Enum
-from ..common import UserBase, AlternateNumber, IdAndName, DirectLineCallerIdName
+from ..common import AlternateNumber, DirectLineCallerIdName, IdAndName, UserBase
 
 __all__ = ['HGandCQ', 'Policy', 'Agent', 'AlternateNumberSettings', 'CallingLineIdPolicy']
 

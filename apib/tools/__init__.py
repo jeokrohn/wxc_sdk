@@ -1,14 +1,12 @@
 import re
-from collections.abc import Generator, Iterator, Iterable
+from collections.abc import Generator, Iterable, Iterator
 
 __all__ = ['break_line', 'remove_links', 'sanitize_class_name', 'remove_html_comments', 'snake_case', 'words_to_camel',
            'lines_for_docstring', 'remove_div', 'simple_python_type', 'cap_first']
 
 from itertools import chain, repeat
-
 from re import Match
-
-from typing import Optional, Any
+from typing import Any, Optional
 from urllib.parse import urljoin
 
 from html2text import html2text

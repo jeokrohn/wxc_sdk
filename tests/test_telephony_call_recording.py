@@ -3,7 +3,7 @@ import json
 
 from pydantic import TypeAdapter
 
-from tests.base import TestWithLocations, async_test, TestCaseWithLog
+from tests.base import TestCaseWithLog, TestWithLocations, async_test
 from wxc_sdk.locations import Location
 from wxc_sdk.telephony.call_recording import CallRecordingRegion, LocationComplianceAnnouncement
 

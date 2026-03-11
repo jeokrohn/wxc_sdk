@@ -9,8 +9,8 @@ from unittest import skip
 
 import matplotlib.pyplot as plt
 
+from tests.base import LoggedRequest, TestCaseWithLog, async_test
 from wxc_sdk.as_api import AsWebexSimpleApi
-from tests.base import TestCaseWithLog, async_test, LoggedRequest
 
 
 class TestPeople(TestCaseWithLog):

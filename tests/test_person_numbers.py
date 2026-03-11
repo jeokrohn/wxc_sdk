@@ -6,7 +6,7 @@ import functools
 import json
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
-from contextlib import contextmanager, asynccontextmanager
+from contextlib import asynccontextmanager, contextmanager
 from dataclasses import dataclass, field
 from functools import reduce
 from operator import attrgetter
@@ -14,19 +14,26 @@ from random import choice
 from time import sleep
 from typing import ClassVar
 
-from tests.base import TestCaseWithUsers, async_test, TestWithLocations, TestCaseWithLog
-from tests.testutil import LocationInfo, us_location_info, available_tns, random_users, as_available_tns, \
-    get_calling_license, available_extensions
+from tests.base import TestCaseWithLog, TestCaseWithUsers, TestWithLocations, async_test
+from tests.testutil import (
+    LocationInfo,
+    as_available_tns,
+    available_extensions,
+    available_tns,
+    get_calling_license,
+    random_users,
+    us_location_info,
+)
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.base import webex_id_to_uuid
-from wxc_sdk.common import PatternAction, RingPattern, OwnerType
-from wxc_sdk.licenses import LicenseRequest, LicenseProperties
+from wxc_sdk.common import OwnerType, PatternAction, RingPattern
+from wxc_sdk.licenses import LicenseProperties, LicenseRequest
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person, PhoneNumber, PhoneNumberType
 from wxc_sdk.person_settings.available_numbers import AvailablePhoneNumberLicenseType
-from wxc_sdk.person_settings.numbers import UpdatePersonNumbers, UpdatePersonPhoneNumber, PersonNumbers
+from wxc_sdk.person_settings.numbers import PersonNumbers, UpdatePersonNumbers, UpdatePersonPhoneNumber
 from wxc_sdk.rest import RestError
-from wxc_sdk.telephony import NumberType, NumberListPhoneNumber
+from wxc_sdk.telephony import NumberListPhoneNumber, NumberType
 from wxc_sdk.telephony.location import TelephonyLocation
 
 

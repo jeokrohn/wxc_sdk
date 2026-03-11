@@ -7,7 +7,7 @@ from random import choice
 from typing import ClassVar
 
 from tests.base import TestCaseWithLog, TestWithLocations, async_test
-from tests.testutil import us_location_info, available_tns, LocationInfo
+from tests.testutil import LocationInfo, available_tns, us_location_info
 from wxc_sdk.as_rest import AsRestError
 from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import NumberState, OwnerType

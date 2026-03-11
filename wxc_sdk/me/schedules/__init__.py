@@ -1,11 +1,11 @@
 from pydantic import TypeAdapter
+
 from wxc_sdk.api_child import ApiChild
 
 __all__ = ['MeSchedulesApi']
 
 from wxc_sdk.base import enum_str
-
-from wxc_sdk.common.schedules import ScheduleType, Schedule, Event
+from wxc_sdk.common.schedules import Event, Schedule, ScheduleType
 
 
 class MeSchedulesApi(ApiChild, base='telephony/config/people/me'):

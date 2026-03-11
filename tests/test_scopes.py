@@ -1,4 +1,5 @@
 from unittest import TestCase
+
 from wxc_sdk.scopes import parse_scopes
 
 DESIRED = 'spark:calls_write spark:kms spark:people_read spark:calls_read spark-admin:telephony_config_read'

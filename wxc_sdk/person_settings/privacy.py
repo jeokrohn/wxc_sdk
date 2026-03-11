@@ -3,9 +3,9 @@ user privacy API
 """
 from typing import Optional, Union
 
-from .common import PersonSettingsApiChild
 from ..base import ApiModel
 from ..common import PersonPlaceAgent
+from .common import PersonSettingsApiChild
 
 __all__ = ['PrivacyApi', 'Privacy']
 

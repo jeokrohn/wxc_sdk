@@ -13,7 +13,7 @@ __all__ = ['Organization', 'OrganizationApi']
 import datetime
 from typing import Optional
 
-from pydantic import TypeAdapter, Field
+from pydantic import Field, TypeAdapter
 
 from ..api_child import ApiChild
 from ..base import ApiModel

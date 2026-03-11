@@ -7,10 +7,19 @@ from typing import Optional, Union
 
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 
-from .common import PersonSettingsApiChild
 from ..base import ApiModel
-from ..common import Greeting, VoicemailMessageStorage, StorageType, VoicemailEnabled, VoicemailNotifications, \
-    VoicemailFax, VoicemailTransferToNumber, VoicemailCopyOfMessage, MediaFile
+from ..common import (
+    Greeting,
+    MediaFile,
+    StorageType,
+    VoicemailCopyOfMessage,
+    VoicemailEnabled,
+    VoicemailFax,
+    VoicemailMessageStorage,
+    VoicemailNotifications,
+    VoicemailTransferToNumber,
+)
+from .common import PersonSettingsApiChild
 
 __all__ = ['VoicemailApi', 'VoicemailEnabledWithGreeting', 'UnansweredCalls', 'VoicemailSettings']
 

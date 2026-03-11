@@ -12,19 +12,25 @@ from operator import attrgetter
 from typing import ClassVar
 from unittest import skip
 
-from tests.base import TestCaseWithLog, async_test, TestLocationsUsersWorkspacesVirtualLines
+from tests.base import TestCaseWithLog, TestLocationsUsersWorkspacesVirtualLines, async_test
 from tests.test_people import time_it
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsDigitPatternsApi, AsOutgoingPermissionsApi
 from wxc_sdk.as_rest import AsRestError
-from wxc_sdk.common import OwnerType, IdAndName, AuthCodeLevel, AuthCode
+from wxc_sdk.common import AuthCode, AuthCodeLevel, IdAndName, OwnerType
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person
-from wxc_sdk.person_settings.permissions_out import DigitPattern, Action, OutgoingPermissionsApi
-from wxc_sdk.telephony import (NumberType, NumberListPhoneNumber, OriginatorType, DestinationType,
-                               TestCallRoutingResult, ConfigurationLevel)
+from wxc_sdk.person_settings.permissions_out import Action, DigitPattern, OutgoingPermissionsApi
+from wxc_sdk.telephony import (
+    ConfigurationLevel,
+    DestinationType,
+    NumberListPhoneNumber,
+    NumberType,
+    OriginatorType,
+    TestCallRoutingResult,
+)
 from wxc_sdk.telephony.virtual_line import VirtualLine
-from wxc_sdk.workspaces import Workspace, CallingType, HotdeskingStatus
+from wxc_sdk.workspaces import CallingType, HotdeskingStatus, Workspace
 
 
 class TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly(TestLocationsUsersWorkspacesVirtualLines):

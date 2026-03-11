@@ -13,8 +13,9 @@
 # ]
 # ///
 # we need to add the parent dir into sys.path so that the import of wxc_sdk can be resolved locally
-import sys
 import os
+import sys
+
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 print(f'inserting parent dir {parent_dir} into sys.path')
 sys.path.insert(0, parent_dir)
@@ -29,7 +30,7 @@ from dataclasses import dataclass, field, fields, is_dataclass
 from importlib import import_module
 from itertools import chain
 from pathlib import Path
-from typing import ClassVar, Dict, Optional, Any, Union
+from typing import Any, ClassVar, Dict, Optional, Union
 
 from wxc_sdk import WebexSimpleApi
 

@@ -29,7 +29,7 @@ import logging
 import os
 import sys
 from contextlib import contextmanager
-from typing import List, Iterable, Optional
+from typing import Iterable, List, Optional
 
 import yaml
 from dotenv import load_dotenv

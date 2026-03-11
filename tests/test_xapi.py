@@ -5,7 +5,7 @@ import time
 from pydantic import TypeAdapter
 
 from tests.base import TestCaseWithLog, async_test
-from wxc_sdk.devices import ProductType, ConnectionStatus, Device
+from wxc_sdk.devices import ConnectionStatus, Device, ProductType
 from wxc_sdk.xapi import ExecuteCommandResponse
 
 

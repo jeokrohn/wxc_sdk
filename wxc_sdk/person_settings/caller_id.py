@@ -1,10 +1,10 @@
-from typing import Optional, ClassVar
+from typing import ClassVar, Optional
 
 from pydantic import Field, field_validator
 
-from .common import PersonSettingsApiChild
-from ..base import ApiModel, to_camel, plus1
+from ..base import ApiModel, plus1, to_camel
 from ..base import SafeEnum as Enum
+from .common import PersonSettingsApiChild
 
 __all__ = ['CallerIdApi', 'CallerId', 'ExternalCallerIdNamePolicy', 'CallerIdSelectedType']
 

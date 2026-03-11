@@ -3,7 +3,7 @@ from typing import Optional
 from pydantic import model_validator
 
 from wxc_sdk.base import ApiModel, E164Number
-from wxc_sdk.common.selective import SelectiveCriteria, SelectiveCrit
+from wxc_sdk.common.selective import SelectiveCrit, SelectiveCriteria
 from wxc_sdk.person_settings.common import PersonSettingsApiChild
 
 __all__ = ['SimRingCriteria', 'SimRingNumber', 'SimRing', 'SimRingApi']

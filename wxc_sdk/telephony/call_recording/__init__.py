@@ -6,7 +6,7 @@ from pydantic import Field, TypeAdapter
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel, enum_str
 from wxc_sdk.base import SafeEnum as Enum
-from wxc_sdk.common import IdAndName, UserType, UserLicenseType
+from wxc_sdk.common import IdAndName, UserLicenseType, UserType
 
 __all__ = ['CallRecordingInfo', 'CallRecordingTermsOfService', 'OrgComplianceAnnouncement',
            'LocationComplianceAnnouncement', 'CallRecordingRegion', 'RecordingUser', 'FailureBehavior',

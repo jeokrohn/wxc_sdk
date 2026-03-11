@@ -11,18 +11,17 @@ from asyncio import Semaphore
 from collections.abc import AsyncGenerator, Callable
 from dataclasses import dataclass
 from functools import wraps
-from io import TextIOBase, StringIO
+from io import StringIO, TextIOBase
 from json import JSONDecodeError
 from time import perf_counter_ns
-from typing import Tuple, Type, Optional, Any, Union
+from typing import Any, Optional, Tuple, Type, Union
 
 import aiohttp
-from aiohttp import ClientSession, ClientResponse, ClientResponseError, RequestInfo, TraceConfig
+from aiohttp import ClientResponse, ClientResponseError, ClientSession, RequestInfo, TraceConfig
 from aiohttp.typedefs import LooseHeaders
 from pydantic import ValidationError
 
-from .base import ApiModel, RETRY_429_MAX_WAIT
-from .base import StrOrDict
+from .base import RETRY_429_MAX_WAIT, ApiModel, StrOrDict
 from .tokens import Tokens
 
 __all__ = ['AsErrorMessage', 'AsSingleError', 'AsErrorDetail', 'AsRestError', 'as_dump_response', 'AsRestSession']

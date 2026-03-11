@@ -3,12 +3,20 @@ Tests related migration to Pydantic 2.0
 """
 import re
 from json import loads
-from typing import Optional, Literal
+from typing import Literal, Optional
 from unittest import TestCase
 
-from pydantic import BaseModel, ValidationError, model_validator, parse_obj_as, TypeAdapter, validator, \
-    field_validator, \
-    Field, Extra
+from pydantic import (
+    BaseModel,
+    Extra,
+    Field,
+    TypeAdapter,
+    ValidationError,
+    field_validator,
+    model_validator,
+    parse_obj_as,
+    validator,
+)
 
 from wxc_sdk.person_settings.permissions_out import OutgoingPermissions
 

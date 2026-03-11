@@ -1,5 +1,4 @@
 from wxc_sdk.api_child import ApiChild
-
 from wxc_sdk.person_settings.selective_reject import SelectiveReject, SelectiveRejectCriteria
 
 __all__ = ['MeSelectiveRejectApi']

@@ -5,19 +5,28 @@ import os
 from collections.abc import Generator
 from dataclasses import dataclass
 from io import BufferedReader
-from typing import Optional, Union, Any
+from typing import Any, Optional, Union
 
-from pydantic import TypeAdapter, Field, field_validator, field_serializer
+from pydantic import Field, TypeAdapter, field_serializer, field_validator
 from requests_toolbelt import MultipartEncoder
 
-from .dynamic_settings import DevicesDynamicSettingsApi
-from ..jobs import LineKeyTemplateAdvisoryTypes
-from ...rest import RestSession
 from ...api_child import ApiChild
-from ...base import ApiModel, plus1, to_camel, enum_str
+from ...base import ApiModel, enum_str, plus1, to_camel
 from ...base import SafeEnum as Enum
-from ...common import PrimaryOrShared, UserType, ValidationStatus, DeviceCustomization, IdAndName, \
-    ApplyLineKeyTemplateAction, UserLicenseType, DeviceType, UsageType
+from ...common import (
+    ApplyLineKeyTemplateAction,
+    DeviceCustomization,
+    DeviceType,
+    IdAndName,
+    PrimaryOrShared,
+    UsageType,
+    UserLicenseType,
+    UserType,
+    ValidationStatus,
+)
+from ...rest import RestSession
+from ..jobs import LineKeyTemplateAdvisoryTypes
+from .dynamic_settings import DevicesDynamicSettingsApi
 
 __all__ = ['DeviceManufacturer', 'DeviceManagedBy', 'OnboardingMethod', 'DeviceSettingsConfiguration',
            'SupportsLogCollection', 'SupportedDevice', 'SupportedDevices', 'MemberCommon', 'DeviceMember',

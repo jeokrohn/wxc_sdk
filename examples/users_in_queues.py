@@ -9,6 +9,7 @@ from collections import defaultdict
 from typing import Optional
 
 from dotenv import load_dotenv
+
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.common import UserType
 from wxc_sdk.integration import Integration

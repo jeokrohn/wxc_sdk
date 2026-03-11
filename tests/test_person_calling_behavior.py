@@ -7,9 +7,9 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from typing import ClassVar
 
-from wxc_sdk.all_types import *
-from tests.base import TestCaseWithUsers, async_test, TestCaseWithLog
+from tests.base import TestCaseWithLog, TestCaseWithUsers, async_test
 from tests.testutil import calling_users
+from wxc_sdk.all_types import *
 
 
 class TestRead(TestCaseWithUsers):

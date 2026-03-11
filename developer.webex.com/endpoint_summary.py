@@ -16,7 +16,7 @@ from collections.abc import Iterable
 from contextlib import contextmanager
 from dataclasses import dataclass
 from functools import reduce
-from sys import stdout, stderr
+from sys import stderr, stdout
 
 from scraper import DocMethodDetails, MethodDetails, SectionAndMethodDetails
 

@@ -39,8 +39,8 @@ from wxc_sdk.integration import Integration
 from wxc_sdk.people import Person
 from wxc_sdk.scopes import parse_scopes
 from wxc_sdk.telephony.callqueue import CallQueue
-from wxc_sdk.tokens import Tokens
 from wxc_sdk.telephony.hg_and_cq import Agent
+from wxc_sdk.tokens import Tokens
 
 
 def agent_name(agent: Agent) -> str:

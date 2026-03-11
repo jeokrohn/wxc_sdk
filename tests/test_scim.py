@@ -18,7 +18,7 @@ from functools import reduce
 from json import JSONDecodeError
 from operator import attrgetter
 from time import sleep
-from typing import Optional, ClassVar
+from typing import ClassVar, Optional
 from unittest import skip
 
 import yaml
@@ -26,8 +26,8 @@ from dotenv import load_dotenv
 from pydantic import TypeAdapter
 from test_helper.randomuser import User
 
-from tests.base import TestCaseWithLog, async_test, TestWithLocations, TestCaseWithUsers, WithIntegrationTokens
-from tests.testutil import random_users, available_extensions_gen
+from tests.base import TestCaseWithLog, TestCaseWithUsers, TestWithLocations, WithIntegrationTokens, async_test
+from tests.testutil import available_extensions_gen, random_users
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.as_rest import AsRestError
@@ -35,14 +35,30 @@ from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import OwnerType
 from wxc_sdk.groups import Group
 from wxc_sdk.integration import Integration
-from wxc_sdk.licenses import LicenseRequest, LicenseRequestOperation, LicenseProperties
-from wxc_sdk.org_contacts import Contact, PrimaryContactMethod, ContactEmail, EmailType, ContactPhoneNumber, \
-    ContactAddress
+from wxc_sdk.licenses import LicenseProperties, LicenseRequest, LicenseRequestOperation
+from wxc_sdk.org_contacts import (
+    Contact,
+    ContactAddress,
+    ContactEmail,
+    ContactPhoneNumber,
+    EmailType,
+    PrimaryContactMethod,
+)
 from wxc_sdk.people import Person, PhoneNumberType
-from wxc_sdk.scim.bulk import BulkOperation, BulkMethod, BulkResponseOperation
+from wxc_sdk.scim.bulk import BulkMethod, BulkOperation, BulkResponseOperation
 from wxc_sdk.scim.groups import ScimGroup, ScimGroupMember
-from wxc_sdk.scim.users import ScimUser, NameObject, EmailObject, EmailObjectType, UserTypeObject, UserPhoneNumber, \
-    ScimPhoneNumberType, UserAddress, PatchUserOperation, PatchUserOperationOp
+from wxc_sdk.scim.users import (
+    EmailObject,
+    EmailObjectType,
+    NameObject,
+    PatchUserOperation,
+    PatchUserOperationOp,
+    ScimPhoneNumberType,
+    ScimUser,
+    UserAddress,
+    UserPhoneNumber,
+    UserTypeObject,
+)
 from wxc_sdk.telephony.location import TelephonyLocation
 from wxc_sdk.tokens import Tokens
 

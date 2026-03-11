@@ -12,14 +12,19 @@ from pydantic import TypeAdapter
 
 from examples.calendarific import CalendarifiyApi
 from tests.base import TestCaseWithLog, async_test
-from tests.testutil import new_operating_mode_names, create_operating_mode
+from tests.testutil import create_operating_mode, new_operating_mode_names
 from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import IdAndName
 from wxc_sdk.common.schedules import ScheduleLevel
 from wxc_sdk.person_settings.forwarding import CallForwardingCommon
 from wxc_sdk.telephony.location import TelephonyLocation
-from wxc_sdk.telephony.operating_modes import (OperatingMode, OperatingModeSchedule, DifferentHoursDaily, DaySchedule,
-                                               OperatingModeHoliday)
+from wxc_sdk.telephony.operating_modes import (
+    DaySchedule,
+    DifferentHoursDaily,
+    OperatingMode,
+    OperatingModeHoliday,
+    OperatingModeSchedule,
+)
 
 
 class TestOperatingModes(TestCaseWithLog):

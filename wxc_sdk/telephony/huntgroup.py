@@ -1,15 +1,15 @@
 import logging
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import Optional, List
+from typing import List, Optional
 
-from .forwarding import ForwardingApi, FeatureSelector
-from .hg_and_cq import HGandCQ, Policy
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel
 from ..common import AlternateNumber
 from ..person_settings.available_numbers import AvailableNumber
 from ..rest import RestSession
+from .forwarding import FeatureSelector, ForwardingApi
+from .hg_and_cq import HGandCQ, Policy
 
 __all__ = ['NoAnswer', 'BusinessContinuity', 'HGCallPolicies', 'HuntGroup', 'HuntGroupApi']
 

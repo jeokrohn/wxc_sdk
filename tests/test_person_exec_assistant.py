@@ -4,8 +4,8 @@ Test for exec assistant settings
 import random
 from concurrent.futures import ThreadPoolExecutor
 
-from wxc_sdk.all_types import ExecAssistantType
 from tests.base import TestCaseWithUsers
+from wxc_sdk.all_types import ExecAssistantType
 
 
 class TestRead(TestCaseWithUsers):

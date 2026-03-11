@@ -10,12 +10,16 @@ from unittest import skip
 from pydantic import TypeAdapter
 
 from tests.base import TestCaseWithLog, TestWithLocations, TestWithProfessionalWorkspace, async_test
-from tests.testutil import available_extensions_gen, new_workspace_names, TEST_WORKSPACES_PREFIX, \
-    create_workspace_with_webex_calling
+from tests.testutil import (
+    TEST_WORKSPACES_PREFIX,
+    available_extensions_gen,
+    create_workspace_with_webex_calling,
+    new_workspace_names,
+)
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.all_types import *
 from wxc_sdk.rest import RestError
-from wxc_sdk.workspaces import WorkspaceCalling, WorkspaceWebexCalling, WorkspaceSupportedDevices
+from wxc_sdk.workspaces import WorkspaceCalling, WorkspaceSupportedDevices, WorkspaceWebexCalling
 
 
 def workspace_location_for_location(api: WebexSimpleApi, location_id: str) -> WorkspaceLocation:

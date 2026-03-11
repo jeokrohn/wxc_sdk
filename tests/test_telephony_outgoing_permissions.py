@@ -2,13 +2,19 @@
 test cases for location outgoing permission settings
 """
 import json
-from concurrent.futures import ThreadPoolExecutor
 import random
+from concurrent.futures import ThreadPoolExecutor
 
-from wxc_sdk.person_settings.permissions_out import AutoTransferNumbers, CallTypePermission, Action, \
-    OutgoingPermissions, CallingPermissions, DigitPattern
-from tests.base import TestWithLocations, TestCaseWithLog
-from wxc_sdk.telephony import OriginatorType, ConfigurationLevel
+from tests.base import TestCaseWithLog, TestWithLocations
+from wxc_sdk.person_settings.permissions_out import (
+    Action,
+    AutoTransferNumbers,
+    CallingPermissions,
+    CallTypePermission,
+    DigitPattern,
+    OutgoingPermissions,
+)
+from wxc_sdk.telephony import ConfigurationLevel, OriginatorType
 
 
 class TestPermOut(TestWithLocations):

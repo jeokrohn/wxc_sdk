@@ -5,7 +5,6 @@ import random
 from concurrent.futures import ThreadPoolExecutor
 
 from tests.base import TestWithLocations
-
 from wxc_sdk.common import AuthCode
 
 

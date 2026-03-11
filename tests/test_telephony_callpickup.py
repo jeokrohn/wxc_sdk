@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from itertools import chain
 from typing import ClassVar
 
-from tests.base import async_test, TestWithLocations
+from tests.base import TestWithLocations, async_test
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import PersonPlaceAgent

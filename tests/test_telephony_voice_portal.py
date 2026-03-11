@@ -2,8 +2,9 @@
 Tests for location voice portals
 """
 
-from tests.base import TestWithLocations
 from concurrent.futures import ThreadPoolExecutor
+
+from tests.base import TestWithLocations
 
 
 class TestVoicePortal(TestWithLocations):

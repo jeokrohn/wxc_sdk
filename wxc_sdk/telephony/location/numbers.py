@@ -3,9 +3,9 @@ from typing import Optional
 from pydantic import Field
 
 from ...api_child import ApiChild
-from ...base import enum_str, ApiModel
-from ...common import NumberState
+from ...base import ApiModel, enum_str
 from ...base import SafeEnum as Enum
+from ...common import NumberState
 
 __all__ = ['TelephoneNumberType', 'NumberUsageType', 'NumberAddError', 'NumberAddResponse', 'NumbersRequestAction',
            'LocationNumbersApi']

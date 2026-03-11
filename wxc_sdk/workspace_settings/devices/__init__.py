@@ -1,7 +1,7 @@
 from collections.abc import Generator
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.person_settings import TelephonyDevice, Hoteling, DeviceList
+from wxc_sdk.person_settings import DeviceList, Hoteling, TelephonyDevice
 
 __all__ = ['WorkspaceDevicesApi']
 

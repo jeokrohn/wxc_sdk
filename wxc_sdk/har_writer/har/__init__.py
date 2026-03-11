@@ -8,11 +8,21 @@ import urllib.parse
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from json import JSONDecodeError
-from typing import Optional, Annotated, Union, Mapping, Literal, Any, TextIO
+from typing import Annotated, Any, Literal, Mapping, Optional, TextIO, Union
 
 import requests_toolbelt
-from pydantic import (BaseModel, PlainSerializer, AwareDatetime, BeforeValidator, AfterValidator, Field,
-                      model_validator, TypeAdapter, PlainValidator, model_serializer)
+from pydantic import (
+    AfterValidator,
+    AwareDatetime,
+    BaseModel,
+    BeforeValidator,
+    Field,
+    PlainSerializer,
+    PlainValidator,
+    TypeAdapter,
+    model_serializer,
+    model_validator,
+)
 from requests.structures import CaseInsensitiveDict
 
 import wxc_sdk.as_mpe

@@ -12,7 +12,7 @@ import uuid
 import webbrowser
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Union, Optional
+from typing import Optional, Union
 
 import requests
 import yaml

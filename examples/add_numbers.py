@@ -43,7 +43,7 @@ import csv
 import logging
 import os
 import sys
-from collections import defaultdict, Counter
+from collections import Counter, defaultdict
 from contextlib import contextmanager
 from functools import wraps
 from itertools import chain
@@ -52,8 +52,8 @@ from typing import Optional
 
 import typer
 from dotenv import load_dotenv
-
 from service_app import SERVICE_APP_ENVS, env_path, get_tokens
+
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.common import NumberState
 from wxc_sdk.har_writer import HarWriter

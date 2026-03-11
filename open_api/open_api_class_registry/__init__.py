@@ -8,10 +8,10 @@ from typing import Optional
 
 import dateutil.parser
 
-from apib.python_class import PythonAPI, PythonClass, Attribute, Endpoint, Parameter
 from apib.class_registry import PythonClassRegistry
+from apib.python_class import Attribute, Endpoint, Parameter, PythonAPI, PythonClass
 from apib.tools import sanitize_class_name, snake_case
-from open_api.open_api_model import OASpec, OASchemaProperty, OAOperation, OAContent, OAParameter
+from open_api.open_api_model import OAContent, OAOperation, OAParameter, OASchemaProperty, OASpec
 from open_api.open_api_sources import OpenApiSpecInfo
 
 log = logging.getLogger(__name__)

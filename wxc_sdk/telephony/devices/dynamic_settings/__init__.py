@@ -5,7 +5,6 @@ from pydantic import TypeAdapter
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel, enum_str
 from wxc_sdk.base import SafeEnum as Enum
-
 from wxc_sdk.common import SetOrClear
 
 __all__ = ['SettingsType', 'DeviceSettingsGroupTag', 'SettingsGroup', 'DynamicSettingsGroups', 'ValidationRule',

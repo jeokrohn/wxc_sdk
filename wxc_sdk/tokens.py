@@ -1,11 +1,11 @@
 """
 Simple implementation of Webex tokens
 """
-from pydantic import BaseModel
-
-from typing import Literal, Optional
 import datetime
+from typing import Literal, Optional
+
 import pytz
+from pydantic import BaseModel
 
 __all__ = ['Tokens']
 

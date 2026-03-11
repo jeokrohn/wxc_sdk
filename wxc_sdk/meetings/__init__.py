@@ -3,8 +3,13 @@ Webex Meetings APIs
 """
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import Optional, List
+from typing import List, Optional
 
+from ..api_child import ApiChild
+from ..base import ApiModel
+from ..base import SafeEnum as Enum
+from ..common import LinkRelation
+from ..rest import RestSession
 from .chats import MeetingChatsApi
 from .closed_captions import MeetingClosedCaptionsApi
 from .invitees import MeetingInviteesApi
@@ -14,11 +19,6 @@ from .qanda import MeetingQandAApi
 from .qualities import MeetingQualitiesApi
 from .recordings import RecordingsApi
 from .transcripts import MeetingTranscriptsApi
-from ..api_child import ApiChild
-from ..base import ApiModel
-from ..base import SafeEnum as Enum
-from ..common import LinkRelation
-from ..rest import RestSession
 
 __all__ = ['AttendeePrivileges', 'AudioConnectionOptions', 'AudioConnectionType', 'BreakoutSession',
            'CallInNumbers', 'AnswerCondition', 'CustomizedQuestionForCreateMeeting',

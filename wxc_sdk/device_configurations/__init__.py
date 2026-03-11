@@ -1,4 +1,4 @@
-from typing import Literal, Any, Optional, NamedTuple, List
+from typing import Any, List, Literal, NamedTuple, Optional
 
 from wxc_sdk.api_child import ApiChild
 

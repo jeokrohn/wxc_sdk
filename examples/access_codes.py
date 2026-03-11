@@ -51,8 +51,8 @@ from typing import Literal, Optional
 import typer
 from dotenv import load_dotenv
 from pydantic import BaseModel, TypeAdapter
-
 from service_app import SERVICE_APP_ENVS, env_path, get_tokens
+
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.common import AuthCode
 from wxc_sdk.telephony.location import TelephonyLocation

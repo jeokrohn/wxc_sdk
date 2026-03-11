@@ -1,9 +1,19 @@
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import Optional, List
+from typing import List, Optional
 
 from pydantic import Field, TypeAdapter
 
+from ...api_child import ApiChild
+from ...base import ApiModel, enum_str, to_camel
+from ...base import SafeEnum as Enum
+from ...common import DeviceCustomization, IdAndName, RouteType, UserType, ValidateExtensionsResponse
+from ...locations import Location
+from ...person_settings.available_numbers import AvailableNumber
+from ...person_settings.common import ApiSelector
+from ...person_settings.ecbn import ECBNEffectiveLevel, ECBNQuality
+from ...person_settings.permissions_out import OutgoingPermissionsApi
+from ...rest import RestSession
 from .emergency_services import LocationEmergencyServicesApi
 from .intercept import LocationInterceptApi
 from .internal_dialing import InternalDialingApi
@@ -11,16 +21,6 @@ from .moh import LocationMoHApi
 from .numbers import LocationNumbersApi
 from .receptionist_contacts import ReceptionistContactsDirectoryApi
 from .vm import LocationVoicemailSettingsApi
-from ...api_child import ApiChild
-from ...base import ApiModel, to_camel, enum_str
-from ...base import SafeEnum as Enum
-from ...common import ValidateExtensionsResponse, RouteType, DeviceCustomization, UserType, IdAndName
-from ...locations import Location
-from ...person_settings.available_numbers import AvailableNumber
-from ...person_settings.common import ApiSelector
-from ...person_settings.ecbn import ECBNEffectiveLevel, ECBNQuality
-from ...person_settings.permissions_out import OutgoingPermissionsApi
-from ...rest import RestSession
 
 __all__ = ['CallingLineId', 'PSTNConnection', 'TelephonyLocation', 'CallBackSelected', 'ContactDetails',
            'LocationECBNLocation', 'LocationECBNLocationMember', 'LocationECBN',

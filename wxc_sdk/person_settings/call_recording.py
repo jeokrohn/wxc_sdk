@@ -5,9 +5,9 @@ from typing import Optional
 
 from pydantic import Field
 
-from .common import PersonSettingsApiChild
 from ..base import ApiModel
 from ..base import SafeEnum as Enum
+from .common import PersonSettingsApiChild
 
 __all__ = ['Record', 'NotificationType', 'NotificationRepeat', 'Notification', 'CallRecordingSetting',
            'StartStopAnnouncement', 'CallRecordingApi']

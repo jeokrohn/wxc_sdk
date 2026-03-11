@@ -6,6 +6,12 @@ from typing import Optional
 
 from pydantic import Field
 
+from ..api_child import ApiChild
+from ..base import ApiModel
+from ..base import SafeEnum as Enum
+from ..common import DeviceType, IdAndName, PrimaryOrShared, UserType
+from ..common.schedules import ScheduleApi, ScheduleApiBase
+from ..rest import RestSession
 from .agent_caller_id import AgentCallerIdApi
 from .app_shared_line import AppSharedLineApi
 from .appservices import AppServicesApi
@@ -42,12 +48,6 @@ from .selective_forward import SelectiveForwardApi
 from .selective_reject import SelectiveRejectApi
 from .single_number_reach import SingleNumberReachApi
 from .voicemail import VoicemailApi
-from ..api_child import ApiChild
-from ..base import ApiModel
-from ..base import SafeEnum as Enum
-from ..common import UserType, PrimaryOrShared, IdAndName, DeviceType
-from ..common.schedules import ScheduleApi, ScheduleApiBase
-from ..rest import RestSession
 
 __all__ = ['PersonSettingsApi', 'DeviceOwner', 'DeviceActivationState', 'Hoteling', 'TelephonyDevice',
            'DeviceList', 'UserCallCaptions']

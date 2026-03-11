@@ -6,7 +6,7 @@ from typing import Union
 
 from tests.base import TestCaseWithLog, async_test
 from wxc_sdk.base import webex_id_to_uuid
-from wxc_sdk.licenses import LicenseUser, License
+from wxc_sdk.licenses import License, LicenseUser
 
 
 class TestLicense(TestCaseWithLog):

@@ -4,7 +4,7 @@ from typing import Optional
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel, enum_str
 from wxc_sdk.base import SafeEnum as Enum
-from wxc_sdk.common import NumberState, NumberOwner, IdAndName
+from wxc_sdk.common import IdAndName, NumberOwner, NumberState
 from wxc_sdk.person_settings.common import ApiSelector
 from wxc_sdk.rest import RestSession
 

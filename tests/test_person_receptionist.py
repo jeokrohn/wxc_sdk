@@ -6,9 +6,9 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from unittest import skip
 
+from tests.base import TestCaseWithUsers
 from wxc_sdk.all_types import Person, ReceptionistSettings
 from wxc_sdk.rest import RestError
-from tests.base import TestCaseWithUsers
 
 
 @skip('Receptionist client is not available anymore')

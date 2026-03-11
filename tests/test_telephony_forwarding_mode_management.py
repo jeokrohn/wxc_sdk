@@ -12,14 +12,21 @@ from dataclasses import dataclass
 from typing import ClassVar
 
 from tests.base import TestCaseWithLog, TestWithLocations
-from tests.testutil import available_extensions_gen, create_simple_call_queue, create_operating_mode, new_aa_names
+from tests.testutil import available_extensions_gen, create_operating_mode, create_simple_call_queue, new_aa_names
 from wxc_sdk.common.schedules import Schedule, ScheduleType
 from wxc_sdk.locations import Location
 from wxc_sdk.rest import RestError
 from wxc_sdk.telephony.autoattendant import AutoAttendant
 from wxc_sdk.telephony.callqueue import CallQueue
-from wxc_sdk.telephony.forwarding import (ForwardingApi, ForwardOperatingModes, ModeForward, ModeForwardTo,
-                                          ForwardToSelection, CallForwarding, ForwardingSetting)
+from wxc_sdk.telephony.forwarding import (
+    CallForwarding,
+    ForwardingApi,
+    ForwardingSetting,
+    ForwardOperatingModes,
+    ForwardToSelection,
+    ModeForward,
+    ModeForwardTo,
+)
 from wxc_sdk.telephony.huntgroup import HuntGroup
 from wxc_sdk.telephony.location import TelephonyLocation
 from wxc_sdk.telephony.operating_modes import OperatingMode

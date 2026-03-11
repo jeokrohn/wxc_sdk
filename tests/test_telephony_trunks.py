@@ -7,9 +7,9 @@ from random import choice
 from typing import ClassVar
 from unittest import skip
 
-from tests.base import TestCaseWithLog, async_test, TestWithLocations
+from tests.base import TestCaseWithLog, TestWithLocations, async_test
 from wxc_sdk.rest import RestError
-from wxc_sdk.telephony.prem_pstn.trunk import TrunkType, TrunkDetail, Trunk
+from wxc_sdk.telephony.prem_pstn.trunk import Trunk, TrunkDetail, TrunkType
 
 
 class TestListTrunks(TestCaseWithLog):

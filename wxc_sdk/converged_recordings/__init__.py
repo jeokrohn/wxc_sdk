@@ -1,6 +1,6 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional, Union, List
+from typing import List, Optional, Union
 
 from dateutil.parser import isoparse
 from pydantic import Field
@@ -15,7 +15,7 @@ __all__ = ['ConvergedRecordingsApi',
            'ConvergedRecordingWithDirectDownloadLinks', 'ConvergedRecordingMeta',
            'TemporaryDirectDownloadLink', 'RecordingSession', 'RecordingParty', 'RecordingPartyActor']
 
-from wxc_sdk.meetings.recordings import RecordingFormat, RecordingStatus, RecordingServiceType
+from wxc_sdk.meetings.recordings import RecordingFormat, RecordingServiceType, RecordingStatus
 
 
 class RecordingOwnerType(str, Enum):

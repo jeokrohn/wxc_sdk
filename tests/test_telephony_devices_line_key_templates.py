@@ -5,11 +5,11 @@ import asyncio
 import json
 from time import sleep
 
-from tests.base import TestCaseWithLog, async_test, TestWithLocations
+from tests.base import TestCaseWithLog, TestWithLocations, async_test
 from wxc_sdk.common import ApplyLineKeyTemplateAction, OwnerType
 from wxc_sdk.devices import Device, ProductType
-from wxc_sdk.telephony import NumberType, NumberListPhoneNumber, SupportedDevices
-from wxc_sdk.telephony.devices import LineKeyTemplate, ProgrammableLineKey, LineKeyType
+from wxc_sdk.telephony import NumberListPhoneNumber, NumberType, SupportedDevices
+from wxc_sdk.telephony.devices import LineKeyTemplate, LineKeyType, ProgrammableLineKey
 
 
 class TestLineKeyTemplate(TestCaseWithLog):

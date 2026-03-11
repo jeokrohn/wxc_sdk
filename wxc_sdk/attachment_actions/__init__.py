@@ -2,7 +2,7 @@
 Attachment actions API
 """
 from datetime import datetime
-from typing import Optional, Literal
+from typing import Literal, Optional
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
