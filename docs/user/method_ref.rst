@@ -1920,19 +1920,21 @@ The method name is a link to the method documentation.
    * - :meth:`api.telephony.pickup.update <wxc_sdk.telephony.callpickup.CallPickupApi.update>`
         Update a Call Pickup
    * - :meth:`api.telephony.playlist.assigned_locations <wxc_sdk.telephony.playlists.PlayListApi.assigned_locations>`
-        Fetch list of locations which are assigned to the announcement playlist
+        List Playlist Locations
    * - :meth:`api.telephony.playlist.create <wxc_sdk.telephony.playlists.PlayListApi.create>`
         Create announcement Playlist at organization level
    * - :meth:`api.telephony.playlist.delete <wxc_sdk.telephony.playlists.PlayListApi.delete>`
-        Delete an announcement playlist for an organization
+        Delete Announcement Playlist
    * - :meth:`api.telephony.playlist.details <wxc_sdk.telephony.playlists.PlayListApi.details>`
-        Fetch details of announcement playlist at the organization level
+        Get Announcement Playlist
    * - :meth:`api.telephony.playlist.list <wxc_sdk.telephony.playlists.PlayListApi.list>`
-        Fetch list of announcement playlist on organization level
+        List Announcement Playlists
    * - :meth:`api.telephony.playlist.modify <wxc_sdk.telephony.playlists.PlayListApi.modify>`
-        Modify announcement playlist at organization level
+        Update Announcement Playlist
    * - :meth:`api.telephony.playlist.modify_assigned_locations <wxc_sdk.telephony.playlists.PlayListApi.modify_assigned_locations>`
-        Modify list of assigned locations to the announcement playlist
+        Update Playlist Locations
+   * - :meth:`api.telephony.playlist.usage <wxc_sdk.telephony.playlists.PlayListApi.usage>`
+        Get Playlist Usage
    * - :meth:`api.telephony.pnc.read <wxc_sdk.telephony.pnc.PrivateNetworkConnectApi.read>`
         Get Private Network Connect
    * - :meth:`api.telephony.pnc.update <wxc_sdk.telephony.pnc.PrivateNetworkConnectApi.update>`

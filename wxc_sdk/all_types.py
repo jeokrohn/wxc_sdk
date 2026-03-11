@@ -239,7 +239,8 @@ from wxc_sdk.telephony.operating_modes import Day, DaySchedule, DifferentHoursDa
     OperatingModeSchedule, SameHoursDaily, Week
 from wxc_sdk.telephony.organisation_vm import OrganisationVoicemailSettings, OrganisationVoicemailSettingsAPI
 from wxc_sdk.telephony.paging import Paging, PagingAgent
-from wxc_sdk.telephony.playlists import PlayList, PlaylistAnnouncement
+from wxc_sdk.telephony.playlists import PlayList, PlaylistAnnouncement, PlaylistUsage, PlaylistUsageLocation, \
+    PlaylistUsageLocationFeatureRef, PlaylistUsageType
 from wxc_sdk.telephony.pnc import NetworkConnectionType
 from wxc_sdk.telephony.prem_pstn import DialPatternValidationResult
 from wxc_sdk.telephony.prem_pstn.dial_plan import CreateResponse, DialPlan, PatternAndAction
@@ -400,7 +401,8 @@ __all__ = ['AcdCustomization', 'Action', 'ActionToBePerformed', 'ActionToBePerfo
            'PersonSettingsApiChild', 'PersonType', 'PersonalAssistant', 'PersonalAssistantAlerting',
            'PersonalAssistantPresence', 'PersonalMeetingRoom', 'PersonalMeetingRoomOptions', 'Personality',
            'PhoneLanguage', 'PhoneNumber', 'PhoneNumberStatus', 'PhoneNumberType', 'PhotoObject', 'PhotoObjectType',
-           'PickupNotificationType', 'PinLength', 'PlayList', 'PlaylistAnnouncement', 'Policy',
+           'PickupNotificationType', 'PinLength', 'PlayList', 'PlaylistAnnouncement', 'PlaylistUsage',
+           'PlaylistUsageLocation', 'PlaylistUsageLocationFeatureRef', 'PlaylistUsageType', 'Policy',
            'PreferredAnswerEndpoint', 'PreferredAnswerEndpointType', 'PreferredAnswerResponse',
            'PrimaryContactMethod', 'PrimaryOrSecondary', 'PrimaryOrShared', 'PriorityAlert', 'PriorityAlertCriteria',
            'Privacy', 'PrivacyOnRedirectedCalls', 'ProductType', 'ProgrammableLineKey', 'PskObject',

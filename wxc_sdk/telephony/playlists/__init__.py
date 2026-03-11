@@ -1,13 +1,16 @@
+import builtins
 from datetime import datetime
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, enum_str
+from wxc_sdk.base import SafeEnum as Enum
 from wxc_sdk.common import IdAndName
 
-__all__ = ['PlaylistAnnouncement', 'PlayListApi', 'PlayList']
+__all__ = ['PlaylistAnnouncement', 'PlayListApi', 'PlayList', 'PlaylistUsageType', 'PlaylistUsageLocation',
+           'PlaylistUsageLocationFeatureRef', 'PlaylistUsage']
 
 
 class PlaylistAnnouncement(ApiModel):
@@ -48,6 +51,36 @@ class PlayList(ApiModel):
     announcements: Optional[list[PlaylistAnnouncement]] = None
 
 
+class PlaylistUsageLocationFeatureRef(ApiModel):
+    #: Feature identifier.
+    id: Optional[str] = None
+    #: Feature name.
+    name: Optional[str] = None
+    #: Feature type.
+    type: Optional[str] = None
+
+
+class PlaylistUsageLocation(ApiModel):
+    #: Location identifier.
+    id: Optional[str] = None
+    #: Location name.
+    name: Optional[str] = None
+    #: Feature referencing the playlist.
+    feature_reference: Optional[PlaylistUsageLocationFeatureRef] = None
+
+
+class PlaylistUsage(ApiModel):
+    #: Identifier of the playlist.
+    id: Optional[str] = None
+    #: List of locations using this playlist.
+    locations: Optional[list[PlaylistUsageLocation]] = None
+
+
+class PlaylistUsageType(str, Enum):
+    feature = 'feature'
+    location = 'location'
+
+
 class PlayListApi(ApiChild, base='telephony/config/announcements/playlists'):
     """
     Features:  Announcement PlayList
@@ -68,7 +101,7 @@ class PlayListApi(ApiChild, base='telephony/config/announcements/playlists'):
 
     def list(self, org_id: str = None) -> list[PlayList]:
         """
-        Fetch list of announcement playlist on organization level
+        List Announcement Playlists
 
         Fetch a list of announcement playlist at an organization.
 
@@ -87,7 +120,7 @@ class PlayListApi(ApiChild, base='telephony/config/announcements/playlists'):
         r = TypeAdapter(list[PlayList]).validate_python(data['playlists'])
         return r
 
-    def create(self, name: str, announcement_ids: List[str], org_id: str = None) -> str:
+    def create(self, name: str, announcement_ids: builtins.list[str], org_id: str = None) -> str:
         """
         Create announcement Playlist at organization level
 
@@ -115,9 +148,47 @@ class PlayListApi(ApiChild, base='telephony/config/announcements/playlists'):
         r = data['id']
         return r
 
+    def usage(self, play_list_id: str, playlist_usage_type: PlaylistUsageType = None) -> PlaylistUsage:
+        """
+        Get Playlist Usage
+
+        :param play_list_id: Unique identifier of the playlist.
+        :type play_list_id: str
+        :param playlist_usage_type: Filter usage by type.
+        :type playlist_usage_type: PlaylistUsageType
+        :rtype: :class:`PlaylistUsage`
+        """
+        params = {}
+        if playlist_usage_type is not None:
+            params['playlistUsageType'] = enum_str(playlist_usage_type)
+        url = self.ep(f'{play_list_id}/usage')
+        data = super().get(url, params=params)
+        r = PlaylistUsage.model_validate(data)
+        return r
+
+    def delete(self, play_list_id: str, org_id: str = None):
+        """
+        Delete Announcement Playlist
+
+        Delete an announcement playlist for an organization.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param play_list_id: Unique identifier of an announcement playlist.
+        :type play_list_id: str
+        :param org_id: Delete an announcement playlist in this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{play_list_id}')
+        super().delete(url, params=params)
+
     def details(self, play_list_id: str, org_id: str = None) -> PlayList:
         """
-        Fetch details of announcement playlist at the organization level
+        Get Announcement Playlist
 
         Fetch details of announcement playlist by its ID at an organization level.
 
@@ -138,9 +209,10 @@ class PlayListApi(ApiChild, base='telephony/config/announcements/playlists'):
         r = PlayList.model_validate(data)
         return r
 
-    def modify(self, play_list_id: str, name: str = None, announcement_ids: List[str] = None, org_id: str = None):
+    def modify(self, play_list_id: str, name: str = None, announcement_ids: builtins.list[str] = None,
+               org_id: str = None):
         """
-        Modify announcement playlist at organization level
+        Update Announcement Playlist
 
         Modify an existing announcement playlist at an organization level.
 
@@ -167,27 +239,9 @@ class PlayListApi(ApiChild, base='telephony/config/announcements/playlists'):
         url = self.ep(f'{play_list_id}')
         super().put(url, params=params, json=body)
 
-    def delete(self, play_list_id: str, org_id: str = None):
+    def assigned_locations(self, play_list_id: str, org_id: str = None) -> builtins.list[IdAndName]:
         """
-        Delete an announcement playlist for an organization.
-
-        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
-
-        :param play_list_id: Unique identifier of an announcement playlist.
-        :type play_list_id: str
-        :param org_id: Delete an announcement playlist in this organization.
-        :type org_id: str
-        :rtype: None
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'{play_list_id}')
-        super().delete(url, params=params)
-
-    def assigned_locations(self, play_list_id: str, org_id: str = None) -> List[IdAndName]:
-        """
-        Fetch list of locations which are assigned to the announcement playlist
+        List Playlist Locations
 
         Fetch list of locations which are assigned to the given announcement playlist
 
@@ -208,9 +262,9 @@ class PlayListApi(ApiChild, base='telephony/config/announcements/playlists'):
         r = TypeAdapter(list[IdAndName]).validate_python(data['locations'])
         return r
 
-    def modify_assigned_locations(self, play_list_id: str, location_ids: List[str], org_id: str = None):
+    def modify_assigned_locations(self, play_list_id: str, location_ids: builtins.list[str], org_id: str = None):
         """
-        Modify list of assigned locations to the announcement playlist
+        Update Playlist Locations
 
         Modify list of assigned locations or add new locations to the announcement playlist. This will assing the
         playlist to the location's music on hold.
