@@ -1,4 +1,5 @@
 # auto-generated. DO NOT EDIT
+import builtins
 import json
 import logging
 import mimetypes
@@ -7,20 +8,19 @@ import urllib.parse
 from collections.abc import AsyncGenerator
 from dataclasses import dataclass
 from datetime import datetime, date, timedelta
-import pytz
-from dateutil import tz
-from dateutil.parser import isoparse
 from enum import Enum
 from io import BufferedReader
 from typing import Union, Optional, Literal, List
 
+import pytz
+from dateutil import tz
+from dateutil.parser import isoparse
 from pydantic import TypeAdapter
-
 from wxc_sdk.all_types import *
 from wxc_sdk.as_mpe import MultipartEncoder
 from wxc_sdk.as_rest import AsRestSession
-from wxc_sdk.base import to_camel, StrOrDict, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
+from wxc_sdk.base import to_camel, StrOrDict, dt_iso_str, enum_str
 
 log = logging.getLogger(__name__)
 
