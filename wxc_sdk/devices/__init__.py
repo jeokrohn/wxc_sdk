@@ -121,6 +121,7 @@ class Device(ApiModel):
     planned_maintenance: Optional[MaintenanceMode] = None
 
     @model_validator(mode='before')
+    @classmethod
     def pop_place_id(cls, values):
         """
         :meta private:
@@ -129,6 +130,7 @@ class Device(ApiModel):
         return values
 
     @field_validator('mac')
+    @classmethod
     def mac_no_colon(cls, v: str) -> str:
         """
         :meta private:

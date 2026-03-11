@@ -186,6 +186,7 @@ class CallForwardingNumber(ApiModel):
     number_type: CallForwardingNumberType = Field(alias='type')
 
     @field_validator('phone_number', mode='before')
+    @classmethod
     def validate_phone_number(cls, v):
         """
         Platform returns NANP numbers w/o +
@@ -221,6 +222,7 @@ class CustomNumbers(ApiModel):
     numbers: Optional[list[str]] = None
 
     @field_validator('numbers', mode='before')
+    @classmethod
     def numbers_validator(cls, numbers: list[str]):
         """
         :meta private:

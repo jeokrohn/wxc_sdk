@@ -199,6 +199,7 @@ class CallParkExtension(ApiModel):
     location_id: Optional[str] = None
 
     @model_validator(mode='before')
+    @classmethod
     def fix_location_name(cls, values):
         """
         The schema changed at some point: endpoint returns "location" instead of "location_name". For backwards
@@ -1040,6 +1041,7 @@ class DeviceCustomization(ApiModel):
     """
 
     @field_validator('last_update_time', mode='before')
+    @classmethod
     def update_time(cls, v):
         """
 

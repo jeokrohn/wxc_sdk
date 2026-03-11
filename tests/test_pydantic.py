@@ -46,6 +46,7 @@ class TestOptional(TestCase):
             b: str
 
             @model_validator(mode='before')
+            @classmethod
             def val_root_test_model(cls, v):
                 fa = re.findall(r'\s*([a-z]+)\s*=\s*(\w+),?', v)
                 v = {k: v for k, v in fa}
@@ -66,6 +67,7 @@ class TestOptional(TestCase):
             a: Attribute
 
             @model_validator(mode='before')
+            @classmethod
             def val_root_object(cls, v):
                 v['a'] = Attribute(a='a', b='10', c='on')
                 return v
@@ -111,6 +113,7 @@ class TestOptional(TestCase):
                 return cls.do_validate(v)
 
             @field_validator('new_flag', mode='before')
+            @classmethod
             def vaL_new_flag(cls, v):
                 return cls.do_validate(v)
 
@@ -137,6 +140,7 @@ class TestOptional(TestCase):
                 extra = Extra.allow
 
             @model_validator(mode='before')
+            @classmethod
             def val_root_test(cls, v):
                 v['c'] = Att(a_1=21, a_2=22)
                 return v

@@ -35,6 +35,7 @@ class Holiday(BaseModel):
     states: AllOrAny  # quick and dirty. Don't need more detail right now
 
     @field_validator('date', mode='before')
+    @classmethod
     def validate_date(cls, v):
         data = v['datetime']
         r = date(day=data['day'], month=data['month'], year=data['year'])

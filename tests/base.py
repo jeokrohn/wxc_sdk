@@ -321,6 +321,7 @@ class LoggedRequest(BaseModel):
     end_line: ClassVar[re.Pattern] = re.compile(r'\s*-+\s*end\s*')
 
     @model_validator(mode='before')
+    @classmethod
     def validate_all(cls, values):
         """
         Validator to populate request, parse the message and set some additional attributes

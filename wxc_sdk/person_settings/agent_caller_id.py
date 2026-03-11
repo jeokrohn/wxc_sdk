@@ -45,6 +45,7 @@ class QueueCallerId(ApiModel):
     selected_queue: Optional[AgentCallerId] = None
 
     @model_validator(mode='before')
+    @classmethod
     def root(cls, values):
         """
 

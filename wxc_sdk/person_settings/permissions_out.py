@@ -85,6 +85,7 @@ class CallingPermissions(ApiModel):
         ...
 
     @model_validator(mode='before')
+    @classmethod
     def rv(cls, v):
         """
 
@@ -182,6 +183,7 @@ class OutgoingPermissions(ApiModel):
     calling_permissions: Optional[CallingPermissions] = None
 
     @field_validator('calling_permissions', mode='before')
+    @classmethod
     def transform_calling_permissions(cls, v):
         """
         calling permissions are returned by the API as a list of triples:

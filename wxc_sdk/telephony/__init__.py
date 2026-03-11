@@ -238,6 +238,7 @@ class DestinationType(str, Enum):
 
 class LocationAndNumbers(ApiModel):
     @field_validator('phone_number', mode='before')
+    @classmethod
     def e164(cls, v):
         """
         :meta private:

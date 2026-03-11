@@ -21,6 +21,7 @@ class SimRingNumber(ApiModel):
     answer_confirmation_required_enabled: Optional[bool] = None
 
     @model_validator(mode='before')
+    @classmethod
     def remove_answer_confirmation_enabled(cls, data):
         """
         Remove answer_confirmation_enabled from data

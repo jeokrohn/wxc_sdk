@@ -119,6 +119,7 @@ class OASchemaProperty(OABaseModel):
 
     # noinspection PyMethodParameters
     @field_validator('enum', mode='before')
+    @classmethod
     def validate_enum(cls, v, validation: ValidationInfo):
         """
         Validate enum. Only valid for type 'string'
@@ -129,7 +130,7 @@ class OASchemaProperty(OABaseModel):
         return v
 
     @model_validator(mode='after')
-    def remove_none_from_enum(cls, data: 'OASchemaProperty') -> 'OASchemaProperty':
+    def remove_none_from_enum(self, data: 'OASchemaProperty') -> 'OASchemaProperty':
         """
         remove None from enum values. None represents the null value and is not a valid enum value.
         """

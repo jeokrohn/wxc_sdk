@@ -36,6 +36,7 @@ class ApibMeta(ApibModel):
     id: Optional[str] = None
 
     @model_validator(mode='before')
+    @classmethod
     def val_root_meta(cls, data):
         log.debug(f'{data}')
         try:
@@ -172,6 +173,7 @@ class ApibElement(ApibModel):
         return v
 
     @model_validator(mode='before')
+    @classmethod
     def val_root_element(cls, data):
         try:
             if cls.has_attributes:
@@ -182,6 +184,7 @@ class ApibElement(ApibModel):
         return data
 
     @field_validator('content', mode='before')
+    @classmethod
     def val_content_element(cls, content):
         """
         Content can be (among other options):
@@ -198,6 +201,7 @@ class ApibElement(ApibModel):
         return content
 
     @field_validator('attributes', mode='before')
+    @classmethod
     def val_attributes(cls, attributes):
         """
         Validate as dict[str, 'ApibElement'] and try to deserialize values
@@ -276,6 +280,7 @@ class ApibString(ApibElement):
     content: Optional[str] = None
 
     @field_validator('content', mode='after')
+    @classmethod
     def content_string_val(cls, v):
         if isinstance(v, int):
             v = f'{v}'
@@ -289,6 +294,7 @@ class ApibBool(ApibElement):
     content: Optional[bool] = None
 
     @field_validator('content', mode='after')
+    @classmethod
     def content_bool(cls, v):
         if v is not None:
             if not isinstance(v, int):
@@ -304,6 +310,7 @@ class ApibNumber(ApibElement):
     default: Optional[float] = None
 
     @model_validator(mode='before')
+    @classmethod
     def val_root_number(cls, v):
         """
         Root validator to parse default from attributes if present
@@ -331,6 +338,7 @@ class ApibSourceMapNumber(ApibNumber, override_element_type_for='sourceMapXYC'):
     column: Optional[int] = None
 
     @field_validator('line', 'column', mode='before')
+    @classmethod
     def val_line_column(cls, v):
         v = ApibNumber.model_validate(v).content
         return v
@@ -341,6 +349,7 @@ class AbibSourceMapNumberArray(ApibElement, override_element_type_for='sourceMap
     content: list[ApibSourceMapNumber]
 
     @model_validator(mode='before')
+    @classmethod
     def val_root_sourcemap_number_array(cls, v):
         v = v.copy()
         v['content'] = TypeAdapter(list[ApibSourceMapNumber]).validate_python(v['content'])
@@ -361,6 +370,7 @@ class ApibSourceMap(ApibElement):
     content: list[ApibSourceMapEntry]
 
     @model_validator(mode='before')
+    @classmethod
     def val_root_sourcemap(cls, v):
         parsed_content = TypeAdapter(list[AbibSourceMapNumberArray]).validate_python(v['content'])
         v = v.copy()
@@ -375,6 +385,7 @@ class WithTypeAttributes(ApibElement):
     type_attributes: set[str] = Field(alias='typeAttributes', default_factory=set)
 
     @model_validator(mode='before')
+    @classmethod
     def val_root_type_attributes(cls, values):
         if values is None:
             return None
@@ -389,6 +400,7 @@ class WithTypeAttributes(ApibElement):
         return values
 
     @field_validator('type_attributes', mode='before')
+    @classmethod
     def val_type_attributes(cls, v):
         """
         Type attributes are something like:
@@ -413,6 +425,7 @@ class ApibEnumElement(ApibString, WithTypeAttributes, override_element_type_for=
         # TODO: check for extra fields?? 'samples' seems to be a candidate
 
     @model_validator(mode='before')
+    @classmethod
     def val_root_enum(cls, data):
         # apparently a "*" in an enum is parsed as:
         #   {
@@ -499,6 +512,7 @@ class ApibMember(WithTypeAttributes):
         return {self.key: self.value.content}
 
     @model_validator(mode='before')
+    @classmethod
     def val_root_member(cls, data):
         if not isinstance(data, dict):
             return
@@ -535,6 +549,7 @@ class ApibOption(ApibElement):
     content: ApibMember
 
     @model_validator(mode='before')
+    @classmethod
     def root_val_option(cls, values):
         # content should be a single element list
         if not (content := values.get('content')) or not isinstance(content, list) or len(content) != 1:
@@ -557,7 +572,7 @@ class ApibSelect(ApibElement):
     content: list[ApibOption]
 
     @model_validator(mode='after')
-    def val_root_select(cls, data: 'ApibSelect'):
+    def val_root_select(self, data: 'ApibSelect'):
         option_keys = set(option.content.key for option in data.content)
         if len(option_keys) != 1:
             raise ValueError(f'only expected one value in all options. Got: {", ".join(sorted(option_keys))}')
@@ -580,6 +595,7 @@ class ApibResource(ApibElement):
     href_variables: Optional[ApibHrefVariables] = Field(alias='hrefVariables', default=None)
 
     @field_validator('href', mode='before')
+    @classmethod
     def vaL_href(cls, v):
         v = ApibString.model_validate(v)
         return v.content
@@ -587,6 +603,7 @@ class ApibResource(ApibElement):
 
 class ApibWithCopy(ApibElement):
     @field_validator('content', mode='after')
+    @classmethod
     def max_one_copy_in_content(cls, content):
         if isinstance(content, list):
             copy_elements = sum(isinstance(c, ApibCopy) for c in content)
@@ -609,6 +626,7 @@ class ApibCategory(ApibWithCopy,
     has_attributes = True
 
     @field_validator('metadata', mode='before')
+    @classmethod
     def val_metadata(cls, data):
         # parse as Array ..
         data = ApibArray.model_validate(data, element='member')
@@ -672,7 +690,7 @@ class ApibObject(WithTypeAttributes):
     content: list[Union[ApibMember, ApibSelect]] = Field(default_factory=list)
 
     @model_validator(mode='after')
-    def val_root_object(cls, o: 'ApibObject'):
+    def val_root_object(self, o: 'ApibObject'):
         if o.type_attributes and o.type_attributes != {'fixedType'}:
             raise ValidationError(f'unexpected type attributes: {o.type_attributes}')
         return o
@@ -687,6 +705,7 @@ class ApibTransition(ApibElement, allowed_content={'copy', 'httpTransaction'}):
     has_attributes = True
 
     @field_validator('href', mode='before')
+    @classmethod
     def val_href(cls, v):
         """
         href is an ApibString
@@ -697,6 +716,7 @@ class ApibTransition(ApibElement, allowed_content={'copy', 'httpTransaction'}):
         return v.content
 
     @field_validator('href_variables', mode='before')
+    @classmethod
     def val_href_variables(cls, v):
         if (element := v.get('element')) != 'hrefVariables':
             raise ValueError(f"unexpected 'element' value for hrefVariables: '{element}'")
@@ -747,7 +767,7 @@ class ApibApi(ApibCategory, override_element_type_for='parseResult'):
         return chain.from_iterable(c.content for c in self.content if isinstance(c, ApibResource))
 
     @model_validator(mode='after')
-    def val_is_api(cls, api: 'ApibApi'):
+    def val_is_api(self, api: 'ApibApi'):
         # verify that this really an api definition by looking for 'api' in meta.classes
         if api.meta.meta_class != 'api':
             raise ValueError('not an api')
@@ -763,6 +783,7 @@ class ApibAnnotation(ApibElement):
     source_map: list[ApibSourceMap] = Field(alias='sourceMap')
 
     @field_validator('code', mode='before')
+    @classmethod
     def val_code(cls, v):
         parsed = ApibNumber.model_validate(v)
         if parsed.attributes or parsed.meta:
@@ -770,6 +791,7 @@ class ApibAnnotation(ApibElement):
         return parsed.content
 
     @field_validator('source_map', mode='before')
+    @classmethod
     def val_source_map(cls, v):
         parsed = ApibArray.model_validate(v)
         return parsed.content
@@ -785,6 +807,7 @@ class ApibWithHeaders(ApibElement):
     headers: Optional[dict[str, str]] = None
 
     @field_validator('headers', mode='before')
+    @classmethod
     def val_headers(cls, data):
         """
         This is a 'httpHeaders' element. Content of which is a list of "member" items with key/value content
@@ -809,6 +832,7 @@ class ApibHttpRequest(ApibWithHeaders):
     method: str
 
     @model_validator(mode='before')
+    @classmethod
     def val_root_http_request(cls, data):
         try:
             data = cls.move_attributes_up(data)
@@ -827,6 +851,7 @@ class ApibHttpResponse(ApibWithHeaders):
     status_code: Optional[int] = Field(alias='statusCode', default=None)
 
     @model_validator(mode='before')
+    @classmethod
     def val_root_http_response(cls, data):
         try:
             data = cls.move_attributes_up(data)
@@ -883,6 +908,7 @@ class ApibEnum(ApibElement):
         return [e.content for e in self.enumerations]
 
     @model_validator(mode='before')
+    @classmethod
     def val_root_enum(cls, data):
         try:
             data = cls.move_attributes_up(data)
@@ -964,7 +990,7 @@ class ApibEnum(ApibElement):
         return data
 
     @model_validator(mode='after')
-    def val_root_enum_post(cls, data):
+    def val_root_enum_post(self, data):
         return data
 
 
@@ -976,7 +1002,7 @@ class ApibParseResult(ApibElement, allowed_content={'category', 'annotation'}):
         return next(c for c in self.content if isinstance(c, ApibApi))
 
     @model_validator(mode='after')
-    def val_root_parse_result(cls, parse_result: 'ApibParseResult'):
+    def val_root_parse_result(self, parse_result: 'ApibParseResult'):
         # make sure we have exactly one 'category' element
         try:
             content = parse_result.content

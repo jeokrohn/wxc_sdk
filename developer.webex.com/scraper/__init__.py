@@ -184,6 +184,7 @@ class Parameter(BaseModel):
         return name
 
     @field_validator('param_attrs', 'param_object', mode='after')
+    @classmethod
     def attrs_and_object(cls, v):
         if not v:
             return list()
@@ -581,6 +582,7 @@ class DocMethodDetails(BaseModel):
     docs: dict[str, SectionDetails] = Field(default_factory=dict)
 
     @model_validator(mode='before')
+    @classmethod
     def backward_compatibility(cls, values):
         """
         docs used to be a dict of list of methods.

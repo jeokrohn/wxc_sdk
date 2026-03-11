@@ -239,6 +239,7 @@ class MemberCommon(ApiModel):
     license_type: Optional[UserLicenseType] = None
 
     @field_validator('phone_number', mode='before')
+    @classmethod
     def e164(cls, v):
         """
         :meta private:
@@ -283,6 +284,7 @@ class DeviceMembersResponse(ApiModel):
 
     # assert that members are always sorted by port number
     @field_validator('members', mode='after')
+    @classmethod
     def sort_members(cls, v):
         """
         :meta private:

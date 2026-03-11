@@ -224,6 +224,7 @@ class WebhookEvent(Webhook):
     data: Union[WebhookEventDataForbid, dict]
 
     @model_validator(mode='before')
+    @classmethod
     def parse_data(cls, values):
         """
         Parse 'data' component with the correct registered Subclass

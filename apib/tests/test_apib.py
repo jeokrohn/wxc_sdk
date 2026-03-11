@@ -1652,6 +1652,7 @@ class ReadAPIB(ApibTest):
             a: str
 
             @model_validator(mode='before')
+            @classmethod
             def vaL_root_base(cls, v):
                 print(f'val_root_base: {v}')
                 return v
@@ -1660,6 +1661,7 @@ class ReadAPIB(ApibTest):
             b: str
 
             @model_validator(mode='wrap')
+            @classmethod
             def val_root_sub(cls, v, handler):
                 v = handler(v)
                 print(f'val_root_sub: {v}')

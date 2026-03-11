@@ -43,6 +43,7 @@ class CallerId(ApiModel):
     """
 
     @field_validator('direct_number', 'location_number', 'mobile_number', 'custom_number', mode='before')
+    @classmethod
     def e164(cls, v):
         """
         :meta private:
