@@ -11,7 +11,7 @@ from functools import wraps
 from io import StringIO, TextIOBase
 from json import JSONDecodeError
 from threading import Semaphore
-from typing import Callable, ClassVar, Optional, Tuple, Type, Union
+from typing import Callable, ClassVar, Optional, Union
 from urllib.parse import parse_qsl
 
 from pydantic import BaseModel, Field, ValidationError
@@ -328,7 +328,7 @@ class RestSession(Session):
 
     @retry_request
     def _request_w_response(self, method: str, url: str, headers=None, content_type: str = None,
-                            ignore_status: int = None, **kwargs) -> Tuple[Response, StrOrDict]:
+                            ignore_status: int = None, **kwargs) -> tuple[Response, StrOrDict]:
         """
         low level API REST request with support for 429 rate limiting
 
@@ -449,7 +449,7 @@ class RestSession(Session):
         """
         return self._rest_request('PATCH', *args, **kwargs)
 
-    def follow_pagination(self, url: str, model: Type[ApiModel] = None,
+    def follow_pagination(self, url: str, model: type[ApiModel] = None,
                           params: dict = None, item_key: str = None, **kwargs) -> Generator[ApiModel, None, None]:
         """
         Handling RFC5988 pagination of list requests. Generator of parsed objects
@@ -497,5 +497,9 @@ class RestSession(Session):
                     item_key = next((k for k, v in data.items()
                                      if isinstance(v, list)))
             items = data.get(item_key, [])
+            # if the response has no items, we're done
+            if not items:
+                log.debug(f'{self.__class__.__name__}.pagination: no items found')
+                break
             for item in items:
                 yield model(item)

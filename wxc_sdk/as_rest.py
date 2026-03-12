@@ -14,7 +14,7 @@ from functools import wraps
 from io import StringIO, TextIOBase
 from json import JSONDecodeError
 from time import perf_counter_ns
-from typing import Any, Optional, Tuple, Type, Union
+from typing import Any, Optional, Union
 
 import aiohttp
 from aiohttp import ClientResponse, ClientResponseError, ClientSession, RequestInfo, TraceConfig
@@ -95,7 +95,7 @@ class AsRestError(ClientResponseError):
     A REST error
     """
 
-    def __init__(self, request_info: RequestInfo, history: Tuple[ClientResponse, ...], *, code: Optional[int] = None,
+    def __init__(self, request_info: RequestInfo, history: tuple[ClientResponse, ...], *, code: Optional[int] = None,
                  status: Optional[int] = None, message: str = "", headers: Optional[LooseHeaders] = None,
                  detail: Any = None) -> None:
         super().__init__(request_info, history, code=code, status=status, message=message, headers=headers)
@@ -389,7 +389,7 @@ class AsRestSession(ClientSession):
     @retry_request
     async def _request_w_response(self, method: str, url: str, headers=None, content_type: str = None,
                                   data=None, json=None, ignore_status: int = None,
-                                  **kwargs) -> Tuple[ClientResponse, StrOrDict]:
+                                  **kwargs) -> tuple[ClientResponse, StrOrDict]:
         """
         low level API REST request with support for 429 rate limiting
 
@@ -523,7 +523,7 @@ class AsRestSession(ClientSession):
         """
         return await self._rest_request('PATCH', *args, **kwargs)
 
-    async def follow_pagination(self, url: str, model: Type[ApiModel] = None,
+    async def follow_pagination(self, url: str, model: type[ApiModel] = None,
                                 params: dict = None,
                                 item_key: str = None, **kwargs) -> AsyncGenerator[ApiModel, None, None]:
         """
@@ -574,5 +574,9 @@ class AsRestSession(ClientSession):
                     item_key = next((k for k, v in data.items()
                                      if isinstance(v, list)))
             items = data.get(item_key, [])
+            # if the response has no items, we're done
+            if not items:
+                log.debug(f'{self.__class__.__name__}.pagination: no items found')
+                break
             for item in items:
                 yield model(item)
