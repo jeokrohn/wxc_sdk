@@ -64,6 +64,7 @@ class AuditEventData(ApiModel):
     change_set: Optional[Any] = None
     changed_attributes: Optional[Any] = None
     changed_group_members: Optional[Any] = None
+    changes: Optional[Any] = None
     client_id: Optional[Any] = None
     client_type: Optional[Any] = None
     command_key: Optional[Any] = None
@@ -113,6 +114,7 @@ class AuditEventData(ApiModel):
     offer_map: Optional[Any] = None
     old_org_default_enabled: Optional[Any] = None
     old_vendor_name: Optional[Any] = None
+    onboard_type: Optional[Any] = None
     operating_mode_level: Optional[Any] = None
     operating_mode_name: Optional[Any] = None
     operation_type: Optional[Any] = None
@@ -131,6 +133,7 @@ class AuditEventData(ApiModel):
     rule_name: Optional[Any] = None
     rule_title: Optional[Any] = None
     service_app_scopes: Optional[Any] = None
+    service_app_sites: Optional[Any] = None
     services: Optional[Any] = None
     setting_key: Optional[Any] = None
     setting_name: Optional[Any] = None
