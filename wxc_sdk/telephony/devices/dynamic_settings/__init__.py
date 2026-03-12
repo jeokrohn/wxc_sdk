@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 from pydantic import TypeAdapter
 
@@ -50,9 +50,9 @@ class ValidationRule(ApiModel):
     #: Possible values for `enum` or `boolean` types.
     values: Optional[list[str]] = None
     #: Minimum value for numeric types.
-    min: Optional[int] = None
+    min: Union[int, float, None] = None
     #: Maximum value for numeric types.
-    max_: Optional[int] = None
+    max_: Union[int, float, None] = None
     #: Increment value for numeric types.
     increment: Optional[int] = None
     #: Regular expression pattern for string validation.
