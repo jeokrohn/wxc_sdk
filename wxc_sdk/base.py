@@ -7,7 +7,7 @@ from typing import Annotated, Optional, Union
 
 from aenum import Enum, extend_enum
 from dateutil import tz
-from pydantic import BaseModel, BeforeValidator, ValidationError
+from pydantic import BaseModel, BeforeValidator, ConfigDict, ValidationError
 
 __all__ = ['StrOrDict', 'webex_id_to_uuid', 'to_camel', 'ApiModel', 'CodeAndReason', 'ApiModelWithErrors', 'plus1',
            'dt_iso_str', 'SafeEnum', 'enum_str', 'RETRY_429_MAX_WAIT', 'E164Number']
@@ -83,13 +83,13 @@ class ApiModel(BaseModel):
     Base for all models used by the APIs
     """
 
-    class Config:
-        alias_generator = to_camel  # alias is camelcase version of attribute name
-        populate_by_name = True
-        #: set to 'allow' by default. Can be overridden by setting environment variable API_MODEL_ALLOW_EXTRA
-        extra = API_MODEL_ALLOW_EXTRA
-        #: store values instead of enum types
-        use_enum_values = True
+    model_config = ConfigDict(
+        alias_generator=to_camel,  # alias is camelcase version of attribute name
+        populate_by_name=True,
+        # set to 'allow' by default. Can be overridden by setting environment variable API_MODEL_ALLOW_EXTRA
+        extra=API_MODEL_ALLOW_EXTRA,
+        # store values instead of enum types
+        use_enum_values=True)
 
     def model_dump_json(self, *args, exclude_none=True, by_alias=True, **kwargs) -> str:
         return super().model_dump_json(*args, exclude_none=exclude_none, by_alias=by_alias, **kwargs)

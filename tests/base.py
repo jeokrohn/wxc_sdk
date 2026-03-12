@@ -31,7 +31,7 @@ import requests
 import yaml
 from dateutil import tz
 from dotenv import load_dotenv
-from pydantic import BaseModel, Field, TypeAdapter, ValidationError, model_validator
+from pydantic import BaseModel, Field, TypeAdapter, ValidationError, model_validator, ConfigDict
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -245,7 +245,7 @@ class TestCaseWithTokens(TestCase):
 
     def setUp(self) -> None:
         self.assertTrue(self.tokens and self.api, 'Failed to obtain tokens')
-        self.assertEqual(ApiModel.Config.extra, 'forbid', 'API_MODEL_ALLOW_EXTRA must be set to "forbid"')
+        self.assertEqual(ApiModel.model_config.get('extra'), 'forbid', 'API_MODEL_ALLOW_EXTRA must be set to "forbid"')
         random.seed()
 
 
@@ -303,8 +303,7 @@ class WithIntegrationTokens(TestCase):
 
 
 class LoggedRequest(BaseModel):
-    class Config:
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(arbitrary_types_allowed = True)
 
     method: str
     url: str
@@ -1021,7 +1020,7 @@ class UserTokens(TestCaseWithLog):
     # cache with tokens for each user indexed by user_id
     _token_cache: ClassVar[dict[str, Tokens]] = {}
 
-    _cache_file: ClassVar[str] = 'user_tokens.yml'
+    _cache_file: ClassVar[str] = os.path.join(os.path.dirname(__file__), 'user_tokens.yml')
 
     # prefix for environment variables _CLIENT_ID, _CLIENT_SECRET, _CLIENT_SCOPES
     _env_prefix: ClassVar[str] = 'TEST_USER_'
@@ -1087,6 +1086,7 @@ class UserTokens(TestCaseWithLog):
         # check remaining lifetime and refresh/regenerate tokens if needed
         integration = cls.build_integration()
         updated = False
+        users_to_pop = []
         for user_id, tokens in cls._token_cache.items():
             if tokens.remaining < 24 * 60 * 60:
                 updated = True
@@ -1097,8 +1097,13 @@ class UserTokens(TestCaseWithLog):
                     # if refresh fails, then we pop the access token from the cache
                     tokens = None
                 if tokens is None or not tokens.access_token:
-                    # remove user from cache
-                    cls._token_cache.pop(user_id)
+                    users_to_pop.append(user_id)
+        # pop users that had invalid tokens
+        if users_to_pop:
+            for user_id in users_to_pop:
+                # remove user from cache
+                cls._token_cache.pop(user_id)
+
         if updated:
             cls.write_user_cache()
         return

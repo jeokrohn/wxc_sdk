@@ -11,7 +11,7 @@ import json
 from dataclasses import dataclass
 from typing import Optional, Union
 
-from pydantic import field_validator, model_validator
+from pydantic import ConfigDict, field_validator, model_validator
 
 from ..base import ApiModel
 from ..base import SafeEnum as Enum
@@ -79,10 +79,9 @@ class CallingPermissions(ApiModel):
     Calling permissions for all call types
     """
 
-    class Config:
+    model_config = ConfigDict(
         # allow undefined attributes (new call types)
-        extra = 'allow'
-        ...
+        extra='allow')
 
     @model_validator(mode='before')
     @classmethod

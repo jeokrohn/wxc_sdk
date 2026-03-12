@@ -18,6 +18,7 @@ from pydantic import (
     AwareDatetime,
     BaseModel,
     BeforeValidator,
+    ConfigDict,
     Field,
     PlainSerializer,
     PlainValidator,
@@ -51,8 +52,7 @@ class HARModel(BaseModel):
     Base model for all HAR models
     """
 
-    class Config:
-        extra = 'allow'
+    model_config = ConfigDict(extra = 'allow')
 
     def model_dump(
         self,

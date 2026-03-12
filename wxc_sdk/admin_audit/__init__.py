@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Any, Optional, Union
 
 from dateutil.parser import isoparse
+from pydantic import ConfigDict
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel, dt_iso_str
@@ -11,8 +12,8 @@ __all__ = ['AdminAuditEventsApi', 'AuditEvent', 'AuditEventData']
 
 
 class AuditEventData(ApiModel):
-    class Config:
-        extra = 'allow'
+
+    model_config = ConfigDict(extra='allow')
 
     #: The display name of the organization.
     actor_org_name: Optional[str] = None

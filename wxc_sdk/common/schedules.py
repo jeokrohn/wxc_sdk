@@ -5,7 +5,7 @@ import datetime
 from collections.abc import Generator
 from typing import Optional, Union
 
-from pydantic import Field
+from pydantic import ConfigDict, Field
 
 from ..api_child import ApiChild
 from ..base import ApiModel
@@ -211,10 +211,9 @@ class Event(ApiModel):
     #: Recurrence scheme for an event.
     recurrence: Optional[Recurrence] = None
 
-    class Config:
-        json_encoders = {
-            datetime.time: lambda v: v.strftime('%H:%M')
-        }
+    model_config = ConfigDict(json_encoders={
+        datetime.time: lambda v: v.strftime('%H:%M')
+    })
 
     @staticmethod
     def day_start_end(name: str,
@@ -275,11 +274,10 @@ class Schedule(ApiModel):
     #: Indicates a list of events.
     events: Optional[list[Event]] = None
 
-    class Config:
-        json_encoders = {
-            # datetime objects are encoded as HH:MM
-            datetime.time: lambda v: v.strftime('%H:%M')
-        }
+    model_config = ConfigDict(json_encoders={
+        # datetime objects are encoded as HH:MM
+        datetime.time: lambda v: v.strftime('%H:%M')
+    })
 
     @staticmethod
     def business(name: str,

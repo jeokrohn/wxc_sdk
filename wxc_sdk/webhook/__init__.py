@@ -5,7 +5,7 @@ import datetime
 from collections.abc import Generator
 from typing import ClassVar, Optional, Union
 
-from pydantic import Extra, Field, model_validator
+from pydantic import ConfigDict, Field, model_validator
 
 from ..api_child import ApiChild
 from ..base import ApiModel, enum_str, webex_id_to_uuid
@@ -167,8 +167,7 @@ class WebhookEventDataForbid(ApiModel):
     resource: ClassVar = None
     _registry: ClassVar = dict()
 
-    class Config:
-        extra = 'forbid'
+    model_config = ConfigDict(extra='forbid')
 
     def __init_subclass__(cls: 'WebhookEventDataForbid', **kwargs):
         """
@@ -209,8 +208,7 @@ class WebhookEventData(WebhookEventDataForbid):
              - :class:`wxc_sdk.attachment_actions.AttachmentActionsApi`
     """
 
-    class Config:
-        extra = Extra.allow
+    model_config = ConfigDict(extra = 'allow')
 
 
 class WebhookEvent(Webhook):
