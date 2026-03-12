@@ -36,6 +36,7 @@ docs:
 
 package:
 	@echo "==> Building the Source Distribution package"
+	rm -rf dist/
 	uv build
 
 oas:

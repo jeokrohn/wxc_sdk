@@ -14,11 +14,10 @@
 * merge branch
 * run "uv run cz bump" and review
 * check changelog, tag, commit
+* build: make package
 * git push --tags
-* after remote build action: git pull --tags
 * review read the docs: especially check build logs for errors
 * readthedocs: set new default version
-* build docs for last tag on readthedocs; under "Versions"
 * review pypi
 * review GitHub
 * unshelve changes that were not part of the build
