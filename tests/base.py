@@ -1094,7 +1094,8 @@ class UserTokens(TestCaseWithLog):
                 try:
                     integration.refresh(tokens)
                 except requests.HTTPError:
-                    tokens = cls.create_user_tokens(user_id=user_id)
+                    # if refresh fails, then we pop the access token from the cache
+                    tokens = None
                 if tokens is None or not tokens.access_token:
                     # remove user from cache
                     cls._token_cache.pop(user_id)
