@@ -17779,8 +17779,7 @@ class AsSCIM2BulkApi(AsScimApiChild, base='identity/scim'):
 
     """
 
-    async def bulk_request(self, org_id: str, fail_on_errors: int,
-                     operations: list[BulkOperation]) -> BulkResponse:
+    async def bulk_request(self, org_id: str, operations: list[BulkOperation], fail_on_errors: int = None) -> BulkResponse:
         """
         User bulk API
 
@@ -17835,11 +17834,11 @@ class AsSCIM2BulkApi(AsScimApiChild, base='identity/scim'):
 
         :param org_id: Webex Identity assigned organization identifier for user's organization.
         :type org_id: str
+        :param operations: Contains a list of bulk operations for POST/PATCH/DELETE operations.
+        :type operations: list[BulkOperation]
         :param fail_on_errors: An integer specifying the maximum number of errors that the service provider will accept
             before the operation is terminated and an error response is returned.
         :type fail_on_errors: int
-        :param operations: Contains a list of bulk operations for POST/PATCH/DELETE operations.
-        :type operations: list[BulkOperation]
         :rtype: :class:`BulkResponse`
 
         Example:
@@ -17857,9 +17856,11 @@ class AsSCIM2BulkApi(AsScimApiChild, base='identity/scim'):
         """
         body = dict()
         body['schemas'] = ['urn:ietf:params:scim:api:messages:2.0:BulkRequest']
-        body['failOnErrors'] = fail_on_errors
+        if fail_on_errors is not None:
+            body['failOnErrors'] = fail_on_errors
         body['operations'] = TypeAdapter(list[BulkOperation]).dump_python(
-            operations, mode='json', by_alias=True, exclude_none=True)
+            operations, mode='json', by_alias=True, exclude_none=True
+        )
         url = self.ep(f'{org_id}/v2/Bulk')
         data = await super().post(url, json=body)
         r = BulkResponse.model_validate(data)
@@ -18445,176 +18446,6 @@ class AsSCIM2UsersApi(AsScimApiChild, base='identity/scim'):
         r = ScimUser.model_validate(data)
         return r
 
-    async def search(self, org_id: str, filter: str = None, attributes: str = None,
-               excluded_attributes: str = None, sort_by: str = None, sort_order: str = None,
-               start_index: int = None, count: int = None, return_groups: bool = None,
-               include_group_details: bool = None, group_usage_types: str = None) -> SearchUserResponse:
-        """
-        Search users
-
-        **Authorization**
-
-        OAuth token rendered by Identity Broker.
-
-        One of the following OAuth scopes is required:
-
-        - `identity:people_rw`
-        - `identity:people_read`
-
-        The following administrators can use this API:
-
-        - `id_full_admin`
-        - `id_user_admin`
-        - `id_readonly_admin`
-        - `id_device_admin`
-
-        :param org_id: Webex Identity assigned organization identifier for user's organization.
-        :type org_id: str
-        :param filter: The url encoded filter. If the value is empty, the API will return all users under the
-            organization.
-
-            The examples below show some search filters:
-
-            - userName eq "user1@example.com"
-            - userName sw "user1@example"
-            - userName ew "example"
-            - phoneNumbers [ type eq "mobile" and value eq "14170120"]
-            - urn:scim:schemas:extension:cisco:webexidentity:2.0:User:meta.organizationId eq
-              "0ae87ade-8c8a-4952-af08-318798958d0c"
-            - More filter patterns, please check https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.2.2"
-
-            .. list-table::
-               :header-rows: 1
-
-               * - **Attributes**
-                 - **Operators**
-               * - **SCIM Core**
-                 -
-               * - `id`
-                 - eq
-               * - `userName`
-                 - eq sw ew
-               * - `name.familyName`
-                 - eq sw ew
-               * - `name.givenName`
-                 - eq sw
-               * - `name.middleName`
-                 - eq sw
-               * - `name.formatted`
-                 - eq sw
-               * - `displayName`
-                 - eq sw ew
-               * - `nickName`
-                 - eq sw ew
-               * - `emails.display`
-                 - eq sw ew
-               * - `emails.value`
-                 - eq sw ew
-               * - `phoneNumbers.value`
-                 - eq sw ew
-               * - `phoneNumbers.display`
-                 - eq sw ew
-               * - **Enterprise Extensions**
-                 -
-               * - `employeeNumber`
-                 - eq sw ew
-               * - `costCenter`
-                 - eq sw ew
-               * - `organization`
-                 - eq sw ew
-               * - `division`
-                 - eq sw ew
-               * - `department`
-                 - eq sw ew
-               * - `manager.value`
-                 - eq
-               * - `manager.displayName`
-                 - eq sw ew
-
-        :type filter: str
-        :param attributes: A multi-valued list of strings indicating the names of resource attributes to return in the
-            response, like 'userName,department,emails'. It supports the SCIM id
-            'urn:ietf:params:scim:schemas:extension:enterprise:2.0:User,userName'. The default is empty, all
-            attributes will be returned
-        :type attributes: str
-        :param excluded_attributes: A multi-valued list of strings indicating the names of resource attributes to be
-            removed from the default set of attributes to return. The default is empty, all attributes will be
-            returned
-        :type excluded_attributes: str
-        :param sort_by: A string indicating the attribute whose value be used to order the returned responses. Now we
-            only allow 'userName, id, meta.lastModified' to sort.
-        :type sort_by: str
-        :param sort_order: A string indicating the order in which the 'sortBy' parameter is applied. Allowed values are
-            'ascending' and 'descending'.
-        :type sort_order: str
-        :param start_index: An integer indicating the 1-based index of the first query result. The default is 1.
-        :type start_index: int
-        :param count: An integer indicating the desired maximum number of query results per page.  The default is 100.
-        :type count: int
-        :param return_groups: Define whether the group information needs to be returned.  The default is false.
-        :type return_groups: str
-        :param include_group_details: Define whether the group information with details need been returned. The default
-            is false.
-        :type include_group_details: str
-        :param group_usage_types: Returns groups with details of the specified group type
-        :type group_usage_types: str
-        :rtype: :class:`SearchUserResponse`
-        """
-        params = {}
-        if filter is not None:
-            params['filter'] = filter
-        if attributes is not None:
-            params['attributes'] = attributes
-        if excluded_attributes is not None:
-            params['excludedAttributes'] = excluded_attributes
-        if sort_by is not None:
-            params['sortBy'] = sort_by
-        if sort_order is not None:
-            params['sortOrder'] = sort_order
-        if start_index is not None:
-            params['startIndex'] = start_index
-        if count is not None:
-            params['count'] = count
-        if return_groups is not None:
-            params['returnGroups'] = return_groups
-        if include_group_details is not None:
-            params['includeGroupDetails'] = include_group_details
-        if group_usage_types is not None:
-            params['groupUsageTypes'] = group_usage_types
-        url = self.ep(f'{org_id}/v2/Users')
-        data = await super().get(url, params=params)
-        r = SearchUserResponse.model_validate(data)
-        return r
-
-    async def search_all_gen(self, org_id: str, filter: str = None, attributes: str = None,
-                             excluded_attributes: str = None,
-                             sort_by: str = None, sort_order: str = None, count: int = None, return_groups: str = None,
-                             include_group_details: str = None,
-                             group_usage_types: str = None) -> AsyncGenerator[ScimUser, None, None]:
-        params = {k: v for k, v in locals().items()
-                  if k not in {'self', 'count'} and v is not None}
-        start_index = None
-        while True:
-            paginated_result = await self.search(**params, start_index=start_index, count=count)
-            for r in paginated_result.resources:
-                yield r
-            # prepare getting the next page
-            count = paginated_result.items_per_page
-            start_index = paginated_result.start_index + paginated_result.items_per_page
-            if start_index > paginated_result.total_results:
-                break
-        return
-
-    async def search_all(self, org_id: str, filter: str = None, attributes: str = None,
-                         excluded_attributes: str = None,
-                         sort_by: str = None, sort_order: str = None, count: int = None, return_groups: str = None,
-                         include_group_details: str = None,
-                         group_usage_types: str = None) -> list[ScimUser]:
-        params = {k: v for k, v in locals().items()
-                  if k not in {'self'} and v is not None}
-        return [u async for u in self.search_all_gen(**params)]
-        
-
     async def update(self, org_id: str, user: ScimUser) -> ScimUser:
         """
         Update a user with PUT
@@ -18666,8 +18497,7 @@ class AsSCIM2UsersApi(AsScimApiChild, base='identity/scim'):
         r = ScimUser.model_validate(data)
         return r
 
-    async def patch(self, org_id: str, user_id: str,
-              operations: list[PatchUserOperation]) -> ScimUser:
+    async def patch(self, org_id: str, user_id: str, operations: list[PatchUserOperation]) -> ScimUser:
         """
         Update a user with PATCH
 
@@ -18773,9 +18603,10 @@ class AsSCIM2UsersApi(AsScimApiChild, base='identity/scim'):
         :rtype: :class:`ScimUser`
         """
         body = dict()
-        body['schemas'] = ["urn:ietf:params:scim:api:messages:2.0:PatchOp"]
-        body['Operations'] = TypeAdapter(list[PatchUserOperation]).dump_python(operations, mode='json', by_alias=True,
-                                                                               exclude_none=True)
+        body['schemas'] = ['urn:ietf:params:scim:api:messages:2.0:PatchOp']
+        body['Operations'] = TypeAdapter(list[PatchUserOperation]).dump_python(
+            operations, mode='json', by_alias=True, exclude_none=True
+        )
         url = self.ep(f'{org_id}/v2/Users/{user_id}')
         data = await super().patch(url, json=body)
         r = ScimUser.model_validate(data)

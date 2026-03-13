@@ -139,7 +139,16 @@ RE_FOLLOW_PAGINATION = re.compile(
 )
 
 # block comment with async code to put in for method
-RE_ASYNC_SOURCE = re.compile("'''async(.*?)$(?P<async_source>.+?)'''", flags=re.VERBOSE + re.DOTALL + re.MULTILINE)
+RE_ASYNC_SOURCE = re.compile(
+    r"""
+    (?P<quote>'''|\"\"\")  # Capture opening delimiter (triple single or double quotes)
+    async                  # Literal 'async' keyword immediately after delimiter
+    (.*?)$                 # Capture any optional same-line content after 'async'
+    (?P<async_source>.+?)  # Capture the actual async source block (non-greedy)
+    (?P=quote)             # Match closing delimiter - must match opening
+    """,
+    flags=re.VERBOSE | re.DOTALL | re.MULTILINE,
+)
 
 IGNORE_BASES = {'Enum', 'str'}
 
