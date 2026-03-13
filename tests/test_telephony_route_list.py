@@ -5,6 +5,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass, field
 from random import choice
 from typing import ClassVar
+from unittest import skip
 
 from tests.base import TestCaseWithLog, async_test
 from tests.testutil import LocationInfo, us_location_info
@@ -17,12 +18,14 @@ from wxc_sdk.telephony.prem_pstn.route_list import NumberAndAction, RouteList
 from wxc_sdk.telephony.prem_pstn.trunk import Trunk, TrunkType
 
 
+@skip('No RL licenses')
 class TestList(TestCaseWithLog):
     def test_001_list_all(self):
         rgs = list(self.api.telephony.prem_pstn.route_list.list())
         print(f'Got {len(rgs)} route list')
 
 
+@skip('No RL licenses')
 @dataclass(init=False, repr=False)
 class TestCreate(TestCaseWithLog):
     _locations: list[LocationInfo] = field(default=None)
@@ -55,8 +58,7 @@ class TestCreate(TestCaseWithLog):
         if self._trunks is None:
             with self.no_log():
                 self._trunks = list(self.api.telephony.prem_pstn.trunk.list())
-        trunks_in_location = [trunk for trunk in self._trunks
-                              if trunk.location.location_id == location.location_id]
+        trunks_in_location = [trunk for trunk in self._trunks if trunk.location.location_id == location.location_id]
         if trunks_in_location:
             trunk = choice(trunks_in_location)
             print(f'Existing trunk: "{trunk.name}"')
@@ -66,14 +68,13 @@ class TestCreate(TestCaseWithLog):
 
         # temporarily create a trunk
         existing_names = set(t.name for t in self._trunks)
-        trunk_name = next(name for i in range(1, 100)
-                          if (name := f'{location.name} {i:02}') not in existing_names)
+        trunk_name = next(name for i in range(1, 100) if (name := f'{location.name} {i:02}') not in existing_names)
         print(f'Creating trunk "{trunk_name}" in location "{location.name}"')
         with self.no_log():
             pwd = self.api.telephony.location.generate_password(location_id=location.location_id)
-            trunk_id = self.api.telephony.prem_pstn.trunk.create(name=trunk_name, location_id=location.location_id,
-                                                                 password=pwd,
-                                                                 trunk_type=TrunkType.registering)
+            trunk_id = self.api.telephony.prem_pstn.trunk.create(
+                name=trunk_name, location_id=location.location_id, password=pwd, trunk_type=TrunkType.registering
+            )
         try:
             with self.with_log():
                 yield trunk_id
@@ -99,16 +100,14 @@ class TestCreate(TestCaseWithLog):
 
         # temporarily create one with a trunk in the location
         existing_names = set(rg.name for rg in self._route_groups)
-        rg_name = next(name for i in range(1, 100)
-                       if (name := f'{location.name} {i:02}') not in existing_names)
+        rg_name = next(name for i in range(1, 100) if (name := f'{location.name} {i:02}') not in existing_names)
 
         with self.get_trunk(location=location) as trunk_id:
             print(f'creating route group: "{rg_name}"')
             with self.no_log():
                 rg_id = self.api.telephony.prem_pstn.route_group.create(
-                    route_group=RouteGroup(name=rg_name,
-                                           local_gateways=[RGTrunk(trunk_id=trunk_id,
-                                                                   priority=1)]))
+                    route_group=RouteGroup(name=rg_name, local_gateways=[RGTrunk(trunk_id=trunk_id, priority=1)])
+                )
             try:
                 with self.with_log():
                     yield rg_id
@@ -123,15 +122,17 @@ class TestCreate(TestCaseWithLog):
         """
         location = self.get_target_location()
         with self.get_route_group(location=location) as rg_id:
-
             # get a name for the new route list
-            rl_name = next(name for i in range(1, 100)
-                           if (name := f'{location.name} {i:02}') not in set(rl.name for rl in self.route_lists))
+            rl_name = next(
+                name
+                for i in range(1, 100)
+                if (name := f'{location.name} {i:02}') not in set(rl.name for rl in self.route_lists)
+            )
 
             print(f'creating route list: "{rl_name}"')
-            rl_id = self.api.telephony.prem_pstn.route_list.create(name=rl_name,
-                                                                   location_id=location.location_id,
-                                                                   rg_id=rg_id)
+            rl_id = self.api.telephony.prem_pstn.route_list.create(
+                name=rl_name, location_id=location.location_id, rg_id=rg_id
+            )
             try:
                 details = self.api.telephony.prem_pstn.route_list.details(rl_id=rl_id)
                 self.assertEqual(location.location_id, details.location.id)
@@ -152,16 +153,19 @@ class TestCreate(TestCaseWithLog):
         with self.get_route_group(location=location) as rg_id:
             rg_id: str
             # get a name for the new route list
-            new_rl_names = (name for i in range(1, 100)
-                            if (name := f'{location.name} {i:02}') not in set(rl.name for rl in self.route_lists))
+            new_rl_names = (
+                name
+                for i in range(1, 100)
+                if (name := f'{location.name} {i:02}') not in set(rl.name for rl in self.route_lists)
+            )
             rl_names = [next(new_rl_names) for _ in range(2)]
             rl_ids = []
             try:
                 for rl_name in rl_names:
                     print(f'creating route list: "{rl_name}"')
-                    rl_id = self.api.telephony.prem_pstn.route_list.create(name=rl_name,
-                                                                           location_id=location.location_id,
-                                                                           rg_id=rg_id)
+                    rl_id = self.api.telephony.prem_pstn.route_list.create(
+                        name=rl_name, location_id=location.location_id, rg_id=rg_id
+                    )
                     rl_ids.append(rl_id)
             finally:
                 for rl_id, rl_name in zip(rl_ids, rl_names):
@@ -169,22 +173,24 @@ class TestCreate(TestCaseWithLog):
                     self.api.telephony.prem_pstn.route_list.delete_route_list(rl_id=rl_id)
 
 
+@skip('No RL licenses')
 class TestDetail(TestCaseWithLog):
     def test_001_detail_all(self):
         rls = list(self.api.telephony.prem_pstn.route_list.list())
         if not rls:
             self.skipTest('No route lists')
         with ThreadPoolExecutor() as pool:
-            details = list(pool.map(lambda rl: self.api.telephony.prem_pstn.route_list.details(rl_id=rl.rl_id),
-                                    rls))
+            details = list(pool.map(lambda rl: self.api.telephony.prem_pstn.route_list.details(rl_id=rl.rl_id), rls))
         print(f'Got details for {len(rls)} route lists')
 
 
+@skip('No RL licenses')
 @dataclass(init=False, repr=False)
 class TestNumbers(TestCaseWithLog):
     """
     Test case to add/remove numbers from a route list
     """
+
     route_list: ClassVar[list[RouteList]]
     us_locations: ClassVar[list[LocationInfo]]
     route_groups: ClassVar[list[RouteGroup]]
@@ -213,13 +219,16 @@ class TestNumbers(TestCaseWithLog):
         rg = choice(self.route_groups)
 
         # get a name for the new route list
-        rl_name = next(name for i in range(1000)
-                       if (name := f'{location_info.location.name} {i}') not in set(rl.name for rl in self.route_lists))
+        rl_name = next(
+            name
+            for i in range(1000)
+            if (name := f'{location_info.location.name} {i}') not in set(rl.name for rl in self.route_lists)
+        )
 
         print(f'Creating route list "{rl_name}"')
-        self.rl_id = self.api.telephony.prem_pstn.route_list.create(name=rl_name,
-                                                                    location_id=location_info.location.location_id,
-                                                                    rg_id=rg.rg_id)
+        self.rl_id = self.api.telephony.prem_pstn.route_list.create(
+            name=rl_name, location_id=location_info.location.location_id, rg_id=rg.rg_id
+        )
         super().setUp()
 
     def tearDown(self) -> None:
@@ -233,18 +242,22 @@ class TestNumbers(TestCaseWithLog):
         gets some TNs which can be added to test route list
         """
         # get phone numbers in target location
-        available_tns = [n.phone_number for n in self.numbers
-                         if n.location.id == self.target_location_info.location.location_id and
-                         not n.main_number and n.owner is None]
+        available_tns = [
+            n.phone_number
+            for n in self.numbers
+            if n.location.id == self.target_location_info.location.location_id and not n.main_number and n.owner is None
+        ]
         if len(available_tns) < tn_count:
             with self.no_log():
-                new_tns = self.target_location_info.available_tns(api=self.api,
-                                                                  tns_requested=tn_count - len(available_tns))
+                new_tns = self.target_location_info.available_tns(
+                    api=self.api, tns_requested=tn_count - len(available_tns)
+                )
                 available_tns.extend(new_tns)
                 # add phone numbers to location (temporarily)
                 print(f'adding TNs to location: {", ".join(new_tns)}')
-                self.api.telephony.location.number.add(location_id=self.target_location_info.location.location_id,
-                                                       phone_numbers=new_tns)
+                self.api.telephony.location.number.add(
+                    location_id=self.target_location_info.location.location_id, phone_numbers=new_tns
+                )
         else:
             new_tns = []
         try:
@@ -254,8 +267,8 @@ class TestNumbers(TestCaseWithLog):
                 with self.no_log():
                     print(f'removing TNs from location: {", ".join(new_tns)}')
                     self.api.telephony.location.number.remove(
-                        location_id=self.target_location_info.location.location_id,
-                        phone_numbers=new_tns)
+                        location_id=self.target_location_info.location.location_id, phone_numbers=new_tns
+                    )
 
     def test_001_add_and_remove_numbers(self):
         """
@@ -266,30 +279,29 @@ class TestNumbers(TestCaseWithLog):
             api = self.api.telephony.prem_pstn.route_list
 
             print(f'Adding numbers to route list: {", ".join(new_numbers)}')
-            response = api.update_numbers(rl_id=self.rl_id,
-                                          numbers=[NumberAndAction.add(number) for number in new_numbers])
+            response = api.update_numbers(
+                rl_id=self.rl_id, numbers=[NumberAndAction.add(number) for number in new_numbers]
+            )
             numbers_after = set(api.numbers(rl_id=self.rl_id))
             try:
                 with self.no_log():
                     # validation
                     self.assertFalse(response)
                     self.assertTrue(all(n in numbers_after for n in new_numbers))
-                    numbers_in_location = list(self.api.telephony.phone_numbers(
-                        location_id=self.target_location_info.location.location_id,
-                        number_type=NumberType.number
-                    ))
+                    numbers_in_location = list(
+                        self.api.telephony.phone_numbers(
+                            location_id=self.target_location_info.location.location_id, number_type=NumberType.number
+                        )
+                    )
                     err = False
                     for number in new_numbers:
                         # number has to exist in location
-                        number_in_location = next((n for n in numbers_in_location
-                                                   if n.phone_number == number), None)
+                        number_in_location = next((n for n in numbers_in_location if n.phone_number == number), None)
                         if number_in_location is None:
                             print(f'new number "{number}": not found in location')
                             continue
                         owner = number_in_location.owner
-                        if owner is None \
-                                or owner.owner_type != OwnerType.route_list \
-                                or owner.owner_id != self.rl_id:
+                        if owner is None or owner.owner_type != OwnerType.route_list or owner.owner_id != self.rl_id:
                             print(f'Something is wrong with the owner: {owner}')
                             err = False
                             continue
@@ -297,14 +309,16 @@ class TestNumbers(TestCaseWithLog):
                     self.assertFalse(err, 'Something went wrong')
             finally:
                 print(f'Removing numbers from route list: {", ".join(new_numbers)}')
-                response = api.update_numbers(rl_id=self.rl_id,
-                                              numbers=[NumberAndAction.delete(number) for number in new_numbers])
+                response = api.update_numbers(
+                    rl_id=self.rl_id, numbers=[NumberAndAction.delete(number) for number in new_numbers]
+                )
                 self.assertFalse(response)
                 numbers_after = set(api.numbers(rl_id=self.rl_id))
                 self.assertTrue(all(n not in numbers_after for n in new_numbers), 'Numbers not removed')
 
 
-class DeleteAll(TestCaseWithLog):
+@skip('No RL licenses')
+class TestDeleteAll(TestCaseWithLog):
     def test_001_delete_all(self):
         """
         delete all route lists
@@ -313,12 +327,15 @@ class DeleteAll(TestCaseWithLog):
         if not route_lists:
             self.skipTest('No route lists to delete')
         with ThreadPoolExecutor() as pool:
-            list(pool.map(lambda rl: self.api.telephony.prem_pstn.route_list.delete_route_list(rl_id=rl.rl_id),
-                          route_lists))
+            list(
+                pool.map(
+                    lambda rl: self.api.telephony.prem_pstn.route_list.delete_route_list(rl_id=rl.rl_id), route_lists
+                )
+            )
 
 
-class UnlistedRLs(TestCaseWithLog):
-
+@skip('No RL licenses')
+class TestUnlistedRLs(TestCaseWithLog):
     @async_test
     async def test_unlisted(self):
         """
@@ -328,9 +345,13 @@ class UnlistedRLs(TestCaseWithLog):
         with self.no_log():
             calling_locations = list(self.api.telephony.location.list())
             calling_locations = await asyncio.gather(
-                *[self.async_api.telephony.location.details(location_id=loc.location_id) for loc in calling_locations])
-            calling_locations = [loc for loc in calling_locations
-                                 if loc.connection and loc.connection.type in {RouteType.trunk, RouteType.route_group}]
+                *[self.async_api.telephony.location.details(location_id=loc.location_id) for loc in calling_locations]
+            )
+            calling_locations = [
+                loc
+                for loc in calling_locations
+                if loc.connection and loc.connection.type in {RouteType.trunk, RouteType.route_group}
+            ]
             route_group = next((rg for rg in self.api.telephony.prem_pstn.route_group.list()), None)
         if route_group is None:
             self.skipTest('No route group to test with')
@@ -346,9 +367,9 @@ class UnlistedRLs(TestCaseWithLog):
                     continue
                 try:
                     print(f'Creating "{rl_name}"')
-                    rl_id = self.api.telephony.prem_pstn.route_list.create(name=rl_name,
-                                                                           location_id=location.location_id,
-                                                                           rg_id=route_group.rg_id)
+                    rl_id = self.api.telephony.prem_pstn.route_list.create(
+                        name=rl_name, location_id=location.location_id, rg_id=route_group.rg_id
+                    )
                 except RestError as e:
                     err = err or e
                     if e.code == 27601:
