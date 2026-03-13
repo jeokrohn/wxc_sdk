@@ -1,6 +1,7 @@
 """
 Testing deletion of calling locations
 """
+
 import asyncio
 import json
 import random
@@ -19,10 +20,13 @@ class TestLocationDelete(TestWithLocations):
         """
         Safe delete check for all calling locations
         """
-        pre_check_results = await asyncio.gather(*[
-            self.async_api.telephony.locations.safe_delete_check_before_disabling_calling_location(loc.location_id)
-            for loc in self.telephony_locations
-        ], return_exceptions=True)
+        pre_check_results = await asyncio.gather(
+            *[
+                self.async_api.telephony.locations.safe_delete_check_before_disabling_calling_location(loc.location_id)
+                for loc in self.telephony_locations
+            ],
+            return_exceptions=True,
+        )
         err = None
         for loc, res in zip(self.locations, pre_check_results):
             print(f'Location {loc.name} safe delete check:')
@@ -42,13 +46,18 @@ class TestLocationDelete(TestWithLocations):
         """
         Try to delete a location that is blocked
         """
-        pre_check_results = await asyncio.gather(*[
-            self.async_api.telephony.locations.safe_delete_check_before_disabling_calling_location(loc.location_id)
-            for loc in self.telephony_locations
-        ])
+        pre_check_results = await asyncio.gather(
+            *[
+                self.async_api.telephony.locations.safe_delete_check_before_disabling_calling_location(loc.location_id)
+                for loc in self.telephony_locations
+            ]
+        )
         pre_check_results: list[SafeDeleteCheckResponse]
-        blocked_locations = [loc for loc, res in zip(self.telephony_locations, pre_check_results)
-                             if res.location_delete_status == LocationDeleteStatus.blocked]
+        blocked_locations = [
+            loc
+            for loc, res in zip(self.telephony_locations, pre_check_results)
+            if res.location_delete_status == LocationDeleteStatus.blocked
+        ]
         if not blocked_locations:
             self.skipTest('No blocked locations to test deletion')
         target = random.choice(blocked_locations)
@@ -61,10 +70,13 @@ class TestLocationDelete(TestWithLocations):
             time.sleep(1)
             job = self.api.jobs.disable_calling_location.status(job.id)
         print(f'Final execution status: {job.latest_execution_status}')
-        errors = self.api.telephony.jobs.disable_calling_location.errors(job.id)
+        errors = list(self.api.telephony.jobs.disable_calling_location.errors(job.id))
         print('Errors:')
-        print(json.dumps(TypeAdapter(list[JobErrorItem]).dump_python(errors, mode='json', exclude_none=True,
-                                                                     by_alias=True),
-                         indent=2))
+        print(
+            json.dumps(
+                TypeAdapter(list[JobErrorItem]).dump_python(errors, mode='json', exclude_none=True, by_alias=True),
+                indent=2,
+            )
+        )
         self.assertEqual('FAILED', job.latest_execution_status)
         self.assertTrue(len(errors) > 0, 'Expected errors for blocked location deletion')

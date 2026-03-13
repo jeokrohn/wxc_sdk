@@ -1,11 +1,13 @@
 """
 Jobs API
 """
+
+import builtins
 import json
 from collections.abc import Generator
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 from pydantic import Field, TypeAdapter
 
@@ -14,35 +16,63 @@ from ...base import ApiModel, enum_str
 from ...common import ApplyLineKeyTemplateAction, DeviceCustomization, SetOrClear
 from ...rest import RestSession
 
-__all__ = ['StepExecutionStatus', 'JobExecutionStatus', 'StartJobResponse', 'JobErrorMessage', 'JobError',
-           'JobErrorItem', 'JobsApi', 'DeviceSettingsJobsApi', 'NumberItem', 'MoveNumberCounts', 'NumberJob',
-           'ManageNumbersJobsApi',
-           'InitiateMoveNumberJobsBody', 'ApplyLineKeyTemplatesJobsApi', 'LineKeyTemplateAdvisoryTypes',
-           'ApplyLineKeyTemplateJobDetails', 'RebuildPhonesJobsApi', 'UpdateRoutingPrefixJobsApi',
-           'RoutingPrefixCounts', 'MoveCounts', 'MoveUser', 'MoveUsersList',
-           'MoveUserJobDetails', 'MoveUsersJobsApi', 'StartMoveUsersJobResponse', 'CallRecordingJobCounts',
-           'CallRecordingJobStatus', 'CallRecordingJobsApi', 'SendActivationEmailApi', 'ActivationEmailCounts',
-           'ActivationEmailJobDetail', 'DynamicSettingsUpdateJobItem', 'UpdateDynamicDeviceSettingsJobsApi',
-           'DisableCallingLocationCounts', 'DisableCallingLocationJobStatus', 'DisableCallingLocationJobsApi']
+__all__ = [
+    'StepExecutionStatus',
+    'JobExecutionStatus',
+    'StartJobResponse',
+    'JobErrorMessage',
+    'JobError',
+    'JobErrorItem',
+    'JobsApi',
+    'DeviceSettingsJobsApi',
+    'NumberItem',
+    'MoveNumberCounts',
+    'NumberJob',
+    'ManageNumbersJobsApi',
+    'InitiateMoveNumberJobsBody',
+    'ApplyLineKeyTemplatesJobsApi',
+    'LineKeyTemplateAdvisoryTypes',
+    'ApplyLineKeyTemplateJobDetails',
+    'RebuildPhonesJobsApi',
+    'UpdateRoutingPrefixJobsApi',
+    'RoutingPrefixCounts',
+    'MoveCounts',
+    'MoveUser',
+    'MoveUsersList',
+    'MoveUserJobDetails',
+    'MoveUsersJobsApi',
+    'StartMoveUsersJobResponse',
+    'CallRecordingJobCounts',
+    'CallRecordingJobStatus',
+    'CallRecordingJobsApi',
+    'SendActivationEmailApi',
+    'ActivationEmailCounts',
+    'ActivationEmailJobDetail',
+    'DynamicSettingsUpdateJobItem',
+    'UpdateDynamicDeviceSettingsJobsApi',
+    'DisableCallingLocationCounts',
+    'DisableCallingLocationJobStatus',
+    'DisableCallingLocationJobsApi',
+]
 
 
 class StepExecutionStatus(ApiModel):
     #: Unique identifier that identifies each step in a job.
     id: int
     #: Step execution start time.
-    start_time: datetime
+    start_time: Optional[datetime] = None
     #: Step execution end time.
     end_time: Optional[datetime] = None
     #: Last updated time for a step.
-    last_updated: datetime
+    last_updated: Optional[datetime] = None
     #: Displays status for a step.
-    status_message: str
+    status_message: Optional[str] = None
     #: ExitCode for a step.
-    exit_code: str
+    exit_code: Optional[str] = None
     #: Step name.
-    name: str
+    name: Optional[str] = None
     #: Time lapsed since the step execution started.
-    time_elapsed: str
+    time_elapsed: Optional[str] = None
 
 
 class JobExecutionStatus(ApiModel):
@@ -160,8 +190,9 @@ class DeviceSettingsJobsApi(ApiChild, base='telephony/config/jobs/devices/callDe
 
     """
 
-    def change(self, location_id: Optional[str], customization: DeviceCustomization,
-               org_id: str = None) -> StartJobResponse:
+    def change(
+        self, location_id: Optional[str], customization: DeviceCustomization, org_id: str = None
+    ) -> StartJobResponse:
         """
         Change device settings across organization or locations jobs.
 
@@ -355,8 +386,13 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
         url = self.ep('manageNumbers')
         return self.session.follow_pagination(url=url, model=NumberJob, params=params)
 
-    def initiate_job(self, operation: str, number_list: List[NumberItem], target_location_id: str = None,
-                     number_usage_type: str = None) -> NumberJob:
+    def initiate_job(
+        self,
+        operation: str,
+        number_list: builtins.list[NumberItem],
+        target_location_id: str = None,
+        number_usage_type: str = None,
+    ) -> NumberJob:
         """
         Initiate Number Jobs
 
@@ -405,8 +441,9 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
             body['targetLocationId'] = target_location_id
         if number_usage_type is not None:
             body['numberUsageType'] = number_usage_type
-        body['numberList'] = TypeAdapter(list[NumberItem]).dump_python(number_list, mode='json', by_alias=True,
-                                                                       exclude_none=True)
+        body['numberList'] = TypeAdapter(list[NumberItem]).dump_python(
+            number_list, mode='json', by_alias=True, exclude_none=True
+        )
         url = self.ep('manageNumbers')
         data = super().post(url=url, json=body)
         return NumberJob.model_validate(data)
@@ -484,8 +521,7 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
         super().post(url=url, params=params)
         return
 
-    def errors(self, job_id: str = None, org_id: str = None,
-               **params) -> Generator[JobErrorItem, None, None]:
+    def errors(self, job_id: str = None, org_id: str = None, **params) -> Generator[JobErrorItem, None, None]:
         """
         List Manage Numbers Job errors
 
@@ -567,11 +603,17 @@ class ApplyLineKeyTemplateJobDetails(ApiModel):
 
 
 class ApplyLineKeyTemplatesJobsApi(ApiChild, base='telephony/config/jobs/devices/applyLineKeyTemplate'):
-    def apply(self, action: ApplyLineKeyTemplateAction, template_id: str = None,
-              location_ids: list[str] = None, exclude_devices_with_custom_layout: bool = None,
-              include_device_tags: list[str] = None, exclude_device_tags: list[str] = None,
-              advisory_types: LineKeyTemplateAdvisoryTypes = None,
-              org_id: str = None) -> ApplyLineKeyTemplateJobDetails:
+    def apply(
+        self,
+        action: ApplyLineKeyTemplateAction,
+        template_id: str = None,
+        location_ids: list[str] = None,
+        exclude_devices_with_custom_layout: bool = None,
+        include_device_tags: list[str] = None,
+        exclude_device_tags: list[str] = None,
+        advisory_types: LineKeyTemplateAdvisoryTypes = None,
+        org_id: str = None,
+    ) -> ApplyLineKeyTemplateJobDetails:
         """
         Apply a Line key Template
 
@@ -1049,8 +1091,7 @@ class CallRecordingJobsApi(ApiChild, base='telephony/config/jobs/callRecording')
         r = CallRecordingJobStatus.model_validate(data)
         return r
 
-    def errors(self, job_id: str, org_id: str = None,
-               **params) -> Generator[JobErrorItem, None, None]:
+    def errors(self, job_id: str, org_id: str = None, **params) -> Generator[JobErrorItem, None, None]:
         """
         Get Job Errors for a Call Recording Job
 
@@ -1075,8 +1116,7 @@ class CallRecordingJobsApi(ApiChild, base='telephony/config/jobs/callRecording')
 
 
 class MoveUsersJobsApi(ApiChild, base='telephony/config/jobs/person/moveLocation'):
-    def validate_or_initiate(self, users_list: list[MoveUsersList],
-                             org_id: str = None) -> StartMoveUsersJobResponse:
+    def validate_or_initiate(self, users_list: list[MoveUsersList], org_id: str = None) -> StartMoveUsersJobResponse:
         """
         Validate or Initiate Move Users Job
 
@@ -1420,8 +1460,9 @@ class MoveUsersJobsApi(ApiChild, base='telephony/config/jobs/person/moveLocation
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['usersList'] = TypeAdapter(list[MoveUsersList]).dump_python(users_list, mode='json', by_alias=True,
-                                                                         exclude_none=True)
+        body['usersList'] = TypeAdapter(list[MoveUsersList]).dump_python(
+            users_list, mode='json', by_alias=True, exclude_none=True
+        )
         url = self.ep()
         data = super().post(url, params=params, json=body)
         r = StartMoveUsersJobResponse.model_validate(data['response'])
@@ -1527,8 +1568,7 @@ class MoveUsersJobsApi(ApiChild, base='telephony/config/jobs/person/moveLocation
         url = self.ep(f'{job_id}/actions/resume/invoke')
         super().post(url, params=params)
 
-    def errors(self, job_id: str, org_id: str = None,
-               **params) -> Generator[JobErrorItem, None, None]:
+    def errors(self, job_id: str, org_id: str = None, **params) -> Generator[JobErrorItem, None, None]:
         """
         List Move Users Job errors
 
@@ -1594,8 +1634,7 @@ class SendActivationEmailApi(ApiChild, base='identity/organizations'):
         r = ActivationEmailJobDetail.model_validate(data)
         return r
 
-    def errors(self, org_id: str, job_id: str,
-               **params) -> Generator[JobErrorItem, None, None]:
+    def errors(self, org_id: str, job_id: str, **params) -> Generator[JobErrorItem, None, None]:
         """
         Get Bulk Activation Email Resend Job Errors
 
@@ -1613,8 +1652,7 @@ class SendActivationEmailApi(ApiChild, base='identity/organizations'):
         url = self.ep(f'{org_id}/jobs/sendActivationEmails/{job_id}/errors')
         return self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)
 
-    def status(self, org_id: str,
-               job_id: str) -> ActivationEmailJobDetail:
+    def status(self, org_id: str, job_id: str) -> ActivationEmailJobDetail:
         """
         Get Bulk Activation Email Resend Job Status
 
@@ -1647,8 +1685,7 @@ class DynamicSettingsUpdateJobItem(ApiModel):
 
 
 class UpdateDynamicDeviceSettingsJobsApi(ApiChild, base='telephony/config'):
-    def list(self, org_id: str = None,
-             **params) -> Generator[StartJobResponse, None, None]:
+    def list(self, org_id: str = None, **params) -> Generator[StartJobResponse, None, None]:
         """
         List dynamic device settings jobs.
 
@@ -1665,13 +1702,11 @@ class UpdateDynamicDeviceSettingsJobsApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('jobs/devices/dynamicDeviceSettings')
-        return self.session.follow_pagination(url=url, model=StartJobResponse, item_key='items',
-                                              params=params)
+        return self.session.follow_pagination(url=url, model=StartJobResponse, item_key='items', params=params)
 
-    def update_across_org_or_location(self,
-                                      tags: List[DynamicSettingsUpdateJobItem],
-                                      location_id: str = None,
-                                      org_id: str = None) -> StartJobResponse:
+    def update_across_org_or_location(
+        self, tags: builtins.list[DynamicSettingsUpdateJobItem], location_id: str = None, org_id: str = None
+    ) -> StartJobResponse:
         """
         Updates dynamic Device Settings Across Organization Or Location
 
@@ -1706,9 +1741,9 @@ class UpdateDynamicDeviceSettingsJobsApi(ApiChild, base='telephony/config'):
         body = dict()
         if location_id is not None:
             body['locationId'] = location_id
-        body['tags'] = TypeAdapter(list[DynamicSettingsUpdateJobItem]).dump_python(tags, mode='json',
-                                                                                   by_alias=True,
-                                                                                   exclude_none=True)
+        body['tags'] = TypeAdapter(list[DynamicSettingsUpdateJobItem]).dump_python(
+            tags, mode='json', by_alias=True, exclude_none=True
+        )
         url = self.ep('jobs/devices/dynamicDeviceSettings')
         data = super().post(url, params=params, json=body)
         r = StartJobResponse.model_validate(data)
@@ -1734,8 +1769,7 @@ class UpdateDynamicDeviceSettingsJobsApi(ApiChild, base='telephony/config'):
         r = StartJobResponse.model_validate(data)
         return r
 
-    def errors(self, job_id: str, org_id: str = None,
-               **params) -> Generator[JobErrorItem, None, None]:
+    def errors(self, job_id: str, org_id: str = None, **params) -> Generator[JobErrorItem, None, None]:
         """
         List Dynamic Device Settings Job Errors
 
@@ -1780,9 +1814,7 @@ class DisableCallingLocationJobStatus(StartJobResponse):
 
 
 class DisableCallingLocationJobsApi(ApiChild, base='telephony/config'):
-
-    def list(self, org_id: str = None,
-             **params) -> Generator[DisableCallingLocationJobStatus, None, None]:
+    def list(self, org_id: str = None, **params) -> Generator[DisableCallingLocationJobStatus, None, None]:
         """
         Get a List of Disable Calling Location Jobs
 
@@ -1798,12 +1830,13 @@ class DisableCallingLocationJobsApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('jobs/locations/deleteCallingLocation')
-        return self.session.follow_pagination(url=url, model=DisableCallingLocationJobStatus, item_key='items',
-                                              params=params)
+        return self.session.follow_pagination(
+            url=url, model=DisableCallingLocationJobStatus, item_key='items', params=params
+        )
 
-    def initiate(self, location_id: str, location_name: str = None,
-                 force_delete: bool = None,
-                 org_id: str = None) -> DisableCallingLocationJobStatus:
+    def initiate(
+        self, location_id: str, location_name: str = None, force_delete: bool = None, org_id: str = None
+    ) -> DisableCallingLocationJobStatus:
         """
         Disable a Location for Webex Calling.
 
@@ -1839,8 +1872,7 @@ class DisableCallingLocationJobsApi(ApiChild, base='telephony/config'):
         r = DisableCallingLocationJobStatus.model_validate(data)
         return r
 
-    def status(self, job_id: str,
-               org_id: str = None) -> DisableCallingLocationJobStatus:
+    def status(self, job_id: str, org_id: str = None) -> DisableCallingLocationJobStatus:
         """
         Get Disable Calling Location Job Status
 
@@ -1903,7 +1935,7 @@ class DisableCallingLocationJobsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'jobs/locations/deleteCallingLocation/{job_id}/actions/resume/invoke')
         super().post(url, params=params)
 
-    def errors(self, job_id: str, org_id: str = None) -> List[JobErrorItem]:
+    def errors(self, job_id: str, org_id: str = None, **params) -> Generator[JobErrorItem, None, None]:
         """
         Retrieve Errors for a Disable Calling Location Job
 
@@ -1935,15 +1967,11 @@ class DisableCallingLocationJobsApi(ApiChild, base='telephony/config'):
         :type job_id: str
         :param org_id: Organization ID for disable calling location job.
         :type org_id: str
-        :rtype: list[JobErrorItem]
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'jobs/locations/deleteCallingLocation/{job_id}/errors')
-        data = super().get(url, params=params)
-        r = TypeAdapter(list[JobErrorItem]).validate_python(data['items'])
-        return r
+        return self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)
 
 
 @dataclass(init=False, repr=False)
@@ -1951,6 +1979,7 @@ class JobsApi(ApiChild, base='telephony/config/jobs'):
     """
     Jobs API
     """
+
     #: API to send activation emails
     activation_emails: SendActivationEmailApi
     #: API for apply line key template jobs

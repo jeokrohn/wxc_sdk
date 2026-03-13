@@ -1303,8 +1303,9 @@ class AsDeviceSettingsJobsApi(AsApiChild, base='telephony/config/jobs/devices/ca
 
     """
 
-    async def change(self, location_id: Optional[str], customization: DeviceCustomization,
-               org_id: str = None) -> StartJobResponse:
+    async def change(
+        self, location_id: Optional[str], customization: DeviceCustomization, org_id: str = None
+    ) -> StartJobResponse:
         """
         Change device settings across organization or locations jobs.
 
@@ -2153,11 +2154,17 @@ class AsGuestManagementApi(AsApiChild, base='guests'):
 
 
 class AsApplyLineKeyTemplatesJobsApi(AsApiChild, base='telephony/config/jobs/devices/applyLineKeyTemplate'):
-    async def apply(self, action: ApplyLineKeyTemplateAction, template_id: str = None,
-              location_ids: list[str] = None, exclude_devices_with_custom_layout: bool = None,
-              include_device_tags: list[str] = None, exclude_device_tags: list[str] = None,
-              advisory_types: LineKeyTemplateAdvisoryTypes = None,
-              org_id: str = None) -> ApplyLineKeyTemplateJobDetails:
+    async def apply(
+        self,
+        action: ApplyLineKeyTemplateAction,
+        template_id: str = None,
+        location_ids: list[str] = None,
+        exclude_devices_with_custom_layout: bool = None,
+        include_device_tags: list[str] = None,
+        exclude_device_tags: list[str] = None,
+        advisory_types: LineKeyTemplateAdvisoryTypes = None,
+        org_id: str = None,
+    ) -> ApplyLineKeyTemplateJobDetails:
         """
         Apply a Line key Template
 
@@ -2395,8 +2402,7 @@ class AsCallRecordingJobsApi(AsApiChild, base='telephony/config/jobs/callRecordi
         r = CallRecordingJobStatus.model_validate(data)
         return r
 
-    def errors_gen(self, job_id: str, org_id: str = None,
-               **params) -> AsyncGenerator[JobErrorItem, None, None]:
+    def errors_gen(self, job_id: str, org_id: str = None, **params) -> AsyncGenerator[JobErrorItem, None, None]:
         """
         Get Job Errors for a Call Recording Job
 
@@ -2419,8 +2425,7 @@ class AsCallRecordingJobsApi(AsApiChild, base='telephony/config/jobs/callRecordi
         url = self.ep(f'{job_id}/errors')
         return self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)
 
-    async def errors(self, job_id: str, org_id: str = None,
-               **params) -> List[JobErrorItem]:
+    async def errors(self, job_id: str, org_id: str = None, **params) -> List[JobErrorItem]:
         """
         Get Job Errors for a Call Recording Job
 
@@ -2445,9 +2450,7 @@ class AsCallRecordingJobsApi(AsApiChild, base='telephony/config/jobs/callRecordi
 
 
 class AsDisableCallingLocationJobsApi(AsApiChild, base='telephony/config'):
-
-    def list_gen(self, org_id: str = None,
-             **params) -> AsyncGenerator[DisableCallingLocationJobStatus, None, None]:
+    def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[DisableCallingLocationJobStatus, None, None]:
         """
         Get a List of Disable Calling Location Jobs
 
@@ -2463,11 +2466,11 @@ class AsDisableCallingLocationJobsApi(AsApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('jobs/locations/deleteCallingLocation')
-        return self.session.follow_pagination(url=url, model=DisableCallingLocationJobStatus, item_key='items',
-                                              params=params)
+        return self.session.follow_pagination(
+            url=url, model=DisableCallingLocationJobStatus, item_key='items', params=params
+        )
 
-    async def list(self, org_id: str = None,
-             **params) -> List[DisableCallingLocationJobStatus]:
+    async def list(self, org_id: str = None, **params) -> List[DisableCallingLocationJobStatus]:
         """
         Get a List of Disable Calling Location Jobs
 
@@ -2483,12 +2486,13 @@ class AsDisableCallingLocationJobsApi(AsApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('jobs/locations/deleteCallingLocation')
-        return [o async for o in self.session.follow_pagination(url=url, model=DisableCallingLocationJobStatus, item_key='items',
-                                              params=params)]
+        return [o async for o in self.session.follow_pagination(
+            url=url, model=DisableCallingLocationJobStatus, item_key='items', params=params
+        )]
 
-    async def initiate(self, location_id: str, location_name: str = None,
-                 force_delete: bool = None,
-                 org_id: str = None) -> DisableCallingLocationJobStatus:
+    async def initiate(
+        self, location_id: str, location_name: str = None, force_delete: bool = None, org_id: str = None
+    ) -> DisableCallingLocationJobStatus:
         """
         Disable a Location for Webex Calling.
 
@@ -2524,8 +2528,7 @@ class AsDisableCallingLocationJobsApi(AsApiChild, base='telephony/config'):
         r = DisableCallingLocationJobStatus.model_validate(data)
         return r
 
-    async def status(self, job_id: str,
-               org_id: str = None) -> DisableCallingLocationJobStatus:
+    async def status(self, job_id: str, org_id: str = None) -> DisableCallingLocationJobStatus:
         """
         Get Disable Calling Location Job Status
 
@@ -2588,7 +2591,7 @@ class AsDisableCallingLocationJobsApi(AsApiChild, base='telephony/config'):
         url = self.ep(f'jobs/locations/deleteCallingLocation/{job_id}/actions/resume/invoke')
         await super().post(url, params=params)
 
-    async def errors(self, job_id: str, org_id: str = None) -> List[JobErrorItem]:
+    def errors_gen(self, job_id: str, org_id: str = None, **params) -> AsyncGenerator[JobErrorItem, None, None]:
         """
         Retrieve Errors for a Disable Calling Location Job
 
@@ -2620,15 +2623,49 @@ class AsDisableCallingLocationJobsApi(AsApiChild, base='telephony/config'):
         :type job_id: str
         :param org_id: Organization ID for disable calling location job.
         :type org_id: str
-        :rtype: list[JobErrorItem]
         """
-        params = {}
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'jobs/locations/deleteCallingLocation/{job_id}/errors')
-        data = await super().get(url, params=params)
-        r = TypeAdapter(list[JobErrorItem]).validate_python(data['items'])
-        return r
+        return self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)
+
+    async def errors(self, job_id: str, org_id: str = None, **params) -> List[JobErrorItem]:
+        """
+        Retrieve Errors for a Disable Calling Location Job
+
+        Retrieve detailed error information for a disable calling location job. This is particularly useful for jobs
+        that have failed or encountered errors during processing.
+
+        Retrieving job errors requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        Possible error codes include:
+
+        * `BATCH-1012002` - Unable to delete calling location from Broadworks.
+        * `BATCH-1012004` - Safe delete checks failed.
+        * `BATCH-1012005` - Failed to perform safe delete checks.
+        * `BATCH-1012006` - Trunks in use in the location. Count: {0}
+        * `BATCH-1012007` - Users associated with the location. Count: {0}
+        * `BATCH-1012008` - Workspaces associated with the location. Count: {0}
+        * `BATCH-1012009` - Virtual lines associated with the location. Count: {0}
+        * `BATCH-1012010` - Number order is pending.
+        * `BATCH-1012011` - Features associated with the location. This is a blocking error, use forceDelete to disable
+          the calling location.
+        * `BATCH-1012012` - Not allowed to delete the last calling location. Calling requires at least one active
+          location in the organization, This is a blocking error.
+        * `BATCH-1012013` - Local gateway's associated with the location. Count: {0}. This is a blocking error, use
+          forceDelete to disable the calling location.
+        * `BATCH-1012014` - Location not found.
+
+        :param job_id: Unique identifier for the job to get errors for.
+        :type job_id: str
+        :param org_id: Organization ID for disable calling location job.
+        :type org_id: str
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'jobs/locations/deleteCallingLocation/{job_id}/errors')
+        return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)]
 
 
 class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
@@ -2682,8 +2719,13 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         url = self.ep('manageNumbers')
         return [o async for o in self.session.follow_pagination(url=url, model=NumberJob, params=params)]
 
-    async def initiate_job(self, operation: str, number_list: List[NumberItem], target_location_id: str = None,
-                     number_usage_type: str = None) -> NumberJob:
+    async def initiate_job(
+        self,
+        operation: str,
+        number_list: builtins.list[NumberItem],
+        target_location_id: str = None,
+        number_usage_type: str = None,
+    ) -> NumberJob:
         """
         Initiate Number Jobs
 
@@ -2732,8 +2774,9 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
             body['targetLocationId'] = target_location_id
         if number_usage_type is not None:
             body['numberUsageType'] = number_usage_type
-        body['numberList'] = TypeAdapter(list[NumberItem]).dump_python(number_list, mode='json', by_alias=True,
-                                                                       exclude_none=True)
+        body['numberList'] = TypeAdapter(list[NumberItem]).dump_python(
+            number_list, mode='json', by_alias=True, exclude_none=True
+        )
         url = self.ep('manageNumbers')
         data = await super().post(url=url, json=body)
         return NumberJob.model_validate(data)
@@ -2811,8 +2854,7 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         await super().post(url=url, params=params)
         return
 
-    def errors_gen(self, job_id: str = None, org_id: str = None,
-               **params) -> AsyncGenerator[JobErrorItem, None, None]:
+    def errors_gen(self, job_id: str = None, org_id: str = None, **params) -> AsyncGenerator[JobErrorItem, None, None]:
         """
         List Manage Numbers Job errors
 
@@ -2847,8 +2889,7 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         url = self.ep(f'manageNumbers/{job_id}/errors')
         return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
 
-    async def errors(self, job_id: str = None, org_id: str = None,
-               **params) -> List[JobErrorItem]:
+    async def errors(self, job_id: str = None, org_id: str = None, **params) -> List[JobErrorItem]:
         """
         List Manage Numbers Job errors
 
@@ -2885,8 +2926,7 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
 
 
 class AsMoveUsersJobsApi(AsApiChild, base='telephony/config/jobs/person/moveLocation'):
-    async def validate_or_initiate(self, users_list: list[MoveUsersList],
-                             org_id: str = None) -> StartMoveUsersJobResponse:
+    async def validate_or_initiate(self, users_list: list[MoveUsersList], org_id: str = None) -> StartMoveUsersJobResponse:
         """
         Validate or Initiate Move Users Job
 
@@ -3230,8 +3270,9 @@ class AsMoveUsersJobsApi(AsApiChild, base='telephony/config/jobs/person/moveLoca
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['usersList'] = TypeAdapter(list[MoveUsersList]).dump_python(users_list, mode='json', by_alias=True,
-                                                                         exclude_none=True)
+        body['usersList'] = TypeAdapter(list[MoveUsersList]).dump_python(
+            users_list, mode='json', by_alias=True, exclude_none=True
+        )
         url = self.ep()
         data = await super().post(url, params=params, json=body)
         r = StartMoveUsersJobResponse.model_validate(data['response'])
@@ -3356,8 +3397,7 @@ class AsMoveUsersJobsApi(AsApiChild, base='telephony/config/jobs/person/moveLoca
         url = self.ep(f'{job_id}/actions/resume/invoke')
         await super().post(url, params=params)
 
-    def errors_gen(self, job_id: str, org_id: str = None,
-               **params) -> AsyncGenerator[JobErrorItem, None, None]:
+    def errors_gen(self, job_id: str, org_id: str = None, **params) -> AsyncGenerator[JobErrorItem, None, None]:
         """
         List Move Users Job errors
 
@@ -3381,8 +3421,7 @@ class AsMoveUsersJobsApi(AsApiChild, base='telephony/config/jobs/person/moveLoca
 
 # noinspection DuplicatedCode
 
-    async def errors(self, job_id: str, org_id: str = None,
-               **params) -> List[JobErrorItem]:
+    async def errors(self, job_id: str, org_id: str = None, **params) -> List[JobErrorItem]:
         """
         List Move Users Job errors
 
@@ -3565,8 +3604,7 @@ class AsSendActivationEmailApi(AsApiChild, base='identity/organizations'):
         r = ActivationEmailJobDetail.model_validate(data)
         return r
 
-    def errors_gen(self, org_id: str, job_id: str,
-               **params) -> AsyncGenerator[JobErrorItem, None, None]:
+    def errors_gen(self, org_id: str, job_id: str, **params) -> AsyncGenerator[JobErrorItem, None, None]:
         """
         Get Bulk Activation Email Resend Job Errors
 
@@ -3584,8 +3622,7 @@ class AsSendActivationEmailApi(AsApiChild, base='identity/organizations'):
         url = self.ep(f'{org_id}/jobs/sendActivationEmails/{job_id}/errors')
         return self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)
 
-    async def errors(self, org_id: str, job_id: str,
-               **params) -> List[JobErrorItem]:
+    async def errors(self, org_id: str, job_id: str, **params) -> List[JobErrorItem]:
         """
         Get Bulk Activation Email Resend Job Errors
 
@@ -3603,8 +3640,7 @@ class AsSendActivationEmailApi(AsApiChild, base='identity/organizations'):
         url = self.ep(f'{org_id}/jobs/sendActivationEmails/{job_id}/errors')
         return [o async for o in self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)]
 
-    async def status(self, org_id: str,
-               job_id: str) -> ActivationEmailJobDetail:
+    async def status(self, org_id: str, job_id: str) -> ActivationEmailJobDetail:
         """
         Get Bulk Activation Email Resend Job Status
 
@@ -3626,8 +3662,7 @@ class AsSendActivationEmailApi(AsApiChild, base='identity/organizations'):
 
 
 class AsUpdateDynamicDeviceSettingsJobsApi(AsApiChild, base='telephony/config'):
-    def list_gen(self, org_id: str = None,
-             **params) -> AsyncGenerator[StartJobResponse, None, None]:
+    def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[StartJobResponse, None, None]:
         """
         List dynamic device settings jobs.
 
@@ -3644,11 +3679,9 @@ class AsUpdateDynamicDeviceSettingsJobsApi(AsApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('jobs/devices/dynamicDeviceSettings')
-        return self.session.follow_pagination(url=url, model=StartJobResponse, item_key='items',
-                                              params=params)
+        return self.session.follow_pagination(url=url, model=StartJobResponse, item_key='items', params=params)
 
-    async def list(self, org_id: str = None,
-             **params) -> List[StartJobResponse]:
+    async def list(self, org_id: str = None, **params) -> List[StartJobResponse]:
         """
         List dynamic device settings jobs.
 
@@ -3665,13 +3698,11 @@ class AsUpdateDynamicDeviceSettingsJobsApi(AsApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('jobs/devices/dynamicDeviceSettings')
-        return [o async for o in self.session.follow_pagination(url=url, model=StartJobResponse, item_key='items',
-                                              params=params)]
+        return [o async for o in self.session.follow_pagination(url=url, model=StartJobResponse, item_key='items', params=params)]
 
-    async def update_across_org_or_location(self,
-                                      tags: List[DynamicSettingsUpdateJobItem],
-                                      location_id: str = None,
-                                      org_id: str = None) -> StartJobResponse:
+    async def update_across_org_or_location(
+        self, tags: builtins.list[DynamicSettingsUpdateJobItem], location_id: str = None, org_id: str = None
+    ) -> StartJobResponse:
         """
         Updates dynamic Device Settings Across Organization Or Location
 
@@ -3706,9 +3737,9 @@ class AsUpdateDynamicDeviceSettingsJobsApi(AsApiChild, base='telephony/config'):
         body = dict()
         if location_id is not None:
             body['locationId'] = location_id
-        body['tags'] = TypeAdapter(list[DynamicSettingsUpdateJobItem]).dump_python(tags, mode='json',
-                                                                                   by_alias=True,
-                                                                                   exclude_none=True)
+        body['tags'] = TypeAdapter(list[DynamicSettingsUpdateJobItem]).dump_python(
+            tags, mode='json', by_alias=True, exclude_none=True
+        )
         url = self.ep('jobs/devices/dynamicDeviceSettings')
         data = await super().post(url, params=params, json=body)
         r = StartJobResponse.model_validate(data)
@@ -3734,8 +3765,7 @@ class AsUpdateDynamicDeviceSettingsJobsApi(AsApiChild, base='telephony/config'):
         r = StartJobResponse.model_validate(data)
         return r
 
-    def errors_gen(self, job_id: str, org_id: str = None,
-               **params) -> AsyncGenerator[JobErrorItem, None, None]:
+    def errors_gen(self, job_id: str, org_id: str = None, **params) -> AsyncGenerator[JobErrorItem, None, None]:
         """
         List Dynamic Device Settings Job Errors
 
@@ -3760,8 +3790,7 @@ class AsUpdateDynamicDeviceSettingsJobsApi(AsApiChild, base='telephony/config'):
 
 # noinspection DuplicatedCode
 
-    async def errors(self, job_id: str, org_id: str = None,
-               **params) -> List[JobErrorItem]:
+    async def errors(self, job_id: str, org_id: str = None, **params) -> List[JobErrorItem]:
         """
         List Dynamic Device Settings Job Errors
 
@@ -3909,6 +3938,7 @@ class AsJobsApi(AsApiChild, base='telephony/config/jobs'):
     """
     Jobs API
     """
+
     #: API to send activation emails
     activation_emails: AsSendActivationEmailApi
     #: API for apply line key template jobs

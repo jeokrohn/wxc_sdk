@@ -23,7 +23,7 @@ def disable_calling(api: WebexSimpleApi, location: TelephonyLocation) -> list[Jo
         print(f'Latest execution status: {job.latest_execution_status}')
         sleep(1)
         job = api.jobs.disable_calling_location.status(job.id)
-    errors = api.telephony.jobs.disable_calling_location.errors(job.id)
+    errors = list(api.telephony.jobs.disable_calling_location.errors(job.id))
     return errors
 
 

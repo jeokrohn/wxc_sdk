@@ -1,6 +1,7 @@
 Release history
 ===============
 
+- fix: :meth:`api.jobs.disable_calling_location.errors <wxc_sdk.telephony.jobs.DisableCallingLocationJobsApi.errors>` is a Generator now
 - fix: parameter fail_on_errors is optional in :meth:`api.scim.bulk.bulk_request <wxc_sdk.scim.bulk.SCIM2BulkApi.bulk_request>`
 - feat: new api :attr:`api.telephony.caller_reputation_provider <wxc_sdk.telephony.TelephonyApi.caller_reputation_provider>`
 - feat: new endpoint :meth:`api.me.contact_center_extensions <wxc_sdk.me.MeSettingsApi.contact_center_extensions>`
