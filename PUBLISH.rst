@@ -12,6 +12,8 @@
 * review TODOs: did we miss anything
 * commit changes, don't push
 * merge branch
+* run "uv run cz bump --dry-run" and check version bump
+* add new version tag to docs/user/changes.rst and commit change
 * run "uv run cz bump" and review
 * check changelog, tag, commit
 * build: make package
