@@ -9,8 +9,20 @@ from aenum import Enum, extend_enum
 from dateutil import tz
 from pydantic import BaseModel, BeforeValidator, ConfigDict, ValidationError
 
-__all__ = ['StrOrDict', 'webex_id_to_uuid', 'to_camel', 'ApiModel', 'CodeAndReason', 'ApiModelWithErrors', 'plus1',
-           'dt_iso_str', 'SafeEnum', 'enum_str', 'RETRY_429_MAX_WAIT', 'E164Number']
+__all__ = [
+    'StrOrDict',
+    'webex_id_to_uuid',
+    'to_camel',
+    'ApiModel',
+    'CodeAndReason',
+    'ApiModelWithErrors',
+    'plus1',
+    'dt_iso_str',
+    'SafeEnum',
+    'enum_str',
+    'RETRY_429_MAX_WAIT',
+    'E164Number',
+]
 
 StrOrDict = Union[str, dict]
 
@@ -24,6 +36,7 @@ class SafeEnum(Enum):
     """
     A replacement for the standard Enum class which allows dynamic enhancements of enums
     """
+
     if os.getenv('API_MODEL_ALLOW_EXTRA', 'allow') != 'allow':
         # don't allow dynamic extension of enum
         @classmethod
@@ -89,7 +102,8 @@ class ApiModel(BaseModel):
         # set to 'allow' by default. Can be overridden by setting environment variable API_MODEL_ALLOW_EXTRA
         extra=API_MODEL_ALLOW_EXTRA,
         # store values instead of enum types
-        use_enum_values=True)
+        use_enum_values=True,
+    )
 
     def model_dump_json(self, *args, exclude_none=True, by_alias=True, **kwargs) -> str:
         return super().model_dump_json(*args, exclude_none=exclude_none, by_alias=by_alias, **kwargs)
@@ -120,14 +134,20 @@ def plus1(v: Optional[str]) -> str:
     """
     return v and len(v) == 10 and v[0] != '+' and f'+1{v}' or v
 
-def e164(v:str)->str:
+
+def e164(v: str) -> str:
     if not isinstance(v, str):
         return v
-    v = re.sub(r"[^+\d]+", "", v)
+    v = re.sub(r'[^+\d]+', '', v)
+    if len(v) == 10 and v[0] != '+':
+        # convert 10D to +1<10D>
+        v = f'+1{v}' or v
     return v
 
-# +E.164 string: all unwanted characters are removed
+
+# +E.164 string: all unwanted characters are removed and 10D converted to +1-10D
 E164Number = Annotated[str, BeforeValidator(e164)]
+
 
 def dt_iso_str(dt: datetime, with_msec: bool = True) -> str:
     """
@@ -139,7 +159,7 @@ def dt_iso_str(dt: datetime, with_msec: bool = True) -> str:
     """
     dt = dt.astimezone(tz.tzutc())
     dt = dt.replace(tzinfo=None)
-    r = f"{dt.isoformat(timespec='milliseconds')}Z"
+    r = f'{dt.isoformat(timespec="milliseconds")}Z'
     if not with_msec:
         r = r[:-5] + 'Z'
     return r

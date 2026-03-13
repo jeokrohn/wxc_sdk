@@ -1,8 +1,8 @@
 from typing import ClassVar, Optional
 
-from pydantic import Field, field_validator
+from pydantic import Field
 
-from ..base import ApiModel, plus1, to_camel
+from ..base import ApiModel, E164Number, to_camel
 from ..base import SafeEnum as Enum
 from .common import PersonSettingsApiChild
 
@@ -15,6 +15,7 @@ class CallerIdSelectedType(str, Enum):
     """
     Allowed types for the selected field.
     """
+
     #: Outgoing caller ID will show the caller's direct line number and/or extension.
     direct_line = 'DIRECT_LINE'
     #: Outgoing caller ID will show the main number for the location.
@@ -29,6 +30,7 @@ class ExternalCallerIdNamePolicy(str, Enum):
     """
     Designates which type of External Caller ID Name policy is used. Default is DIRECT_LINE.
     """
+
     #: Outgoing caller ID will show the caller's direct line name
     direct_line = 'DIRECT_LINE'
     #: Outgoing caller ID will show the Site Name for the location.
@@ -42,32 +44,24 @@ class CallerId(ApiModel):
     Caller id settings of a user, also used for workspaces, virtual lines, ...
     """
 
-    @field_validator('direct_number', 'location_number', 'mobile_number', 'custom_number', mode='before')
-    @classmethod
-    def e164(cls, v):
-        """
-        :meta private:
-        """
-        return plus1(v)
-
     #: Allowed types for the `selected` field. This field is read-only and cannot be modified.
     caller_id_types: Optional[list[CallerIdSelectedType]] = Field(alias='types', default=None)
     #: Which type of outgoing Caller ID will be used. This setting is for the number portion.
     selected: Optional[CallerIdSelectedType] = None
     #: Direct number which will be shown if `DIRECT_LINE` is selected.
-    direct_number: Optional[str] = None
+    direct_number: Optional[E164Number] = None
     #: Extension number which will be shown if `DIRECT_LINE` is selected.
     extension_number: Optional[str] = None
     #: Location number which will be shown if `LOCATION_NUMBER` is selected.
-    location_number: Optional[str] = None
+    location_number: Optional[E164Number] = None
     #: Mobile number which will be shown if `MOBILE_NUMBER` is selected.
-    mobile_number: Optional[str] = None
+    mobile_number: Optional[E164Number] = None
     #: Flag to indicate if the location number is toll-free number.
     toll_free_location_number: Optional[bool] = None
     #: Custom number which is shown if CUSTOM is selected. This value must be a number from the workspace's location or
     #: from another location with the same country, PSTN provider, and zone (only applicable for India locations) as
     #: the workspace's location.
-    custom_number: Optional[str] = None
+    custom_number: Optional[E164Number] = None
     #: Person's Caller ID first name. The characters `%`,  `+`, ``, `"` and Unicode characters are not allowed.
     #: field has been deprecated. Please use `directLineCallerIdName` and `dialByFirstName` instead.
     first_name: Optional[str] = None
@@ -178,13 +172,17 @@ class CallerIdApi(PersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return CallerId.model_validate(self.get(ep, params=params))
 
-    def configure(self, entity_id: str, org_id: str = None,
-                  selected: CallerIdSelectedType = None,
-                  custom_number: str = None,
-                  first_name: str = None,
-                  last_name: str = None,
-                  external_caller_id_name_policy: ExternalCallerIdNamePolicy = None,
-                  custom_external_caller_id_name: str = None):
+    def configure(
+        self,
+        entity_id: str,
+        org_id: str = None,
+        selected: CallerIdSelectedType = None,
+        custom_number: str = None,
+        first_name: str = None,
+        last_name: str = None,
+        external_caller_id_name_policy: ExternalCallerIdNamePolicy = None,
+        custom_external_caller_id_name: str = None,
+    ):
         """
         Configure a Caller ID Settings
 
@@ -217,8 +215,7 @@ class CallerIdApi(PersonSettingsApiChild):
         :type custom_external_caller_id_name: str
 
         """
-        data = {to_camel(k): v for i, (k, v) in enumerate(locals().items())
-                if i > 2 and v is not None}
+        data = {to_camel(k): v for i, (k, v) in enumerate(locals().items()) if i > 2 and v is not None}
         params = org_id and {'orgId': org_id} or None
         ep = self.f_ep(person_id=entity_id)
         self.put(ep, params=params, json=data)

@@ -1,17 +1,17 @@
 """
-Telephony types and API (location and organisation settings)
+Telephony types and API (location and organization settings)
 """
+
 from collections.abc import Generator
 from dataclasses import dataclass
 from typing import Optional
 
-from pydantic import Field, TypeAdapter, field_validator
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.telephony.emergency_address import EmergencyAddressApi
-from .caller_reputation import CallerReputationProviderApi
 
 from ..api_child import ApiChild
-from ..base import ApiModel, enum_str, plus1, to_camel
+from ..base import ApiModel, E164Number, enum_str, to_camel
 from ..base import SafeEnum as Enum
 from ..common import (
     DeviceCustomization,
@@ -35,6 +35,7 @@ from .autoattendant import AutoAttendantApi
 from .call_contols_members import CallControlsMembersApi
 from .call_recording import CallRecordingSettingsApi
 from .call_routing import CallRoutingApi
+from .caller_reputation import CallerReputationProviderApi
 from .callpark import CallParkApi
 from .callpark_extension import CallparkExtensionApi
 from .callpickup import CallPickupApi
@@ -68,18 +69,46 @@ from .voice_messaging import VoiceMessagingApi
 from .voicemail_groups import VoicemailGroupsApi
 from .voiceportal import VoicePortalApi
 
-__all__ = ['NumberListPhoneNumberType', 'TelephonyType',
-           'NumberListPhoneNumber',
-           'NumberType', 'NumberDetails', 'UCMProfile',
-           'TestCallRoutingResult', 'OriginatorType', 'CallSourceType', 'CallSourceInfo', 'DestinationType',
-           'LocationAndNumbers', 'HostedUserDestination', 'ServiceType', 'HostedFeatureDestination',
-           'TrunkDestination', 'PbxUserDestination', 'PstnNumberDestination', 'VirtualExtensionDestination',
-           'RouteListDestination', 'FeatureAccessCodeDestination', 'EmergencyDestination',
-           'TranslationPatternConfigurationLevel', 'AppliedServiceTranslationPattern', 'ConfigurationLevel',
-           'CallInterceptDetailsPermission', 'CallInterceptDetails', 'CallingPlanReason',
-           'OutgoingCallingPlanPermissionsByType', 'OutgoingCallingPlanPermissionsByDigitPattern', 'AppliedService',
-           'AnnouncementLanguage', 'TelephonyApi',
-           'MoHTheme', 'MoHConfig', 'NameAndCode', 'OrgCallCaptions', 'LargeOrgStatus']
+__all__ = [
+    'NumberListPhoneNumberType',
+    'TelephonyType',
+    'NumberListPhoneNumber',
+    'NumberType',
+    'NumberDetails',
+    'UCMProfile',
+    'TestCallRoutingResult',
+    'OriginatorType',
+    'CallSourceType',
+    'CallSourceInfo',
+    'DestinationType',
+    'LocationAndNumbers',
+    'HostedUserDestination',
+    'ServiceType',
+    'HostedFeatureDestination',
+    'TrunkDestination',
+    'PbxUserDestination',
+    'PstnNumberDestination',
+    'VirtualExtensionDestination',
+    'RouteListDestination',
+    'FeatureAccessCodeDestination',
+    'EmergencyDestination',
+    'TranslationPatternConfigurationLevel',
+    'AppliedServiceTranslationPattern',
+    'ConfigurationLevel',
+    'CallInterceptDetailsPermission',
+    'CallInterceptDetails',
+    'CallingPlanReason',
+    'OutgoingCallingPlanPermissionsByType',
+    'OutgoingCallingPlanPermissionsByDigitPattern',
+    'AppliedService',
+    'AnnouncementLanguage',
+    'TelephonyApi',
+    'MoHTheme',
+    'MoHConfig',
+    'NameAndCode',
+    'OrgCallCaptions',
+    'LargeOrgStatus',
+]
 
 
 class NumberListPhoneNumberType(str, Enum):
@@ -101,6 +130,7 @@ class NumberListPhoneNumber(ApiModel):
     """
     Phone Number
     """
+
     #: A unique identifier for the PSTN phone number.
     phone_number: Optional[str] = None
     #: Extension for a PSTN phone number.
@@ -170,6 +200,7 @@ class CallSourceType(str, Enum):
     """
     The type of call source.
     """
+
     #: Indicates that the call source is a route list
     route_list = 'ROUTE_LIST'
     #: Indicates that the call source is a dial pattern.
@@ -184,6 +215,7 @@ class CallSourceInfo(ApiModel):
     """
     This data object is only returned when originatorNumber is specified in the request.
     """
+
     #: The type of call source.
     call_source_type: CallSourceType
     #: When originatorType is "trunk", originatorId is a valid trunk, this trunk belongs to a route group which is
@@ -210,6 +242,7 @@ class DestinationType(str, Enum):
     """
     Matching destination type for the call.
     """
+
     #: Matching destination is a person or workspace with details in the hosted_user field.
     hosted_agent = 'HOSTED_AGENT'
     #: Matching destination is a calling feature like auto-attendant or hunt group with details in the hostedFeature
@@ -238,17 +271,9 @@ class DestinationType(str, Enum):
 
 
 class LocationAndNumbers(ApiModel):
-    @field_validator('phone_number', mode='before')
-    @classmethod
-    def e164(cls, v):
-        """
-        :meta private:
-        """
-        return plus1(v)
-
     location_name: str
     location_id: str
-    phone_number: Optional[str] = None
+    phone_number: Optional[E164Number] = None
     extension: Optional[str] = None
 
 
@@ -256,6 +281,7 @@ class HostedUserDestination(LocationAndNumbers):
     """
     This data object is returned when destinationType is HOSTED_USER.
     """
+
     #: person/workspace's id
     hu_id: str = Field(alias='id')
     #: Type of agent for call destination.
@@ -289,6 +315,7 @@ class HostedFeatureDestination(LocationAndNumbers):
     """
     This data object is returned when destinationType is HOSTED_FEATURE
     """
+
     service_type: ServiceType = Field(alias='type')
     #: service instance name
     name: str
@@ -311,6 +338,7 @@ class PbxUserDestination(TrunkDestination):
     """
     This data object is returned when destinationType is PBX_USER.
     """
+
     #: the dial plan name that the called string matches
     dial_plan_name: str
     dial_plan_id: str
@@ -349,6 +377,7 @@ class RouteListDestination(ApiModel):
     """
     This data object is returned when destinationType is ROUTE_LIST.
     """
+
     route_list_id: str = Field(alias='id')
     name: str
     route_group_name: str
@@ -361,6 +390,7 @@ class FeatureAccessCodeDestination(ApiModel):
     """
     This data object is returned when destinationType is FAC.
     """
+
     code: str
     name: str
 
@@ -369,6 +399,7 @@ class EmergencyDestination(TrunkDestination):
     """
     This data object is returned when destinationType is EMERGENCY.
     """
+
     is_red_sky: bool
 
 
@@ -560,6 +591,7 @@ class OrgCallCaptions(ApiModel):
         """
         return self.model_dump(mode='json', by_alias=True, exclude_unset=True, exclude_none=True)
 
+
 class LargeOrgStatus(ApiModel):
     #: `true` if the organization is categorized as large organization.
     is_large_org: Optional[bool] = None
@@ -573,6 +605,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     """
     The telephony settings (features) API.
     """
+
     #: access or authentication codes at location level
     access_codes: LocationAccessCodesApi
     announcements_repo: AnnouncementsRepositoryApi
@@ -674,16 +707,27 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         self.voice_messaging = VoiceMessagingApi(session=session)
         self.voiceportal = VoicePortalApi(session=session)
 
-    def phone_numbers(self, location_id: str = None, phone_number: str = None, available: bool = None,
-                      order: str = None,
-                      owner_name: str = None, owner_id: str = None, owner_type: OwnerType = None,
-                      extension: str = None, number_type: NumberType = None,
-                      phone_number_type: NumberListPhoneNumberType = None,
-                      state: NumberState = None, details: bool = None, toll_free_numbers: bool = None,
-                      restricted_non_geo_numbers: bool = None,
-                      included_telephony_type: TelephonyType = None,
-                      service_number: bool = None,
-                      org_id: str = None, **params) -> Generator[NumberListPhoneNumber, None, None]:
+    def phone_numbers(
+        self,
+        location_id: str = None,
+        phone_number: str = None,
+        available: bool = None,
+        order: str = None,
+        owner_name: str = None,
+        owner_id: str = None,
+        owner_type: OwnerType = None,
+        extension: str = None,
+        number_type: NumberType = None,
+        phone_number_type: NumberListPhoneNumberType = None,
+        state: NumberState = None,
+        details: bool = None,
+        toll_free_numbers: bool = None,
+        restricted_non_geo_numbers: bool = None,
+        included_telephony_type: TelephonyType = None,
+        service_number: bool = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[NumberListPhoneNumber, None, None]:
         """
         Get Phone Numbers for an Organization with Given Criterias
 
@@ -742,8 +786,9 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :return: yields :class:`NumberListPhoneNumber` instances
         """
-        params.update((to_camel(p), v) for i, (p, v) in enumerate(locals().items())
-                      if i and v is not None and p != 'params')
+        params.update(
+            (to_camel(p), v) for i, (p, v) in enumerate(locals().items()) if i and v is not None and p != 'params'
+        )
         # parameter is actually called included_telephony_types
         if itp := params.pop('includedTelephonyType', None):
             params['includedTelephonyTypes'] = itp
@@ -756,8 +801,9 @@ class TelephonyApi(ApiChild, base='telephony/config'):
                 params[param] = value
         url = self.ep(path='numbers')
         # noinspection PyTypeChecker
-        return self.session.follow_pagination(url=url, model=NumberListPhoneNumber, params=params,
-                                              item_key='phoneNumbers')
+        return self.session.follow_pagination(
+            url=url, model=NumberListPhoneNumber, params=params, item_key='phoneNumbers'
+        )
 
     def phone_number_details(self, org_id: str = None) -> NumberDetails:
         """
@@ -768,8 +814,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         :return: phone number details
         :rtype: :class:`NumberDetails`
         """
-        params = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
-                  if i and v is not None}
+        params = {to_camel(p): v for i, (p, v) in enumerate(locals().items()) if i and v is not None}
         params['details'] = 'true'
         params['max'] = 1
         url = self.ep(path='numbers')
@@ -851,8 +896,9 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         data = self.get(url, params=params)
         return TypeAdapter(list[UCMProfile]).validate_python(data['callingProfiles'])
 
-    def route_choices(self, route_group_name: str = None, trunk_name: str = None, order: str = None,
-                      org_id: str = None) -> Generator[RouteIdentity, None, None]:
+    def route_choices(
+        self, route_group_name: str = None, trunk_name: str = None, order: str = None, org_id: str = None
+    ) -> Generator[RouteIdentity, None, None]:
         """
         Read the List of Routing Choices
 
@@ -872,15 +918,20 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         :param org_id: List route identities for this organization.
         :return:
         """
-        params = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
-                  if i and v is not None}
+        params = {to_camel(p): v for i, (p, v) in enumerate(locals().items()) if i and v is not None}
         url = self.ep('routeChoices')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=RouteIdentity, params=params, item_key='routeIdentities')
 
-    def test_call_routing(self, originator_id: str, originator_type: OriginatorType, destination: str,
-                          originator_number: str = None, include_applied_services: bool = None,
-                          org_id: str = None) -> TestCallRoutingResult:
+    def test_call_routing(
+        self,
+        originator_id: str,
+        originator_type: OriginatorType,
+        destination: str,
+        originator_number: str = None,
+        include_applied_services: bool = None,
+        org_id: str = None,
+    ) -> TestCallRoutingResult:
         """
         Test Call Routing
 
@@ -926,8 +977,9 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         data = self.post(url=url, params=params, json=body)
         return TestCallRoutingResult.model_validate(data)
 
-    def supported_devices(self, allow_configure_layout_enabled: bool = None, type_: str = None,
-                          org_id: str = None) -> SupportedDevices:
+    def supported_devices(
+        self, allow_configure_layout_enabled: bool = None, type_: str = None, org_id: str = None
+    ) -> SupportedDevices:
         """
         Read the List of Supported Devices
 
@@ -984,7 +1036,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         """
         url = self.ep('announcementLanguages')
         data = super().get(url=url)
-        return TypeAdapter(list[AnnouncementLanguage]).validate_python(data["languages"])
+        return TypeAdapter(list[AnnouncementLanguage]).validate_python(data['languages'])
 
     def read_moh(self, org_id: str = None) -> MoHConfig:
         """

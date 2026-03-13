@@ -13240,51 +13240,6 @@ class AsCallerIdApi(AsPersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return CallerId.model_validate(await self.get(ep, params=params))
 
-    async def configure(self, entity_id: str, org_id: str = None,
-                  selected: CallerIdSelectedType = None,
-                  custom_number: str = None,
-                  first_name: str = None,
-                  last_name: str = None,
-                  external_caller_id_name_policy: ExternalCallerIdNamePolicy = None,
-                  custom_external_caller_id_name: str = None):
-        """
-        Configure a Caller ID Settings
-
-        Caller ID settings control how a entity’s information is displayed when making outgoing calls.
-
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
-        auth token with spark:people_write scope can be used by a entity to update their own settings.
-
-        :param entity_id: Unique identifier for the entity.
-        :type entity_id: str
-        :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
-            may use this parameter as the default is the same organization as the token used to access API.
-        :type org_id: str
-        :param selected: Which type of outgoing Caller ID will be used.
-        :type selected: CallerIdSelectedType
-        :param custom_number: This value must be an assigned number from the entity\'s location.
-        :type custom_number: str
-        :param first_name: entity's Caller ID first name. Characters of %, +, `, " and Unicode characters are not
-            allowed.
-
-        :type first_name: str
-        :param last_name: entity's Caller ID last name. Characters of %, +, `, " and Unicode characters are not
-            allowed.
-        :type last_name: str
-        :param external_caller_id_name_policy: Designates which type of External Caller ID Name policy is used.
-            Default is DIRECT_LINE.
-        :type external_caller_id_name_policy: ExternalCallerIdNamePolicy
-        :param custom_external_caller_id_name: Custom External Caller Name, which will be shown if External Caller ID
-            Name is OTHER.
-        :type custom_external_caller_id_name: str
-
-        """
-        data = {to_camel(k): v for i, (k, v) in enumerate(locals().items())
-                if i > 2 and v is not None}
-        params = org_id and {'orgId': org_id} or None
-        ep = self.f_ep(person_id=entity_id)
-        await self.put(ep, params=params, json=data)
-
     async def configure_settings(self, entity_id: str, settings: CallerId, org_id: str = None):
         """
         Configure a Caller ID Settings
@@ -30169,41 +30124,12 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
     """
     Telephony devices API
     """
+
     dynamic_settings: AsDevicesDynamicSettingsApi
 
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
         self.dynamic_settings = AsDevicesDynamicSettingsApi(session=session)
-
-    async def supported_devices(self, allow_configure_layout_enabled: bool = None, type_: str = None,
-                          org_id: str = None) -> SupportedDevices:
-        """
-        Read the List of Supported Devices
-
-        Gets the list of supported devices for an organization.
-
-        Retrieving this list requires a full or read-only administrator auth token with a scope of
-        `spark-admin:telephony_config_read`.
-
-        :param allow_configure_layout_enabled: List supported devices that allow the user to configure the layout.
-        :type allow_configure_layout_enabled: bool
-        :param type_: List supported devices of a specific type. To excluded device types from a request or query, add
-            `type=not:DEVICE_TYPE`. For example, `type=not:MPP`.
-        :type type_: str
-        :param org_id: List supported devices for an organization.
-        :type org_id: str
-        :rtype: SupportedDevices
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        if allow_configure_layout_enabled is not None:
-            params['allowConfigureLayoutEnabled'] = str(allow_configure_layout_enabled).lower()
-        if type is not None:
-            params['type'] = type_
-        url = self.ep('supportedDevices')
-        data = await self.get(url=url, params=params)
-        return SupportedDevices.model_validate(data)
 
     async def details(self, device_id: str, org_id: str = None) -> TelephonyDeviceDetails:
         """
@@ -30286,179 +30212,6 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         data = await self.get(url=url, params=params)
         return DeviceMembersResponse.model_validate(data)
 
-    async def update_members(self, device_id: str, members: list[Union[DeviceMember, AvailableMember]] = None,
-                       org_id: str = None):
-        """
-        Modify member details on the device.
-
-        A device member can be either a person or a workspace. An admin can access the list of member details,
-        modify member details and search for available members on a device.
-
-        Modifying members on the device requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
-
-        :param device_id: Unique identifier for the device.
-        :type device_id: str
-        :param members: New member details for the device. If the member's list is missing then all the users are
-            removed except the primary user.
-        :type members: list[Union[DeviceMember, AvailableMember]
-        :param org_id: Modify members on the device in this organization.
-        :type org_id: str
-        """
-        members_for_update = []
-        for member in members or []:
-            if isinstance(member, AvailableMember):
-                member = DeviceMember.from_available(member)
-            else:
-                member = member.model_copy(deep=True)
-            members_for_update.append(member)
-
-        if members_for_update:
-            # now assign port indices
-            port = 1
-            for member in members_for_update:
-                member.port = port
-                port += member.line_weight
-
-        # create body
-        if members_for_update:
-            members = ','.join(m.model_dump_json(include={'member_id', 'port', 't38_fax_compression_enabled',
-                                                          'primary_owner', 'line_type', 'line_weight', 'line_label',
-                                                          'hotline_enabled', 'hotline_destination',
-                                                          'allow_call_decline_enabled'})
-                               for m in members_for_update)
-            body = f'{{"members": [{members}]}}'
-        else:
-            body = None
-
-        url = self.ep(f'devices/{device_id}/members')
-        params = org_id and {'orgId': org_id} or None
-        await self.put(url=url, data=body, params=params)
-
-    def available_members_gen(self, device_id: str, location_id: str = None, member_name: str = None,
-                          phone_number: str = None, extension: str = None, org_id: str = None,
-                          usage_type: UsageType = None,
-                          order: str = None,
-                          **params) -> AsyncGenerator[AvailableMember, None, None]:
-        """
-        Search members that can be assigned to the device.
-
-        A device member can be either a person or a workspace. A admin can access the list of member details,
-        modify member details and search for available members on a device.
-
-        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
-
-        :param device_id: Unique identifier for the device.
-        :type device_id: str
-        :param location_id: Search (Contains) based on number.
-        :type location_id: str
-        :param member_name: Search (Contains) numbers based on member name.
-        :type member_name: str
-        :param phone_number: Search (Contains) based on number.
-        :type phone_number: str
-        :param extension: Search (Contains) based on extension.
-        :type extension: str
-        :param usage_type: Search for members eligible to become the owner of the device, or share line on the device.
-        :type usage_type: UsageType
-        :param order: Sort the list of available members on the device in ascending order by name, use either last name
-            `lname` or first name `fname`. Default: last name in ascending order.
-        :type order: str
-        :param org_id: Retrieves the list of available members on the device in this Organization.
-        :type org_id: str
-        :return: list of available members
-        """
-        params.update((to_camel(p), v) for p, v in locals().items()
-                      if p not in {'self', 'params', 'device_id'} and v is not None)
-        url = self.ep(f'devices/{device_id}/availableMembers')
-        # noinspection PyTypeChecker
-        return self.session.follow_pagination(url=url, model=AvailableMember, params=params, item_key='members')
-
-    async def available_members(self, device_id: str, location_id: str = None, member_name: str = None,
-                          phone_number: str = None, extension: str = None, org_id: str = None,
-                          usage_type: UsageType = None,
-                          order: str = None,
-                          **params) -> List[AvailableMember]:
-        """
-        Search members that can be assigned to the device.
-
-        A device member can be either a person or a workspace. A admin can access the list of member details,
-        modify member details and search for available members on a device.
-
-        This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
-
-        :param device_id: Unique identifier for the device.
-        :type device_id: str
-        :param location_id: Search (Contains) based on number.
-        :type location_id: str
-        :param member_name: Search (Contains) numbers based on member name.
-        :type member_name: str
-        :param phone_number: Search (Contains) based on number.
-        :type phone_number: str
-        :param extension: Search (Contains) based on extension.
-        :type extension: str
-        :param usage_type: Search for members eligible to become the owner of the device, or share line on the device.
-        :type usage_type: UsageType
-        :param order: Sort the list of available members on the device in ascending order by name, use either last name
-            `lname` or first name `fname`. Default: last name in ascending order.
-        :type order: str
-        :param org_id: Retrieves the list of available members on the device in this Organization.
-        :type org_id: str
-        :return: list of available members
-        """
-        params.update((to_camel(p), v) for p, v in locals().items()
-                      if p not in {'self', 'params', 'device_id'} and v is not None)
-        url = self.ep(f'devices/{device_id}/availableMembers')
-        # noinspection PyTypeChecker
-        return [o async for o in self.session.follow_pagination(url=url, model=AvailableMember, params=params, item_key='members')]
-
-    async def get_count_of_members(self, device_id: str, member_name: str = None, phone_number: str = None,
-                             location_id: str = None, extension: str = None, usage_type: UsageType = None,
-                             org_id: str = None) -> int:
-        """
-        Get Count of Members
-
-        Get the count of members that can be assigned to the device.
-
-        A device member can be either a person or a workspace.
-
-        This requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param device_id: Unique identifier for the device.
-        :type device_id: str
-        :param member_name: Search (Contains) numbers based on member name.
-        :type member_name: str
-        :param phone_number: Search (Contains) based on number.
-        :type phone_number: str
-        :param location_id: Unique identifier for the location.
-        :type location_id: str
-        :param extension: Search (Contains) based on extension.
-        :type extension: str
-        :param usage_type: Search for members eligible to become the owner of the device, or share line on the device.
-        * `DEVICE_OWNER` - Search for members eligible to become the owner of the device.
-        * `SHARED_LINE` - Search for members eligible to share line on the device.
-        :type usage_type: UsageType
-        :param org_id: Retrieves the count of available members on the device in this organization.
-        :type org_id: str
-        :rtype: int
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        if member_name is not None:
-            params['memberName'] = member_name
-        if phone_number is not None:
-            params['phoneNumber'] = phone_number
-        if location_id is not None:
-            params['locationId'] = location_id
-        if extension is not None:
-            params['extension'] = extension
-        if usage_type is not None:
-            params['usageType'] = enum_str(usage_type)
-        url = self.ep(f'devices/{device_id}/availableMembers/count')
-        data = await super().get(url, params=params)
-        r = data['totalCount']
-        return r
-
     async def apply_changes(self, device_id: str, org_id: str = None):
         """
         Apply Changes for a specific device
@@ -30504,113 +30257,6 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         data = await self.get(url=url, params=params)
         return DeviceCustomization.model_validate(data)
 
-    async def update_device_settings(self, device_id: str, device_model: str, customization: DeviceCustomization,
-                               org_id: str = None):
-        """
-        Modify override settings for a device.
-
-        Device settings list all the applicable settings for an MPP and an ATA devices at the device level. Admins
-        can also modify the settings. NOTE: DECT devices do not support settings at the device level.
-
-        Updating settings on the device requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
-
-        :param device_id: Unique identifier for the device.
-        :type device_id: str
-        :param device_model: Device model name.
-        :type device_model: str
-        :param customization: Indicates the customization object of the device settings.
-        :type customization: DeviceCustomization
-        :param org_id: Organization in which the device resides..
-        :type org_id: str
-
-        Example :
-
-            .. code-block:: python
-
-                # target_device is a TelephonyDevice object
-                target_device: TelephonyDevice
-
-                # get device level settings
-                settings = api.telephony.devices.device_settings(device_id=target_device.device_id,
-                                                                 device_model=target_device.model)
-
-                # update settings (display name format) and enable device level customization
-                settings.customizations.mpp.display_name_format = DisplayNameSelection.person_last_then_first_name
-                settings.custom_enabled = True
-
-                # update the device level settings
-                api.telephony.devices.update_device_settings(device_id=target_device.device_id,
-                                                             device_model=target_device.model,
-                                                             customization=settings)
-
-                # apply changes to device
-                api.telephony.devices.apply_changes(device_id=target_device.device_id)
-
-        """
-        params = {'model': device_model}
-        if org_id:
-            params['orgId'] = org_id
-        url = self.ep(f'devices/{device_id}/settings')
-        body = customization.model_dump_json(include={'customizations', 'custom_enabled'})
-        await self.put(url=url, params=params, data=body)
-
-    async def get_count_of_available_members(self, member_name: str = None, phone_number: str = None,
-                                       location_id: str = None, extension: str = None, usage_type: UsageType = None,
-                                       exclude_virtual_line: bool = None, device_location_id: str = None,
-                                       org_id: str = None) -> int:
-        """
-        Get Count of Available Members
-
-        Get the count of members that can be assigned to devices.
-
-        A device member can be either a person or a workspace.
-
-        This requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
-
-        :param member_name: Search (Contains) numbers based on member name.
-        :type member_name: str
-        :param phone_number: Search (Contains) based on number.
-        :type phone_number: str
-        :param location_id: Unique identifier for the location.
-        :type location_id: str
-        :param extension: Search (Contains) based on extension.
-        :type extension: str
-        :param usage_type: Search for members eligible to become the owner of the device, or share line on the device.
-        * `DEVICE_OWNER` - Search for members eligible to become the owner of the device.
-        * `SHARED_LINE` - Search for members eligible to share line on the device.
-        :type usage_type: UsageType
-        :param exclude_virtual_line: If true, filters out virtual lines from the available members list.
-        :type exclude_virtual_line: bool
-        :param device_location_id: Unique identifier for the device's location. When specified, filters available
-            members to those in the same location as the device.
-        :type device_location_id: str
-        :param org_id: Retrieves the count of available members in this organization.
-        :type org_id: str
-        :rtype: int
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        if member_name is not None:
-            params['memberName'] = member_name
-        if phone_number is not None:
-            params['phoneNumber'] = phone_number
-        if location_id is not None:
-            params['locationId'] = location_id
-        if extension is not None:
-            params['extension'] = extension
-        if usage_type is not None:
-            params['usageType'] = enum_str(usage_type)
-        if exclude_virtual_line is not None:
-            params['excludeVirtualLine'] = str(exclude_virtual_line).lower()
-        if device_location_id is not None:
-            params['deviceLocationId'] = device_location_id
-        url = self.ep('devices/availableMembers/count')
-        data = await super().get(url, params=params)
-        r = data['totalCount']
-        return r
-
     async def validate_macs(self, macs: list[str], org_id: str = None) -> MACValidationResponse:
         """
         Validate a list of MAC addresses.
@@ -30630,8 +30276,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         data = await self.post(url=url, params=params, json={'macs': macs})
         return MACValidationResponse.model_validate(data)
 
-    async def create_line_key_template(self, template: LineKeyTemplate,
-                                 org_id: str = None) -> str:
+    async def create_line_key_template(self, template: LineKeyTemplate, org_id: str = None) -> str:
         """
         Create a Line Key Template
 
@@ -30771,68 +30416,6 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         url = self.ep(f'devices/lineKeyTemplates/{template_id}')
         await super().delete(url, params=params)
 
-    async def preview_apply_line_key_template(self, action: ApplyLineKeyTemplateAction, template_id: str = None,
-                                        location_ids: list[str] = None,
-                                        exclude_devices_with_custom_layout: bool = None,
-                                        include_device_tags: list[str] = None, exclude_device_tags: list[str] = None,
-                                        advisory_types: LineKeyTemplateAdvisoryTypes = None,
-                                        org_id: str = None) -> int:
-        """
-        Preview Apply Line Key Template
-
-        Preview the number of devices that will be affected by the application of a Line Key Template or when resetting
-        devices to their factory Line Key settings.
-
-        Line Keys, also known as Programmable Line Keys (PLK) are the keys found on either sides of a typical desk phone
-        display.
-        A Line Key Template is a definition of actions that will be performed by each of the Line Keys for a particular
-        device model.
-        This API allows users to preview the number of devices that will be affected if a customer were to apply a Line
-        Key Template or apply factory default Line Key settings to devices.
-
-        Retrieving the number of devices affected requires a full administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.
-
-        :param action: Line key Template action to perform.
-        :type action: PostApplyLineKeyTemplateRequestAction
-        :param template_id: `templateId` is required for `APPLY_TEMPLATE` action.
-        :type template_id: str
-        :param location_ids: Used to search for devices only in the given locations.
-        :type location_ids: list[str]
-        :param exclude_devices_with_custom_layout: Indicates whether to exclude devices with custom layout.
-        :type exclude_devices_with_custom_layout: bool
-        :param include_device_tags: Include devices only with these tags.
-        :type include_device_tags: list[str]
-        :param exclude_device_tags: Exclude devices with these tags.
-        :type exclude_device_tags: list[str]
-        :param advisory_types: Refine search with advisories.
-        :type advisory_types: LineKeyTemplateAdvisoryTypes
-        :param org_id: Preview Line Key Template for this organization.
-        :type org_id: str
-        :rtype: int
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        body = dict()
-        body['action'] = enum_str(action)
-        if template_id is not None:
-            body['templateId'] = template_id
-        if location_ids is not None:
-            body['locationIds'] = location_ids
-        if exclude_devices_with_custom_layout is not None:
-            body['excludeDevicesWithCustomLayout'] = exclude_devices_with_custom_layout
-        if include_device_tags is not None:
-            body['includeDeviceTags'] = include_device_tags
-        if exclude_device_tags is not None:
-            body['excludeDeviceTags'] = exclude_device_tags
-        if advisory_types is not None:
-            body['advisoryTypes'] = advisory_types.model_dump(mode='json', by_alias=True, exclude_none=True)
-        url = self.ep('devices/actions/previewApplyLineKeyTemplate/invoke')
-        data = await super().post(url, params=params, json=body)
-        r = data['deviceCount']
-        return r
-
     async def get_device_layout(self, device_id: str, org_id: str = None) -> DeviceLayout:
         """
         Get Device Layout by Device ID
@@ -30859,8 +30442,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         r = DeviceLayout.model_validate(data)
         return r
 
-    async def modify_device_layout(self, device_id: str, layout: DeviceLayout,
-                             org_id: str = None):
+    async def modify_device_layout(self, device_id: str, layout: DeviceLayout, org_id: str = None):
         """
         Modify Device Layout by Device ID
 
@@ -31014,87 +30596,6 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         url = self.ep('devices/backgroundImages')
         data = await super().get(url, params=params)
         r = BackgroundImages.model_validate(data)
-        return r
-
-    async def upload_background_image(self, device_id: str, file: Union[BufferedReader, str], file_name: str = None,
-                                org_id: str = None) -> BackgroundImage:
-        """
-        Upload a Device Background Image
-
-        Configure a device's background image by uploading an image with file format, `.jpeg` or `.png`, encoded image
-        file. Maximum image file size allowed to upload is 625 KB.
-
-        The request must be a multipart/form-data request rather than JSON, using the image/jpeg or image/png
-        content-type.
-
-        Webex Calling supports the upload of up to 100 background image files for each org. These image files can then
-        be referenced by MPP phones in that org for use as their background image.
-
-        Uploading a device background image requires a full or device administrator auth token with a scope
-        of `spark-admin:telephony_config_write`.
-
-        :param device_id: Unique identifier for the device.
-        :type device_id: str
-        :param file: the file to be uploaded, can be a path to a file or a buffered reader (opened file); if a
-            reader referring to an open file is passed then make sure to open the file as binary b/c otherwise the
-            content length might be calculated wrong
-        :type file: Union[BufferedReader, str]
-        :param file_name: filename for the content. Only required if content is a reader
-        :type file_name: str
-        :param org_id: Uploads the image in this organization.
-        :type org_id: str
-        :rtype: :class:`BackgroundImage`
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        url = self.ep(f'devices/{device_id}/actions/backgroundImageUpload/invoke')
-        if isinstance(file, str):
-            file_name = file_name or os.path.basename(file)
-            file = open(file, mode='rb')
-            must_close = True
-        else:
-            must_close = False
-            # an existing reader
-            if not file_name:
-                raise ValueError('file_name is required')
-        encoder = MultipartEncoder({'fileName': file_name,
-                                    'file': (file_name, file, f'image/{file_name.split(".")[-1].lower()}')})
-        try:
-            data = await super().post(url, data=encoder, headers={'Content-Type': encoder.content_type},
-                                params=params)
-        finally:
-            if must_close:
-                file.close()
-        r = BackgroundImage.model_validate(data)
-        return r
-
-    async def delete_background_images(self, background_images: list[DeleteImageRequestObject],
-                                 org_id: str = None) -> DeleteDeviceBackgroundImagesResponse:
-        """
-        Delete Device Background Images
-
-        Delete the list of designated device background images for an organization. Maximum is 10 images per request.
-
-        Deleting a device background image requires a full or device administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.
-
-        :param background_images: Array of images to be deleted.
-        :type background_images: list[DeleteImageRequestObject]
-        :param org_id: Deletes the list of images in this organization.
-        :type org_id: str
-        :rtype: :class:`DeleteDeviceBackgroundImagesResponse`
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        body = dict()
-        body['backgroundImages'] = TypeAdapter(list[DeleteImageRequestObject]).dump_python(background_images,
-                                                                                           mode='json', by_alias=True,
-                                                                                           exclude_none=True)
-        url = self.ep('devices/backgroundImages')
-        data = await super().delete(url, params=params, json=body)
-        r = DeleteDeviceBackgroundImagesResponse.model_validate(data)
         return r
 
     async def user_devices_count(self, person_id: str, org_id: str = None) -> UserDeviceCount:
@@ -34535,6 +34036,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     """
     The telephony settings (features) API.
     """
+
     #: access or authentication codes at location level
     access_codes: AsLocationAccessCodesApi
     announcements_repo: AsAnnouncementsRepositoryApi
@@ -34636,176 +34138,6 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         self.voice_messaging = AsVoiceMessagingApi(session=session)
         self.voiceportal = AsVoicePortalApi(session=session)
 
-    def phone_numbers_gen(self, location_id: str = None, phone_number: str = None, available: bool = None,
-                      order: str = None,
-                      owner_name: str = None, owner_id: str = None, owner_type: OwnerType = None,
-                      extension: str = None, number_type: NumberType = None,
-                      phone_number_type: NumberListPhoneNumberType = None,
-                      state: NumberState = None, details: bool = None, toll_free_numbers: bool = None,
-                      restricted_non_geo_numbers: bool = None,
-                      included_telephony_type: TelephonyType = None,
-                      service_number: bool = None,
-                      org_id: str = None, **params) -> AsyncGenerator[NumberListPhoneNumber, None, None]:
-        """
-        Get Phone Numbers for an Organization with Given Criterias
-
-        List all the phone numbers for the given organization along with the status and owner (if any).
-
-        Numbers can be standard, service, or mobile. Both standard and service numbers are PSTN numbers.
-        Service numbers are considered as high-utilization or high-concurrency phone numbers and can be assigned to
-        features like auto-attendants, call queues, and hunt groups.
-        Phone numbers can be linked to a specific location, be active or inactive, and be assigned or unassigned.
-        The owner of a number is the person, workspace, or feature to which the number is assigned.
-        Only a person can own a mobile number.
-
-        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
-        scope of `spark-admin:telephony_config_read`.
-
-        :param location_id: Return the list of phone numbers for this location within the given organization.
-        :type location_id: str
-        :param phone_number: Search for this phone number.
-        :type phone_number: str
-        :param available: Search among the available phone numbers. This parameter cannot be used along with owner_type
-            parameter when set to true.
-        :type available: bool
-        :param order: Sort the list of phone numbers based on the following:lastName,dn,extension. Default sort will
-            be based on number and extension in an Ascending order
-        :type order: str
-        :param owner_name: Return the list of phone numbers that is owned by given owner name. Maximum length is 255.
-        :type owner_name: str
-        :param owner_id: Returns only the matched number/extension entries assigned to the feature with specified
-            uuid/broadsoftId.
-        :type owner_id: str
-        :param owner_type: Returns the list of phone numbers that are of given owner_type.
-        :type owner_type: OwnerType
-        :param extension: Returns the list of PSTN phone numbers with given extension.
-        :type extension: str
-        :param number_type: Returns the filtered list of phone numbers that contain a given type of number. `available`
-            or `state` query parameters cannot be used when `numberType=EXTENSION`.
-        :type number_type: NumberType
-        :param phone_number_type: Returns the filtered list of PSTN phone numbers that are of given phoneNumberType.
-        :type phone_number_type: NumberListPhoneNumberType
-        :param state: Returns the list of PSTN phone numbers with matching state.
-        :type state: NumberState
-        :param details: Returns the overall count of the PSTN phone numbers along with other details for given
-            organization.
-        :type details: bool
-        :param toll_free_numbers: Returns the list of toll free phone numbers.
-        :type toll_free_numbers: bool
-        :param restricted_non_geo_numbers: Returns the list of restricted non geographical numbers.
-        :type restricted_non_geo_numbers: bool
-        :param included_telephony_type: Returns the list of phone numbers that are of given `includedTelephonyType`.
-            By default if this query parameter is not provided, it will list both PSTN and Mobile Numbers. Possible
-            input values are PSTN_NUMBER, MOBILE_NUMBER.
-        :type included_telephony_type: TelephonyType
-        :param service_number: Returns the list of service phone numbers.
-        :type service_number: bool
-        :param org_id: List numbers for this organization.
-        :type org_id: str
-        :return: yields :class:`NumberListPhoneNumber` instances
-        """
-        params.update((to_camel(p), v) for i, (p, v) in enumerate(locals().items())
-                      if i and v is not None and p != 'params')
-        # parameter is actually called included_telephony_types
-        if itp := params.pop('includedTelephonyType', None):
-            params['includedTelephonyTypes'] = itp
-        for param, value in params.items():
-            if isinstance(value, bool):
-                value = 'true' if value else 'false'
-                params[param] = value
-            elif isinstance(value, Enum):
-                value = value.value
-                params[param] = value
-        url = self.ep(path='numbers')
-        # noinspection PyTypeChecker
-        return self.session.follow_pagination(url=url, model=NumberListPhoneNumber, params=params,
-                                              item_key='phoneNumbers')
-
-    async def phone_numbers(self, location_id: str = None, phone_number: str = None, available: bool = None,
-                      order: str = None,
-                      owner_name: str = None, owner_id: str = None, owner_type: OwnerType = None,
-                      extension: str = None, number_type: NumberType = None,
-                      phone_number_type: NumberListPhoneNumberType = None,
-                      state: NumberState = None, details: bool = None, toll_free_numbers: bool = None,
-                      restricted_non_geo_numbers: bool = None,
-                      included_telephony_type: TelephonyType = None,
-                      service_number: bool = None,
-                      org_id: str = None, **params) -> List[NumberListPhoneNumber]:
-        """
-        Get Phone Numbers for an Organization with Given Criterias
-
-        List all the phone numbers for the given organization along with the status and owner (if any).
-
-        Numbers can be standard, service, or mobile. Both standard and service numbers are PSTN numbers.
-        Service numbers are considered as high-utilization or high-concurrency phone numbers and can be assigned to
-        features like auto-attendants, call queues, and hunt groups.
-        Phone numbers can be linked to a specific location, be active or inactive, and be assigned or unassigned.
-        The owner of a number is the person, workspace, or feature to which the number is assigned.
-        Only a person can own a mobile number.
-
-        Retrieving this list requires a full or read-only administrator or location administrator auth token with a
-        scope of `spark-admin:telephony_config_read`.
-
-        :param location_id: Return the list of phone numbers for this location within the given organization.
-        :type location_id: str
-        :param phone_number: Search for this phone number.
-        :type phone_number: str
-        :param available: Search among the available phone numbers. This parameter cannot be used along with owner_type
-            parameter when set to true.
-        :type available: bool
-        :param order: Sort the list of phone numbers based on the following:lastName,dn,extension. Default sort will
-            be based on number and extension in an Ascending order
-        :type order: str
-        :param owner_name: Return the list of phone numbers that is owned by given owner name. Maximum length is 255.
-        :type owner_name: str
-        :param owner_id: Returns only the matched number/extension entries assigned to the feature with specified
-            uuid/broadsoftId.
-        :type owner_id: str
-        :param owner_type: Returns the list of phone numbers that are of given owner_type.
-        :type owner_type: OwnerType
-        :param extension: Returns the list of PSTN phone numbers with given extension.
-        :type extension: str
-        :param number_type: Returns the filtered list of phone numbers that contain a given type of number. `available`
-            or `state` query parameters cannot be used when `numberType=EXTENSION`.
-        :type number_type: NumberType
-        :param phone_number_type: Returns the filtered list of PSTN phone numbers that are of given phoneNumberType.
-        :type phone_number_type: NumberListPhoneNumberType
-        :param state: Returns the list of PSTN phone numbers with matching state.
-        :type state: NumberState
-        :param details: Returns the overall count of the PSTN phone numbers along with other details for given
-            organization.
-        :type details: bool
-        :param toll_free_numbers: Returns the list of toll free phone numbers.
-        :type toll_free_numbers: bool
-        :param restricted_non_geo_numbers: Returns the list of restricted non geographical numbers.
-        :type restricted_non_geo_numbers: bool
-        :param included_telephony_type: Returns the list of phone numbers that are of given `includedTelephonyType`.
-            By default if this query parameter is not provided, it will list both PSTN and Mobile Numbers. Possible
-            input values are PSTN_NUMBER, MOBILE_NUMBER.
-        :type included_telephony_type: TelephonyType
-        :param service_number: Returns the list of service phone numbers.
-        :type service_number: bool
-        :param org_id: List numbers for this organization.
-        :type org_id: str
-        :return: yields :class:`NumberListPhoneNumber` instances
-        """
-        params.update((to_camel(p), v) for i, (p, v) in enumerate(locals().items())
-                      if i and v is not None and p != 'params')
-        # parameter is actually called included_telephony_types
-        if itp := params.pop('includedTelephonyType', None):
-            params['includedTelephonyTypes'] = itp
-        for param, value in params.items():
-            if isinstance(value, bool):
-                value = 'true' if value else 'false'
-                params[param] = value
-            elif isinstance(value, Enum):
-                value = value.value
-                params[param] = value
-        url = self.ep(path='numbers')
-        # noinspection PyTypeChecker
-        return [o async for o in self.session.follow_pagination(url=url, model=NumberListPhoneNumber, params=params,
-                                              item_key='phoneNumbers')]
-
     async def phone_number_details(self, org_id: str = None) -> NumberDetails:
         """
         get summary (counts) of phone numbers
@@ -34815,8 +34147,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         :return: phone number details
         :rtype: :class:`NumberDetails`
         """
-        params = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
-                  if i and v is not None}
+        params = {to_camel(p): v for i, (p, v) in enumerate(locals().items()) if i and v is not None}
         params['details'] = 'true'
         params['max'] = 1
         url = self.ep(path='numbers')
@@ -34898,138 +34229,6 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         data = await self.get(url, params=params)
         return TypeAdapter(list[UCMProfile]).validate_python(data['callingProfiles'])
 
-    def route_choices_gen(self, route_group_name: str = None, trunk_name: str = None, order: str = None,
-                      org_id: str = None) -> AsyncGenerator[RouteIdentity, None, None]:
-        """
-        Read the List of Routing Choices
-
-        List all Routes for the organization.
-
-        Trunk and Route Group qualify as Route. Trunks and Route Groups provide you the ability to configure Webex
-        Calling to manage calls between Webex Calling hosted users and premises PBX(s) users. This solution lets you
-        configure users to use Cloud PSTN (CCP or Cisco PSTN) or Premises-based PSTN.
-
-        Retrieving this list requires a full or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
-
-        :param route_group_name: Return the list of route identities matching the route group name.
-        :param trunk_name: Return the list of route identities matching the trunk name.
-        :param order: Order the route identities according to the designated fields.
-            Available sort fields: routeName, routeType.
-        :param org_id: List route identities for this organization.
-        :return:
-        """
-        params = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
-                  if i and v is not None}
-        url = self.ep('routeChoices')
-        # noinspection PyTypeChecker
-        return self.session.follow_pagination(url=url, model=RouteIdentity, params=params, item_key='routeIdentities')
-
-    async def route_choices(self, route_group_name: str = None, trunk_name: str = None, order: str = None,
-                      org_id: str = None) -> List[RouteIdentity]:
-        """
-        Read the List of Routing Choices
-
-        List all Routes for the organization.
-
-        Trunk and Route Group qualify as Route. Trunks and Route Groups provide you the ability to configure Webex
-        Calling to manage calls between Webex Calling hosted users and premises PBX(s) users. This solution lets you
-        configure users to use Cloud PSTN (CCP or Cisco PSTN) or Premises-based PSTN.
-
-        Retrieving this list requires a full or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
-
-        :param route_group_name: Return the list of route identities matching the route group name.
-        :param trunk_name: Return the list of route identities matching the trunk name.
-        :param order: Order the route identities according to the designated fields.
-            Available sort fields: routeName, routeType.
-        :param org_id: List route identities for this organization.
-        :return:
-        """
-        params = {to_camel(p): v for i, (p, v) in enumerate(locals().items())
-                  if i and v is not None}
-        url = self.ep('routeChoices')
-        # noinspection PyTypeChecker
-        return [o async for o in self.session.follow_pagination(url=url, model=RouteIdentity, params=params, item_key='routeIdentities')]
-
-    async def test_call_routing(self, originator_id: str, originator_type: OriginatorType, destination: str,
-                          originator_number: str = None, include_applied_services: bool = None,
-                          org_id: str = None) -> TestCallRoutingResult:
-        """
-        Test Call Routing
-
-        Validates that an incoming call can be routed.
-
-        Dial plans route calls to on-premises destinations by use of trunks or route groups.
-        They are configured globally for an enterprise and apply to all users, regardless of location.
-        A dial plan also specifies the routing choice (trunk or route group) for calls that match any of its dial
-        patterns.
-        Specific dial patterns can be defined as part of your dial plan.
-
-        Test call routing requires a full administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.
-
-        :param originator_id: This element is used to identify the originating party. It can be a person ID or a trunk
-            ID.
-        :type originator_id: str
-        :param originator_type: This element is used to identify if the `originatorId` is of type `PEOPLE` or `TRUNK`.
-        :type originator_type: OriginatorType
-        :param destination: This element specifies the called party. It can be any dialable string, for example, an ESN
-            number, E.164 number, hosted user DN, extension, extension with location code, URL, or FAC code.
-        :type destination: str
-        :param originator_number: Only used when `originatorType` is `TRUNK`. The `originatorNumber` can be a phone
-            number or URI.
-        :type originator_number: str
-        :param include_applied_services: This element is used to retrieve if any translation pattern, call intercept,
-            permission by type or permission by digit pattern is present for the called party.
-        :type include_applied_services: bool
-        :param org_id: Organization in which we are validating a call routing.
-        :type org_id: str
-        :rtype: :class:`TestCallRoutingResult`
-        """
-        params = org_id and {'orgId': org_id} or None
-        body = dict()
-        body['originatorId'] = originator_id
-        body['originatorType'] = enum_str(originator_type)
-        if originator_number is not None:
-            body['originatorNumber'] = originator_number
-        body['destination'] = destination
-        if include_applied_services is not None:
-            body['includeAppliedServices'] = include_applied_services
-        url = self.ep('actions/testCallRouting/invoke')
-        data = await self.post(url=url, params=params, json=body)
-        return TestCallRoutingResult.model_validate(data)
-
-    async def supported_devices(self, allow_configure_layout_enabled: bool = None, type_: str = None,
-                          org_id: str = None) -> SupportedDevices:
-        """
-        Read the List of Supported Devices
-
-        Gets the list of supported devices for an organization.
-
-        Retrieving this list requires a full or read-only administrator auth token with a scope of
-        `spark-admin:telephony_config_read`.
-
-        :param allow_configure_layout_enabled: List supported devices that allow the user to configure the layout.
-        :type allow_configure_layout_enabled: bool
-        :param type_: List supported devices of a specific type. To excluded device types from a request or query, add
-            `type=not:DEVICE_TYPE`. For example, `type=not:MPP`.
-        :type type_: str
-        :param org_id: List supported devices for an organization.
-        :type org_id: str
-        :rtype: SupportedDevices
-        """
-        params = {}
-        if org_id is not None:
-            params['orgId'] = org_id
-        if allow_configure_layout_enabled is not None:
-            params['allowConfigureLayoutEnabled'] = str(allow_configure_layout_enabled).lower()
-        if type is not None:
-            params['type'] = type_
-        url = self.ep('supportedDevices')
-        data = await self.get(url=url, params=params)
-        return SupportedDevices.model_validate(data)
-
     async def device_settings(self, org_id: str = None) -> DeviceCustomization:
         """
         Get device override settings for an organization.
@@ -35058,7 +34257,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         """
         url = self.ep('announcementLanguages')
         data = await super().get(url=url)
-        return TypeAdapter(list[AnnouncementLanguage]).validate_python(data["languages"])
+        return TypeAdapter(list[AnnouncementLanguage]).validate_python(data['languages'])
 
     async def read_moh(self, org_id: str = None) -> MoHConfig:
         """

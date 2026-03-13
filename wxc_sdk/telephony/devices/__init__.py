@@ -1,6 +1,7 @@
 """
 Telephony devices
 """
+
 import os
 from collections.abc import Generator
 from dataclasses import dataclass
@@ -11,7 +12,7 @@ from pydantic import Field, TypeAdapter, field_serializer, field_validator
 from requests_toolbelt import MultipartEncoder
 
 from ...api_child import ApiChild
-from ...base import ApiModel, enum_str, plus1, to_camel
+from ...base import ApiModel, E164Number, enum_str, to_camel
 from ...base import SafeEnum as Enum
 from ...common import (
     ApplyLineKeyTemplateAction,
@@ -28,15 +29,42 @@ from ...rest import RestSession
 from ..jobs import LineKeyTemplateAdvisoryTypes
 from .dynamic_settings import DevicesDynamicSettingsApi
 
-__all__ = ['DeviceManufacturer', 'DeviceManagedBy', 'OnboardingMethod', 'DeviceSettingsConfiguration',
-           'SupportsLogCollection', 'SupportedDevice', 'SupportedDevices', 'MemberCommon', 'DeviceMember',
-           'DeviceMembersResponse', 'AvailableMember', 'MACState',
-           'MACStatus', 'MACValidationResponse', 'TelephonyDevicesApi', 'LineKeyType', 'ProgrammableLineKey',
-           'LineKeyTemplate', 'TelephonyDeviceDetails', 'ActivationState', 'TelephonyDeviceOwner',
-           'TelephonyDeviceProxy', 'LayoutMode', 'KemModuleType', 'KemKey', 'DeviceLayout', 'DeviceSettings',
-           'BackgroundImage', 'BackgroundImages', 'DeleteImageRequestObject',
-           'DeleteImageResponseSuccessObjectResult', 'DeleteImageResponseSuccessObject',
-           'DeleteDeviceBackgroundImagesResponse', 'UserDeviceCount']
+__all__ = [
+    'DeviceManufacturer',
+    'DeviceManagedBy',
+    'OnboardingMethod',
+    'DeviceSettingsConfiguration',
+    'SupportsLogCollection',
+    'SupportedDevice',
+    'SupportedDevices',
+    'MemberCommon',
+    'DeviceMember',
+    'DeviceMembersResponse',
+    'AvailableMember',
+    'MACState',
+    'MACStatus',
+    'MACValidationResponse',
+    'TelephonyDevicesApi',
+    'LineKeyType',
+    'ProgrammableLineKey',
+    'LineKeyTemplate',
+    'TelephonyDeviceDetails',
+    'ActivationState',
+    'TelephonyDeviceOwner',
+    'TelephonyDeviceProxy',
+    'LayoutMode',
+    'KemModuleType',
+    'KemKey',
+    'DeviceLayout',
+    'DeviceSettings',
+    'BackgroundImage',
+    'BackgroundImages',
+    'DeleteImageRequestObject',
+    'DeleteImageResponseSuccessObjectResult',
+    'DeleteImageResponseSuccessObject',
+    'DeleteDeviceBackgroundImagesResponse',
+    'UserDeviceCount',
+]
 
 
 class DeviceManufacturer(str, Enum):
@@ -220,7 +248,7 @@ class MemberCommon(ApiModel):
     last_name: Optional[str] = None
     #: Phone Number of a person or workspace. In some regions phone numbers are not returned in E.164 format. This
     #: will be supported in a future update.
-    phone_number: Optional[str] = None
+    phone_number: Optional[E164Number] = None
     #: Extension of a person or workspace.
     extension: Optional[str] = None
     #: Routing prefix of location.
@@ -237,14 +265,6 @@ class MemberCommon(ApiModel):
     allow_call_decline_enabled: Optional[bool] = Field(default=True)
     location: Optional[IdAndName] = None
     license_type: Optional[UserLicenseType] = None
-
-    @field_validator('phone_number', mode='before')
-    @classmethod
-    def e164(cls, v):
-        """
-        :meta private:
-        """
-        return plus1(v)
 
 
 class DeviceMember(MemberCommon):
@@ -278,6 +298,7 @@ class DeviceMembersResponse(ApiModel):
     """
     Get Device Members response
     """
+
     model: str
     members: list[DeviceMember]
     max_line_count: int
@@ -293,14 +314,14 @@ class DeviceMembersResponse(ApiModel):
         return v
 
 
-class AvailableMember(MemberCommon):
-    ...
+class AvailableMember(MemberCommon): ...
 
 
 class MACState(str, Enum):
     """
     State of the MAC address.
     """
+
     #: The requested MAC address is available.
     available = 'AVAILABLE'
     #: The requested MAC address is unavailable.
@@ -540,14 +561,16 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
     """
     Telephony devices API
     """
+
     dynamic_settings: DevicesDynamicSettingsApi
 
     def __init__(self, session: RestSession):
         super().__init__(session=session)
         self.dynamic_settings = DevicesDynamicSettingsApi(session=session)
 
-    def supported_devices(self, allow_configure_layout_enabled: bool = None, type_: str = None,
-                          org_id: str = None) -> SupportedDevices:
+    def supported_devices(
+        self, allow_configure_layout_enabled: bool = None, type_: str = None, org_id: str = None
+    ) -> SupportedDevices:
         """
         Read the List of Supported Devices
 
@@ -657,8 +680,9 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         data = self.get(url=url, params=params)
         return DeviceMembersResponse.model_validate(data)
 
-    def update_members(self, device_id: str, members: list[Union[DeviceMember, AvailableMember]] = None,
-                       org_id: str = None):
+    def update_members(
+        self, device_id: str, members: list[Union[DeviceMember, AvailableMember]] = None, org_id: str = None
+    ):
         """
         Modify member details on the device.
 
@@ -693,11 +717,23 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
 
         # create body
         if members_for_update:
-            members = ','.join(m.model_dump_json(include={'member_id', 'port', 't38_fax_compression_enabled',
-                                                          'primary_owner', 'line_type', 'line_weight', 'line_label',
-                                                          'hotline_enabled', 'hotline_destination',
-                                                          'allow_call_decline_enabled'})
-                               for m in members_for_update)
+            members = ','.join(
+                m.model_dump_json(
+                    include={
+                        'member_id',
+                        'port',
+                        't38_fax_compression_enabled',
+                        'primary_owner',
+                        'line_type',
+                        'line_weight',
+                        'line_label',
+                        'hotline_enabled',
+                        'hotline_destination',
+                        'allow_call_decline_enabled',
+                    }
+                )
+                for m in members_for_update
+            )
             body = f'{{"members": [{members}]}}'
         else:
             body = None
@@ -706,11 +742,18 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         params = org_id and {'orgId': org_id} or None
         self.put(url=url, data=body, params=params)
 
-    def available_members(self, device_id: str, location_id: str = None, member_name: str = None,
-                          phone_number: str = None, extension: str = None, org_id: str = None,
-                          usage_type: UsageType = None,
-                          order: str = None,
-                          **params) -> Generator[AvailableMember, None, None]:
+    def available_members(
+        self,
+        device_id: str,
+        location_id: str = None,
+        member_name: str = None,
+        phone_number: str = None,
+        extension: str = None,
+        org_id: str = None,
+        usage_type: UsageType = None,
+        order: str = None,
+        **params,
+    ) -> Generator[AvailableMember, None, None]:
         """
         Search members that can be assigned to the device.
 
@@ -738,15 +781,23 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :return: list of available members
         """
-        params.update((to_camel(p), v) for p, v in locals().items()
-                      if p not in {'self', 'params', 'device_id'} and v is not None)
+        params.update(
+            (to_camel(p), v) for p, v in locals().items() if p not in {'self', 'params', 'device_id'} and v is not None
+        )
         url = self.ep(f'devices/{device_id}/availableMembers')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=AvailableMember, params=params, item_key='members')
 
-    def get_count_of_members(self, device_id: str, member_name: str = None, phone_number: str = None,
-                             location_id: str = None, extension: str = None, usage_type: UsageType = None,
-                             org_id: str = None) -> int:
+    def get_count_of_members(
+        self,
+        device_id: str,
+        member_name: str = None,
+        phone_number: str = None,
+        location_id: str = None,
+        extension: str = None,
+        usage_type: UsageType = None,
+        org_id: str = None,
+    ) -> int:
         """
         Get Count of Members
 
@@ -837,8 +888,9 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         data = self.get(url=url, params=params)
         return DeviceCustomization.model_validate(data)
 
-    def update_device_settings(self, device_id: str, device_model: str, customization: DeviceCustomization,
-                               org_id: str = None):
+    def update_device_settings(
+        self, device_id: str, device_model: str, customization: DeviceCustomization, org_id: str = None
+    ):
         """
         Modify override settings for a device.
 
@@ -888,10 +940,17 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         body = customization.model_dump_json(include={'customizations', 'custom_enabled'})
         self.put(url=url, params=params, data=body)
 
-    def get_count_of_available_members(self, member_name: str = None, phone_number: str = None,
-                                       location_id: str = None, extension: str = None, usage_type: UsageType = None,
-                                       exclude_virtual_line: bool = None, device_location_id: str = None,
-                                       org_id: str = None) -> int:
+    def get_count_of_available_members(
+        self,
+        member_name: str = None,
+        phone_number: str = None,
+        location_id: str = None,
+        extension: str = None,
+        usage_type: UsageType = None,
+        exclude_virtual_line: bool = None,
+        device_location_id: str = None,
+        org_id: str = None,
+    ) -> int:
         """
         Get Count of Available Members
 
@@ -963,8 +1022,7 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         data = self.post(url=url, params=params, json={'macs': macs})
         return MACValidationResponse.model_validate(data)
 
-    def create_line_key_template(self, template: LineKeyTemplate,
-                                 org_id: str = None) -> str:
+    def create_line_key_template(self, template: LineKeyTemplate, org_id: str = None) -> str:
         """
         Create a Line Key Template
 
@@ -1104,12 +1162,17 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         url = self.ep(f'devices/lineKeyTemplates/{template_id}')
         super().delete(url, params=params)
 
-    def preview_apply_line_key_template(self, action: ApplyLineKeyTemplateAction, template_id: str = None,
-                                        location_ids: list[str] = None,
-                                        exclude_devices_with_custom_layout: bool = None,
-                                        include_device_tags: list[str] = None, exclude_device_tags: list[str] = None,
-                                        advisory_types: LineKeyTemplateAdvisoryTypes = None,
-                                        org_id: str = None) -> int:
+    def preview_apply_line_key_template(
+        self,
+        action: ApplyLineKeyTemplateAction,
+        template_id: str = None,
+        location_ids: list[str] = None,
+        exclude_devices_with_custom_layout: bool = None,
+        include_device_tags: list[str] = None,
+        exclude_device_tags: list[str] = None,
+        advisory_types: LineKeyTemplateAdvisoryTypes = None,
+        org_id: str = None,
+    ) -> int:
         """
         Preview Apply Line Key Template
 
@@ -1192,8 +1255,7 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         r = DeviceLayout.model_validate(data)
         return r
 
-    def modify_device_layout(self, device_id: str, layout: DeviceLayout,
-                             org_id: str = None):
+    def modify_device_layout(self, device_id: str, layout: DeviceLayout, org_id: str = None):
         """
         Modify Device Layout by Device ID
 
@@ -1349,8 +1411,9 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         r = BackgroundImages.model_validate(data)
         return r
 
-    def upload_background_image(self, device_id: str, file: Union[BufferedReader, str], file_name: str = None,
-                                org_id: str = None) -> BackgroundImage:
+    def upload_background_image(
+        self, device_id: str, file: Union[BufferedReader, str], file_name: str = None, org_id: str = None
+    ) -> BackgroundImage:
         """
         Upload a Device Background Image
 
@@ -1391,19 +1454,20 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
             # an existing reader
             if not file_name:
                 raise ValueError('file_name is required')
-        encoder = MultipartEncoder({'fileName': file_name,
-                                    'file': (file_name, file, f'image/{file_name.split(".")[-1].lower()}')})
+        encoder = MultipartEncoder(
+            {'fileName': file_name, 'file': (file_name, file, f'image/{file_name.split(".")[-1].lower()}')}
+        )
         try:
-            data = super().post(url, data=encoder, headers={'Content-Type': encoder.content_type},
-                                params=params)
+            data = super().post(url, data=encoder, headers={'Content-Type': encoder.content_type}, params=params)
         finally:
             if must_close:
                 file.close()
         r = BackgroundImage.model_validate(data)
         return r
 
-    def delete_background_images(self, background_images: list[DeleteImageRequestObject],
-                                 org_id: str = None) -> DeleteDeviceBackgroundImagesResponse:
+    def delete_background_images(
+        self, background_images: list[DeleteImageRequestObject], org_id: str = None
+    ) -> DeleteDeviceBackgroundImagesResponse:
         """
         Delete Device Background Images
 
@@ -1422,9 +1486,9 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['backgroundImages'] = TypeAdapter(list[DeleteImageRequestObject]).dump_python(background_images,
-                                                                                           mode='json', by_alias=True,
-                                                                                           exclude_none=True)
+        body['backgroundImages'] = TypeAdapter(list[DeleteImageRequestObject]).dump_python(
+            background_images, mode='json', by_alias=True, exclude_none=True
+        )
         url = self.ep('devices/backgroundImages')
         data = super().delete(url, params=params, json=body)
         r = DeleteDeviceBackgroundImagesResponse.model_validate(data)
