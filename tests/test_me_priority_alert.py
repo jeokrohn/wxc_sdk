@@ -1,7 +1,6 @@
 import asyncio
 import json
 import random
-from typing import List, Tuple
 
 from pydantic import TypeAdapter
 
@@ -32,24 +31,25 @@ class TestMePriorityAlert(TestWithRandomUserApi):
             # end of get_settings
             return
 
-        users = [user
-                 for user in self.users
-                 if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_settings(user)
-                                         for user in users], return_exceptions=True)
+        users = [user for user in self.users if not user.display_name.startswith('admin@')]
+        results = await asyncio.gather(*[get_settings(user) for user in users], return_exceptions=True)
         err = None
         for user, result in zip(users, results):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error priority alert settings for {user.display_name}: {result}")
+                print(f'Error priority alert settings for {user.display_name}: {result}')
             elif result is not None:
                 result: PriorityAlert
-                print(f"Call priority alert for {user.display_name}: ")
+                print(f'Call priority alert for {user.display_name}: ')
 
-                print(json.dumps(
-                    TypeAdapter(PriorityAlert).dump_python(result, mode='json', exclude_unset=True,
-                                                            exclude_none=True),
-                    indent=2))
+                print(
+                    json.dumps(
+                        TypeAdapter(PriorityAlert).dump_python(
+                            result, mode='json', exclude_unset=True, exclude_none=True
+                        ),
+                        indent=2,
+                    )
+                )
         if err:
             raise err
 
@@ -68,7 +68,7 @@ class TestMePriorityAlert(TestWithRandomUserApi):
                         cn_settings = await cn_api.get()
                         tasks = []
                         for crit in cn_settings.criteria:
-                            tasks.append(cn_api.criteria_get(id=crit.id))
+                            tasks.append(cn_api.criteria_get(criteria_id=crit.id))
                         if tasks:
                             criteria = await asyncio.gather(*tasks, return_exceptions=True)
                         else:
@@ -79,27 +79,28 @@ class TestMePriorityAlert(TestWithRandomUserApi):
             # end of get_settings
             return
 
-        users = [user
-                 for user in self.users
-                 if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_settings(user)
-                                         for user in users], return_exceptions=True)
+        users = [user for user in self.users if not user.display_name.startswith('admin@')]
+        results = await asyncio.gather(*[get_settings(user) for user in users], return_exceptions=True)
         err = None
         for user, result in zip(users, results):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Call notify settings for {user.display_name}: {result}")
+                print(f'Call notify settings for {user.display_name}: {result}')
             elif result is not None:
-                result: Tuple[CallNotify, List[CallNotifyCriteria]]
+                result: tuple[CallNotify, list[CallNotifyCriteria]]
                 cn_settings, criteria = result
-                print(f"Call notify settings for {user.display_name}: ")
+                print(f'Call notify settings for {user.display_name}: ')
                 print(json.dumps(cn_settings.model_dump(mode='json', by_alias=True, exclude_none=True), indent=2))
                 if criteria:
                     print()
-                    print(json.dumps(
-                        TypeAdapter(List[CallNotifyCriteria]).dump_python(criteria, mode='json', exclude_unset=True,
-                                                                exclude_none=True),
-                        indent=2))
+                    print(
+                        json.dumps(
+                            TypeAdapter(list[CallNotifyCriteria]).dump_python(
+                                criteria, mode='json', exclude_unset=True, exclude_none=True
+                            ),
+                            indent=2,
+                        )
+                    )
         if err:
             raise err
 
@@ -108,13 +109,11 @@ class TestMePriorityAlert(TestWithRandomUserApi):
         Create a new call notifycriteria for a user
         """
         # pick random users
-        users = [user
-                 for user in self.users
-                 if not user.display_name.startswith('admin@')]
+        users = [user for user in self.users if not user.display_name.startswith('admin@')]
         user = random.choice(users)
         print(f'Creating call notify criteria for "{user.display_name}"')
 
-        with (self.user_api(user) as api):
+        with self.user_api(user) as api:
             cn_api = api.me.call_notify
             cn_settings = cn_api.get()
 
@@ -122,7 +121,7 @@ class TestMePriorityAlert(TestWithRandomUserApi):
             schedules_used = set(c.schedule_name for c in cn_settings.criteria)
             unused_schedules = [s for s in api.me.schedules.list() if s.name not in schedules_used]
             if not unused_schedules:
-                self.skipTest("No schedules available")
+                self.skipTest('No schedules available')
             schedule = random.choice(unused_schedules)
 
             new_criteria = CallNotifyCriteria(calls_from=SelectiveFrom.any_phone_number, enabled=True)

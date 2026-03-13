@@ -10,18 +10,6 @@ from wxc_sdk.telephony.devices import AvailableMember, DeviceMembersResponse
 
 
 class TestAppSharedLine(TestCaseWithUsers):
-    def test_search_members_old(self):
-        target_user = random.choice(self.users)
-        target_user: Person
-        print(f'Target user: {target_user.display_name}')
-
-        apps = self.api.person_settings.appservices.read(target_user.person_id)
-
-        members = list(self.api.person_settings.app_shared_line.search_members_old(
-            person_id=target_user.person_id,
-            application_id=apps.desktop_client_id))
-        print(f'Found {len(members)} members')
-
     def test_search_members(self):
         target_user = random.choice(self.users)
         target_user: Person
@@ -29,12 +17,18 @@ class TestAppSharedLine(TestCaseWithUsers):
 
         members = list(self.api.person_settings.app_shared_line.search_members(person_id=target_user.person_id))
         print(f'Found {len(members)} members')
-        print(json.dumps(TypeAdapter(list[AvailableMember]).dump_python(members, mode='json',
-                                                                        exclude_none=True, by_alias=True),
-                         indent=2))
+        print(
+            json.dumps(
+                TypeAdapter(list[AvailableMember]).dump_python(members, mode='json', exclude_none=True, by_alias=True),
+                indent=2,
+            )
+        )
         self.assertTrue(all(m.member_id for m in members), 'Member ID should not be empty, WXCAPIBULK-724')
 
     def test_search_members_location_hartford(self):
+        """
+        Search shared line appearance members limited to location Hartford
+        """
         target_user = random.choice(self.users)
         target_user: Person
         print(f'Target user: {target_user.display_name}')
@@ -43,9 +37,11 @@ class TestAppSharedLine(TestCaseWithUsers):
         if hartford is None:
             self.skipTest('Hartford location not found')
 
-        members = list(self.api.person_settings.app_shared_line.search_members(person_id=target_user.person_id,
-                                                                               location=hartford.location_id,
-                                                                               max=2))
+        members = list(
+            self.api.person_settings.app_shared_line.search_members(
+                person_id=target_user.person_id, location=hartford.location_id, max=2
+            )
+        )
         print(f'Found {len(members)} members')
         self.assertTrue(all(m for m in members if m.location.id == hartford.location_id))
 
@@ -76,13 +72,12 @@ class TestAppSharedLine(TestCaseWithUsers):
         members = self.api.person_settings.app_shared_line.get_members(target_user.person_id)
 
         # get available members
-        available_members_old = list(self.api.person_settings.app_shared_line.search_members_old(target_user.person_id,
-                                                                                                 apps.desktop_client_id))
         available_members = list(self.api.person_settings.app_shared_line.search_members(target_user.person_id))
 
-        foo = 1
         # pick an available member
-        new_member: AvailableMember = random.choice(available_members_old)
+        new_member: AvailableMember = random.choice(available_members)
+        print(f'Adding member: "{new_member.first_name}.{new_member.last_name}" ({new_member.member_id})')
+
         # add member
         member_list = [m for m in members.members]
         member_list.append(new_member)
@@ -90,8 +85,7 @@ class TestAppSharedLine(TestCaseWithUsers):
         try:
             members_after = self.api.person_settings.app_shared_line.get_members(target_user.person_id)
             # validate that the member is added
-            self.assertIsNotNone(next((m for m in members_after.members if m.member_id == new_member.member_id),
-                                      None))
+            self.assertIsNotNone(next((m for m in members_after.members if m.member_id == new_member.member_id), None))
         finally:
             # try to restore old settings
             member_list.pop()

@@ -142,6 +142,7 @@ def get_tokens() -> Optional[Tokens]:
 @dataclass(init=False, repr=False)
 class TestWithScimToken(TestCaseWithLog):
     test_api: ClassVar[WebexSimpleApi]
+    org_id: ClassVar[str]
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -153,18 +154,17 @@ class TestWithScimToken(TestCaseWithLog):
         cls.test_api = WebexSimpleApi(tokens=cls.api.access_token)
         # replace session access token with service app access token
         cls.api.session._tokens.access_token = tokens.access_token
+        # cache our org id
+        me = cls.test_api.people.me()
+        cls.org_id = webex_id_to_uuid(me.org_id)
 
     def setUp(self) -> None:
         super().setUp()
 
-    @property
-    def org_id(self) -> str:
-        return webex_id_to_uuid(self.me.org_id)
-
 
 class TestScimRead(TestWithScimToken):
     def test_search(self):
-        org_id = webex_id_to_uuid(self.me.org_id)
+        org_id = self.org_id
         users = self.api.scim.users.search(org_id=org_id)
 
         print(f'total results: {users.total_results}')
@@ -173,7 +173,7 @@ class TestScimRead(TestWithScimToken):
         print(f'resources: {len(users.resources)}')
 
     def test_search_users_with_work_extensions(self):
-        org_id = webex_id_to_uuid(self.me.org_id)
+        org_id = self.org_id
         users = self.api.scim.users.search(org_id=org_id, filter='phoneNumbers [ type eq "work_extension"]')
 
         print(f'total results: {users.total_results}')
@@ -198,7 +198,7 @@ class TestScimRead(TestWithScimToken):
         """
         Apparently no emails are returned?
         """
-        org_id = webex_id_to_uuid(self.me.org_id)
+        org_id = self.org_id
         api = self.api.scim.users
         users = list(api.search_all(org_id=org_id))
         with_emails = [user for user in users if user.emails]
@@ -208,7 +208,7 @@ class TestScimRead(TestWithScimToken):
         """
         Searching with attributes list
         """
-        org_id = webex_id_to_uuid(self.me.org_id)
+        org_id = self.org_id
         api = self.api.scim.users
         users_attrs = list(api.search_all(org_id=org_id, attributes='id,userName,displayName'))
         # we exp that all returned users have exactly these three attributes
@@ -221,21 +221,22 @@ class TestScimRead(TestWithScimToken):
             print(json.dumps(TypeAdapter(list[ScimUser]).dump_python(issues, mode='json', exclude_none=True), indent=2))
         self.assertTrue(not issues)
 
+    @skip("The user's externalid, operator: PR is not supported search.")
     def test_search_external_id(self):
         """
         search users with external_id
         """
-        org_id = webex_id_to_uuid(self.me.org_id)
+        org_id = self.org_id
         api = self.api.scim.users
         users = list(api.search_all(org_id=org_id, filter='externalId pr'))
-        foo = 1
+        print(f'Got {len(users)} users with external_id')
 
     @async_test
     async def test_async_search_all(self):
         """
         test search_all()
         """
-        org_id = webex_id_to_uuid(self.me.org_id)
+        org_id = self.org_id
         api = self.async_api.scim.users
         users = await api.search_all(org_id=org_id)
         print(f'Got {len(users)} users')
@@ -247,7 +248,7 @@ class TestScimRead(TestWithScimToken):
             print(f'  items per page: {r.response_body["itemsPerPage"]}')
 
     def test_with_external_id(self):
-        org_id = webex_id_to_uuid(self.me.org_id)
+        org_id = self.org_id
         users = list(self.api.scim.users.search_all(org_id=org_id))
         with_external_id = [u for u in users if u.external_id]
         print(f'{len(users)} users')
@@ -256,7 +257,7 @@ class TestScimRead(TestWithScimToken):
 
     @async_test
     async def test_details(self):
-        org_id = webex_id_to_uuid(self.me.org_id)
+        org_id = self.org_id
         api = self.async_api.scim.users
         users = await api.search(org_id=org_id)
         details = await asyncio.gather(
@@ -273,7 +274,7 @@ class TestScimRead(TestWithScimToken):
             self.skipTest('No users with SIP addresses')
 
         # get SCIM details for all these users
-        org_id = webex_id_to_uuid(self.me.org_id)
+        org_id = self.org_id
         scim_details = await asyncio.gather(
             *[
                 self.async_api.scim.users.details(org_id=org_id, user_id=webex_id_to_uuid(u.person_id))
@@ -290,7 +291,7 @@ class TestScimRead(TestWithScimToken):
                 err += 1
                 print(f'Webex user {user.display_name:{display_name_len}}: no SIP addresses in SCIMv2 info')
 
-        self.assertFalse(err, f'{err}/{len(users_with_uris)} SCIMv2 users are missing SIP addresses')
+        self.assertTrue(not err, f'{err}/{len(users_with_uris)} SCIMv2 users are missing SIP addresses')
 
     def test_with_groups(self):
         """
@@ -330,6 +331,31 @@ def us_e164(tn: str) -> str:
 
 
 class TestScimCreate(TestWithScimToken):
+    # True indicates that users created by the test cases should be deleted again after the tests
+    delete_created_users = True
+
+    @classmethod
+    def tearDownClass(cls):
+        try:
+            if cls.delete_created_users:
+                # clean up
+                # get users created by any SCIM tests
+                to_delete = [
+                    u
+                    for u in cls.api.scim.users.search_all(org_id=cls.org_id)
+                    if u.external_id and u.external_id.startswith('test_')
+                ]
+                # .. and delete them
+                print(f'tearDownClass({cls.__name__}): deleting {len(to_delete)} users created by SCIM tests')
+                operations = [
+                    BulkOperation(method=BulkMethod.delete, path=f'/Users/{user.id}', bulk_id=str(uuid.uuid4()))
+                    for user in to_delete
+                ]
+                cls.api.scim.bulk.bulk_request(org_id=cls.org_id, operations=operations)
+        finally:
+            # continue tearDown
+            super().tearDownClass()
+
     def scim_user_from_random_user(self, new_user: User) -> ScimUser:
         """
         Create a SCIMv2 user object from random user data
@@ -370,7 +396,7 @@ class TestScimCreate(TestWithScimToken):
         new_user = (await random_users(api=self.async_api, user_count=1, inc=['name', 'location', 'phone', 'cell']))[0]
         scim_user = self.scim_user_from_random_user(new_user)
         api = self.api.scim.users
-        org_id = webex_id_to_uuid(self.me.org_id)
+        org_id = self.org_id
         created_user = api.create(org_id=org_id, user=scim_user)
         print(f'Created user: {created_user.display_name}({created_user.emails[0].value})')
         print(
@@ -415,7 +441,7 @@ class TestScimCreate(TestWithScimToken):
         Create multiple random users
         """
         users_to_create = 10
-        org_id = webex_id_to_uuid(self.me.org_id)
+        org_id = self.org_id
         api = self.async_api.scim.users
         users_before = await api.search_all(org_id=org_id)
         new_users = await random_users(
@@ -449,7 +475,7 @@ class TestScimCreate(TestWithScimToken):
         Create a bunch of users using bulk operations
         """
         users_to_create = 20
-        org_id = webex_id_to_uuid(self.me.org_id)
+        org_id = self.org_id
         api = self.api.scim
         users_before = list(api.users.search_all(org_id=org_id))
         new_users = await random_users(
@@ -466,7 +492,6 @@ class TestScimCreate(TestWithScimToken):
         ]
         print(f'Creating {len(new_scim_users)} users')
         bulk_response = self.api.scim.bulk.bulk_request(org_id=org_id, fail_on_errors=1, operations=operations)
-        users_after = list(api.users.search_all(org_id=org_id))
         err = False
         if not all(o.status == 201 for o in bulk_response.operations):
             err = True
@@ -477,9 +502,19 @@ class TestScimCreate(TestWithScimToken):
                 f'Some user ids missing. '
                 f'{sum(1 for o in bulk_response.operations if o.status == 201 and not o.user_id)} missing'
             )
-        if len(users_after) != users_to_create + len(users_before):
+        # list users again and check user count
+        for i in range(1, 4):
+            users_after = list(api.users.search_all(org_id=org_id))
+
+            if len(users_after) != users_to_create + len(users_before):
+                print(f'check({i}), before: {len(users_before)}, after: {len(users_after)}')
+                if i < 3:
+                    print('Retry in 5 seconds...')
+                    sleep(5)
+            else:
+                break
+        else:
             err = True
-            print(f'before: {len(users_before)}, after: {len(users_after)}')
         self.assertFalse(err, 'Something went wrong; check output')
 
 
@@ -509,7 +544,7 @@ class TestScimUpdate(TestWithScimToken):
         Pick a random SCIM generated user, update something anc check
         """
         api = self.api.scim.users
-        org_id = webex_id_to_uuid(self.me.org_id)
+        org_id = self.org_id
         target_details = self.target_user
         update = target_details.model_copy(deep=True)
         update.title = 'Dr.'
@@ -531,7 +566,7 @@ class TestScimUpdate(TestWithScimToken):
             self.assertEqual(target_details, restored_details)
 
     def test_patch(self):
-        org_id = webex_id_to_uuid(self.me.org_id)
+        org_id = self.org_id
         api = self.api.scim.users
         target_details = api.details(org_id=org_id, user_id=self.target_user.id)
         patched = api.patch(
@@ -590,13 +625,13 @@ class TestScimUpdate(TestWithScimToken):
 
 
 class TestScimDelete(TestWithScimToken):
-    @skip('skipping to keep test users .. for now')
+    # @skip('skipping to keep test users .. for now')
     @async_test
     async def test_delete_users_with_external_id(self):
         """
         Delete all users with external id
         """
-        org_id = webex_id_to_uuid(self.me.org_id)
+        org_id = self.org_id
         users = list(self.api.scim.users.search_all(org_id=org_id))
         with_external_id = [u for u in users if u.external_id]
         if not with_external_id:
@@ -608,7 +643,7 @@ class TestScimDelete(TestWithScimToken):
         """
         try to bulk delete some users
         """
-        org_id = webex_id_to_uuid(self.me.org_id)
+        org_id = self.org_id
         api = self.api.scim
         targets = list(
             user
@@ -652,7 +687,7 @@ class TestScimAndPeople(TestScimCreate, TestWithLocations):
             extension = next(available_extensions_gen(api=self.api, location_id=target_location.location_id))
 
         api = self.api.scim.users
-        org_id = webex_id_to_uuid(self.me.org_id)
+        org_id = self.org_id
         scim_user = api.create(org_id=org_id, user=scim_user)
         with self.no_log():
             webex_user = next(user for user in self.test_api.people.list(email=new_user.email))
@@ -1203,7 +1238,7 @@ class TestOrgContacts(TestWithScimToken, WithIntegrationTokens):
             )[0]
         contact = self.contact_from_random_user(new_user)
         api = self.int_api.org_contacts
-        org_id = webex_id_to_uuid(self.me.org_id)
+        org_id = self.org_id
         created = api.create(org_id=org_id, contact=contact)
         print('Created contact:')
         print(json.dumps(created.model_dump(mode='json', exclude_unset=True, by_alias=True), indent=2))
@@ -1221,7 +1256,7 @@ class TestOrgContacts(TestWithScimToken, WithIntegrationTokens):
             )[0]
         contact = self.contact_from_random_user(new_user, address_as_str=False)
         api = self.int_api.org_contacts
-        org_id = webex_id_to_uuid(self.me.org_id)
+        org_id = self.org_id
         created = api.create(org_id=org_id, contact=contact)
         print('Created contact:')
         print(json.dumps(created.model_dump(mode='json', exclude_unset=True, by_alias=True), indent=2))
@@ -1239,7 +1274,7 @@ class TestOrgContacts(TestWithScimToken, WithIntegrationTokens):
         Create 20 contacts in bulk
         """
         count = 20
-        org_id = webex_id_to_uuid(self.me.org_id)
+        org_id = self.org_id
         api = self.int_api.org_contacts
         with self.no_log():
             new_users = await random_users(
@@ -1254,7 +1289,7 @@ class TestOrgContacts(TestWithScimToken, WithIntegrationTokens):
         """
         Create 100 contacts in bulk
         """
-        org_id = webex_id_to_uuid(self.me.org_id)
+        org_id = self.org_id
         api = self.int_api.org_contacts
         with self.no_log():
             new_users = await random_users(api=self.async_api, user_count=2, inc=['name', 'location', 'phone', 'cell'])
@@ -1271,7 +1306,7 @@ class TestOrgContacts(TestWithScimToken, WithIntegrationTokens):
         """
         List contacts
         """
-        org_id = webex_id_to_uuid(self.me.org_id)
+        org_id = self.org_id
         contacts = list(self.int_api.org_contacts.list(org_id=org_id))
         print(f'Got {len(contacts)} contacts')
 
@@ -1280,7 +1315,7 @@ class TestOrgContacts(TestWithScimToken, WithIntegrationTokens):
         List contacts and check whether pagination works
         """
         limit = 5
-        org_id = webex_id_to_uuid(self.me.org_id)
+        org_id = self.org_id
         contacts = list(self.int_api.org_contacts.list(org_id=org_id, limit=limit))
         requests = list(self.requests())
         first_body = requests[0].response_body
@@ -1295,7 +1330,7 @@ class TestOrgContacts(TestWithScimToken, WithIntegrationTokens):
         """
         delete a contact
         """
-        org_id = webex_id_to_uuid(self.me.org_id)
+        org_id = self.org_id
         api = self.int_api.org_contacts
         contacts = [contact for contact in api.list(org_id=org_id) if contact.company_name == 'Test Company']
         target = random.choice(contacts)
@@ -1310,7 +1345,7 @@ class TestOrgContacts(TestWithScimToken, WithIntegrationTokens):
         """
         Bulk delete test contacts
         """
-        org_id = webex_id_to_uuid(self.me.org_id)
+        org_id = self.org_id
         api = self.int_api.org_contacts
         while True:
             contacts = [contact for contact in api.list(org_id=org_id) if contact.company_name == 'Test Company']

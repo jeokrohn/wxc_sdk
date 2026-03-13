@@ -140,8 +140,11 @@ class TestConvergedRecording(WithRecordingServiceApp, WithIntegrationTokens):
         self.har_writer.register_webex_api(self.integration_api)
 
     def test_list(self):
+        """
+        List recordings using service app tokens
+        """
         api = self.recording_service_api
-        recordings = list(api.converged_recordings.list())
+        recordings = list(api.converged_recordings.list_for_admin_or_compliance_officer())
         print(
             json.dumps(
                 TypeAdapter(list[ConvergedRecording]).dump_python(recordings, mode='json', by_alias=True), indent=2
@@ -150,7 +153,7 @@ class TestConvergedRecording(WithRecordingServiceApp, WithIntegrationTokens):
 
     def test_list_admin_or_compliance(self):
         """
-        Get recordings via listfor admin or compliance office
+        Get recordings via list for admin or compliance office
         """
         api = self.integration_api
         recordings = list(api.converged_recordings.list_for_admin_or_compliance_officer(max=100))

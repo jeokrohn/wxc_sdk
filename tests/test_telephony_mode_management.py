@@ -5,6 +5,7 @@ Mode management tests for:
 * Hunt Groups
 * Personal settings
 """
+
 import asyncio
 import json
 import random
@@ -13,7 +14,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import timedelta
 from itertools import chain
-from typing import Callable, ClassVar
+from typing import Callable, ClassVar, Optional
 from zoneinfo import ZoneInfo
 
 from future.backports.datetime import datetime
@@ -52,6 +53,7 @@ class TestModeManagement(TestCaseWithLog):
     """
     Mode Management tests for Call Queues, Auto Attendants, and Hunt Groups
     """
+
     fwd_api: ClassVar[ForwardingApi] = None
     target: ClassVar[CallQueue] = None
     operating_modes: ClassVar[list[OperatingMode]] = []
@@ -72,8 +74,7 @@ class TestModeManagement(TestCaseWithLog):
 
     @staticmethod
     def id_for_entity(entity):
-        return {'location_id': entity.location_id,
-                'feature_id': entity.id}
+        return {'location_id': entity.location_id, 'feature_id': entity.id}
 
     def list(self):
         raise NotImplementedError('Abstract method')
@@ -112,14 +113,12 @@ class TestModeManagement(TestCaseWithLog):
         """
         entities = list(self.list())
         with ThreadPoolExecutor() as pool:
-            settings = list(pool.map(lambda e: self.fwd_api.settings(**self.id_for_entity(e)),
-                                     entities))
+            settings = list(pool.map(lambda e: self.fwd_api.settings(**self.id_for_entity(e)), entities))
         for entity, setting in zip(entities, settings):
             if not (setting.operating_modes and setting.operating_modes.modes):
                 continue
             print(f'{entity.name}')
-            print(json.dumps(setting.model_dump(mode='json', by_alias=True, exclude_none=True),
-                             indent=2))
+            print(json.dumps(setting.model_dump(mode='json', by_alias=True, exclude_none=True), indent=2))
             print()
 
     def assert_target_has_operating_mode_forwarding(self):
@@ -129,12 +128,21 @@ class TestModeManagement(TestCaseWithLog):
         fwd_settings = self.fwd_api.settings(**self.target_id)
         if not fwd_settings.operating_modes.modes:
             om = self.create_operating_mode()
-            self.fwd_api.update(forwarding=CallForwarding(operating_modes=ForwardOperatingModes(
-                enabled=True,
-                modes=[ModeForward(normal_operation_enabled=True,
-                                   id=om.id,
-                                   forward_to=ModeForwardTo(selection=ForwardToSelection.default_number))])),
-                **self.target_id)
+            self.fwd_api.update(
+                forwarding=CallForwarding(
+                    operating_modes=ForwardOperatingModes(
+                        enabled=True,
+                        modes=[
+                            ModeForward(
+                                normal_operation_enabled=True,
+                                id=om.id,
+                                forward_to=ModeForwardTo(selection=ForwardToSelection.default_number),
+                            )
+                        ],
+                    )
+                ),
+                **self.target_id,
+            )
             print(f'enabled operating mode forwarding for {self.target.name}')
 
     def test_enable_om_forwarding(self):
@@ -144,23 +152,27 @@ class TestModeManagement(TestCaseWithLog):
         # assign operating mode to the queue
         fwd_settings = self.fwd_api.settings(**self.target_id)
         try:
-
-            update = CallForwarding(operating_modes=ForwardOperatingModes(
-                enabled=True,
-                modes=[ModeForward(normal_operation_enabled=True,
-                                   id=operating_mode.id,
-                                   forward_to=ModeForwardTo(selection=ForwardToSelection.default_number))]),
+            update = CallForwarding(
+                operating_modes=ForwardOperatingModes(
+                    enabled=True,
+                    modes=[
+                        ModeForward(
+                            normal_operation_enabled=True,
+                            id=operating_mode.id,
+                            forward_to=ModeForwardTo(selection=ForwardToSelection.default_number),
+                        )
+                    ],
+                ),
                 always=ForwardingSetting(enabled=False),
-                selective=ForwardingSetting(enabled=False))
+                selective=ForwardingSetting(enabled=False),
+            )
 
             self.fwd_api.update(forwarding=update, **self.target_id)
             after = self.fwd_api.settings(**self.target_id)
             self.assertIsNotNone(after.operating_modes)
-            self.assertTrue(after.operating_modes and after.operating_modes.enabled,
-                            'operating modes not enabled')
+            self.assertTrue(after.operating_modes and after.operating_modes.enabled, 'operating modes not enabled')
             self.assertEqual(1, len(after.operating_modes.modes))
-            self.assertEqual(operating_mode.id, after.operating_modes.modes[0].id,
-                             'mode id does not match')
+            self.assertEqual(operating_mode.id, after.operating_modes.modes[0].id, 'mode id does not match')
         finally:
             # restore forwarding settings
             self.fwd_api.update(forwarding=fwd_settings, **self.target_id)
@@ -180,29 +192,29 @@ class TestModeManagement(TestCaseWithLog):
         #  * mode 2 is active for the rest of the day
         mode1_from = (now.hour + 1) % 24
         mode1_to = (mode1_from + 3) % 24
-        mode1_schedule = DaySchedule(enabled=True,
-                                     start_time=f'{mode1_from:02}:00',
-                                     end_time=f'{mode1_to:02}:00')
+        mode1_schedule = DaySchedule(enabled=True, start_time=f'{mode1_from:02}:00', end_time=f'{mode1_to:02}:00')
         mode2_from = mode1_to
         mode2_to = mode1_from
-        mode2_schedule = DaySchedule(enabled=True,
-                                     start_time=f'{mode2_from:02}:00',
-                                     end_time=f'{mode2_to:02}:00')
+        mode2_schedule = DaySchedule(enabled=True, start_time=f'{mode2_from:02}:00', end_time=f'{mode2_to:02}:00')
         mode_names = new_operating_mode_names(api=self.api)
 
         # modes to create
-        modes = [OperatingMode(name=next(mode_names), type=OperatingModeSchedule.same_hours_daily,
-                               level=ScheduleLevel.organization,
-                               same_hours_daily=SameHoursDaily(
-                                   monday_to_friday=mode1_schedule,
-                                   saturday_to_sunday=mode1_schedule),
-                               call_forwarding=CallForwardingCommon(enabled=False)),
-                 OperatingMode(name=next(mode_names), type=OperatingModeSchedule.same_hours_daily,
-                               level=ScheduleLevel.organization,
-                               same_hours_daily=SameHoursDaily(
-                                   monday_to_friday=mode2_schedule,
-                                   saturday_to_sunday=mode2_schedule),
-                               call_forwarding=CallForwardingCommon(enabled=True, destination='+4961007739764'))]
+        modes = [
+            OperatingMode(
+                name=next(mode_names),
+                type=OperatingModeSchedule.same_hours_daily,
+                level=ScheduleLevel.organization,
+                same_hours_daily=SameHoursDaily(monday_to_friday=mode1_schedule, saturday_to_sunday=mode1_schedule),
+                call_forwarding=CallForwardingCommon(enabled=False),
+            ),
+            OperatingMode(
+                name=next(mode_names),
+                type=OperatingModeSchedule.same_hours_daily,
+                level=ScheduleLevel.organization,
+                same_hours_daily=SameHoursDaily(monday_to_friday=mode2_schedule, saturday_to_sunday=mode2_schedule),
+                call_forwarding=CallForwardingCommon(enabled=True, destination='+4961007739764'),
+            ),
+        ]
 
         # create the modes
         with ThreadPoolExecutor() as pool:
@@ -228,14 +240,21 @@ class TestModeManagement(TestCaseWithLog):
                 update = CallForwarding(
                     operating_modes=ForwardOperatingModes(
                         enabled=True,
-                        modes=[ModeForward(normal_operation_enabled=True, id=m.id,
-                                           forward_to=ModeForwardTo(
-                                               selection=ForwardToSelection.default_number))
-                               for m in modes]))
+                        modes=[
+                            ModeForward(
+                                normal_operation_enabled=True,
+                                id=m.id,
+                                forward_to=ModeForwardTo(selection=ForwardToSelection.default_number),
+                            )
+                            for m in modes
+                        ],
+                    )
+                )
                 self.fwd_api.update(forwarding=update, **self.target_id)
                 after = self.fwd_api.settings(**self.target_id)
                 active_mode = self.api.telephony.operating_modes.details(
-                    after.operating_modes.current_operating_mode_id)
+                    after.operating_modes.current_operating_mode_id
+                )
                 now: datetime = datetime.now(ZoneInfo(self.target.time_zone)) + timedelta(minutes=5)
                 print(f'Active mode: {active_mode.name} at {now:%H:%M}')
                 print(json.dumps(active_mode.model_dump(mode='json', by_alias=True, exclude_none=True), indent=2))
@@ -265,6 +284,7 @@ class TestQueueModeManagement(TestModeManagement, TestWithLocations):
     """
     Mode Management tests for Call Queues
     """
+
     # location where we are creating the temp queue for the test
     target_location: ClassVar[Location]
 
@@ -297,12 +317,12 @@ class TestQueueModeManagement(TestModeManagement, TestWithLocations):
             return
         if self.create_temp_queue:
             with self.no_log():
-                self.__class__.target = create_simple_call_queue(api=self.api,
-                                                                 locations=self.telephony_locations,
-                                                                 no_log=self.no_log)
-            self.__class__.target_location = next(loc
-                                                  for loc in self.telephony_locations
-                                                  if loc.location_id == self.target.location_id)
+                self.__class__.target = create_simple_call_queue(
+                    api=self.api, locations=self.telephony_locations, no_log=self.no_log
+                )
+            self.__class__.target_location = next(
+                loc for loc in self.telephony_locations if loc.location_id == self.target.location_id
+            )
 
         else:
             # pick random queue
@@ -314,11 +334,13 @@ class TestQueueModeManagement(TestModeManagement, TestWithLocations):
             target.location_id = location_id
             self.__class__.target = target
 
-        self.__class__.target_location = next(loc
-                                              for loc in self.telephony_locations
-                                              if loc.location_id == self.target.location_id)
-        print(f'{"temp" if self.create_temp_queue else ""} '
-              f'target queue: {self.target.name} in location: {self.target_location.name}')
+        self.__class__.target_location = next(
+            loc for loc in self.telephony_locations if loc.location_id == self.target.location_id
+        )
+        print(
+            f'{"temp" if self.create_temp_queue else ""} '
+            f'target queue: {self.target.name} in location: {self.target_location.name}'
+        )
 
     def setUp(self) -> None:
         super().setUp()
@@ -333,8 +355,7 @@ class TestAttendantModeManagement(TestModeManagement, TestWithLocations):
 
     @staticmethod
     def id_for_entity(entity):
-        return {'location_id': entity.location_id,
-                'feature_id': entity.auto_attendant_id}
+        return {'location_id': entity.location_id, 'feature_id': entity.auto_attendant_id}
 
     def list(self):
         return self.api.telephony.auto_attendant.list()
@@ -347,13 +368,16 @@ class TestAttendantModeManagement(TestModeManagement, TestWithLocations):
     @classmethod
     def tearDownClass(cls):
         if cls.target:
-            cls.api.telephony.auto_attendant.delete_auto_attendant(location_id=cls.target_location.location_id,
-                                                                   auto_attendant_id=cls.target.auto_attendant_id)
+            cls.api.telephony.auto_attendant.delete_auto_attendant(
+                location_id=cls.target_location.location_id, auto_attendant_id=cls.target.auto_attendant_id
+            )
             print(f'deleted auto attendant "{cls.target.name}" in location "{cls.target_location.name}"')
         if cls.schedule:
-            cls.api.telephony.schedules.delete_schedule(obj_id=cls.target_location.location_id,
-                                                        schedule_type=ScheduleType.business_hours,
-                                                        schedule_id=cls.schedule.schedule_id)
+            cls.api.telephony.schedules.delete_schedule(
+                obj_id=cls.target_location.location_id,
+                schedule_type=ScheduleType.business_hours,
+                schedule_id=cls.schedule.schedule_id,
+            )
             print(f'deleted schedule "{cls.schedule.name}" in location "{cls.target_location.name}"')
         super().tearDownClass()
 
@@ -370,11 +394,14 @@ class TestAttendantModeManagement(TestModeManagement, TestWithLocations):
         with self.no_log():
             names = {s.name for s in self.api.telephony.schedules.list(obj_id=self.target_location.location_id)}
             new_name = next(name for i in range(1, 1000) if (name := f'test_{i:03}') not in names)
-            schedule_id = self.api.telephony.schedules.create(obj_id=self.target_location.location_id,
-                                                              schedule=Schedule.business(name=new_name))
-            target_schedule = self.api.telephony.schedules.details(obj_id=self.target_location.location_id,
-                                                                   schedule_type=ScheduleType.business_hours,
-                                                                   schedule_id=schedule_id)
+            schedule_id = self.api.telephony.schedules.create(
+                obj_id=self.target_location.location_id, schedule=Schedule.business(name=new_name)
+            )
+            target_schedule = self.api.telephony.schedules.details(
+                obj_id=self.target_location.location_id,
+                schedule_type=ScheduleType.business_hours,
+                schedule_id=schedule_id,
+            )
             print(f'created schedule "{target_schedule.name}" in location "{self.target_location.name}"')
         self.__class__.schedule = target_schedule
 
@@ -389,15 +416,17 @@ class TestAttendantModeManagement(TestModeManagement, TestWithLocations):
             new_name = next(new_aa_names(api=self.api))
             extension = next(available_extensions_gen(api=self.api, location_id=self.target_location.location_id))
 
-            print(f'creating AA "{new_name}" ({extension}) with schedule "{self.schedule.name}" '
-                  f'in location "{self.target_location.name}"...')
-            aa_settings = AutoAttendant.create(name=new_name,
-                                               business_schedule=self.schedule.name,
-                                               extension=extension)
-            aa_id = self.api.telephony.auto_attendant.create(location_id=self.target_location.location_id,
-                                                             settings=aa_settings)
-            aa = self.api.telephony.auto_attendant.details(location_id=self.target_location.location_id,
-                                                           auto_attendant_id=aa_id)
+            print(
+                f'creating AA "{new_name}" ({extension}) with schedule "{self.schedule.name}" '
+                f'in location "{self.target_location.name}"...'
+            )
+            aa_settings = AutoAttendant.create(name=new_name, business_schedule=self.schedule.name, extension=extension)
+            aa_id = self.api.telephony.auto_attendant.create(
+                location_id=self.target_location.location_id, settings=aa_settings
+            )
+            aa = self.api.telephony.auto_attendant.details(
+                location_id=self.target_location.location_id, auto_attendant_id=aa_id
+            )
             aa.location_id = self.target_location.location_id
             self.__class__.target = aa
 
@@ -409,22 +438,24 @@ class TestAttendantModeManagement(TestModeManagement, TestWithLocations):
             if self.create_temp:
                 self.temp_auto_attendant_target()
             else:
-                self.__class__.target = next(q for q in self.api.telephony.auto_attendant.list(name='aa')
-                                             if q.name == 'aa for om tests')
-                self.__class__.target_location = next(loc for loc in self.telephony_locations
-                                                      if loc.location_id == self.target.location_id)
+                self.__class__.target = next(
+                    q for q in self.api.telephony.auto_attendant.list(name='aa') if q.name == 'aa for om tests'
+                )
+                self.__class__.target_location = next(
+                    loc for loc in self.telephony_locations if loc.location_id == self.target.location_id
+                )
 
 
 class HuntGroupModeManagement(TestModeManagement, TestWithLocations):
     """
     Mode Management tests for Call Hunt Groups
     """
-    target: ClassVar[HuntGroup] = None
+
+    target: ClassVar[Optional[HuntGroup]] = None
 
     @staticmethod
     def id_for_entity(entity: HuntGroup):
-        return {'location_id': entity.location_id,
-                'feature_id': entity.id}
+        return {'location_id': entity.location_id, 'feature_id': entity.id}
 
     def list(self):
         return self.api.telephony.huntgroup.list()
@@ -437,8 +468,7 @@ class HuntGroupModeManagement(TestModeManagement, TestWithLocations):
     @classmethod
     def tearDownClass(cls):
         if cls.target:
-            cls.api.telephony.huntgroup.delete_huntgroup(location_id=cls.target.location_id,
-                                                         huntgroup_id=cls.target.id)
+            cls.api.telephony.huntgroup.delete_huntgroup(location_id=cls.target.location_id, huntgroup_id=cls.target.id)
             print(f'deleted hunt group "{cls.target.name}" in location "{cls.target.name}"')
         super().tearDownClass()
 
@@ -458,20 +488,15 @@ class HuntGroupModeManagement(TestModeManagement, TestWithLocations):
             hapi = self.api.telephony.huntgroup
             # pick available HG name in location
             hg_names = set(hg.name for hg in hapi.list(location_id=target_location.location_id))
-            new_name = next(name for i in range(1000)
-                            if (name := f'hg_{i:03}') not in hg_names)
-            extension = next(
-                available_extensions_gen(api=self.api, location_id=target_location.location_id))
+            new_name = next(name for i in range(1000) if (name := f'hg_{i:03}') not in hg_names)
+            extension = next(available_extensions_gen(api=self.api, location_id=target_location.location_id))
 
             # settings for new hunt group
-            settings = HuntGroup(name=new_name,
-                                 extension=extension,
-                                 agents=[])
+            settings = HuntGroup(name=new_name, extension=extension, agents=[])
 
             # creat new hg
             print(f'creating hunt group "{new_name}" ({extension}) in location "{target_location.name}"...')
-            new_hg_id = hapi.create(location_id=target_location.location_id,
-                                    settings=settings)
+            new_hg_id = hapi.create(location_id=target_location.location_id, settings=settings)
 
             # and get details of new queue using the queue id
             details = hapi.details(location_id=target_location.location_id, huntgroup_id=new_hg_id)
@@ -490,15 +515,19 @@ class EnableAllFeaturesForModeManagement(TestCaseWithLog):
         enable all features for mode management
         """
         # create a mode that doesn't impact normal operation of a feature
-        mode = OperatingMode(type=OperatingModeSchedule.none_, level=ScheduleLevel.organization,
-                             call_forwarding=CallForwardingCommon(enabled=False))
+        mode = OperatingMode(
+            type=OperatingModeSchedule.none_,
+            level=ScheduleLevel.organization,
+            call_forwarding=CallForwardingCommon(enabled=False),
+        )
         consider = {'type': True, 'level': True, 'call_forwarding': {'enabled': True}}
         mode_data = mode.model_dump(mode='json', by_alias=True, include=consider)
 
         # does a mode already exist?
         modes = list(self.api.telephony.operating_modes.list())
-        existing = next((om for om in modes
-                         if om.model_dump(mode='json', by_alias=True, include=consider) == mode_data), None)
+        existing = next(
+            (om for om in modes if om.model_dump(mode='json', by_alias=True, include=consider) == mode_data), None
+        )
         if existing is None:
             candidates = chain(('NOP',), (f'NOP_{i:03}' for i in range(1, 1000)))
             new_name = next(name for name in candidates if name not in {om.name for om in modes})
@@ -520,35 +549,53 @@ class EnableAllFeaturesForModeManagement(TestCaseWithLog):
             feature_class = features[0].__class__.__name__
 
             # get forwarding settings for each feature
-            forwarding_settings = await asyncio.gather(
-                *[fwd_api.settings(*key(f))
-                  for f in features])
+            forwarding_settings = await asyncio.gather(*[fwd_api.settings(*key(f)) for f in features])
             forwarding_settings: list[CallForwarding]
 
             # if no forwarding is enabled then enable mode based formating
-            features_to_enable = [f for f, fs in zip(features, forwarding_settings)
-                                  if (not fs.always.enabled and not fs.selective.enabled and
-                                      (not fs.operating_modes or not fs.operating_modes.modes))]
+            features_to_enable = [
+                f
+                for f, fs in zip(features, forwarding_settings)
+                if (
+                    not fs.always.enabled
+                    and not fs.selective.enabled
+                    and (not fs.operating_modes or not fs.operating_modes.modes)
+                )
+            ]
             if not features_to_enable:
                 return
             update = CallForwarding(
                 operating_modes=ForwardOperatingModes(
                     enabled=True,
-                    modes=[ModeForward(
-                        normal_operation_enabled=True,
-                        id=mode_id,
-                        forward_to=ModeForwardTo(
-                            selection=ForwardToSelection.default_number))]))
-            print(f'Enabling mode based forwarding for {len(features_to_enable)} '
-                  f'{feature_class}s: {", ".join(f.name for f in features_to_enable)}')
+                    modes=[
+                        ModeForward(
+                            normal_operation_enabled=True,
+                            id=mode_id,
+                            forward_to=ModeForwardTo(selection=ForwardToSelection.default_number),
+                        )
+                    ],
+                )
+            )
+            print(
+                f'Enabling mode based forwarding for {len(features_to_enable)} '
+                f'{feature_class}s: {", ".join(f.name for f in features_to_enable)}'
+            )
             await asyncio.gather(*[fwd_api.update(*key(f), forwarding=update) for f in features_to_enable])
 
-        await asyncio.gather(enable_for_one_feature_type(list_method=self.async_api.telephony.callqueue.list,
-                                                         key=lambda q: (q.location_id, q.id),
-                                                         fwd_api=self.async_api.telephony.callqueue.forwarding),
-                             enable_for_one_feature_type(list_method=self.async_api.telephony.auto_attendant.list,
-                                                         key=lambda a: (a.location_id, a.auto_attendant_id),
-                                                         fwd_api=self.async_api.telephony.auto_attendant.forwarding),
-                             enable_for_one_feature_type(list_method=self.async_api.telephony.huntgroup.list,
-                                                         key=lambda h: (h.location_id, h.id),
-                                                         fwd_api=self.async_api.telephony.huntgroup.forwarding))
+        await asyncio.gather(
+            enable_for_one_feature_type(
+                list_method=self.async_api.telephony.callqueue.list,
+                key=lambda q: (q.location_id, q.id),
+                fwd_api=self.async_api.telephony.callqueue.forwarding,
+            ),
+            enable_for_one_feature_type(
+                list_method=self.async_api.telephony.auto_attendant.list,
+                key=lambda a: (a.location_id, a.auto_attendant_id),
+                fwd_api=self.async_api.telephony.auto_attendant.forwarding,
+            ),
+            enable_for_one_feature_type(
+                list_method=self.async_api.telephony.huntgroup.list,
+                key=lambda h: (h.location_id, h.id),
+                fwd_api=self.async_api.telephony.huntgroup.forwarding,
+            ),
+        )

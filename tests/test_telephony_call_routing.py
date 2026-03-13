@@ -274,17 +274,17 @@ class DpContext:
 class RLTestContext:
     test: 'TestCallRouting'
     # for RL tests
-    location: Optional[Location] = field(init=False)
-    trunk: Optional[TrunkDetail] = field(init=False)
-    rg: Optional[RouteGroup] = field(init=False)
-    rl: Optional[RouteList] = field(init=False)
-    test_tns: Optional[list[str]] = field(init=False)
+    location: Optional[Location] = field(default=None)
+    trunk: Optional[TrunkDetail] = field(default=None)
+    rg: Optional[RouteGroup] = field(default=None)
+    rl: Optional[RouteList] = field(default=None)
+    test_tns: Optional[list[str]] = field(default=None)
     # for RL tests, in dp_context location
-    rg1: Optional[RouteGroup] = field(init=False)
-    rg2: Optional[RouteGroup] = field(init=False)
-    rl1: Optional[RouteList] = field(init=False)
-    rl2: Optional[RouteList] = field(init=False)
-    test_tns1: Optional[list[str]] = field(init=False)
+    rg1: Optional[RouteGroup] = field(default=None)
+    rg2: Optional[RouteGroup] = field(default=None)
+    rl1: Optional[RouteList] = field(default=None)
+    rl2: Optional[RouteList] = field(default=None)
+    test_tns1: Optional[list[str]] = field(default=None)
 
     def __post_init__(self):
         """
@@ -849,6 +849,8 @@ class TestUsersAndTrunks(TestCallRouting):
         with self.assert_dial_plan_context() as ctx:
             ctx: DpContext
             users_w_extension = [u for u in ctx.location_users if u.extension]
+            if not users_w_extension:
+                self.skipTest('Need at least two users with extensions in the same location to run this test')
             called = choice(users_w_extension)
             originator = choice(ctx.prem_numbers)
             print(f'Call from trunk "{ctx.trunk.name}" from "{originator}" to "{called.extension}"')
