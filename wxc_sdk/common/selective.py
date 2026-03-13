@@ -10,9 +10,10 @@ __all__ = ['SelectiveScheduleLevel', 'SelectiveFrom', 'SelectiveCriteria', 'Sele
 
 
 class SelectiveScheduleLevel(str, Enum):
-    #: Indicates schedule specified is of `GROUP` level.
     group = 'GROUP'
     global_ = 'GLOBAL'
+    location = 'LOCATION'
+    people = 'PEOPLE'
 
 
 class SelectiveFrom(str, Enum):
