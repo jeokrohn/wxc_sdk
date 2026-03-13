@@ -6,8 +6,15 @@ from pydantic import Field, TypeAdapter
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
-__all__ = ['BulkMethod', 'BulkOperation', 'ResponseError', 'BulkErrorResponse', 'BulkResponseOperation',
-           'BulkResponse', 'SCIM2BulkApi']
+__all__ = [
+    'BulkMethod',
+    'BulkOperation',
+    'ResponseError',
+    'BulkErrorResponse',
+    'BulkResponseOperation',
+    'BulkResponse',
+    'SCIM2BulkApi',
+]
 
 from wxc_sdk.scim.child import ScimApiChild
 
@@ -40,7 +47,8 @@ class BulkErrorResponse(ApiModel):
     schemas: Optional[list[str]] = None
     status: Optional[int] = None
     error: Optional[ResponseError] = Field(
-        alias='urn:scim:schemas:extension:cisco:webexidentity:api:messages:2.0:Error', default=None)
+        alias='urn:scim:schemas:extension:cisco:webexidentity:api:messages:2.0:Error', default=None
+    )
 
 
 class BulkResponseOperation(ApiModel):
@@ -76,8 +84,7 @@ class SCIM2BulkApi(ScimApiChild, base='identity/scim'):
 
     """
 
-    def bulk_request(self, org_id: str, fail_on_errors: int,
-                     operations: list[BulkOperation]) -> BulkResponse:
+    def bulk_request(self, org_id: str, operations: list[BulkOperation], fail_on_errors: int = None) -> BulkResponse:
         """
         User bulk API
 
@@ -132,11 +139,11 @@ class SCIM2BulkApi(ScimApiChild, base='identity/scim'):
 
         :param org_id: Webex Identity assigned organization identifier for user's organization.
         :type org_id: str
+        :param operations: Contains a list of bulk operations for POST/PATCH/DELETE operations.
+        :type operations: list[BulkOperation]
         :param fail_on_errors: An integer specifying the maximum number of errors that the service provider will accept
             before the operation is terminated and an error response is returned.
         :type fail_on_errors: int
-        :param operations: Contains a list of bulk operations for POST/PATCH/DELETE operations.
-        :type operations: list[BulkOperation]
         :rtype: :class:`BulkResponse`
 
         Example:
@@ -154,9 +161,11 @@ class SCIM2BulkApi(ScimApiChild, base='identity/scim'):
         """
         body = dict()
         body['schemas'] = ['urn:ietf:params:scim:api:messages:2.0:BulkRequest']
-        body['failOnErrors'] = fail_on_errors
+        if fail_on_errors is not None:
+            body['failOnErrors'] = fail_on_errors
         body['operations'] = TypeAdapter(list[BulkOperation]).dump_python(
-            operations, mode='json', by_alias=True, exclude_none=True)
+            operations, mode='json', by_alias=True, exclude_none=True
+        )
         url = self.ep(f'{org_id}/v2/Bulk')
         data = super().post(url, json=body)
         r = BulkResponse.model_validate(data)
