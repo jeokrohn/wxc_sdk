@@ -1,12 +1,9 @@
-repos: []
-# disabled: started directly from ./git/pre-commit
-#  - repo: local
-#    hooks:
-#      - id: build-and-stage
-#        name: Build and stage generated files
-#        language: system
-#        entry: script/pre-commit-build
-#        pass_filenames: false
-#        always_run: false        # 👈 change this to false
-#        files: ^wxc_sdk/.*\.py$         # 👈 only trigger if files under wxc_sdk/ are staged
-#        stages: [pre-commit]
+repos:
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  # Ruff version.
+  rev: v0.15.6
+  hooks:
+    # Run the linter.
+    - id: ruff-check
+    # Run the formatter.
+    - id: ruff-format

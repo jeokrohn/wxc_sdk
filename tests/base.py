@@ -31,7 +31,7 @@ import requests
 import yaml
 from dateutil import tz
 from dotenv import load_dotenv
-from pydantic import BaseModel, Field, TypeAdapter, ValidationError, model_validator, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, ValidationError, model_validator
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -303,7 +303,7 @@ class WithIntegrationTokens(TestCase):
 
 
 class LoggedRequest(BaseModel):
-    model_config = ConfigDict(arbitrary_types_allowed = True)
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
     method: str
     url: str
@@ -905,8 +905,8 @@ class TestLocationsUsersWorkspacesVirtualLines(TestWithLocations, TestCaseWithUs
 
 @dataclass(init=False, repr=False)
 class TestWithTarget(TestWithLocations):
-    target_id: ClassVar[str] = None
-    location_id: ClassVar[str] = None
+    target_id: ClassVar[Optional[str]] = None
+    location_id: ClassVar[Optional[str]] = None
 
     def setUp(self) -> None:
         if self.target_id is None:
@@ -958,8 +958,8 @@ class TestWithProfessionalWorkspace(TestWithTarget):
     """
 
     # temporary workspace with professional license
-    workspace: ClassVar[Workspace] = None
-    location: ClassVar[Location] = None
+    workspace: ClassVar[Optional[Workspace]] = None
+    location: ClassVar[Optional[Location]] = None
 
     @classmethod
     def create_temp_workspace(cls):
@@ -1253,7 +1253,7 @@ class UserTokens(TestCaseWithLog):
 
 @dataclass(init=False, repr=False)
 class TestWithRandomUserApi(UserTokens, TestCaseWithUsers):
-    fixed_user_display_name: ClassVar[str] = None
+    fixed_user_display_name: ClassVar[Optional[str]] = None
 
     def random_user(self) -> Person:
         """

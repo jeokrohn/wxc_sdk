@@ -112,6 +112,9 @@ exclude = [
     "workspace call settings.md"
 ]
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
 [tool.ruff]
 line-length = 120
 
@@ -134,7 +137,7 @@ select = [
     "F",   # pyflakes (flake8 core)
     "C90", # mccabe complexity (flake8-mccabe)
     "I",   # isort (flake8-isort)
-    "N",   # pep8-naming (flake8-pep8-naming)
+    # "N",   # pep8-naming (flake8-pep8-naming)
     "B",   # flake8-bugbear
     "UP",  # pyupgrade
 ]
