@@ -105,7 +105,7 @@ RE_METHOD = re.compile(
     (?:^[ ]+@\w+(?:\(.+\))?$\n)?    # optional decorator
     (?P<indent>^[ ]+)def            # start of line with "def"
     \s+(?P<method_name>\S+)         # white space(s) followed by non white spaces (method name)
-    \(.+$                           # .. until opening bracket until end of line.
+    \(.*$                           # .. until opening bracket until end of line.
                                     # This is end of the 1st line of the method
     (?s:.+?)                        # non greedy match on arbitrary characters
     (?=\s*                          # non capturing, (potentially empty) sequence of white spaces (empty lines)
