@@ -18,6 +18,7 @@ from re import Pattern
 from typing import Union
 
 from tests.base import WithIntegrationTokens, get_tokens
+from tests.cleanup_locations import delete_unused_locations
 from tests.testutil import calling_users
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.as_api import AsWebexSimpleApi
@@ -388,7 +389,7 @@ async def main():
             if not DRY_RUN:
                 # delete numbers in batches of 5
                 def batches_to_delete() -> Generator[tuple[str, list[str]]]:
-                    for (l_id, l_name), numbers in numbers_by_location.items():
+                    for (l_id, _l_name), numbers in numbers_by_location.items():
                         n_iter = iter(numbers)
                         for batch in zip_longest(*([n_iter] * 5), fillvalue=None):
                             batch = [n.phone_number for n in batch if n]
@@ -530,6 +531,7 @@ async def main():
 
             await asyncio.gather(*[remove_ocp_patterns_location(loc) for loc in locations], return_exceptions=True)
         # async with AsWebexSimpleApi(tokens=tokens)
+        delete_unused_locations(api)
     # with HarWriter
 
 
