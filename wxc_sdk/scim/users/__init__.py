@@ -8,19 +8,37 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 from wxc_sdk.scim.child import ScimApiChild
 
-__all__ = ['EmailObject', 'EmailObjectType', 'ScimUser',
-           'EnterpriseUser', 'ManagedOrg',
-           'ManagerObject', 'NameObject', 'PatchUserOperation', 'PatchUserOperationOp', 'PhotoObject',
-           'PhotoObjectType',
-           'UserManager',
-           'WebexUser', 'UserAddress', 'UserPhoneNumber',
-           'ScimPhoneNumberType', 'SCIM2UsersApi', 'SearchUserResponse', 'SipAddressObject',
-           'UserTypeObject', 'ManagedGroup', 'WebexUserMeta', 'ScimMeta', 'ScimValueDisplayRef']
+__all__ = [
+    'EmailObject',
+    'EmailObjectType',
+    'ScimUser',
+    'EnterpriseUser',
+    'ManagedOrg',
+    'ManagerObject',
+    'NameObject',
+    'PatchUserOperation',
+    'PatchUserOperationOp',
+    'PhotoObject',
+    'PhotoObjectType',
+    'UserManager',
+    'WebexUser',
+    'UserAddress',
+    'UserPhoneNumber',
+    'ScimPhoneNumberType',
+    'SCIM2UsersApi',
+    'SearchUserResponse',
+    'SipAddressObject',
+    'UserTypeObject',
+    'ManagedGroup',
+    'WebexUserMeta',
+    'ScimMeta',
+    'ScimValueDisplayRef',
+]
 
 SCHEMAS = [
-    "urn:ietf:params:scim:schemas:core:2.0:User",
-    "urn:scim:schemas:extension:cisco:webexidentity:2.0:User",
-    "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"
+    'urn:ietf:params:scim:schemas:core:2.0:User',
+    'urn:scim:schemas:extension:cisco:webexidentity:2.0:User',
+    'urn:ietf:params:scim:schemas:extension:enterprise:2.0:User',
 ]
 
 
@@ -67,6 +85,8 @@ class WebexUserMeta(ApiModel):
 
 
 class ManagedGroup(ApiModel):
+    #: Webex Identity assigned organization identifier.
+    org_id: Optional[str] = None
     #: Webex Identity assigned group identifier.
     group_id: Optional[str] = None
     #: Role in the target group for the user.
@@ -300,10 +320,12 @@ class ScimUser(ApiModel):
     addresses: Optional[list[UserAddress]] = None
     #: SCIM2 enterprise extension
     enterprise_user: Optional[EnterpriseUser] = Field(
-        alias='urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', default=None)
+        alias='urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', default=None
+    )
     #: The Cisco extension of SCIM 2.
     webex_user: Optional[WebexUser] = Field(
-        alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:User', default=None)
+        alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:User', default=None
+    )
 
     # TODO: undocumented
     meta: Optional[ScimMeta] = None
@@ -315,13 +337,12 @@ class ScimUser(ApiModel):
 
         :meta private:
         """
-        data = self.model_dump(mode='json',
-                               exclude_none=True,
-                               by_alias=True,
-                               exclude={'id': True,
-                                        'schemas': True,
-                                        'meta': True,
-                                        'webex_user': {'meta': True}})
+        data = self.model_dump(
+            mode='json',
+            exclude_none=True,
+            by_alias=True,
+            exclude={'id': True, 'schemas': True, 'meta': True, 'webex_user': {'meta': True}},
+        )
         data['schemas'] = SCHEMAS
         return data
 
@@ -434,10 +455,20 @@ class SCIM2UsersApi(ScimApiChild, base='identity/scim'):
         r = ScimUser.model_validate(data)
         return r
 
-    def search(self, org_id: str, filter: str = None, attributes: str = None,
-               excluded_attributes: str = None, sort_by: str = None, sort_order: str = None,
-               start_index: int = None, count: int = None, return_groups: bool = None,
-               include_group_details: bool = None, group_usage_types: str = None) -> SearchUserResponse:
+    def search(
+        self,
+        org_id: str,
+        filter: str = None,
+        attributes: str = None,
+        excluded_attributes: str = None,
+        sort_by: str = None,
+        sort_order: str = None,
+        start_index: int = None,
+        count: int = None,
+        return_groups: bool = None,
+        include_group_details: bool = None,
+        group_usage_types: str = None,
+    ) -> SearchUserResponse:
         """
         Search users
 
@@ -575,9 +606,19 @@ class SCIM2UsersApi(ScimApiChild, base='identity/scim'):
         r = SearchUserResponse.model_validate(data)
         return r
 
-    def search_all(self, org_id: str, filter: str = None, attributes: str = None, excluded_attributes: str = None,
-                   sort_by: str = None, sort_order: str = None, count: int = None, return_groups: str = None,
-                   include_group_details: str = None, group_usage_types: str = None) -> Generator[ScimUser, None, None]:
+    def search_all(
+        self,
+        org_id: str,
+        filter: str = None,
+        attributes: str = None,
+        excluded_attributes: str = None,
+        sort_by: str = None,
+        sort_order: str = None,
+        count: int = None,
+        return_groups: str = None,
+        include_group_details: str = None,
+        group_usage_types: str = None,
+    ) -> Generator[ScimUser, None, None]:
         """
         Same operation as search() but returns a generator of ScimUsers instead of paginated resources
 
@@ -595,7 +636,7 @@ class SCIM2UsersApi(ScimApiChild, base='identity/scim'):
         :param group_usage_types:
         :return:
         """
-        '''async
+        """async
     async def search_all_gen(self, org_id: str, filter: str = None, attributes: str = None,
                              excluded_attributes: str = None,
                              sort_by: str = None, sort_order: str = None, count: int = None, return_groups: str = None,
@@ -623,9 +664,8 @@ class SCIM2UsersApi(ScimApiChild, base='identity/scim'):
         params = {k: v for k, v in locals().items()
                   if k not in {'self'} and v is not None}
         return [u async for u in self.search_all_gen(**params)]
-        '''
-        params = {k: v for k, v in locals().items()
-                  if k not in {'self', 'count'} and v is not None}
+        """
+        params = {k: v for k, v in locals().items() if k not in {'self', 'count'} and v is not None}
         start_index = None
         while True:
             paginated_result = self.search(**params, start_index=start_index, count=count)
@@ -688,8 +728,7 @@ class SCIM2UsersApi(ScimApiChild, base='identity/scim'):
         r = ScimUser.model_validate(data)
         return r
 
-    def patch(self, org_id: str, user_id: str,
-              operations: list[PatchUserOperation]) -> ScimUser:
+    def patch(self, org_id: str, user_id: str, operations: list[PatchUserOperation]) -> ScimUser:
         """
         Update a user with PATCH
 
@@ -795,9 +834,10 @@ class SCIM2UsersApi(ScimApiChild, base='identity/scim'):
         :rtype: :class:`ScimUser`
         """
         body = dict()
-        body['schemas'] = ["urn:ietf:params:scim:api:messages:2.0:PatchOp"]
-        body['Operations'] = TypeAdapter(list[PatchUserOperation]).dump_python(operations, mode='json', by_alias=True,
-                                                                               exclude_none=True)
+        body['schemas'] = ['urn:ietf:params:scim:api:messages:2.0:PatchOp']
+        body['Operations'] = TypeAdapter(list[PatchUserOperation]).dump_python(
+            operations, mode='json', by_alias=True, exclude_none=True
+        )
         url = self.ep(f'{org_id}/v2/Users/{user_id}')
         data = super().patch(url, json=body)
         r = ScimUser.model_validate(data)
