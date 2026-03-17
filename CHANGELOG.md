@@ -1,3 +1,20 @@
+## 1.31.0 (2026-03-17)
+
+### Feat
+
+- emergency services API enhancements (RedSky) for org and locations
+
+### Fix
+
+- api.jobs.disable_calling_location.errors is a Generator now, more relaxed deserialization for StepExecutionStatus
+- improved handling of TNs; enforce +E.164
+- more permissive validation for enum SelectiveScheduleLevel
+- parameter fail_on_errors is optional in api.scim.bulk.bulk_request
+- new attribute ManagedGroup.org_id
+- allow floats for min/max of dynamic device settings validation rules
+- added new AuditEventData attributes based on unit test result
+- stop following pagination if empty list is returned
+
 ## 1.30.0 (2026-03-11)
 
 ### Feat
