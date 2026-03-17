@@ -109,7 +109,8 @@ exclude = [
     "/TODO",
     "/user call settings.md",
     "/virtual line call settings.md",
-    "workspace call settings.md"
+    "workspace call settings.md",
+    "/private"
 ]
 
 [tool.pytest.ini_options]

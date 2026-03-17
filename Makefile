@@ -1,5 +1,5 @@
 # Makefile for project build automation
-# Copyright (c) 2022 Johannes Krohn <jkrohn@cisco.com>
+# Copyright (c) 2026 Johannes Krohn <jkrohn@cisco.com>
 # License: MIT
 
 .PHONY: all package docs types async methref apib oas clean rst
