@@ -33,6 +33,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Communications",
     "Topic :: Communications :: Chat",
     "Topic :: Communications :: Conferencing",
@@ -52,6 +53,8 @@ dependencies = [
 [project.urls]
 Homepage = "https://github.com/jeokrohn/wxc_sdk"
 Documentation = "https://wxc-sdk.readthedocs.io"
+"Bug Tracker" = "https://github.com/jeokrohn/wxc_sdk/issues"
+Changelog = "https://github.com/jeokrohn/wxc_sdk/blob/master/CHANGELOG.md"
 
 [dependency-groups]
 dev = [
@@ -118,6 +121,7 @@ testpaths = ["tests"]
 
 [tool.ruff]
 line-length = 120
+# exclude auto-generated code from ruff formatting/linting
 extend-exclude = ["open_api/generated", "wxc_sdk/as_api.py", "wxc_sdk/all_types.py"]
 
 # exclude some directories
