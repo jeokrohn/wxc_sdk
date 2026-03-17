@@ -43,7 +43,3 @@ oas:
 	@echo "==> Creating Python sources from OAS files"
 	script/oas2py.py --cleanup
 	script/oas2py.py --with-examples
-
-apib:
-	@echo "==> Creating Python sources from APIB files"
-	script/apib2py.py "*.apib" --exclude "attachment-actions|meeting-preferences" --with-examples

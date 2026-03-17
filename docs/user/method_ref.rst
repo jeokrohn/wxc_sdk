@@ -1491,10 +1491,40 @@ The method name is a link to the method documentation.
         Update the Emergency Address of a Location
    * - :meth:`api.telephony.emergency_address.update_for_phone_number <wxc_sdk.telephony.emergency_address.EmergencyAddressApi.update_for_phone_number>`
         Update the emergency address for a phone number
-   * - :meth:`api.telephony.emergency_services.read_emergency_call_notification <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.read_emergency_call_notification>`
+   * - :meth:`api.telephony.emergency_services.create_location_address_and_alert_email <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.create_location_address_and_alert_email>`
+        Create a RedSky Building Address and Alert Email for a Location
+   * - :meth:`api.telephony.emergency_services.create_redsky_account_and_admin <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.create_redsky_account_and_admin>`
+        Create an account and admin in RedSky
+   * - :meth:`api.telephony.emergency_services.get_location_compliance_status <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.get_location_compliance_status>`
+        Get a Location's RedSky Compliance Status
+   * - :meth:`api.telephony.emergency_services.get_location_notification <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.get_location_notification>`
+        Get a Location Emergency Call Notification
+   * - :meth:`api.telephony.emergency_services.get_location_parameters <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.get_location_parameters>`
+        Get a Location's RedSky Emergency Calling Parameters
+   * - :meth:`api.telephony.emergency_services.get_notification <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.get_notification>`
         Get an Organization Emergency Call Notification
-   * - :meth:`api.telephony.emergency_services.update_emergency_call_notification <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.update_emergency_call_notification>`
+   * - :meth:`api.telephony.emergency_services.get_org_compliance <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.get_org_compliance>`
+        Get the Organization Compliance Status and the Location Status List
+   * - :meth:`api.telephony.emergency_services.get_org_compliance_status <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.get_org_compliance_status>`
+        Get the Organization Compliance Status for a RedSky Account
+   * - :meth:`api.telephony.emergency_services.get_redsky_account_details <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.get_redsky_account_details>`
+        Retrieve RedSky account details for an organization
+   * - :meth:`api.telephony.emergency_services.hunt_group_ecbn_dependencies <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.hunt_group_ecbn_dependencies>`
+        Get Dependencies for a Hunt Group Emergency Callback Number
+   * - :meth:`api.telephony.emergency_services.login <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.login>`
+        Login to a RedSky Admin Account
+   * - :meth:`api.telephony.emergency_services.update_location_address <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.update_location_address>`
+        Update a RedSky Building Address for a Location
+   * - :meth:`api.telephony.emergency_services.update_location_compliance_status <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.update_location_compliance_status>`
+        Update a Location's RedSky Compliance Status
+   * - :meth:`api.telephony.emergency_services.update_location_notification <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.update_location_notification>`
+        Update a location emergency call notification
+   * - :meth:`api.telephony.emergency_services.update_notification <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.update_notification>`
         Update an organization emergency call notification
+   * - :meth:`api.telephony.emergency_services.update_org_compliance_status <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.update_org_compliance_status>`
+        Update the Organization RedSky Account's Compliance Status
+   * - :meth:`api.telephony.emergency_services.update_service_settings <wxc_sdk.telephony.emergency_services.OrgEmergencyServicesApi.update_service_settings>`
+        Update RedSky Service Settings
    * - :meth:`api.telephony.guest_calling.available_members <wxc_sdk.telephony.guest_calling.GuestCallingApi.available_members>`
         Read the Click-to-call Available Members
    * - :meth:`api.telephony.guest_calling.members <wxc_sdk.telephony.guest_calling.GuestCallingApi.members>`

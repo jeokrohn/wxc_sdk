@@ -118,6 +118,7 @@ testpaths = ["tests"]
 
 [tool.ruff]
 line-length = 120
+extend-exclude = ["open_api/generated", "wxc_sdk/as_api.py", "wxc_sdk/all_types.py"]
 
 # exclude some directories
 exclude = [
