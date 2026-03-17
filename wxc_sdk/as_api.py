@@ -37918,8 +37918,15 @@ class AsWebexSimpleApi:
     #: whether the session used for all requests must be closed when :meth:`close` is called
     _must_close_session: bool
 
-    def __init__(self, *, tokens: Union[str, Tokens] = None, concurrent_requests: int = 10, retry_429: bool = True,
-                 session: AsRestSession = None, **kwargs):
+    def __init__(
+        self,
+        *,
+        tokens: Union[str, Tokens] = None,
+        concurrent_requests: int = 10,
+        retry_429: bool = True,
+        session: AsRestSession = None,
+        **kwargs,
+    ):
         """
 
         :param tokens: token to be used by the API. Can be a :class:`tokens.Tokens` instance, a string or None. If
@@ -37939,13 +37946,14 @@ class AsWebexSimpleApi:
         elif tokens is None:
             tokens = os.getenv('WEBEX_ACCESS_TOKEN')
             if tokens is None:
-                raise ValueError('if no access token is passed, then a valid access token has to be present in '
-                                 'WEBEX_ACCESS_TOKEN environment variable')
+                raise ValueError(
+                    'if no access token is passed, then a valid access token has to be present in '
+                    'WEBEX_ACCESS_TOKEN environment variable'
+                )
             tokens = Tokens(access_token=tokens)
 
         if session is None:
-            session = AsRestSession(tokens=tokens, concurrent_requests=concurrent_requests, retry_429=retry_429,
-                                  **kwargs)
+            session = AsRestSession(tokens=tokens, concurrent_requests=concurrent_requests, retry_429=retry_429, **kwargs)
             self._must_close_session = True
         else:
             self._must_close_session = False
