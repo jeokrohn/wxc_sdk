@@ -3989,6 +3989,13 @@ class AsLicensesApi(AsApiChild, base='licenses'):
     Updating the licenses of users requires an administrator auth token with a `scope
     <https://developer.webex.com/docs/integrations#scopes>`_ of `spark-admin:people_write`.
 
+    The license assignment API now supports partial success scenarios. When assigning multiple licenses to a user, if
+    some licenses can be assigned successfully while others fail due to constraints or conflicts, the API returns a
+    206 Partial Content status code instead of failing the entire request. This allows for more robust bulk license
+    operations, providing detailed information about which licenses were assigned successfully and which failed, along
+    with specific error details for each failure. Previously, if any single license in a batch could not be assigned,
+    the entire request would fail.
+
     To learn about how to allocate Hybrid Services licenses, see the `Managing Hybrid Services
     <https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses>`_ guide.
     """
@@ -4038,8 +4045,7 @@ class AsLicensesApi(AsApiChild, base='licenses'):
         """
         ep = self.ep(license_id)
         params['includeAssignedTo'] = 'user'
-        return self.session.follow_pagination(url=ep, model=LicenseUser, item_key='users',
-                                              params=params)
+        return self.session.follow_pagination(url=ep, model=LicenseUser, item_key='users', params=params)
 
     async def assigned_users(self, license_id: str, **params) -> List[LicenseUser]:
         """
@@ -4055,12 +4061,16 @@ class AsLicensesApi(AsApiChild, base='licenses'):
         """
         ep = self.ep(license_id)
         params['includeAssignedTo'] = 'user'
-        return [o async for o in self.session.follow_pagination(url=ep, model=LicenseUser, item_key='users',
-                                              params=params)]
+        return [o async for o in self.session.follow_pagination(url=ep, model=LicenseUser, item_key='users', params=params)]
 
-    async def assign_licenses_to_users(self, email: str = None, person_id: str = None,
-                                 licenses: List[LicenseRequest] = None, site_urls: List[SiteUrlsRequest] = None,
-                                 org_id: str = None) -> UserLicensesResponse:
+    async def assign_licenses_to_users(
+        self,
+        email: str = None,
+        person_id: str = None,
+        licenses: builtins.list[LicenseRequest] = None,
+        site_urls: builtins.list[SiteUrlsRequest] = None,
+        org_id: str = None,
+    ) -> UserLicensesResponse:
         """
         Assign Licenses to Users
 
@@ -4108,11 +4118,13 @@ class AsLicensesApi(AsApiChild, base='licenses'):
         if org_id is not None:
             body['orgId'] = org_id
         if licenses is not None:
-            body['licenses'] = TypeAdapter(list[LicenseRequest]).dump_python(licenses, mode='json', by_alias=True,
-                                                                             exclude_none=True)
+            body['licenses'] = TypeAdapter(list[LicenseRequest]).dump_python(
+                licenses, mode='json', by_alias=True, exclude_none=True
+            )
         if site_urls is not None:
-            body['siteUrls'] = TypeAdapter(list[SiteUrlsRequest]).dump_python(site_urls, mode='json', by_alias=True,
-                                                                              exclude_none=True)
+            body['siteUrls'] = TypeAdapter(list[SiteUrlsRequest]).dump_python(
+                site_urls, mode='json', by_alias=True, exclude_none=True
+            )
         url = self.ep('users')
         data = await super().patch(url, json=body)
         r = UserLicensesResponse.model_validate(data)

@@ -1,42 +1,22 @@
-"""
-Licenses
-
-An allowance for features and services that are provided to users on a Webex services subscription. Cisco and its
-partners manage the amount of licenses provided to administrators and users. This license resource can be accessed
-only by an admin.
-"""
-
-import builtins
 from collections.abc import Generator
-from typing import Optional
+from datetime import datetime
+from json import loads
+from typing import Optional, Union, Any, List
 
+from dateutil.parser import isoparse
 from pydantic import Field, TypeAdapter
 
-from ..api_child import ApiChild
-from ..base import ApiModel, webex_id_to_uuid
-from ..base import SafeEnum as Enum
-
-__all__ = [
-    'SiteType',
-    'License',
-    'LicensesApi',
-    'LicenseUser',
-    'LicenseUserType',
-    'LicenseRequestOperation',
-    'LicenseProperties',
-    'LicenseRequest',
-    'SiteAccountType',
-    'SiteUrlsRequest',
-    'SiteResponse',
-    'UserLicensesResponse',
-]
+from wxc_sdk.api_child import ApiChild
+from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
+from wxc_sdk.base import SafeEnum as Enum
 
 
-class SiteType(str, Enum):
-    """
-    Webex site type
-    """
+__all__ = ['IncludeAssignedTo', 'License', 'LicenseProperties', 'LicenseRequest', 'LicenseRequestOperation',
+           'LicenseSiteType', 'LicensesApi', 'LicensewithUsers', 'SiteResponse', 'SiteResponseAccountType',
+           'SiteUrlsRequest', 'SiteUrlsRequestAccountType', 'UserLicensesResponse', 'Users', 'UsersType']
 
+
+class LicenseSiteType(str, Enum):
     #: The site is managed by Webex Control Hub.
     control_hub_managed_site = 'Control Hub managed site'
     #: The site is a linked site.
@@ -46,18 +26,14 @@ class SiteType(str, Enum):
 
 
 class License(ApiModel):
-    """
-    Webex license
-    """
-
     #: A unique identifier for the license.
-    license_id: str = Field(alias='id')
+    id: Optional[str] = None
     #: Name of the licensed feature.
-    name: str
+    name: Optional[str] = None
     #: Total number of license units allocated.
-    total_units: int
+    total_units: Optional[int] = None
     #: Total number of license units consumed.
-    consumed_units: int
+    consumed_units: Optional[int] = None
     #: Total number of license units consumed by users.
     consumed_by_users: Optional[int] = None
     #: Total number of license units consumed by workspaces.
@@ -67,76 +43,48 @@ class License(ApiModel):
     #: The Webex Meetings site associated with this license.
     site_url: Optional[str] = None
     #: The type of site associated with this license.
-    site_type: Optional[SiteType] = None
-
-    @property
-    def webex_calling(self) -> bool:
-        """
-        is this a Webex Calling license
-        """
-        return any((self.webex_calling_professional, self.webex_calling_workspaces, self.webex_calling_basic))
-
-    @property
-    def webex_calling_professional(self) -> bool:
-        """
-        is this a Webex Calling professional license
-        """
-        return self.name == 'Webex Calling - Professional'
-
-    @property
-    def webex_calling_basic(self) -> bool:
-        """
-        is this a Webex Calling basic license
-        """
-        return self.name == 'Webex Calling - Basic'
-
-    @property
-    def webex_calling_workspaces(self) -> bool:
-        """
-        is this a Webex Calling workspace license
-        """
-        return self.name == 'Webex Calling - Workspaces'
-
-    @property
-    def cx_essentials(self) -> bool:
-        """
-        is this a Customer Experience Essentials license
-        """
-        return self.name == 'Customer Experience - Essential'
-
-    @property
-    def lic_type(self) -> str:
-        """
-        base64 decoded license id looks something like this:
-        <org uuid>:<lic type>_<lic uuid>
-        """
-        return webex_id_to_uuid(self.license_id).split(':')[-1].split('_')[0]
-
-    @property
-    def lic_uuid(self) -> str:
-        """
-        base64 decoded license id looks something like this:
-        <org uuid>:<lic type>_<lic uuid>
-        """
-        return webex_id_to_uuid(self.license_id).split(':')[-1].split('_')[1]
+    site_type: Optional[LicenseSiteType] = None
 
 
-class LicenseUserType(str, Enum):
+class UsersType(str, Enum):
     #: User resides in the license-owned organization.
     internal = 'INTERNAL'
     #: User resides outside the license-owned organization.
     external = 'EXTERNAL'
 
 
-class LicenseUser(ApiModel):
+class Users(ApiModel):
     #: A unique identifier for the user.
     id: Optional[str] = None
     #: Indicates if the user is internal or external to the organization.
-    type: Optional[LicenseUserType] = None
+    type: Optional[UsersType] = None
     #: The full name of the user.
     display_name: Optional[str] = None
     #: Email address of the user.
     email: Optional[str] = None
+
+
+class LicensewithUsers(ApiModel):
+    #: A unique identifier for the license.
+    id: Optional[str] = None
+    #: Name of the licensed feature.
+    name: Optional[str] = None
+    #: Total number of license units allocated.
+    total_units: Optional[int] = None
+    #: Total number of license units consumed.
+    consumed_units: Optional[int] = None
+    #: Total number of license units consumed by users.
+    consumed_by_users: Optional[int] = None
+    #: Total number of license units consumed by workspaces.
+    consumed_by_workspaces: Optional[int] = None
+    #: The subscription ID associated with this license. This ID is used in other systems, such as Webex Control Hub.
+    subscription_id: Optional[str] = None
+    #: The Webex Meetings site associated with this license.
+    site_url: Optional[str] = None
+    #: The type of site associated with this license.
+    site_type: Optional[LicenseSiteType] = None
+    #: A list of users to whom the license is assigned to.
+    users: Optional[list[Users]] = None
 
 
 class LicenseRequestOperation(str, Enum):
@@ -160,16 +108,12 @@ class LicenseRequest(ApiModel):
     id: Optional[str] = None
     #: Operation type. The default operation is `add` if no operation is specified.
     operation: Optional[LicenseRequestOperation] = None
-    #: Properties for the license. Either `phoneNumber` or `extension` are mandatory for assigning Webex Calling
-    #: licenses. If `phoneNumber` is not provided then `locationId` is mandatory.
     properties: Optional[LicenseProperties] = None
 
 
-class SiteAccountType(str, Enum):
-    #: Attendee account on the site.
+class SiteUrlsRequestAccountType(str, Enum):
+    #: Attendee role on the siteUrl
     attendee = 'attendee'
-    #: Host account on the site.
-    host = 'host'
 
 
 class SiteUrlsRequest(ApiModel):
@@ -177,16 +121,23 @@ class SiteUrlsRequest(ApiModel):
     site_url: Optional[str] = None
     #: Account type. Only `attendee` type is supported. For host account, remove attendee and assign the license on
     #: that site.
-    account_type: Optional[SiteAccountType] = None
+    account_type: Optional[SiteUrlsRequestAccountType] = None
     #: Operation type. The default operation is `add` if no operation is specified.
     operation: Optional[LicenseRequestOperation] = None
+
+
+class SiteResponseAccountType(str, Enum):
+    #: Attendee account on the site.
+    attendee = 'attendee'
+    #: Host account on the site.
+    host = 'host'
 
 
 class SiteResponse(ApiModel):
     #: `siteUrl` assigned to the user.
     site_url: Optional[str] = None
     #: Account Type of the site.
-    account_type: Optional[SiteAccountType] = None
+    account_type: Optional[SiteResponseAccountType] = None
 
 
 class UserLicensesResponse(ApiModel):
@@ -197,8 +148,6 @@ class UserLicensesResponse(ApiModel):
     #: The email address of this user.
     email: Optional[str] = None
     #: An array of license strings that are assigned to this user.
-    # 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LWIyNjMtMGY0NTkyYWRlZmFi',
-    # 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvOTZhYmMyYWEtM2RjYy0xMWU1LTIzNDItMGY0NTU2YWRlZXJm']
     licenses: Optional[list[str]] = None
     #: An array of `siteUrls` and their `accountType` that are assigned to this user.
     site_urls: Optional[list[SiteResponse]] = None
@@ -210,87 +159,59 @@ class UserLicensesResponse(ApiModel):
     pending_site_urls: Optional[list[SiteResponse]] = None
 
 
+class IncludeAssignedTo(str, Enum):
+    user = 'user'
+
+
 class LicensesApi(ApiChild, base='licenses'):
     """
     Licenses
-
+    
     An allowance for features and services that are provided to users on a Webex services subscription. Cisco and its
     partners manage the amount of licenses provided to administrators and users. License can be assigned only by
     admins.
-
+    
     Viewing the list of all licenses in your organization and viewing license details requires an administrator auth
     token with a `scope
     <https://developer.webex.com/docs/integrations#scopes>`_ of `spark-admin:licenses_read`.
-
+    
     Updating the licenses of users requires an administrator auth token with a `scope
     <https://developer.webex.com/docs/integrations#scopes>`_ of `spark-admin:people_write`.
-
+    
     The license assignment API now supports partial success scenarios. When assigning multiple licenses to a user, if
     some licenses can be assigned successfully while others fail due to constraints or conflicts, the API returns a
     206 Partial Content status code instead of failing the entire request. This allows for more robust bulk license
     operations, providing detailed information about which licenses were assigned successfully and which failed, along
     with specific error details for each failure. Previously, if any single license in a batch could not be assigned,
     the entire request would fail.
-
+    
     To learn about how to allocate Hybrid Services licenses, see the `Managing Hybrid Services
     <https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses>`_ guide.
     """
 
-    def list(self, org_id: str = None) -> list[License]:
+    def list_licenses(self, org_id: str = None) -> List[License]:
         """
-        List all licenses for a given organization. If no org_id is specified, the default is the organization of
-        the authenticated user.
+        List Licenses
+
+        List all licenses for a given organization.  If no `orgId` is specified, the default is the organization of the
+        authenticated user.
 
         Response properties that are not applicable to the license will not be present in the response.
 
         :param org_id: List licenses for this organization.
         :type org_id: str
-        :return: yields :class:`License` instances
+        :rtype: list[License]
         """
-        params = org_id and {'orgId': org_id} or None
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
         url = self.ep()
         data = super().get(url, params=params)
         r = TypeAdapter(list[License]).validate_python(data['items'])
         return r
 
-    def details(self, license_id) -> License:
-        """
-        Shows details for a license, by ID.
-
-        Response properties that are not applicable to the license will not be present in the response.
-
-        :param license_id: The unique identifier for the license.
-        :type license_id: str
-        :return: license details
-        :rtype: License
-        """
-        ep = self.ep(license_id)
-        return License.model_validate(self.get(ep))
-
-    def assigned_users(self, license_id: str, **params) -> Generator[LicenseUser, None, None]:
-        """
-        Get users license is assigned to, by license ID.
-
-        Specify the license ID in the `licenseId` parameter in the URI.
-        Long result sets will be
-        split into `pages
-        <https://developer.webex.com/docs/basics#pagination>`_.
-
-        :param license_id: The unique identifier for the license.
-        :type license_id: str
-        """
-        ep = self.ep(license_id)
-        params['includeAssignedTo'] = 'user'
-        return self.session.follow_pagination(url=ep, model=LicenseUser, item_key='users', params=params)
-
-    def assign_licenses_to_users(
-        self,
-        email: str = None,
-        person_id: str = None,
-        licenses: builtins.list[LicenseRequest] = None,
-        site_urls: builtins.list[SiteUrlsRequest] = None,
-        org_id: str = None,
-    ) -> UserLicensesResponse:
+    def assign_licenses_to_users(self, email: str = None, person_id: str = None, licenses: list[LicenseRequest] = None,
+                                 site_urls: list[SiteUrlsRequest] = None, org_id: str = None) -> UserLicensesResponse:
         """
         Assign Licenses to Users
 
@@ -318,17 +239,6 @@ class LicensesApi(ApiChild, base='licenses'):
             organization ID from the OAuth token is used.
         :type org_id: str
         :rtype: :class:`UserLicensesResponse`
-
-        Example:
-
-            .. code-block:: python
-
-                self.api.licenses.assign_licenses_to_users(
-                    person_id=new_user.person_id,
-                    licenses=[LicenseRequest(id=calling_license_id,
-                                             properties=LicenseProperties(location_id=target_location.location_id,
-                                                                          extension=extension))])
-
         """
         body = dict()
         if email is not None:
@@ -338,14 +248,48 @@ class LicensesApi(ApiChild, base='licenses'):
         if org_id is not None:
             body['orgId'] = org_id
         if licenses is not None:
-            body['licenses'] = TypeAdapter(list[LicenseRequest]).dump_python(
-                licenses, mode='json', by_alias=True, exclude_none=True
-            )
+            body['licenses'] = TypeAdapter(list[LicenseRequest]).dump_python(licenses, mode='json', by_alias=True, exclude_none=True)
         if site_urls is not None:
-            body['siteUrls'] = TypeAdapter(list[SiteUrlsRequest]).dump_python(
-                site_urls, mode='json', by_alias=True, exclude_none=True
-            )
+            body['siteUrls'] = TypeAdapter(list[SiteUrlsRequest]).dump_python(site_urls, mode='json', by_alias=True, exclude_none=True)
         url = self.ep('users')
         data = super().patch(url, json=body)
         r = UserLicensesResponse.model_validate(data)
+        return r
+
+    def get_license_details(self, license_id: str, include_assigned_to: IncludeAssignedTo = None, next: str = None,
+                            limit: int = None) -> LicensewithUsers:
+        """
+        Get License Details
+
+        Shows details for a license, by ID.
+
+        Specify the license ID in the `licenseId` parameter in the URI.
+        Use the optional query parameter `includeAssignedTo` to get a list of all objects that are assigned with the
+        license. The objects include but not limited to, users including external users. Long result sets will be
+        split into `pages
+        <https://developer.webex.com/docs/basics#pagination>`_.
+
+        Response properties that are not applicable to the license will not be present in the response.
+
+        :param license_id: The unique identifier for the license.
+        :type license_id: str
+        :param include_assigned_to: The type of object to whom the license is assigned to.
+        :type include_assigned_to: IncludeAssignedTo
+        :param next: List the next set of users. Applicable only if `includeAssignedTo` is populated.
+        :type next: str
+        :param limit: A limit on the number of users to be returned in the response. Applicable only if
+            `includeAssignedTo` is populated. limit cannot be more than 300.
+        :type limit: int
+        :rtype: :class:`LicensewithUsers`
+        """
+        params = {}
+        if include_assigned_to is not None:
+            params['includeAssignedTo'] = enum_str(include_assigned_to)
+        if next is not None:
+            params['next'] = next
+        if limit is not None:
+            params['limit'] = limit
+        url = self.ep(f'{license_id}')
+        data = super().get(url, params=params)
+        r = LicensewithUsers.model_validate(data)
         return r
