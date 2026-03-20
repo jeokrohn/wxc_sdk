@@ -7,7 +7,7 @@ import re
 from collections.abc import Generator
 from typing import Any, Optional, Union
 
-from pydantic import BaseModel, Field, ValidationError, field_validator, model_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 from pydantic_core.core_schema import ValidationInfo
 
 from wxc_sdk.base import to_camel
@@ -94,7 +94,7 @@ class OASchemaProperty(OABaseModel):
     # ref for array items if type == 'array'
     items: Optional['OASchemaProperty'] = None
     # enum values if type == 'string'
-    enum: Optional[list[Optional[str]]] = None
+    enum: Optional[list[Optional[str | int]]] = None
     # properties if type == 'object'
     properties: Optional[dict[str, 'OASchemaProperty']] = None
     required: Optional[list[str]] = Field(default_factory=list)
@@ -123,11 +123,11 @@ class OASchemaProperty(OABaseModel):
     @classmethod
     def validate_enum(cls, v, validation: ValidationInfo):
         """
-        Validate enum. Only valid for type 'string'
+        Validate enum. Only valid for type 'string' and 'integer'
         """
         data = validation.data
-        if data['type'] != 'string':
-            raise ValueError("enum is only valid for type 'string'")
+        if data['type'] not in {'string', 'integer'}:
+            raise ValueError("enum is only valid for type 'string' and 'integer")
         return v
 
     @model_validator(mode='after')
@@ -162,7 +162,7 @@ class OASchemaProperty(OABaseModel):
         # the regex is multiline, so we need to use re.MULTILINE
         try:
             match_enum_values = '|'.join(
-                f'(?:{re.escape(enum_value)})' for enum_value in self.enum if enum_value is not None
+                f'(?:{re.escape(str(enum_value))})' for enum_value in self.enum if enum_value is not None
             )
             match_descriptions = f'^\\s*\\* `({match_enum_values})`\\s*-\\s*'
         except:
