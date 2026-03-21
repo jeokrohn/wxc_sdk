@@ -19,6 +19,7 @@ __all__ = [
     'RedSkyLocationParameters',
     'RedSkyLocationState',
     'RedSkyClientLocation',
+    'RedSkyAddress',
 ]
 
 

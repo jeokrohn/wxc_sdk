@@ -1,6 +1,10 @@
 Release history
 ===============
 
+1.31.1
+------
+fix: NameError: name 'RedSkyAddress' is not defined
+
 1.31.0
 ------
 - feat: emergency services API enhancements (RedSky) for org and locations
