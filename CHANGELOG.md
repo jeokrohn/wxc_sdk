@@ -1,3 +1,9 @@
+## 1.31.1 (2026-03-21)
+
+### Fix
+
+- NameError: name 'RedSkyAddress' is not defined
+
 ## 1.31.0 (2026-03-17)
 
 ### Feat
