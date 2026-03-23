@@ -8,8 +8,10 @@ Searching and viewing locations in your organization requires an administrator a
 spark-admin:people_read and spark-admin:people_write or spark-admin:device_read AND spark-admin:device_writescope
 combinations.
 """
+
+import builtins
 from collections.abc import Generator
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import Field, TypeAdapter
 
@@ -38,6 +40,7 @@ class Location(ApiModel):
     """
     Webex location
     """
+
     #: A unique identifier for the location.
     location_id: Optional[str] = Field(alias='id', default=None)
     #: The name of the location.
@@ -67,8 +70,9 @@ class Location(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json', exclude_unset=True, exclude_none=False, by_alias=True,
-                               exclude={'location_id', 'org_id'})
+        return self.model_dump(
+            mode='json', exclude_unset=True, exclude_none=False, by_alias=True, exclude={'location_id', 'org_id'}
+        )
 
     @property
     def location_id_uuid(self) -> str:
@@ -116,8 +120,9 @@ class LocationsApi(ApiChild, base='locations'):
     <https://help.webex.com/en-us/article/ajh6iy/Locations-in-Control-Hub>`_ for more information.
     """
 
-    def list(self, name: str = None, location_id: str = None, org_id: str = None,
-             **params) -> Generator[Location, None, None]:
+    def list(
+        self, name: str = None, location_id: str = None, org_id: str = None, **params
+    ) -> Generator[Location, None, None]:
         """
         List Locations
 
@@ -125,8 +130,8 @@ class LocationsApi(ApiChild, base='locations'):
 
             * Use query parameters to filter the result set by location name, ID, or organization.
             * Long result sets will be split into `pages <https://developer.webex.com/docs/basics#pagination>`_.
-            * Searching and viewing locations in your organization requires an administrator or location administrator auth
-              token with any of the following scopes: `spark-admin:locations_read`, `spark-admin:people_read` or
+            * Searching and viewing locations in your organization requires an administrator or location administrator
+              auth token with any of the following scopes: `spark-admin:locations_read`, `spark-admin:people_read` or
               `spark-admin:device_read`.
 
         :param name: List locations whose name contains this string (case-insensitive).
@@ -138,9 +143,9 @@ class LocationsApi(ApiChild, base='locations'):
         :type org_id: str
         :return: generator of :class:`Location` instances
         """
-        params.update((to_camel(k), v)
-                      for i, (k, v) in enumerate(locals().items())
-                      if i and k != 'params' and v is not None)
+        params.update(
+            (to_camel(k), v) for i, (k, v) in enumerate(locals().items()) if i and k != 'params' and v is not None
+        )
         if location_id is not None:
             params.pop('locationId')
             params['id'] = location_id
@@ -160,8 +165,7 @@ class LocationsApi(ApiChild, base='locations'):
         :return: locations
         :rtype: Location
         """
-        return next((location for location in self.list(name=name, org_id=org_id)
-                     if location.name == name), None)
+        return next((location for location in self.list(name=name, org_id=org_id) if location.name == name), None)
 
     def details(self, location_id: str, org_id: str = None) -> Location:
         """
@@ -192,9 +196,23 @@ class LocationsApi(ApiChild, base='locations'):
         ep = self.ep(location_id)
         return Location.model_validate(self.get(ep, params=params))
 
-    def create(self, name: str, time_zone: str, preferred_language: str, announcement_language: str, address1: str,
-               city: str, state: str, postal_code: str, country: str, address2: str = None, latitude: str = None,
-               longitude: str = None, notes: str = None, org_id: str = None) -> str:
+    def create(
+        self,
+        name: str,
+        time_zone: str,
+        preferred_language: str,
+        announcement_language: str,
+        address1: str,
+        city: str,
+        state: str,
+        postal_code: str,
+        country: str,
+        address2: str = None,
+        latitude: str = None,
+        longitude: str = None,
+        notes: str = None,
+        org_id: str = None,
+    ) -> str:
         """
         Create a Location
 
@@ -326,7 +344,7 @@ class LocationsApi(ApiChild, base='locations'):
         data = settings.update()
         self.put(url=url, json=data, params=params)
 
-    def list_floors(self, location_id: str) -> List[Floor]:
+    def list_floors(self, location_id: str) -> builtins.list[Floor]:
         """
         List Location Floors
 

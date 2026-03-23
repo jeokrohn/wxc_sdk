@@ -7,8 +7,14 @@ from ...base import ApiModel, enum_str
 from ...base import SafeEnum as Enum
 from ...common import NumberState
 
-__all__ = ['TelephoneNumberType', 'NumberUsageType', 'NumberAddError', 'NumberAddResponse', 'NumbersRequestAction',
-           'LocationNumbersApi']
+__all__ = [
+    'TelephoneNumberType',
+    'NumberUsageType',
+    'NumberAddError',
+    'NumberAddResponse',
+    'NumbersRequestAction',
+    'LocationNumbersApi',
+]
 
 
 class TelephoneNumberType(str, Enum):
@@ -98,11 +104,17 @@ class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
         body = {'phoneNumbers': phone_numbers}
         self.delete(url=url, params=params, json=body)
 
-    def add(self, location_id: str, phone_numbers: list[str], number_type: TelephoneNumberType = None,
-            number_usage_type: NumberUsageType = None,
-            state: NumberState = NumberState.inactive, subscription_id: str = None,
-            carrier_id: str = None,
-            org_id: str = None) -> NumberAddResponse:
+    def add(
+        self,
+        location_id: str,
+        phone_numbers: list[str],
+        number_type: TelephoneNumberType = None,
+        number_usage_type: NumberUsageType = None,
+        state: NumberState = NumberState.inactive,
+        subscription_id: str = None,
+        carrier_id: str = None,
+        org_id: str = None,
+    ) -> NumberAddResponse:
         """
         Add Phone Numbers to a location
 
@@ -187,11 +199,11 @@ class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
         :param org_id: Organization to manage
         :type org_id: str
         """
-        return self.manage_number_state(location_id, phone_numbers,
-                                        action=NumbersRequestAction.activate, org_id=org_id)
+        return self.manage_number_state(location_id, phone_numbers, action=NumbersRequestAction.activate, org_id=org_id)
 
-    def manage_number_state(self, location_id: str, phone_numbers: list[str],
-                            action: NumbersRequestAction = None, org_id: str = None):
+    def manage_number_state(
+        self, location_id: str, phone_numbers: list[str], action: NumbersRequestAction = None, org_id: str = None
+    ):
         """
         Manage Number State in a location
 

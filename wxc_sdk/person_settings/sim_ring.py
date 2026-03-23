@@ -64,8 +64,7 @@ class SimRing(ApiModel):
 
         :meta private
         """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               exclude={'criteria'})
+        return self.model_dump(mode='json', by_alias=True, exclude_none=True, exclude={'criteria'})
 
 
 class SimRingApi(PersonSettingsApiChild):
@@ -77,8 +76,7 @@ class SimRingApi(PersonSettingsApiChild):
 
     feature = 'simultaneousRing'
 
-    def read_criteria(self, entity_id: str, id: str,
-                      org_id: str = None) -> SimRingCriteria:
+    def read_criteria(self, entity_id: str, id: str, org_id: str = None) -> SimRingCriteria:
         """
         Retrieve Simultaneous Ring Criteria for an entity
 
@@ -113,8 +111,7 @@ class SimRingApi(PersonSettingsApiChild):
         r = SimRingCriteria.model_validate(data)
         return r
 
-    def configure_criteria(self, entity_id: str, id: str, settings: SimRingCriteria,
-                           org_id: str = None):
+    def configure_criteria(self, entity_id: str, id: str, settings: SimRingCriteria, org_id: str = None):
         """
         Modify Simultaneous Ring Criteria for an entity
 
@@ -217,8 +214,7 @@ class SimRingApi(PersonSettingsApiChild):
         r = data['id']
         return r
 
-    def read(self, entity_id: str,
-             org_id: str = None) -> SimRing:
+    def read(self, entity_id: str, org_id: str = None) -> SimRing:
         """
         Retrieve Simultaneous Ring Settings for an entity.
 
@@ -248,8 +244,7 @@ class SimRingApi(PersonSettingsApiChild):
         r = SimRing.model_validate(data)
         return r
 
-    def configure(self, entity_id: str, settings: SimRing,
-                  org_id: str = None):
+    def configure(self, entity_id: str, settings: SimRing, org_id: str = None):
         """
         Modify Simultaneous Ring Settings for an entity.
 

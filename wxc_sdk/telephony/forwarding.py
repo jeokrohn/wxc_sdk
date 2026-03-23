@@ -1,6 +1,7 @@
 """
 Forwarding settings and API for call queues, hunt groups, and auto attendants
 """
+
 from dataclasses import dataclass
 from typing import Optional
 
@@ -14,10 +15,25 @@ from ..person_settings.mode_management import ExceptionType
 from ..rest import RestSession
 from .operating_modes import OperatingModeSchedule
 
-__all__ = ['ForwardingRule', 'ForwardingSetting',
-           'ModeDefaultForwardToSelection', 'ForwardToSelection', 'ModeForwardTo', 'ModeForward',
-           'ForwardOperatingModes', 'CallForwarding', 'ForwardTo', 'ForwardFromSelection', 'CallForwardingNumber',
-           'ForwardCallsTo', 'CustomNumbers', 'CallsFrom', 'ForwardingRuleDetails', 'FeatureSelector', 'ForwardingApi']
+__all__ = [
+    'ForwardingRule',
+    'ForwardingSetting',
+    'ModeDefaultForwardToSelection',
+    'ForwardToSelection',
+    'ModeForwardTo',
+    'ModeForward',
+    'ForwardOperatingModes',
+    'CallForwarding',
+    'ForwardTo',
+    'ForwardFromSelection',
+    'CallForwardingNumber',
+    'ForwardCallsTo',
+    'CustomNumbers',
+    'CallsFrom',
+    'ForwardingRuleDetails',
+    'FeatureSelector',
+    'ForwardingApi',
+]
 
 
 def assert_plus1(number: str) -> str:
@@ -64,10 +80,9 @@ class ForwardingSetting(ApiModel):
 
     @staticmethod
     def default() -> 'ForwardingSetting':
-        return ForwardingSetting(enabled=False,
-                                 ring_reminder_enabled=False,
-                                 send_to_voicemail_enabled=False,
-                                 destination='')
+        return ForwardingSetting(
+            enabled=False, ring_reminder_enabled=False, send_to_voicemail_enabled=False, destination=''
+        )
 
 
 class ModeDefaultForwardToSelection(str, Enum):
@@ -138,9 +153,7 @@ class CallForwarding(ApiModel):
 
     @staticmethod
     def default() -> 'CallForwarding':
-        return CallForwarding(always=ForwardingSetting.default(),
-                              selective=ForwardingSetting.default(),
-                              rules=[])
+        return CallForwarding(always=ForwardingSetting.default(), selective=ForwardingSetting.default(), rules=[])
 
     def update(self) -> dict:
         """
@@ -148,17 +161,19 @@ class CallForwarding(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json', exclude_unset=True, by_alias=True,
-                               exclude={'rules': {'__all__': {'calls_from',
-                                                              'forward_to',
-                                                              'calls_to',
-                                                              'name'}}})
+        return self.model_dump(
+            mode='json',
+            exclude_unset=True,
+            by_alias=True,
+            exclude={'rules': {'__all__': {'calls_from', 'forward_to', 'calls_to', 'name'}}},
+        )
 
 
 class ForwardTo(ApiModel):
     """
     Definition of a call forward destination
     """
+
     selection: ForwardToSelection = Field(default=ForwardToSelection.default_number)
     phone_number: Optional[str] = None
 
@@ -172,6 +187,7 @@ class CallForwardingNumberType(str, Enum):
     """
     Number type for call forwarding number
     """
+
     primary = 'PRIMARY'
     alternate = 'ALTERNATE'
 
@@ -181,6 +197,7 @@ class CallForwardingNumber(ApiModel):
     """
     single number in forwarding calls to definition
     """
+
     phone_number: Optional[str] = None
     extension: Optional[str] = None
     number_type: CallForwardingNumberType = Field(alias='type')
@@ -210,6 +227,7 @@ class ForwardCallsTo(ApiModel):
     """
     List of numbers in custom number definition
     """
+
     numbers: list[CallForwardingNumber] = Field(default_factory=list)
 
 
@@ -217,6 +235,7 @@ class CustomNumbers(ApiModel):
     """
     custom numbers definition in forwarding rule
     """
+
     private_number_enabled: bool = Field(default=False)
     unavailable_number_enabled: bool = Field(default=False)
     numbers: Optional[list[str]] = None
@@ -246,6 +265,7 @@ class CallsFrom(ApiModel):
     """
     calls_from specification in forwarding rule
     """
+
     selection: ForwardFromSelection = Field(default=ForwardFromSelection.any)
     custom_numbers: CustomNumbers = Field(default_factory=CustomNumbers)
 
@@ -254,6 +274,7 @@ class ForwardingRuleDetails(ApiModel):
     """
     Details of a call forwarding rule
     """
+
     name: str
     #: A unique identifier for the auto attendant call forward selective rule.
     id: Optional[str] = None
@@ -276,11 +297,9 @@ class ForwardingRuleDetails(ApiModel):
 
     @staticmethod
     def default(name: str) -> 'ForwardingRuleDetails':
-        return ForwardingRuleDetails(name=name,
-                                     enabled=True,
-                                     forward_to=ForwardTo(),
-                                     calls_to=ForwardCallsTo(),
-                                     calls_from=CallsFrom())
+        return ForwardingRuleDetails(
+            name=name, enabled=True, forward_to=ForwardTo(), calls_to=ForwardCallsTo(), calls_from=CallsFrom()
+        )
 
 
 class FeatureSelector(str, Enum):
@@ -294,6 +313,7 @@ class ForwardingApi(ApiChild, base=''):
     """
     API for forwarding settings on call queues, hunt groups, and auto attendants
     """
+
     _session: RestSession
     _feature: FeatureSelector
 
@@ -311,8 +331,9 @@ class ForwardingApi(ApiChild, base=''):
         :param path:
         """
         path = path and f'/{path}' or ''
-        ep = self._session.ep(path=f'telephony/config/locations/{location_id}/{self._feature.value}/'
-                                   f'{feature_id}/callForwarding{path}')
+        ep = self._session.ep(
+            path=f'telephony/config/locations/{location_id}/{self._feature.value}/{feature_id}/callForwarding{path}'
+        )
         return ep
 
     def settings(self, location_id: str, feature_id: str, org_id: str = None) -> CallForwarding:
@@ -344,8 +365,7 @@ class ForwardingApi(ApiChild, base=''):
         result = CallForwarding.model_validate(data['callForwarding'])
         return result
 
-    def update(self, location_id: str, feature_id: str,
-               forwarding: CallForwarding, org_id: str = None):
+    def update(self, location_id: str, feature_id: str, forwarding: CallForwarding, org_id: str = None):
         """
         Update Call Forwarding Settings for a feature
 
@@ -369,8 +389,9 @@ class ForwardingApi(ApiChild, base=''):
         body = {'callForwarding': forwarding.update()}
         self._session.rest_put(url=url, json=body, params=params)
 
-    def create_call_forwarding_rule(self, location_id: str, feature_id: str,
-                                    forwarding_rule: ForwardingRuleDetails, org_id: str = None) -> str:
+    def create_call_forwarding_rule(
+        self, location_id: str, feature_id: str, forwarding_rule: ForwardingRuleDetails, org_id: str = None
+    ) -> str:
         """
         Create a Selective Call Forwarding Rule feature
 
@@ -396,8 +417,9 @@ class ForwardingApi(ApiChild, base=''):
         data = self._session.rest_post(url=url, data=body, params=params)
         return data['id']
 
-    def call_forwarding_rule(self, location_id: str, feature_id: str, rule_id: str,
-                             org_id: str = None) -> ForwardingRuleDetails:
+    def call_forwarding_rule(
+        self, location_id: str, feature_id: str, rule_id: str, org_id: str = None
+    ) -> ForwardingRuleDetails:
         """
         Retrieve a Selective Call Forwarding Rule's settings for the designated Call Queue.
 
@@ -423,8 +445,14 @@ class ForwardingApi(ApiChild, base=''):
         result = ForwardingRuleDetails.model_validate(data)
         return result
 
-    def update_call_forwarding_rule(self, location_id: str, feature_id: str, rule_id: str,
-                                    forwarding_rule: ForwardingRuleDetails, org_id: str = None) -> str:
+    def update_call_forwarding_rule(
+        self,
+        location_id: str,
+        feature_id: str,
+        rule_id: str,
+        forwarding_rule: ForwardingRuleDetails,
+        org_id: str = None,
+    ) -> str:
         """
         Update a Selective Call Forwarding Rule's settings for the designated feature.
 
@@ -473,8 +501,7 @@ class ForwardingApi(ApiChild, base=''):
         params = org_id and {'orgId': org_id} or None
         self._session.rest_delete(url=url, params=params)
 
-    def switch_mode_for_call_forwarding(self, location_id: str, feature_id: str,
-                                        org_id: str = None):
+    def switch_mode_for_call_forwarding(self, location_id: str, feature_id: str, org_id: str = None):
         """
         Switch Mode for Call Forwarding Settings for an entity
 

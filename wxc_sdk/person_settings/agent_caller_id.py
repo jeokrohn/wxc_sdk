@@ -1,6 +1,7 @@
 """
 API to manage call queue agent caller ID information
 """
+
 import json
 from typing import Optional
 
@@ -37,6 +38,7 @@ class QueueCallerId(ApiModel):
     """
     call queue agent's Caller ID information
     """
+
     #: When true, indicates that this agent is using the selectedQueue for its Caller ID. When false, indicates that
     #: it is using the agent's configured Caller ID.
     queue_caller_id_enabled: Optional[bool] = None
@@ -65,10 +67,9 @@ class QueueCallerId(ApiModel):
 
         :meta private:
         """
-        data = self.model_dump(include={'queue_caller_id_enabled': True,
-                                        'selected_queue': {'id', 'name'}
-                                        },
-                               by_alias=True)
+        data = self.model_dump(
+            include={'queue_caller_id_enabled': True, 'selected_queue': {'id', 'name'}}, by_alias=True
+        )
         if not self.queue_caller_id_enabled:
             # apparently selectedQueue is still mandatory even if we try to disable agent caller id
             data['selectedQueue'] = {'id': None}
@@ -81,6 +82,7 @@ class AgentCallerIdApi(PersonSettingsApiChild):
 
     Also used for virtual lines
     """
+
     feature = 'agent'
 
     def available_caller_ids(self, entity_id: str, org_id: str = None) -> list[AgentCallerId]:

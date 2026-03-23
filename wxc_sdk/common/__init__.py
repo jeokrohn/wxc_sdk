@@ -1,6 +1,7 @@
 """
 Common date types and APIs
 """
+
 from datetime import datetime
 from typing import Any, Optional, Union
 
@@ -9,27 +10,106 @@ from pydantic import Field, field_validator, model_validator
 from ..base import ApiModel, webex_id_to_uuid
 from ..base import SafeEnum as Enum
 
-__all__ = ['UserType', 'UserBase', 'RingPattern', 'AlternateNumber', 'Greeting', 'UserNumber', 'PersonPlaceAgent',
-           'MonitoredMember', 'CallParkExtension', 'AuthCodeLevel', 'AuthCode', 'RouteType', 'DialPatternValidate',
-           'DialPatternStatus',
-           'RouteIdentity', 'Customer', 'IdOnly', 'IdAndName', 'PatternAction', 'NumberState', 'ValidationStatus',
-           'ValidateExtensionStatusState', 'ValidateExtensionStatus', 'ValidateExtensionsResponse',
-           'ValidatePhoneNumberStatusState', 'ValidatePhoneNumberStatus', 'ValidatePhoneNumbersResponse', 'StorageType',
-           'VoicemailMessageStorage', 'VoicemailEnabled', 'VoicemailNotifications', 'VoicemailFax',
-           'VoicemailTransferToNumber', 'VoicemailCopyOfMessage', 'AudioCodecPriority', 'AtaDtmfMode', 'AtaDtmfMethod',
-           'VlanSetting', 'AtaCustomization', 'DeviceCustomizations', 'DeviceCustomization',
-           'CommonDeviceCustomization', 'BacklightTimer', 'Background', 'BackgroundSelection', 'DisplayNameSelection',
-           'LoggingLevel', 'DisplayCallqueueAgentSoftkey', 'AcdCustomization', 'LineKeyLabelSelection',
-           'LineKeyLedPattern', 'PhoneLanguage', 'EnabledAndValue', 'WifiNetwork', 'MppCustomization',
-           'PrimaryOrShared',
-           'MediaFileType', 'AnnAudioFile', 'WifiCustomization', 'RoomType', 'LinkRelation', 'AnnouncementLevel',
-           'UsbPortsObject', 'WifiAuthenticationMethod', 'DirectoryMethod', 'CallHistoryMethod', 'MppVlanDevice',
-           'VolumeSettings', 'CallForwardExpandedSoftKey', 'HttpProxy', 'HttpProxyMode', 'BluetoothMode',
-           'BluetoothSetting', 'NoiseCancellation', 'SoftKeyLayout', 'SoftKeyMenu', 'PskObject', 'BackgroundImageColor',
-           'BacklightTimer68XX78XX', 'DectCustomization', 'OwnerType', 'NumberOwner', 'ApplyLineKeyTemplateAction',
-           'AssignedDectNetwork', 'DevicePlatform', 'Multicast', 'EnhancedMulticast', 'DeviceType', 'UserLicenseType',
-           'MaintenanceMode', 'SetOrClear', 'MeGroupSettings', 'MeGroupMember', 'PrimaryOrSecondary', 'MediaFile',
-           'UsageType', 'DirectLineCallerIdName', 'DirectLineCallerIdNameSelection']
+__all__ = [
+    'UserType',
+    'UserBase',
+    'RingPattern',
+    'AlternateNumber',
+    'Greeting',
+    'UserNumber',
+    'PersonPlaceAgent',
+    'MonitoredMember',
+    'CallParkExtension',
+    'AuthCodeLevel',
+    'AuthCode',
+    'RouteType',
+    'DialPatternValidate',
+    'DialPatternStatus',
+    'RouteIdentity',
+    'Customer',
+    'IdOnly',
+    'IdAndName',
+    'PatternAction',
+    'NumberState',
+    'ValidationStatus',
+    'ValidateExtensionStatusState',
+    'ValidateExtensionStatus',
+    'ValidateExtensionsResponse',
+    'ValidatePhoneNumberStatusState',
+    'ValidatePhoneNumberStatus',
+    'ValidatePhoneNumbersResponse',
+    'StorageType',
+    'VoicemailMessageStorage',
+    'VoicemailEnabled',
+    'VoicemailNotifications',
+    'VoicemailFax',
+    'VoicemailTransferToNumber',
+    'VoicemailCopyOfMessage',
+    'AudioCodecPriority',
+    'AtaDtmfMode',
+    'AtaDtmfMethod',
+    'VlanSetting',
+    'AtaCustomization',
+    'DeviceCustomizations',
+    'DeviceCustomization',
+    'CommonDeviceCustomization',
+    'BacklightTimer',
+    'Background',
+    'BackgroundSelection',
+    'DisplayNameSelection',
+    'LoggingLevel',
+    'DisplayCallqueueAgentSoftkey',
+    'AcdCustomization',
+    'LineKeyLabelSelection',
+    'LineKeyLedPattern',
+    'PhoneLanguage',
+    'EnabledAndValue',
+    'WifiNetwork',
+    'MppCustomization',
+    'PrimaryOrShared',
+    'MediaFileType',
+    'AnnAudioFile',
+    'WifiCustomization',
+    'RoomType',
+    'LinkRelation',
+    'AnnouncementLevel',
+    'UsbPortsObject',
+    'WifiAuthenticationMethod',
+    'DirectoryMethod',
+    'CallHistoryMethod',
+    'MppVlanDevice',
+    'VolumeSettings',
+    'CallForwardExpandedSoftKey',
+    'HttpProxy',
+    'HttpProxyMode',
+    'BluetoothMode',
+    'BluetoothSetting',
+    'NoiseCancellation',
+    'SoftKeyLayout',
+    'SoftKeyMenu',
+    'PskObject',
+    'BackgroundImageColor',
+    'BacklightTimer68XX78XX',
+    'DectCustomization',
+    'OwnerType',
+    'NumberOwner',
+    'ApplyLineKeyTemplateAction',
+    'AssignedDectNetwork',
+    'DevicePlatform',
+    'Multicast',
+    'EnhancedMulticast',
+    'DeviceType',
+    'UserLicenseType',
+    'MaintenanceMode',
+    'SetOrClear',
+    'MeGroupSettings',
+    'MeGroupMember',
+    'PrimaryOrSecondary',
+    'MediaFile',
+    'UsageType',
+    'DirectLineCallerIdName',
+    'DirectLineCallerIdNameSelection',
+]
 
 
 class IdOnly(ApiModel):
@@ -85,6 +165,7 @@ class RingPattern(str, Enum):
     """
     Ring Pattern
     """
+
     #: Normal incoming ring pattern.
     normal = 'NORMAL'
     #: Incoming ring pattern of two long rings.
@@ -99,6 +180,7 @@ class AlternateNumber(ApiModel):
     """
     Hunt group or call queue alternate number
     """
+
     #: Alternate phone number for the hunt group or call queue
     phone_number: Optional[str] = None
     #: Ring pattern for when this alternate number is called. Only available when distinctiveRing is enabled for the
@@ -112,6 +194,7 @@ class Greeting(str, Enum):
     """
     DEFAULT indicates that a system default message will be placed when incoming calls are intercepted.
     """
+
     #: A custom will be placed when incoming calls are intercepted.
     custom = 'CUSTOM'
     #: A System default message will be placed when incoming calls are intercepted.
@@ -122,6 +205,7 @@ class UserNumber(ApiModel):
     """
     phone number of the person or workspace.
     """
+
     #: Phone number of person or workspace. Either phoneNumber or extension is mandatory
     external: Optional[str] = None
     #: Extension of person or workspace. Either phoneNumber or extension is mandatory.
@@ -138,6 +222,7 @@ class PersonPlaceAgent(UserBase):
     """
     Agent (person or place)
     """
+
     #: ID of person or workspace.
     agent_id: str = Field(alias='id')
     #: Display name of person or workspace.
@@ -153,6 +238,7 @@ class MonitoredMember(ApiModel):
     """
     a monitored user or place
     """
+
     #: The identifier of the monitored person.
     member_id: Optional[str] = Field(alias='id', default=None)
     #: The last name of the monitored person or place.
@@ -233,6 +319,7 @@ class AuthCode(ApiModel):
     """
     authorization code and description.
     """
+
     #: Indicates an authorization code.
     code: str
     #: Indicates the description of the authorization code.
@@ -262,6 +349,7 @@ class DialPatternStatus(str, Enum):
     """
     validation status.
     """
+
     #: invalid pattern
     invalid = 'INVALID'
     #: duplicate pattern
@@ -289,6 +377,7 @@ class Customer(ApiModel):
     """
     Customer information.
     """
+
     #: ID of the customer/organization.
     customer_id: str = Field(alias='id')
     #: Name of the customer/organization.
@@ -387,6 +476,7 @@ class StorageType(str, Enum):
     """
     Designates which type of voicemail message storage is used.
     """
+
     #: For message access via phone or the Calling User Portal.
     internal = 'INTERNAL'
     #: For sending all messages to the person's email.
@@ -397,6 +487,7 @@ class VoicemailMessageStorage(ApiModel):
     """
     Settings for message storage
     """
+
     #: When true desktop phone will indicate there are new voicemails.
     mwi_enabled: Optional[bool] = None
     #: Designates which type of voicemail message storage is used.
@@ -414,6 +505,7 @@ class VoicemailNotifications(VoicemailEnabled):
     """
     Settings for notifications when there are any new voicemails.
     """
+
     #: Email address to which the notification will be sent. For text messages, use an email to text message gateway
     #: like 2025551212@txt.att.net.
     destination: Optional[str] = None
@@ -426,6 +518,7 @@ class VoicemailFax(VoicemailEnabled):
     """
     Fax message settings
     """
+
     #: Designates optional extension for fax.
     extension: Optional[str] = None
     #: Designates phone number for fax. A value for this field must be provided in the request if faxMessage enabled
@@ -437,6 +530,7 @@ class VoicemailTransferToNumber(VoicemailEnabled):
     """
     Settings for voicemail caller to transfer to a different number by pressing zero (0).
     """
+
     #: Number voicemail caller will be transferred to when they press zero (0).
     destination: Optional[str] = None
 
@@ -445,6 +539,7 @@ class VoicemailCopyOfMessage(VoicemailEnabled):
     """
     Settings for sending a copy of new voicemail message audio via email.
     """
+
     #: Email address to which the new voicemail audio will be sent.
     email_id: Optional[str] = None
 
@@ -466,6 +561,7 @@ class AudioCodecPriority(ApiModel):
     """
     Choose up to three predefined codec priority options available for your region.
     """
+
     #: Indicates the selection of an Audio Code Priority Object.
     selection: str
     #: Indicates the primary Audio Codec.
@@ -480,6 +576,7 @@ class AtaDtmfMode(str, Enum):
     """
     DTMF Detection Tx Mode selection for Cisco ATA devices.
     """
+
     #: It means a) DTMF digit requires an extra hold time after detection and b) DTMF level threshold is raised to
     #: -20 dBm.
     strict = 'STRICT'
@@ -491,6 +588,7 @@ class AtaDtmfMethod(str, Enum):
     """
     Method for transmitting DTMF signals to the far end.
     """
+
     #: Sends DTMF by using the audio path.
     inband = 'INBAND'
     #: Audio video transport. Sends DTMF as AVT events.
@@ -526,6 +624,7 @@ class AtaCustomization(CommonDeviceCustomization):
     """
     settings that are applicable to ATA devices.
     """
+
     #: DTMF Detection Tx Mode selection for Cisco ATA devices.
     ata_dtmf_mode: AtaDtmfMode
     #: Method for transmitting DTMF signals to the far end.
@@ -577,6 +676,7 @@ class BackgroundSelection(ApiModel):
     """
     Background selection for MPP devices
     """
+
     image: Background
     custom_url: Optional[str] = None
 
@@ -602,6 +702,7 @@ class DisplayCallqueueAgentSoftkey(str, Enum):
     """
     Chooses the location of the Call Queue Agent Login/Logout softkey on Multi-Platform Phones.
     """
+
     front_page = 'FRONT_PAGE'
     last_page = 'LAST_PAGE'
 
@@ -617,6 +718,7 @@ class LineKeyLabelSelection(str, Enum):
     """
     Line key labels define the format of what’s shown next to line keys.
     """
+
     #: This will display the person extension, or if a person doesn’t have an extension, the person’s first name will
     #: be displayed.
     person_extension = 'PERSON_EXTENSION'
@@ -677,6 +779,7 @@ class WifiNetwork(ApiModel):
     """
     Specify the Wi-Fi SSID and password for wireless-enabled MPP phones.
     """
+
     #: Indicates whether the wifi network is enabled.
     enabled: bool
     #: Authentication method of wifi network.
@@ -911,6 +1014,7 @@ class MppCustomization(CommonDeviceCustomization):
     """
     settings that are applicable to MPP devices.
     """
+
     #: Indicates whether PNAC of MPP object is enabled or not
     pnac_enabled: bool
     #: Choose the length of time (in minutes) for the phone’s backlight to remain on.
@@ -1029,6 +1133,7 @@ class DeviceCustomizations(ApiModel):
     At the device level only one of ata, dect, and mpp is set. At location and org level all three
     customizations are set.
     """
+
     ata: Optional[AtaCustomization] = None
     dect: Optional[DectCustomization] = None
     mpp: Optional[MppCustomization] = None
@@ -1086,6 +1191,7 @@ class MediaFileType(str, Enum):
     """
     Media Type of the audio file.
     """
+
     #: WMA File Extension.
     wma = 'WMA'
     #: WAV File Extension.
@@ -1114,6 +1220,7 @@ class AnnAudioFile(ApiModel):
     """
     Announcement Audio Files
     """
+
     #: A unique identifier for the announcement. name, mediaFileType, level are mandatory if id is not provided for
     #: uploading an announcement.
     id: Optional[str] = None
@@ -1164,6 +1271,7 @@ class NumberOwner(ApiModel):
     """
     Owner of a phone number
     """
+
     #: ID of the owner to which PSTN Phone number is assigned.
     owner_id: Optional[str] = Field(alias='id', default=None)
     #: Type of the PSTN phone number's owner

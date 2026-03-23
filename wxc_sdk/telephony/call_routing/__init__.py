@@ -13,6 +13,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
     """
     Call Routing Api
     """
+
     #: translation patterns
     tp: TranslationPatternsApi
 

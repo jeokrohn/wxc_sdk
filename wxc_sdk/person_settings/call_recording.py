@@ -1,6 +1,7 @@
 """
 Call recording API
 """
+
 from typing import Optional
 
 from pydantic import Field
@@ -9,8 +10,15 @@ from ..base import ApiModel
 from ..base import SafeEnum as Enum
 from .common import PersonSettingsApiChild
 
-__all__ = ['Record', 'NotificationType', 'NotificationRepeat', 'Notification', 'CallRecordingSetting',
-           'StartStopAnnouncement', 'CallRecordingApi']
+__all__ = [
+    'Record',
+    'NotificationType',
+    'NotificationRepeat',
+    'Notification',
+    'CallRecordingSetting',
+    'StartStopAnnouncement',
+    'CallRecordingApi',
+]
 
 
 class Record(str, Enum):
@@ -30,6 +38,7 @@ class NotificationType(str, Enum):
     """
     Type of pause/resume notification.
     """
+
     #: No notification sound played when call recording is paused or resumed.
     none = 'None'
     #: A beep sound is played when call recording is paused or resumed.
@@ -42,6 +51,7 @@ class NotificationRepeat(ApiModel):
     """
     Beep sound plays periodically.
     """
+
     #: Interval at which warning tone "beep" will be played. This interval is an integer from 10 to 1800 seconds
     interval: int
     #: true when ongoing call recording tone will be played at the designated interval. false indicates no warning tone
@@ -60,6 +70,7 @@ class StartStopAnnouncement(ApiModel):
     """
     Call Recording starts and stops announcement settings.
     """
+
     #: When true, an announcement is played when call recording starts and an announcement is played when call
     #:  recording ends for internal calls.
     internal_calls_enabled: Optional[bool] = None
@@ -116,16 +127,15 @@ class CallRecordingSetting(ApiModel):
         """
         Default settings for a user
         """
-        return CallRecordingSetting(enabled=False,
-                                    record=Record.never,
-                                    record_voicemail_enabled=False,
-                                    start_stop_announcement_enabled=False,
-                                    notification=Notification(notification_type=NotificationType.none,
-                                                              enabled=False),
-                                    repeat=NotificationRepeat(interval=15,
-                                                              enabled=False),
-                                    start_stop_announcement=StartStopAnnouncement(internal_calls_enabled=False,
-                                                                                  pstn_calls_enabled=False))
+        return CallRecordingSetting(
+            enabled=False,
+            record=Record.never,
+            record_voicemail_enabled=False,
+            start_stop_announcement_enabled=False,
+            notification=Notification(notification_type=NotificationType.none, enabled=False),
+            repeat=NotificationRepeat(interval=15, enabled=False),
+            start_stop_announcement=StartStopAnnouncement(internal_calls_enabled=False, pstn_calls_enabled=False),
+        )
 
     def update(self) -> dict:
         """
@@ -133,8 +143,12 @@ class CallRecordingSetting(ApiModel):
 
         :meta private:
         """
-        data = self.model_dump(mode='json', exclude_unset=True, by_alias=True,
-                               exclude={'service_provider', 'external_group', 'external_identifier'})
+        data = self.model_dump(
+            mode='json',
+            exclude_unset=True,
+            by_alias=True,
+            exclude={'service_provider', 'external_group', 'external_identifier'},
+        )
         if self.notification and self.notification.notification_type == NotificationType.none:
             # Read on API returns "None" but update has to be null
             data['notification']['type'] = None

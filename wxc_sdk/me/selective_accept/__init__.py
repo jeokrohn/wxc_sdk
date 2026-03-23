@@ -105,7 +105,7 @@ class MeSelectiveAcceptApi(ApiChild, base='telephony/config/people/me'):
         r = SelectiveAcceptCriteria.model_validate(data)
         return r
 
-    def criteria_update(self, criteria: SelectiveAcceptCriteria, criteria_id: str=None):
+    def criteria_update(self, criteria: SelectiveAcceptCriteria, criteria_id: str = None):
         """
         Modify a Selective Call Accept Criteria
 

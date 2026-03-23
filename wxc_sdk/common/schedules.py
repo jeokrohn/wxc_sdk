@@ -1,6 +1,7 @@
 """
 Schedules for locations or users
 """
+
 import datetime
 from collections.abc import Generator
 from typing import Optional, Union
@@ -12,9 +13,22 @@ from ..base import ApiModel
 from ..base import SafeEnum as Enum
 from ..rest import RestSession
 
-__all__ = ['ScheduleApi', 'ScheduleType', 'ScheduleMonth', 'ScheduleDay', 'ScheduleWeek', 'RecurWeekly',
-           'RecurYearlyByDate', 'RecurYearlyByDay', 'Recurrence', 'Event', 'Schedule', 'ScheduleApiBase',
-           'ScheduleTypeOrStr', 'ScheduleLevel']
+__all__ = [
+    'ScheduleApi',
+    'ScheduleType',
+    'ScheduleMonth',
+    'ScheduleDay',
+    'ScheduleWeek',
+    'RecurWeekly',
+    'RecurYearlyByDate',
+    'RecurYearlyByDay',
+    'Recurrence',
+    'Event',
+    'Schedule',
+    'ScheduleApiBase',
+    'ScheduleTypeOrStr',
+    'ScheduleLevel',
+]
 
 
 class ScheduleLevel(str, Enum):
@@ -43,6 +57,7 @@ class ScheduleMonth(str, Enum):
     """
     Month used in yearly recurrences
     """
+
     jan = 'JANUARY'
     feb = 'FEBRUARY'
     mar = 'MARCH'
@@ -68,14 +83,20 @@ class ScheduleDay(str, Enum):
 
     @staticmethod
     def mon_to_fri() -> list['ScheduleDay']:
-        return [ScheduleDay.monday, ScheduleDay.tuesday, ScheduleDay.wednesday, ScheduleDay.thursday,
-                ScheduleDay.friday]
+        return [
+            ScheduleDay.monday,
+            ScheduleDay.tuesday,
+            ScheduleDay.wednesday,
+            ScheduleDay.thursday,
+            ScheduleDay.friday,
+        ]
 
 
 class ScheduleWeek(str, Enum):
     """
     Week used in monthly recurrence
     """
+
     first = 'FIRST'
     second = 'SECOND'
     third = 'THIRD'
@@ -86,6 +107,7 @@ class RecurWeekly(ApiModel):
     """
     Specifies the event recur weekly on the designated days of the week
     """
+
     #: Specifies the number of weeks between the start of each recurrence.
     recur_interval: Optional[int] = None
     sunday: bool = Field(default=False)
@@ -143,6 +165,7 @@ class RecurDaily(ApiModel):
     """
     Specifies the number of days between the start of each recurrence and is not allowed with recurWeekly.
     """
+
     #: Recurring interval in Daily. The Number of days after the start when an event will repeat.
     #: Repetitions cannot overlap.
     recur_interval: int
@@ -154,6 +177,7 @@ class Recurrence(ApiModel):
     Location schedules support:  recur_weekly, recur_yearly_by_date, recur_yearly_by_day
     User schedules support: recur_daily, recur_weekly
     """
+
     #: True if the event repeats forever. Requires either recurDaily or recurWeekly to be specified.
     #: user and location schedules
     recur_for_ever: Optional[bool] = None
@@ -183,8 +207,7 @@ class Recurrence(ApiModel):
         :return: weekly recurrence
         :rtype: :class:`Recurrence`
         """
-        return Recurrence(recur_for_ever=True,
-                          recur_weekly=RecurWeekly.single_day(day=day))
+        return Recurrence(recur_for_ever=True, recur_weekly=RecurWeekly.single_day(day=day))
 
 
 class Event(ApiModel):
@@ -211,15 +234,12 @@ class Event(ApiModel):
     #: Recurrence scheme for an event.
     recurrence: Optional[Recurrence] = None
 
-    model_config = ConfigDict(json_encoders={
-        datetime.time: lambda v: v.strftime('%H:%M')
-    })
+    model_config = ConfigDict(json_encoders={datetime.time: lambda v: v.strftime('%H:%M')})
 
     @staticmethod
-    def day_start_end(name: str,
-                      day: datetime.date,
-                      start_time: Union[int, datetime.time],
-                      end_time: Union[int, datetime.time]) -> 'Event':
+    def day_start_end(
+        name: str, day: datetime.date, start_time: Union[int, datetime.time], end_time: Union[int, datetime.time]
+    ) -> 'Event':
         """
         Event on a given day with specified start and end time and weekly recurrence
 
@@ -235,12 +255,15 @@ class Event(ApiModel):
         if isinstance(end_time, int):
             end_time = datetime.time(end_time)
         # noinspection PyArgumentList
-        return Event(name=name,
-                     start_date=day, end_date=day,
-                     start_time=start_time,
-                     end_time=end_time,
-                     all_day_enabled=False,
-                     recurrence=Recurrence.every_week(day=day))
+        return Event(
+            name=name,
+            start_date=day,
+            end_date=day,
+            start_time=start_time,
+            end_time=end_time,
+            all_day_enabled=False,
+            recurrence=Recurrence.every_week(day=day),
+        )
 
     def create_update(self, update: bool = False) -> dict:
         """
@@ -248,8 +271,7 @@ class Event(ApiModel):
 
         :meta private:
         """
-        data = self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               exclude={'event_id': True})
+        data = self.model_dump(mode='json', by_alias=True, exclude_none=True, exclude={'event_id': True})
         if update:
             data['newName'] = self.new_name or self.name
         return data
@@ -274,17 +296,21 @@ class Schedule(ApiModel):
     #: Indicates a list of events.
     events: Optional[list[Event]] = None
 
-    model_config = ConfigDict(json_encoders={
-        # datetime objects are encoded as HH:MM
-        datetime.time: lambda v: v.strftime('%H:%M')
-    })
+    model_config = ConfigDict(
+        json_encoders={
+            # datetime objects are encoded as HH:MM
+            datetime.time: lambda v: v.strftime('%H:%M')
+        }
+    )
 
     @staticmethod
-    def business(name: str,
-                 day_start: Union[int, datetime.time] = 9,
-                 day_end: Union[int, datetime.time] = 17,
-                 break_start: Union[int, datetime.time] = 12,
-                 break_end: Union[int, datetime.time] = 13) -> 'Schedule':
+    def business(
+        name: str,
+        day_start: Union[int, datetime.time] = 9,
+        day_end: Union[int, datetime.time] = 17,
+        break_start: Union[int, datetime.time] = 12,
+        break_end: Union[int, datetime.time] = 13,
+    ) -> 'Schedule':
         """
         Business schedule with the given times Mon-Fri
 
@@ -317,14 +343,12 @@ class Schedule(ApiModel):
                 # day this week
                 dt_day = dt_today + datetime.timedelta(days=weekday - weekday_today)
 
-            schedule.events.append(Event.day_start_end(name=f'{day} 1',
-                                                       day=dt_day,
-                                                       start_time=day_start,
-                                                       end_time=break_start))
-            schedule.events.append(Event.day_start_end(name=f'{day} 2',
-                                                       day=dt_day,
-                                                       start_time=break_end,
-                                                       end_time=day_end))
+            schedule.events.append(
+                Event.day_start_end(name=f'{day} 1', day=dt_day, start_time=day_start, end_time=break_start)
+            )
+            schedule.events.append(
+                Event.day_start_end(name=f'{day} 2', day=dt_day, start_time=break_end, end_time=day_end)
+            )
         return schedule
 
     def create_update(self, update: bool = False) -> dict:
@@ -337,17 +361,24 @@ class Schedule(ApiModel):
         if update:
             for event in working_copy.events or []:
                 event.new_name = event.new_name or event.name
-        return working_copy.model_dump(mode='json', by_alias=True, exclude_none=True,
-                                       exclude={'schedule_id': True,
-                                                'location_name': True,
-                                                'location_id': True,
-                                                'events': {'__all__': {'event_id': True}}})
+        return working_copy.model_dump(
+            mode='json',
+            by_alias=True,
+            exclude_none=True,
+            exclude={
+                'schedule_id': True,
+                'location_name': True,
+                'location_id': True,
+                'events': {'__all__': {'event_id': True}},
+            },
+        )
 
 
 class ScheduleApiBase(str, Enum):
     """
     possible base URLs for schedule api: locations or users
     """
+
     locations = 'telephony/config/locations'
     people = 'people'
 
@@ -366,8 +397,9 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         else:
             raise ValueError('unexpected value for base')
 
-    def _endpoint(self, *, obj_id: str, schedule_type: ScheduleTypeOrStr = None, schedule_id: str = None,
-                  event_id: str = None):
+    def _endpoint(
+        self, *, obj_id: str, schedule_type: ScheduleTypeOrStr = None, schedule_id: str = None, event_id: str = None
+    ):
         """
         location specific feature endpoint like v1/telephony/config/locations/{obj_id}/schedules/.... or
         v1/people/{obj_id}/features/schedules/....
@@ -391,8 +423,9 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
                 ep = f'{ep}/events{event_id}'
         return ep
 
-    def list(self, obj_id: str, org_id: str = None, schedule_type: ScheduleType = None,
-             name: str = None, **params) -> Generator[Schedule, None, None]:
+    def list(
+        self, obj_id: str, org_id: str = None, schedule_type: ScheduleType = None, name: str = None, **params
+    ) -> Generator[Schedule, None, None]:
         """
         List of schedules for a person or location
 
@@ -426,8 +459,7 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Schedule, params=params or None)
 
-    def details(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
-                org_id: str = None) -> Schedule:
+    def details(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str, org_id: str = None) -> Schedule:
         """
         Get details for a schedule
 
@@ -484,8 +516,14 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         result = data['id']
         return result
 
-    def update(self, obj_id: str, schedule: Schedule, schedule_type: ScheduleTypeOrStr = None,
-               schedule_id: str = None, org_id: str = None) -> str:
+    def update(
+        self,
+        obj_id: str,
+        schedule: Schedule,
+        schedule_type: ScheduleTypeOrStr = None,
+        schedule_id: str = None,
+        org_id: str = None,
+    ) -> str:
         """
         Update a schedule
 
@@ -520,8 +558,7 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         data = self.put(url, json=schedule_data, params=params)
         return data['id']
 
-    def delete_schedule(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
-                        org_id: str = None):
+    def delete_schedule(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str, org_id: str = None):
         """
         Delete a schedule
 
@@ -548,8 +585,9 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         self.delete(url, params=params)
 
-    def event_details(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
-                      event_id: str, org_id: str = None) -> Event:
+    def event_details(
+        self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str, event_id: str, org_id: str = None
+    ) -> Event:
         """
         Get details for a schedule event
 
@@ -576,14 +614,14 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         :return:
         """
         params = org_id and {'orgId': org_id} or None
-        url = self._endpoint(obj_id=obj_id, schedule_type=schedule_type, schedule_id=schedule_id,
-                             event_id=event_id)
+        url = self._endpoint(obj_id=obj_id, schedule_type=schedule_type, schedule_id=schedule_id, event_id=event_id)
         data = self.get(url, params=params)
         result = Event.model_validate(data)
         return result
 
-    def event_create(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
-                     event: Event, org_id: str = None) -> str:
+    def event_create(
+        self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str, event: Event, org_id: str = None
+    ) -> str:
         """
         Create a schedule event
 
@@ -611,14 +649,20 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         :rtype: str
         """
         params = org_id and {'orgId': org_id} or None
-        url = self._endpoint(obj_id=obj_id, schedule_type=schedule_type, schedule_id=schedule_id,
-                             event_id='')
+        url = self._endpoint(obj_id=obj_id, schedule_type=schedule_type, schedule_id=schedule_id, event_id='')
         data = event.create_update()
         data = self.post(url, json=data, params=params)
         return data['id']
 
-    def event_update(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
-                     event: Event, event_id: str = None, org_id: str = None) -> str:
+    def event_update(
+        self,
+        obj_id: str,
+        schedule_type: ScheduleTypeOrStr,
+        schedule_id: str,
+        event: Event,
+        event_id: str = None,
+        org_id: str = None,
+    ) -> str:
         """
         Update a schedule event
 
@@ -650,14 +694,14 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         """
         event_id = event_id or event.event_id
         params = org_id and {'orgId': org_id} or None
-        url = self._endpoint(obj_id=obj_id, schedule_type=schedule_type, schedule_id=schedule_id,
-                             event_id=event_id)
+        url = self._endpoint(obj_id=obj_id, schedule_type=schedule_type, schedule_id=schedule_id, event_id=event_id)
         event_data = event.create_update(update=True)
         data = self.put(url, json=event_data, params=params)
         return data['id']
 
-    def event_delete(self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str,
-                     event_id: str, org_id: str = None):
+    def event_delete(
+        self, obj_id: str, schedule_type: ScheduleTypeOrStr, schedule_id: str, event_id: str, org_id: str = None
+    ):
         """
         Delete a schedule event
 
@@ -683,6 +727,5 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         :type org_id: str
         """
         params = org_id and {'orgId': org_id} or None
-        url = self._endpoint(obj_id=obj_id, schedule_type=schedule_type, schedule_id=schedule_id,
-                             event_id=event_id)
+        url = self._endpoint(obj_id=obj_id, schedule_type=schedule_type, schedule_id=schedule_id, event_id=event_id)
         self.delete(url, params=params)

@@ -8,7 +8,6 @@ from wxc_sdk.me.callerid import MeCallerIdSettings, MeSelectedCallerId
 
 
 class MeSecondaryLineCallerIdApi(ApiChild, base='telephony/config/people/me'):
-
     def available_caller_id_list(self, lineowner_id: str) -> list[MeSelectedCallerId]:
         """
         Get My Secondary Line Owner's Available Caller ID List
@@ -79,7 +78,6 @@ class MeSecondaryLineCallerIdApi(ApiChild, base='telephony/config/people/me'):
         body = settings.model_dump(mode='json', by_alias=True, exclude_unset=True)
         url = self.ep(f'settings/secondaryLines/{lineowner_id}/callerId')
         super().put(url, json=body)
-
 
     def get_selected_caller_id_settings(self, lineowner_id: str) -> MeSelectedCallerId:
         """

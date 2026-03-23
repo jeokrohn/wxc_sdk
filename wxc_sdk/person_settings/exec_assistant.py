@@ -15,6 +15,7 @@ class ExecAssistantType(str, Enum):
     """
     Indicates the Executive Assistant type.
     """
+
     #: Indicates the feature is not enabled.
     unassigned = 'UNASSIGNED'
     #: Indicates the feature is enabled and the person is an Executive

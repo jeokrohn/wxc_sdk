@@ -25,8 +25,7 @@ class CallPolicyApi(PersonSettingsApiChild):
 
     feature = 'callPolicies'
 
-    def read(self, entity_id: str,
-             org_id: str = None) -> PrivacyOnRedirectedCalls:
+    def read(self, entity_id: str, org_id: str = None) -> PrivacyOnRedirectedCalls:
         """
         Read Call Policy Settings for an entity
 
@@ -56,9 +55,12 @@ class CallPolicyApi(PersonSettingsApiChild):
         r = TypeAdapter(PrivacyOnRedirectedCalls).validate_python(data['connectedLineIdPrivacyOnRedirectedCalls'])
         return r
 
-    def configure(self, entity_id: str,
-                  connected_line_id_privacy_on_redirected_calls: PrivacyOnRedirectedCalls,
-                  org_id: str = None):
+    def configure(
+        self,
+        entity_id: str,
+        connected_line_id_privacy_on_redirected_calls: PrivacyOnRedirectedCalls,
+        org_id: str = None,
+    ):
         """
         Configure Call Policy Settings for an entity
 

@@ -1,6 +1,7 @@
 """
 utility function to parse scopes from various input forms
 """
+
 import urllib.parse
 from typing import Optional
 

@@ -2,6 +2,7 @@
 MoH API for locations
 
 """
+
 from typing import Optional
 
 from ...api_child import ApiChild
@@ -16,6 +17,7 @@ class LocationMoHGreetingType(str, Enum):
     """
     Greeting type for the location.
     """
+
     #: Play default music when call is placed on hold or parked. The system plays music to fill the silence and lets
     #: the customer know they are still connected.
     system = 'SYSTEM'
@@ -28,6 +30,7 @@ class LocationMoHSetting(ApiModel):
     """
     location's music on hold settings.
     """
+
     #: If enabled, music will be played when call is placed on hold.
     call_hold_enabled: Optional[bool] = None
     #: If enabled, music will be played when call is parked.

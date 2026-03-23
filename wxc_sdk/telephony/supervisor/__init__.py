@@ -1,5 +1,6 @@
+import builtins
 from collections.abc import Generator
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import TypeAdapter
 
@@ -7,9 +8,7 @@ from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.common import PatternAction, UserType
 
-__all__ = ['SupervisorApi', 'IdAndAction',
-           'SupervisorAgentStatus',
-           'AgentOrSupervisor']
+__all__ = ['SupervisorApi', 'IdAndAction', 'SupervisorAgentStatus', 'AgentOrSupervisor']
 
 
 class AgentOrSupervisor(ApiModel):
@@ -67,9 +66,15 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
     administrator auth token with a scope of `spark-admin:telephony_config_write`.
     """
 
-    def list(self, name: str = None, phone_number: str = None, order: str = None,
-             has_cx_essentials: bool = None, org_id: str = None,
-             **params) -> Generator[AgentOrSupervisor, None, None]:
+    def list(
+        self,
+        name: str = None,
+        phone_number: str = None,
+        order: str = None,
+        has_cx_essentials: bool = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[AgentOrSupervisor, None, None]:
         """
         Get List of Supervisors
 
@@ -105,12 +110,9 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         if has_cx_essentials is not None:
             params['hasCxEssentials'] = str(has_cx_essentials).lower()
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=AgentOrSupervisor, item_key='supervisors',
-                                              params=params)
+        return self.session.follow_pagination(url=url, model=AgentOrSupervisor, item_key='supervisors', params=params)
 
-    def create(self, id: str, agents: List[str],
-               has_cx_essentials: bool = None,
-               org_id: str = None):
+    def create(self, id: str, agents: builtins.list[str], has_cx_essentials: bool = None, org_id: str = None):
         """
         Create a Supervisor
 
@@ -166,7 +168,7 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         url = self.ep(supervisor_id)
         super().delete(url, params=params)
 
-    def delete_bulk(self, supervisors_ids: List[str], delete_all: bool = None, org_id: str = None):
+    def delete_bulk(self, supervisors_ids: builtins.list[str], delete_all: bool = None, org_id: str = None):
         """
         Delete Bulk supervisors
 
@@ -195,9 +197,15 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         url = self.ep()
         super().delete(url, params=params, json=body)
 
-    def available_supervisors(self, name: str = None, phone_number: str = None, order: str = None,
-                              has_cx_essentials: bool = None, org_id: str = None,
-                              **params) -> Generator[AgentOrSupervisor, None, None]:
+    def available_supervisors(
+        self,
+        name: str = None,
+        phone_number: str = None,
+        order: str = None,
+        has_cx_essentials: bool = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[AgentOrSupervisor, None, None]:
         """
         List Available Supervisors
 
@@ -234,12 +242,18 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         if has_cx_essentials is not None:
             params['hasCxEssentials'] = str(has_cx_essentials).lower()
         url = self.ep('availableSupervisors')
-        return self.session.follow_pagination(url=url, model=AgentOrSupervisor, item_key='supervisors',
-                                              params=params)
+        return self.session.follow_pagination(url=url, model=AgentOrSupervisor, item_key='supervisors', params=params)
 
-    def details(self, supervisor_id: str, name: str = None,
-                phone_number: str = None, order: str = None, has_cx_essentials: bool = None,
-                org_id: str = None, **additional_params) -> Generator[AgentOrSupervisor, None, None]:
+    def details(
+        self,
+        supervisor_id: str,
+        name: str = None,
+        phone_number: str = None,
+        order: str = None,
+        has_cx_essentials: bool = None,
+        org_id: str = None,
+        **additional_params,
+    ) -> Generator[AgentOrSupervisor, None, None]:
         """
         GET Supervisor Details
 
@@ -282,9 +296,9 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         url = self.ep(supervisor_id)
         return self.session.follow_pagination(url=url, model=AgentOrSupervisor, params=params, item_key='agents')
 
-    def assign_unassign_agents(self, supervisor_id: str, agents: List[IdAndAction],
-                               has_cx_essentials: bool = None,
-                               org_id: str = None) -> Optional[List[SupervisorAgentStatus]]:
+    def assign_unassign_agents(
+        self, supervisor_id: str, agents: builtins.list[IdAndAction], has_cx_essentials: bool = None, org_id: str = None
+    ) -> Optional[builtins.list[SupervisorAgentStatus]]:
         """
         Assign or Unassign Agents to Supervisor
 
@@ -317,12 +331,18 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         data = super().put(url, params=params, json=body)
         if not data:
             return None
-        r = TypeAdapter(List[SupervisorAgentStatus]).validate_python(data['supervisorAgentStatus'])
+        r = TypeAdapter(list[SupervisorAgentStatus]).validate_python(data['supervisorAgentStatus'])
         return r
 
-    def available_agents(self, name: str = None, phone_number: str = None, order: str = None,
-                         has_cx_essentials: bool = None, org_id: str = None,
-                         **params) -> Generator[AgentOrSupervisor, None, None]:
+    def available_agents(
+        self,
+        name: str = None,
+        phone_number: str = None,
+        order: str = None,
+        has_cx_essentials: bool = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[AgentOrSupervisor, None, None]:
         """
         List Available Agents
 
@@ -359,5 +379,4 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         if has_cx_essentials is not None:
             params['hasCxEssentials'] = str(has_cx_essentials).lower()
         url = self.ep('availableAgents')
-        return self.session.follow_pagination(url=url, model=AgentOrSupervisor, item_key='agents',
-                                              params=params)
+        return self.session.follow_pagination(url=url, model=AgentOrSupervisor, item_key='agents', params=params)

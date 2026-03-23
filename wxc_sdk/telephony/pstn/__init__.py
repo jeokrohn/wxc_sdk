@@ -74,9 +74,9 @@ class PSTNApi(ApiChild, base='telephony/pstn/locations'):
     query parameter.
     """
 
-    def list(self, location_id: str,
-             service_types: list[PSTNServiceType] = None,
-             org_id: str = None) -> list[PSTNConnectionOption]:
+    def list(
+        self, location_id: str, service_types: list[PSTNServiceType] = None, org_id: str = None
+    ) -> list[PSTNConnectionOption]:
         """
         Retrieve PSTN Connection Options for a Location
 
@@ -107,8 +107,14 @@ class PSTNApi(ApiChild, base='telephony/pstn/locations'):
         r = TypeAdapter(list[PSTNConnectionOption]).validate_python(data['items'])
         return r
 
-    def configure(self, location_id: str, id: str = None, premise_route_type: str = None,
-                  premise_route_id: str = None, org_id: str = None):
+    def configure(
+        self,
+        location_id: str,
+        id: str = None,
+        premise_route_type: str = None,
+        premise_route_id: str = None,
+        org_id: str = None,
+    ):
         """
         Setup PSTN Connection for a Location
 
@@ -146,8 +152,7 @@ class PSTNApi(ApiChild, base='telephony/pstn/locations'):
         url = self.ep(f'{location_id}/connection')
         super().put(url, params=params, json=body)
 
-    def read(self, location_id: str,
-             org_id: str = None) -> PSTNConnectionOption:
+    def read(self, location_id: str, org_id: str = None) -> PSTNConnectionOption:
         """
         Retrieve PSTN Connection for a Location
 

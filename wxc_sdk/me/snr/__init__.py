@@ -19,7 +19,6 @@ class MeSNRSettings(ApiModel):
 
 
 class MeSNRApi(ApiChild, base='telephony/config/people/me'):
-
     def settings(self) -> MeSNRSettings:
         """
         Get User's Single Number Reach Settings

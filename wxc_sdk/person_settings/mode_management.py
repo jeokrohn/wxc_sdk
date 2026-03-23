@@ -7,9 +7,7 @@ from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
-__all__ = ['ModeManagementApi', 'ExceptionType',
-           'FeatureType', 'AvailableFeature',
-           'ModeManagementFeature']
+__all__ = ['ModeManagementApi', 'ExceptionType', 'FeatureType', 'AvailableFeature', 'ModeManagementFeature']
 
 from wxc_sdk.common import IdAndName
 
@@ -97,10 +95,16 @@ class ModeManagementApi(ApiChild, base='telephony/config/people'):
     <https://help.webex.com/en-us/article/n1qbbp7/Features-available-by-license-type-for-Webex-Calling>`_.
     """
 
-    def available_features(self, person_id: str = None, name: str = None,
-                           phone_number: str = None, extension: str = None, order: str = None,
-                           org_id: str = None,
-                           **params) -> Generator[AvailableFeature, None, None]:
+    def available_features(
+        self,
+        person_id: str = None,
+        name: str = None,
+        phone_number: str = None,
+        extension: str = None,
+        order: str = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[AvailableFeature, None, None]:
         """
         Retrieve the List of Available Features.
 
@@ -138,11 +142,9 @@ class ModeManagementApi(ApiChild, base='telephony/config/people'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/modeManagement/availableFeatures')
-        return self.session.follow_pagination(url=url, model=AvailableFeature,
-                                              item_key='features', params=params)
+        return self.session.follow_pagination(url=url, model=AvailableFeature, item_key='features', params=params)
 
-    def assigned_features(self, person_id: str = None,
-                          org_id: str = None) -> list[ModeManagementFeature]:
+    def assigned_features(self, person_id: str = None, org_id: str = None) -> list[ModeManagementFeature]:
         """
         Retrieve the List of Features Assigned to a User for Mode Management.
 

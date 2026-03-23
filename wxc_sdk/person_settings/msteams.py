@@ -38,8 +38,7 @@ class OrgMSTeamsSettings(ApiModel):
 
 
 class MSTeamsSettingApi(ApiChild, base='telephony/config/people'):
-    def read(self, person_id: str,
-             org_id: str = None) -> MSTeamsSettings:
+    def read(self, person_id: str, org_id: str = None) -> MSTeamsSettings:
         """
         Retrieve a Person's MS Teams Settings
 
@@ -65,9 +64,7 @@ class MSTeamsSettingApi(ApiChild, base='telephony/config/people'):
         r = MSTeamsSettings.model_validate(data)
         return r
 
-    def configure(self, person_id: str,
-                  setting_name: str, value: bool,
-                  org_id: str = None):
+    def configure(self, person_id: str, setting_name: str, value: bool, org_id: str = None):
         """
         Configure a Person's MS Teams Setting
 
@@ -140,8 +137,7 @@ class OrgMSTeamsSettingApi(ApiChild, base='telephony/config/settings/msTeams'):
         r = OrgMSTeamsSettings.model_validate(data)
         return r
 
-    def configure(self, setting_name: str, value: bool,
-                  org_id: str = None):
+    def configure(self, setting_name: str, value: bool, org_id: str = None):
         """
         Update an Organization's MS Teams Setting
 

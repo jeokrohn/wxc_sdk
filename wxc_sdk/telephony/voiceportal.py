@@ -1,6 +1,7 @@
 """
 Voice portal API
 """
+
 import json
 from collections.abc import Generator
 from typing import Optional
@@ -46,6 +47,7 @@ class FailedAttempts(ApiModel):
     """
     Number of failed attempts allowed.
     """
+
     #: If enabled, allows specified number of attempts before locking voice portal access.
     enabled: bool
     #: Number of failed attempts allowed.
@@ -147,18 +149,16 @@ class VoicePortalApi(ApiChild, base='telephony/config/locations'):
         :param org_id: Organization to which the voice portal belongs.
         :type org_id: str
         """
-        data = json.loads(settings.model_dump_json(exclude={'portal_id': True,
-                                                            'language': True}))
+        data = json.loads(settings.model_dump_json(exclude={'portal_id': True, 'language': True}))
         if passcode is not None:
-            data['passcode'] = {'newPasscode': passcode,
-                                'confirmPasscode': passcode}
+            data['passcode'] = {'newPasscode': passcode, 'confirmPasscode': passcode}
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id)
         self.put(url, params=params, json=data)
 
-    def available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
-                                org_id: str = None,
-                                **params) -> Generator[AvailableNumber, None, None]:
+    def available_phone_numbers(
+        self, location_id: str, phone_number: list[str] = None, org_id: str = None, **params
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get VoicePortal Available Phone Numbers
 

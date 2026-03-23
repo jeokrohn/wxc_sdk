@@ -1,5 +1,6 @@
+import builtins
 from collections.abc import Generator
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import TypeAdapter
 
@@ -7,8 +8,13 @@ from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.common import IdAndName
 
-__all__ = ['CallQueueAgent', 'CallQueueAgentQueue', 'CallQueueAgentDetail', 'AgentCallQueueSetting',
-           'CallQueueAgentsApi']
+__all__ = [
+    'CallQueueAgent',
+    'CallQueueAgentQueue',
+    'CallQueueAgentDetail',
+    'AgentCallQueueSetting',
+    'CallQueueAgentsApi',
+]
 
 
 class CallQueueAgent(ApiModel):
@@ -77,10 +83,18 @@ class CallQueueAgentsApi(ApiChild, base='telephony/config/queues/agents'):
     Call Queue Agents API
     """
 
-    def list(self, location_id: str = None, queue_id: str = None, name: str = None,
-             phone_number: str = None, join_enabled: bool = None,
-             has_cx_essentials: bool = None, order: str = None, org_id: str = None,
-             **params) -> Generator[CallQueueAgent, None, None]:
+    def list(
+        self,
+        location_id: str = None,
+        queue_id: str = None,
+        name: str = None,
+        phone_number: str = None,
+        join_enabled: bool = None,
+        has_cx_essentials: bool = None,
+        order: str = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[CallQueueAgent, None, None]:
         """
         Read the List of Call Queue Agents
 
@@ -134,8 +148,9 @@ class CallQueueAgentsApi(ApiChild, base='telephony/config/queues/agents'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=CallQueueAgent, item_key='agents', params=params)
 
-    def details(self, id: str, has_cx_essentials: bool = None,
-                max_: int = 50, start: int = 0, org_id: str = None) -> CallQueueAgentDetail:
+    def details(
+        self, id: str, has_cx_essentials: bool = None, max_: int = 50, start: int = 0, org_id: str = None
+    ) -> CallQueueAgentDetail:
         """
         Get Details for a Call Queue Agent
 
@@ -177,8 +192,13 @@ class CallQueueAgentsApi(ApiChild, base='telephony/config/queues/agents'):
         r = CallQueueAgentDetail.model_validate(data)
         return r
 
-    def update_call_queue_settings(self, id: str, settings: List[AgentCallQueueSetting],
-                                   has_cx_essentials: bool = None, org_id: str = None):
+    def update_call_queue_settings(
+        self,
+        id: str,
+        settings: builtins.list[AgentCallQueueSetting],
+        has_cx_essentials: bool = None,
+        org_id: str = None,
+    ):
         """
         Update an Agent's Settings of One or More Call Queues
 
@@ -205,8 +225,8 @@ class CallQueueAgentsApi(ApiChild, base='telephony/config/queues/agents'):
         if has_cx_essentials is not None:
             params['hasCxEssentials'] = str(has_cx_essentials).lower()
         body = dict()
-        body['settings'] = TypeAdapter(list[AgentCallQueueSetting]).dump_python(settings, mode='json',
-                                                                                by_alias=True,
-                                                                                exclude_none=True)
+        body['settings'] = TypeAdapter(list[AgentCallQueueSetting]).dump_python(
+            settings, mode='json', by_alias=True, exclude_none=True
+        )
         url = self.ep(f'{id}/settings')
         super().put(url, params=params, json=body)

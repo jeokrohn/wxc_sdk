@@ -1,10 +1,12 @@
 """
 Devices represent cloud-registered Webex RoomOS devices and Webex Calling phones.
 """
+
+import builtins
 from collections.abc import Generator
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from pydantic import Field, field_validator, model_validator
 
@@ -182,12 +184,29 @@ class DevicesApi(ApiChild, base='devices'):
         super().__init__(session=session)
         self.settings_jobs = DeviceSettingsJobsApi(session=session)
 
-    def list(self, person_id: str = None, workspace_id: str = None, location_id: str = None,
-             workspace_location_id: str = None, display_name: str = None, product: str = None,
-             product_type: ProductType = None, tag: str = None, connection_status: ConnectionStatus = None,
-             serial: str = None, software: str = None, upgrade_channel: str = None, error_code: str = None,
-             capability: str = None, permission: str = None, mac: str = None, device_platform: DevicePlatform = None,
-             planned_maintenance: MaintenanceMode = None, org_id: str = None, **params) -> Generator[Device, None, None]:
+    def list(
+        self,
+        person_id: str = None,
+        workspace_id: str = None,
+        location_id: str = None,
+        workspace_location_id: str = None,
+        display_name: str = None,
+        product: str = None,
+        product_type: ProductType = None,
+        tag: str = None,
+        connection_status: ConnectionStatus = None,
+        serial: str = None,
+        software: str = None,
+        upgrade_channel: str = None,
+        error_code: str = None,
+        capability: str = None,
+        permission: str = None,
+        mac: str = None,
+        device_platform: DevicePlatform = None,
+        planned_maintenance: MaintenanceMode = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[Device, None, None]:
         """
         List Devices
 
@@ -314,7 +333,9 @@ class DevicesApi(ApiChild, base='devices'):
         params = org_id and {'orgId': org_id} or None
         super().delete(url=url, params=params)
 
-    def modify_device_tags(self, device_id: str, op: TagOp, value: List[str] = None, org_id: str = None) -> Device:
+    def modify_device_tags(
+        self, device_id: str, op: TagOp, value: builtins.list[str] = None, org_id: str = None
+    ) -> Device:
         """
         Modify Device Tags
 
@@ -331,8 +352,7 @@ class DevicesApi(ApiChild, base='devices'):
         :return: device details
         :rtype: Device
         """
-        body = {'op': op.value if isinstance(op, TagOp) else op,
-                'path': 'tags'}
+        body = {'op': op.value if isinstance(op, TagOp) else op, 'path': 'tags'}
         if value is not None:
             body['value'] = value
         url = self.ep(device_id)
@@ -340,8 +360,9 @@ class DevicesApi(ApiChild, base='devices'):
         data = self.patch(url=url, json=body, params=params, content_type='application/json-patch+json')
         return Device.model_validate(data)
 
-    def activation_code(self, workspace_id: str = None, person_id: str = None, model: str = None,
-                        org_id: str = None) -> ActivationCodeResponse:
+    def activation_code(
+        self, workspace_id: str = None, person_id: str = None, model: str = None, org_id: str = None
+    ) -> ActivationCodeResponse:
         """
         Create a Device Activation Code
 
@@ -383,8 +404,15 @@ class DevicesApi(ApiChild, base='devices'):
         data = self.post(url=url, json=body, params=params)
         return ActivationCodeResponse.model_validate(data)
 
-    def create_by_mac_address(self, mac: str, workspace_id: str = None, person_id: str = None,
-                              model: str = None, password: str = None, org_id: str = None) -> Optional[Device]:
+    def create_by_mac_address(
+        self,
+        mac: str,
+        workspace_id: str = None,
+        person_id: str = None,
+        model: str = None,
+        password: str = None,
+        org_id: str = None,
+    ) -> Optional[Device]:
         """
         Create a phone by it's MAC address in a specific workspace or for a person.
         Specify the mac, model and either workspaceId or personId.

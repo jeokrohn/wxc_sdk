@@ -1,6 +1,7 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import Field, TypeAdapter
 
@@ -10,10 +11,20 @@ from wxc_sdk.base import SafeEnum as Enum
 from wxc_sdk.people import SipType
 from wxc_sdk.scim.users import ScimPhoneNumberType
 
-__all__ = ['ContactPhoneNumber', 'Contact', 'Meta', 'OrganizationContactsApi',
-           'ContactEmail', 'EmailType', 'ContactIm',
-           'ContactImType', 'UpdateContactPhoneNumbers',
-           'PrimaryContactMethod', 'ContactSipAddress', 'ContactAddress']
+__all__ = [
+    'ContactPhoneNumber',
+    'Contact',
+    'Meta',
+    'OrganizationContactsApi',
+    'ContactEmail',
+    'EmailType',
+    'ContactIm',
+    'ContactImType',
+    'UpdateContactPhoneNumbers',
+    'PrimaryContactMethod',
+    'ContactSipAddress',
+    'ContactAddress',
+]
 
 
 class PrimaryContactMethod(str, Enum):
@@ -284,8 +295,9 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations'):
         url = self.ep(f'{org_id}/contacts/{contact_id}')
         super().delete(url)
 
-    def list(self, org_id: str, keyword: str = None, source: str = None, limit: int = None,
-             group_ids: list[str] = None) -> Generator[Contact, None, None]:
+    def list(
+        self, org_id: str, keyword: str = None, source: str = None, limit: int = None, group_ids: list[str] = None
+    ) -> Generator[Contact, None, None]:
         """
         List Contacts
 
@@ -323,7 +335,7 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations'):
         url = self.ep(f'{org_id}/contacts/search')
         return self.session.follow_pagination(url, params=params, item_key='result', model=Contact)
 
-    def bulk_create_or_update(self, org_id: str, contacts: List[Contact]) -> BulkResponse:
+    def bulk_create_or_update(self, org_id: str, contacts: builtins.list[Contact]) -> BulkResponse:
         """
         Bulk Create or Update Contacts
 
@@ -339,13 +351,14 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations'):
         """
         body = dict()
         body['schemas'] = 'urn:cisco:codev:identity:contact:core:1.0'
-        body['contacts'] = TypeAdapter(list[Contact]).dump_python(contacts, mode='json', by_alias=True,
-                                                                  exclude_unset=True)
+        body['contacts'] = TypeAdapter(list[Contact]).dump_python(
+            contacts, mode='json', by_alias=True, exclude_unset=True
+        )
         url = self.ep(f'{org_id}/contacts/bulk')
         data = super().post(url, json=body)
         return BulkResponse.model_validate(data)
 
-    def bulk_delete(self, org_id: str, object_ids: List[str]):
+    def bulk_delete(self, org_id: str, object_ids: builtins.list[str]):
         """
         Bulk Delete Contacts
 

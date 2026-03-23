@@ -13,6 +13,7 @@ class ExternalTransfer(str, Enum):
     """
     Specifies the transfer behavior for incoming, external calls.
     """
+
     #: Allow transfer and forward for all external calls including those which were transferred.
     allow_all_external = 'ALLOW_ALL_EXTERNAL'
     #: Only allow transferred calls to be transferred or forwarded and disallow transfer of other external calls.
@@ -25,6 +26,7 @@ class IncomingPermissions(ApiModel):
     """
     Person's Incoming Permission Settings
     """
+
     #: When true, indicates that this person uses the specified calling permissions for receiving inbound calls rather
     #: than the organizational defaults.
     use_custom_enabled: bool
@@ -42,9 +44,12 @@ class IncomingPermissions(ApiModel):
 
         :return: :class:`IncomingPermissions`
         """
-        return IncomingPermissions(use_custom_enabled=True,
-                                   external_transfer=ExternalTransfer.allow_all_external,
-                                   internal_calls_enabled=True, collect_calls_enabled=True)
+        return IncomingPermissions(
+            use_custom_enabled=True,
+            external_transfer=ExternalTransfer.allow_all_external,
+            internal_calls_enabled=True,
+            collect_calls_enabled=True,
+        )
 
     @staticmethod
     def default() -> 'IncomingPermissions':
@@ -53,9 +58,12 @@ class IncomingPermissions(ApiModel):
 
         :return: :class:`IncomingPermissions`
         """
-        return IncomingPermissions(use_custom_enabled=False,
-                                   external_transfer=ExternalTransfer.allow_all_external,
-                                   internal_calls_enabled=True, collect_calls_enabled=True)
+        return IncomingPermissions(
+            use_custom_enabled=False,
+            external_transfer=ExternalTransfer.allow_all_external,
+            internal_calls_enabled=True,
+            collect_calls_enabled=True,
+        )
 
 
 class IncomingPermissionsApi(PersonSettingsApiChild):

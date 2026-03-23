@@ -1,6 +1,7 @@
 """
 Person DND settings API
 """
+
 from typing import Optional
 
 from ..base import ApiModel
@@ -13,6 +14,7 @@ class DND(ApiModel):
     """
     DND settings
     """
+
     #: forwarding.py
     enabled: Optional[bool] = None
     #: Enables a Ring Reminder to play a brief tone on your desktop phone when you receive incoming calls.

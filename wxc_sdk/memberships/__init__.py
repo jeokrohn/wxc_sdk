@@ -1,6 +1,7 @@
 """
 Membership API
 """
+
 from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
@@ -42,14 +43,16 @@ class Membership(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               include={'is_moderator', 'is_room_hidden'})
+        return self.model_dump(
+            mode='json', by_alias=True, exclude_none=True, include={'is_moderator', 'is_room_hidden'}
+        )
 
 
 class MembershipsData(WebhookEventData, Membership):
     """
     Data in a webhook "memberships" event
     """
+
     resource = 'memberships'
 
 
@@ -73,8 +76,9 @@ class MembershipApi(ApiChild, base='memberships'):
 
     """
 
-    def list(self, room_id: str = None, person_id: str = None, person_email: str = None,
-             **params) -> Generator[Membership, None, None]:
+    def list(
+        self, room_id: str = None, person_id: str = None, person_email: str = None, **params
+    ) -> Generator[Membership, None, None]:
         """
         Lists all room memberships. By default, lists memberships for rooms to which the authenticated user belongs.
         Use query parameters to filter the response.
@@ -104,8 +108,9 @@ class MembershipApi(ApiChild, base='memberships'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Membership, params=params)
 
-    def create(self, room_id: str, person_id: str = None, person_email: str = None,
-               is_moderator: bool = None) -> Membership:
+    def create(
+        self, room_id: str, person_id: str = None, person_email: str = None, is_moderator: bool = None
+    ) -> Membership:
         """
         Add someone to a room by Person ID or email address, optionally making them a moderator.
 

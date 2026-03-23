@@ -140,11 +140,20 @@ class RecordingsApi(ApiChild, base=''):
     required for each API.
     """
 
-    def list_recordings(self, from_: Union[str, datetime] = None, to_: Union[str, datetime] = None,
-                        meeting_id: str = None, host_email: str = None, site_url: str = None,
-                        integration_tag: str = None, topic: str = None, format_: RecordingFormat = None,
-                        service_type: RecordingServiceType = None, status: RecordingStatus = None,
-                        **params) -> Generator[Recording, None, None]:
+    def list_recordings(
+        self,
+        from_: Union[str, datetime] = None,
+        to_: Union[str, datetime] = None,
+        meeting_id: str = None,
+        host_email: str = None,
+        site_url: str = None,
+        integration_tag: str = None,
+        topic: str = None,
+        format_: RecordingFormat = None,
+        service_type: RecordingServiceType = None,
+        status: RecordingStatus = None,
+        **params,
+    ) -> Generator[Recording, None, None]:
         """
         List Recordings
 
@@ -238,13 +247,19 @@ class RecordingsApi(ApiChild, base=''):
         url = self.ep('recordings')
         return self.session.follow_pagination(url=url, model=Recording, item_key='items', params=params)
 
-    def list_recordings_for_an_admin_or_compliance_officer(self, from_: Union[str, datetime] = None,
-                                                           to_: Union[str, datetime] = None, meeting_id: str = None,
-                                                           site_url: str = None, integration_tag: str = None,
-                                                           topic: str = None, format_: RecordingFormat = None,
-                                                           service_type: RecordingServiceType = None,
-                                                           status: RecordingStatus = None,
-                                                           **params) -> Generator[Recording, None, None]:
+    def list_recordings_for_an_admin_or_compliance_officer(
+        self,
+        from_: Union[str, datetime] = None,
+        to_: Union[str, datetime] = None,
+        meeting_id: str = None,
+        site_url: str = None,
+        integration_tag: str = None,
+        topic: str = None,
+        format_: RecordingFormat = None,
+        service_type: RecordingServiceType = None,
+        status: RecordingStatus = None,
+        **params,
+    ) -> Generator[Recording, None, None]:
         """
         List Recordings For an Admin or Compliance Officer
 
@@ -325,8 +340,7 @@ class RecordingsApi(ApiChild, base=''):
         if status is not None:
             params['status'] = enum_str(status)
         url = self.ep('admin/recordings')
-        return self.session.follow_pagination(url=url, model=Recording, item_key='items',
-                                              params=params)
+        return self.session.follow_pagination(url=url, model=Recording, item_key='items', params=params)
 
     def get_recording_details(self, recording_id: str, host_email: str = None) -> Recording:
         """
@@ -438,8 +452,9 @@ class RecordingsApi(ApiChild, base=''):
         url = self.ep('recordings/softDelete')
         super().post(url, params=params, json=body)
 
-    def restore_recordings_from_recycle_bin(self, restore_all: bool, recording_ids: list[str], site_url: str,
-                                            host_email: str = None):
+    def restore_recordings_from_recycle_bin(
+        self, restore_all: bool, recording_ids: list[str], site_url: str, host_email: str = None
+    ):
         """
         Restore Recordings from Recycle Bin
 
@@ -483,8 +498,9 @@ class RecordingsApi(ApiChild, base=''):
         url = self.ep('recordings/restore')
         super().post(url, params=params, json=body)
 
-    def purge_recordings_from_recycle_bin(self, purge_all: bool, recording_ids: list[str], site_url: str,
-                                          host_email: str = None):
+    def purge_recordings_from_recycle_bin(
+        self, purge_all: bool, recording_ids: list[str], site_url: str, host_email: str = None
+    ):
         """
         Purge Recordings from Recycle Bin
 

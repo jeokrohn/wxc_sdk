@@ -1,9 +1,11 @@
 """
 Webex Meetings APIs
 """
+
+import builtins
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import Optional
 
 from ..api_child import ApiChild
 from ..base import ApiModel
@@ -20,21 +22,53 @@ from .qualities import MeetingQualitiesApi
 from .recordings import RecordingsApi
 from .transcripts import MeetingTranscriptsApi
 
-__all__ = ['AttendeePrivileges', 'AudioConnectionOptions', 'AudioConnectionType', 'BreakoutSession',
-           'CallInNumbers', 'AnswerCondition', 'CustomizedQuestionForCreateMeeting',
-           'EntryAndExitTone', 'GetMeetingSurveyResponse', 'InputMode',
-           'InterpreterForSimultaneousInterpretation',
-           'InviteeForCreateMeeting',
-           'JoinMeetingResponse', 'TrackingCode',
-           'MeetingOptions',
-           'Meeting', 'MeetingType', 'NoteType', 'QuestionOption', 'TrackingCodeOption',
-           'PatchMeetingBody', 'PatchMeetingResponse', 'ApprovalQuestion', 'QuestionAnswer', 'Question',
-           'QuestionWithAnswers', 'Registration', 'AutoRegistrationResult', 'ApprovalRule',
-           'ScheduledMeeting',
-           'ScheduledType', 'MeetingService', 'SimultaneousInterpretation',
-           'StandardRegistrationApproveRule', 'MeetingState', 'SurveyResult', 'MeetingTelephony',
-           'TrackingCodeItem', 'Type', 'QuestionType', 'TrackingCodeType', 'UnlockedMeetingJoinSecurity',
-           'MeetingsApi', 'CreateMeetingBody', 'JoinMeetingBody']
+__all__ = [
+    'AttendeePrivileges',
+    'AudioConnectionOptions',
+    'AudioConnectionType',
+    'BreakoutSession',
+    'CallInNumbers',
+    'AnswerCondition',
+    'CustomizedQuestionForCreateMeeting',
+    'EntryAndExitTone',
+    'GetMeetingSurveyResponse',
+    'InputMode',
+    'InterpreterForSimultaneousInterpretation',
+    'InviteeForCreateMeeting',
+    'JoinMeetingResponse',
+    'TrackingCode',
+    'MeetingOptions',
+    'Meeting',
+    'MeetingType',
+    'NoteType',
+    'QuestionOption',
+    'TrackingCodeOption',
+    'PatchMeetingBody',
+    'PatchMeetingResponse',
+    'ApprovalQuestion',
+    'QuestionAnswer',
+    'Question',
+    'QuestionWithAnswers',
+    'Registration',
+    'AutoRegistrationResult',
+    'ApprovalRule',
+    'ScheduledMeeting',
+    'ScheduledType',
+    'MeetingService',
+    'SimultaneousInterpretation',
+    'StandardRegistrationApproveRule',
+    'MeetingState',
+    'SurveyResult',
+    'MeetingTelephony',
+    'TrackingCodeItem',
+    'Type',
+    'QuestionType',
+    'TrackingCodeType',
+    'UnlockedMeetingJoinSecurity',
+    'MeetingsApi',
+    'CreateMeetingBody',
+    'JoinMeetingBody',
+]
 
 
 class ScheduledType(str, Enum):
@@ -1077,6 +1111,7 @@ class MeetingsApi(ApiChild, base='meetings'):
     """
     Meetings API
     """
+
     #: meeting chats API
     chats: MeetingChatsApi
     #: closed captions API
@@ -1108,23 +1143,49 @@ class MeetingsApi(ApiChild, base='meetings'):
         self.recordings = RecordingsApi(session=session)
         self.transcripts = MeetingTranscriptsApi(session=session)
 
-    def create(self, title: str = None, agenda: str = None, password: str = None, start: str = None, end: str = None,
-               timezone: str = None, recurrence: str = None, enabled_auto_record_meeting: bool = None,
-               allow_any_user_to_be_co_host: bool = None, enabled_join_before_host: bool = None,
-               enable_connect_audio_before_host: bool = None, join_before_host_minutes: int = None,
-               exclude_password: bool = None, public_meeting: bool = None, reminder_time: int = None,
-               unlocked_meeting_join_security: UnlockedMeetingJoinSecurity = None, session_type_id: int = None,
-               enabled_webcast_view: bool = None, panelist_password: str = None, enable_automatic_lock: bool = None,
-               automatic_lock_minutes: int = None, allow_first_user_to_be_co_host: bool = None,
-               allow_authenticated_devices: bool = None, send_email: bool = None, host_email: str = None,
-               site_url: str = None, meeting_options: MeetingOptions = None,
-               attendee_privileges: AttendeePrivileges = None, integration_tags: List[str] = None,
-               enabled_breakout_sessions: bool = None, tracking_codes: TrackingCodeItem = None,
-               audio_connection_options: AudioConnectionOptions = None, adhoc: bool = None, room_id: str = None,
-               template_id: str = None, scheduled_type: ScheduledType = None,
-               invitees: InviteeForCreateMeeting = None, registration: Registration = None,
-               simultaneous_interpretation: SimultaneousInterpretation = None,
-               breakout_sessions: BreakoutSession = None) -> Meeting:
+    def create(
+        self,
+        title: str = None,
+        agenda: str = None,
+        password: str = None,
+        start: str = None,
+        end: str = None,
+        timezone: str = None,
+        recurrence: str = None,
+        enabled_auto_record_meeting: bool = None,
+        allow_any_user_to_be_co_host: bool = None,
+        enabled_join_before_host: bool = None,
+        enable_connect_audio_before_host: bool = None,
+        join_before_host_minutes: int = None,
+        exclude_password: bool = None,
+        public_meeting: bool = None,
+        reminder_time: int = None,
+        unlocked_meeting_join_security: UnlockedMeetingJoinSecurity = None,
+        session_type_id: int = None,
+        enabled_webcast_view: bool = None,
+        panelist_password: str = None,
+        enable_automatic_lock: bool = None,
+        automatic_lock_minutes: int = None,
+        allow_first_user_to_be_co_host: bool = None,
+        allow_authenticated_devices: bool = None,
+        send_email: bool = None,
+        host_email: str = None,
+        site_url: str = None,
+        meeting_options: MeetingOptions = None,
+        attendee_privileges: AttendeePrivileges = None,
+        integration_tags: list[str] = None,
+        enabled_breakout_sessions: bool = None,
+        tracking_codes: TrackingCodeItem = None,
+        audio_connection_options: AudioConnectionOptions = None,
+        adhoc: bool = None,
+        room_id: str = None,
+        template_id: str = None,
+        scheduled_type: ScheduledType = None,
+        invitees: InviteeForCreateMeeting = None,
+        registration: Registration = None,
+        simultaneous_interpretation: SimultaneousInterpretation = None,
+        breakout_sessions: BreakoutSession = None,
+    ) -> Meeting:
         """
         Creates a new meeting. Regular users can schedule up to 100 meetings in 24 hours and admin users up to 3000.
 
@@ -1232,7 +1293,7 @@ class MeetingsApi(ApiChild, base='meetings'):
             be a maximum of 64 characters long. Please note that an empty or null integrationTags will delete all
             existing integration tags for the meeting implicitly. Developer can update integration tags for a
             meetingSeries but he cannot update it for a scheduledMeeting or a meeting instance.
-        :type integration_tags: List[str]
+        :type integration_tags: list[str]
         :param enabled_breakout_sessions: Whether or not breakout sessions are enabled. If the value of
             enabledBreakoutSessions is false, users can not set breakout sessions. If the value of
             enabledBreakoutSessions is true, users can update breakout sessions using the Update Breakout Sessions API.
@@ -1404,10 +1465,22 @@ class MeetingsApi(ApiChild, base='meetings'):
         data = super().get(url=url, params=params)
         return Meeting.model_validate(data)
 
-    def list(self, meeting_number: str = None, web_link: str = None, room_id: str = None, meeting_type: str = None,
-             state: str = None, scheduled_type: str = None, current: bool = None, from_: str = None, to_: str = None,
-             host_email: str = None, site_url: str = None, integration_tag: str = None,
-             **params) -> Generator[Meeting, None, None]:
+    def list(
+        self,
+        meeting_number: str = None,
+        web_link: str = None,
+        room_id: str = None,
+        meeting_type: str = None,
+        state: str = None,
+        scheduled_type: str = None,
+        current: bool = None,
+        from_: str = None,
+        to_: str = None,
+        host_email: str = None,
+        site_url: str = None,
+        integration_tag: str = None,
+        **params,
+    ) -> Generator[Meeting, None, None]:
         """
         Retrieves details for meetings with a specified meeting number, web link, meeting type, etc. Please note that
         there are various products in the Webex Suite such as Meetings and Events. Currently, only meetings of the
@@ -1495,9 +1568,17 @@ class MeetingsApi(ApiChild, base='meetings'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Meeting, params=params)
 
-    def list_of_series(self, meeting_series_id: str, from_: str = None, to_: str = None, meeting_type: str = None,
-                       state: str = None, is_modified: bool = None, host_email: str = None,
-                       **params) -> Generator[ScheduledMeeting, None, None]:
+    def list_of_series(
+        self,
+        meeting_series_id: str,
+        from_: str = None,
+        to_: str = None,
+        meeting_type: str = None,
+        state: str = None,
+        is_modified: bool = None,
+        host_email: str = None,
+        **params,
+    ) -> Generator[ScheduledMeeting, None, None]:
         """
         Lists scheduled meeting and meeting instances of a meeting series identified by meetingSeriesId. Scheduled
         meetings of an ad-hoc meeting created by Create a Meeting with adhoc of true and a roomId will not be listed,
@@ -1558,19 +1639,42 @@ class MeetingsApi(ApiChild, base='meetings'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=ScheduledMeeting, params=params)
 
-    def patch(self, meeting_id: str, title: str = None, agenda: str = None, password: str = None, start: str = None,
-              end: str = None, timezone: str = None, recurrence: str = None, enabled_auto_record_meeting: bool = None,
-              allow_any_user_to_be_co_host: bool = None, enabled_join_before_host: bool = None,
-              enable_connect_audio_before_host: bool = None, join_before_host_minutes: int = None,
-              exclude_password: bool = None, public_meeting: bool = None, reminder_time: int = None,
-              unlocked_meeting_join_security: UnlockedMeetingJoinSecurity = None, session_type_id: int = None,
-              enabled_webcast_view: bool = None, panelist_password: str = None, enable_automatic_lock: bool = None,
-              automatic_lock_minutes: int = None, allow_first_user_to_be_co_host: bool = None,
-              allow_authenticated_devices: bool = None, send_email: bool = None, host_email: str = None,
-              site_url: str = None, meeting_options: MeetingOptions = None,
-              attendee_privileges: AttendeePrivileges = None, integration_tags: List[str] = None,
-              enabled_breakout_sessions: bool = None, tracking_codes: TrackingCodeItem = None,
-              audio_connection_options: AudioConnectionOptions = None) -> PatchMeetingResponse:
+    def patch(
+        self,
+        meeting_id: str,
+        title: str = None,
+        agenda: str = None,
+        password: str = None,
+        start: str = None,
+        end: str = None,
+        timezone: str = None,
+        recurrence: str = None,
+        enabled_auto_record_meeting: bool = None,
+        allow_any_user_to_be_co_host: bool = None,
+        enabled_join_before_host: bool = None,
+        enable_connect_audio_before_host: bool = None,
+        join_before_host_minutes: int = None,
+        exclude_password: bool = None,
+        public_meeting: bool = None,
+        reminder_time: int = None,
+        unlocked_meeting_join_security: UnlockedMeetingJoinSecurity = None,
+        session_type_id: int = None,
+        enabled_webcast_view: bool = None,
+        panelist_password: str = None,
+        enable_automatic_lock: bool = None,
+        automatic_lock_minutes: int = None,
+        allow_first_user_to_be_co_host: bool = None,
+        allow_authenticated_devices: bool = None,
+        send_email: bool = None,
+        host_email: str = None,
+        site_url: str = None,
+        meeting_options: MeetingOptions = None,
+        attendee_privileges: AttendeePrivileges = None,
+        integration_tags: builtins.list[str] = None,
+        enabled_breakout_sessions: bool = None,
+        tracking_codes: TrackingCodeItem = None,
+        audio_connection_options: AudioConnectionOptions = None,
+    ) -> PatchMeetingResponse:
         """
         Updates details for a meeting with a specified meeting ID. This operation applies to meeting series and
         scheduled meetings. It doesn't apply to ended or in-progress meeting instances. Ad-hoc meetings created by
@@ -1684,7 +1788,7 @@ class MeetingsApi(ApiChild, base='meetings'):
             be a maximum of 64 characters long. Please note that an empty or null integrationTags will delete all
             existing integration tags for the meeting implicitly. Developer can update integration tags for a
             meetingSeries but he cannot update it for a scheduledMeeting or a meeting instance.
-        :type integration_tags: List[str]
+        :type integration_tags: list[str]
         :param enabled_breakout_sessions: Whether or not breakout sessions are enabled. If the value of
             enabledBreakoutSessions is false, users can not set breakout sessions. If the value of
             enabledBreakoutSessions is true, users can update breakout sessions using the Update Breakout Sessions API.
@@ -1771,19 +1875,42 @@ class MeetingsApi(ApiChild, base='meetings'):
         data = super().patch(url=url, data=body.model_dump_json())
         return PatchMeetingResponse.model_validate(data)
 
-    def update(self, meeting_id: str, title: str = None, agenda: str = None, password: str = None, start: str = None,
-               end: str = None, timezone: str = None, recurrence: str = None, enabled_auto_record_meeting: bool = None,
-               allow_any_user_to_be_co_host: bool = None, enabled_join_before_host: bool = None,
-               enable_connect_audio_before_host: bool = None, join_before_host_minutes: int = None,
-               exclude_password: bool = None, public_meeting: bool = None, reminder_time: int = None,
-               unlocked_meeting_join_security: UnlockedMeetingJoinSecurity = None, session_type_id: int = None,
-               enabled_webcast_view: bool = None, panelist_password: str = None, enable_automatic_lock: bool = None,
-               automatic_lock_minutes: int = None, allow_first_user_to_be_co_host: bool = None,
-               allow_authenticated_devices: bool = None, send_email: bool = None, host_email: str = None,
-               site_url: str = None, meeting_options: MeetingOptions = None,
-               attendee_privileges: AttendeePrivileges = None, integration_tags: List[str] = None,
-               enabled_breakout_sessions: bool = None, tracking_codes: TrackingCodeItem = None,
-               audio_connection_options: AudioConnectionOptions = None) -> PatchMeetingResponse:
+    def update(
+        self,
+        meeting_id: str,
+        title: str = None,
+        agenda: str = None,
+        password: str = None,
+        start: str = None,
+        end: str = None,
+        timezone: str = None,
+        recurrence: str = None,
+        enabled_auto_record_meeting: bool = None,
+        allow_any_user_to_be_co_host: bool = None,
+        enabled_join_before_host: bool = None,
+        enable_connect_audio_before_host: bool = None,
+        join_before_host_minutes: int = None,
+        exclude_password: bool = None,
+        public_meeting: bool = None,
+        reminder_time: int = None,
+        unlocked_meeting_join_security: UnlockedMeetingJoinSecurity = None,
+        session_type_id: int = None,
+        enabled_webcast_view: bool = None,
+        panelist_password: str = None,
+        enable_automatic_lock: bool = None,
+        automatic_lock_minutes: int = None,
+        allow_first_user_to_be_co_host: bool = None,
+        allow_authenticated_devices: bool = None,
+        send_email: bool = None,
+        host_email: str = None,
+        site_url: str = None,
+        meeting_options: MeetingOptions = None,
+        attendee_privileges: AttendeePrivileges = None,
+        integration_tags: builtins.list[str] = None,
+        enabled_breakout_sessions: bool = None,
+        tracking_codes: TrackingCodeItem = None,
+        audio_connection_options: AudioConnectionOptions = None,
+    ) -> PatchMeetingResponse:
         """
         Updates details for a meeting with a specified meeting ID. This operation applies to meeting series and
         scheduled meetings. It doesn't apply to ended or in-progress meeting instances. Ad-hoc meetings created by
@@ -1897,7 +2024,7 @@ class MeetingsApi(ApiChild, base='meetings'):
             be a maximum of 64 characters long. Please note that an empty or null integrationTags will delete all
             existing integration tags for the meeting implicitly. Developer can update integration tags for a
             meetingSeries but he cannot update it for a scheduledMeeting or a meeting instance.
-        :type integration_tags: List[str]
+        :type integration_tags: list[str]
         :param enabled_breakout_sessions: Whether or not breakout sessions are enabled. If the value of
             enabledBreakoutSessions is false, users can not set breakout sessions. If the value of
             enabledBreakoutSessions is true, users can update breakout sessions using the Update Breakout Sessions API.
@@ -2012,9 +2139,17 @@ class MeetingsApi(ApiChild, base='meetings'):
         super().delete(url=url, params=params)
         return
 
-    def join(self, meeting_id: str = None, meeting_number: str = None, web_link: str = None, join_directly: bool = None,
-             email: str = None, display_name: str = None, password: str = None,
-             expiration_minutes: int = None) -> JoinMeetingResponse:
+    def join(
+        self,
+        meeting_id: str = None,
+        meeting_number: str = None,
+        web_link: str = None,
+        join_directly: bool = None,
+        email: str = None,
+        display_name: str = None,
+        password: str = None,
+        expiration_minutes: int = None,
+    ) -> JoinMeetingResponse:
         """
         Retrieves a meeting join link for a meeting with a specified meetingId, meetingNumber, or webLink that allows
         users to join the meeting directly without logging in and entering a password.
@@ -2066,10 +2201,9 @@ class MeetingsApi(ApiChild, base='meetings'):
         data = super().post(url=url, data=body.model_dump_json())
         return JoinMeetingResponse.model_validate(data)
 
-    def update_simultaneous_interpretation(self, meeting_id: str, enabled: bool,
-                                           interpreters:
-                                           InterpreterForSimultaneousInterpretation =
-                                           None) -> SimultaneousInterpretation:
+    def update_simultaneous_interpretation(
+        self, meeting_id: str, enabled: bool, interpreters: InterpreterForSimultaneousInterpretation = None
+    ) -> SimultaneousInterpretation:
         """
         Updates simultaneous interpretation options of a meeting with a specified meeting ID. This operation applies to
         meeting series and scheduled meetings. It doesn't apply to ended or in-progress meeting instances.
@@ -2107,8 +2241,9 @@ class MeetingsApi(ApiChild, base='meetings'):
         data = super().get(url=url)
         return GetMeetingSurveyResponse.model_validate(data)
 
-    def list_survey_results(self, meeting_id: str, meeting_start_time_from: str = None,
-                            meeting_start_time_to: str = None, **params) -> Generator[SurveyResult, None, None]:
+    def list_survey_results(
+        self, meeting_id: str, meeting_start_time_from: str = None, meeting_start_time_to: str = None, **params
+    ) -> Generator[SurveyResult, None, None]:
         """
         Retrieves results for a meeting survey identified by meetingId.
 
@@ -2140,8 +2275,9 @@ class MeetingsApi(ApiChild, base='meetings'):
         url = self.ep(f'{meeting_id}/surveyResults')
         return self.session.follow_pagination(url=url, model=SurveyResult, params=params)
 
-    def list_tracking_codes(self, service: str, site_url: str = None,
-                            host_email: str = None) -> Generator[TrackingCode, None, None]:
+    def list_tracking_codes(
+        self, service: str, site_url: str = None, host_email: str = None
+    ) -> Generator[TrackingCode, None, None]:
         """
         Lists tracking codes on a site by a meeting host. The result indicates which tracking codes and what options
         can be used to create or update a meeting on the specified site.

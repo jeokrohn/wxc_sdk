@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import TypeAdapter
 
@@ -6,8 +6,14 @@ from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
-__all__ = ['CallerReputationProviderProvider', 'ReputationProviderRegion', 'ReputationProviderSettings',
-           'ReputationProviderStatus', 'ReputationProviderState', 'CallerReputationProviderApi']
+__all__ = [
+    'CallerReputationProviderProvider',
+    'ReputationProviderRegion',
+    'ReputationProviderSettings',
+    'ReputationProviderStatus',
+    'ReputationProviderState',
+    'CallerReputationProviderApi',
+]
 
 
 class ReputationProviderSettings(ApiModel):

@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import TypeAdapter
 
@@ -14,8 +14,14 @@ from wxc_sdk.telephony.operating_modes import (
     SameHoursDaily,
 )
 
-__all__ = ['MeModeManagementApi', 'FeatureDetail', 'FeatureMode', 'FeatureModeForwardTo', 'OperatingModeDetail',
-           'OperatingModeForwardTo']
+__all__ = [
+    'MeModeManagementApi',
+    'FeatureDetail',
+    'FeatureMode',
+    'FeatureModeForwardTo',
+    'OperatingModeDetail',
+    'OperatingModeForwardTo',
+]
 
 
 class FeatureModeForwardTo(ApiModel):
@@ -105,7 +111,7 @@ class OperatingModeDetail(ApiModel):
 
 
 class MeModeManagementApi(ApiChild, base='telephony/config/people/me'):
-    def get_features(self) -> List[ModeManagementFeature]:
+    def get_features(self) -> list[ModeManagementFeature]:
         """
         Get Mode Management Features
 
@@ -233,8 +239,9 @@ class MeModeManagementApi(ApiChild, base='telephony/config/people/me'):
         url = self.ep(f'settings/modeManagement/features/{feature_id}/actions/extendMode/invoke')
         super().post(url, json=body)
 
-    def switch_mode_for_feature(self, feature_id: str, operating_mode_id: str,
-                                is_manual_switchback_enabled: bool = None):
+    def switch_mode_for_feature(
+        self, feature_id: str, operating_mode_id: str, is_manual_switchback_enabled: bool = None
+    ):
         """
         Switch Mode for Single Feature
 

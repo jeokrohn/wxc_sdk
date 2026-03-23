@@ -29,11 +29,12 @@ class AssignedAssistants(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json', by_alias=True, exclude_unset=True,
-                               include={'allow_opt_in_out_enabled': True,
-                                        'assistants': {'__all__': {'id': True}}})
-
-
+        return self.model_dump(
+            mode='json',
+            by_alias=True,
+            exclude_unset=True,
+            include={'allow_opt_in_out_enabled': True, 'assistants': {'__all__': {'id': True}}},
+        )
 
 
 class MeExecutiveApi(ApiChild, base='telephony/config/people/me'):

@@ -9,8 +9,7 @@ from wxc_sdk.common.schedules import Event, Schedule, ScheduleType
 
 
 class MeSchedulesApi(ApiChild, base='telephony/config/people/me'):
-    def get_location_schedule(self, schedule_type: ScheduleType,
-                              schedule_id: str) -> Schedule:
+    def get_location_schedule(self, schedule_type: ScheduleType, schedule_id: str) -> Schedule:
         """
         Get User's Location Level Schedule
 
@@ -193,8 +192,7 @@ class MeSchedulesApi(ApiChild, base='telephony/config/people/me'):
         url = self.ep(f'schedules/{enum_str(schedule_type)}/{schedule_id}/events/{event_id}')
         super().delete(url)
 
-    def event_get(self, schedule_type: ScheduleType, schedule_id: str,
-                  event_id: str) -> Event:
+    def event_get(self, schedule_type: ScheduleType, schedule_id: str, event_id: str) -> Event:
         """
         Get User Schedule Event
 
@@ -221,7 +219,7 @@ class MeSchedulesApi(ApiChild, base='telephony/config/people/me'):
         r = Event.model_validate(data)
         return r
 
-    def event_update(self, schedule_type: ScheduleType, schedule_id: str, event:Event, event_id: str=None):
+    def event_update(self, schedule_type: ScheduleType, schedule_id: str, event: Event, event_id: str = None):
         """
         Modify User Schedule Event
 

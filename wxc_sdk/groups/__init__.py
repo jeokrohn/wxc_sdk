@@ -1,6 +1,7 @@
 """
 Groups API
 """
+
 import datetime
 from collections.abc import Generator
 from typing import Optional
@@ -50,9 +51,16 @@ class GroupsApi(ApiChild, base='groups'):
     To learn more about managing people to use as members in the /groups API please refer to the People API.
     """
 
-    def list(self, include_members: bool = None, attributes: str = None, sort_by: str = None,
-             sort_order: str = None, list_filter: str = None, org_id: str = None,
-             **params) -> Generator[Group, None, None]:
+    def list(
+        self,
+        include_members: bool = None,
+        attributes: str = None,
+        sort_by: str = None,
+        sort_order: str = None,
+        list_filter: str = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[Group, None, None]:
         """
         List groups in your organization.
 
@@ -73,8 +81,9 @@ class GroupsApi(ApiChild, base='groups'):
         :param params:
         :return: generator of :class:`Group` objects
         """
-        params.update((to_camel(k), v) for i, (k, v) in enumerate(locals().items())
-                      if i and k != 'params' and v is not None)
+        params.update(
+            (to_camel(k), v) for i, (k, v) in enumerate(locals().items()) if i and k != 'params' and v is not None
+        )
         for k, v in params.items():
             if isinstance(v, bool):
                 params[k] = 'true' if v else 'false'
@@ -93,12 +102,14 @@ class GroupsApi(ApiChild, base='groups'):
         :rtype: :class:`Group`
         """
         url = self.ep()
-        body = settings.model_dump_json(exclude={'group_id': True,
-                                                 'members': {'__all__': {'member_type': True,
-                                                                         'display_name': True,
-                                                                         'operation': True}},
-                                                 'created': True,
-                                                 'last_modified': True})
+        body = settings.model_dump_json(
+            exclude={
+                'group_id': True,
+                'members': {'__all__': {'member_type': True, 'display_name': True, 'operation': True}},
+                'created': True,
+                'last_modified': True,
+            }
+        )
         data = self.post(url, data=body)
         return Group.model_validate(data)
 
@@ -147,11 +158,14 @@ class GroupsApi(ApiChild, base='groups'):
             raise ValueError('settings or remove_all have to be present')
         url = self.ep(group_id)
         if settings:
-            body = settings.model_dump_json(exclude={'group_id': True,
-                                                     'members': {'__all__': {'member_type': True,
-                                                                             'display_name': True}},
-                                                     'created': True,
-                                                     'last_modified': True})
+            body = settings.model_dump_json(
+                exclude={
+                    'group_id': True,
+                    'members': {'__all__': {'member_type': True, 'display_name': True}},
+                    'created': True,
+                    'last_modified': True,
+                }
+            )
         else:
             body = 'purgeAllValues:{"attributes":["members"]}'
         data = self.patch(url, data=body)

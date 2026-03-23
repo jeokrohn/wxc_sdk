@@ -48,8 +48,9 @@ class TeamMembershipsApi(ApiChild, base='team/memberships'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=TeamMembership, params=params)
 
-    def create(self, team_id: str, person_id: str = None, person_email: str = None,
-               is_moderator: bool = None) -> TeamMembership:
+    def create(
+        self, team_id: str, person_id: str = None, person_email: str = None, is_moderator: bool = None
+    ) -> TeamMembership:
         """
         Add someone to a team by Person ID or email address, optionally making them a moderator.
 

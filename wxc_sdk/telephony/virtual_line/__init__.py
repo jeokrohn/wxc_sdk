@@ -26,8 +26,13 @@ from ...person_settings.privacy import PrivacyApi
 from ...person_settings.push_to_talk import PushToTalkApi
 from ...person_settings.voicemail import VoicemailApi
 
-__all__ = ['VirtualLine', 'VirtualLinesApi', 'VirtualLineLocation', 'VirtualLineNumberPhoneNumber',
-           'VirtualLineDevices']
+__all__ = [
+    'VirtualLine',
+    'VirtualLinesApi',
+    'VirtualLineLocation',
+    'VirtualLineNumberPhoneNumber',
+    'VirtualLineDevices',
+]
 
 
 class VirtualLineLocation(ApiModel):
@@ -152,10 +157,19 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
         self.push_to_talk = PushToTalkApi(session=session, selector=ApiSelector.virtual_line)
         self.voicemail = VoicemailApi(session=session, selector=ApiSelector.virtual_line)
 
-    def create(self, first_name: str, last_name: str, location_id: str, display_name: str = None,
-               phone_number: str = None, extension: str = None, caller_id_last_name: str = None,
-               caller_id_first_name: str = None, caller_id_number: str = None,
-               org_id: str = None) -> str:
+    def create(
+        self,
+        first_name: str,
+        last_name: str,
+        location_id: str,
+        display_name: str = None,
+        phone_number: str = None,
+        extension: str = None,
+        caller_id_last_name: str = None,
+        caller_id_first_name: str = None,
+        caller_id_number: str = None,
+        org_id: str = None,
+    ) -> str:
         """
         Create a Virtual Line
 
@@ -268,11 +282,21 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
         r = VirtualLine.model_validate(data)
         return r
 
-    def update(self, virtual_line_id: str, first_name: str = None, last_name: str = None,
-               display_name: str = None, phone_number: str = None, extension: str = None,
-               announcement_language: str = None, caller_id_last_name: str = None,
-               caller_id_first_name: str = None, caller_id_number: str = None, time_zone: str = None,
-               org_id: str = None):
+    def update(
+        self,
+        virtual_line_id: str,
+        first_name: str = None,
+        last_name: str = None,
+        display_name: str = None,
+        phone_number: str = None,
+        extension: str = None,
+        announcement_language: str = None,
+        caller_id_last_name: str = None,
+        caller_id_first_name: str = None,
+        caller_id_number: str = None,
+        time_zone: str = None,
+        org_id: str = None,
+    ):
         """
         Update a Virtual Line
 
@@ -342,8 +366,7 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
         url = self.ep(f'{virtual_line_id}')
         super().put(url, params=params, json=body)
 
-    def get_phone_number(self, virtual_line_id: str,
-                         org_id: str = None) -> VirtualLineNumberPhoneNumber:
+    def get_phone_number(self, virtual_line_id: str, org_id: str = None) -> VirtualLineNumberPhoneNumber:
         """
         Get Phone Number assigned for a Virtual Line
 
@@ -447,11 +470,20 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
         r = TypeAdapter(list[AssignedDectNetwork]).validate_python(data['dectNetworks'])
         return r
 
-    def list(self, org_id: str = None, location_id: list[str] = None,
-             id: list[str] = None, owner_name: list[str] = None, phone_number: list[str] = None,
-             location_name: list[str] = None, order: list[str] = None, has_device_assigned: bool = None,
-             has_extension_assigned: bool = None, has_dn_assigned: bool = None,
-             **params) -> Generator[VirtualLine, None, None]:
+    def list(
+        self,
+        org_id: str = None,
+        location_id: list[str] = None,
+        id: list[str] = None,
+        owner_name: list[str] = None,
+        phone_number: list[str] = None,
+        location_name: list[str] = None,
+        order: list[str] = None,
+        has_device_assigned: bool = None,
+        has_extension_assigned: bool = None,
+        has_dn_assigned: bool = None,
+        **params,
+    ) -> Generator[VirtualLine, None, None]:
         """
         List all Virtual Lines for the organization.
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
@@ -463,18 +495,18 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
         :type org_id: str
         :param location_id: Return the list of virtual lines matching these location ids. Example for multiple values -
             ?locationId=locId1&locationId=locId2.
-        :type location_id: List[str]
+        :type location_id: list[str]
         :param id: Return the list of virtual lines matching these virtualLineIds.
-        :type id: List[str]
+        :type id: list[str]
         :param owner_name: Return the list of virtual lines matching these owner names.
-        :type owner_name: List[str]
+        :type owner_name: list[str]
         :param phone_number: Return the list of virtual lines matching these phone numbers.
-        :type phone_number: List[str]
+        :type phone_number: list[str]
         :param location_name: Return the list of virtual lines matching the location names.
-        :type location_name: List[str]
+        :type location_name: list[str]
         :param order: Return the list of virtual lines based on the order. Default sort will be in an Ascending order.
             Maximum 3 orders allowed at a time.
-        :type order: List[str]
+        :type order: list[str]
         :param has_device_assigned: If true, includes only virtual lines with devices assigned. When not explicitly
             specified, the default includes both virtual lines with devices assigned and not assigned.
         :type has_device_assigned: bool

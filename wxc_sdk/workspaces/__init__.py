@@ -12,6 +12,7 @@ The Workspaces API can also be used by partner administrators acting as administ
 than their own. In those cases an orgId value must be supplied, as indicated in the reference documentation for the
 relevant endpoints.
 """
+
 import datetime
 from collections.abc import Generator
 from typing import Optional
@@ -22,10 +23,27 @@ from ..api_child import ApiChild
 from ..base import ApiModel, enum_str
 from ..base import SafeEnum as Enum
 
-__all__ = ['WorkSpaceType', 'CallingType', 'CalendarType', 'WorkspaceEmail', 'Calendar', 'WorkspaceSupportedDevices',
-           'WorkspaceCallingHybridCalling', 'WorkspaceWebexCalling', 'WorkspaceCalling', 'DeviceHostedMeetings',
-           'HotdeskingStatus', 'WorkspaceIndoorNavigation', 'WorkspaceHealthLevel', 'WorkspaceHealthIssue',
-           'WorkspaceHealth', 'Workspace', 'SupportAndConfiguredInfo', 'CapabilityMap', 'WorkspacesApi']
+__all__ = [
+    'WorkSpaceType',
+    'CallingType',
+    'CalendarType',
+    'WorkspaceEmail',
+    'Calendar',
+    'WorkspaceSupportedDevices',
+    'WorkspaceCallingHybridCalling',
+    'WorkspaceWebexCalling',
+    'WorkspaceCalling',
+    'DeviceHostedMeetings',
+    'HotdeskingStatus',
+    'WorkspaceIndoorNavigation',
+    'WorkspaceHealthLevel',
+    'WorkspaceHealthIssue',
+    'WorkspaceHealth',
+    'Workspace',
+    'SupportAndConfiguredInfo',
+    'CapabilityMap',
+    'WorkspacesApi',
+]
 
 from ..common import DevicePlatform, MaintenanceMode
 from ..devices import Device
@@ -35,6 +53,7 @@ class WorkSpaceType(str, Enum):
     """
     workspace type
     """
+
     #: No workspace type set.
     not_set = 'notSet'
     #: High concentration.
@@ -55,6 +74,7 @@ class CallingType(str, Enum):
     """
     Calling types: freeCalling, webexEdgeForDevices, thirdPartySipCalling, webexCalling and none.
     """
+
     #: Free Calling.
     free = 'freeCalling'
     #: Webex Edge For Devices.
@@ -70,6 +90,7 @@ class CalendarType(str, Enum):
     """
     type of calendar integration
     """
+
     #: No calendar.
     none = 'none'
     #: Google Calendar.
@@ -211,6 +232,7 @@ class Workspace(ApiModel):
     """
     Workspace details
     """
+
     #: Unique identifier for the Workspace.
     workspace_id: Optional[str] = Field(alias='id', default=None)
     #: OrgId associate with the workspace.
@@ -266,24 +288,26 @@ class Workspace(ApiModel):
         :meta private:
         """
         # supported device cannot be changed later
-        return self.model_dump(mode='json',
-                               exclude_unset=True,
-                               exclude_none=True,
-                               by_alias=True,
-                               exclude={'workspace_id': True,
-                                        'org_id': True,
-                                        'sip_address': True,
-                                        'created': True,
-                                        'hybrid_calling': True,
-                                        'health': True,
-                                        'devices': True,
-                                        # only include workspace_location_id if no location_id is given
-                                        # location_id is the preferred/new way of setting the location
-                                        'workspace_location_id': not (self.workspace_location_id and
-                                                                      not self.location_id),
-                                        'supported_devices': for_update,
-                                        'planned_maintenance': True
-                                        })
+        return self.model_dump(
+            mode='json',
+            exclude_unset=True,
+            exclude_none=True,
+            by_alias=True,
+            exclude={
+                'workspace_id': True,
+                'org_id': True,
+                'sip_address': True,
+                'created': True,
+                'hybrid_calling': True,
+                'health': True,
+                'devices': True,
+                # only include workspace_location_id if no location_id is given
+                # location_id is the preferred/new way of setting the location
+                'workspace_location_id': not (self.workspace_location_id and not self.location_id),
+                'supported_devices': for_update,
+                'planned_maintenance': True,
+            },
+        )
 
     @staticmethod
     def create(*, display_name: str) -> 'Workspace':
@@ -309,14 +333,27 @@ class WorkspacesApi(ApiChild, base='workspaces'):
     relevant endpoints.
     """
 
-    def list(self, location_id: str = None, workspace_location_id: str = None, floor_id: str = None,
-             display_name: str = None, capacity: int = None, workspace_type: WorkSpaceType = None,
-             calling: CallingType = None, supported_devices: WorkspaceSupportedDevices = None,
-             calendar: CalendarType = None, device_hosted_meetings_enabled: bool = None,
-             device_platform: DevicePlatform = None, health_level: WorkspaceHealthLevel = None,
-             include_devices: bool = None, include_capabilities: bool = None,
-             planned_maintenance: MaintenanceMode = None, custom_attribute: str = None, org_id: str = None,
-             **params) -> Generator[Workspace, None, None]:
+    def list(
+        self,
+        location_id: str = None,
+        workspace_location_id: str = None,
+        floor_id: str = None,
+        display_name: str = None,
+        capacity: int = None,
+        workspace_type: WorkSpaceType = None,
+        calling: CallingType = None,
+        supported_devices: WorkspaceSupportedDevices = None,
+        calendar: CalendarType = None,
+        device_hosted_meetings_enabled: bool = None,
+        device_platform: DevicePlatform = None,
+        health_level: WorkspaceHealthLevel = None,
+        include_devices: bool = None,
+        include_capabilities: bool = None,
+        planned_maintenance: MaintenanceMode = None,
+        custom_attribute: str = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[Workspace, None, None]:
         """
         List Workspaces
 
@@ -546,4 +583,4 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         """
         url = self.ep(f'{workspace_id}/capabilities')
         data = super().get(url=url)
-        return CapabilityMap.model_validate(data["capabilities"])
+        return CapabilityMap.model_validate(data['capabilities'])

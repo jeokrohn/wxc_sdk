@@ -19,9 +19,16 @@ class AppSharedLineApi(ApiChild, base='telephony/config/people'):
         """
         return super().ep(f'{person_id}/applications/{application_id}/{path}')
 
-    def search_members(self, person_id: str, order: str = None, location: str = None,
-                       name: str = None, phone_number: str = None, extension: str = None,
-                       **params) -> Generator[AvailableMember, None, None]:
+    def search_members(
+        self,
+        person_id: str,
+        order: str = None,
+        location: str = None,
+        name: str = None,
+        phone_number: str = None,
+        extension: str = None,
+        **params,
+    ) -> Generator[AvailableMember, None, None]:
         """
         Search Shared-Line Appearance Members
 
@@ -58,12 +65,17 @@ class AppSharedLineApi(ApiChild, base='telephony/config/people'):
         if extension is not None:
             params['extension'] = extension
         url = self.ep(f'{person_id}/applications/availableMembers')
-        return self.session.follow_pagination(url=url, model=AvailableMember,
-                                              item_key='members', params=params)
+        return self.session.follow_pagination(url=url, model=AvailableMember, item_key='members', params=params)
 
-    def members_count(self, person_id: str, location_id: str = None,
-                      member_name: str = None, phone_number: str = None,
-                      extension: str = None, org_id: str = None) -> int:
+    def members_count(
+        self,
+        person_id: str,
+        location_id: str = None,
+        member_name: str = None,
+        phone_number: str = None,
+        extension: str = None,
+        org_id: str = None,
+    ) -> int:
         """
         Get Count of Shared-Line Appearance Members
 
@@ -125,8 +137,7 @@ class AppSharedLineApi(ApiChild, base='telephony/config/people'):
         r = DeviceMembersResponse.model_validate(data)
         return r
 
-    def update_members(self, person_id: str,
-                       members: list[Union[DeviceMember, AvailableMember]] = None):
+    def update_members(self, person_id: str, members: list[Union[DeviceMember, AvailableMember]] = None):
         """
         Put Shared-Line Appearance Members New
 
@@ -161,11 +172,23 @@ class AppSharedLineApi(ApiChild, base='telephony/config/people'):
 
         # create body
         if members_for_update:
-            members = [m.model_dump(mode='json', exclude_none=True, by_alias=True,
-                                    include={'member_id', 'port',
-                                             'primary_owner', 'line_type', 'line_weight', 'line_label',
-                                             'allow_call_decline_enabled'})
-                       for m in members_for_update]
+            members = [
+                m.model_dump(
+                    mode='json',
+                    exclude_none=True,
+                    by_alias=True,
+                    include={
+                        'member_id',
+                        'port',
+                        'primary_owner',
+                        'line_type',
+                        'line_weight',
+                        'line_label',
+                        'allow_call_decline_enabled',
+                    },
+                )
+                for m in members_for_update
+            ]
             body = {'members': members}
         else:
             body = None

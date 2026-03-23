@@ -1,8 +1,10 @@
 """
 Voicemail groups API
 """
+
+import builtins
 from collections.abc import Generator
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import Field
 
@@ -100,8 +102,15 @@ class VoicemailGroupDetail(ApiModel):
     dial_by_name: Optional[str] = None
 
     @staticmethod
-    def create(name: str, extension: str, first_name: str, last_name: str, passcode: int, language_code: str = 'en_us',
-               phone_number: str = None) -> 'VoicemailGroupDetail':
+    def create(
+        name: str,
+        extension: str,
+        first_name: str,
+        last_name: str,
+        passcode: int,
+        language_code: str = 'en_us',
+        phone_number: str = None,
+    ) -> 'VoicemailGroupDetail':
         """
         VoiceMailGroupDetail for create() call
 
@@ -115,27 +124,63 @@ class VoicemailGroupDetail(ApiModel):
         :return: Voicemail group details which can be used in :meth:`VoicemailGroupsApi.create`
         :rtype: :class:`VoicemailGroupDetail`
         """
-        return VoicemailGroupDetail(name=name, phone_number=phone_number, extension=extension, first_name=first_name,
-                                    last_name=last_name, passcode=passcode, language_code=language_code,
-                                    message_storage=VoicemailMessageStorage(storage_type=StorageType.internal),
-                                    notifications=VoicemailNotifications(enabled=False),
-                                    fax_message=VoicemailFax(enabled=False),
-                                    transfer_to_number=VoicemailTransferToNumber(enabled=False),
-                                    email_copy_of_message=VoicemailCopyOfMessage(enabled=False))
+        return VoicemailGroupDetail(
+            name=name,
+            phone_number=phone_number,
+            extension=extension,
+            first_name=first_name,
+            last_name=last_name,
+            passcode=passcode,
+            language_code=language_code,
+            message_storage=VoicemailMessageStorage(storage_type=StorageType.internal),
+            notifications=VoicemailNotifications(enabled=False),
+            fax_message=VoicemailFax(enabled=False),
+            transfer_to_number=VoicemailTransferToNumber(enabled=False),
+            email_copy_of_message=VoicemailCopyOfMessage(enabled=False),
+        )
 
     def for_create(self) -> dict:
-        return self.model_dump(mode='json', exclude_unset=True,
-                                    include={'name', 'phone_number', 'extension', 'first_name', 'last_name', 'passcode',
-                                             'language_code', 'message_storage', 'notifications', 'fax_message',
-                                             'transfer_to_number', 'email_copy_of_message'})
+        return self.model_dump(
+            mode='json',
+            exclude_unset=True,
+            include={
+                'name',
+                'phone_number',
+                'extension',
+                'first_name',
+                'last_name',
+                'passcode',
+                'language_code',
+                'message_storage',
+                'notifications',
+                'fax_message',
+                'transfer_to_number',
+                'email_copy_of_message',
+            },
+        )
 
     def for_update(self) -> dict:
-        return self.model_dump(mode='json', exclude_unset=True,
-                                    include={'name', 'phone_number', 'extension', 'first_name', 'last_name', 'enabled',
-                                             'passcode',
-                                             'language_code', 'greeting', 'greeting_description', 'message_storage',
-                                             'notifications', 'fax_message',
-                                             'transfer_to_number', 'email_copy_of_message'})
+        return self.model_dump(
+            mode='json',
+            exclude_unset=True,
+            include={
+                'name',
+                'phone_number',
+                'extension',
+                'first_name',
+                'last_name',
+                'enabled',
+                'passcode',
+                'language_code',
+                'greeting',
+                'greeting_description',
+                'message_storage',
+                'notifications',
+                'fax_message',
+                'transfer_to_number',
+                'email_copy_of_message',
+            },
+        )
 
 
 class VoicemailGroupsApi(ApiChild, base='telephony/config/voicemailGroups'):
@@ -154,8 +199,9 @@ class VoicemailGroupsApi(ApiChild, base='telephony/config/voicemailGroups'):
             return super().ep(path)
         return self.session.ep(f'telephony/config/locations/{location_id}/voicemailGroups{path}')
 
-    def list(self, location_id: str = None, name: str = None, phone_number: str = None,
-             org_id: str = None, **params) -> Generator[VoicemailGroup, None, None]:
+    def list(
+        self, location_id: str = None, name: str = None, phone_number: str = None, org_id: str = None, **params
+    ) -> Generator[VoicemailGroup, None, None]:
         """
         List the voicemail group information for the organization.
 
@@ -279,9 +325,9 @@ class VoicemailGroupsApi(ApiChild, base='telephony/config/voicemailGroups'):
         url = self.ep(location_id, voicemail_group_id)
         super().delete(url=url)
 
-    def fax_message_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
-                                            org_id: str = None,
-                                            **params) -> Generator[AvailableNumber, None, None]:
+    def fax_message_available_phone_numbers(
+        self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get Voicemail Group Fax Message Available Phone Numbers
 
@@ -313,9 +359,9 @@ class VoicemailGroupsApi(ApiChild, base='telephony/config/voicemailGroups'):
         url = self.ep(location_id=location_id, path='faxMessage/availableNumbers')
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
-    def available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
-                                org_id: str = None,
-                                **params) -> Generator[AvailableNumber, None, None]:
+    def available_phone_numbers(
+        self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get Voicemail Group Available Phone Numbers
 

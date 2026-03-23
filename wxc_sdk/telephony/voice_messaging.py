@@ -12,8 +12,7 @@ from typing import Optional
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 
-__all__ = ['MessageSummary', 'VoiceMailPartyInformation', 'VoiceMessageDetails',
-           'VoiceMessagingApi']
+__all__ = ['MessageSummary', 'VoiceMailPartyInformation', 'VoiceMessageDetails', 'VoiceMessagingApi']
 
 
 # noinspection DuplicatedCode

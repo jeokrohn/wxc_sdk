@@ -1,6 +1,7 @@
 """
 Meetings Q and A API
 """
+
 from collections.abc import Generator
 from typing import Optional
 
@@ -74,8 +75,7 @@ class MeetingQandAApi(ApiChild, base='meetings/q_and_a'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=QAObject, params=params)
 
-    def list_answers(self, question_id: str, meeting_id: str,
-                     **params) -> Generator[AnswerObject, None, None]:
+    def list_answers(self, question_id: str, meeting_id: str, **params) -> Generator[AnswerObject, None, None]:
         """
         Lists the answers to a specific question asked in a meeting.
 

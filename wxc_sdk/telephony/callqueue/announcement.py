@@ -16,6 +16,7 @@ class Announcement(ApiModel):
     """
     Announcement file information
     """
+
     name: str = Field(alias='fileName')
     size: int = Field(alias='fileSize')
 

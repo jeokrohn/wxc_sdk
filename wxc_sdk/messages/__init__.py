@@ -1,11 +1,13 @@
 """
 Messages API
 """
+
+import builtins
 import mimetypes
 import os.path
 from collections.abc import Generator
 from datetime import datetime
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 from requests_toolbelt import MultipartEncoder
 
@@ -13,8 +15,15 @@ from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel, dt_iso_str
 from wxc_sdk.common import RoomType
 
-__all__ = ['AdaptiveCardAction', 'AdaptiveCard', 'MessageAttachment', 'AdaptiveCardBody',
-           'Message', 'MessagesData', 'MessagesApi']
+__all__ = [
+    'AdaptiveCardAction',
+    'AdaptiveCard',
+    'MessageAttachment',
+    'AdaptiveCardBody',
+    'Message',
+    'MessagesData',
+    'MessagesApi',
+]
 
 from wxc_sdk.webhook import WebhookEventData
 
@@ -103,6 +112,7 @@ class MessagesData(WebhookEventData):
     """
     Data in a webhook "messages" event
     """
+
     resource = 'messages'
     id: str
     room_id: str
@@ -113,12 +123,17 @@ class MessagesData(WebhookEventData):
 
 
 class MessagesApi(ApiChild, base='messages'):
-    """
+    """ """
 
-    """
-
-    def list(self, room_id: str, parent_id: str = None, mentioned_people: List[str] = None, before: datetime = None,
-             before_message: str = None, **params) -> Generator[Message, None, None]:
+    def list(
+        self,
+        room_id: str,
+        parent_id: str = None,
+        mentioned_people: list[str] = None,
+        before: datetime = None,
+        before_message: str = None,
+        **params,
+    ) -> Generator[Message, None, None]:
         """
         Lists all messages in a room.  Each message will include content attachments if present.
 
@@ -133,7 +148,7 @@ class MessagesApi(ApiChild, base='messages'):
         :param mentioned_people: List messages with these people mentioned, by ID. Use me as a shorthand
             for the current API user. Only me or the person ID of the current user may be specified. Bots must include
             this parameter to list messages in group rooms (spaces).
-        :type mentioned_people: List[str]
+        :type mentioned_people: list[str]
         :param before: List messages sent before a date and time.
         :type before: str
         :param before_message: List messages sent before a message, by ID.
@@ -153,8 +168,9 @@ class MessagesApi(ApiChild, base='messages'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Message, params=params)
 
-    def list_direct(self, parent_id: str = None, person_id: str = None, person_email: str = None,
-                    **params) -> Generator[Message, None, None]:
+    def list_direct(
+        self, parent_id: str = None, person_id: str = None, person_email: str = None, **params
+    ) -> Generator[Message, None, None]:
         """
         List all messages in a 1:1 (direct) room. Use the personId or personEmail query parameter to specify the
         room. Each message will include content attachments if present.
@@ -177,9 +193,18 @@ class MessagesApi(ApiChild, base='messages'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Message, params=params)
 
-    def create(self, room_id: str = None, parent_id: str = None, to_person_id: str = None, to_person_email: str = None,
-               text: str = None, markdown: str = None, html: str = None, files: List[str] = None,
-               attachments: List[Union[dict, MessageAttachment]] = None) -> Message:
+    def create(
+        self,
+        room_id: str = None,
+        parent_id: str = None,
+        to_person_id: str = None,
+        to_person_email: str = None,
+        text: str = None,
+        markdown: str = None,
+        html: str = None,
+        files: builtins.list[str] = None,
+        attachments: builtins.list[Union[dict, MessageAttachment]] = None,
+    ) -> Message:
         """
         Post a plain text, rich text or html message, and optionally, a file attachment, to a room.
 
@@ -208,10 +233,10 @@ class MessagesApi(ApiChild, base='messages'):
             Only one file is allowed
             per message. Uploaded files are automatically converted into a format that all Webex clients can render. For
             the supported media types and the behavior of uploads, see the Message Attachments Guide.
-        :type files: List[str]
+        :type files: list[str]
         :param attachments: Content attachments to attach to the message. Only one card per message
             is supported. See the Cards Guide for more information.
-        :type attachments: List[Attachment]
+        :type attachments: list[Attachment]
         :rtype: Message
         """
         # TODO: handle local files for attachments
@@ -231,8 +256,9 @@ class MessagesApi(ApiChild, base='messages'):
         if html is not None:
             body['html'] = html
         if attachments is not None:
-            body['attachments'] = [a.model_dump(by_alias=True) if isinstance(a, MessageAttachment) else a
-                                   for a in attachments]
+            body['attachments'] = [
+                a.model_dump(by_alias=True) if isinstance(a, MessageAttachment) else a for a in attachments
+            ]
         if files is not None:
             body['files'] = files
 
@@ -242,9 +268,7 @@ class MessagesApi(ApiChild, base='messages'):
             open_file = open(files[0], mode='rb')
             try:
                 c_type = mimetypes.guess_type(files[0])[0] or 'text/plain'
-                body['files'] = (os.path.basename(files[0]),
-                                 open_file,
-                                 c_type)
+                body['files'] = (os.path.basename(files[0]), open_file, c_type)
                 multipart = MultipartEncoder(body)
                 headers = {'Content-type': multipart.content_type}
                 data = super().post(url=url, headers=headers, data=multipart)

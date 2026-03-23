@@ -1,6 +1,7 @@
 """
 Person numbers API
 """
+
 from typing import Literal, Optional
 
 from pydantic import Field
@@ -16,6 +17,7 @@ class PersonPhoneNumber(ApiModel):
     """
     Information about a phone number
     """
+
     #: Flag to indicate primary number or not.
     primary: bool
     #: Phone Number.
@@ -34,6 +36,7 @@ class PersonNumbers(ApiModel):
     """
     Information about person's phone numbers
     """
+
     #: To enable/disable distinctive ring pattern that identifies calls coming from a specific phone number.
     distinctive_ring_enabled: bool
     #: Information about the number.
@@ -44,6 +47,7 @@ class UpdatePersonPhoneNumber(ApiModel):
     """
     Information about a phone number
     """
+
     #: Flag to indicate primary number or not.
     primary: Literal[False] = Field(default=False)
     #: This is either 'ADD' to add phone numbers or 'DELETE' to remove phone numbers.
@@ -60,6 +64,7 @@ class UpdatePersonNumbers(ApiModel):
     """
     Information about person's phone numbers
     """
+
     #: This enable distinctive ring pattern for the person.
     enable_distinctive_ring_pattern: Optional[bool] = None
     #: Information about the number.

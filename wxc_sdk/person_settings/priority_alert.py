@@ -24,8 +24,7 @@ class PriorityAlert(ApiModel):
 
         :meta private
         """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               exclude={'criteria'})
+        return self.model_dump(mode='json', by_alias=True, exclude_none=True, exclude={'criteria'})
 
 
 class PriorityAlertApi(PersonSettingsApiChild):
@@ -37,8 +36,7 @@ class PriorityAlertApi(PersonSettingsApiChild):
 
     feature = 'priorityAlert'
 
-    def read_criteria(self, entity_id: str, id: str,
-                      org_id: str = None) -> PriorityAlertCriteria:
+    def read_criteria(self, entity_id: str, id: str, org_id: str = None) -> PriorityAlertCriteria:
         """
         Retrieve Priority Alert Criteria for a Workspace
 
@@ -70,8 +68,7 @@ class PriorityAlertApi(PersonSettingsApiChild):
         r = PriorityAlertCriteria.model_validate(data)
         return r
 
-    def configure_criteria(self, entity_id: str, id: str, settings: PriorityAlertCriteria,
-                           org_id: str = None):
+    def configure_criteria(self, entity_id: str, id: str, settings: PriorityAlertCriteria, org_id: str = None):
         """
         Modify Priority Alert Criteria for a Workspace
 
@@ -166,8 +163,7 @@ class PriorityAlertApi(PersonSettingsApiChild):
         r = data['id']
         return r
 
-    def read(self, entity_id: str,
-             org_id: str = None) -> PriorityAlert:
+    def read(self, entity_id: str, org_id: str = None) -> PriorityAlert:
         """
         Retrieve Priority Alert Settings for a Workspace.
 
@@ -192,8 +188,7 @@ class PriorityAlertApi(PersonSettingsApiChild):
         r = PriorityAlert.model_validate(data)
         return r
 
-    def configure(self, entity_id: str, settings: PriorityAlert,
-                  org_id: str = None):
+    def configure(self, entity_id: str, settings: PriorityAlert, org_id: str = None):
         """
         Configure Priority Alert Settings for a Workspace
 

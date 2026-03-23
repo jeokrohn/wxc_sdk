@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import Field, TypeAdapter
 
@@ -9,10 +9,24 @@ from wxc_sdk.common import IdAndName, PrimaryOrSecondary
 from wxc_sdk.common.schedules import ScheduleType
 from wxc_sdk.common.selective import SelectiveFrom
 
-__all__ = ['ExecAlertingMode', 'ExecAlertRolloverAction', 'ExecAlertClidNameMode', 'ExecAlertClidPhoneNumberMode',
-           'ExecAlert', 'ExecOrAssistant', 'AssistantSettings', 'ExecCallFilterType', 'ExecCallFilteringCriteriaItem',
-           'ExecCallFiltering', 'ExecCallFilteringScheduleLevel', 'ExecCallFilteringToNumber',
-           'ExecCallFilteringCriteria', 'ExecScreeningAlertType', 'ExecScreening', 'ExecutiveSettingsApi']
+__all__ = [
+    'ExecAlertingMode',
+    'ExecAlertRolloverAction',
+    'ExecAlertClidNameMode',
+    'ExecAlertClidPhoneNumberMode',
+    'ExecAlert',
+    'ExecOrAssistant',
+    'AssistantSettings',
+    'ExecCallFilterType',
+    'ExecCallFilteringCriteriaItem',
+    'ExecCallFiltering',
+    'ExecCallFilteringScheduleLevel',
+    'ExecCallFilteringToNumber',
+    'ExecCallFilteringCriteria',
+    'ExecScreeningAlertType',
+    'ExecScreening',
+    'ExecutiveSettingsApi',
+]
 
 
 class ExecAlertingMode(str, Enum):
@@ -126,10 +140,16 @@ class AssistantSettings(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json', by_alias=True, exclude_unset=True,
-                               include={'forward_filtered_calls_enabled': True,
-                                        'forward_to_phone_number': True,
-                                        'executives': {'__all__': {'id': True, 'opt_in_enabled': True}}})
+        return self.model_dump(
+            mode='json',
+            by_alias=True,
+            exclude_unset=True,
+            include={
+                'forward_filtered_calls_enabled': True,
+                'forward_to_phone_number': True,
+                'executives': {'__all__': {'id': True, 'opt_in_enabled': True}},
+            },
+        )
 
 
 class ExecCallFilterType(str, Enum):
@@ -171,11 +191,16 @@ class ExecCallFiltering(ApiModel):
 
         :meta private:
         """
-        data = self.model_dump(mode='json', by_alias=True, exclude_unset=True,
-                               include={'enabled': True,
-                                        'filter_type': True,
-                                        'criteria': {'__all__': {'id': True,
-                                                                 'activation_enabled': True}}})
+        data = self.model_dump(
+            mode='json',
+            by_alias=True,
+            exclude_unset=True,
+            include={
+                'enabled': True,
+                'filter_type': True,
+                'criteria': {'__all__': {'id': True, 'activation_enabled': True}},
+            },
+        )
         criteria = data.pop('criteria', None)
         if criteria is not None:
             data['criteriaActivation'] = criteria
@@ -227,8 +252,7 @@ class ExecCallFilteringCriteria(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json', by_alias=True, exclude_unset=True,
-                               exclude={'id': True})
+        return self.model_dump(mode='json', by_alias=True, exclude_unset=True, exclude={'id': True})
 
     def update(self) -> dict:
         """
@@ -290,9 +314,7 @@ class ExecutiveSettingsApi(ApiChild, base=''):
         r = ExecAlert.model_validate(data)
         return r
 
-    def update_alert_settings(self, person_id: str,
-                              settings: ExecAlert,
-                              org_id: str = None):
+    def update_alert_settings(self, person_id: str, settings: ExecAlert, org_id: str = None):
         """
         Modify Person Executive Alert Settings
 
@@ -346,8 +368,7 @@ class ExecutiveSettingsApi(ApiChild, base=''):
         r = TypeAdapter(list[ExecOrAssistant]).validate_python(data['assistants'])
         return r
 
-    def update_assigned_assistants(self, person_id: str, assistant_ids: list[str] = None,
-                                   org_id: str = None):
+    def update_assigned_assistants(self, person_id: str, assistant_ids: list[str] = None, org_id: str = None):
         """
         Modify Person Executive Assigned Assistants
 
@@ -377,8 +398,7 @@ class ExecutiveSettingsApi(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/executive/assignedAssistants')
         super().put(url, params=params, json=body)
 
-    def executive_assistant_settings(self, person_id: str,
-                                     org_id: str = None) -> AssistantSettings:
+    def executive_assistant_settings(self, person_id: str, org_id: str = None) -> AssistantSettings:
         """
         Get Person Executive Assistant Settings
 
@@ -431,9 +451,9 @@ class ExecutiveSettingsApi(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/executive/assistant')
         super().put(url, params=params, json=body)
 
-    def executive_available_assistants(self, person_id: str, name: str = None, phone_number: str = None,
-                                       org_id: str = None,
-                                       **params) -> List[ExecOrAssistant]:
+    def executive_available_assistants(
+        self, person_id: str, name: str = None, phone_number: str = None, org_id: str = None, **params
+    ) -> list[ExecOrAssistant]:
         """
         Get Person Executive Available Assistants
 
@@ -466,8 +486,7 @@ class ExecutiveSettingsApi(ApiChild, base=''):
         r = TypeAdapter(list[ExecOrAssistant]).validate_python(data['assistants'])
         return r
 
-    def executive_call_filtering_settings(self, person_id: str,
-                                          org_id: str = None) -> ExecCallFiltering:
+    def executive_call_filtering_settings(self, person_id: str, org_id: str = None) -> ExecCallFiltering:
         """
         Get Person Executive Call Filtering Settings
 
@@ -494,8 +513,7 @@ class ExecutiveSettingsApi(ApiChild, base=''):
         r = ExecCallFiltering.model_validate(data)
         return r
 
-    def update_executive_call_filtering_settings(self, person_id: str, settings: ExecCallFiltering,
-                                                 org_id: str = None):
+    def update_executive_call_filtering_settings(self, person_id: str, settings: ExecCallFiltering, org_id: str = None):
         """
         Modify Person Executive Call Filtering Settings
 
@@ -523,8 +541,9 @@ class ExecutiveSettingsApi(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/executive/callFiltering')
         super().put(url, params=params, json=body)
 
-    def create_call_filtering_criteria(self, person_id: str, settings: ExecCallFilteringCriteria,
-                                       org_id: str = None) -> str:
+    def create_call_filtering_criteria(
+        self, person_id: str, settings: ExecCallFilteringCriteria, org_id: str = None
+    ) -> str:
         """
         Add Person Executive Call Filtering Criteria
 
@@ -581,8 +600,7 @@ class ExecutiveSettingsApi(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/executive/callFiltering/criteria/{id}')
         super().delete(url, params=params)
 
-    def get_filtering_criteria(self, person_id: str, id: str,
-                               org_id: str = None) -> ExecCallFilteringCriteria:
+    def get_filtering_criteria(self, person_id: str, id: str, org_id: str = None) -> ExecCallFilteringCriteria:
         """
         Get Person Executive Call Filtering Criteria Settings
 
@@ -611,9 +629,9 @@ class ExecutiveSettingsApi(ApiChild, base=''):
         r = ExecCallFilteringCriteria.model_validate(data)
         return r
 
-    def update_call_filtering_criteria(self, person_id: str, id: str,
-                                       settings: ExecCallFilteringCriteria,
-                                       org_id: str = None):
+    def update_call_filtering_criteria(
+        self, person_id: str, id: str, settings: ExecCallFilteringCriteria, org_id: str = None
+    ):
         """
         Modify Person Executive Call Filtering Criteria Settings
 
@@ -671,8 +689,7 @@ class ExecutiveSettingsApi(ApiChild, base=''):
         r = ExecScreening.model_validate(data)
         return r
 
-    def update_screening_settings(self, person_id: str, settings: ExecScreening,
-                                  org_id: str = None):
+    def update_screening_settings(self, person_id: str, settings: ExecScreening, org_id: str = None):
         """
         Modify Person Executive Screening Settings
 

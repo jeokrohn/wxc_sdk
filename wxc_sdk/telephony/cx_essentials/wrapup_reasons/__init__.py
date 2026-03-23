@@ -1,16 +1,23 @@
 """
 Customer Experience Essentials Wrap Up Reasons API
 """
-from typing import List, Optional
+
+import builtins
+from typing import Optional
 
 from pydantic import TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 
-__all__ = ['WrapupReasonApi', 'QueueWrapupReasonSettings', 'WrapUpReasonDetails', 'WrapupReasonQueue',
-           'AvailableQueue',
-           'WrapUpReason']
+__all__ = [
+    'WrapupReasonApi',
+    'QueueWrapupReasonSettings',
+    'WrapUpReasonDetails',
+    'WrapupReasonQueue',
+    'AvailableQueue',
+    'WrapUpReason',
+]
 
 
 class WrapUpReason(ApiModel):
@@ -120,9 +127,15 @@ class WrapupReasonApi(ApiChild, base='telephony/config'):
         data = super().get(url)
         return QueueWrapupReasonSettings.model_validate(data)
 
-    def update_queue_settings(self, location_id: str, queue_id: str, wrapup_reasons: list[str] = None,
-                              default_wrapup_reason_id: str = None, wrapup_timer_enabled: bool = None,
-                              wrapup_timer: int = None):
+    def update_queue_settings(
+        self,
+        location_id: str,
+        queue_id: str,
+        wrapup_reasons: list[str] = None,
+        default_wrapup_reason_id: str = None,
+        wrapup_timer_enabled: bool = None,
+        wrapup_timer: int = None,
+    ):
         """
         Update Wrap Up Reason Settings
 
@@ -166,7 +179,7 @@ class WrapupReasonApi(ApiChild, base='telephony/config'):
         url = self.ep(f'cxEssentials/locations/{location_id}/queues/{queue_id}/wrapup/settings')
         super().put(url, json=body)
 
-    def list(self) -> List[WrapUpReason]:
+    def list(self) -> list[WrapUpReason]:
         """
         List Wrap Up Reasons
 
@@ -188,8 +201,13 @@ class WrapupReasonApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[WrapUpReason]).validate_python(data['wrapupReasons'])
         return r
 
-    def create(self, name: str, description: str = None, queues: List[str] = None,
-               assign_all_queues_enabled: bool = None) -> str:
+    def create(
+        self,
+        name: str,
+        description: str = None,
+        queues: builtins.list[str] = None,
+        assign_all_queues_enabled: bool = None,
+    ) -> str:
         """
         Create Wrap Up Reason
 
@@ -309,9 +327,16 @@ class WrapupReasonApi(ApiChild, base='telephony/config'):
         r = WrapUpReasonDetails.model_validate(data)
         return r
 
-    def update(self, wrapup_reason_id: str, name: str = None, description: str = None,
-               queues_to_assign: List[str] = None, queues_to_unassign: List[str] = None,
-               assign_all_queues_enabled: bool = None, unassign_all_queues_enabled: bool = None):
+    def update(
+        self,
+        wrapup_reason_id: str,
+        name: str = None,
+        description: str = None,
+        queues_to_assign: builtins.list[str] = None,
+        queues_to_unassign: builtins.list[str] = None,
+        assign_all_queues_enabled: bool = None,
+        unassign_all_queues_enabled: bool = None,
+    ):
         """
         Update Wrap Up Reason
 
@@ -361,7 +386,7 @@ class WrapupReasonApi(ApiChild, base='telephony/config'):
         url = self.ep(f'cxEssentials/wrapup/reasons/{wrapup_reason_id}')
         super().put(url, json=body)
 
-    def available_queues(self, wrapup_reason_id: str) -> List[AvailableQueue]:
+    def available_queues(self, wrapup_reason_id: str) -> builtins.list[AvailableQueue]:
         """
         Read Available Queues
 

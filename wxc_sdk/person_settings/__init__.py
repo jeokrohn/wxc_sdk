@@ -1,6 +1,7 @@
 """
 Person settings
 """
+
 from dataclasses import dataclass
 from typing import Optional
 
@@ -49,8 +50,15 @@ from .selective_reject import SelectiveRejectApi
 from .single_number_reach import SingleNumberReachApi
 from .voicemail import VoicemailApi
 
-__all__ = ['PersonSettingsApi', 'DeviceOwner', 'DeviceActivationState', 'Hoteling', 'TelephonyDevice',
-           'DeviceList', 'UserCallCaptions']
+__all__ = [
+    'PersonSettingsApi',
+    'DeviceOwner',
+    'DeviceActivationState',
+    'Hoteling',
+    'TelephonyDevice',
+    'DeviceList',
+    'UserCallCaptions',
+]
 
 
 # TODO: UC profile
@@ -148,8 +156,13 @@ class UserCallCaptions(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True, exclude_unset=True,
-                               exclude={'location_closed_captions_enabled', 'location_transcripts_enabled'})
+        return self.model_dump(
+            mode='json',
+            by_alias=True,
+            exclude_none=True,
+            exclude_unset=True,
+            exclude={'location_closed_captions_enabled', 'location_transcripts_enabled'},
+        )
 
 
 @dataclass(init=False, repr=False)
@@ -315,8 +328,7 @@ class PersonSettingsApi(ApiChild, base='people'):
         data = self.get(url=url, params=params)
         return DeviceList.model_validate(data)
 
-    def modify_hoteling_settings_primary_devices(self, person_id: str, hoteling: Hoteling,
-                                                 org_id: str = None):
+    def modify_hoteling_settings_primary_devices(self, person_id: str, hoteling: Hoteling, org_id: str = None):
         """
         Modify Hoteling Settings for a Person's Primary Devices
 

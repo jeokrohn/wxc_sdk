@@ -1,6 +1,7 @@
 """
 CDR API
 """
+
 import re
 from collections.abc import Generator
 from dataclasses import dataclass
@@ -15,8 +16,17 @@ from ..api_child import ApiChild
 from ..base import ApiModel, dt_iso_str
 from ..base import SafeEnum as Enum
 
-__all__ = ['CDRCallType', 'CDRClientType', 'CDRDirection', 'CDROriginalReason', 'CDRRedirectReason',
-           'CDRRelatedReason', 'CDRUserType', 'CDR', 'DetailedCDRApi']
+__all__ = [
+    'CDRCallType',
+    'CDRClientType',
+    'CDRDirection',
+    'CDROriginalReason',
+    'CDRRedirectReason',
+    'CDRRelatedReason',
+    'CDRUserType',
+    'CDR',
+    'DetailedCDRApi',
+]
 
 
 class CDRCallType(str, Enum):
@@ -157,7 +167,6 @@ def names_and_values(data: dict) -> Generator[tuple[str, Optional[str]], None, N
 
 
 class CDR(ApiModel):
-
     @model_validator(mode='before')
     @classmethod
     def normalize_data(cls, data: dict):
@@ -589,10 +598,15 @@ class DetailedCDRApi(ApiChild, base=''):
     can be retrieved.
     """
 
-    def get_cdr_history(self, start_time: Union[str, datetime] = None, end_time: Union[datetime, str] = None,
-                        locations: list[str] = None, host: str = 'analytics-calling.webexapis.com',
-                        stream: bool = False,
-                        **params) -> Generator[CDR, None, None]:
+    def get_cdr_history(
+        self,
+        start_time: Union[str, datetime] = None,
+        end_time: Union[datetime, str] = None,
+        locations: list[str] = None,
+        host: str = 'analytics-calling.webexapis.com',
+        stream: bool = False,
+        **params,
+    ) -> Generator[CDR, None, None]:
         """
         Provides Webex Calling Detailed Call History data for your organization.
 

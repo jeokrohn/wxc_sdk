@@ -1,6 +1,7 @@
 """
 Rooms API
 """
+
 from collections.abc import Generator
 from datetime import datetime
 from typing import Optional
@@ -74,9 +75,16 @@ class RoomsApi(ApiChild, base='rooms'):
     To post content see the Messages API.
     """
 
-    def list(self, team_id: str = None, type_: RoomType = None, org_public_spaces: bool = None,
-             from_: datetime = None, to_: datetime = None, sort_by: str = None,
-             **params) -> Generator[Room, None, None]:
+    def list(
+        self,
+        team_id: str = None,
+        type_: RoomType = None,
+        org_public_spaces: bool = None,
+        from_: datetime = None,
+        to_: datetime = None,
+        sort_by: str = None,
+        **params,
+    ) -> Generator[Room, None, None]:
         """
         List rooms.
 
@@ -124,8 +132,16 @@ class RoomsApi(ApiChild, base='rooms'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Room, params=params)
 
-    def create(self, title: str, team_id: str = None, classification_id: str = None, is_locked: bool = None,
-               is_public: bool = None, description: str = None, is_announcement_only: bool = None) -> Room:
+    def create(
+        self,
+        title: str,
+        team_id: str = None,
+        classification_id: str = None,
+        is_locked: bool = None,
+        is_public: bool = None,
+        description: str = None,
+        is_announcement_only: bool = None,
+    ) -> Room:
         """
         Creates a room. The authenticated user is automatically added as a member of the room. See the Memberships
         API to learn how to add more people to the room.
@@ -238,8 +254,18 @@ class RoomsApi(ApiChild, base='rooms'):
               new information exchanges in this space, while maintaining historical data.
         """
         update: Room
-        data = update.model_dump_json(include={'title', 'classification_id', 'team_id', 'is_locked', 'is_public',
-                                               'description', 'is_announcement_only', 'is_read_only'})
+        data = update.model_dump_json(
+            include={
+                'title',
+                'classification_id',
+                'team_id',
+                'is_locked',
+                'is_public',
+                'description',
+                'is_announcement_only',
+                'is_read_only',
+            }
+        )
         if update.id is None:
             raise ValueError('ID has to be set')
         url = self.ep(f'{update.id}')

@@ -1,6 +1,7 @@
 """
 app services settings API
 """
+
 from dataclasses import dataclass
 from typing import Optional
 
@@ -16,6 +17,7 @@ class AppServicesSettings(ApiModel):
     """
     Person app services settings
     """
+
     #: When `true`, indicates to ring devices for outbound Click to Dial calls.
     ring_devices_for_click_to_dial_calls_enabled: Optional[bool] = None
     #: When `true`, indicates to ring devices for inbound Group Pages.
@@ -47,10 +49,18 @@ class AppServicesSettings(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               exclude={'browser_client_id', 'desktop_client_id',
-                                        'tablet_client_id', 'mobile_client_id',
-                                        'available_line_count'})
+        return self.model_dump(
+            mode='json',
+            by_alias=True,
+            exclude_none=True,
+            exclude={
+                'browser_client_id',
+                'desktop_client_id',
+                'tablet_client_id',
+                'mobile_client_id',
+                'available_line_count',
+            },
+        )
 
 
 @dataclass(init=False, repr=False)

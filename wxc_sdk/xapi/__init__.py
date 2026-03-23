@@ -69,8 +69,9 @@ class XApi(ApiChild, base='xapi'):
         r = QueryStatusResponse.model_validate(data)
         return r
 
-    def execute_command(self, command_name: str, device_id: str, arguments: dict = None,
-                        body: Union[dict, str] = None) -> ExecuteCommandResponse:
+    def execute_command(
+        self, command_name: str, device_id: str, arguments: dict = None, body: Union[dict, str] = None
+    ) -> ExecuteCommandResponse:
         """
         Execute Command
 
@@ -107,7 +108,8 @@ class XApi(ApiChild, base='xapi'):
 
         :param device_id: The unique identifier for the Webex RoomOS Device.
         :type device_id: str
-        :param force: If True, the device will be rebooted immediately. If False, the device will wait for a period of time before rebooting.
+        :param force: If True, the device will be rebooted immediately. If False, the device will wait for a period of
+            time before rebooting.
         :type force: bool
         """
         return self.execute_command('SystemUnit.Boot', device_id, arguments={'Force': str(force)})

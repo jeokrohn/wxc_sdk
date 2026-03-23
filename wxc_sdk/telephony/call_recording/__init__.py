@@ -8,9 +8,19 @@ from wxc_sdk.base import ApiModel, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 from wxc_sdk.common import IdAndName, UserLicenseType, UserType
 
-__all__ = ['CallRecordingInfo', 'CallRecordingTermsOfService', 'OrgComplianceAnnouncement',
-           'LocationComplianceAnnouncement', 'CallRecordingRegion', 'RecordingUser', 'FailureBehavior',
-           'RecordingVendor', 'CallRecordingVendors', 'CallRecordingLocationVendors', 'CallRecordingSettingsApi']
+__all__ = [
+    'CallRecordingInfo',
+    'CallRecordingTermsOfService',
+    'OrgComplianceAnnouncement',
+    'LocationComplianceAnnouncement',
+    'CallRecordingRegion',
+    'RecordingUser',
+    'FailureBehavior',
+    'RecordingVendor',
+    'CallRecordingVendors',
+    'CallRecordingLocationVendors',
+    'CallRecordingSettingsApi',
+]
 
 
 class CallRecordingInfo(ApiModel):
@@ -318,8 +328,9 @@ class CallRecordingSettingsApi(ApiChild, base='telephony/config'):
         url = self.ep('callRecording/complianceAnnouncement')
         super().put(url, params=params, json=body)
 
-    def read_location_compliance_announcement(self, location_id: str,
-                                              org_id: str = None) -> LocationComplianceAnnouncement:
+    def read_location_compliance_announcement(
+        self, location_id: str, org_id: str = None
+    ) -> LocationComplianceAnnouncement:
         """
         Get details for the Location Compliance Announcement Setting
 
@@ -346,8 +357,9 @@ class CallRecordingSettingsApi(ApiChild, base='telephony/config'):
         r = LocationComplianceAnnouncement.model_validate(data)
         return r
 
-    def update_location_compliance_announcement(self, location_id: str, settings: LocationComplianceAnnouncement,
-                                                org_id: str = None):
+    def update_location_compliance_announcement(
+        self, location_id: str, settings: LocationComplianceAnnouncement, org_id: str = None
+    ):
         """
         Update the location compliance announcement
 
@@ -397,8 +409,9 @@ class CallRecordingSettingsApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[CallRecordingRegion]).validate_python(data['regions'])
         return r
 
-    def list_org_users(self, standard_user_only: bool = None,
-                       org_id: str = None, **params) -> Generator[RecordingUser, None, None]:
+    def list_org_users(
+        self, standard_user_only: bool = None, org_id: str = None, **params
+    ) -> Generator[RecordingUser, None, None]:
         """
         Get Call Recording Vendor Users
 
@@ -423,12 +436,17 @@ class CallRecordingSettingsApi(ApiChild, base='telephony/config'):
         url = self.ep('callRecording/vendorUsers')
         return self.session.follow_pagination(url=url, model=RecordingUser, params=params, item_key='members')
 
-    def set_location_vendor(self, location_id: str, id: str = None,
-                            org_default_enabled: bool = None, storage_region: str = None,
-                            org_storage_region_enabled: bool = None,
-                            failure_behavior: FailureBehavior = None,
-                            org_failure_behavior_enabled: bool = None,
-                            org_id: str = None) -> str:
+    def set_location_vendor(
+        self,
+        location_id: str,
+        id: str = None,
+        org_default_enabled: bool = None,
+        storage_region: str = None,
+        org_storage_region_enabled: bool = None,
+        failure_behavior: FailureBehavior = None,
+        org_failure_behavior_enabled: bool = None,
+        org_id: str = None,
+    ) -> str:
         """
         Set Call Recording Vendor for a Location
 
@@ -480,8 +498,7 @@ class CallRecordingSettingsApi(ApiChild, base='telephony/config'):
         r = data['jobId']
         return r
 
-    def get_location_vendors(self, location_id: str,
-                             org_id: str = None) -> CallRecordingLocationVendors:
+    def get_location_vendors(self, location_id: str, org_id: str = None) -> CallRecordingLocationVendors:
         """
         Get Location Call Recording Vendors
 
@@ -507,9 +524,9 @@ class CallRecordingSettingsApi(ApiChild, base='telephony/config'):
         r = CallRecordingLocationVendors.model_validate(data)
         return r
 
-    def list_location_users(self, location_id: str,
-                            standard_user_only: bool = None,
-                            org_id: str = None, **params) -> Generator[RecordingUser, None, None]:
+    def list_location_users(
+        self, location_id: str, standard_user_only: bool = None, org_id: str = None, **params
+    ) -> Generator[RecordingUser, None, None]:
         """
         Get Call Recording Vendor Users for a Location
 
@@ -560,8 +577,9 @@ class CallRecordingSettingsApi(ApiChild, base='telephony/config'):
         r = CallRecordingVendors.model_validate(data)
         return r
 
-    def set_org_vendor(self, vendor_id: str, storage_region: str = None,
-                       failure_behavior: FailureBehavior = None, org_id: str = None) -> str:
+    def set_org_vendor(
+        self, vendor_id: str, storage_region: str = None, failure_behavior: FailureBehavior = None, org_id: str = None
+    ) -> str:
         """
         Set Organization Call Recording Vendor
 

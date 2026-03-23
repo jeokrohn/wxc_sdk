@@ -1,6 +1,7 @@
 """
 Organisation voicemail settings
 """
+
 from typing import Optional
 
 from ..api_child import ApiChild
@@ -13,6 +14,7 @@ class OrganisationVoicemailSettings(ApiModel):
     """
     voicemail settings for and organization.
     """
+
     #: When enabled, you can set the deletion conditions for expired messages.
     message_expiry_enabled: bool
     #: Number of days after which messages expire.
@@ -25,10 +27,12 @@ class OrganisationVoicemailSettings(ApiModel):
 
     @staticmethod
     def default() -> 'OrganisationVoicemailSettings':
-        return OrganisationVoicemailSettings(message_expiry_enabled=False,
-                                             number_of_days_for_message_expiry=15,
-                                             strict_deletion_enabled=False,
-                                             voice_message_forwarding_enabled=False)
+        return OrganisationVoicemailSettings(
+            message_expiry_enabled=False,
+            number_of_days_for_message_expiry=15,
+            strict_deletion_enabled=False,
+            voice_message_forwarding_enabled=False,
+        )
 
 
 class OrganisationVoicemailSettingsAPI(ApiChild, base='telephony/config/voicemail/settings'):

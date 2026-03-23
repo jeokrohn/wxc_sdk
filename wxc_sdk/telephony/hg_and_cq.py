@@ -1,6 +1,7 @@
 """
 common base for Call Queues and Hunt Groups
 """
+
 from base64 import b64decode
 from typing import Optional
 
@@ -22,6 +23,7 @@ class AlternateNumberSettings(ApiModel):
     number will reach the same greeting and each menu will function identically to the main number. The alternate
     numbers option enables you to have up to ten (10) phone numbers ring into the call queue.
     """
+
     #: Distinctive Ringing selected for the alternate numbers in the call queue or hunt group overrides the normal
     #: ringing patterns set for Alternate Number.
     distinctive_ring_enabled: bool = Field(default=True)
@@ -64,6 +66,7 @@ class HGandCQ(ApiModel):
     """
     Common attributes of hunt groups and call queues
     """
+
     #: Unique name
     name: Optional[str] = None
     #: Unique identified
@@ -125,28 +128,29 @@ class HGandCQ(ApiModel):
         :meta private:
         :return: dict
         """
-        return {'id': True,
-                'location_name': True,
-                'location_id': True,
-                'toll_free_number': True,
-                'language': True,
-                'routing_prefix': True,
-                'esn': True,
-                'agents':
-                    {'__all__':
-                         {'first_name': True,
-                          'last_name': True,
-                          'user_type': True,
-                          'extension': True,
-                          'phone_number': True,
-                          'routing_prefix': True,
-                          'esn': True,
-                          'location': True,
-                          'has_cx_essentials': True}},
-                'alternate_number_settings':
-                    {'alternate_numbers':
-                         {'__all__':
-                              {'toll_free_number': True}}}}
+        return {
+            'id': True,
+            'location_name': True,
+            'location_id': True,
+            'toll_free_number': True,
+            'language': True,
+            'routing_prefix': True,
+            'esn': True,
+            'agents': {
+                '__all__': {
+                    'first_name': True,
+                    'last_name': True,
+                    'user_type': True,
+                    'extension': True,
+                    'phone_number': True,
+                    'routing_prefix': True,
+                    'esn': True,
+                    'location': True,
+                    'has_cx_essentials': True,
+                }
+            },
+            'alternate_number_settings': {'alternate_numbers': {'__all__': {'toll_free_number': True}}},
+        }
 
     def create_or_update(self) -> dict:
         """
@@ -156,14 +160,14 @@ class HGandCQ(ApiModel):
         :return: data
         :rtype: str
         """
-        return self.model_dump(mode='json', exclude_unset=True, by_alias=True,
-                               exclude=self.exclude_update_or_create())
+        return self.model_dump(mode='json', exclude_unset=True, by_alias=True, exclude=self.exclude_update_or_create())
 
 
 class Policy(str, Enum):
     """
     Policy controlling how calls are routed to agents.
     """
+
     #: (Max 1,000 agents) This option cycles through all agents after the last agent that took a call. It sends calls
     #: to the next available agent.
     circular = 'CIRCULAR'

@@ -1,5 +1,3 @@
-from typing import List
-
 from pydantic import TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
@@ -58,7 +56,7 @@ class CallControlsMembersApi(ApiChild, base='telephony/calls/members'):
         url = self.ep(f'{member_id}/answer')
         super().post(url, params=params, json=body)
 
-    def list_calls(self, member_id: str, org_id: str = None) -> List[TelephonyCall]:
+    def list_calls(self, member_id: str, org_id: str = None) -> list[TelephonyCall]:
         """
         List Calls by Member ID
 
@@ -106,8 +104,7 @@ class CallControlsMembersApi(ApiChild, base='telephony/calls/members'):
         r = TelephonyCall.model_validate(data)
         return r
 
-    def dial(self, member_id: str, destination: str, endpoint_id: str = None,
-                          org_id: str = None) -> CallInfo:
+    def dial(self, member_id: str, destination: str, endpoint_id: str = None, org_id: str = None) -> CallInfo:
         """
         Dial by Member ID
 

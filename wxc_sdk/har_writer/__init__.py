@@ -24,6 +24,7 @@ class HarWriter:
     """
     log WebexSimpleApi and AsWebexSimpleApi requests and responses to HAR files
     """
+
     #: flag to indicate if the writer is active
     active: bool
     #: flag to indicate if the writer should include authorization headers
@@ -47,10 +48,13 @@ class HarWriter:
     _incremental_first_entry: bool
     _incremental_trailer: str
 
-    def __init__(self, path: Union[None, str, TextIOBase] = None,
-                 api: Union[WebexSimpleApi, AsWebexSimpleApi] = None,
-                 with_authorization: bool = False,
-                 incremental: bool = False):
+    def __init__(
+        self,
+        path: Union[None, str, TextIOBase] = None,
+        api: Union[WebexSimpleApi, AsWebexSimpleApi] = None,
+        with_authorization: bool = False,
+        incremental: bool = False,
+    ):
         """
         Create a new HAR writer
 
@@ -73,10 +77,9 @@ class HarWriter:
         elif isinstance(api, AsWebexSimpleApi):
             self.register_as_webex_api(api)
 
-        har_instance = HAR(log=HARLog(version='1.2',
-                                      creator=HARCreator(name='wxc_sdk',
-                                                         version=wxc_sdk.__version__),
-                                      entries=[]))
+        har_instance = HAR(
+            log=HARLog(version='1.2', creator=HARCreator(name='wxc_sdk', version=wxc_sdk.__version__), entries=[])
+        )
         self._incremental = incremental
         if self._incremental:
             # open stream if needed
@@ -171,25 +174,37 @@ class HarWriter:
 
         # build and store HAR request from response
         try:
-            new_entry = HAREntry(request=HARRequest(method=response.request.method,
-                                                    url=response.request.url,
-                                                    headers=response.request.headers,
-                                                    postData=response.request.body,
-                                                    httpVersion=response.raw.version_string,
-                                                    with_authorization=self.with_authorization),
-                                 response=HARResponse(status=response.status_code,
-                                                      statusText=response.reason,
-                                                      httpVersion=response.raw.version_string,
-                                                      headers=response.headers,
-                                                      content_str=response.content.decode()),
-                                 time=diff_ns / 1_000_000)
+            new_entry = HAREntry(
+                request=HARRequest(
+                    method=response.request.method,
+                    url=response.request.url,
+                    headers=response.request.headers,
+                    postData=response.request.body,
+                    httpVersion=response.raw.version_string,
+                    with_authorization=self.with_authorization,
+                ),
+                response=HARResponse(
+                    status=response.status_code,
+                    statusText=response.reason,
+                    httpVersion=response.raw.version_string,
+                    headers=response.headers,
+                    content_str=response.content.decode(),
+                ),
+                time=diff_ns / 1_000_000,
+            )
         except Exception as e:
             log.error(f'Error creating HAR entry: {e}')
         else:
             self.new_entry(new_entry)
 
-    def _on_as_webex_response(self, response: ClientResponse, request_body: Union[str, bytes], request_ct: str,
-                              response_data: Union[str, dict], diff_ns: int):
+    def _on_as_webex_response(
+        self,
+        response: ClientResponse,
+        request_body: Union[str, bytes],
+        request_ct: str,
+        response_data: Union[str, dict],
+        diff_ns: int,
+    ):
         """
         Callback for AsWebexSimpleApi responses
         """
@@ -206,18 +221,24 @@ class HarWriter:
             response_data_str = json.dumps(response_data)
         http_version = f'HTTP/{response.version.major}.{response.version.minor}'
         try:
-            new_entry = HAREntry(request=HARRequest(method=response.request_info.method,
-                                                    url=str(response.request_info.url),
-                                                    headers=response.request_info.headers,
-                                                    postData=request_body,
-                                                    httpVersion=http_version,
-                                                    with_authorization=self.with_authorization),
-                                 response=HARResponse(status=response.status,
-                                                      statusText=response.reason,
-                                                      httpVersion=http_version,
-                                                      headers=response.headers,
-                                                      content_str=response_data_str),
-                                 time=diff_ns / 1_000_000)
+            new_entry = HAREntry(
+                request=HARRequest(
+                    method=response.request_info.method,
+                    url=str(response.request_info.url),
+                    headers=response.request_info.headers,
+                    postData=request_body,
+                    httpVersion=http_version,
+                    with_authorization=self.with_authorization,
+                ),
+                response=HARResponse(
+                    status=response.status,
+                    statusText=response.reason,
+                    httpVersion=http_version,
+                    headers=response.headers,
+                    content_str=response_data_str,
+                ),
+                time=diff_ns / 1_000_000,
+            )
         except Exception as e:
             log.error(f'Error creating HAR entry: {e}')
         else:

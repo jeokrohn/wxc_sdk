@@ -26,13 +26,12 @@ class MusicOnHold(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json', by_alias=True,
-                               exclude_unset=True, exclude_none=False,
-                               exclude={'moh_location_enabled'})
+        return self.model_dump(
+            mode='json', by_alias=True, exclude_unset=True, exclude_none=False, exclude={'moh_location_enabled'}
+        )
 
 
 class MusicOnHoldApi(PersonSettingsApiChild):
-
     feature = 'musicOnHold'
 
     def read(self, entity_id: str, org_id: str = None) -> MusicOnHold:
@@ -60,8 +59,7 @@ class MusicOnHoldApi(PersonSettingsApiChild):
         r = MusicOnHold.model_validate(data)
         return r
 
-    def configure(self, entity_id: str, settings: MusicOnHold,
-                  org_id: str = None):
+    def configure(self, entity_id: str, settings: MusicOnHold, org_id: str = None):
         """
         Configure Music On Hold Settings for a Personvirtual line, or workspace.
 

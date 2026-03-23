@@ -2,7 +2,6 @@ from wxc_sdk.api_child import ApiChild
 
 
 class ScimApiChild(ApiChild, base='identity/scim'):
-
     def ep(self, path: str = None):
         """
         endpoint URL for given path

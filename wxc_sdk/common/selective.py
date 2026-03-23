@@ -97,13 +97,13 @@ class SelectiveCriteria(ApiModel):
 
         :meta private:
         """
-        data = self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               exclude={'id'})
+        data = self.model_dump(mode='json', by_alias=True, exclude_none=True, exclude={'id'})
         if 'enabled' in data:
             data[self._enabled_attr] = data.pop('enabled')
         if 'phoneNumbers' in data:
             data[self._phone_numbers] = data.pop('phoneNumbers')
         return data
+
 
 class SelectiveSource(str, Enum):
     #: Criteria applies to all incoming numbers.

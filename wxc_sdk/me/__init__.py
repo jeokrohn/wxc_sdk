@@ -3,6 +3,7 @@ Call Settings For Me
 
 Call settings for me APIs allow a person to read or modify their settings.
 """
+
 from collections.abc import Generator
 from dataclasses import dataclass
 from typing import Optional
@@ -45,11 +46,27 @@ from wxc_sdk.person_settings import DeviceActivationState, UserCallCaptions
 from wxc_sdk.rest import RestSession
 from wxc_sdk.telephony import AnnouncementLanguage, NameAndCode, NumberListPhoneNumberType
 
-__all__ = ['MeSettingsApi', 'MeProfile', 'MeNumber', 'MeOwner', 'MeDevice',
-           'LocationNameAddress', 'CountryTelephonyConfigRequirements',
-           'FeatureAccessCode', 'MeMonitoringSettings', 'MeMonitoredElement', 'MonitoredElementType', 'ServicesEnum',
-           'LocationAssignedNumber', 'GuestCallingNumber', 'UserEndpointType', 'UserExtension', 'EndpointStatus',
-           'UserEndpoint', 'CCExtensions']
+__all__ = [
+    'MeSettingsApi',
+    'MeProfile',
+    'MeNumber',
+    'MeOwner',
+    'MeDevice',
+    'LocationNameAddress',
+    'CountryTelephonyConfigRequirements',
+    'FeatureAccessCode',
+    'MeMonitoringSettings',
+    'MeMonitoredElement',
+    'MonitoredElementType',
+    'ServicesEnum',
+    'LocationAssignedNumber',
+    'GuestCallingNumber',
+    'UserEndpointType',
+    'UserExtension',
+    'EndpointStatus',
+    'UserEndpoint',
+    'CCExtensions',
+]
 
 
 class MeNumber(ApiModel):
@@ -397,6 +414,7 @@ class MeSettingsApi(ApiChild, base='telephony/config/people/me'):
 
     Configuring settings requires a user auth token with a scope of `spark:telephony_config_write`.
     """
+
     anon_calls: MeAnonCallsApi
     barge: MeBargeApi
     call_block: MeCallBlockApi
@@ -493,8 +511,7 @@ class MeSettingsApi(ApiChild, base='telephony/config/people/me'):
         r = TypeAdapter(list[AnnouncementLanguage]).validate_python(data['languages'])
         return r
 
-    def country_telephony_config_requirements(self,
-                                              country_code: str) -> CountryTelephonyConfigRequirements:
+    def country_telephony_config_requirements(self, country_code: str) -> CountryTelephonyConfigRequirements:
         """
         Retrieve country-specific telephony configuration requirements
 
@@ -590,9 +607,9 @@ class MeSettingsApi(ApiChild, base='telephony/config/people/me'):
         r = UserCallCaptions.model_validate(data)
         return r
 
-    def available_numbers_for_location(self, name: str = None, phone_number: str = None, extension: str = None,
-                                       order: str = None,
-                                       **params) -> Generator[LocationAssignedNumber, None, None]:
+    def available_numbers_for_location(
+        self, name: str = None, phone_number: str = None, extension: str = None, order: str = None, **params
+    ) -> Generator[LocationAssignedNumber, None, None]:
         """
         Get Available Numbers for User's Location.
 
@@ -619,8 +636,9 @@ class MeSettingsApi(ApiChild, base='telephony/config/people/me'):
         if order is not None:
             params['order'] = order
         url = self.ep('location/assignedNumbers')
-        return self.session.follow_pagination(url=url, model=LocationAssignedNumber, item_key='phoneNumbers',
-                                              params=params)
+        return self.session.follow_pagination(
+            url=url, model=LocationAssignedNumber, item_key='phoneNumbers', params=params
+        )
 
     def guest_calling_numbers(self) -> list[GuestCallingNumber]:
         """

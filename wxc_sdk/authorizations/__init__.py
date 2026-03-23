@@ -13,6 +13,7 @@ class AuthorizationType(str, SafeEnum):
     """
     The type of token associated with the authorization.
     """
+
     #: refresh authorization used to create access tokens
     refresh = 'refresh'
     #: access token authorization
@@ -54,7 +55,8 @@ class AuthorizationsApi(ApiChild, base='authorizations'):
     Authorizations are user grants to applications to act on the user's behalf. Authorizations are how `Integrations
     <https://developer.webex.com/docs/integrations>`_ get
     authorized with specific `access scopes
-    <https://developer.webex.com/docs/integrations#scopes>`_ in the oAuth client life-cycle. Integrations and some of the Webex service
+    <https://developer.webex.com/docs/integrations#scopes>`_ in the oAuth client life-cycle. Integrations and some of
+    the Webex service
     portals, like `developer.webex.com
     <https://developer.webex.com/>`_, are all oAuth clients, each with their unique `clientId.`
 
@@ -92,13 +94,11 @@ class AuthorizationsApi(ApiChild, base='authorizations'):
         :param person_email: List authorizations for this user email.
         :return: List of Authorizations
         """
-        params = {to_camel(k): v
-                  for k, v in locals().items()
-                  if k not in {'self'} and v is not None}
-        if frozenset(params) not in {frozenset({'personId'}),
-                                     frozenset({'personEmail'})}:
+        params = {to_camel(k): v for k, v in locals().items() if k not in {'self'} and v is not None}
+        if frozenset(params) not in {frozenset({'personId'}), frozenset({'personEmail'})}:
             raise ValueError(
-                'Invalid parameter combination: exactly one of person_id or person_email has to be present.')
+                'Invalid parameter combination: exactly one of person_id or person_email has to be present.'
+            )
         url = self.ep()
         data = self.get(url, params=params)
         return TypeAdapter(list[Authorization]).validate_python(data['items'])
@@ -133,13 +133,15 @@ class AuthorizationsApi(ApiChild, base='authorizations'):
         if authorization_id:
             if client_id or org_id:
                 raise ValueError(
-                    'Invalid parameter combination: authorization_id cannot be combined with client_id or org_id.')
+                    'Invalid parameter combination: authorization_id cannot be combined with client_id or org_id.'
+                )
             url = self.ep(authorization_id)
             params = None
         else:
             if not client_id:
                 raise ValueError(
-                    'Invalid parameter combination: client_id is required when authorization_id is not specified.')
+                    'Invalid parameter combination: client_id is required when authorization_id is not specified.'
+                )
             url = self.ep()
             params = client_id and {'clientId': client_id} or dict()
             if org_id:

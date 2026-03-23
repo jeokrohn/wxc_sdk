@@ -1,6 +1,7 @@
 """
 API for location voicemail settings
 """
+
 from typing import Optional
 
 from ...api_child import ApiChild
@@ -13,6 +14,7 @@ class LocationVoiceMailSettings(ApiModel):
     """
     voicemail settings for a specific location
     """
+
     #: Set to true to enable voicemail transcription.
     voicemail_transcription_enabled: Optional[bool] = None
 

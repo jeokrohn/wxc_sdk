@@ -7,6 +7,7 @@ API is used in:
     * workspace settings
     * virtual line settings
 """
+
 import json
 from dataclasses import dataclass
 from typing import Optional, Union
@@ -19,15 +20,28 @@ from ..common import AuthCode
 from ..rest import RestSession
 from .common import ApiSelector, PersonSettingsApiChild
 
-__all__ = ['OutgoingPermissionCallType', 'Action', 'CallTypePermission', 'CallingPermissions',
-           'OutgoingPermissions', 'AutoTransferNumbers', 'DigitPattern', 'DigitPatterns', 'DigitPatternsApi',
-           'TransferNumbersApi', 'AuthCodes', 'AccessCodesApi', 'OutgoingPermissionsApi']
+__all__ = [
+    'OutgoingPermissionCallType',
+    'Action',
+    'CallTypePermission',
+    'CallingPermissions',
+    'OutgoingPermissions',
+    'AutoTransferNumbers',
+    'DigitPattern',
+    'DigitPatterns',
+    'DigitPatternsApi',
+    'TransferNumbersApi',
+    'AuthCodes',
+    'AccessCodesApi',
+    'OutgoingPermissionsApi',
+]
 
 
 class OutgoingPermissionCallType(str, Enum):
     """
     call types for outgoing permissions
     """
+
     internal_call = 'INTERNAL_CALL'
     # TODO: remove when CALL-336 is GA
     local = 'LOCAL'
@@ -48,6 +62,7 @@ class Action(str, Enum):
     """
     Action on a specific call type
     """
+
     allow = 'ALLOW'
     block = 'BLOCK'
     auth_code = 'AUTH_CODE'
@@ -60,6 +75,7 @@ class CallTypePermission(ApiModel):
     """
     Permission for a specific call type
     """
+
     #: Action on the given call_type.
     action: Action
     #: If `true`, allows transfer and forwarding for the call type.
@@ -81,7 +97,8 @@ class CallingPermissions(ApiModel):
 
     model_config = ConfigDict(
         # allow undefined attributes (new call types)
-        extra='allow')
+        extra='allow'
+    )
 
     @model_validator(mode='before')
     @classmethod
@@ -147,8 +164,10 @@ class CallingPermissions(ApiModel):
         :return: :class:`CallingPermissions` instance allowing all call types
         :rtype: CallingPermissions
         """
-        init_dict = {call_type: CallTypePermission(action=Action.allow, transfer_enabled=True)
-                     for call_type in CallingPermissions.model_fields}
+        init_dict = {
+            call_type: CallTypePermission(action=Action.allow, transfer_enabled=True)
+            for call_type in CallingPermissions.model_fields
+        }
         return CallingPermissions(**init_dict)
 
     @staticmethod
@@ -161,8 +180,11 @@ class CallingPermissions(ApiModel):
         """
         # allow all call types except for a few
         r = CallingPermissions.allow_all()
-        for call_type in (OutgoingPermissionCallType.international, OutgoingPermissionCallType.premium_services_i,
-                          OutgoingPermissionCallType.premium_services_ii):
+        for call_type in (
+            OutgoingPermissionCallType.international,
+            OutgoingPermissionCallType.premium_services_i,
+            OutgoingPermissionCallType.premium_services_ii,
+        ):
             ctp = r.for_call_type(call_type)
             ctp.transfer_enabled = False
             ctp.action = Action.block
@@ -173,6 +195,7 @@ class OutgoingPermissions(ApiModel):
     """
     Outgoing Permission Settings
     """
+
     #: When true, indicates that this user uses the shared control that applies to all outgoing call settings
     #: categories when placing outbound calls.
     use_custom_enabled: Optional[bool] = None
@@ -259,6 +282,7 @@ class AutoTransferNumbers(ApiModel):
     """
     Outgoing permission auto transfer numbers
     """
+
     #: When `true`, use custom settings for the transfer numbers category of outgoing call permissions.
     use_custom_transfer_numbers: Optional[bool] = None
     #: Calls placed meeting the criteria in an outbound rule whose action is TRANSFER_NUMBER_1 will be transferred to
@@ -321,6 +345,7 @@ class TransferNumbersApi(PersonSettingsApiChild):
     """
     API for outgoing permission auto transfer numbers
     """
+
     feature = 'outgoingPermission/autoTransferNumbers'
 
     def read(self, entity_id: str, org_id: str = None) -> AutoTransferNumbers:
@@ -383,6 +408,7 @@ class AccessCodesApi(PersonSettingsApiChild):
     """
     API for outgoing permission access codes: locations, persons, workspaces, virtual lines
     """
+
     feature = 'outgoingPermission/accessCodes'
 
     def read(self, entity_id: str, org_id: str = None) -> AuthCodes:
@@ -408,8 +434,13 @@ class AccessCodesApi(PersonSettingsApiChild):
         data = self.get(url, params=params)
         return AuthCodes.model_validate(data)
 
-    def modify(self, entity_id: str, use_custom_access_codes: bool = None,
-               delete_codes: list[Union[str, AuthCode]] = None, org_id: str = None):
+    def modify(
+        self,
+        entity_id: str,
+        use_custom_access_codes: bool = None,
+        delete_codes: list[Union[str, AuthCode]] = None,
+        org_id: str = None,
+    ):
         """
         Modify Access Codes
 
@@ -439,8 +470,7 @@ class AccessCodesApi(PersonSettingsApiChild):
         if use_custom_access_codes is not None:
             body['useCustomAccessCodes'] = use_custom_access_codes
         if delete_codes is not None:
-            body['deleteCodes'] = [ac.code if isinstance(ac, AuthCode) else ac
-                                   for ac in delete_codes]
+            body['deleteCodes'] = [ac.code if isinstance(ac, AuthCode) else ac for ac in delete_codes]
         super().put(url, params=params, json=body)
 
     def create(self, entity_id: str, code: str, description: str, org_id: str = None):
@@ -465,8 +495,7 @@ class AccessCodesApi(PersonSettingsApiChild):
         """
         url = self.f_ep(entity_id)
         params = org_id and {'orgId': org_id} or None
-        body = {'code': code,
-                'description': description}
+        body = {'code': code, 'description': description}
         self.post(url, params=params, json=body)
 
     def delete(self, entity_id: str, org_id: str = None):
@@ -499,8 +528,7 @@ class AccessCodesApi(PersonSettingsApiChild):
 class DigitPatternsApi(PersonSettingsApiChild):
     feature = 'outgoingPermission/digitPatterns'
 
-    def get_digit_patterns(self, entity_id: str,
-                           org_id: str = None) -> DigitPatterns:
+    def get_digit_patterns(self, entity_id: str, org_id: str = None) -> DigitPatterns:
         """
         Retrieve Digit Patterns
 
@@ -525,8 +553,7 @@ class DigitPatternsApi(PersonSettingsApiChild):
         r = DigitPatterns.model_validate(data)
         return r
 
-    def details(self, entity_id: str, digit_pattern_id: str,
-                org_id: str = None) -> DigitPattern:
+    def details(self, entity_id: str, digit_pattern_id: str, org_id: str = None) -> DigitPattern:
         """
         Retrieve Digit Pattern Details
 
@@ -581,9 +608,9 @@ class DigitPatternsApi(PersonSettingsApiChild):
         r = data['id']
         return r
 
-    def update_category_control_settings(self, entity_id: str,
-                                         use_custom_digit_patterns: bool = None,
-                                         org_id: str = None):
+    def update_category_control_settings(
+        self, entity_id: str, use_custom_digit_patterns: bool = None, org_id: str = None
+    ):
         """
         Modify the Digit Pattern Category Control Settings for the entity
 
@@ -690,6 +717,7 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
 
     Also used for user, workspace, location, and virtual line outgoing permissions
     """
+
     transfer_numbers: TransferNumbersApi
     access_codes: AccessCodesApi
     digit_patterns: DigitPatternsApi
@@ -698,18 +726,17 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
 
     def __getattribute__(self, item):
         if item == 'access_codes' and self.selector == ApiSelector.location:
-            raise AttributeError("access_codes API is not available for locations. Use the telephony access_codes API")
+            raise AttributeError('access_codes API is not available for locations. Use the telephony access_codes API')
         return super().__getattribute__(item)
 
-    def __init__(self, *, session: RestSession,
-                 selector: ApiSelector = 'person'):
+    def __init__(self, *, session: RestSession, selector: ApiSelector = 'person'):
         super().__init__(session=session, selector=selector)
         self.transfer_numbers = TransferNumbersApi(session=session, selector=selector)
         if selector == ApiSelector.location:
             # Apparently there is a difference between access code API for locations on one hand and users,
             # workspaces, and virtual lines one the other.
             # For locations, we can create multiple access codes at once.
-            self.access_codes = None    # instead use the access_codes API at the telephony level
+            self.access_codes = None  # instead use the access_codes API at the telephony level
         else:
             self.access_codes = AccessCodesApi(session=session, selector=selector)
         self.digit_patterns = DigitPatternsApi(session=session, selector=selector)
@@ -735,8 +762,9 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         return OutgoingPermissions.model_validate(self.get(ep, params=params))
 
-    def configure(self, entity_id: str, settings: OutgoingPermissions, drop_call_types: set[str] = None,
-                  org_id: str = None):
+    def configure(
+        self, entity_id: str, settings: OutgoingPermissions, drop_call_types: set[str] = None, org_id: str = None
+    ):
         """
         Configure Outgoing Calling Permissions Settings
 

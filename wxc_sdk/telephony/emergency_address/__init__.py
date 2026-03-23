@@ -5,8 +5,7 @@ from pydantic import TypeAdapter
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 
-__all__ = ['EmergencyAddressApi', 'EmergencyAddress', 'AddressLookupError',
-           'SuggestedEmergencyAddress']
+__all__ = ['EmergencyAddressApi', 'EmergencyAddress', 'AddressLookupError', 'SuggestedEmergencyAddress']
 
 
 class EmergencyAddress(ApiModel):
@@ -54,8 +53,9 @@ class SuggestedEmergencyAddress(EmergencyAddress):
 
         :meta private:
         """
-        return self.model_dump(mode='json', by_alias=True, exclude_unset=True, exclude_none=True,
-                               exclude={'meta', 'errors'})
+        return self.model_dump(
+            mode='json', by_alias=True, exclude_unset=True, exclude_none=True, exclude={'meta', 'errors'}
+        )
 
 
 class EmergencyAddressApi(ApiChild, base='telephony/pstn'):
@@ -64,8 +64,9 @@ class EmergencyAddressApi(ApiChild, base='telephony/pstn'):
 
     """
 
-    def add_to_location(self, location_id: str, address: Union[EmergencyAddress, SuggestedEmergencyAddress],
-                        org_id: str = None) -> str:
+    def add_to_location(
+        self, location_id: str, address: Union[EmergencyAddress, SuggestedEmergencyAddress], org_id: str = None
+    ) -> str:
         """
         Add an Emergency Address to a Location
 
@@ -95,8 +96,9 @@ class EmergencyAddressApi(ApiChild, base='telephony/pstn'):
         r = data['id']
         return r
 
-    def lookup_for_location(self, location_id: str, address: Union[EmergencyAddress, SuggestedEmergencyAddress],
-                            org_id: str = None) -> list[SuggestedEmergencyAddress]:
+    def lookup_for_location(
+        self, location_id: str, address: Union[EmergencyAddress, SuggestedEmergencyAddress], org_id: str = None
+    ) -> list[SuggestedEmergencyAddress]:
         """
         Emergency Address Lookup to Verify if Address is Valid
 
@@ -126,8 +128,13 @@ class EmergencyAddressApi(ApiChild, base='telephony/pstn'):
         r = TypeAdapter(list[SuggestedEmergencyAddress]).validate_python(data['addresses'])
         return r
 
-    def update_for_location(self, location_id: str, address_id: str,
-                            address: Union[EmergencyAddress, SuggestedEmergencyAddress], org_id: str = None):
+    def update_for_location(
+        self,
+        location_id: str,
+        address_id: str,
+        address: Union[EmergencyAddress, SuggestedEmergencyAddress],
+        org_id: str = None,
+    ):
         """
         Update the Emergency Address of a Location
 
@@ -156,9 +163,12 @@ class EmergencyAddressApi(ApiChild, base='telephony/pstn'):
         url = self.ep(f'locations/{location_id}/emergencyAddresses/{address_id}')
         super().put(url, params=params, json=body)
 
-    def update_for_phone_number(self, phone_number: str,
-                                emergency_address: Union[EmergencyAddress, SuggestedEmergencyAddress] = None,
-                                org_id: str = None):
+    def update_for_phone_number(
+        self,
+        phone_number: str,
+        emergency_address: Union[EmergencyAddress, SuggestedEmergencyAddress] = None,
+        org_id: str = None,
+    ):
         """
         Update the emergency address for a phone number.
 

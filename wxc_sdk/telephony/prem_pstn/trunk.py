@@ -1,6 +1,7 @@
+import builtins
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from pydantic import Field, TypeAdapter
 
@@ -9,9 +10,21 @@ from ...base import ApiModel, enum_str, to_camel
 from ...base import SafeEnum as Enum
 from ...common import Customer, IdAndName
 
-__all__ = ['TrunkType', 'Trunk', 'TrunkDeviceType', 'TrunkTypeWithDeviceType', 'DeviceStatus',
-           'ResponseStatusType', 'ResponseStatus', 'CnameRecord', 'OutboundProxy', 'TrunkDetail', 'TrunkUsage',
-           'PChargeInfoSupportPolicy', 'TrunkApi']
+__all__ = [
+    'TrunkType',
+    'Trunk',
+    'TrunkDeviceType',
+    'TrunkTypeWithDeviceType',
+    'DeviceStatus',
+    'ResponseStatusType',
+    'ResponseStatus',
+    'CnameRecord',
+    'OutboundProxy',
+    'TrunkDetail',
+    'TrunkUsage',
+    'PChargeInfoSupportPolicy',
+    'TrunkApi',
+]
 
 
 class TrunkType(str, Enum):
@@ -161,8 +174,15 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
     API for everything trunks
     """
 
-    def list(self, name: str = None, location_name: str = None, trunk_type: str = None, order: str = None,
-             org_id: str = None, **params) -> Generator[Trunk, None, None]:
+    def list(
+        self,
+        name: str = None,
+        location_name: str = None,
+        trunk_type: str = None,
+        order: str = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[Trunk, None, None]:
         """
         List all Trunks for the organization.
 
@@ -187,16 +207,26 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         :return: generator of Trunk instances
         :rtype: :class:`Trunk`
         """
-        params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'params'})
+        params.update((to_camel(p), v) for p, v in locals().items() if v is not None and p not in {'self', 'params'})
         url = self.ep()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, params=params, model=Trunk, item_key='trunks')
 
-    def create(self, name: str, location_id: str, password: str, trunk_type: TrunkType = TrunkType.registering,
-               dual_identity_support_enabled: bool = None, device_type: TrunkDeviceType = None, address: str = None,
-               domain: str = None, port: int = None, max_concurrent_calls: int = None,
-               p_charge_info_support_policy: PChargeInfoSupportPolicy = None, org_id: str = None) -> str:
+    def create(
+        self,
+        name: str,
+        location_id: str,
+        password: str,
+        trunk_type: TrunkType = TrunkType.registering,
+        dual_identity_support_enabled: bool = None,
+        device_type: TrunkDeviceType = None,
+        address: str = None,
+        domain: str = None,
+        port: int = None,
+        max_concurrent_calls: int = None,
+        p_charge_info_support_policy: PChargeInfoSupportPolicy = None,
+        org_id: str = None,
+    ) -> str:
         """
         Create a Trunk for the organization.
 
@@ -281,9 +311,16 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         data = self.get(url=url, params=params)
         return TrunkDetail.model_validate(data)
 
-    def update(self, trunk_id: str, name: str, password: str, dual_identity_support_enabled: bool = None,
-               max_concurrent_calls: int = None, p_charge_info_support_policy: PChargeInfoSupportPolicy = None,
-               org_id: str = None):
+    def update(
+        self,
+        trunk_id: str,
+        name: str,
+        password: str,
+        dual_identity_support_enabled: bool = None,
+        max_concurrent_calls: int = None,
+        p_charge_info_support_policy: PChargeInfoSupportPolicy = None,
+        org_id: str = None,
+    ):
         """
         Modify a Trunk for the organization.
 
@@ -341,7 +378,7 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         params = org_id and {'orgId': org_id} or None
         self.delete(url=url, params=params)
 
-    def trunk_types(self, org_id: str = None) -> List[TrunkTypeWithDeviceType]:
+    def trunk_types(self, org_id: str = None) -> builtins.list[TrunkTypeWithDeviceType]:
         """
         List all TrunkTypes with DeviceTypes for the organization.
 
@@ -385,8 +422,9 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         data = self.get(url=url, params=params)
         return TrunkUsage.model_validate(data)
 
-    def usage_call_to_extension(self, trunk_id: str, order: str = None, name: List[str] = None, org_id: str = None,
-                                **params) -> Generator[IdAndName, None, None]:
+    def usage_call_to_extension(
+        self, trunk_id: str, order: str = None, name: builtins.list[str] = None, org_id: str = None, **params
+    ) -> Generator[IdAndName, None, None]:
         """
         Get local gateway call to on-premises extension usage for a trunk.
 
@@ -418,8 +456,9 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
 
-    def usage_dial_plan(self, trunk_id: str, order: str = None, name: List[str] = None,
-                        org_id: str = None, **params) -> Generator[IdAndName, None, None]:
+    def usage_dial_plan(
+        self, trunk_id: str, order: str = None, name: builtins.list[str] = None, org_id: str = None, **params
+    ) -> Generator[IdAndName, None, None]:
         """
         Get Local Gateway Dial Plan Usage for a Trunk.
 
@@ -521,8 +560,7 @@ class TrunkApi(ApiChild, base='telephony/config/premisePstn/trunks'):
         :param org_id: Organization to which trunk types belongs.
         :type org_id: str
         """
-        body = {p: v for p, v in locals().items()
-                if p not in {'self', 'org_id'} and v is not None}
+        body = {p: v for p, v in locals().items() if p not in {'self', 'org_id'} and v is not None}
         url = self.ep('actions/fqdnValidation/invoke')
         params = org_id and {'orgId': org_id} or None
         self.post(url=url, params=params, json=body)

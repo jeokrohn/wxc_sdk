@@ -196,9 +196,15 @@ class EventsApi(ApiChild, base='events'):
     spark-compliance:events_read scope. See the Compliance Guide for more information.
     """
 
-    def list(self, resource: EventResource = None, type_: EventType = None, actor_id: str = None,
-             from_: Union[str, datetime] = None, to_: Union[str, datetime] = None,
-             **params) -> Generator[ComplianceEvent, None, None]:
+    def list(
+        self,
+        resource: EventResource = None,
+        type_: EventType = None,
+        actor_id: str = None,
+        from_: Union[str, datetime] = None,
+        to_: Union[str, datetime] = None,
+        **params,
+    ) -> Generator[ComplianceEvent, None, None]:
         """
         List events in your organization. Several query parameters are available to filter the response.
 

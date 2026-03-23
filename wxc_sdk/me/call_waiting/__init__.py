@@ -1,6 +1,6 @@
 from wxc_sdk.api_child import ApiChild
 
-__all__ = ['MeCallWaitingApi', ]
+__all__ = ['MeCallWaitingApi']
 
 
 class MeCallWaitingApi(ApiChild, base='telephony/config/people/me'):

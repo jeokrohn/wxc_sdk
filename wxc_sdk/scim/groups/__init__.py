@@ -9,17 +9,22 @@ from wxc_sdk.base import SafeEnum as Enum
 from wxc_sdk.scim.child import ScimApiChild
 from wxc_sdk.scim.users import PatchUserOperation
 
-__all__ = ['ScimGroup', 'ScimGroupMember',
-           'WebexGroup',
-           'WebexGroupMeta', 'GroupMemberObject',
-           'GroupMemberResponse', 'ManagedBy', 'GroupMeta',
-           'MetaObjectResourceType',
-           'WebexGroupOwner', 'SCIM2GroupsApi', 'SearchGroupResponse']
-
-SCHEMAS = [
-    "urn:ietf:params:scim:schemas:core:2.0:Group",
-    "urn:scim:schemas:extension:cisco:webexidentity:2.0:Group"
+__all__ = [
+    'ScimGroup',
+    'ScimGroupMember',
+    'WebexGroup',
+    'WebexGroupMeta',
+    'GroupMemberObject',
+    'GroupMemberResponse',
+    'ManagedBy',
+    'GroupMeta',
+    'MetaObjectResourceType',
+    'WebexGroupOwner',
+    'SCIM2GroupsApi',
+    'SearchGroupResponse',
 ]
+
+SCHEMAS = ['urn:ietf:params:scim:schemas:core:2.0:Group', 'urn:scim:schemas:extension:cisco:webexidentity:2.0:Group']
 
 
 class WebexGroupOwner(ApiModel):
@@ -106,20 +111,20 @@ class ScimGroup(ApiModel):
     meta: Optional[GroupMeta] = None
     #: The Cisco extention of SCIM 2
     webex_group: Optional[WebexGroup] = Field(
-        alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:Group', default=None)
+        alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:Group', default=None
+    )
 
     def create_update(self) -> dict:
         """
 
         :meta private:
         """
-        data = self.model_dump(mode='json',
-                               exclude_none=True,
-                               by_alias=True,
-                               exclude={'id': True,
-                                        'schemas': True,
-                                        'meta': True,
-                                        'webex_group': {'meta': True}})
+        data = self.model_dump(
+            mode='json',
+            exclude_none=True,
+            by_alias=True,
+            exclude={'id': True, 'schemas': True, 'meta': True, 'webex_group': {'meta': True}},
+        )
         data['schemas'] = SCHEMAS
         return data
 
@@ -248,9 +253,19 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
         r = ScimGroup.model_validate(data)
         return r
 
-    def search(self, org_id: str, filter: str = None, excluded_attributes: str = None, attributes: str = None,
-               start_index: int = None, count: int = None, sort_by: str = None, sort_order: str = None,
-               include_members: bool = None, member_type: str = None) -> SearchGroupResponse:
+    def search(
+        self,
+        org_id: str,
+        filter: str = None,
+        excluded_attributes: str = None,
+        attributes: str = None,
+        start_index: int = None,
+        count: int = None,
+        sort_by: str = None,
+        sort_order: str = None,
+        include_members: bool = None,
+        member_type: str = None,
+    ) -> SearchGroupResponse:
         """
         Search groups
 
@@ -328,9 +343,18 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
         r = SearchGroupResponse.model_validate(data)
         return r
 
-    def search_all(self, org_id: str, filter: str = None, excluded_attributes: str = None, attributes: str = None,
-                   count: int = None, sort_by: str = None, sort_order: str = None,
-                   include_members: bool = None, member_type: str = None) -> Generator[ScimGroup, None, None]:
+    def search_all(
+        self,
+        org_id: str,
+        filter: str = None,
+        excluded_attributes: str = None,
+        attributes: str = None,
+        count: int = None,
+        sort_by: str = None,
+        sort_order: str = None,
+        include_members: bool = None,
+        member_type: str = None,
+    ) -> Generator[ScimGroup, None, None]:
         """
         Same operation as search() but returns a generator of ScimGroups instead of paginated resources
 
@@ -347,7 +371,7 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
         :param member_type:
         :return:
         """
-        '''async
+        """async
     async def search_all_gen(self, org_id: str, filter: str = None, excluded_attributes: str = None,
                              attributes: str= None,
                              count: int = None, sort_by: str = None, sort_order: str = None,
@@ -373,9 +397,8 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
         params = {k: v for k, v in locals().items()
                   if k not in {'self'} and v is not None}
         return [u async for u in self.search_all_gen(**params)]
-        '''
-        params = {k: v for k, v in locals().items()
-                  if k not in {'self', 'count'} and v is not None}
+        """
+        params = {k: v for k, v in locals().items() if k not in {'self', 'count'} and v is not None}
         start_index = None
         while True:
             paginated_result = self.search(**params, start_index=start_index, count=count)
@@ -387,8 +410,9 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
                 break
         return
 
-    def members(self, org_id: str, group_id: str, start_index: int = None, count: int = None,
-                member_type: str = None) -> GroupMemberResponse:
+    def members(
+        self, org_id: str, group_id: str, start_index: int = None, count: int = None, member_type: str = None
+    ) -> GroupMemberResponse:
         """
         Get Group Members
 
@@ -444,8 +468,9 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
         r = GroupMemberResponse.model_validate(data)
         return r
 
-    def members_all(self, org_id: str, group_id: str, start_index: int = None, count: int = None,
-                    member_type: str = None) -> Generator[ScimGroupMember, None, None]:
+    def members_all(
+        self, org_id: str, group_id: str, start_index: int = None, count: int = None, member_type: str = None
+    ) -> Generator[ScimGroupMember, None, None]:
         """
         Same operation as members() but returns a generator of ScimGroupMembers instead of paginated resources
 
@@ -458,7 +483,7 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
         :param member_type:
         :return:
         """
-        '''async
+        """async
     async def members_all_gen(self, org_id: str, group_id: str, start_index: int = None, count: int = None,
                               member_type: str = None) -> AsyncGenerator[ScimGroupMember, None, None]:
         params = {k: v for k, v in locals().items()
@@ -480,10 +505,9 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
         params = {k: v for k, v in locals().items()
                   if k not in {'self'} and v is not None}
         return [u async for u in self.members_all_gen(**params)]
-        '''
+        """
 
-        params = {k: v for k, v in locals().items()
-                  if k not in {'self', 'count'} and v is not None}
+        params = {k: v for k, v in locals().items() if k not in {'self', 'count'} and v is not None}
         start_index = None
         while True:
             paginated_result = self.members(**params, start_index=start_index, count=count)
@@ -542,8 +566,7 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
         r = ScimGroup.model_validate(data)
         return r
 
-    def patch(self, org_id: str, group_id: str, schemas: list[str],
-              operations: list[PatchUserOperation]) -> ScimGroup:
+    def patch(self, org_id: str, group_id: str, schemas: list[str], operations: list[PatchUserOperation]) -> ScimGroup:
         """
         Update a group with PATCH
 
@@ -659,8 +682,9 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
         """
         body = dict()
         body['schemas'] = schemas
-        body['Operations'] = TypeAdapter(list[PatchUserOperation]).dump_python(operations, mode='json', by_alias=True,
-                                                                               exclude_none=True)
+        body['Operations'] = TypeAdapter(list[PatchUserOperation]).dump_python(
+            operations, mode='json', by_alias=True, exclude_none=True
+        )
         url = self.ep(f'{org_id}/v2/Groups/{group_id}')
         data = super().patch(url, json=body)
         r = ScimGroup.model_validate(data)

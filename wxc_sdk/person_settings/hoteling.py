@@ -1,6 +1,7 @@
 """
 Hoteling API
 """
+
 import json
 
 from .common import PersonSettingsApiChild

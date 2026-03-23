@@ -44,12 +44,10 @@ class MeSelectedCallerId(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json', by_alias=True, exclude_unset=True,
-                               include={'type', 'id', 'direct_number'})
+        return self.model_dump(mode='json', by_alias=True, exclude_unset=True, include={'type', 'id', 'direct_number'})
 
 
 class MeCallerIdApi(ApiChild, base='telephony/config/people/me'):
-
     def settings(self) -> MeCallerIdSettings:
         """
         Get My Caller ID Settings

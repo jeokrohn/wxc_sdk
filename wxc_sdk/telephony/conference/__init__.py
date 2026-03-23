@@ -5,8 +5,13 @@ from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
-__all__ = ['ConferenceControlsApi', 'ConferenceDetails', 'ConferenceParticipant', 'ConferenceState',
-           'ConferenceTypeEnum']
+__all__ = [
+    'ConferenceControlsApi',
+    'ConferenceDetails',
+    'ConferenceParticipant',
+    'ConferenceState',
+    'ConferenceTypeEnum',
+]
 
 
 class ConferenceState(str, Enum):

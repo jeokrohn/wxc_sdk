@@ -1,6 +1,7 @@
 """
 Numbers API for Workspaces
 """
+
 from typing import Optional
 
 from pydantic import TypeAdapter
@@ -38,7 +39,6 @@ class UpdateWorkspacePhoneNumber(ApiModel):
 
 
 class WorkspaceNumbersApi(ApiChild, base='workspaces'):
-
     # noinspection PyMethodOverriding
     def ep(self, workspace_id: str, path: str = None):
         """
@@ -68,10 +68,13 @@ class WorkspaceNumbersApi(ApiChild, base='workspaces'):
         data = self.get(url=url, params=params)
         return TypeAdapter(WorkspaceNumbers).validate_python(data)
 
-    def update(self, workspace_id: str,
-               phone_numbers: list[UpdateWorkspacePhoneNumber],
-               distinctive_ring_enabled: bool = None,
-               org_id: str = None):
+    def update(
+        self,
+        workspace_id: str,
+        phone_numbers: list[UpdateWorkspacePhoneNumber],
+        distinctive_ring_enabled: bool = None,
+        org_id: str = None,
+    ):
         """
         Assign or Unassign numbers associated with a specific workspace
 
@@ -104,8 +107,8 @@ class WorkspaceNumbersApi(ApiChild, base='workspaces'):
         body = dict()
         if distinctive_ring_enabled is not None:
             body['distinctiveRingEnabled'] = distinctive_ring_enabled
-        body['phoneNumbers'] = TypeAdapter(list[UpdateWorkspacePhoneNumber]).dump_python(phone_numbers, mode='json',
-                                                                                         by_alias=True,
-                                                                                         exclude_none=True)
+        body['phoneNumbers'] = TypeAdapter(list[UpdateWorkspacePhoneNumber]).dump_python(
+            phone_numbers, mode='json', by_alias=True, exclude_none=True
+        )
         url = self.session.ep(f'telephony/config/workspaces/{workspace_id}/numbers')
         super().put(url, params=params, json=body)

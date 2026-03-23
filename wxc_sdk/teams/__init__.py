@@ -1,6 +1,7 @@
 """
 Teams API
 """
+
 from collections.abc import Generator
 from datetime import datetime
 from typing import Optional

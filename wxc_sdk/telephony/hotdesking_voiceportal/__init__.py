@@ -49,9 +49,7 @@ class HotDeskingSigninViaVoicePortalApi(ApiChild, base='telephony/config'):
         data = super().get(url, params=params)
         return HotDeskingVoicePortalSetting.model_validate(data)
 
-    def location_update(self, location_id: str,
-                        setting: HotDeskingVoicePortalSetting,
-                        org_id: str = None):
+    def location_update(self, location_id: str, setting: HotDeskingVoicePortalSetting, org_id: str = None):
         """
         Update Voice Portal Hot desking sign in details for a location
 
@@ -97,9 +95,7 @@ class HotDeskingSigninViaVoicePortalApi(ApiChild, base='telephony/config'):
         data = super().get(url, params=params)
         return HotDeskingVoicePortalSetting.model_validate(data)
 
-    def user_update(self, person_id: str,
-                    setting: HotDeskingVoicePortalSetting,
-                    org_id: str = None):
+    def user_update(self, person_id: str, setting: HotDeskingVoicePortalSetting, org_id: str = None):
         """
         Update Voice Portal Hot desking sign in details for a user
 

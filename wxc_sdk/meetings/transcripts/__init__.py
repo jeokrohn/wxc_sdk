@@ -1,6 +1,7 @@
 """
 Meeting transcripts API
 """
+
 from collections.abc import Generator
 from typing import Optional
 
@@ -8,8 +9,14 @@ from ...api_child import ApiChild
 from ...base import ApiModel
 from ...base import SafeEnum as Enum
 
-__all__ = ['MeetingTranscriptsApi', 'TranscriptSnippet', 'TranscriptStatus', 'Transcript',
-           'UpdateTranscriptSnippetBody', 'DeleteTranscriptBody']
+__all__ = [
+    'MeetingTranscriptsApi',
+    'TranscriptSnippet',
+    'TranscriptStatus',
+    'Transcript',
+    'UpdateTranscriptSnippetBody',
+    'DeleteTranscriptBody',
+]
 
 
 class TranscriptStatus(str, Enum):
@@ -89,8 +96,15 @@ class MeetingTranscriptsApi(ApiChild, base=''):
     NOTE:
     """
 
-    def list(self, meeting_id: str = None, host_email: str = None, site_url: str = None, from_: str = None,
-             to_: str = None, **params) -> Generator[Transcript, None, None]:
+    def list(
+        self,
+        meeting_id: str = None,
+        host_email: str = None,
+        site_url: str = None,
+        from_: str = None,
+        to_: str = None,
+        **params,
+    ) -> Generator[Transcript, None, None]:
         """
         Lists available transcripts of an ended meeting instance.
         Use this operation to list transcripts of an ended meeting instance when they are ready. Please note that only
@@ -132,8 +146,9 @@ class MeetingTranscriptsApi(ApiChild, base=''):
         url = self.ep('meetingTranscripts')
         return self.session.follow_pagination(url=url, model=Transcript, params=params)
 
-    def list_compliance_officer(self, site_url: str, from_: str = None, to_: str = None,
-                                **params) -> Generator[Transcript, None, None]:
+    def list_compliance_officer(
+        self, site_url: str, from_: str = None, to_: str = None, **params
+    ) -> Generator[Transcript, None, None]:
         """
         Lists available or deleted transcripts of an ended meeting instance for a specific site.
         The returned list is sorted in descending order by the date and time that the transcript was created.

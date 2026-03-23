@@ -66,13 +66,15 @@ class AvailableNumbersApi(ApiChild, base='telephony/config'):
     """
 
     # lookup for allowed entities for each function
-    existing = {'callForwarding': {'virtualLines', 'workspaces', 'people'},
-                'emergencyCallbackNumber': {'virtualLines', 'workspaces', 'people'},
-                'faxMessage': {'virtualLines', 'people', 'workspaces'},
-                '': {'virtualLines', 'workspaces'},
-                'callIntercept': {'workspaces', 'people'},
-                'primary': {'people'},
-                'secondary': {'people', 'workspaces'}}
+    existing = {
+        'callForwarding': {'virtualLines', 'workspaces', 'people'},
+        'emergencyCallbackNumber': {'virtualLines', 'workspaces', 'people'},
+        'faxMessage': {'virtualLines', 'people', 'workspaces'},
+        '': {'virtualLines', 'workspaces'},
+        'callIntercept': {'workspaces', 'people'},
+        'primary': {'people'},
+        'secondary': {'people', 'workspaces'},
+    }
 
     def __init__(self, *, session: RestSession, selector: ApiSelector = ApiSelector.person):
         super().__init__(session=session)
@@ -103,10 +105,14 @@ class AvailableNumbersApi(ApiChild, base='telephony/config'):
         url = self.ep(f'{self.selector}/{entity_id}{available_for}availableNumbers')
         return url
 
-    def primary(self, location_id: str = None, phone_number: list[str] = None,
-                license_type: AvailablePhoneNumberLicenseType = None,
-                org_id: str = None,
-                **params) -> Generator[AvailableNumber, None, None]:
+    def primary(
+        self,
+        location_id: str = None,
+        phone_number: list[str] = None,
+        license_type: AvailablePhoneNumberLicenseType = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get Person Primary Available Phone Numbers
 
@@ -148,9 +154,9 @@ class AvailableNumbersApi(ApiChild, base='telephony/config'):
         url = self.f_ep('primary')
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
-    def secondary(self, entity_id: str, phone_number: list[str] = None,
-                  org_id: str = None,
-                  **params) -> Generator[AvailableNumber, None, None]:
+    def secondary(
+        self, entity_id: str, phone_number: list[str] = None, org_id: str = None, **params
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get Person Secondary Available Phone Numbers
 
@@ -182,9 +188,9 @@ class AvailableNumbersApi(ApiChild, base='telephony/config'):
         url = self.f_ep('secondary', entity_id=entity_id)
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
-    def fax_message(self, entity_id: str, phone_number: list[str] = None,
-                    org_id: str = None,
-                    **params) -> Generator[AvailableNumber, None, None]:
+    def fax_message(
+        self, entity_id: str, phone_number: list[str] = None, org_id: str = None, **params
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get Fax Message Available Phone Numbers
 
@@ -216,10 +222,15 @@ class AvailableNumbersApi(ApiChild, base='telephony/config'):
         url = self.f_ep('faxMessage', entity_id=entity_id)
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
-    def call_forward(self, entity_id: str, phone_number: list[str] = None,
-                     owner_name: str = None, extension: str = None,
-                     org_id: str = None,
-                     **params) -> Generator[AvailableNumber, None, None]:
+    def call_forward(
+        self,
+        entity_id: str,
+        phone_number: list[str] = None,
+        owner_name: str = None,
+        extension: str = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get Call Forward Available Phone Numbers
 
@@ -260,9 +271,9 @@ class AvailableNumbersApi(ApiChild, base='telephony/config'):
         url = self.f_ep('callForwarding', entity_id=entity_id)
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
-    def ecbn(self, entity_id: str, phone_number: list[str] = None,
-             owner_name: str = None, org_id: str = None,
-             **params) -> Generator[AvailableNumber, None, None]:
+    def ecbn(
+        self, entity_id: str, phone_number: list[str] = None, owner_name: str = None, org_id: str = None, **params
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get ECBN Available Phone Numbers
 
@@ -299,9 +310,9 @@ class AvailableNumbersApi(ApiChild, base='telephony/config'):
         url = self.f_ep('emergencyCallbackNumber', entity_id=entity_id)
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
-    def available(self, location_id: str = None, phone_number: list[str] = None,
-                  org_id: str = None,
-                  **params) -> Generator[AvailableNumber, None, None]:
+    def available(
+        self, location_id: str = None, phone_number: list[str] = None, org_id: str = None, **params
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get Available Phone Numbers
 
@@ -336,10 +347,15 @@ class AvailableNumbersApi(ApiChild, base='telephony/config'):
         url = self.f_ep('')
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
-    def call_intercept(self, entity_id: str, phone_number: list[str] = None,
-                       owner_name: str = None, extension: str = None,
-                       org_id: str = None,
-                       **params) -> Generator[AvailableNumber, None, None]:
+    def call_intercept(
+        self,
+        entity_id: str,
+        phone_number: list[str] = None,
+        owner_name: str = None,
+        extension: str = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get Call Intercept Available Phone Numbers
 

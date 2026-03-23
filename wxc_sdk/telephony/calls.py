@@ -1,6 +1,7 @@
 """
 Webex Calling Call Control API and related data types
 """
+
 import datetime
 from typing import Optional
 
@@ -11,10 +12,27 @@ from ..base import ApiModel, enum_str
 from ..base import SafeEnum as Enum
 from ..webhook import WebhookEvent, WebhookEventData
 
-__all__ = ['CallType', 'TelephonyParty', 'RedirectReason', 'Redirection', 'Recall', 'RecordingState',
-           'Personality', 'CallState', 'TelephonyCall', 'TelephonyEventData', 'TelephonyEvent', 'DialResponse',
-           'RejectAction', 'HistoryType', 'CallHistoryRecord', 'CallInfo', 'CallsApi', 'RecallType',
-           'ExternalVoicemailMwiAction']
+__all__ = [
+    'CallType',
+    'TelephonyParty',
+    'RedirectReason',
+    'Redirection',
+    'Recall',
+    'RecordingState',
+    'Personality',
+    'CallState',
+    'TelephonyCall',
+    'TelephonyEventData',
+    'TelephonyEvent',
+    'DialResponse',
+    'RejectAction',
+    'HistoryType',
+    'CallHistoryRecord',
+    'CallInfo',
+    'CallsApi',
+    'RecallType',
+    'ExternalVoicemailMwiAction',
+]
 
 
 class RejectAction(str, Enum):
@@ -123,6 +141,7 @@ class Recall(ApiModel):
     """
     call recall
     """
+
     #: The type of recall the incoming call is for. Park is the only type of recall currently supported but additional
     #: values may be added in the future.
     recall_type: RecallType = Field(alias='type')
@@ -241,6 +260,7 @@ class TelephonyEventData(WebhookEventData, TelephonyCall):
     """
     data in a webhook 'telephony_calls' event
     """
+
     resource = 'telephony_calls'
     event_type: str
     event_timestamp: datetime.datetime
@@ -489,8 +509,9 @@ class CallsApi(ApiChild, base='telephony/calls'):
         url = self.ep('mute')
         super().post(url, json=body)
 
-    def park(self, call_id: str, destination: str = None, is_group_park: bool = None,
-             line_owner_id: str = None) -> TelephonyParty:
+    def park(
+        self, call_id: str, destination: str = None, is_group_park: bool = None, line_owner_id: str = None
+    ) -> TelephonyParty:
         """
         Park
 
@@ -774,8 +795,9 @@ class CallsApi(ApiChild, base='telephony/calls'):
         url = self.ep('stopRecording')
         super().post(url, json=body)
 
-    def transfer(self, call_id1: str = None, call_id2: str = None, destination: str = None,
-                 line_owner_id: str = None) -> CallInfo:
+    def transfer(
+        self, call_id1: str = None, call_id2: str = None, destination: str = None, line_owner_id: str = None
+    ) -> CallInfo:
         """
         Transfer
 

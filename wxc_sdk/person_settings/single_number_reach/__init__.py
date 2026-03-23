@@ -28,10 +28,7 @@ class SingleNumberReachNumber(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json',
-                               by_alias=True,
-                               exclude_unset=True,
-                               exclude={'id'})
+        return self.model_dump(mode='json', by_alias=True, exclude_unset=True, exclude={'id'})
 
 
 class SingleNumberReach(ApiModel):
@@ -60,9 +57,9 @@ class SingleNumberReachApi(ApiChild, base='telephony/config'):
     query parameter.
     """
 
-    def available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
-                                org_id: str = None,
-                                **params) -> Generator[AvailableNumber, None, None]:
+    def available_phone_numbers(
+        self, location_id: str, phone_number: list[str] = None, org_id: str = None, **params
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get Single Number Reach Primary Available Phone Numbers
 
@@ -92,8 +89,7 @@ class SingleNumberReachApi(ApiChild, base='telephony/config'):
         if phone_number is not None:
             params['phoneNumber'] = ','.join(phone_number)
         url = self.ep(f'locations/{location_id}/singleNumberReach/availableNumbers')
-        return self.session.follow_pagination(url=url, model=AvailableNumber,
-                                              item_key='phoneNumbers', params=params)
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
     def read(self, person_id: str) -> SingleNumberReach:
         """
@@ -117,8 +113,7 @@ class SingleNumberReachApi(ApiChild, base='telephony/config'):
         r = SingleNumberReach.model_validate(data)
         return r
 
-    def update(self, person_id: str,
-               alert_all_numbers_for_click_to_dial_calls_enabled: bool = None):
+    def update(self, person_id: str, alert_all_numbers_for_click_to_dial_calls_enabled: bool = None):
         """
         Update Single number reach settings for a person.
 

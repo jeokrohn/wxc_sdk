@@ -1,6 +1,7 @@
 """
 call monitoring API
 """
+
 from typing import Optional, Union
 
 from pydantic import Field
@@ -9,8 +10,7 @@ from ..base import ApiModel, webex_id_to_uuid
 from ..common import CallParkExtension, MonitoredMember
 from .common import PersonSettingsApiChild
 
-__all__ = ['MonitoredElementMember', 'MonitoredElement', 'Monitoring',
-           'MonitoringApi']
+__all__ = ['MonitoredElementMember', 'MonitoredElement', 'Monitoring', 'MonitoringApi']
 
 
 class MonitoredElementMember(MonitoredMember):
@@ -39,13 +39,11 @@ class Monitoring(ApiModel):
 
     @property
     def monitored_cpes(self) -> list[CallParkExtension]:
-        return [me.cpe for me in self.monitored_elements or []
-                if me.cpe]
+        return [me.cpe for me in self.monitored_elements or [] if me.cpe]
 
     @property
     def monitored_members(self) -> list[MonitoredElementMember]:
-        return [me.member for me in self.monitored_elements or []
-                if me.member]
+        return [me.member for me in self.monitored_elements or [] if me.member]
 
 
 class MonitoringApi(PersonSettingsApiChild):

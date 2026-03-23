@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Union
+from typing import Union
 
 from wxc_sdk.api_child import ApiChild
 
@@ -11,8 +11,7 @@ from .route_group import RouteGroupApi
 from .route_list import RouteListApi
 from .trunk import TrunkApi
 
-__all__ = ['DialPatternValidationResult',
-           'PremisePstnApi']
+__all__ = ['DialPatternValidationResult', 'PremisePstnApi']
 
 
 class DialPatternValidationResult(ApiModel):
@@ -30,6 +29,7 @@ class PremisePstnApi(ApiChild, base='telephony/config/premisePstn'):
     """
     Premises PSTN API
     """
+
     #: dial plan configuration
     dial_plan: DialPlanApi
     #: trunk configuration
@@ -46,7 +46,7 @@ class PremisePstnApi(ApiChild, base='telephony/config/premisePstn'):
         self.route_group = RouteGroupApi(session=session)
         self.route_list = RouteListApi(session=session)
 
-    def validate_pattern(self, dial_patterns: Union[str, List[str]], org_id: str = None) -> DialPatternValidationResult:
+    def validate_pattern(self, dial_patterns: Union[str, list[str]], org_id: str = None) -> DialPatternValidationResult:
         """
         Validate a Dial Pattern.
 

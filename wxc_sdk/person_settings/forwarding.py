@@ -1,19 +1,27 @@
 """
 Call forwarding API
 """
+
 from typing import Optional
 
 from ..base import ApiModel
 from .common import PersonSettingsApiChild
 
-__all__ = ['CallForwardingCommon', 'CallForwardingAlways', 'CallForwardingNoAnswer', 'CallForwardingPerson',
-           'PersonForwardingSetting', 'PersonForwardingApi']
+__all__ = [
+    'CallForwardingCommon',
+    'CallForwardingAlways',
+    'CallForwardingNoAnswer',
+    'CallForwardingPerson',
+    'PersonForwardingSetting',
+    'PersonForwardingApi',
+]
 
 
 class CallForwardingCommon(ApiModel):
     """
     Common call forwarding settings
     """
+
     #: call forwarding is enabled or disabled.
     enabled: bool
     #: Destination for call forwarding.
@@ -31,13 +39,15 @@ class CallForwardingAlways(CallForwardingCommon):
     """
     Settings for forwarding all incoming calls to the destination you choose.
     """
+
     #: If true, a brief tone will be played on the person’s phone when a call has been forwarded.
     ring_reminder_enabled: bool
 
     @staticmethod
     def default() -> 'CallForwardingAlways':
-        return CallForwardingAlways(enabled=False, destination='', destination_voicemail_enabled=False,
-                                    ring_reminder_enabled=False)
+        return CallForwardingAlways(
+            enabled=False, destination='', destination_voicemail_enabled=False, ring_reminder_enabled=False
+        )
 
 
 class CallForwardingNoAnswer(CallForwardingCommon):
@@ -48,14 +58,16 @@ class CallForwardingNoAnswer(CallForwardingCommon):
 
     @staticmethod
     def default() -> 'CallForwardingNoAnswer':
-        return CallForwardingNoAnswer(enabled=False, destination='', destination_voicemail_enabled=False,
-                                      number_of_rings=3)
+        return CallForwardingNoAnswer(
+            enabled=False, destination='', destination_voicemail_enabled=False, number_of_rings=3
+        )
 
 
 class CallForwardingPerson(ApiModel):
     """
     Settings related to "Always", "Busy", and "No Answer" call forwarding.
     """
+
     #: Settings for forwarding all incoming calls to the destination you choose.
     always: CallForwardingAlways
     #: Settings for forwarding all incoming calls to the destination you chose while the phone is in use or the person
@@ -66,15 +78,18 @@ class CallForwardingPerson(ApiModel):
 
     @staticmethod
     def default() -> 'CallForwardingPerson':
-        return CallForwardingPerson(always=CallForwardingAlways.default(),
-                                    busy=CallForwardingCommon.default(),
-                                    no_answer=CallForwardingNoAnswer.default())
+        return CallForwardingPerson(
+            always=CallForwardingAlways.default(),
+            busy=CallForwardingCommon.default(),
+            no_answer=CallForwardingNoAnswer.default(),
+        )
 
 
 class PersonForwardingSetting(ApiModel):
     """
     A person's call forwarding setting
     """
+
     #: Settings related to "Always", "Busy", and "No Answer" call forwarding.
     call_forwarding: CallForwardingPerson
     #: Settings for sending calls to a destination of your choice if your phone is not connected to the network for
@@ -83,8 +98,9 @@ class PersonForwardingSetting(ApiModel):
 
     @staticmethod
     def default() -> 'PersonForwardingSetting':
-        return PersonForwardingSetting(call_forwarding=CallForwardingPerson.default(),
-                                       business_continuity=CallForwardingCommon.default())
+        return PersonForwardingSetting(
+            call_forwarding=CallForwardingPerson.default(), business_continuity=CallForwardingCommon.default()
+        )
 
     def update(self) -> dict:
         """
@@ -92,8 +108,12 @@ class PersonForwardingSetting(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json', exclude_unset=True, by_alias=True,
-                               exclude={'call_forwarding': {'no_answer': {'system_max_number_of_rings': True}}})
+        return self.model_dump(
+            mode='json',
+            exclude_unset=True,
+            by_alias=True,
+            exclude={'call_forwarding': {'no_answer': {'system_max_number_of_rings': True}}},
+        )
 
 
 class PersonForwardingApi(PersonSettingsApiChild):

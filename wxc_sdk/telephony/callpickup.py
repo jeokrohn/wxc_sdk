@@ -51,12 +51,12 @@ class CallPickup(ApiModel):
         :rtype: str
         :meta private:
         """
-        data = self.model_dump(mode='json',
-                               by_alias=True,
-                               exclude_unset=True,
-                               exclude={'pickup_id': True,
-                                        'location_name': True,
-                                        'location_id': True})
+        data = self.model_dump(
+            mode='json',
+            by_alias=True,
+            exclude_unset=True,
+            exclude={'pickup_id': True, 'location_name': True, 'location_id': True},
+        )
         # for create or update 'agents' is just a list of agent IDs
         if agents := data.pop('agents', None):
             data['agents'] = [a.pop('id', None) for a in agents]
@@ -87,8 +87,9 @@ class CallPickupApi(ApiChild, base='telephony/config/callPickups'):
         ep = self.session.ep(f'telephony/config/locations/{location_id}/callPickups{pickup_id}{path}')
         return ep
 
-    def list(self, location_id: str, order: Literal['ASC', 'DSC'] = None, name: str = None,
-             org_id: str = None, **params) -> Generator[CallPickup, None, None]:
+    def list(
+        self, location_id: str, order: Literal['ASC', 'DSC'] = None, name: str = None, org_id: str = None, **params
+    ) -> Generator[CallPickup, None, None]:
         """
         Read the List of Call Pickups
 
@@ -227,9 +228,16 @@ class CallPickupApi(ApiChild, base='telephony/config/callPickups'):
         return data['id']
 
     # noinspection DuplicatedCode
-    def available_agents(self, location_id: str, call_pickup_name: str = None, name: str = None,
-                         phone_number: str = None, order: str = None,
-                         org_id: str = None, **params) -> Generator[PersonPlaceAgent, None, None]:
+    def available_agents(
+        self,
+        location_id: str,
+        call_pickup_name: str = None,
+        name: str = None,
+        phone_number: str = None,
+        order: str = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[PersonPlaceAgent, None, None]:
         """
         Get available agents from Call Pickups
 

@@ -55,9 +55,7 @@ class MeVoicemailApi(ApiChild, base='telephony/config/people/me'):
         url = self.ep('settings/voicemail')
         super().put(url, json=body)
 
-    def _configure_greeting(self, *, content: Union[BufferedReader, str],
-                            upload_as: str = None,
-                            greeting_key: str):
+    def _configure_greeting(self, *, content: Union[BufferedReader, str], upload_as: str = None, greeting_key: str):
         """
         handle greeting upload
 
@@ -86,8 +84,7 @@ class MeVoicemailApi(ApiChild, base='telephony/config/people/me'):
             if must_close:
                 content.close()
 
-    def upload_busy_greeting(self, content: Union[BufferedReader, str],
-                             upload_as: str = None):
+    def upload_busy_greeting(self, content: Union[BufferedReader, str], upload_as: str = None):
         """
         Upload Voicemail Busy Greeting
 
@@ -108,11 +105,9 @@ class MeVoicemailApi(ApiChild, base='telephony/config/people/me'):
         :type upload_as: str
         :rtype: None
         """
-        return self._configure_greeting(content=content, upload_as=upload_as,
-                                        greeting_key='busyGreetingUpload')
+        return self._configure_greeting(content=content, upload_as=upload_as, greeting_key='busyGreetingUpload')
 
-    def upload_no_answer_greeting(self, content: Union[BufferedReader, str],
-                                  upload_as: str = None):
+    def upload_no_answer_greeting(self, content: Union[BufferedReader, str], upload_as: str = None):
         """
         Upload Voicemail No Answer Greeting
 
@@ -133,5 +128,4 @@ class MeVoicemailApi(ApiChild, base='telephony/config/people/me'):
         :type upload_as: str
         :rtype: None
         """
-        return self._configure_greeting(content=content, upload_as=upload_as,
-                                        greeting_key='noAnswerGreetingUpload')
+        return self._configure_greeting(content=content, upload_as=upload_as, greeting_key='noAnswerGreetingUpload')

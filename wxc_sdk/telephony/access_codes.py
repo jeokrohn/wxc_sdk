@@ -3,6 +3,7 @@ Access codes API for locations
 
 Use Access Codes to bypass the set permissions for all persons/workspaces at this location.
 """
+
 from typing import Union
 
 from pydantic import TypeAdapter
@@ -80,8 +81,9 @@ class LocationAccessCodesApi(ApiChild, base='telephony/config/locations'):
         body = {'accessCodes': [ac.model_dump(mode='json', by_alias=True, exclude_none=True) for ac in access_codes]}
         self.post(url, json=body, params=params)
 
-    def delete_codes(self, location_id: str, access_codes: list[Union[str, AuthCode]],
-                     org_id: str = None) -> list[AuthCode]:
+    def delete_codes(
+        self, location_id: str, access_codes: list[Union[str, AuthCode]], org_id: str = None
+    ) -> list[AuthCode]:
         """
         Delete Access Code Location
 
@@ -101,8 +103,7 @@ class LocationAccessCodesApi(ApiChild, base='telephony/config/locations'):
         """
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(location_id=location_id)
-        body = {'deleteCodes': [ac.code if isinstance(ac, AuthCode) else ac
-                                for ac in access_codes]}
+        body = {'deleteCodes': [ac.code if isinstance(ac, AuthCode) else ac for ac in access_codes]}
         self.put(url, json=body, params=params)
 
     def delete_all(self, location_id: str, org_id: str = None):

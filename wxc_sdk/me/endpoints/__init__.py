@@ -1,7 +1,9 @@
 """
 API for /me/endpoints
 """
-from typing import List, Optional
+
+import builtins
+from typing import Optional
 
 from pydantic import TypeAdapter
 
@@ -10,8 +12,7 @@ from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 from wxc_sdk.common import UserType
 
-__all__ = ['MeEndpointsApi', 'MeEndpoint', 'MeSecondaryLine', 'MeMobility',
-           'EndpointType', 'MeHost']
+__all__ = ['MeEndpointsApi', 'MeEndpoint', 'MeSecondaryLine', 'MeMobility', 'EndpointType', 'MeHost']
 
 
 class EndpointType(str, Enum):
@@ -140,7 +141,7 @@ class MeEndpointsApi(ApiChild, base='telephony/config/people/me'):
         url = self.ep(f'endpoints/{endpoint_id}')
         super().put(url, json=body)
 
-    def available_preferred_answer_endpoints(self, org_id: str = None) -> List[MeEndpoint]:
+    def available_preferred_answer_endpoints(self, org_id: str = None) -> builtins.list[MeEndpoint]:
         """
         Get List Available Preferred Answer Endpoints
 

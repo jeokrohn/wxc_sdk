@@ -1,6 +1,7 @@
 """
 user privacy API
 """
+
 from typing import Optional, Union
 
 from ..base import ApiModel
@@ -14,6 +15,7 @@ class Privacy(ApiModel):
     """
     Person privacy settings
     """
+
     #: When true auto attendant extension dialing will be enabled.
     aa_extension_dialing_enabled: Optional[bool] = None
     #: When true auto attendant dialing by first or last name will be enabled.

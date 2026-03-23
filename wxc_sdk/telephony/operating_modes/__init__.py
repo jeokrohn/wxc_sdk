@@ -1,6 +1,7 @@
+import builtins
 from collections.abc import Generator
 from datetime import date, time
-from typing import Annotated, List, Optional
+from typing import Annotated, Optional
 
 from pydantic import PlainSerializer, TypeAdapter
 
@@ -12,13 +13,21 @@ from wxc_sdk.common.schedules import ScheduleLevel
 from wxc_sdk.person_settings.available_numbers import AvailableNumber
 from wxc_sdk.person_settings.forwarding import CallForwardingCommon
 
-__all__ = ['OperatingModesApi', 'Month',
-           'DaySchedule',
-           'DifferentHoursDaily', 'OperatingMode',
-           'OperatingModeHoliday',
-           'OperatingModeRecurrence', 'SameHoursDaily',
-           'OperatingModeSchedule', 'OperatingModeRecurYearlyByDate',
-           'OperatingModeRecurYearlyByDay', 'Day', 'Week']
+__all__ = [
+    'OperatingModesApi',
+    'Month',
+    'DaySchedule',
+    'DifferentHoursDaily',
+    'OperatingMode',
+    'OperatingModeHoliday',
+    'OperatingModeRecurrence',
+    'SameHoursDaily',
+    'OperatingModeSchedule',
+    'OperatingModeRecurYearlyByDate',
+    'OperatingModeRecurYearlyByDay',
+    'Day',
+    'Week',
+]
 
 
 class OperatingModeSchedule(str, Enum):
@@ -228,10 +237,12 @@ class OperatingMode(ApiModel):
 
         :meta private:
         """
-        data = self.model_dump(mode='json', by_alias=True, exclude_unset=True,
-                               exclude={'id': True,
-                                        'location': True,
-                                        'holidays': {'__all__': {'id': True}}})
+        data = self.model_dump(
+            mode='json',
+            by_alias=True,
+            exclude_unset=True,
+            exclude={'id': True, 'location': True, 'holidays': {'__all__': {'id': True}}},
+        )
         if self.location:
             data['locationId'] = self.location.id
         return data
@@ -242,12 +253,12 @@ class OperatingMode(ApiModel):
 
         :meta private:
         """
-        data = self.model_dump(mode='json', by_alias=True, exclude_unset=True,
-                               exclude={'id': True,
-                                        'location': True,
-                                        'holidays': {'__all__': {'id': True}},
-                                        'type': True,
-                                        'level': True})
+        data = self.model_dump(
+            mode='json',
+            by_alias=True,
+            exclude_unset=True,
+            exclude={'id': True, 'location': True, 'holidays': {'__all__': {'id': True}}, 'type': True, 'level': True},
+        )
         return data
 
 
@@ -270,10 +281,15 @@ class OperatingModesApi(ApiChild, base='telephony/config'):
     query parameter.
     """
 
-    def list(self, limit_to_location_id: str = None, name: str = None,
-             limit_to_org_level_enabled: bool = None, order: str = None,
-             org_id: str = None,
-             **params) -> Generator[OperatingMode, None, None]:
+    def list(
+        self,
+        limit_to_location_id: str = None,
+        name: str = None,
+        limit_to_org_level_enabled: bool = None,
+        order: str = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[OperatingMode, None, None]:
         """
         Read the List of Operating Modes.
 
@@ -310,8 +326,7 @@ class OperatingModesApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('operatingModes')
-        return self.session.follow_pagination(url=url, model=OperatingMode, item_key='operatingModes',
-                                              params=params)
+        return self.session.follow_pagination(url=url, model=OperatingMode, item_key='operatingModes', params=params)
 
     def details(self, mode_id: str, org_id: str = None) -> OperatingMode:
         """
@@ -411,8 +426,7 @@ class OperatingModesApi(ApiChild, base='telephony/config'):
         url = self.ep(f'operatingModes/{mode_id}')
         super().delete(url, params=params)
 
-    def holiday_details(self, mode_id: str, holiday_id: str,
-                        org_id: str = None) -> OperatingModeHoliday:
+    def holiday_details(self, mode_id: str, holiday_id: str, org_id: str = None) -> OperatingModeHoliday:
         """
         Get details for an Operating Mode Holiday.
 
@@ -512,8 +526,7 @@ class OperatingModesApi(ApiChild, base='telephony/config'):
         url = self.ep(f'operatingModes/{mode_id}/holidays/{holiday_id}')
         super().delete(url, params=params)
 
-    def available_operating_modes(self, location_id: str,
-                                  org_id: str = None) -> List[IdAndName]:
+    def available_operating_modes(self, location_id: str, org_id: str = None) -> builtins.list[IdAndName]:
         """
         Retrieve the List of Available Operating Modes in a Location.
 
@@ -541,10 +554,15 @@ class OperatingModesApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[IdAndName]).validate_python(data['operatingModes'])
         return r
 
-    def call_forward_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
-                                             owner_name: str = None, extension: str = None,
-                                             org_id: str = None,
-                                             **params) -> Generator[AvailableNumber, None, None]:
+    def call_forward_available_phone_numbers(
+        self,
+        location_id: str,
+        phone_number: builtins.list[str] = None,
+        owner_name: str = None,
+        extension: str = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get Operating Mode Call Forward Available Phone Numbers
 
@@ -584,5 +602,4 @@ class OperatingModesApi(ApiChild, base='telephony/config'):
         if extension is not None:
             params['extension'] = extension
         url = self.ep(f'locations/{location_id}/operatingModes/callForwarding/availableNumbers')
-        return self.session.follow_pagination(url=url, model=AvailableNumber,
-                                              item_key='phoneNumbers', params=params)
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)

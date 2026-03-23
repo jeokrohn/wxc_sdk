@@ -54,8 +54,7 @@ class ReceptionistContactsDirectoryApi(ApiChild, base='telephony/config/location
         """
         url = self._url(location_id)
         params = org_id and {'orgId': org_id} or None
-        body = {'name': name,
-                'contacts': [{'personId': contact} for contact in contacts]}
+        body = {'name': name, 'contacts': [{'personId': contact} for contact in contacts]}
         data = self.post(url=url, params=params, json=body)
         return data['id']
 

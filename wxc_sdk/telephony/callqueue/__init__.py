@@ -1,6 +1,7 @@
+import builtins
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import Field
 
@@ -16,16 +17,33 @@ from .agents import CallQueueAgentsApi
 from .announcement import AnnouncementApi
 from .policies import CQPolicyApi
 
-__all__ = ['CallBounce', 'DistinctiveRing', 'CallQueueCallPolicies', 'OverflowAction', 'OverflowSetting', 'WaitMode',
-           'WaitMessageSetting', 'AudioSource', 'WelcomeMessageSetting', 'ComfortMessageSetting', 'MohMessageSetting',
-           'ComfortMessageBypass', 'QueueSettings', 'CallQueue', 'CallQueueApi', 'CQRoutingType', 'AvailableAgent',
-           'CallQueueSettings']
+__all__ = [
+    'CallBounce',
+    'DistinctiveRing',
+    'CallQueueCallPolicies',
+    'OverflowAction',
+    'OverflowSetting',
+    'WaitMode',
+    'WaitMessageSetting',
+    'AudioSource',
+    'WelcomeMessageSetting',
+    'ComfortMessageSetting',
+    'MohMessageSetting',
+    'ComfortMessageBypass',
+    'QueueSettings',
+    'CallQueue',
+    'CallQueueApi',
+    'CQRoutingType',
+    'AvailableAgent',
+    'CallQueueSettings',
+]
 
 
 class CallBounce(ApiModel):
     """
     Settings for when the call into the call queue is not answered.
     """
+
     #: If enabled, bounce calls after the set number of rings.
     enabled: Optional[bool] = Field(alias='callBounceEnabled', default=None)
     #: Number of rings after which to bounce call, if call bounce is enabled.
@@ -43,19 +61,22 @@ class CallBounce(ApiModel):
 
     @staticmethod
     def default() -> 'CallBounce':
-        return CallBounce(enabled=True,
-                          max_rings=8,
-                          agent_unavailable_enabled=False,
-                          alert_agent_enabled=False,
-                          alert_agent_max_seconds=30,
-                          on_hold_enabled=False,
-                          on_hold_max_seconds=60)
+        return CallBounce(
+            enabled=True,
+            max_rings=8,
+            agent_unavailable_enabled=False,
+            alert_agent_enabled=False,
+            alert_agent_max_seconds=30,
+            on_hold_enabled=False,
+            on_hold_max_seconds=60,
+        )
 
 
 class DistinctiveRing(ApiModel):
     """
     Whether or not the call queue has the distinctive ring option enabled.
     """
+
     #: Whether or not the distinctive ring is enabled.
     enabled: bool
     #: Ring pattern for when this callqueue is called. Only available when distinctiveRing is enabled for the call
@@ -67,8 +88,7 @@ class DistinctiveRing(ApiModel):
         """
         Default DistinctiveRing
         """
-        return DistinctiveRing(enabled=True,
-                               ring_pattern=RingPattern.normal)
+        return DistinctiveRing(enabled=True, ring_pattern=RingPattern.normal)
 
 
 class CQRoutingType(str, Enum):
@@ -87,6 +107,7 @@ class CallQueueCallPolicies(ApiModel):
     """
     Policy controlling how calls are routed to agents.
     """
+
     #: Call routing type to use to dispatch calls to agents.
     routing_type: Optional[CQRoutingType] = None
     #: Call routing policy to use to dispatch calls to agents.
@@ -101,22 +122,25 @@ class CallQueueCallPolicies(ApiModel):
         """
         Default CallPolicies
         """
-        return CallQueueCallPolicies(routing_type=CQRoutingType.priority_based,
-                                     policy=Policy.circular,
-                                     call_bounce=CallBounce.default(),
-                                     distinctive_ring=DistinctiveRing.default())
+        return CallQueueCallPolicies(
+            routing_type=CQRoutingType.priority_based,
+            policy=Policy.circular,
+            call_bounce=CallBounce.default(),
+            distinctive_ring=DistinctiveRing.default(),
+        )
 
     @staticmethod
     def simple() -> 'CallQueueCallPolicies':
-        return CallQueueCallPolicies(routing_type=CQRoutingType.priority_based,
-                                     policy=Policy.circular,
-                                     call_bounce=CallBounce.default())
+        return CallQueueCallPolicies(
+            routing_type=CQRoutingType.priority_based, policy=Policy.circular, call_bounce=CallBounce.default()
+        )
 
 
 class OverflowAction(str, Enum):
     """
     How to handle new calls when the queue is full.
     """
+
     #: The caller hears a fast-busy tone.
     perform_busy_treatment = 'PERFORM_BUSY_TREATMENT'
     #: Enter the number where you want to transfer overflow calls.
@@ -129,6 +153,7 @@ class OverflowSetting(ApiModel):
     """
     Settings for incoming calls exceed queueSize.
     """
+
     #: How to handle new calls when the queue is full.
     action: Optional[OverflowAction] = None
     #: When true, forward all calls to a voicemail service of an internal number. This option is ignored when an
@@ -155,14 +180,16 @@ class OverflowSetting(ApiModel):
 
     @staticmethod
     def default() -> 'OverflowSetting':
-        return OverflowSetting(action=OverflowAction.perform_busy_treatment,
-                               send_to_voicemail=False,
-                               is_transfer_number_set=False,
-                               overflow_after_wait_enabled=False,
-                               overflow_after_wait_time=30,
-                               play_overflow_greeting_enabled=False,
-                               greeting=Greeting.default,
-                               audio_announcement_files=list())
+        return OverflowSetting(
+            action=OverflowAction.perform_busy_treatment,
+            send_to_voicemail=False,
+            is_transfer_number_set=False,
+            overflow_after_wait_enabled=False,
+            overflow_after_wait_time=30,
+            play_overflow_greeting_enabled=False,
+            greeting=Greeting.default,
+            audio_announcement_files=list(),
+        )
 
 
 class WaitMode(str, Enum):
@@ -201,12 +228,14 @@ class WaitMessageSetting(ApiModel):
 
     @staticmethod
     def default():
-        return WaitMessageSetting(enabled=False,
-                                  wait_mode=WaitMode.position,
-                                  handling_time=100,
-                                  queue_position=100,
-                                  high_volume_message_enabled=False,
-                                  default_handling_time=5)
+        return WaitMessageSetting(
+            enabled=False,
+            wait_mode=WaitMode.position,
+            handling_time=100,
+            queue_position=100,
+            high_volume_message_enabled=False,
+            default_handling_time=5,
+        )
 
 
 class AudioSource(ApiModel):
@@ -242,14 +271,14 @@ class MohMessageSetting(ApiModel):
 
     @staticmethod
     def default() -> 'MohMessageSetting':
-        return MohMessageSetting(normal_source=AudioSource(enabled=True),
-                                 alternate_source=AudioSource(enabled=False))
+        return MohMessageSetting(normal_source=AudioSource(enabled=True), alternate_source=AudioSource(enabled=False))
 
 
 class ComfortMessageBypass(AudioSource):
     """
     Comfort message bypass settings
     """
+
     call_waiting_age_threshold: int = Field(default=30)
     play_announcement_after_ringing: bool = Field(default=False)
     ring_time_before_playing_announcement: int = Field(default=10)
@@ -259,6 +288,7 @@ class QueueSettings(ApiModel):
     """
     Overall call queue settings.
     """
+
     #: The maximum number of calls for this call queue. Once this number is reached, the `overflow` settings are
     #: triggered.
     queue_size: Optional[int] = None
@@ -301,14 +331,14 @@ class QueueSettings(ApiModel):
         :param queue_size: queue size
         :type queue_size: int
         """
-        return QueueSettings(queue_size=queue_size,
-                             overflow=OverflowSetting.default())
+        return QueueSettings(queue_size=queue_size, overflow=OverflowSetting.default())
 
 
 class CallQueue(HGandCQ):
     """
     Call queue details
     """
+
     #: Policy controlling how calls are routed to agents.
     call_policies: Optional[CallQueueCallPolicies] = None
     #: Overall call queue settings.
@@ -333,31 +363,36 @@ class CallQueue(HGandCQ):
         :meta private:
         """
         base_exclude = HGandCQ.exclude_update_or_create()
-        base_exclude.update({'queue_settings':
-                                 {'overflow':
-                                      {'is_transfer_number_set': True}},
-                             'department': {'name': True},
-                             'has_cx_essentials': True})
+        base_exclude.update(
+            {
+                'queue_settings': {'overflow': {'is_transfer_number_set': True}},
+                'department': {'name': True},
+                'has_cx_essentials': True,
+            }
+        )
         return base_exclude
 
     @staticmethod
-    def create(*, name: str,
-               agents: list[Agent],
-               queue_size: int = None,
-               enabled: bool = None,
-               language_code: str = None,
-               first_name: str = None,
-               last_name: str = None,
-               time_zone: str = None,
-               phone_number: str = None,
-               extension: str = None,
-               department_id: str = None,
-               has_cx_essentials: bool = None,
-               call_policies: CallQueueCallPolicies = None,
-               queue_settings: QueueSettings = None,
-               allow_call_waiting_for_agents_enabled: bool = None,
-               allow_agent_join_enabled: bool = None,
-               phone_number_for_outgoing_calls_enabled: bool = None) -> 'CallQueue':
+    def create(
+        *,
+        name: str,
+        agents: list[Agent],
+        queue_size: int = None,
+        enabled: bool = None,
+        language_code: str = None,
+        first_name: str = None,
+        last_name: str = None,
+        time_zone: str = None,
+        phone_number: str = None,
+        extension: str = None,
+        department_id: str = None,
+        has_cx_essentials: bool = None,
+        call_policies: CallQueueCallPolicies = None,
+        queue_settings: QueueSettings = None,
+        allow_call_waiting_for_agents_enabled: bool = None,
+        allow_agent_join_enabled: bool = None,
+        phone_number_for_outgoing_calls_enabled: bool = None,
+    ) -> 'CallQueue':
         """
         Get an instance which can be uses for a create() call. Allows simplified creation of default queue settings
         based on queue_size
@@ -390,8 +425,7 @@ class CallQueue(HGandCQ):
         if queue_size:
             queue_settings = QueueSettings(queue_size=queue_size)
         call_policies = call_policies or CallQueueCallPolicies.default()
-        params = {k: v for k, v in locals().items()
-                  if v is not None and k != 'queue_size'}
+        params = {k: v for k, v in locals().items() if v is not None and k != 'queue_size'}
         if department_id:
             params.pop('department_id')
             params['department'] = {'id': department_id}
@@ -446,6 +480,7 @@ class CallQueueApi(ApiChild, base=''):
     A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
     query parameter.
     """
+
     agents: CallQueueAgentsApi
     forwarding: ForwardingApi
     announcement: AnnouncementApi
@@ -477,10 +512,17 @@ class CallQueueApi(ApiChild, base=''):
                 ep = f'{ep}/{path}'
             return ep
 
-    def list(self, location_id: str = None, name: str = None, phone_number: str = None,
-             department_id: str = None, department_name: str = None,
-             has_cx_essentials: bool = None, org_id: str = None,
-             **params) -> Generator[CallQueue, None, None]:
+    def list(
+        self,
+        location_id: str = None,
+        name: str = None,
+        phone_number: str = None,
+        department_id: str = None,
+        department_name: str = None,
+        has_cx_essentials: bool = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[CallQueue, None, None]:
         """
         Read the List of Call Queues
 
@@ -531,8 +573,9 @@ class CallQueueApi(ApiChild, base=''):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=CallQueue, params=params)
 
-    def by_name(self, name: str, location_id: str = None, has_cx_essentials: bool = None,
-                org_id: str = None) -> Optional[CallQueue]:
+    def by_name(
+        self, name: str, location_id: str = None, has_cx_essentials: bool = None, org_id: str = None
+    ) -> Optional[CallQueue]:
         """
         Get queue info by name
 
@@ -542,12 +585,18 @@ class CallQueueApi(ApiChild, base=''):
         :param org_id:
         :return:
         """
-        return next((cq for cq in self.list(location_id=location_id, has_cx_essentials=has_cx_essentials,
-                                            org_id=org_id, name=name)
-                     if cq.name == name), None)
+        return next(
+            (
+                cq
+                for cq in self.list(
+                    location_id=location_id, has_cx_essentials=has_cx_essentials, org_id=org_id, name=name
+                )
+                if cq.name == name
+            ),
+            None,
+        )
 
-    def create(self, location_id: str, settings: CallQueue, has_cx_essentials: bool = None,
-               org_id: str = None) -> str:
+    def create(self, location_id: str, settings: CallQueue, has_cx_essentials: bool = None, org_id: str = None) -> str:
         """
         Create a Call Queue
 
@@ -627,8 +676,7 @@ class CallQueueApi(ApiChild, base=''):
         params = org_id and {'orgId': org_id} or None
         self.delete(url=url, params=params)
 
-    def details(self, location_id: str, queue_id: str, has_cx_essentials: bool = None,
-                org_id: str = None) -> CallQueue:
+    def details(self, location_id: str, queue_id: str, has_cx_essentials: bool = None, org_id: str = None) -> CallQueue:
         """
         Get Details for a Call Queue
 
@@ -789,9 +837,9 @@ class CallQueueApi(ApiChild, base=''):
         url = self.ep('telephony/config/queues/settings')
         self.put(url, params=params, json=body)
 
-    def primary_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
-                                        org_id: str = None,
-                                        **params) -> Generator[AvailableNumber, None, None]:
+    def primary_available_phone_numbers(
+        self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get Call Queue Primary Available Phone Numbers
 
@@ -824,9 +872,9 @@ class CallQueueApi(ApiChild, base=''):
         url = self._endpoint(location_id=location_id, path='availableNumbers')
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
-    def alternate_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
-                                          org_id: str = None,
-                                          **params) -> Generator[AvailableNumber, None, None]:
+    def alternate_available_phone_numbers(
+        self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get Call Queue Alternate Available Phone Numbers
 
@@ -859,10 +907,15 @@ class CallQueueApi(ApiChild, base=''):
         url = self._endpoint(location_id=location_id, path='alternate/availableNumbers')
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
-    def call_forward_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
-                                             owner_name: str = None, extension: str = None,
-                                             org_id: str = None,
-                                             **params) -> Generator[AvailableNumber, None, None]:
+    def call_forward_available_phone_numbers(
+        self,
+        location_id: str,
+        phone_number: builtins.list[str] = None,
+        owner_name: str = None,
+        extension: str = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get Call Queue Call Forward Available Phone Numbers
 
@@ -904,9 +957,15 @@ class CallQueueApi(ApiChild, base=''):
         url = self._endpoint(location_id=location_id, path='callForwarding/availableNumbers')
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
-    def available_agents(self, location_id: str, name: str = None, phone_number: str = None,
-                         order: str = None, org_id: str = None,
-                         **params) -> Generator[AvailableAgent, None, None]:
+    def available_agents(
+        self,
+        location_id: str,
+        name: str = None,
+        phone_number: str = None,
+        order: str = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[AvailableAgent, None, None]:
         """
         Get Call Queue Available Agents
 

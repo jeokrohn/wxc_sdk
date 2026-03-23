@@ -52,7 +52,7 @@ class HARModel(BaseModel):
     Base model for all HAR models
     """
 
-    model_config = ConfigDict(extra = 'allow')
+    model_config = ConfigDict(extra='allow')
 
     def model_dump(
         self,

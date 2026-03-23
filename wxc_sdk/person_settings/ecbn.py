@@ -5,12 +5,19 @@ from pydantic import Field
 from wxc_sdk.base import ApiModel, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
-__all__ = ['ECBNApi', 'ECBNQuality',
-           'ECBNDependencies', 'PersonECBN',
-           'ECBNDefault', 'PersonECBNDirectLine',
-           'ECBNLocationMember', 'ECBNEffectiveLevel',
-           'ECBNSelection', 'SelectedECBN',
-           'ECBNLocationEffectiveLevel']
+__all__ = [
+    'ECBNApi',
+    'ECBNQuality',
+    'ECBNDependencies',
+    'PersonECBN',
+    'ECBNDefault',
+    'PersonECBNDirectLine',
+    'ECBNLocationMember',
+    'ECBNEffectiveLevel',
+    'ECBNSelection',
+    'SelectedECBN',
+    'ECBNLocationEffectiveLevel',
+]
 
 from wxc_sdk.common import UserType
 from wxc_sdk.person_settings.common import PersonSettingsApiChild
@@ -123,8 +130,7 @@ class PersonECBN(ApiModel):
     #: Data relevant to the ECBN for this user/location/virtual line.
     direct_line_info: Optional[PersonECBNDirectLine] = None
     #: Data relevant to the ECBN for this user/location/virtual line.
-    location_ecbn_info: Optional[PersonECBNDirectLine] = Field(alias='locationECBNInfo',
-                                                               default=None)
+    location_ecbn_info: Optional[PersonECBNDirectLine] = Field(alias='locationECBNInfo', default=None)
     #: Data relevant to the ECBN for this user/location/virtual line.
     location_member_info: Optional[ECBNLocationMember] = None
     #: Gives Emergency Callback Number effective value when none of the above is assigned or some other value is set
@@ -168,8 +174,7 @@ class ECBNApi(PersonSettingsApiChild):
 
     feature = 'emergencyCallbackNumber'
 
-    def read(self, entity_id: str,
-             org_id: str = None) -> PersonECBN:
+    def read(self, entity_id: str, org_id: str = None) -> PersonECBN:
         """
         Get an entity's Emergency Callback Number
 
@@ -200,9 +205,7 @@ class ECBNApi(PersonSettingsApiChild):
         r = PersonECBN.model_validate(data)
         return r
 
-    def configure(self, entity_id: str,
-                  selected: SelectedECBN,
-                  location_member_id: str = None, org_id: str = None):
+    def configure(self, entity_id: str, selected: SelectedECBN, location_member_id: str = None, org_id: str = None):
         """
         Update an entity's Emergency Callback Number.
 
@@ -239,8 +242,7 @@ class ECBNApi(PersonSettingsApiChild):
         url = self.f_ep(entity_id)
         super().put(url, params=params, json=body)
 
-    def dependencies(self, entity_id: str,
-                     org_id: str = None) -> ECBNDependencies:
+    def dependencies(self, entity_id: str, org_id: str = None) -> ECBNDependencies:
         """
         Retrieve an entity's Emergency Callback Number Dependencies
 

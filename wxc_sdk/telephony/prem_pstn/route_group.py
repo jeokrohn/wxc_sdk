@@ -1,6 +1,6 @@
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import Dict, Optional
+from typing import Optional
 
 from pydantic import Field
 
@@ -29,16 +29,18 @@ class RouteGroup(ApiModel):
     #: only returned by detail()
     local_gateways: Optional[list[RGTrunk]] = None
 
-    def create_or_update(self) -> Dict:
+    def create_or_update(self) -> dict:
         """
         data for create or update call
 
         :meta private:
         """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               include={'name': True,
-                                        'local_gateways': {
-                                            '__all__': {'trunk_id', 'priority'}}})
+        return self.model_dump(
+            mode='json',
+            by_alias=True,
+            exclude_none=True,
+            include={'name': True, 'local_gateways': {'__all__': {'trunk_id', 'priority'}}},
+        )
 
 
 class RouteGroupUsage(ApiModel):
@@ -65,8 +67,9 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
     API for everything route groups
     """
 
-    def list(self, name: str = None, order: str = None,
-             org_id: str = None, **params) -> Generator[RouteGroup, None, None]:
+    def list(
+        self, name: str = None, order: str = None, org_id: str = None, **params
+    ) -> Generator[RouteGroup, None, None]:
         """
         List all Route Groups for an organization. A Route Group is a group of trunks that allows further scale and
         redundancy with the connection to the premises.
@@ -82,8 +85,7 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         :type org_id: str
         :return: generator of :class:`RouteGroup` instances
         """
-        params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'params'})
+        params.update((to_camel(p), v) for p, v in locals().items() if v is not None and p not in {'self', 'params'})
         url = self.ep()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, params=params, model=RouteGroup)
@@ -214,8 +216,9 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         data = self.get(url=url, params=params)
         return RouteGroupUsage.model_validate(data)
 
-    def usage_call_to_extension(self, rg_id: str, location_name: str = None, order: str = None,
-                                org_id: str = None, **params) -> Generator[IdAndName, None, None]:
+    def usage_call_to_extension(
+        self, rg_id: str, location_name: str = None, order: str = None, org_id: str = None, **params
+    ) -> Generator[IdAndName, None, None]:
         """
         List "Call to" on-premises Extension Locations for a specific route group. Users within these locations are
         registered to a PBX which allows you to route unknown extensions (calling number length of 2-6 digits) to
@@ -243,8 +246,9 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
 
-    def usage_dial_plan(self, rg_id: str, location_name: str = None, order: str = None,
-                        org_id: str = None, **params) -> Generator[IdAndName, None, None]:
+    def usage_dial_plan(
+        self, rg_id: str, location_name: str = None, order: str = None, org_id: str = None, **params
+    ) -> Generator[IdAndName, None, None]:
         """
         List Dial Plan Locations for a specific route group.
 
@@ -275,8 +279,9 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
 
-    def usage_location_pstn(self, rg_id: str, location_name: str = None,
-                            order: str = None, org_id: str = None, **params) -> Generator[IdAndName, None, None]:
+    def usage_location_pstn(
+        self, rg_id: str, location_name: str = None, order: str = None, org_id: str = None, **params
+    ) -> Generator[IdAndName, None, None]:
         """
         List PSTN Connection Locations for a specific route group. This solution lets you configure users to use Cloud
         PSTN (CCP or Cisco PSTN) or Premises-based PSTN.
@@ -303,8 +308,9 @@ class RouteGroupApi(ApiChild, base='telephony/config/premisePstn/routeGroups'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
 
-    def usage_route_lists(self, rg_id: str, name: str = None, order: str = None, org_id: str = None,
-                          **params) -> Generator[UsageRouteLists, None, None]:
+    def usage_route_lists(
+        self, rg_id: str, name: str = None, order: str = None, org_id: str = None, **params
+    ) -> Generator[UsageRouteLists, None, None]:
         """
         Read the Route Lists of a Routing Group
 

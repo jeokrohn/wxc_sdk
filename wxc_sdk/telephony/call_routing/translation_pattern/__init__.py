@@ -71,10 +71,16 @@ class TranslationPatternsApi(ApiChild, base='telephony/config/callRouting/transl
         base = 'telephony/config/locations'
         return self.session.ep(f'{base}/{location_id}/callRouting/translationPatterns{path}')
 
-    def list(self, limit_to_location_id: str = None,
-             limit_to_org_level_enabled: bool = None, order: str = None, name: str = None,
-             matching_pattern: str = None, org_id: str = None,
-             **params) -> Generator[TranslationPattern, None, None]:
+    def list(
+        self,
+        limit_to_location_id: str = None,
+        limit_to_org_level_enabled: bool = None,
+        order: str = None,
+        name: str = None,
+        matching_pattern: str = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[TranslationPattern, None, None]:
         """
         Retrieve a list of Translation Patterns
 
@@ -115,11 +121,11 @@ class TranslationPatternsApi(ApiChild, base='telephony/config/callRouting/transl
         if matching_pattern is not None:
             params['matchingPattern'] = matching_pattern
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=TranslationPattern, item_key='translationPatterns',
-                                              params=params)
+        return self.session.follow_pagination(
+            url=url, model=TranslationPattern, item_key='translationPatterns', params=params
+        )
 
-    def create(self, pattern: TranslationPattern, location_id: str = None,
-               org_id: str = None) -> str:
+    def create(self, pattern: TranslationPattern, location_id: str = None, org_id: str = None) -> str:
         """
         Create a Translation Pattern
 
@@ -145,9 +151,7 @@ class TranslationPatternsApi(ApiChild, base='telephony/config/callRouting/transl
         r = data['id']
         return r
 
-    def details(self, translation_id: str,
-                location_id: str = None,
-                org_id: str = None) -> TranslationPattern:
+    def details(self, translation_id: str, location_id: str = None, org_id: str = None) -> TranslationPattern:
         """
         Retrieve the details of a Translation Pattern
 

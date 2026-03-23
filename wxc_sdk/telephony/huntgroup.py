@@ -1,7 +1,8 @@
+import builtins
 import logging
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import Optional
 
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel
@@ -20,6 +21,7 @@ class NoAnswer(ApiModel):
     """
     Settings for when the call into the hunt group is not answered.
     """
+
     #: If enabled, advance to next agent after the next_agent_rings has occurred.
     next_agent_enabled: Optional[bool] = None
     #: Number of rings before call will be forwarded if unanswered and nextAgentEnabled is true.
@@ -39,12 +41,14 @@ class NoAnswer(ApiModel):
 
     @staticmethod
     def default() -> 'NoAnswer':
-        return NoAnswer(destination_voicemail_enabled=False,
-                        forward_enabled=False,
-                        next_agent_enabled=False,
-                        next_agent_rings=5,
-                        number_of_rings=15,
-                        system_max_number_of_rings=20)
+        return NoAnswer(
+            destination_voicemail_enabled=False,
+            forward_enabled=False,
+            next_agent_enabled=False,
+            next_agent_rings=5,
+            number_of_rings=15,
+            system_max_number_of_rings=20,
+        )
 
 
 class BusinessContinuity(ApiModel):
@@ -57,14 +61,14 @@ class BusinessContinuity(ApiModel):
 
     @staticmethod
     def default() -> 'BusinessContinuity':
-        return BusinessContinuity(enabled=False,
-                                  destination_voicemail_enabled=False)
+        return BusinessContinuity(enabled=False, destination_voicemail_enabled=False)
 
 
 class HGCallPolicies(ApiModel):
     """
     Policy controlling how calls are routed to agents.
     """
+
     #: Call routing policy to use to dispatch calls to agents.
     policy: Optional[Policy] = None
     #: If false, then the option is treated as "Advance when busy": the hunt group won’t ring agents when they’re on
@@ -87,17 +91,20 @@ class HGCallPolicies(ApiModel):
 
     @staticmethod
     def default() -> 'HGCallPolicies':
-        return HGCallPolicies(policy=Policy.circular,
-                              waiting_enabled=False,
-                              no_answer=NoAnswer.default(),
-                              busy_redirect=BusinessContinuity.default(),
-                              business_continuity_redirect=BusinessContinuity.default())
+        return HGCallPolicies(
+            policy=Policy.circular,
+            waiting_enabled=False,
+            no_answer=NoAnswer.default(),
+            busy_redirect=BusinessContinuity.default(),
+            business_continuity_redirect=BusinessContinuity.default(),
+        )
 
 
 class HuntGroup(HGandCQ):
     """
     The huntgroup object
     """
+
     #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a hunt group. Each
     #: number will reach the same greeting and each menu will function identically to the main number. The alternate
     #: numbers option enables you to have up to ten (10) phone numbers ring into the hunt group.
@@ -116,11 +123,12 @@ class HuntGroup(HGandCQ):
         :return: dict
         """
         base_exclude = HGandCQ.exclude_update_or_create()
-        base_exclude.update({'call_policies':
-                                 {'no_answer': {'system_max_number_of_rings': True}},
-                             'alternate_numbers':
-                                 {'__all__':
-                                      {'toll_free_number': True}}})
+        base_exclude.update(
+            {
+                'call_policies': {'no_answer': {'system_max_number_of_rings': True}},
+                'alternate_numbers': {'__all__': {'toll_free_number': True}},
+            }
+        )
         return base_exclude
 
     @staticmethod
@@ -139,9 +147,7 @@ class HuntGroup(HGandCQ):
         """
         if not any((extension, phone_number)):
             raise ValueError('at least one of phone_number or extension has to be set')
-        return HuntGroup(name=name,
-                         phone_number=phone_number,
-                         extension=extension)
+        return HuntGroup(name=name, phone_number=phone_number, extension=extension)
 
     def create_or_update(self) -> dict:
         """
@@ -158,6 +164,7 @@ class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
     """
     Hunt Group API
     """
+
     forwarding: ForwardingApi
 
     def __init__(self, session: RestSession):
@@ -186,8 +193,9 @@ class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
                 ep = f'{ep}/{path}'
             return ep
 
-    def list(self, org_id: str = None, location_id: str = None, name: str = None,
-             phone_number: str = None, **params) -> Generator[HuntGroup, None, None]:
+    def list(
+        self, org_id: str = None, location_id: str = None, name: str = None, phone_number: str = None, **params
+    ) -> Generator[HuntGroup, None, None]:
         """
         Read the List of Hunt Groups
 
@@ -205,9 +213,9 @@ class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
         :param phone_number: Only return hunt groups with the matching primary phone number or extension.
         :return: yields :class:`HuntGroup` instances
         """
-        params.update((to_camel(k), v)
-                      for i, (k, v) in enumerate(locals().items())
-                      if i and v is not None and k != 'params')
+        params.update(
+            (to_camel(k), v) for i, (k, v) in enumerate(locals().items()) if i and v is not None and k != 'params'
+        )
         url = self._endpoint()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=HuntGroup, params=params)
@@ -220,8 +228,9 @@ class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
         :param org_id:
         :return:
         """
-        return next((hg for hg in self.list(name=name, location_id=location_id, org_id=org_id)
-                     if hg.name == name), None)
+        return next(
+            (hg for hg in self.list(name=name, location_id=location_id, org_id=org_id) if hg.name == name), None
+        )
 
     def create(self, location_id: str, settings: HuntGroup, org_id: str = None) -> str:
         """
@@ -300,8 +309,7 @@ class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
         result = HuntGroup.model_validate(data)
         return result
 
-    def update(self, location_id: str, huntgroup_id: str, update: HuntGroup,
-               org_id: str = None):
+    def update(self, location_id: str, huntgroup_id: str, update: HuntGroup, org_id: str = None):
         """
         Update a Hunt Group
 
@@ -326,9 +334,9 @@ class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
         url = self._endpoint(location_id=location_id, huntgroup_id=huntgroup_id)
         self.put(url, json=data, params=params)
 
-    def primary_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
-                                        org_id: str = None,
-                                        **params) -> Generator[AvailableNumber, None, None]:
+    def primary_available_phone_numbers(
+        self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get Hunt Group Primary Available Phone Numbers
 
@@ -359,9 +367,9 @@ class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
         url = self._endpoint(location_id=location_id, path='availableNumbers')
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
-    def alternate_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
-                                          org_id: str = None,
-                                          **params) -> Generator[AvailableNumber, None, None]:
+    def alternate_available_phone_numbers(
+        self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get Hunt Group Alternate Available Phone Numbers
 
@@ -392,10 +400,15 @@ class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
         url = self._endpoint(location_id=location_id, path='alternate/availableNumbers')
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
-    def forward_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
-                                        owner_name: str = None, extension: str = None,
-                                        org_id: str = None,
-                                        **params) -> Generator[AvailableNumber, None, None]:
+    def forward_available_phone_numbers(
+        self,
+        location_id: str,
+        phone_number: builtins.list[str] = None,
+        owner_name: str = None,
+        extension: str = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get Hunt Group Call Forward Available Phone Numbers
 

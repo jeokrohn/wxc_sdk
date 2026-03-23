@@ -2,7 +2,6 @@ from wxc_sdk.api_child import ApiChild
 
 
 class GoOverrideApi(ApiChild, base='telephony/config/people/me/settings/webexGoOverride'):
-
     def get(self) -> bool:
         """
         Get My WebexGoOverride Settings

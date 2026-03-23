@@ -24,8 +24,7 @@ class SelectiveReject(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               exclude={'criteria'})
+        return self.model_dump(mode='json', by_alias=True, exclude_none=True, exclude={'criteria'})
 
 
 class SelectiveRejectApi(PersonSettingsApiChild):
@@ -37,8 +36,7 @@ class SelectiveRejectApi(PersonSettingsApiChild):
 
     feature = 'selectiveReject'
 
-    def read_criteria(self, entity_id: str, id: str,
-                      org_id: str = None) -> SelectiveRejectCriteria:
+    def read_criteria(self, entity_id: str, id: str, org_id: str = None) -> SelectiveRejectCriteria:
         """
         Retrieve Selective Reject Criteria for an entity
 
@@ -68,8 +66,7 @@ class SelectiveRejectApi(PersonSettingsApiChild):
         r = SelectiveRejectCriteria.model_validate(data)
         return r
 
-    def configure_criteria(self, entity_id: str, id: str, settings: SelectiveRejectCriteria,
-                           org_id: str = None):
+    def configure_criteria(self, entity_id: str, id: str, settings: SelectiveRejectCriteria, org_id: str = None):
         """
         Modify Selective Reject Criteria for an entity
 
@@ -159,8 +156,7 @@ class SelectiveRejectApi(PersonSettingsApiChild):
         r = data['id']
         return r
 
-    def read(self, entity_id: str,
-             org_id: str = None) -> SelectiveReject:
+    def read(self, entity_id: str, org_id: str = None) -> SelectiveReject:
         """
         Retrieve Selective Reject Settings for an entity.
 

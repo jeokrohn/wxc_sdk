@@ -17,6 +17,7 @@ class ReceptionistSettings(ApiModel):
     """
     user's receptionist client settings
     """
+
     #: Set to true to enable the Receptionist Client feature.
     enabled: Optional[bool] = Field(alias='receptionEnabled', default=None)
     #: List of people and/or workspaces to monitor.

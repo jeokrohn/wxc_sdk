@@ -1,6 +1,7 @@
 """
 Simple implementation of Webex tokens
 """
+
 import datetime
 from typing import Literal, Optional
 
@@ -14,12 +15,13 @@ class Tokens(BaseModel):
     """
     Webex tokens
     """
+
     access_token: Optional[str] = None  #: access token
     expires_in: Optional[int] = None  #: remaining lifetime at time of token creation
     expires_at: Optional[datetime.datetime] = None  #: expiration, calculated at time of token creation
     refresh_token: Optional[str] = None  #: refresh token
-    refresh_token_expires_in: Optional[int] = None   # remaining lifetime of refresh token at time of token creation
-    refresh_token_expires_at: Optional[datetime.datetime] = None   #: expiration, calculated at time of token creation
+    refresh_token_expires_in: Optional[int] = None  # remaining lifetime of refresh token at time of token creation
+    refresh_token_expires_at: Optional[datetime.datetime] = None  #: expiration, calculated at time of token creation
     token_type: Optional[Literal['Bearer']] = None
     scope: Optional[str] = None
 

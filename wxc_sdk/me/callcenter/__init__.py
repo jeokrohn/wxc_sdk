@@ -50,9 +50,12 @@ class MeCallCenterSettings(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json', by_alias=True, exclude_unset=True,
-                               include={'agent_acdstate': True,
-                                        'queues': {'__all__': {'id', 'available'}}})
+        return self.model_dump(
+            mode='json',
+            by_alias=True,
+            exclude_unset=True,
+            include={'agent_acdstate': True, 'queues': {'__all__': {'id', 'available'}}},
+        )
 
 
 class MeCallCenterApi(ApiChild, base='telephony/config/people/me'):

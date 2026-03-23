@@ -34,8 +34,7 @@ class MeSimRing(ApiModel):
 
         :meta private
         """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               exclude={'criteria'})
+        return self.model_dump(mode='json', by_alias=True, exclude_none=True, exclude={'criteria'})
 
 
 class MeSimRingApi(ApiChild, base='telephony/config/people/me'):
@@ -80,70 +79,70 @@ class MeSimRingApi(ApiChild, base='telephony/config/people/me'):
         super().put(url, json=body)
 
     def criteria_create(self, criteria: SimRingCriteria) -> str:
-       """
-       Create My Simultaneous Ring Criteria
+        """
+        Create My Simultaneous Ring Criteria
 
-       Create simultaneous ring criteria settings for the authenticated user.
+        Create simultaneous ring criteria settings for the authenticated user.
 
-       The Simultaneous Ring feature allows you to configure your office phone and other phones of your
-       choice to ring
-       simultaneously. Simultaneous Ring Criteria (Schedules) can also be set up to ring these phones
-       during certain
-       times of the day or days of the week.
+        The Simultaneous Ring feature allows you to configure your office phone and other phones of your
+        choice to ring
+        simultaneously. Simultaneous Ring Criteria (Schedules) can also be set up to ring these phones
+        during certain
+        times of the day or days of the week.
 
-       Creating criteria requires a user auth token with a scope of `spark:telephony_config_write`.
+        Creating criteria requires a user auth token with a scope of `spark:telephony_config_write`.
 
-       :param criteria: new sim ring criteria
-       :type criteria: :class:`MeSimRingCriteria`
-       :rtype: str
-       """
-       body = criteria.update()
-       url = self.ep('settings/simultaneousRing/criteria')
-       data = super().post(url, json=body)
-       r = data['id']
-       return r
+        :param criteria: new sim ring criteria
+        :type criteria: :class:`MeSimRingCriteria`
+        :rtype: str
+        """
+        body = criteria.update()
+        url = self.ep('settings/simultaneousRing/criteria')
+        data = super().post(url, json=body)
+        r = data['id']
+        return r
 
     def criteria_delete(self, criteria_id: str):
-       """
-       Delete My Simultaneous Ring Criteria
+        """
+        Delete My Simultaneous Ring Criteria
 
-       Delete simultaneous ring criteria settings for the authenticated user.
+        Delete simultaneous ring criteria settings for the authenticated user.
 
-       The Simultaneous Ring feature allows you to configure your office phone and other phones of your
-       choice to ring simultaneously. Simultaneous Ring Criteria (Schedules) can also be set up to ring these phones
-       during certain times of the day or days of the week.
+        The Simultaneous Ring feature allows you to configure your office phone and other phones of your
+        choice to ring simultaneously. Simultaneous Ring Criteria (Schedules) can also be set up to ring these phones
+        during certain times of the day or days of the week.
 
-       Deleting criteria requires a user auth token with a scope of `spark:telephony_config_write`.
+        Deleting criteria requires a user auth token with a scope of `spark:telephony_config_write`.
 
-       :param criteria_id: Unique identifier for the criteria.
-       :type criteria_id: str
-       :rtype: None
-       """
-       url = self.ep(f'settings/simultaneousRing/criteria/{criteria_id}')
-       super().delete(url)
+        :param criteria_id: Unique identifier for the criteria.
+        :type criteria_id: str
+        :rtype: None
+        """
+        url = self.ep(f'settings/simultaneousRing/criteria/{criteria_id}')
+        super().delete(url)
 
     def criteria_get(self, criteria_id: str) -> SimRingCriteria:
-       """
-       Retrieve My Simultaneous Ring Criteria
+        """
+        Retrieve My Simultaneous Ring Criteria
 
-       Retrieve simultaneous ring criteria settings for the authenticated user.
+        Retrieve simultaneous ring criteria settings for the authenticated user.
 
-       The Simultaneous Ring feature allows you to configure your office phone and other phones of your
-       choice to ring simultaneously. Simultaneous Ring Criteria (Schedules) can also be set up to ring these phones
-       during certain times of the day or days of the week.
+        The Simultaneous Ring feature allows you to configure your office phone and other phones of your
+        choice to ring simultaneously. Simultaneous Ring Criteria (Schedules) can also be set up to ring these phones
+        during certain times of the day or days of the week.
 
-       Retrieving criteria requires a user auth token with a scope of `spark:telephony_config_read`.
+        Retrieving criteria requires a user auth token with a scope of `spark:telephony_config_read`.
 
-       :param criteria_id: Unique identifier for the criteria.
-       :type criteria_id: str
-       :rtype: :class:`SimRingCriteria`
-       """
-       url = self.ep(f'settings/simultaneousRing/criteria/{criteria_id}')
-       data = super().get(url)
-       r = SimRingCriteria.model_validate(data)
-       return r
+        :param criteria_id: Unique identifier for the criteria.
+        :type criteria_id: str
+        :rtype: :class:`SimRingCriteria`
+        """
+        url = self.ep(f'settings/simultaneousRing/criteria/{criteria_id}')
+        data = super().get(url)
+        r = SimRingCriteria.model_validate(data)
+        return r
 
-    def criteria_update(self, criteria: SimRingCriteria, criteria_id: str=None):
+    def criteria_update(self, criteria: SimRingCriteria, criteria_id: str = None):
         """
         Modify My Simultaneous Ring Criteria
 

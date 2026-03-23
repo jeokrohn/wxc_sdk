@@ -103,7 +103,7 @@ class MeSequentialRingApi(ApiChild, base='telephony/config/people/me'):
         r = SequentialRingCriteria.model_validate(data)
         return r
 
-    def criteria_update(self, criteria: SequentialRingCriteria, criteria_id: str=None):
+    def criteria_update(self, criteria: SequentialRingCriteria, criteria_id: str = None):
         """
         Modify Sequential Ring Criteria Settings for User
 

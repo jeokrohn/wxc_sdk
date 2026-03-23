@@ -9,10 +9,24 @@ from wxc_sdk.base import SafeEnum as Enum
 from wxc_sdk.common import AssignedDectNetwork, IdAndName, UsageType, UserType
 from wxc_sdk.telephony.devices import AvailableMember
 
-__all__ = ['DECTNetworkModel', 'DECTNetworkDetail', 'BaseStationResult', 'BaseStationResponse', 'BaseStationsResponse',
-           'DECTHandsetLine', 'Handset', 'BaseStationDetail', 'DECTHandsetItem', 'DECTHandsetList',
-           'DectDevice', 'AddDECTHandset', 'AddDECTHandsetBulkError', 'AddDECTHandsetBulkResult',
-           'AddDECTHandsetBulkResponse', 'DECTDevicesApi']
+__all__ = [
+    'DECTNetworkModel',
+    'DECTNetworkDetail',
+    'BaseStationResult',
+    'BaseStationResponse',
+    'BaseStationsResponse',
+    'DECTHandsetLine',
+    'Handset',
+    'BaseStationDetail',
+    'DECTHandsetItem',
+    'DECTHandsetList',
+    'DectDevice',
+    'AddDECTHandset',
+    'AddDECTHandsetBulkError',
+    'AddDECTHandsetBulkResult',
+    'AddDECTHandsetBulkResponse',
+    'DECTDevicesApi',
+]
 
 
 class DECTNetworkModel(str, Enum):
@@ -58,9 +72,11 @@ class DECTNetworkDetail(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json',
-                               exclude_none=True,
-                               include={'name', 'display_name', 'default_access_code_enabled', 'default_access_code'})
+        return self.model_dump(
+            mode='json',
+            exclude_none=True,
+            include={'name', 'display_name', 'default_access_code_enabled', 'default_access_code'},
+        )
 
 
 class BaseStationResult(ApiModel):
@@ -116,7 +132,6 @@ class DECTHandsetLine(ApiModel):
 
 class Handset(ApiModel):
     #: Unique identifier of the DECT handset.
-    # Y2lzY29zcGFyazovL3VzL1NDSU1fR1JPVVAvZjA2ZWRiOGMtMjMxNC00ZTcxLWIzNzgtZTdiMmQwNjk3OTliOjk2YWJjMmFhLTNkY2MtMTFlNS1hMTUyLWZlMzQ4MTljZGM5RG
     id: Optional[str] = None
     #: Display name of the DECT handset.
     display_name: Optional[str] = None
@@ -250,9 +265,16 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[DectDevice]).validate_python(data['devices'])
         return r
 
-    def create_dect_network(self, location_id: str, name: str, model: DECTNetworkModel,
-                            default_access_code_enabled: bool, default_access_code: str, display_name: str = None,
-                            org_id: str = None) -> str:
+    def create_dect_network(
+        self,
+        location_id: str,
+        name: str,
+        model: DECTNetworkModel,
+        default_access_code_enabled: bool,
+        default_access_code: str,
+        display_name: str = None,
+        org_id: str = None,
+    ) -> str:
         """
         Create a DECT Network
 
@@ -299,8 +321,9 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         r = data['dectNetworkId']
         return r
 
-    def list_dect_networks(self, name: str = None, location_id: str = None,
-                           org_id: str = None) -> list[DECTNetworkDetail]:
+    def list_dect_networks(
+        self, name: str = None, location_id: str = None, org_id: str = None
+    ) -> list[DECTNetworkDetail]:
         """
         Get the List of DECT Networks for an organization
 
@@ -332,8 +355,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[DECTNetworkDetail]).validate_python(data['dectNetworks'])
         return r
 
-    def dect_network_details(self, location_id: str, dect_network_id: str,
-                             org_id: str = None) -> DECTNetworkDetail:
+    def dect_network_details(self, location_id: str, dect_network_id: str, org_id: str = None) -> DECTNetworkDetail:
         """
         Get DECT Network Details
 
@@ -361,8 +383,16 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         r = DECTNetworkDetail.model_validate(data)
         return r
 
-    def update_dect_network(self, location_id: str, dect_network_id: str, name: str, default_access_code_enabled: bool,
-                            default_access_code: str = None, display_name: str = None, org_id: str = None):
+    def update_dect_network(
+        self,
+        location_id: str,
+        dect_network_id: str,
+        name: str,
+        default_access_code_enabled: bool,
+        default_access_code: str = None,
+        display_name: str = None,
+        org_id: str = None,
+    ):
         """
         Update DECT Network
 
@@ -453,8 +483,9 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}')
         super().delete(url, params=params)
 
-    def create_base_stations(self, location_id: str, dect_id: str, base_station_macs: list[str],
-                             org_id: str = None) -> list[BaseStationResponse]:
+    def create_base_stations(
+        self, location_id: str, dect_id: str, base_station_macs: list[str], org_id: str = None
+    ) -> list[BaseStationResponse]:
         """
         Create Multiple Base Stations
 
@@ -483,8 +514,9 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[BaseStationResponse]).validate_python(data['baseStations'])
         return r
 
-    def list_base_stations(self, location_id: str, dect_network_id: str,
-                           org_id: str = None) -> list[BaseStationsResponse]:
+    def list_base_stations(
+        self, location_id: str, dect_network_id: str, org_id: str = None
+    ) -> list[BaseStationsResponse]:
         """
         Get a list of DECT Network Base Stations
 
@@ -513,9 +545,9 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[BaseStationsResponse]).validate_python(data['baseStations'])
         return r
 
-    def base_station_details(self, location_id: str, dect_network_id: str,
-                             base_station_id: str,
-                             org_id: str = None) -> BaseStationDetail:
+    def base_station_details(
+        self, location_id: str, dect_network_id: str, base_station_id: str, org_id: str = None
+    ) -> BaseStationDetail:
         """
         Get the details of a specific DECT Network Base Station
 
@@ -572,8 +604,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/baseStations')
         super().delete(url, params=params)
 
-    def delete_base_station(self, location_id: str, dect_network_id: str, base_station_id: str,
-                            org_id: str = None):
+    def delete_base_station(self, location_id: str, dect_network_id: str, base_station_id: str, org_id: str = None):
         """
         Delete a specific DECT Network Base Station
 
@@ -601,8 +632,15 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/baseStations/{base_station_id}')
         super().delete(url, params=params)
 
-    def add_a_handset(self, location_id: str, dect_network_id: str, line1_member_id: str,
-                      line2_member_id: str = None, custom_display_name: str = None, org_id: str = None):
+    def add_a_handset(
+        self,
+        location_id: str,
+        dect_network_id: str,
+        line1_member_id: str,
+        line2_member_id: str = None,
+        custom_display_name: str = None,
+        org_id: str = None,
+    ):
         """
         Add a Handset to a DECT Network
 
@@ -646,9 +684,9 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/handsets')
         super().post(url, params=params, json=body)
 
-    def add_list_of_handsets(self, location_id: str, dect_network_id: str,
-                             items: list[AddDECTHandset],
-                             org_id: str = None) -> list[AddDECTHandsetBulkResponse]:
+    def add_list_of_handsets(
+        self, location_id: str, dect_network_id: str, items: list[AddDECTHandset], org_id: str = None
+    ) -> list[AddDECTHandsetBulkResponse]:
         """
         Add a List of Handsets to a DECT Network
 
@@ -681,16 +719,22 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['items'] = TypeAdapter(list[AddDECTHandset]).dump_python(items, mode='json', by_alias=True,
-                                                                      exclude_none=True)
+        body['items'] = TypeAdapter(list[AddDECTHandset]).dump_python(
+            items, mode='json', by_alias=True, exclude_none=True
+        )
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/handsets/bulk')
         data = super().post(url, params=params, json=body)
         r = TypeAdapter(list[AddDECTHandsetBulkResponse]).validate_python(data['items'])
         return r
 
-    def list_handsets(self, location_id: str, dect_network_id: str,
-                      basestation_id: str = None, member_id: str = None,
-                      org_id: str = None) -> DECTHandsetList:
+    def list_handsets(
+        self,
+        location_id: str,
+        dect_network_id: str,
+        basestation_id: str = None,
+        member_id: str = None,
+        org_id: str = None,
+    ) -> DECTHandsetList:
         """
         Get List of Handsets for a DECT Network ID
 
@@ -727,8 +771,9 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         r = DECTHandsetList.model_validate(data)
         return r
 
-    def handset_details(self, location_id: str, dect_network_id: str, handset_id: str,
-                        org_id: str = None) -> DECTHandsetItem:
+    def handset_details(
+        self, location_id: str, dect_network_id: str, handset_id: str, org_id: str = None
+    ) -> DECTHandsetItem:
         """
         Get Specific DECT Network Handset Details
 
@@ -759,9 +804,16 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         r = DECTHandsetItem.model_validate(data)
         return r
 
-    def update_handset(self, location_id: str, dect_network_id: str, handset_id: str,
-                       line1_member_id: str, custom_display_name: str, line2_member_id: str = None,
-                       org_id: str = None):
+    def update_handset(
+        self,
+        location_id: str,
+        dect_network_id: str,
+        handset_id: str,
+        line1_member_id: str,
+        custom_display_name: str,
+        line2_member_id: str = None,
+        org_id: str = None,
+    ):
         """
         Update DECT Network Handset
 
@@ -801,8 +853,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/handsets/{handset_id}')
         super().put(url, params=params, json=body)
 
-    def delete_handset(self, location_id: str, dect_network_id: str, handset_id: str,
-                       org_id: str = None):
+    def delete_handset(self, location_id: str, dect_network_id: str, handset_id: str, org_id: str = None):
         """
         Delete specific DECT Network Handset Details
 
@@ -830,8 +881,14 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/handsets/{handset_id}')
         super().delete(url, params=params)
 
-    def delete_handsets(self, location_id: str, dect_network_id: str, handset_ids: list[str],
-                        delete_all: bool = None, org_id: str = None):
+    def delete_handsets(
+        self,
+        location_id: str,
+        dect_network_id: str,
+        handset_ids: list[str],
+        delete_all: bool = None,
+        org_id: str = None,
+    ):
         """
         Delete multiple handsets
 
@@ -871,8 +928,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/handsets')
         super().delete(url, params=params, json=body)
 
-    def dect_networks_associated_with_person(self, person_id: str,
-                                             org_id: str = None) -> list[AssignedDectNetwork]:
+    def dect_networks_associated_with_person(self, person_id: str, org_id: str = None) -> list[AssignedDectNetwork]:
         """
         GET List of DECT networks associated with a Person
 
@@ -898,8 +954,9 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[AssignedDectNetwork]).validate_python(data['dectNetworks'])
         return r
 
-    def dect_networks_associated_with_workspace(self, workspace_id: str,
-                                                org_id: str = None) -> list[AssignedDectNetwork]:
+    def dect_networks_associated_with_workspace(
+        self, workspace_id: str, org_id: str = None
+    ) -> list[AssignedDectNetwork]:
         """
         GET List of DECT networks associated with a workspace
 
@@ -925,8 +982,9 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[AssignedDectNetwork]).validate_python(data['dectNetworks'])
         return r
 
-    def dect_networks_associated_with_virtual_line(self, virtual_line_id: str,
-                                                   org_id: str = None) -> list[AssignedDectNetwork]:
+    def dect_networks_associated_with_virtual_line(
+        self, virtual_line_id: str, org_id: str = None
+    ) -> list[AssignedDectNetwork]:
         """
         Get List of Dect Networks Handsets for a Virtual Line
 
@@ -953,10 +1011,18 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[AssignedDectNetwork]).validate_python(data['dectNetworks'])
         return r
 
-    def available_members(self, member_name: str = None, phone_number: str = None, extension: str = None,
-                          location_id: str = None, order: str = None, exclude_virtual_line: bool = None,
-                          usage_type: UsageType = None, org_id: str = None,
-                          **params) -> Generator[AvailableMember, None, None]:
+    def available_members(
+        self,
+        member_name: str = None,
+        phone_number: str = None,
+        extension: str = None,
+        location_id: str = None,
+        order: str = None,
+        exclude_virtual_line: bool = None,
+        usage_type: UsageType = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[AvailableMember, None, None]:
         """
         Search Available Members
 
@@ -1003,8 +1069,9 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         url = self.ep('devices/availableMembers')
         return self.session.follow_pagination(url=url, model=AvailableMember, item_key='members', params=params)
 
-    def generate_and_enable_dect_serviceability_password(self, location_id: str, dect_network_id: str,
-                                                         org_id: str = None) -> str:
+    def generate_and_enable_dect_serviceability_password(
+        self, location_id: str, dect_network_id: str, org_id: str = None
+    ) -> str:
         """
         Generate and Enable DECT Serviceability Password
 
@@ -1031,13 +1098,15 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(
-            f'locations/{location_id}/dectNetworks/{dect_network_id}/serviceabilityPassword/actions/generate/invoke')
+            f'locations/{location_id}/dectNetworks/{dect_network_id}/serviceabilityPassword/actions/generate/invoke'
+        )
         data = super().post(url, params=params)
         r = data['password']
         return r
 
-    def get_dect_serviceability_password_status(self, location_id: str, dect_network_id: str,
-                                                org_id: str = None) -> bool:
+    def get_dect_serviceability_password_status(
+        self, location_id: str, dect_network_id: str, org_id: str = None
+    ) -> bool:
         """
         Get DECT Serviceability Password status
 
@@ -1069,8 +1138,9 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         r = data['enabled']
         return r
 
-    def update_dect_serviceability_password_status(self, location_id: str, dect_network_id: str, enabled: bool,
-                                                   org_id: str = None):
+    def update_dect_serviceability_password_status(
+        self, location_id: str, dect_network_id: str, enabled: bool, org_id: str = None
+    ):
         """
         Update DECT Serviceability Password status
 

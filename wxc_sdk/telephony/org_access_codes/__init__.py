@@ -1,5 +1,5 @@
+import builtins
 from collections.abc import Generator
-from typing import List
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.common import AuthCode
@@ -13,8 +13,9 @@ class OrganisationAccessCodesApi(ApiChild, base='telephony/config/outgoingPermis
     of `spark-admin:telephony_config_read.
     """
 
-    def list(self, code: list[str] = None, description: list[str] = None, org_id: str = None,
-             **params) -> Generator[AuthCode, None, None]:
+    def list(
+        self, code: list[str] = None, description: list[str] = None, org_id: str = None, **params
+    ) -> Generator[AuthCode, None, None]:
         """
         Retrieve the organisation's access codes.
 
@@ -40,11 +41,9 @@ class OrganisationAccessCodesApi(ApiChild, base='telephony/config/outgoingPermis
         if description is not None:
             params['description'] = ','.join(description)
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=AuthCode, params=params,
-                                              item_key='accessCodes')
+        return self.session.follow_pagination(url=url, model=AuthCode, params=params, item_key='accessCodes')
 
-    def delete(self, delete_codes: List[str] = None,
-               org_id: str = None):
+    def delete(self, delete_codes: builtins.list[str] = None, org_id: str = None):
         """
         Delete Outgoing Permission Access Code for an Organisation
 
@@ -69,7 +68,7 @@ class OrganisationAccessCodesApi(ApiChild, base='telephony/config/outgoingPermis
         url = self.ep()
         super().put(url, params=params, json=body)
 
-    def create(self, access_codes: List[AuthCode], org_id: str = None):
+    def create(self, access_codes: builtins.list[AuthCode], org_id: str = None):
         """
         Create Access Codes for an Organisation
 

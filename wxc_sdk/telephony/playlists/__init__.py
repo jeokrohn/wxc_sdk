@@ -9,8 +9,15 @@ from wxc_sdk.base import ApiModel, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 from wxc_sdk.common import IdAndName
 
-__all__ = ['PlaylistAnnouncement', 'PlayListApi', 'PlayList', 'PlaylistUsageType', 'PlaylistUsageLocation',
-           'PlaylistUsageLocationFeatureRef', 'PlaylistUsage']
+__all__ = [
+    'PlaylistAnnouncement',
+    'PlayListApi',
+    'PlayList',
+    'PlaylistUsageType',
+    'PlaylistUsageLocation',
+    'PlaylistUsageLocationFeatureRef',
+    'PlaylistUsage',
+]
 
 
 class PlaylistAnnouncement(ApiModel):
@@ -209,8 +216,9 @@ class PlayListApi(ApiChild, base='telephony/config/announcements/playlists'):
         r = PlayList.model_validate(data)
         return r
 
-    def modify(self, play_list_id: str, name: str = None, announcement_ids: builtins.list[str] = None,
-               org_id: str = None):
+    def modify(
+        self, play_list_id: str, name: str = None, announcement_ids: builtins.list[str] = None, org_id: str = None
+    ):
         """
         Update Announcement Playlist
 

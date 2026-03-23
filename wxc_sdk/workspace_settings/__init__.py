@@ -2,6 +2,7 @@
 Workspace settings, mostly identical to user settings
 
 """
+
 from dataclasses import dataclass
 
 from ..api_child import ApiChild
@@ -46,6 +47,7 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
     this class are instances of the respective user settings APIs. When calling endpoints of these APIs workspace IDs
     need to be passed to the ``person_id`` parameter of the called function.
     """
+
     anon_calls: AnonCallsApi
     available_numbers: AvailableNumbersApi
     barge: BargeApi

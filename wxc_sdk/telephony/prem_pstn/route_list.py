@@ -1,6 +1,7 @@
+import builtins
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import Field, TypeAdapter
 
@@ -55,13 +56,11 @@ class NumberAndAction(ApiModel):
 
     @staticmethod
     def add(number: str) -> 'NumberAndAction':
-        return NumberAndAction(number=number,
-                               action=PatternAction.add)
+        return NumberAndAction(number=number, action=PatternAction.add)
 
     @staticmethod
     def delete(number: str) -> 'NumberAndAction':
-        return NumberAndAction(number=number,
-                               action=PatternAction.delete)
+        return NumberAndAction(number=number, action=PatternAction.delete)
 
 
 class UpdateNumbersResponse(ApiModel):
@@ -76,8 +75,9 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
     API for everything route lists
     """
 
-    def list(self, name: list[str] = None, location_id: list[str] = None, order: str = None,
-             org_id: str = None, **params) -> Generator[RouteList, None, None]:
+    def list(
+        self, name: list[str] = None, location_id: list[str] = None, order: str = None, org_id: str = None, **params
+    ) -> Generator[RouteList, None, None]:
         """
         List all Route Lists for the organization.
 
@@ -98,8 +98,7 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
         :type org_id: str
         :return: generator yielding :class:`RouteList` instances
         """
-        params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'params'})
+        params.update((to_camel(p), v) for p, v in locals().items() if v is not None and p not in {'self', 'params'})
         url = self.ep()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, params=params, model=RouteList)
@@ -126,9 +125,7 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
         :rtype: str
         """
         params = org_id and {'orgId': org_id} or None
-        body = {'name': name,
-                'locationId': location_id,
-                'routeGroupId': rg_id}
+        body = {'name': name, 'locationId': location_id, 'routeGroupId': rg_id}
         url = self.ep()
         data = self.post(url=url, params=params, json=body)
         return data['id']
@@ -202,8 +199,9 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
         url = self.ep(rl_id)
         self.delete(url=url, params=params)
 
-    def numbers(self, rl_id: str, order: str = None, number: str = None,
-                org_id: str = None, **params) -> Generator[str, None, None]:
+    def numbers(
+        self, rl_id: str, order: str = None, number: str = None, org_id: str = None, **params
+    ) -> Generator[str, None, None]:
         """
         Get numbers assigned to a Route List
 
@@ -223,15 +221,20 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
         :type org_id: str
         :return: generator yielding str
         """
-        params.update((to_camel(p), v) for p, v in locals().items()
-                      if v is not None and p not in {'self', 'params', 'rl_id'})
+        params.update(
+            (to_camel(p), v) for p, v in locals().items() if v is not None and p not in {'self', 'params', 'rl_id'}
+        )
         url = self.ep(f'{rl_id}/numbers')
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, params=params)
 
-    def update_numbers(self, rl_id: str, numbers: List[NumberAndAction] = None,
-                       delete_all_numbers: bool = None,
-                       org_id: str = None) -> List[UpdateNumbersResponse]:
+    def update_numbers(
+        self,
+        rl_id: str,
+        numbers: builtins.list[NumberAndAction] = None,
+        delete_all_numbers: bool = None,
+        org_id: str = None,
+    ) -> builtins.list[UpdateNumbersResponse]:
         """
         Modify Numbers for Route List
 
@@ -260,8 +263,9 @@ class RouteListApi(ApiChild, base='telephony/config/premisePstn/routeLists'):
 
         body = dict()
         if numbers is not None:
-            body['numbers'] = TypeAdapter(list[NumberAndAction]).dump_python(numbers, mode='json', by_alias=True,
-                                                                             exclude_none=True)
+            body['numbers'] = TypeAdapter(list[NumberAndAction]).dump_python(
+                numbers, mode='json', by_alias=True, exclude_none=True
+            )
         if delete_all_numbers is not None:
             body['deleteAllNumbers'] = delete_all_numbers
         data = self.put(url=url, params=params, json=body)

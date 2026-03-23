@@ -1,6 +1,7 @@
 """
 Attachment actions API
 """
+
 from datetime import datetime
 from typing import Literal, Optional
 
@@ -32,6 +33,7 @@ class AttachmentActionData(WebhookEventData):
     """
     Data in a webhook "attachmentActions" event
     """
+
     resource = 'attachmentActions'
     id: str
     type: Literal['submit']

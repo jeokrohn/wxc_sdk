@@ -1,6 +1,7 @@
 """
 Webex Status API as described at https://status.webex.com/api
 """
+
 from datetime import datetime
 from typing import Optional
 

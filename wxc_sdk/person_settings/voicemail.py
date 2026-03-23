@@ -1,6 +1,7 @@
 """
 Voicemail API
 """
+
 import os
 from io import BufferedReader
 from typing import Optional, Union
@@ -28,6 +29,7 @@ class VoicemailEnabledWithGreeting(VoicemailEnabled):
     """
     Voicemail enablement setting with greeting details
     """
+
     #: DEFAULT indicates the default greeting will be played. CUSTOM indicates a custom .wav file will be played.
     greeting: Optional[Greeting] = None
     #: Indicates a custom greeting has been uploaded.
@@ -39,6 +41,7 @@ class UnansweredCalls(VoicemailEnabledWithGreeting):
     """
     Voicemail enablement settungs for unsanswered cals
     """
+
     #: Number of rings before unanswered call will be sent to voicemail.
     number_of_rings: Optional[int] = None
     #: System-wide maximum number of rings allowed for number_of_rings setting.
@@ -49,6 +52,7 @@ class VoicemailSettings(ApiModel):
     """
     User's voicemail settings
     """
+
     #: Voicemail is enabled or disabled.
     enabled: Optional[bool] = None
     #: Settings for sending all calls to voicemail.
@@ -77,19 +81,18 @@ class VoicemailSettings(ApiModel):
         :return: defauilt settings
         :rtype: :class:`VoicemailSettings`
         """
-        return VoicemailSettings(enabled=True,
-                                 send_all_calls=VoicemailEnabled(enabled=False),
-                                 send_busy_calls=VoicemailEnabledWithGreeting(enabled=False, greeting=Greeting.default),
-                                 send_unanswered_calls=UnansweredCalls(enabled=True,
-                                                                       greeting=Greeting.default,
-                                                                       number_of_rings=3),
-                                 notifications=VoicemailNotifications(enabled=False),
-                                 transfer_to_number=VoicemailTransferToNumber(enabled=False),
-                                 email_copy_of_message=VoicemailCopyOfMessage(enabled=False),
-                                 message_storage=VoicemailMessageStorage(mwi_enabled=True,
-                                                                         storage_type=StorageType.internal),
-                                 fax_message=VoicemailFax(enabled=False),
-                                 voice_message_forwarding_enabled=False)
+        return VoicemailSettings(
+            enabled=True,
+            send_all_calls=VoicemailEnabled(enabled=False),
+            send_busy_calls=VoicemailEnabledWithGreeting(enabled=False, greeting=Greeting.default),
+            send_unanswered_calls=UnansweredCalls(enabled=True, greeting=Greeting.default, number_of_rings=3),
+            notifications=VoicemailNotifications(enabled=False),
+            transfer_to_number=VoicemailTransferToNumber(enabled=False),
+            email_copy_of_message=VoicemailCopyOfMessage(enabled=False),
+            message_storage=VoicemailMessageStorage(mwi_enabled=True, storage_type=StorageType.internal),
+            fax_message=VoicemailFax(enabled=False),
+            voice_message_forwarding_enabled=False,
+        )
 
     def update(self) -> dict:
         """
@@ -97,14 +100,16 @@ class VoicemailSettings(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json',
-                               by_alias=True,
-                               exclude_unset=True,
-                               exclude={'send_busy_calls': {'greeting_uploaded': True},
-                                        'send_unanswered_calls': {'system_max_number_of_rings': True,
-                                                                  'greeting_uploaded': True},
-                                        'voice_message_forwarding_enabled': True
-                                        })
+        return self.model_dump(
+            mode='json',
+            by_alias=True,
+            exclude_unset=True,
+            exclude={
+                'send_busy_calls': {'greeting_uploaded': True},
+                'send_unanswered_calls': {'system_max_number_of_rings': True, 'greeting_uploaded': True},
+                'voice_message_forwarding_enabled': True,
+            },
+        )
 
 
 class XForwardingSetting:
@@ -163,9 +168,15 @@ class VoicemailApi(PersonSettingsApiChild):
         params = org_id and {'orgId': org_id} or None
         self.put(url, json=data, params=params)
 
-    def _configure_greeting(self, *, entity_id: str, content: Union[BufferedReader, str],
-                            upload_as: str = None, org_id: str = None,
-                            greeting_key: str):
+    def _configure_greeting(
+        self,
+        *,
+        entity_id: str,
+        content: Union[BufferedReader, str],
+        upload_as: str = None,
+        org_id: str = None,
+        greeting_key: str,
+    ):
         """
         handle greeting configuration
 
@@ -195,14 +206,14 @@ class VoicemailApi(PersonSettingsApiChild):
         ep = self.f_ep(entity_id, path=f'actions/{greeting_key}/invoke')
         params = org_id and {'orgId': org_id} or None
         try:
-            self.post(ep, data=encoder, headers={'Content-Type': encoder.content_type},
-                      params=params)
+            self.post(ep, data=encoder, headers={'Content-Type': encoder.content_type}, params=params)
         finally:
             if must_close:
                 content.close()
 
-    def configure_busy_greeting(self, entity_id: str, content: Union[BufferedReader, str],
-                                upload_as: str = None, org_id: str = None):
+    def configure_busy_greeting(
+        self, entity_id: str, content: Union[BufferedReader, str], upload_as: str = None, org_id: str = None
+    ):
         """
         Configure Busy Voicemail Greeting for an entity
 
@@ -223,11 +234,13 @@ class VoicemailApi(PersonSettingsApiChild):
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        return self._configure_greeting(entity_id=entity_id, content=content, upload_as=upload_as, org_id=org_id,
-                                        greeting_key='uploadBusyGreeting')
+        return self._configure_greeting(
+            entity_id=entity_id, content=content, upload_as=upload_as, org_id=org_id, greeting_key='uploadBusyGreeting'
+        )
 
-    def configure_no_answer_greeting(self, entity_id: str, content: Union[BufferedReader, str],
-                                     upload_as: str = None, org_id: str = None):
+    def configure_no_answer_greeting(
+        self, entity_id: str, content: Union[BufferedReader, str], upload_as: str = None, org_id: str = None
+    ):
         """
         Configure No Answer Voicemail Greeting for an entity
 
@@ -251,8 +264,13 @@ class VoicemailApi(PersonSettingsApiChild):
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        return self._configure_greeting(entity_id=entity_id, content=content, upload_as=upload_as, org_id=org_id,
-                                        greeting_key='uploadNoAnswerGreeting')
+        return self._configure_greeting(
+            entity_id=entity_id,
+            content=content,
+            upload_as=upload_as,
+            org_id=org_id,
+            greeting_key='uploadNoAnswerGreeting',
+        )
 
     def modify_passcode(self, entity_id: str, passcode: str, org_id: str = None):
         """

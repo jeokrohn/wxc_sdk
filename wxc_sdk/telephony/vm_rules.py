@@ -7,14 +7,23 @@ from typing import Optional
 from ..api_child import ApiChild
 from ..base import ApiModel
 
-__all__ = ['BlockRepeatedDigits', 'BlockContiguousSequences', 'PinLength', 'DefaultVoicemailPinRules',
-           'EnabledAndNumberOfDays', 'BlockPreviousPasscodes', 'VoiceMailRules', 'VoicemailRulesApi']
+__all__ = [
+    'BlockRepeatedDigits',
+    'BlockContiguousSequences',
+    'PinLength',
+    'DefaultVoicemailPinRules',
+    'EnabledAndNumberOfDays',
+    'BlockPreviousPasscodes',
+    'VoiceMailRules',
+    'VoicemailRulesApi',
+]
 
 
 class BlockRepeatedDigits(ApiModel):
     """
     Settings for not allowing single or groups of repeated digits in passcode (for example, 22888, 121212, or 408408).
     """
+
     #: If enabled, passcode should not contain repeated digits.
     enabled: Optional[bool] = None
     #: Maximum number of repeated digits. Min 1, Max 6.
@@ -25,6 +34,7 @@ class BlockContiguousSequences(ApiModel):
     """
     Settings for not allowing numerical sequence in passcode (for example, 012345 or 987654).
     """
+
     #: If enabled, do not allow the specified number of ascending or descending digits in a row.
     enabled: Optional[bool] = None
     #: Number of ascending digits in sequence. The minimum value is 2. The maximum value is 5.
@@ -37,6 +47,7 @@ class PinLength(ApiModel):
     """
     Length of the passcode.
     """
+
     #: The minimum value is 2. The maximum value is 15.
     min: Optional[int] = None
     #: The minimum value is 3. The maximum value is 30.
@@ -47,6 +58,7 @@ class DefaultVoicemailPinRules(ApiModel):
     """
     Default voicemail passcode requirements.
     """
+
     #: If enabled, the passcode should not contain repeated pattern.
     block_repeated_patterns_enabled: Optional[bool] = None
     #: Settings for not allowing single or groups of repeated digits in passcode (for example, 22888, 121212, or
@@ -61,20 +73,22 @@ class DefaultVoicemailPinRules(ApiModel):
 
     @staticmethod
     def default() -> 'DefaultVoicemailPinRules':
-        return DefaultVoicemailPinRules(block_repeated_patterns_enabled=True,
-                                        block_repeated_digits=BlockRepeatedDigits(enabled=True, max=3),
-                                        block_contiguous_sequences=BlockContiguousSequences(
-                                            enabled=True,
-                                            number_of_descending_digits=3,
-                                            number_of_ascending_digits=3),
-                                        length=PinLength(min=6, max=30),
-                                        default_voicemail_pin_enabled=False)
+        return DefaultVoicemailPinRules(
+            block_repeated_patterns_enabled=True,
+            block_repeated_digits=BlockRepeatedDigits(enabled=True, max=3),
+            block_contiguous_sequences=BlockContiguousSequences(
+                enabled=True, number_of_descending_digits=3, number_of_ascending_digits=3
+            ),
+            length=PinLength(min=6, max=30),
+            default_voicemail_pin_enabled=False,
+        )
 
 
 class BlockPreviousPasscodes(ApiModel):
     """
     Settings for previous passcode usage.
     """
+
     #: If enabled, set how many of the previous passcodes are not allowed to be re-used.
     enabled: Optional[bool] = None
     #: Number of previous passcodes. Min 1, Max 10.
@@ -85,6 +99,7 @@ class EnabledAndNumberOfDays(ApiModel):
     """
     Settings for passcode expiry or passcode changes
     """
+
     enabled: Optional[bool] = None
     number_of_days: Optional[int] = None
 
@@ -105,10 +120,12 @@ class VoiceMailRules(ApiModel):
 
     @staticmethod
     def default() -> 'VoiceMailRules':
-        return VoiceMailRules(default_voicemail_pin_rules=DefaultVoicemailPinRules.default(),
-                              expire_passcode=EnabledAndNumberOfDays(enabled=True, number_of_days=180),
-                              change_passcode=EnabledAndNumberOfDays(enabled=False, number_of_days=1),
-                              block_previous_passcodes=BlockPreviousPasscodes(enabled=True, number_of_passcodes=10))
+        return VoiceMailRules(
+            default_voicemail_pin_rules=DefaultVoicemailPinRules.default(),
+            expire_passcode=EnabledAndNumberOfDays(enabled=True, number_of_days=180),
+            change_passcode=EnabledAndNumberOfDays(enabled=False, number_of_days=1),
+            block_previous_passcodes=BlockPreviousPasscodes(enabled=True, number_of_passcodes=10),
+        )
 
 
 class VoicemailRulesApi(ApiChild, base='telephony/config/voicemail/rules'):

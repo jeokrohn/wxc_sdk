@@ -1,6 +1,7 @@
 """
 Calling behavior API
 """
+
 from typing import Optional
 
 from ..base import ApiModel
@@ -14,6 +15,7 @@ class BehaviorType(str, Enum):
     """
     The Calling Behavior setting for the person
     """
+
     #: Calling in Webex Teams(formerly Spark Call), or Hybrid Calling.
     native = 'NATIVE_WEBEX_TEAMS_CALLING'
     #: Cisco Jabber app
@@ -75,8 +77,7 @@ class CallingBehaviorApi(PersonSettingsApiChild):
         data = self.get(ep, params=params)
         return CallingBehavior.model_validate(data)
 
-    def configure(self, person_id: str, settings: CallingBehavior,
-                  org_id: str = None):
+    def configure(self, person_id: str, settings: CallingBehavior, org_id: str = None):
         """
         Configure a Person's Calling Behavior
 

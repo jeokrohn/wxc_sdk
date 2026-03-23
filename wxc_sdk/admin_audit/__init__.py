@@ -12,7 +12,6 @@ __all__ = ['AdminAuditEventsApi', 'AuditEvent', 'AuditEventData']
 
 
 class AuditEventData(ApiModel):
-
     model_config = ConfigDict(extra='allow')
 
     #: The display name of the organization.
@@ -189,9 +188,15 @@ class AdminAuditEventsApi(ApiChild, base='adminAudit'):
     An administrator account with the `audit:events_read` scope is required to use this API.
     """
 
-    def list_events(self, org_id: str, from_: Union[str, datetime], to_: Union[str, datetime],
-                    actor_id: str = None, event_categories: list[str] = None,
-                    **params) -> Generator[AuditEvent, None, None]:
+    def list_events(
+        self,
+        org_id: str,
+        from_: Union[str, datetime],
+        to_: Union[str, datetime],
+        actor_id: str = None,
+        event_categories: list[str] = None,
+        **params,
+    ) -> Generator[AuditEvent, None, None]:
         """
         List Admin Audit Events
 

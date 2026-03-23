@@ -9,8 +9,15 @@ from ..base import ApiModel
 from ..base import SafeEnum as Enum
 from ..common import CallParkExtension, PersonPlaceAgent, RingPattern
 
-__all__ = ['CallParkRecall', 'RecallHuntGroup', 'AvailableRecallHuntGroup',
-           'CallPark', 'CallParkSettings', 'LocationCallParkSettings', 'CallParkApi']
+__all__ = [
+    'CallParkRecall',
+    'RecallHuntGroup',
+    'AvailableRecallHuntGroup',
+    'CallPark',
+    'CallParkSettings',
+    'LocationCallParkSettings',
+    'CallParkApi',
+]
 
 
 class CallParkRecall(str, Enum):
@@ -45,6 +52,7 @@ class AvailableRecallHuntGroup(ApiModel):
     """
     available recall hunt group
     """
+
     #: A unique identifier for the hunt group.
     huntgroup_id: str = Field(alias='id')
     #: Unique name for the hunt group.
@@ -55,6 +63,7 @@ class CallPark(ApiModel):
     """
     Call Park
     """
+
     #: A unique identifier for the call park.
     callpark_id: Optional[str] = Field(alias='id', default=None)
     #: Unique name for the call park. The maximum length is 80.
@@ -93,11 +102,16 @@ class CallPark(ApiModel):
         :return: JSON
         :rtype: str
         """
-        data = self.model_dump(mode='json', exclude_unset=True,
-                               exclude={'callpark_id': True,
-                                        'location_name': True,
-                                        'location_id': True,
-                                        'recall': {'hunt_group_name': True}})
+        data = self.model_dump(
+            mode='json',
+            exclude_unset=True,
+            exclude={
+                'callpark_id': True,
+                'location_name': True,
+                'location_id': True,
+                'recall': {'hunt_group_name': True},
+            },
+        )
         # agents need to be passed as list of IDs only
         if data.get('agents'):
             data['agents'] = [a['id'] for a in data['agents']]
@@ -112,6 +126,7 @@ class CallParkSettings(ApiModel):
     """
     Setting controlling call park behavior.
     """
+
     #: Ring pattern for when this callpark is called.
     ring_pattern: Optional[RingPattern] = None
     #: Amount of time within 30 and 600 seconds the Call Park will be parked. If the call isn't picked up within the
@@ -128,9 +143,7 @@ class CallParkSettings(ApiModel):
 
         :return: :class:`CallParkSettings`
         """
-        return CallParkSettings(ring_pattern=RingPattern.normal,
-                                recall_time=45,
-                                hunt_wait_time=45)
+        return CallParkSettings(ring_pattern=RingPattern.normal, recall_time=45, hunt_wait_time=45)
 
 
 class LocationCallParkSettings(ApiModel):
@@ -146,8 +159,9 @@ class LocationCallParkSettings(ApiModel):
 
         :return: :class:`LocationCallParkSettings`
         """
-        return LocationCallParkSettings(call_park_recall=RecallHuntGroup.default(),
-                                        call_park_settings=CallParkSettings.default())
+        return LocationCallParkSettings(
+            call_park_recall=RecallHuntGroup.default(), call_park_settings=CallParkSettings.default()
+        )
 
     def update(self) -> str:
         """
@@ -194,8 +208,9 @@ class CallParkApi(ApiChild, base='telephony/config/callParks'):
         ep = self.session.ep(f'telephony/config/locations/{location_id}/callParks{call_park_id}{path}')
         return ep
 
-    def list(self, location_id: str, order: str = None, name: str = None,
-             org_id: str = None, **params) -> Generator[CallPark, None, None]:
+    def list(
+        self, location_id: str, order: str = None, name: str = None, org_id: str = None, **params
+    ) -> Generator[CallPark, None, None]:
         """
         Read the List of Call Parks
 
@@ -334,8 +349,16 @@ class CallParkApi(ApiChild, base='telephony/config/callParks'):
         data = self.put(url, data=body, params=params)
         return data['id']
 
-    def available_agents(self, location_id: str, call_park_name: str = None, name: str = None, phone_number: str = None,
-                         order: str = None, org_id: str = None, **params) -> Generator[PersonPlaceAgent, None, None]:
+    def available_agents(
+        self,
+        location_id: str,
+        call_park_name: str = None,
+        name: str = None,
+        phone_number: str = None,
+        order: str = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[PersonPlaceAgent, None, None]:
         """
         Get available agents from Call Parks
 
@@ -376,8 +399,9 @@ class CallParkApi(ApiChild, base='telephony/config/callParks'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=PersonPlaceAgent, params=params, item_key='agents')
 
-    def available_recalls(self, location_id: str, name: str = None, order: str = None,
-                          org_id: str = None, **params) -> Generator[AvailableRecallHuntGroup, None, None]:
+    def available_recalls(
+        self, location_id: str, name: str = None, order: str = None, org_id: str = None, **params
+    ) -> Generator[AvailableRecallHuntGroup, None, None]:
         """
         Get available recall hunt groups from Call Parks
 
@@ -407,8 +431,9 @@ class CallParkApi(ApiChild, base='telephony/config/callParks'):
             params['order'] = order
         url = self._endpoint(location_id=location_id, path='availableRecallHuntGroups')
         # noinspection PyTypeChecker
-        return self.session.follow_pagination(url=url, model=AvailableRecallHuntGroup,
-                                              params=params, item_key='huntGroups')
+        return self.session.follow_pagination(
+            url=url, model=AvailableRecallHuntGroup, params=params, item_key='huntGroups'
+        )
 
     def call_park_settings(self, location_id: str, org_id: str = None) -> LocationCallParkSettings:
         """

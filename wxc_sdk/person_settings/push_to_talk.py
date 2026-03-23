@@ -1,6 +1,7 @@
 """
 Person PTT settings API
 """
+
 from typing import Optional, Union
 
 from ..base import ApiModel
@@ -32,6 +33,7 @@ class PushToTalkSettings(ApiModel):
     """
     Push To Talk settings
     """
+
     #: Set to true to enable the Push-to-Talk feature. When enabled, a person receives a Push-to-Talk call and
     #: answers the call automatically.
     allow_auto_answer: Optional[bool] = None
@@ -97,11 +99,9 @@ class PushToTalkApi(PersonSettingsApiChild):
         if settings.members:
             # for an update member is just a list of IDs
             body_settings = settings.model_copy(deep=True)
-            members = [m.member_id if isinstance(m, MonitoredMember) else m
-                       for m in settings.members]
+            members = [m.member_id if isinstance(m, MonitoredMember) else m for m in settings.members]
             body_settings.members = members
         else:
             body_settings = settings
-        body = body_settings.model_dump_json(exclude_none=False,
-                                             exclude_unset=True)
+        body = body_settings.model_dump_json(exclude_none=False, exclude_unset=True)
         self.put(ep, params=params, data=body)

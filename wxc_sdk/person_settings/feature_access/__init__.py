@@ -185,9 +185,7 @@ class FeatureAccessApi(ApiChild, base='telephony'):
         r = UserFeatureAccessSettings.model_validate(data)
         return r
 
-    def update(self,
-               person_id: str,
-               settings: FeatureAccessSettings):
+    def update(self, person_id: str, settings: FeatureAccessSettings):
         """
         Update a Person’s Feature Access Configuration
 

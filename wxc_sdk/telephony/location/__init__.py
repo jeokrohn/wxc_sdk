@@ -1,6 +1,7 @@
+import builtins
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import Field, TypeAdapter
 
@@ -22,16 +23,30 @@ from .numbers import LocationNumbersApi
 from .receptionist_contacts import ReceptionistContactsDirectoryApi
 from .vm import LocationVoicemailSettingsApi
 
-__all__ = ['CallingLineId', 'PSTNConnection', 'TelephonyLocation', 'CallBackSelected', 'ContactDetails',
-           'LocationECBNLocation', 'LocationECBNLocationMember', 'LocationECBN',
-           'BlockingDisableCalling', 'NonBlockingDisableCalling', 'BlockingUnlessForced',
-           'LocationDeleteStatus', 'SafeDeleteCheckResponse', 'LocationCallCaptions', 'TelephonyLocationApi']
+__all__ = [
+    'CallingLineId',
+    'PSTNConnection',
+    'TelephonyLocation',
+    'CallBackSelected',
+    'ContactDetails',
+    'LocationECBNLocation',
+    'LocationECBNLocationMember',
+    'LocationECBN',
+    'BlockingDisableCalling',
+    'NonBlockingDisableCalling',
+    'BlockingUnlessForced',
+    'LocationDeleteStatus',
+    'SafeDeleteCheckResponse',
+    'LocationCallCaptions',
+    'TelephonyLocationApi',
+]
 
 
 class CallingLineId(ApiModel):
     """
     Location calling line information.
     """
+
     #: Group calling line ID name. By default it will be org name.
     #: when updating the name make sure to also include the phone number
     name: Optional[str] = None
@@ -43,6 +58,7 @@ class PSTNConnection(ApiModel):
     """
     Connection details
     """
+
     #: Webex Calling location only supports TRUNK and ROUTE_GROUP connection type.
     type: RouteType
     #: A unique identifier of route type.
@@ -94,9 +110,12 @@ class TelephonyLocation(ApiModel):
 
         :meta private:
         """
-        data = self.model_dump(mode='json', exclude_unset=True, by_alias=True,
-                               exclude={'location_id', 'name', 'subscription_id', 'user_limit', 'default_domain',
-                                        'e911_setup_required'})
+        data = self.model_dump(
+            mode='json',
+            exclude_unset=True,
+            by_alias=True,
+            exclude={'location_id', 'name', 'subscription_id', 'user_limit', 'default_domain', 'e911_setup_required'},
+        )
         if not self.connection:
             data.pop('connection', None)
         return data
@@ -236,8 +255,13 @@ class LocationCallCaptions(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json', exclude_unset=True, by_alias=True, exclude_none=True,
-                               exclude={'org_closed_captions_enabled', 'org_transcripts_enabled'})
+        return self.model_dump(
+            mode='json',
+            exclude_unset=True,
+            by_alias=True,
+            exclude_none=True,
+            exclude={'org_closed_captions_enabled', 'org_transcripts_enabled'},
+        )
 
 
 @dataclass(init=False, repr=False)
@@ -297,8 +321,9 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         data = self.post(url=url, params=params, json=body)
         return data['exampleSipPassword']
 
-    def validate_extensions(self, location_id: str, extensions: list[str],
-                            org_id: str = None) -> ValidateExtensionsResponse:
+    def validate_extensions(
+        self, location_id: str, extensions: list[str], org_id: str = None
+    ) -> ValidateExtensionsResponse:
         """
         Validate Extensions
 
@@ -383,9 +408,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         :type org_id: str
         :return: generator of :class:`TelephonyLocation` instances
         """
-        params = {to_camel(k): v
-                  for k, v in locals().items()
-                  if k != 'self' and v is not None}
+        params = {to_camel(k): v for k, v in locals().items() if k != 'self' and v is not None}
         url = self.ep()
         return self.session.follow_pagination(url=url, model=TelephonyLocation, params=params, item_key='locations')
 
@@ -430,8 +453,14 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
             return data.get('batchJobId')
         return
 
-    def change_announcement_language(self, location_id: str, language_code: str, agent_enabled: bool = None,
-                                     service_enabled: bool = None, org_id: str = None):
+    def change_announcement_language(
+        self,
+        location_id: str,
+        language_code: str,
+        agent_enabled: bool = None,
+        service_enabled: bool = None,
+        org_id: str = None,
+    ):
         """
         Change Announcement Language
 
@@ -464,8 +493,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         url = self.session.ep(f'{location_id}/actions/modifyAnnouncementLanguage/invoke')
         self.put(url, json=body, params=params)
 
-    def read_ecbn(self, location_id: str,
-                  org_id: str = None) -> LocationECBN:
+    def read_ecbn(self, location_id: str, org_id: str = None) -> LocationECBN:
         """
         Get a Location Emergency callback number
 
@@ -488,8 +516,9 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         r = LocationECBN.model_validate(data)
         return r
 
-    def update_ecbn(self, location_id: str, selected: CallBackSelected,
-                    location_member_id: str = None, org_id: str = None):
+    def update_ecbn(
+        self, location_id: str, selected: CallBackSelected, location_member_id: str = None, org_id: str = None
+    ):
         """
         Update a Location Emergency callback number
 
@@ -537,11 +566,15 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         data = self.get(url=url, params=params)
         return DeviceCustomization.model_validate(data)
 
-    def phone_numbers_available_for_external_caller_id(self, location_id: str,
-                                                       phone_number: List[str] = None,
-                                                       owner_name: str = None, person_id: str = None,
-                                                       org_id: str = None,
-                                                       **params) -> Generator[AvailableNumber, None, None]:
+    def phone_numbers_available_for_external_caller_id(
+        self,
+        location_id: str,
+        phone_number: builtins.list[str] = None,
+        owner_name: str = None,
+        person_id: str = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get the List of Phone Numbers Available for External Caller ID
 
@@ -586,10 +619,14 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         url = self.ep(f'{location_id}/externalCallerId/availableNumbers')
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
-    def phone_numbers(self, location_id: str,
-                      phone_number: List[str] = None,
-                      owner_name: str = None, org_id: str = None,
-                      **params) -> Generator[AvailableNumber, None, None]:
+    def phone_numbers(
+        self,
+        location_id: str,
+        phone_number: builtins.list[str] = None,
+        owner_name: str = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get Available Phone Numbers for a Location with Given Criteria
 
@@ -625,9 +662,9 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         url = self.ep(f'{location_id}/availableNumbers')
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
-    def webex_go_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
-                                         org_id: str = None,
-                                         **params) -> Generator[AvailableNumber, None, None]:
+    def webex_go_available_phone_numbers(
+        self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get Webex Go Available Phone Numbers
 
@@ -658,9 +695,14 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         url = self.ep(f'{location_id}/webexGo/availableNumbers')
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
-    def ecbn_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
-                                     owner_name: str = None, org_id: str = None,
-                                     **params) -> Generator[AvailableNumber, None, None]:
+    def ecbn_available_phone_numbers(
+        self,
+        location_id: str,
+        phone_number: builtins.list[str] = None,
+        owner_name: str = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get Location ECBN Available Phone Numbers
 
@@ -696,9 +738,14 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         url = self.ep(f'{location_id}/emergencyCallbackNumber/availableNumbers')
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
-    def charge_number_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
-                                              owner_name: str = None, org_id: str = None,
-                                              **params) -> Generator[AvailableNumber, None, None]:
+    def charge_number_available_phone_numbers(
+        self,
+        location_id: str,
+        phone_number: builtins.list[str] = None,
+        owner_name: str = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get Available Charge Numbers for a Location with Given Criteria
 
@@ -729,12 +776,16 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         if owner_name is not None:
             params['ownerName'] = owner_name
         url = self.ep(f'{location_id}/chargeNumber/availableNumbers')
-        return self.session.follow_pagination(url=url, model=AvailableNumber,
-                                              item_key='phoneNumbers', params=params)
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
-    def call_intercept_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
-                                               owner_name: str = None, org_id: str = None,
-                                               **params) -> Generator[AvailableNumber, None, None]:
+    def call_intercept_available_phone_numbers(
+        self,
+        location_id: str,
+        phone_number: builtins.list[str] = None,
+        owner_name: str = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get Location Call Intercept Available Phone Numbers
 
@@ -770,8 +821,9 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         url = self.ep(f'{location_id}/callIntercept/availableNumbers')
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
-    def create_receptionist_contact_directory(self, location_id: str, name: str, contacts: List[str],
-                                              org_id: str = None) -> str:
+    def create_receptionist_contact_directory(
+        self, location_id: str, name: str, contacts: builtins.list[str], org_id: str = None
+    ) -> str:
         """
         Create a Receptionist Contact Directory
 
@@ -805,8 +857,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         r = data['id']
         return r
 
-    def list_receptionist_contact_directories(self, location_id: str,
-                                              org_id: str = None) -> List[IdAndName]:
+    def list_receptionist_contact_directories(self, location_id: str, org_id: str = None) -> builtins.list[IdAndName]:
         """
         Read list of Receptionist Contact Directories
 
@@ -831,11 +882,18 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         r = TypeAdapter(list[IdAndName]).validate_python(data['directories'])
         return r
 
-    def receptionist_contact_directory_details(self, location_id: str, directory_id: str,
-                                               search_criteria_mode_or: bool = None, first_name: str = None,
-                                               last_name: str = None, phone_number: str = None,
-                                               extension: str = None, person_id: str = None,
-                                               org_id: str = None) -> List[ContactDetails]:
+    def receptionist_contact_directory_details(
+        self,
+        location_id: str,
+        directory_id: str,
+        search_criteria_mode_or: bool = None,
+        first_name: str = None,
+        last_name: str = None,
+        phone_number: str = None,
+        extension: str = None,
+        person_id: str = None,
+        org_id: str = None,
+    ) -> builtins.list[ContactDetails]:
         """
         Get details for a Receptionist Contact Directory
 
@@ -919,8 +977,9 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         url = self.ep(f'{location_id}/receptionistContacts/directories/{directory_id}')
         super().delete(url, params=params)
 
-    def modify_receptionist_contact_directory(self, location_id: str, directory_id: str, name: str,
-                                              contacts: List[str], org_id: str = None) -> str:
+    def modify_receptionist_contact_directory(
+        self, location_id: str, directory_id: str, name: str, contacts: builtins.list[str], org_id: str = None
+    ) -> str:
         """
         Modify a Receptionist Contact Directory
 
@@ -958,8 +1017,9 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         r = data['id']
         return r
 
-    def safe_delete_check_before_disabling_calling_location(self, location_id: str,
-                                                            org_id: str = None) -> SafeDeleteCheckResponse:
+    def safe_delete_check_before_disabling_calling_location(
+        self, location_id: str, org_id: str = None
+    ) -> SafeDeleteCheckResponse:
         """
         Safe Delete Check Before Disabling a Location for Webex Calling
 
@@ -983,8 +1043,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         r = SafeDeleteCheckResponse.model_validate(data)
         return r
 
-    def get_call_captions_settings(self, location_id: str,
-                                   org_id: str = None) -> LocationCallCaptions:
+    def get_call_captions_settings(self, location_id: str, org_id: str = None) -> LocationCallCaptions:
         """
         Get the location call captions settings
 
@@ -1012,8 +1071,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         r = LocationCallCaptions.model_validate(data)
         return r
 
-    def update_call_captions_settings(self, location_id: str, settings: LocationCallCaptions,
-                                      org_id: str = None):
+    def update_call_captions_settings(self, location_id: str, settings: LocationCallCaptions, org_id: str = None):
         """
         Update the location call captions settings
 

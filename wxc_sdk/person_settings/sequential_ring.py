@@ -45,8 +45,7 @@ class SequentialRing(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               exclude={'criteria'})
+        return self.model_dump(mode='json', by_alias=True, exclude_none=True, exclude={'criteria'})
 
 
 class SequentialRingApi(PersonSettingsApiChild):
@@ -58,8 +57,7 @@ class SequentialRingApi(PersonSettingsApiChild):
 
     feature = 'sequentialRing'
 
-    def read_criteria(self, entity_id: str, id: str,
-                      org_id: str = None) -> SequentialRingCriteria:
+    def read_criteria(self, entity_id: str, id: str, org_id: str = None) -> SequentialRingCriteria:
         """
         Retrieve sequential ring criteria for an entity.
 
@@ -88,8 +86,7 @@ class SequentialRingApi(PersonSettingsApiChild):
         r = SequentialRingCriteria.model_validate(data)
         return r
 
-    def configure_criteria(self, entity_id: str, id: str, settings: SequentialRingCriteria,
-                           org_id: str = None):
+    def configure_criteria(self, entity_id: str, id: str, settings: SequentialRingCriteria, org_id: str = None):
         """
         Modify sequential ring criteria for an entity.
 
@@ -146,8 +143,7 @@ class SequentialRingApi(PersonSettingsApiChild):
         url = self.f_ep(entity_id, f'criteria/{id}')
         super().delete(url, params=params)
 
-    def create_criteria(self, entity_id: str, settings: SequentialRingCriteria,
-                        org_id: str = None) -> str:
+    def create_criteria(self, entity_id: str, settings: SequentialRingCriteria, org_id: str = None) -> str:
         """
         Create sequential ring criteria for an entity.
 
@@ -178,8 +174,7 @@ class SequentialRingApi(PersonSettingsApiChild):
         r = data['id']
         return r
 
-    def read(self, entity_id: str,
-             org_id: str = None) -> SequentialRing:
+    def read(self, entity_id: str, org_id: str = None) -> SequentialRing:
         """
         Retrieve sequential ring settings for an entity.
 
@@ -204,8 +199,7 @@ class SequentialRingApi(PersonSettingsApiChild):
         r = SequentialRing.model_validate(data)
         return r
 
-    def configure(self, entity_id: str, settings: SequentialRing,
-                  org_id: str = None):
+    def configure(self, entity_id: str, settings: SequentialRing, org_id: str = None):
         """
         Modify sequential ring settings for an entity.
 

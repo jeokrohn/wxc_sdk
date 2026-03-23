@@ -9,7 +9,6 @@ from wxc_sdk.person_settings.call_policy import PrivacyOnRedirectedCalls
 
 
 class MeCallPoliciesApi(ApiChild, base='telephony/config/people/me'):
-
     def settings(self) -> PrivacyOnRedirectedCalls:
         """
         Get Call Policies Settings for User

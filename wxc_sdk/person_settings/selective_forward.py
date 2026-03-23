@@ -37,8 +37,7 @@ class SelectiveForward(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               exclude={'criteria'})
+        return self.model_dump(mode='json', by_alias=True, exclude_none=True, exclude={'criteria'})
 
 
 class SelectiveForwardApi(PersonSettingsApiChild):
@@ -50,8 +49,7 @@ class SelectiveForwardApi(PersonSettingsApiChild):
 
     feature = 'selectiveForward'
 
-    def read_criteria(self, entity_id: str, id: str,
-                      org_id: str = None) -> SelectiveForwardCriteria:
+    def read_criteria(self, entity_id: str, id: str, org_id: str = None) -> SelectiveForwardCriteria:
         """
         Retrieve Selective Forward Criteria for a Workspace
 
@@ -82,8 +80,7 @@ class SelectiveForwardApi(PersonSettingsApiChild):
         r = SelectiveForwardCriteria.model_validate(data)
         return r
 
-    def configure_criteria(self, entity_id: str, id: str, settings: SelectiveForwardCriteria,
-                           org_id: str = None):
+    def configure_criteria(self, entity_id: str, id: str, settings: SelectiveForwardCriteria, org_id: str = None):
         """
         Modify Selective Forward Criteria for a Workspace
 
@@ -142,8 +139,7 @@ class SelectiveForwardApi(PersonSettingsApiChild):
         url = self.f_ep(entity_id, f'criteria/{id}')
         super().delete(url, params=params)
 
-    def create_criteria(self, entity_id: str, settings: SelectiveForwardCriteria,
-                        org_id: str = None) -> str:
+    def create_criteria(self, entity_id: str, settings: SelectiveForwardCriteria, org_id: str = None) -> str:
         """
         Create Selective Forward Criteria for a Workspace
 
@@ -178,8 +174,7 @@ class SelectiveForwardApi(PersonSettingsApiChild):
         r = data['id']
         return r
 
-    def read(self, entity_id: str,
-             org_id: str = None) -> SelectiveForward:
+    def read(self, entity_id: str, org_id: str = None) -> SelectiveForward:
         """
         Retrieve Selective Forward Settings for a Workspace
 
@@ -207,8 +202,7 @@ class SelectiveForwardApi(PersonSettingsApiChild):
         r = SelectiveForward.model_validate(data)
         return r
 
-    def configure(self, entity_id: str, settings: SelectiveForward,
-                  org_id: str = None):
+    def configure(self, entity_id: str, settings: SelectiveForward, org_id: str = None):
         """
         Modify Selective Forward Settings for a Workspace
 

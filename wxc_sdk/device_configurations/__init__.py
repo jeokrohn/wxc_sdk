@@ -1,10 +1,17 @@
-from typing import Any, List, Literal, NamedTuple, Optional
+import builtins
+from typing import Any, Literal, NamedTuple, Optional
 
 from wxc_sdk.api_child import ApiChild
 
-__all__ = ['DeviceConfigurationsApi', 'DeviceConfiguration', 'DeviceConfigurationSourceEditability',
-           'DeviceConfigurationSources', 'DeviceConfigurationSource', 'DeviceConfigurationResponse',
-           'DeviceConfigurationOperation']
+__all__ = [
+    'DeviceConfigurationsApi',
+    'DeviceConfiguration',
+    'DeviceConfigurationSourceEditability',
+    'DeviceConfigurationSources',
+    'DeviceConfigurationSource',
+    'DeviceConfigurationResponse',
+    'DeviceConfigurationOperation',
+]
 
 from wxc_sdk.base import ApiModel
 
@@ -61,8 +68,7 @@ class DeviceConfigurationOperation(NamedTuple):
 
         :meta private:
         """
-        r = {'op': self.op,
-             'path': f'{self.key}/sources/configured/value'}
+        r = {'op': self.op, 'path': f'{self.key}/sources/configured/value'}
         if self.value is not None:
             r['value'] = self.value
         return r
@@ -107,7 +113,9 @@ class DeviceConfigurationsApi(ApiChild, base='deviceConfigurations'):
         data = self.get(self.ep(), params=params)
         return DeviceConfigurationResponse.model_validate(data)
 
-    def update(self, device_id: str, operations: List[DeviceConfigurationOperation]) -> DeviceConfigurationResponse:
+    def update(
+        self, device_id: str, operations: builtins.list[DeviceConfigurationOperation]
+    ) -> DeviceConfigurationResponse:
         """
         Update Device Configurations
 
@@ -115,6 +123,7 @@ class DeviceConfigurationsApi(ApiChild, base='deviceConfigurations'):
         :param operations: list if operations to apply
         """
         body = [op.for_update() for op in operations]
-        data = self.patch(self.ep(), json=body, content_type='application/json-patch+json',
-                          params={'deviceId': device_id})
+        data = self.patch(
+            self.ep(), json=body, content_type='application/json-patch+json', params={'deviceId': device_id}
+        )
         return DeviceConfigurationResponse.model_validate(data)

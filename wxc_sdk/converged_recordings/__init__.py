@@ -1,6 +1,7 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 from dateutil.parser import isoparse
 from pydantic import Field
@@ -9,11 +10,19 @@ from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
-__all__ = ['ConvergedRecordingsApi',
-           'RecordingStorageRegion', 'ConvergedRecording',
-           'RecordingOwnerType', 'RecordingServiceData',
-           'ConvergedRecordingWithDirectDownloadLinks', 'ConvergedRecordingMeta',
-           'TemporaryDirectDownloadLink', 'RecordingSession', 'RecordingParty', 'RecordingPartyActor']
+__all__ = [
+    'ConvergedRecordingsApi',
+    'RecordingStorageRegion',
+    'ConvergedRecording',
+    'RecordingOwnerType',
+    'RecordingServiceData',
+    'ConvergedRecordingWithDirectDownloadLinks',
+    'ConvergedRecordingMeta',
+    'TemporaryDirectDownloadLink',
+    'RecordingSession',
+    'RecordingParty',
+    'RecordingPartyActor',
+]
 
 from wxc_sdk.meetings.recordings import RecordingFormat, RecordingServiceType, RecordingStatus
 
@@ -195,16 +204,22 @@ class ConvergedRecordingsApi(ApiChild, base=''):
     -recording_selecting-call-recording-provider>`_.
     """
 
-    def list_for_admin_or_compliance_officer(self, from_: Union[str, datetime] = None,
-                                             to_: Union[str, datetime] = None, status: RecordingStatus = None,
-                                             service_type: RecordingServiceType = None,
-                                             format_: str = None, owner_id: str = None,
-                                             owner_email: str = None,
-                                             owner_type: RecordingOwnerType = None,
-                                             storage_region: RecordingStorageRegion = None,
-                                             location_id: str = None, topic: str = None,
-                                             timezone: str = None,
-                                             **params) -> Generator[ConvergedRecording, None, None]:
+    def list_for_admin_or_compliance_officer(
+        self,
+        from_: Union[str, datetime] = None,
+        to_: Union[str, datetime] = None,
+        status: RecordingStatus = None,
+        service_type: RecordingServiceType = None,
+        format_: str = None,
+        owner_id: str = None,
+        owner_email: str = None,
+        owner_type: RecordingOwnerType = None,
+        storage_region: RecordingStorageRegion = None,
+        location_id: str = None,
+        topic: str = None,
+        timezone: str = None,
+        **params,
+    ) -> Generator[ConvergedRecording, None, None]:
         """
         List Recordings for Admin or Compliance officer
 
@@ -287,14 +302,22 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         url = self.ep('admin/convergedRecordings')
         return self.session.follow_pagination(url=url, model=ConvergedRecording, item_key='items', params=params)
 
-    def list(self, from_: Union[str, datetime] = None,
-             to_: Union[str, datetime] = None, status: RecordingStatus = None,
-             service_type: RecordingServiceType = None,
-             format_: str = None, owner_id: str = None,
-             owner_email: str = None, owner_type: RecordingOwnerType = None,
-             storage_region: RecordingStorageRegion = None,
-             location_id: str = None, topic: str = None, timezone: str = None,
-             **params) -> Generator[ConvergedRecording, None, None]:
+    def list(
+        self,
+        from_: Union[str, datetime] = None,
+        to_: Union[str, datetime] = None,
+        status: RecordingStatus = None,
+        service_type: RecordingServiceType = None,
+        format_: str = None,
+        owner_id: str = None,
+        owner_email: str = None,
+        owner_type: RecordingOwnerType = None,
+        storage_region: RecordingStorageRegion = None,
+        location_id: str = None,
+        topic: str = None,
+        timezone: str = None,
+        **params,
+    ) -> Generator[ConvergedRecording, None, None]:
         """
         List Recordings
 
@@ -375,8 +398,9 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         url = self.ep('convergedRecordings')
         return self.session.follow_pagination(url=url, model=ConvergedRecording, item_key='items', params=params)
 
-    def purge_recordings_from_recycle_bin(self, purge_all: bool = None, owner_email: str = None,
-                                          recording_ids: List[str] = None):
+    def purge_recordings_from_recycle_bin(
+        self, purge_all: bool = None, owner_email: str = None, recording_ids: builtins.list[str] = None
+    ):
         """
         Purge Recordings from Recycle Bin
 
@@ -434,7 +458,7 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         url = self.ep('convergedRecordings/purge')
         super().post(url, json=body)
 
-    def reassign(self, reassign_owner_email: str, owner_email: str = None, recording_ids: List[str] = None):
+    def reassign(self, reassign_owner_email: str, owner_email: str = None, recording_ids: builtins.list[str] = None):
         """
         Reassign Recordings
 
@@ -471,8 +495,9 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         url = self.ep('convergedRecordings/reassign')
         super().post(url, json=body)
 
-    def restore_recordings_from_recycle_bin(self, restore_all: bool = None, owner_email: str = None,
-                                            recording_ids: List[str] = None):
+    def restore_recordings_from_recycle_bin(
+        self, restore_all: bool = None, owner_email: str = None, recording_ids: builtins.list[str] = None
+    ):
         """
         Restore Recordings from Recycle Bin
 
@@ -530,8 +555,9 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         url = self.ep('convergedRecordings/restore')
         super().post(url, json=body)
 
-    def move_recordings_into_the_recycle_bin(self, trash_all: bool = None, owner_email: str = None,
-                                             recording_ids: List[str] = None):
+    def move_recordings_into_the_recycle_bin(
+        self, trash_all: bool = None, owner_email: str = None, recording_ids: builtins.list[str] = None
+    ):
         """
         Move Recordings into the Recycle Bin
 

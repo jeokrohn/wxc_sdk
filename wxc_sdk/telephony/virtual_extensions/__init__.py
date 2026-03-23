@@ -7,11 +7,20 @@ from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
-__all__ = ['VirtualExtensionsApi', 'VirtualExtension', 'VirtualExtensionMode',
-           'VirtualExtensionLevel', 'VirtualExtensionRange', 'VirtualExtensionRangeAction',
-           'ValidateVirtualExtensionStatus', 'VirtualExtensionValidationStatus',
-           'VirtualExtensionRangeValidationResult', 'ValidateVirtualExtensionRange',
-           'PhoneNumberStatus', 'ValidatePhoneNumber']
+__all__ = [
+    'VirtualExtensionsApi',
+    'VirtualExtension',
+    'VirtualExtensionMode',
+    'VirtualExtensionLevel',
+    'VirtualExtensionRange',
+    'VirtualExtensionRangeAction',
+    'ValidateVirtualExtensionStatus',
+    'VirtualExtensionValidationStatus',
+    'VirtualExtensionRangeValidationResult',
+    'ValidateVirtualExtensionRange',
+    'PhoneNumberStatus',
+    'ValidatePhoneNumber',
+]
 
 
 class VirtualExtensionLevel(str, Enum):
@@ -119,8 +128,9 @@ class ValidateVirtualExtensionRange(ApiModel):
     #: Virtual extension range validation status.
     status: Optional[ValidateVirtualExtensionStatus] = None
     #: Array of virtual extension range validation status. This is set only when the `status` is `ERRORS`.
-    validation_status: Optional[list[VirtualExtensionRangeValidationResult]] = (
-        Field(alias='virtualExtensionRangeValidationStatus', default=None))
+    validation_status: Optional[list[VirtualExtensionRangeValidationResult]] = Field(
+        alias='virtualExtensionRangeValidationStatus', default=None
+    )
 
 
 class PhoneNumberStatus(ApiModel):
@@ -152,10 +162,16 @@ class VirtualExtensionsApi(ApiChild, base='telephony/config'):
     query parameter.
     """
 
-    def list_range(self, order: str = None, name: str = None, prefix: str = None,
-                   location_id: str = None, org_level_only: bool = None,
-                   org_id: str = None,
-                   **params) -> Generator[VirtualExtensionRange, None, None]:
+    def list_range(
+        self,
+        order: str = None,
+        name: str = None,
+        prefix: str = None,
+        location_id: str = None,
+        org_level_only: bool = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[VirtualExtensionRange, None, None]:
         """
         Get a list of a Virtual Extension Range
 
@@ -200,11 +216,13 @@ class VirtualExtensionsApi(ApiChild, base='telephony/config'):
         if org_level_only is not None:
             params['orgLevelOnly'] = str(org_level_only).lower()
         url = self.ep('virtualExtensionRanges')
-        return self.session.follow_pagination(url=url, model=VirtualExtensionRange,
-                                              item_key='virtualExtensionRanges', params=params)
+        return self.session.follow_pagination(
+            url=url, model=VirtualExtensionRange, item_key='virtualExtensionRanges', params=params
+        )
 
-    def create_range(self, name: str, prefix: str, patterns: list[str] = None,
-                     location_id: str = None, org_id: str = None) -> str:
+    def create_range(
+        self, name: str, prefix: str, patterns: list[str] = None, location_id: str = None, org_id: str = None
+    ) -> str:
         """
         Create a Virtual Extension Range
 
@@ -252,11 +270,15 @@ class VirtualExtensionsApi(ApiChild, base='telephony/config'):
         r = data['id']
         return r
 
-    def validate_range(self, location_id: str = None,
-                       name: str = None, prefix: str = None,
-                       patterns: list[str] = None,
-                       range_id: str = None,
-                       org_id: str = None) -> ValidateVirtualExtensionRange:
+    def validate_range(
+        self,
+        location_id: str = None,
+        name: str = None,
+        prefix: str = None,
+        patterns: list[str] = None,
+        range_id: str = None,
+        org_id: str = None,
+    ) -> ValidateVirtualExtensionRange:
         """
         Validate the prefix and extension pattern for a Virtual Extension Range.
 
@@ -331,8 +353,7 @@ class VirtualExtensionsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'virtualExtensionRanges/{extension_range_id}')
         super().delete(url, params=params)
 
-    def details_range(self, extension_range_id: str,
-                      org_id: str = None) -> VirtualExtensionRange:
+    def details_range(self, extension_range_id: str, org_id: str = None) -> VirtualExtensionRange:
         """
         Get details of a Virtual Extension Range
 
@@ -361,9 +382,15 @@ class VirtualExtensionsApi(ApiChild, base='telephony/config'):
         r = VirtualExtensionRange.model_validate(data)
         return r
 
-    def modify_range(self, extension_range_id: str, name: str = None, prefix: str = None,
-                     patterns: list[str] = None,
-                     action: VirtualExtensionRangeAction = None, org_id: str = None):
+    def modify_range(
+        self,
+        extension_range_id: str,
+        name: str = None,
+        prefix: str = None,
+        patterns: list[str] = None,
+        action: VirtualExtensionRangeAction = None,
+        org_id: str = None,
+    ):
         """
         Modify Virtual Extension Range
 
@@ -409,10 +436,18 @@ class VirtualExtensionsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'virtualExtensionRanges/{extension_range_id}')
         super().put(url, params=params, json=body)
 
-    def list_extensions(self, order: str = None, extension: str = None, phone_number: str = None,
-                        name: str = None, location_name: str = None, location_id: str = None,
-                        org_level_only: bool = None, org_id: str = None,
-                        **params) -> Generator[VirtualExtension, None, None]:
+    def list_extensions(
+        self,
+        order: str = None,
+        extension: str = None,
+        phone_number: str = None,
+        name: str = None,
+        location_name: str = None,
+        location_id: str = None,
+        org_level_only: bool = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[VirtualExtension, None, None]:
         """
         Read the List of Virtual Extensions
 
@@ -467,11 +502,20 @@ class VirtualExtensionsApi(ApiChild, base='telephony/config'):
         if org_level_only is not None:
             params['orgLevelOnly'] = str(org_level_only).lower()
         url = self.ep('virtualExtensions')
-        return self.session.follow_pagination(url=url, model=VirtualExtension, item_key='virtualExtensions',
-                                              params=params)
+        return self.session.follow_pagination(
+            url=url, model=VirtualExtension, item_key='virtualExtensions', params=params
+        )
 
-    def create_extension(self, display_name: str, phone_number: str, extension: str, first_name: str = None,
-                         last_name: str = None, location_id: str = None, org_id: str = None) -> str:
+    def create_extension(
+        self,
+        display_name: str,
+        phone_number: str,
+        extension: str,
+        first_name: str = None,
+        last_name: str = None,
+        location_id: str = None,
+        org_id: str = None,
+    ) -> str:
         """
         Create a Virtual Extension
 
@@ -666,9 +710,16 @@ class VirtualExtensionsApi(ApiChild, base='telephony/config'):
         r = VirtualExtension.model_validate(data)
         return r
 
-    def update_extension(self, extension_id: str, first_name: str = None, last_name: str = None,
-                         display_name: str = None, phone_number: str = None, extension: str = None,
-                         org_id: str = None):
+    def update_extension(
+        self,
+        extension_id: str,
+        first_name: str = None,
+        last_name: str = None,
+        display_name: str = None,
+        phone_number: str = None,
+        extension: str = None,
+        org_id: str = None,
+    ):
         """
         Update a Virtual Extension
 

@@ -14,6 +14,7 @@ class NetworkConnectionType(str, Enum):
     """
     Network Connection Type for the location.
     """
+
     #: Use public internet for the location's connection type.
     public_internet = 'PUBLIC_INTERNET'
     #: Use private network connect for the location's connection type.

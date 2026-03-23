@@ -1,11 +1,18 @@
+import builtins
 from collections.abc import Generator
-from typing import List, Optional
+from typing import Optional
 
 from ...api_child import ApiChild
 from ...base import ApiModel
 
-__all__ = ['CreateInviteesItem', 'Invitee', 'MeetingInviteesApi', 'CreateMeetingInviteeBody',
-           'UpdateMeetingInviteeBody', 'CreateMeetingInviteesBody']
+__all__ = [
+    'CreateInviteesItem',
+    'Invitee',
+    'MeetingInviteesApi',
+    'CreateMeetingInviteeBody',
+    'UpdateMeetingInviteeBody',
+    'CreateMeetingInviteesBody',
+]
 
 
 class Invitee(ApiModel):
@@ -89,8 +96,9 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
     Refer to the Meetings API Scopes section of Meetings Overview for scopes required for each API.
     """
 
-    def list(self, meeting_id: str, host_email: str = None, panelist: bool = None,
-             **params) -> Generator[Invitee, None, None]:
+    def list(
+        self, meeting_id: str, host_email: str = None, panelist: bool = None, **params
+    ) -> Generator[Invitee, None, None]:
         """
         Lists meeting invitees for a meeting with a specified meetingId. You can set a maximum number of invitees to
         return. This operation can be used for meeting series, scheduled meetings, and ended or ongoing meeting
@@ -121,8 +129,16 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Invitee, params=params)
 
-    def create_invitee(self, email: str, meeting_id: str, display_name: str = None, co_host: bool = None,
-                       send_email: bool = None, panelist: bool = None, host_email: str = None) -> Invitee:
+    def create_invitee(
+        self,
+        email: str,
+        meeting_id: str,
+        display_name: str = None,
+        co_host: bool = None,
+        send_email: bool = None,
+        panelist: bool = None,
+        host_email: str = None,
+    ) -> Invitee:
         """
         Invite a person to attend a meeting.
         Identify the invitee in the request body, by email address.
@@ -178,8 +194,9 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         data = super().post(url=url, data=body.model_dump_json())
         return Invitee.model_validate(data)
 
-    def create_invitees(self, meeting_id: str, items: List[CreateInviteesItem],
-                        host_email: str = None) -> List[Invitee]:
+    def create_invitees(
+        self, meeting_id: str, items: builtins.list[CreateInviteesItem], host_email: str = None
+    ) -> builtins.list[Invitee]:
         """
         Invite people to attend a meeting in bulk.
         Identify each invitee by the email address of each item in the items of the request body.
@@ -208,7 +225,7 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
             body.items = items
         url = self.ep('bulkInsert')
         data = super().post(url=url, data=body.model_dump_json())
-        return data["items"]
+        return data['items']
 
     def invitee_details(self, meeting_invitee_id: str, host_email: str = None) -> Invitee:
         """
@@ -228,8 +245,16 @@ class MeetingInviteesApi(ApiChild, base='meetingInvitees'):
         data = super().get(url=url, params=params)
         return Invitee.model_validate(data)
 
-    def update(self, meeting_invitee_id: str, email: str, display_name: str = None, co_host: bool = None,
-               send_email: bool = None, panelist: bool = None, host_email: str = None) -> Invitee:
+    def update(
+        self,
+        meeting_invitee_id: str,
+        email: str,
+        display_name: str = None,
+        co_host: bool = None,
+        send_email: bool = None,
+        panelist: bool = None,
+        host_email: str = None,
+    ) -> Invitee:
         """
         Update details for a meeting invitee identified by a meetingInviteeId in the URI.
 

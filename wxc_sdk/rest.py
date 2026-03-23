@@ -1,6 +1,7 @@
 """
 REST session for Webex API requests
 """
+
 import json
 import logging
 import time
@@ -31,6 +32,7 @@ class SingleError(BaseModel):
     """
     Representation of single error in the body of an HTTP error response from Webex
     """
+
     description: str
     error_code: Optional[int] = Field(alias='errorCode', default=None)
 
@@ -48,6 +50,7 @@ class ErrorDetail(ApiModel):
     """
     Representation of error details in the body of an HTTP error response from Webex
     """
+
     error_code: Optional[int] = Field(alias='errorCode', default=None)
     message: str  #: error message
     errors: Optional[list[SingleError]] = None  #: list of errors; typically has a single entry
@@ -74,6 +77,7 @@ class RestError(HTTPError):
     """
     A REST error
     """
+
     request: PreparedRequest
     response: Response
 
@@ -142,8 +146,11 @@ def dump_response(response: Response, file: TextIOBase = None, dump_log: logging
     else:
         time_str = f'({diff_ns / 1000000.0:.3f} ms)'
 
-    print(f'Request {response.status_code}[{response.reason}]{time_str}: '
-          f'{response.request.method} {response.request.url}', file=output)
+    print(
+        f'Request {response.status_code}[{response.reason}]{time_str}: '
+        f'{response.request.method} {response.request.url}',
+        file=output,
+    )
 
     # request headers
     for k, v in response.request.headers.items():
@@ -161,8 +168,7 @@ def dump_response(response: Response, file: TextIOBase = None, dump_log: logging
                 print(f'  {line}', file=output)
         elif ct.startswith('application/x-www-form-urlencoded'):
             for k, v in parse_qsl(request_body):
-                print(f'  {k}: {"***" if k in {"client_secret", "refresh_token"} else v}',
-                      file=output)
+                print(f'  {k}: {"***" if k in {"client_secret", "refresh_token"} else v}', file=output)
         else:
             print(f'  {request_body}', file=output)
 
@@ -256,6 +262,7 @@ class RestSession(Session):
         * implements retries on 429
         * loads deserializes JSON data if needed
     """
+
     #: base URL for all Webex API requests
     BASE: ClassVar[str] = 'https://webexapis.com/v1'
 
@@ -268,8 +275,15 @@ class RestSession(Session):
     # registry of response callbacks
     _response_callback_registry: dict[str, RestResponseCallBack]
 
-    def __init__(self, *, tokens: Tokens, concurrent_requests: int, retry_429: bool = True,
-                 proxy_url: str = None, verify: Union[bool, str] = None):
+    def __init__(
+        self,
+        *,
+        tokens: Tokens,
+        concurrent_requests: int,
+        retry_429: bool = True,
+        proxy_url: str = None,
+        verify: Union[bool, str] = None,
+    ):
         super().__init__()
         self.mount('http://', HTTPAdapter(pool_maxsize=concurrent_requests))
         self.mount('https://', HTTPAdapter(pool_maxsize=concurrent_requests))
@@ -327,8 +341,9 @@ class RestSession(Session):
         return self._tokens.access_token
 
     @retry_request
-    def _request_w_response(self, method: str, url: str, headers=None, content_type: str = None,
-                            ignore_status: int = None, **kwargs) -> tuple[Response, StrOrDict]:
+    def _request_w_response(
+        self, method: str, url: str, headers=None, content_type: str = None, ignore_status: int = None, **kwargs
+    ) -> tuple[Response, StrOrDict]:
         """
         low level API REST request with support for 429 rate limiting
 
@@ -347,9 +362,11 @@ class RestSession(Session):
         :return: Tuple of response object and body. Body can be text or dict (parsed from JSON body)
         :rtype:
         """
-        request_headers = {'Authorization': f'Bearer {self._tokens.access_token}',
-                           'Content-Type': 'application/json;charset=utf-8',
-                           'TrackingID': f'SIMPLE_{uuid.uuid4()}'}
+        request_headers = {
+            'Authorization': f'Bearer {self._tokens.access_token}',
+            'Content-Type': 'application/json;charset=utf-8',
+            'TrackingID': f'SIMPLE_{uuid.uuid4()}',
+        }
         if headers:
             request_headers.update((k.lower(), v) for k, v in headers.items())
         if content_type:
@@ -449,8 +466,9 @@ class RestSession(Session):
         """
         return self._rest_request('PATCH', *args, **kwargs)
 
-    def follow_pagination(self, url: str, model: type[ApiModel] = None,
-                          params: dict = None, item_key: str = None, **kwargs) -> Generator[ApiModel, None, None]:
+    def follow_pagination(
+        self, url: str, model: type[ApiModel] = None, params: dict = None, item_key: str = None, **kwargs
+    ) -> Generator[ApiModel, None, None]:
         """
         Handling RFC5988 pagination of list requests. Generator of parsed objects
 
@@ -494,8 +512,7 @@ class RestSession(Session):
                     item_key = 'items'
                 else:
                     # we go w/ the first return value that is a list
-                    item_key = next((k for k, v in data.items()
-                                     if isinstance(v, list)))
+                    item_key = next((k for k, v in data.items() if isinstance(v, list)))
             items = data.get(item_key, [])
             # if the response has no items, we're done
             if not items:

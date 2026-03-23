@@ -44,6 +44,7 @@ class CustomerExperienceEssentialsApi(ApiChild, base='telephony/config'):
     Modifying the customer Experience Essentials APIs requires a full or device administrator auth token with a scope
     of `spark-admin:telephony_config_write`.
     """
+
     callqueue_recording: QueueCallRecordingSettingsApi
     wrapup_reasons: WrapupReasonApi
 
@@ -52,8 +53,9 @@ class CustomerExperienceEssentialsApi(ApiChild, base='telephony/config'):
         self.callqueue_recording = QueueCallRecordingSettingsApi(session=session)
         self.wrapup_reasons = WrapupReasonApi(session=session)
 
-    def get_screen_pop_configuration(self, location_id: str = None,
-                                     queue_id: str = None, org_id: str = None) -> ScreenPopConfiguration:
+    def get_screen_pop_configuration(
+        self, location_id: str = None, queue_id: str = None, org_id: str = None
+    ) -> ScreenPopConfiguration:
         """
         Get Screen Pop configuration for a Call Queue in a Location
 
@@ -75,8 +77,9 @@ class CustomerExperienceEssentialsApi(ApiChild, base='telephony/config'):
         data = super().get(url, params=params)
         return ScreenPopConfiguration.model_validate(data)
 
-    def modify_screen_pop_configuration(self, location_id: str,
-                                        queue_id: str, settings: ScreenPopConfiguration, org_id: str = None):
+    def modify_screen_pop_configuration(
+        self, location_id: str, queue_id: str, settings: ScreenPopConfiguration, org_id: str = None
+    ):
         """
         Modify Screen Pop configuration for a Call Queue in a Location
 
@@ -100,9 +103,9 @@ class CustomerExperienceEssentialsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/cxEssentials/screenPop')
         super().put(url, params=params, json=body)
 
-    def available_agents(self, location_id: str,
-                         has_cx_essentials: bool = None,
-                         org_id: str = None) -> Generator[AvailableAgent, None, None]:
+    def available_agents(
+        self, location_id: str, has_cx_essentials: bool = None, org_id: str = None
+    ) -> Generator[AvailableAgent, None, None]:
         """
         Get List of available agents for Customer Experience Essentials
 
@@ -126,5 +129,4 @@ class CustomerExperienceEssentialsApi(ApiChild, base='telephony/config'):
         if has_cx_essentials is not None:
             params['hasCxEssentials'] = str(has_cx_essentials).lower()
         url = self.ep(f'locations/{location_id}/cxEssentials/agents/availableAgents')
-        return self.session.follow_pagination(url=url, model=AvailableAgent, item_key='agents',
-                                              params=params)
+        return self.session.follow_pagination(url=url, model=AvailableAgent, item_key='agents', params=params)

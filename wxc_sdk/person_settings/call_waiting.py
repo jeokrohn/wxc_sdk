@@ -1,6 +1,7 @@
 """
 Call waiting API
 """
+
 import json
 
 from .common import PersonSettingsApiChild

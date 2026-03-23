@@ -34,8 +34,17 @@ from ..api_child import ApiChild
 from ..base import ApiModel, ApiModelWithErrors, to_camel, webex_id_to_uuid
 from ..base import SafeEnum as Enum
 
-__all__ = ['PhoneNumberType', 'PhoneNumber', 'SipType', 'SipAddress', 'PeopleStatus', 'PersonType', 'PersonAddress',
-           'Person', 'PeopleApi']
+__all__ = [
+    'PhoneNumberType',
+    'PhoneNumber',
+    'SipType',
+    'SipAddress',
+    'PeopleStatus',
+    'PersonType',
+    'PersonAddress',
+    'Person',
+    'PeopleApi',
+]
 
 # there seems to be a problem with getting too many users with calling data at the same time
 # this is the maximum number the SDK enforces
@@ -47,6 +56,7 @@ class PhoneNumberType(str, Enum):
     """
     Webex phone number type
     """
+
     #: Work phone number of the person.
     work = 'work'
     #: Work extension of the person. For the Webex Calling person, the value will have a routing prefix along with the
@@ -65,6 +75,7 @@ class PhoneNumber(ApiModel):
     """
     Webex phone number: type and Value
     """
+
     number_type: PhoneNumberType = Field(alias='type')
     value: str
     primary: Optional[bool] = None
@@ -74,6 +85,7 @@ class SipType(str, Enum):
     """
     SIP address type
     """
+
     #: Personal room address.
     personal_room = 'personal-room'
     #: Enterprise address.
@@ -87,6 +99,7 @@ class SipAddress(ApiModel):
     """
     SIP address: type, value and primary indication
     """
+
     #: The type of SIP address.
     sip_type: SipType = Field(alias='type')
     #: The SIP address.
@@ -145,6 +158,7 @@ class Person(ApiModelWithErrors):
     """
     Webex person
     """
+
     #: A unique identifier for the person.
     person_id: Optional[str] = Field(alias='id', default=None)
     #: The email addresses of the person.
@@ -227,8 +241,7 @@ class Person(ApiModelWithErrors):
         List of +E.164 phone numbers of the user
         :return:
         """
-        return self.phone_numbers and [number for number in self.phone_numbers
-                                       if number.value.startswith('+')] or []
+        return self.phone_numbers and [number for number in self.phone_numbers if number.value.startswith('+')] or []
 
     @property
     def tn(self) -> Optional[PhoneNumber]:
@@ -238,8 +251,7 @@ class Person(ApiModelWithErrors):
         """
         if not self.phone_numbers:
             return None
-        return next((number for number in self.phone_numbers
-                     if number.value.startswith('+')), None)
+        return next((number for number in self.phone_numbers if number.value.startswith('+')), None)
 
     def create_update(self) -> dict:
         """
@@ -247,18 +259,23 @@ class Person(ApiModelWithErrors):
 
         :meta private:
         """
-        return self.model_dump(mode='json', exclude_none=True, by_alias=True,
-                               exclude={'person_id': True,
-                                        'created': True,
-                                        'last_modified': True,
-                                        'timezone': True,
-                                        'last_activity': True,
-                                        'sip_addresses': True,
-                                        'status': True,
-                                        'invite_pending': True,
-                                        'login_enabled': True,
-                                        'person_type': True}
-                               )
+        return self.model_dump(
+            mode='json',
+            exclude_none=True,
+            by_alias=True,
+            exclude={
+                'person_id': True,
+                'created': True,
+                'last_modified': True,
+                'timezone': True,
+                'last_activity': True,
+                'sip_addresses': True,
+                'status': True,
+                'invite_pending': True,
+                'login_enabled': True,
+                'person_type': True,
+            },
+        )
 
 
 class PeopleApi(ApiChild, base='people'):
@@ -288,9 +305,18 @@ class PeopleApi(ApiChild, base='people'):
     <https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses>`_ guide.
     """
 
-    def list(self, email: str = None, display_name: str = None, id_list: list[str] = None, org_id: str = None,
-             roles: str = None, calling_data: bool = None, location_id: str = None, exclude_status: bool = None,
-             **params) -> Generator[Person, None, None]:
+    def list(
+        self,
+        email: str = None,
+        display_name: str = None,
+        id_list: list[str] = None,
+        org_id: str = None,
+        roles: str = None,
+        calling_data: bool = None,
+        location_id: str = None,
+        exclude_status: bool = None,
+        **params,
+    ) -> Generator[Person, None, None]:
         """
         List people in your organization. For most users, either the email or displayName parameter is required. Admin
         users can omit these fields and list all users in their organization.
@@ -331,9 +357,9 @@ class PeopleApi(ApiChild, base='people'):
         :type exclude_status: bool
         :return: yield :class:`Person` instances
         """
-        params.update((to_camel(k), v)
-                      for i, (k, v) in enumerate(locals().items())
-                      if i and v is not None and k != 'params')
+        params.update(
+            (to_camel(k), v) for i, (k, v) in enumerate(locals().items()) if i and v is not None and k != 'params'
+        )
         if calling_data:
             params['callingData'] = 'true'
             # apparently there is a performance problem with getting too many users w/ calling data at the same time
@@ -453,8 +479,9 @@ class PeopleApi(ApiChild, base='people'):
         ep = self.ep(path=person_id)
         self.delete(ep)
 
-    def update(self, person: Person, calling_data: bool = False, show_all_types: bool = False,
-               min_response: bool = None) -> Person:
+    def update(
+        self, person: Person, calling_data: bool = False, show_all_types: bool = False, min_response: bool = None
+    ) -> Person:
         """
         Update a Person
 
@@ -464,7 +491,8 @@ class PeopleApi(ApiChild, base='people'):
 
         Include all details for the person. This action expects all user details to be present in the request. A common
         approach is to first `GET the person's details
-        <https://developer.webex.com/docs/api/v1/people/get-person-details>`_, make changes, then PUT both the changed and unchanged values.
+        <https://developer.webex.com/docs/api/v1/people/get-person-details>`_, make changes, then PUT both the changed
+        and unchanged values.
 
         Admin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData`
         parameter as true.

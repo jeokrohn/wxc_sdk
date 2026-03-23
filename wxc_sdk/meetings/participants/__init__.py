@@ -1,14 +1,24 @@
 from collections.abc import Generator
-from typing import List, Optional
+from typing import Optional
 
 from ...api_child import ApiChild
 from ...base import ApiModel
 from ...base import SafeEnum as Enum
 
-__all__ = ['AudioType', 'MeetingCallType', 'MeetingDevice', 'InProgressDevice', 'MeetingParticipantsApi', 'Participant',
-           'ParticipantState',
-           'UpdateParticipantResponse', 'VideoState', 'QueryMeetingParticipantsWithEmailBody', 'UpdateParticipantBody',
-           'AdmitParticipantsBody']
+__all__ = [
+    'AudioType',
+    'MeetingCallType',
+    'MeetingDevice',
+    'InProgressDevice',
+    'MeetingParticipantsApi',
+    'Participant',
+    'ParticipantState',
+    'UpdateParticipantResponse',
+    'VideoState',
+    'QueryMeetingParticipantsWithEmailBody',
+    'UpdateParticipantBody',
+    'AdmitParticipantsBody',
+]
 
 
 class VideoState(str, Enum):
@@ -176,8 +186,9 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
     Refer to the Meetings API Scopes section of Meetings Overview for scopes required for each API.
     """
 
-    def list_participants(self, meeting_id: str, host_email: str = None, join_time_from: str = None,
-                          join_time_to: str = None, **params) -> Generator[Participant, None, None]:
+    def list_participants(
+        self, meeting_id: str, host_email: str = None, join_time_from: str = None, join_time_to: str = None, **params
+    ) -> Generator[Participant, None, None]:
         """
         List all participants in a live or post meeting. The meetingId parameter is required, which is the unique
         identifier for the meeting.
@@ -209,9 +220,15 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Participant, params=params)
 
-    def query_participants_with_email(self, meeting_id: str, max: int = None, host_email: str = None,
-                                      join_time_from: str = None, join_time_to: str = None,
-                                      emails: list[str] = None) -> list[Participant]:
+    def query_participants_with_email(
+        self,
+        meeting_id: str,
+        max: int = None,
+        host_email: str = None,
+        join_time_from: str = None,
+        join_time_to: str = None,
+        emails: list[str] = None,
+    ) -> list[Participant]:
         """
         Query participants in a live meeting, or after the meeting, using participant's email. The meetingId parameter
         is the unique identifier for the meeting and is required.
@@ -234,7 +251,7 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
             between joinTimeFrom and joinTimeTo must be within 90 days.
         :type join_time_to: str
         :param emails: Participants email list Possible values: a@example.com
-        :type emails: List[str]
+        :type emails: list[str]
         """
         params = dict()
         params['meetingId'] = meeting_id
@@ -252,7 +269,7 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
         url = self.ep('query')
         data = super().post(url=url, params=params, data=body.model_dump_json())
         # TODO: this is wrong -> fix code generation
-        return data["items"]
+        return data['items']
 
     def participant_details(self, participant_id: str, host_email: str = None) -> Participant:
         """
@@ -275,8 +292,9 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
         data = super().get(url=url, params=params)
         return Participant.model_validate(data)
 
-    def update_participant(self, participant_id: str, muted: bool = None, admit: bool = None,
-                           expel: bool = None) -> UpdateParticipantResponse:
+    def update_participant(
+        self, participant_id: str, muted: bool = None, admit: bool = None, expel: bool = None
+    ) -> UpdateParticipantResponse:
         """
         To mute, un-mute, expel, or admit a participant in a live meeting. The participantId is required to identify
         the meeting and the participant.
@@ -305,14 +323,14 @@ class MeetingParticipantsApi(ApiChild, base='meetingParticipants'):
         data = super().put(url=url, data=body.model_dump_json())
         return UpdateParticipantResponse.model_validate(data)
 
-    def admit_participants(self, participant_ids: List[str] = None):
+    def admit_participants(self, participant_ids: list[str] = None):
         """
         To admit participants into a live meeting in bulk.
         This API limits the maximum size of items in the request body to 100.
         Each participantId of items in the request body should have the same prefix of meetingId.
 
         :param participant_ids: The ID that identifies the meeting participant.
-        :type participant_ids: List[str]
+        :type participant_ids: list[str]
         """
         body = AdmitParticipantsBody()
         if participant_ids is not None:

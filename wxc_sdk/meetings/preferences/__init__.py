@@ -11,10 +11,25 @@ from ...base import ApiModel
 from ...base import SafeEnum as Enum
 from ...common import LinkRelation
 
-__all__ = ['Audio', 'CallInNumber', 'CoHost', 'DefaultAudioType', 'MeetingPreferenceDetails',
-           'PersonalMeetingRoomOptions', 'VideoOptions',
-           'MeetingPreferencesApi', 'OfficeNumber', 'PersonalMeetingRoom', 'SchedulingOptions', 'MeetingsSite',
-           'Telephony', 'UpdatePersonalMeetingRoomOptionsBody', 'Video', 'VideoDevice', 'UpdateDefaultSiteBody']
+__all__ = [
+    'Audio',
+    'CallInNumber',
+    'CoHost',
+    'DefaultAudioType',
+    'MeetingPreferenceDetails',
+    'PersonalMeetingRoomOptions',
+    'VideoOptions',
+    'MeetingPreferencesApi',
+    'OfficeNumber',
+    'PersonalMeetingRoom',
+    'SchedulingOptions',
+    'MeetingsSite',
+    'Telephony',
+    'UpdatePersonalMeetingRoomOptionsBody',
+    'Video',
+    'VideoDevice',
+    'UpdateDefaultSiteBody',
+]
 
 
 class CoHost(ApiModel):
@@ -322,12 +337,21 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
         data = super().get(url=url, params=params)
         return PersonalMeetingRoomOptions.model_validate(data)
 
-    def update_personal_meeting_room_options(self, topic: str, host_pin: str, enabled_auto_lock: bool,
-                                             auto_lock_minutes: int, enabled_notify_host: bool, support_co_host: bool,
-                                             co_hosts: CoHost, user_email: str = None, site_url: str = None,
-                                             support_anyone_as_co_host: bool = None,
-                                             allow_first_user_to_be_co_host: bool = None,
-                                             allow_authenticated_devices: bool = None) -> PersonalMeetingRoomOptions:
+    def update_personal_meeting_room_options(
+        self,
+        topic: str,
+        host_pin: str,
+        enabled_auto_lock: bool,
+        auto_lock_minutes: int,
+        enabled_notify_host: bool,
+        support_co_host: bool,
+        co_hosts: CoHost,
+        user_email: str = None,
+        site_url: str = None,
+        support_anyone_as_co_host: bool = None,
+        allow_first_user_to_be_co_host: bool = None,
+        allow_authenticated_devices: bool = None,
+    ) -> PersonalMeetingRoomOptions:
         """
         Update a single meeting
 
@@ -430,11 +454,19 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
         data = super().get(url=url, params=params)
         return Audio.model_validate(data)
 
-    def update_audio_options(self, user_email: str = None, site_url: str = None,
-                             default_audio_type: DefaultAudioType = None, other_teleconference_description: str = None,
-                             enabled_global_call_in: bool = None, enabled_toll_free: bool = None,
-                             enabled_auto_connection: bool = None, audio_pin: str = None,
-                             office_number: OfficeNumber = None, mobile_number: OfficeNumber = None) -> Audio:
+    def update_audio_options(
+        self,
+        user_email: str = None,
+        site_url: str = None,
+        default_audio_type: DefaultAudioType = None,
+        other_teleconference_description: str = None,
+        enabled_global_call_in: bool = None,
+        enabled_toll_free: bool = None,
+        enabled_auto_connection: bool = None,
+        audio_pin: str = None,
+        office_number: OfficeNumber = None,
+        mobile_number: OfficeNumber = None,
+    ) -> Audio:
         """
         Updates audio options for the authenticated user.
 
@@ -529,10 +561,11 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
             params['siteUrl'] = site_url
         url = self.ep('video')
         data = super().get(url=url, params=params)
-        return TypeAdapter(list[VideoDevice]).validate_python(data["videoDevices"])
+        return TypeAdapter(list[VideoDevice]).validate_python(data['videoDevices'])
 
-    def update_video_options(self, video_devices: VideoDevice, user_email: str = None,
-                             site_url: str = None) -> list[VideoDevice]:
+    def update_video_options(
+        self, video_devices: VideoDevice, user_email: str = None, site_url: str = None
+    ) -> list[VideoDevice]:
         """
         Updates video options for the authenticated user.
 
@@ -561,7 +594,7 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
             body.video_devices = video_devices
         url = self.ep('video')
         data = super().put(url=url, params=params, data=body.model_dump_json())
-        return TypeAdapter(list[VideoDevice]).validate_python(data["videoDevices"])
+        return TypeAdapter(list[VideoDevice]).validate_python(data['videoDevices'])
 
     def scheduling_options(self, user_email: str = None, site_url: str = None) -> SchedulingOptions:
         """
@@ -588,10 +621,15 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
         data = super().get(url=url, params=params)
         return SchedulingOptions.model_validate(data)
 
-    def update_scheduling_options(self, user_email: str = None, site_url: str = None,
-                                  enabled_join_before_host: bool = None, join_before_host_minutes: int = None,
-                                  enabled_auto_share_recording: bool = None,
-                                  enabled_webex_assistant_by_default: bool = None) -> SchedulingOptions:
+    def update_scheduling_options(
+        self,
+        user_email: str = None,
+        site_url: str = None,
+        enabled_join_before_host: bool = None,
+        join_before_host_minutes: int = None,
+        enabled_auto_share_recording: bool = None,
+        enabled_webex_assistant_by_default: bool = None,
+    ) -> SchedulingOptions:
         """
         Updates scheduling options for the authenticated user.
 
@@ -654,7 +692,7 @@ class MeetingPreferencesApi(ApiChild, base='meetingPreferences'):
             params['userEmail'] = user_email
         url = self.ep('sites')
         data = super().get(url=url, params=params)
-        return TypeAdapter(list[MeetingsSite]).validate_python(data["sites"])
+        return TypeAdapter(list[MeetingsSite]).validate_python(data['sites'])
 
     def update_default_site(self, default_site: bool, site_url: str, user_email: str = None) -> MeetingsSite:
         """

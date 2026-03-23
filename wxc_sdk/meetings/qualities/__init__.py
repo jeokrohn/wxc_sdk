@@ -1,6 +1,7 @@
 """
 Mesting qualities API
 """
+
 from collections.abc import Generator
 from typing import Optional
 
@@ -8,9 +9,7 @@ from ...api_child import ApiChild
 from ...base import ApiModel
 from ...base import SafeEnum as Enum
 
-__all__ = ['MediaSessionQuality', 'MeetingQualitiesApi', 'NetworkType',
-           'QualityResources',
-           'TransportType', 'VideoIn']
+__all__ = ['MediaSessionQuality', 'MeetingQualitiesApi', 'NetworkType', 'QualityResources', 'TransportType', 'VideoIn']
 
 
 class NetworkType(str, Enum):
@@ -139,8 +138,9 @@ class MeetingQualitiesApi(ApiChild, base=''):
     A rate limit of 1 API call every 5 minutes for the same meeting instance ID applies.
     """
 
-    def meeting_qualities(self, meeting_id: str, offset: int = None,
-                          **params) -> Generator[MediaSessionQuality, None, None]:
+    def meeting_qualities(
+        self, meeting_id: str, offset: int = None, **params
+    ) -> Generator[MediaSessionQuality, None, None]:
         """
         Get quality data for a meeting, by meetingId. Only organization administrators can retrieve meeting quality
         data.

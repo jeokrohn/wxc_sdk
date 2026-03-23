@@ -11,6 +11,7 @@ class ApiChild:
     """
     Base class for child APIs of :class:`WebexSimpleApi`
     """
+
     session: RestSession
 
     def __init__(self, *, session: RestSession, base: str = None):

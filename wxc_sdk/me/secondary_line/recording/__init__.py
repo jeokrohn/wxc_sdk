@@ -6,7 +6,6 @@ from wxc_sdk.me.recording import MeRecordingSettings
 
 
 class MeSecondaryLineRecordingApi(ApiChild, base='telephony/config/people/me'):
-
     def settings(self, lineowner_id: str) -> MeRecordingSettings:
         """
         Get My Secondary Line Owner's Call Recording Settings

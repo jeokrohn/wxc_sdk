@@ -1,6 +1,7 @@
 """
 Call intercept API
 """
+
 import os
 from io import BufferedReader
 from typing import Optional, Union
@@ -13,8 +14,16 @@ from ..base import SafeEnum as Enum
 from ..common import Greeting
 from .common import PersonSettingsApiChild
 
-__all__ = ['InterceptTypeIncoming', 'InterceptNumber', 'InterceptAnnouncements', 'InterceptSettingIncoming',
-           'InterceptTypeOutgoing', 'InterceptSettingOutgoing', 'InterceptSetting', 'CallInterceptApi']
+__all__ = [
+    'InterceptTypeIncoming',
+    'InterceptNumber',
+    'InterceptAnnouncements',
+    'InterceptSettingIncoming',
+    'InterceptTypeOutgoing',
+    'InterceptSettingOutgoing',
+    'InterceptSetting',
+    'CallInterceptApi',
+]
 
 
 class InterceptTypeIncoming(str, Enum):
@@ -28,6 +37,7 @@ class InterceptNumber(ApiModel):
     """
     Information about a number announcement.
     """
+
     #: If true, the caller will hear this number when the call is intercepted.
     enabled: Optional[bool] = None
     #: number caller will hear announced.
@@ -38,6 +48,7 @@ class InterceptAnnouncements(ApiModel):
     """
     Settings related to how incoming calls are handled when the intercept feature is enabled.
     """
+
     greeting: Optional[Greeting] = None
     #: Filename of custom greeting, will be an empty string if no custom greeting has been uploaded.
     file_name: Optional[str] = None
@@ -51,14 +62,18 @@ class InterceptAnnouncements(ApiModel):
         """
         Default for incoming call intercept announcement settings
         """
-        return InterceptAnnouncements(greeting=Greeting.default, new_number=InterceptNumber(enabled=False),
-                                      zero_transfer=InterceptNumber(enabled=False))
+        return InterceptAnnouncements(
+            greeting=Greeting.default,
+            new_number=InterceptNumber(enabled=False),
+            zero_transfer=InterceptNumber(enabled=False),
+        )
 
 
 class InterceptSettingIncoming(ApiModel):
     """
     Settings related to how incoming calls are handled when the intercept feature is enabled.
     """
+
     intercept_type: Optional[InterceptTypeIncoming] = Field(alias='type', default=None)
     #: If true, the destination will be the person's voicemail.
     voicemail_enabled: Optional[bool] = None
@@ -70,8 +85,11 @@ class InterceptSettingIncoming(ApiModel):
         """
         Default incoming call intercept settings
         """
-        return InterceptSettingIncoming(intercept_type=InterceptTypeIncoming.intercept_all, voicemail_enabled=False,
-                                        announcements=InterceptAnnouncements.default())
+        return InterceptSettingIncoming(
+            intercept_type=InterceptTypeIncoming.intercept_all,
+            voicemail_enabled=False,
+            announcements=InterceptAnnouncements.default(),
+        )
 
 
 class InterceptTypeOutgoing(str, Enum):
@@ -100,6 +118,7 @@ class InterceptSetting(ApiModel):
     """
     A person's call intercept settings
     """
+
     #: true if call intercept is enabled.
     enabled: Optional[bool] = None
     #: Settings related to how incoming calls are handled when the intercept feature is enabled.
@@ -112,9 +131,9 @@ class InterceptSetting(ApiModel):
         """
         Default call intercept settings.
         """
-        return InterceptSetting(enabled=False,
-                                incoming=InterceptSettingIncoming.default(),
-                                outgoing=InterceptSettingOutgoing.default())
+        return InterceptSetting(
+            enabled=False, incoming=InterceptSettingIncoming.default(), outgoing=InterceptSettingOutgoing.default()
+        )
 
     def update(self) -> dict:
         """
@@ -122,8 +141,9 @@ class InterceptSetting(ApiModel):
 
         :meta private:
         """
-        return self.model_dump(mode='json', exclude_none=True, by_alias=True,
-                               exclude={'incoming': {'announcements': 'file_name'}})
+        return self.model_dump(
+            mode='json', exclude_none=True, by_alias=True, exclude={'incoming': {'announcements': 'file_name'}}
+        )
 
 
 class CallInterceptApi(PersonSettingsApiChild):
@@ -186,8 +206,7 @@ class CallInterceptApi(PersonSettingsApiChild):
         data = intercept.update()
         self.put(ep, params=params, json=data)
 
-    def greeting(self, entity_id: str, content: Union[BufferedReader, str],
-                 upload_as: str = None, org_id: str = None):
+    def greeting(self, entity_id: str, content: Union[BufferedReader, str], upload_as: str = None, org_id: str = None):
         """
         Configure Call Intercept Greeting
 
@@ -224,8 +243,7 @@ class CallInterceptApi(PersonSettingsApiChild):
         ep = self.f_ep(person_id=entity_id, path='actions/announcementUpload/invoke')
         params = org_id and {'orgId': org_id} or None
         try:
-            self.post(ep, data=encoder, headers={'Content-Type': encoder.content_type},
-                      params=params)
+            self.post(ep, data=encoder, headers={'Content-Type': encoder.content_type}, params=params)
         finally:
             if must_close:
                 content.close()

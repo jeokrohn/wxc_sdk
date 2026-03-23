@@ -55,8 +55,7 @@ class CallBridgeApi(PersonSettingsApiChild):
         data = super().get(url, params=params)
         return CallBridgeSetting.model_validate(data)
 
-    def configure(self, entity_id: str, setting: CallBridgeSetting,
-                  org_id: str = None):
+    def configure(self, entity_id: str, setting: CallBridgeSetting, org_id: str = None):
         """
         Configure Call Bridge Settings
 

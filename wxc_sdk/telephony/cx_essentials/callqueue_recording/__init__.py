@@ -25,8 +25,7 @@ class QueueCallRecordingSettingsApi(ApiChild, base='telephony/config/locations')
     <https://help.webex.com/en-us/article/n1qbbp7/Features-available-by-license-type-for-Webex-Calling>`_.
     """
 
-    def read(self, location_id: str, queue_id: str,
-             org_id: str = None) -> CallRecordingSetting:
+    def read(self, location_id: str, queue_id: str, org_id: str = None) -> CallRecordingSetting:
         """
         Read Queue Call Recording Settings for a Queue
 
@@ -59,9 +58,7 @@ class QueueCallRecordingSettingsApi(ApiChild, base='telephony/config/locations')
         r = CallRecordingSetting.model_validate(data)
         return r
 
-    def configure(self, location_id: str, queue_id: str,
-                  recording: CallRecordingSetting,
-                  org_id: str = None):
+    def configure(self, location_id: str, queue_id: str, recording: CallRecordingSetting, org_id: str = None):
         """
         Configure Queue Call Recording Settings for a Queue
 

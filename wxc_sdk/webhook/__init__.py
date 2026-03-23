@@ -1,6 +1,7 @@
 """
 Webhook types and API
 """
+
 import datetime
 from collections.abc import Generator
 from typing import ClassVar, Optional, Union
@@ -11,14 +12,23 @@ from ..api_child import ApiChild
 from ..base import ApiModel, enum_str, webex_id_to_uuid
 from ..base import SafeEnum as Enum
 
-__all__ = ['WebhookEventType', 'WebhookResource', 'WebhookStatus', 'Webhook', 'WebhookEventData',
-           'WebhookEvent', 'WebhookApi', 'WebhookCreate']
+__all__ = [
+    'WebhookEventType',
+    'WebhookResource',
+    'WebhookStatus',
+    'Webhook',
+    'WebhookEventData',
+    'WebhookEvent',
+    'WebhookApi',
+    'WebhookCreate',
+]
 
 
 class WebhookEventType(str, Enum):
     """
     The event type for the webhook.
     """
+
     #: an object was created
     created = 'created'
     #: an object was updated
@@ -49,6 +59,7 @@ class WebhookResource(str, Enum):
     """
     The resource type for the webhook. Creating a webhook requires 'read' scope on the resource the webhook is for.
     """
+
     #: The `Attachment Actions
     #: <https://developer.webex.com/docs/api/v1/attachment-actions>`_ resource.
     attachment_actions = 'attachmentActions'
@@ -101,6 +112,7 @@ class WebhookCreate(ApiModel):
     """
     Body for a webhook create call
     """
+
     name: str
     target_url: str
     resource: WebhookResource
@@ -208,13 +220,14 @@ class WebhookEventData(WebhookEventDataForbid):
              - :class:`wxc_sdk.attachment_actions.AttachmentActionsApi`
     """
 
-    model_config = ConfigDict(extra = 'allow')
+    model_config = ConfigDict(extra='allow')
 
 
 class WebhookEvent(Webhook):
     """
     A webhook event. Can be used in to parse data posted to a webhook handler
     """
+
     actor_id: Optional[str] = None
     #: resource specific event data; for registered subclasses of :class:`wwx_sdk.webhook.WebhookEventData` an
     #: instance of this subclass is returned. If no class is registered for the given resource, then data is returned as
@@ -257,9 +270,16 @@ class WebhookApi(ApiChild, base='webhooks'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Webhook, item_key='items', params=params)
 
-    def create(self, name: str, target_url: str, resource: WebhookResource, event: WebhookEventType, filter: str = None,
-               secret: str = None,
-               owned_by: str = None) -> Webhook:
+    def create(
+        self,
+        name: str,
+        target_url: str,
+        resource: WebhookResource,
+        event: WebhookEventType,
+        filter: str = None,
+        secret: str = None,
+        owned_by: str = None,
+    ) -> Webhook:
         """
         Creates a webhook.
 
@@ -276,9 +296,9 @@ class WebhookApi(ApiChild, base='webhooks'):
         :param event: The event type for the webhook.
         :type event: WebhookEvent
         :param filter: Filter that defines the webhook scope. See `Filtering Webhooks
-            <https://developer.webex.com/docs/api/guides/webhooks#filtering-webhooks>`_ for more information. Please note
-            that if a filter of `hostEmail`, `hostUserId`, `ownerEmail` or `ownerId` is specified, `ownedBy` must be
-            set to `org`.
+            <https://developer.webex.com/docs/api/guides/webhooks#filtering-webhooks>`_ for more information.
+            Please note that if a filter of `hostEmail`, `hostUserId`, `ownerEmail` or `ownerId` is specified,
+            `ownedBy` must be set to `org`.
         :type filter: str
         :param secret: The secret used to generate payload signature.
         :param secret: str
@@ -332,8 +352,9 @@ class WebhookApi(ApiChild, base='webhooks'):
         :return: updated :class:`Webhook` object
         """
         url = self.ep(webhook_id)
-        webhook_data = update.model_dump(mode='json', include={'name', 'target_url', 'secret', 'owned_by', 'status'},
-                                         exclude_unset=True)
+        webhook_data = update.model_dump(
+            mode='json', include={'name', 'target_url', 'secret', 'owned_by', 'status'}, exclude_unset=True
+        )
         return Webhook.model_validate(self.put(url, data=webhook_data))
 
     def webhook_delete(self, webhook_id: str):

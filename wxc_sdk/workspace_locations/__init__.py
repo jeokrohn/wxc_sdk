@@ -84,8 +84,9 @@ class WorkspaceLocationFloorApi(ApiChild, base='workspaceLocations'):
         params = org_id and {'orgId': org_id} or None
         return self.session.follow_pagination(url=url, model=WorkspaceLocationFloor, params=params, item_key='items')
 
-    def create(self, location_id: str, floor_number: int, display_name: str = None,
-               org_id: str = None) -> WorkspaceLocationFloor:
+    def create(
+        self, location_id: str, floor_number: int, display_name: str = None, org_id: str = None
+    ) -> WorkspaceLocationFloor:
         """
         Create a Workspace Location Floor
 
@@ -102,8 +103,9 @@ class WorkspaceLocationFloorApi(ApiChild, base='workspaceLocations'):
         :rtype: WorkspaceLocationFloor
         """
         logging.warning('use of the workspace locations API is not recommended. use locations API instead')
-        body = {to_camel(p): v for p, v in locals().items()
-                if p not in {'self', 'location_id', 'org_id'} and v is not None}
+        body = {
+            to_camel(p): v for p, v in locals().items() if p not in {'self', 'location_id', 'org_id'} and v is not None
+        }
         url = self.ep(location_id=location_id)
         params = org_id and {'orgId': org_id} or None
         data = self.post(url=url, params=params, json=body)
@@ -129,8 +131,9 @@ class WorkspaceLocationFloorApi(ApiChild, base='workspaceLocations'):
         data = self.get(url=url, params=params)
         return WorkspaceLocationFloor.model_validate(data)
 
-    def update(self, location_id: str, floor_id: str, settings: WorkspaceLocationFloor,
-               org_id: str = None) -> WorkspaceLocationFloor:
+    def update(
+        self, location_id: str, floor_id: str, settings: WorkspaceLocationFloor, org_id: str = None
+    ) -> WorkspaceLocationFloor:
         """
         Updates details for a floor, by ID. Specify the floor ID in the floorId parameter in the URI. Include all
         details for the floor that are present in a Get Workspace Location Floor Details. Not including the optional
@@ -184,8 +187,15 @@ class WorkspaceLocationApi(ApiChild, base='workspaceLocations'):
         logging.warning('use of the workspace locations API is not recommended. use locations API instead')
         return super().ep(path=location_id)
 
-    def list(self, display_name: str = None, address: str = None, country_code: str = None, city_name: str = None,
-             org_id: str = None, **params) -> Generator[WorkspaceLocation, None, None]:
+    def list(
+        self,
+        display_name: str = None,
+        address: str = None,
+        country_code: str = None,
+        city_name: str = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[WorkspaceLocation, None, None]:
         """
         List workspace locations
 
@@ -202,13 +212,21 @@ class WorkspaceLocationApi(ApiChild, base='workspaceLocations'):
         :param params: addtl. parameters
         :return: generator of :class:`WorkspaceLocation` instances
         """
-        params.update((to_camel(p), v) for p, v in locals().items()
-                      if p not in {'self', 'params'} and v is not None)
+        params.update((to_camel(p), v) for p, v in locals().items() if p not in {'self', 'params'} and v is not None)
         url = self.ep()
         return self.session.follow_pagination(url=url, model=WorkspaceLocation, params=params, item_key='items')
 
-    def create(self, display_name: str, address: str, country_code: str, latitude: float, longitude: float,
-               city_name: str = None, notes: str = None, org_id: str = None) -> WorkspaceLocation:
+    def create(
+        self,
+        display_name: str,
+        address: str,
+        country_code: str,
+        latitude: float,
+        longitude: float,
+        city_name: str = None,
+        notes: str = None,
+        org_id: str = None,
+    ) -> WorkspaceLocation:
         """
         Create a location. The cityName and notes parameters are optional, and omitting them will result in the
         creation of a location without these values set.
@@ -225,8 +243,7 @@ class WorkspaceLocationApi(ApiChild, base='workspaceLocations'):
         :rtype: WorkspaceLocation
         """
         logging.warning('use of the workspace locations API is not recommended. use locations API instead')
-        body = {to_camel(p): v for p, v in locals().items()
-                if p not in {'self', 'org_id'} and v is not None}
+        body = {to_camel(p): v for p, v in locals().items() if p not in {'self', 'org_id'} and v is not None}
         params = org_id and {'orgId': org_id} or None
         url = self.ep()
         data = self.post(url=url, json=body, params=params)

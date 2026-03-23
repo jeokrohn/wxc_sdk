@@ -1,6 +1,7 @@
 """
 Reports API
 """
+
 import csv
 import io
 import zipfile
@@ -136,8 +137,14 @@ class ReportsApi(ApiChild, base='devices'):
         result = TypeAdapter(list[ReportTemplate]).validate_python(data['items'])
         return result
 
-    def list(self, report_id: str = None, service: str = None, template_id: str = None, from_date: date = None,
-             to_date: date = None) -> Generator[Report, None, None]:
+    def list(
+        self,
+        report_id: str = None,
+        service: str = None,
+        template_id: str = None,
+        from_date: date = None,
+        to_date: date = None,
+    ) -> Generator[Report, None, None]:
         """
         Lists all reports. Use query parameters to filter the response. The parameters are optional. However, `from`
         and `to` parameters should be provided together.
@@ -164,8 +171,11 @@ class ReportsApi(ApiChild, base='devices'):
         # TODO: https://developer.webex.com/docs/api/v1/report-templates/list-report-templates, documentation bug
         #   "scheduledFrom" is actually "scheduleFrom"
 
-        params = {to_camel(k.split('_')[0] if k.endswith('date') else k): v for k, v in locals().items()
-                  if k not in {'self', 'from_date', 'to_date'} and v is not None}
+        params = {
+            to_camel(k.split('_')[0] if k.endswith('date') else k): v
+            for k, v in locals().items()
+            if k not in {'self', 'from_date', 'to_date'} and v is not None
+        }
         if from_date:
             params['from'] = from_date.strftime('%Y-%m-%d')
         if to_date:
@@ -257,7 +267,7 @@ class ReportsApi(ApiChild, base='devices'):
         :return: yields dicts
         """
         '''async
-    async def download(self, url: str) -> List[dict]:
+    async def download(self, url: str) -> builtins.list[dict]:
         """
         Download a report from the given URL and yield the rows as dicts
 

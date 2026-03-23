@@ -1,9 +1,11 @@
 """
 Auto attendant data types and API
 """
+
+import builtins
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import Field, TypeAdapter
 
@@ -15,15 +17,26 @@ from ..person_settings.available_numbers import AvailableNumber
 from ..rest import RestSession
 from .forwarding import FeatureSelector, ForwardingApi
 
-__all__ = ['Dialing', 'MenuKey', 'AutoAttendantAction', 'AutoAttendantKeyConfiguration',
-           'AutoAttendantMenu', 'AutoAttendant', 'AutoAttendantApi', 'CallTreatmentRetry', 'ActionToBePerformed',
-           'ActionToBePerformedAction', 'CallTreatment']
+__all__ = [
+    'Dialing',
+    'MenuKey',
+    'AutoAttendantAction',
+    'AutoAttendantKeyConfiguration',
+    'AutoAttendantMenu',
+    'AutoAttendant',
+    'AutoAttendantApi',
+    'CallTreatmentRetry',
+    'ActionToBePerformed',
+    'ActionToBePerformedAction',
+    'CallTreatment',
+]
 
 
 class Dialing(str, Enum):
     """
     Dialing setting.
     """
+
     enterprise = 'ENTERPRISE'
     group = 'GROUP'
 
@@ -47,6 +60,7 @@ class AutoAttendantAction(str, Enum):
     """
     Auto Attendant Action
     """
+
     transfer_without_prompt = 'TRANSFER_WITHOUT_PROMPT'
     transfer_with_prompt = 'TRANSFER_WITH_PROMPT'
     transfer_to_operator = 'TRANSFER_TO_OPERATOR'
@@ -63,6 +77,7 @@ class AutoAttendantKeyConfiguration(ApiModel):
     """
     Key configuration defined for the auto attendant.
     """
+
     #: Key assigned to specific menu configuration.
     key: MenuKey
     #: Action assigned to specific menu key configuration.
@@ -141,6 +156,7 @@ class AutoAttendantMenu(ApiModel):
     """
     Menu defined for Auto Attendant
     """
+
     #: Greeting type defined for the auto attendant.
     greeting: Greeting
     #: Flag to indicate if auto attendant extension is enabled or not.
@@ -159,15 +175,18 @@ class AutoAttendantMenu(ApiModel):
 
         :return: :class:`AutoAttendantMenu`
         """
-        return AutoAttendantMenu(greeting=Greeting.default,
-                                 extension_enabled=True,
-                                 key_configurations=[AutoAttendantKeyConfiguration.zero_exit()])
+        return AutoAttendantMenu(
+            greeting=Greeting.default,
+            extension_enabled=True,
+            key_configurations=[AutoAttendantKeyConfiguration.zero_exit()],
+        )
 
 
 class AutoAttendant(ApiModel):
     """
     Auto attendant details
     """
+
     #: A unique identifier for the auto attendant.
     auto_attendant_id: Optional[str] = Field(alias='id', default=None)
     #: Unique name for the auto attendant.
@@ -226,19 +245,23 @@ class AutoAttendant(ApiModel):
         :return: JSON
         :rtype: str
         """
-        return self.model_dump_json(exclude={'auto_attendant_id': True,
-                                             'location_name': True,
-                                             'location_id': True,
-                                             'enabled': True,
-                                             'toll_free_number': True,
-                                             'language': True,
-                                             'esn': True,
-                                             'routing_prefix': True
-                                             })
+        return self.model_dump_json(
+            exclude={
+                'auto_attendant_id': True,
+                'location_name': True,
+                'location_id': True,
+                'enabled': True,
+                'toll_free_number': True,
+                'language': True,
+                'esn': True,
+                'routing_prefix': True,
+            }
+        )
 
     @staticmethod
-    def create(*, name: str, business_schedule: str, phone_number: str = None,
-               extension: str = None) -> 'AutoAttendant':
+    def create(
+        *, name: str, business_schedule: str, phone_number: str = None, extension: str = None
+    ) -> 'AutoAttendant':
         """
         Get minimal auto attendant settings that can be used to create a new auto attendant by
         calling :meth:`AutoAttendantAPI.create` with these settings:
@@ -265,12 +288,14 @@ class AutoAttendant(ApiModel):
         """
         if not any((phone_number, extension)):
             raise ValueError('phone_number or extension have to be set')
-        return AutoAttendant(name=name,
-                             phone_number=phone_number,
-                             extension=extension,
-                             business_schedule=business_schedule,
-                             business_hours_menu=AutoAttendantMenu.default(),
-                             after_hours_menu=AutoAttendantMenu.default())
+        return AutoAttendant(
+            name=name,
+            phone_number=phone_number,
+            extension=extension,
+            business_schedule=business_schedule,
+            business_hours_menu=AutoAttendantMenu.default(),
+            after_hours_menu=AutoAttendantMenu.default(),
+        )
 
 
 @dataclass(init=False, repr=False)
@@ -290,6 +315,7 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
     A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
     query parameter.
     """
+
     forwarding: ForwardingApi
 
     def __init__(self, session: RestSession):
@@ -319,8 +345,9 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
                 ep = f'{ep}/{path}'
             return ep
 
-    def list(self, org_id: str = None, location_id: str = None, name: str = None,
-             phone_number: str = None, **params) -> Generator[AutoAttendant, None, None]:
+    def list(
+        self, org_id: str = None, location_id: str = None, name: str = None, phone_number: str = None, **params
+    ) -> Generator[AutoAttendant, None, None]:
         """
         Read the List of Auto Attendants
 
@@ -342,9 +369,9 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         :type phone_number: str
         :return: yields :class:`AutoAttendant` objects
         """
-        params.update((to_camel(k), v)
-                      for i, (k, v) in enumerate(locals().items())
-                      if i and v is not None and k != 'params')
+        params.update(
+            (to_camel(k), v) for i, (k, v) in enumerate(locals().items()) if i and v is not None and k != 'params'
+        )
         url = self._endpoint()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=AutoAttendant, params=params, item_key='autoAttendants')
@@ -358,8 +385,9 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         :param org_id:
         :return:
         """
-        return next((hg for hg in self.list(name=name, location_id=location_id, org_id=org_id)
-                     if hg.name == name), None)
+        return next(
+            (hg for hg in self.list(name=name, location_id=location_id, org_id=org_id) if hg.name == name), None
+        )
 
     def details(self, location_id: str, auto_attendant_id: str, org_id: str = None) -> AutoAttendant:
         """
@@ -466,9 +494,9 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         params = org_id and {'orgId': org_id} or None
         self.delete(url, params=params)
 
-    def primary_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
-                                        org_id: str = None,
-                                        **params) -> Generator[AvailableNumber, None, None]:
+    def primary_available_phone_numbers(
+        self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get Auto Attendant Primary Available Phone Numbers
 
@@ -500,9 +528,9 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         url = self._endpoint(location_id=location_id, path='availableNumbers')
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
-    def alternate_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
-                                          org_id: str = None,
-                                          **params) -> Generator[AvailableNumber, None, None]:
+    def alternate_available_phone_numbers(
+        self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get Auto Attendant Alternate Available Phone Numbers
 
@@ -533,10 +561,15 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         url = self._endpoint(location_id=location_id, path='alternate/availableNumbers')
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
-    def call_forward_available_phone_numbers(self, location_id: str, phone_number: List[str] = None,
-                                             owner_name: str = None, extension: str = None,
-                                             org_id: str = None,
-                                             **params) -> Generator[AvailableNumber, None, None]:
+    def call_forward_available_phone_numbers(
+        self,
+        location_id: str,
+        phone_number: builtins.list[str] = None,
+        owner_name: str = None,
+        extension: str = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[AvailableNumber, None, None]:
         """
         Get Auto Attendant Call Forward Available Phone Numbers
 
@@ -577,8 +610,9 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         url = self._endpoint(location_id=location_id, path='callForwarding/availableNumbers')
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
-    def list_announcement_files(self, location_id: str, auto_attendant_id: str,
-                                org_id: str = None) -> List[AnnAudioFile]:
+    def list_announcement_files(
+        self, location_id: str, auto_attendant_id: str, org_id: str = None
+    ) -> builtins.list[AnnAudioFile]:
         """
         Read the List of Auto Attendant Announcement Files
 
@@ -605,13 +639,13 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.session.ep(
-            f'telephony/config/locations/{location_id}/autoAttendants/{auto_attendant_id}/announcements')
+            f'telephony/config/locations/{location_id}/autoAttendants/{auto_attendant_id}/announcements'
+        )
         data = super().get(url, params=params)
         r = TypeAdapter(list[AnnAudioFile]).validate_python(data['announcements'])
         return r
 
-    def delete_announcement_file(self, location_id: str, auto_attendant_id: str, file_name: str,
-                                 org_id: str = None):
+    def delete_announcement_file(self, location_id: str, auto_attendant_id: str, file_name: str, org_id: str = None):
         """
         Delete an Auto Attendant Announcement File
 
@@ -636,5 +670,6 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         if org_id is not None:
             params['orgId'] = org_id
         url = self.session.ep(
-            f'telephony/config/locations/{location_id}/autoAttendants/{auto_attendant_id}/announcements/{file_name}')
+            f'telephony/config/locations/{location_id}/autoAttendants/{auto_attendant_id}/announcements/{file_name}'
+        )
         super().delete(url, params=params)

@@ -79,8 +79,7 @@ class GuestCallingApi(ApiChild, base='telephony/config/guestCalling'):
         r = GuestCallingSettings.model_validate(data)
         return r
 
-    def update(self, enabled: bool, privacy_enabled: bool, destination_members: list[str],
-               org_id: str = None):
+    def update(self, enabled: bool, privacy_enabled: bool, destination_members: list[str], org_id: str = None):
         """
         Update the Click-to-call Settings
 
@@ -113,8 +112,9 @@ class GuestCallingApi(ApiChild, base='telephony/config/guestCalling'):
         url = self.ep()
         super().put(url, params=params, json=body)
 
-    def members(self, member_name: str = None, phone_number: str = None, extension: str = None,
-                org_id: str = None, **params) -> Generator[DestinationMember, None, None]:
+    def members(
+        self, member_name: str = None, phone_number: str = None, extension: str = None, org_id: str = None, **params
+    ) -> Generator[DestinationMember, None, None]:
         """
         Read the Click-to-call Members
 
@@ -145,12 +145,13 @@ class GuestCallingApi(ApiChild, base='telephony/config/guestCalling'):
         if extension is not None:
             params['extension'] = extension
         url = self.ep('members')
-        return self.session.follow_pagination(url=url, model=DestinationMember, item_key='destinationMembers',
-                                              params=params)
+        return self.session.follow_pagination(
+            url=url, model=DestinationMember, item_key='destinationMembers', params=params
+        )
 
-    def available_members(self, member_name: str = None, phone_number: str = None,
-                          extension: str = None, org_id: str = None,
-                          **params) -> Generator[DestinationMember, None, None]:
+    def available_members(
+        self, member_name: str = None, phone_number: str = None, extension: str = None, org_id: str = None, **params
+    ) -> Generator[DestinationMember, None, None]:
         """
         Read the Click-to-call Available Members
 
@@ -182,5 +183,6 @@ class GuestCallingApi(ApiChild, base='telephony/config/guestCalling'):
         if extension is not None:
             params['extension'] = extension
         url = self.ep('availableMembers')
-        return self.session.follow_pagination(url=url, model=DestinationMember, item_key='availableDestinationMembers',
-                                              params=params)
+        return self.session.follow_pagination(
+            url=url, model=DestinationMember, item_key='availableDestinationMembers', params=params
+        )

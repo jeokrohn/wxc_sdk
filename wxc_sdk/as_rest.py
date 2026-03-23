@@ -1,6 +1,7 @@
 """
 REST session for Webex API requests
 """
+
 import asyncio
 import json as json_mod
 import logging
@@ -39,6 +40,7 @@ class AsSingleError(ApiModel):
     """
     Representation of single error in the body of an HTTP error response from Webex
     """
+
     key: Optional[str] = None
     message: list[AsErrorMessage]
 
@@ -66,6 +68,7 @@ class AsErrorDetail(ApiModel):
     Representation of error details in the body of an HTTP error response from Webex. There are several variants of
     error responses. This model tries to generalize them
     """
+
     error: Optional[list[AsSingleError]] = None
     error_code: Optional[int] = None
     tracking_id: Optional[str] = None
@@ -95,9 +98,17 @@ class AsRestError(ClientResponseError):
     A REST error
     """
 
-    def __init__(self, request_info: RequestInfo, history: tuple[ClientResponse, ...], *, code: Optional[int] = None,
-                 status: Optional[int] = None, message: str = "", headers: Optional[LooseHeaders] = None,
-                 detail: Any = None) -> None:
+    def __init__(
+        self,
+        request_info: RequestInfo,
+        history: tuple[ClientResponse, ...],
+        *,
+        code: Optional[int] = None,
+        status: Optional[int] = None,
+        message: str = '',
+        headers: Optional[LooseHeaders] = None,
+        detail: Any = None,
+    ) -> None:
         super().__init__(request_info, history, code=code, status=status, message=message, headers=headers)
         try:
             self.detail = AsErrorDetail.model_validate(detail)
@@ -106,8 +117,15 @@ class AsRestError(ClientResponseError):
         # TODO: implement equivalent to __init__ in sync implementation
 
 
-def as_dump_response(*, response: ClientResponse, response_data=None, request_body: str = None, file: TextIOBase = None,
-                     dump_log: logging.Logger = None, diff_ns: int = None):
+def as_dump_response(
+    *,
+    response: ClientResponse,
+    response_data=None,
+    request_body: str = None,
+    file: TextIOBase = None,
+    dump_log: logging.Logger = None,
+    diff_ns: int = None,
+):
     """
     Dump response object to log file
 
@@ -135,8 +153,11 @@ def as_dump_response(*, response: ClientResponse, response_data=None, request_bo
     else:
         time_str = f'({diff_ns / 1000000.0:.3f} ms)'
 
-    print(f'Request {response.status}[{response.reason}]{time_str}: '
-          f'{response.request_info.method} {response.request_info.url}', file=output)
+    print(
+        f'Request {response.status}[{response.reason}]{time_str}: '
+        f'{response.request_info.method} {response.request_info.url}',
+        file=output,
+    )
 
     # request headers
     for k, v in response.request_info.headers.items():
@@ -228,10 +249,11 @@ AsRestResponseCallBack = Callable[[ClientResponse, str, str, dict, int], None]
 # as_dump_response(response=response, data=data, json=json, response_data=response_data, diff_ns=diff_ns)
 #
 
-def _dump_response_callback(response: ClientResponse, request_body: str, request_ct: str, response_data: str,
-                            diff_ns: int):
-    as_dump_response(response=response, request_body=request_body, response_data=response_data,
-                     diff_ns=diff_ns)
+
+def _dump_response_callback(
+    response: ClientResponse, request_body: str, request_ct: str, response_data: str, diff_ns: int
+):
+    as_dump_response(response=response, request_body=request_body, response_data=response_data, diff_ns=diff_ns)
 
 
 @dataclass(init=False, repr=False)
@@ -242,6 +264,7 @@ class AsRestSession(ClientSession):
             * implements retries on 429
             * loads deserializes JSON data if needed
     """
+
     #: base URL for all Webex API requests
     BASE = 'https://webexapis.com/v1'
 
@@ -256,9 +279,17 @@ class AsRestSession(ClientSession):
     # additional request arguments
     _request_arguments: dict
 
-    def __init__(self, *, tokens: Tokens, concurrent_requests: int, retry_429: bool = True,
-                 trace_configs: list[TraceConfig] = None, proxy_url: str = None,
-                 ssl: Union[bool, aiohttp.Fingerprint, ssl.SSLContext] = None, **kwargs):
+    def __init__(
+        self,
+        *,
+        tokens: Tokens,
+        concurrent_requests: int,
+        retry_429: bool = True,
+        trace_configs: list[TraceConfig] = None,
+        proxy_url: str = None,
+        ssl: Union[bool, aiohttp.Fingerprint, ssl.SSLContext] = None,
+        **kwargs,
+    ):
         """
         Initialize the REST session
 
@@ -329,9 +360,14 @@ class AsRestSession(ClientSession):
         self._response_callback_registry[id] = callback
         return id
 
-    def _dispatch_to_response_callbacks(self, response: ClientResponse, request_data: Union[str, dict],
-                                        request_json: dict,
-                                        response_data: Union[str, dict], diff_ns: int):
+    def _dispatch_to_response_callbacks(
+        self,
+        response: ClientResponse,
+        request_data: Union[str, dict],
+        request_json: dict,
+        response_data: Union[str, dict],
+        diff_ns: int,
+    ):
         # request body
         body_str = ''
         body_ct = ''
@@ -341,6 +377,7 @@ class AsRestSession(ClientSession):
                 return data.is_multipart
             except AttributeError:
                 return False
+
         if isinstance(request_data, dict):
             body_str = str(urllib.parse.quote_plus(urllib.parse.urlencode(request_data)))
             body_ct = 'application/x-www-form-urlencoded'
@@ -387,9 +424,17 @@ class AsRestSession(ClientSession):
         return self._tokens.access_token
 
     @retry_request
-    async def _request_w_response(self, method: str, url: str, headers=None, content_type: str = None,
-                                  data=None, json=None, ignore_status: int = None,
-                                  **kwargs) -> tuple[ClientResponse, StrOrDict]:
+    async def _request_w_response(
+        self,
+        method: str,
+        url: str,
+        headers=None,
+        content_type: str = None,
+        data=None,
+        json=None,
+        ignore_status: int = None,
+        **kwargs,
+    ) -> tuple[ClientResponse, StrOrDict]:
         """
         low level API REST request with support for 429 rate limiting
 
@@ -406,9 +451,11 @@ class AsRestSession(ClientSession):
         :return: Tuple of response object and body. Body can be text or dict (parsed from JSON body)
         :rtype:
         """
-        request_headers = {'Authorization': f'Bearer {self._tokens.access_token}',
-                           'Content-Type': 'application/json;charset=utf-8',
-                           'TrackingID': f'SIMPLE_{uuid.uuid4()}'}
+        request_headers = {
+            'Authorization': f'Bearer {self._tokens.access_token}',
+            'Content-Type': 'application/json;charset=utf-8',
+            'TrackingID': f'SIMPLE_{uuid.uuid4()}',
+        }
         if headers:
             request_headers.update((k.lower(), v) for k, v in headers.items())
         if content_type:
@@ -424,9 +471,9 @@ class AsRestSession(ClientSession):
             additional_arguments = kwargs or self._request_arguments
         # the event is cleared if any task hit a 429
         start = perf_counter_ns()
-        async with self.request(method, url=url, headers=request_headers,
-                                data=data, json=json,
-                                **additional_arguments) as response:
+        async with self.request(
+            method, url=url, headers=request_headers, data=data, json=json, **additional_arguments
+        ) as response:
             # get response body as text or dict (parsed JSON)
             ct = response.headers.get('Content-Type')
             if not ct:
@@ -441,18 +488,22 @@ class AsRestSession(ClientSession):
             diff_ns = perf_counter_ns() - start
 
             # relay response to all registered callbacks
-            self._dispatch_to_response_callbacks(response=response, request_data=data, request_json=json,
-                                                 response_data=response_data,
-                                                 diff_ns=diff_ns)
+            self._dispatch_to_response_callbacks(
+                response=response, request_data=data, request_json=json, response_data=response_data, diff_ns=diff_ns
+            )
             try:
                 response.raise_for_status()
             except ClientResponseError as error:
                 if ignore_status is None or error.status != ignore_status:
                     # create a RestError based on HTTP error
-                    error = AsRestError(request_info=error.request_info,
-                                        history=error.history, status=error.status,
-                                        message=error.message, headers=error.headers,
-                                        detail=response_data)
+                    error = AsRestError(
+                        request_info=error.request_info,
+                        history=error.history,
+                        status=error.status,
+                        message=error.message,
+                        headers=error.headers,
+                        detail=response_data,
+                    )
                     raise error
 
         return response, response_data
@@ -523,9 +574,9 @@ class AsRestSession(ClientSession):
         """
         return await self._rest_request('PATCH', *args, **kwargs)
 
-    async def follow_pagination(self, url: str, model: type[ApiModel] = None,
-                                params: dict = None,
-                                item_key: str = None, **kwargs) -> AsyncGenerator[ApiModel, None, None]:
+    async def follow_pagination(
+        self, url: str, model: type[ApiModel] = None, params: dict = None, item_key: str = None, **kwargs
+    ) -> AsyncGenerator[ApiModel, None, None]:
         """
         Handling RFC5988 pagination of list requests. Generator of parsed objects
 
@@ -571,8 +622,7 @@ class AsRestSession(ClientSession):
                     item_key = 'items'
                 else:
                     # we go w/ the first return value that is a list
-                    item_key = next((k for k, v in data.items()
-                                     if isinstance(v, list)))
+                    item_key = next((k for k, v in data.items() if isinstance(v, list)))
             items = data.get(item_key, [])
             # if the response has no items, we're done
             if not items:

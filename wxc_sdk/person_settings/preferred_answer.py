@@ -1,6 +1,7 @@
 """
 API for person preferred answer endpoint operatins
 """
+
 from typing import Optional
 
 from wxc_sdk.api_child import ApiChild
@@ -33,7 +34,6 @@ class PreferredAnswerResponse(ApiModel):
 
 
 class PreferredAnswerApi(ApiChild, base='telephony/config/people'):
-
     # noinspection PyMethodOverriding
     def ep(self, person_id: str) -> str:
         """

@@ -32,9 +32,16 @@ class CallparkExtensionApi(ApiChild, base='telephony'):
                 ep = f'{ep}/{cpe_id}'
             return ep
 
-    def list(self, extension: str = None, name: str = None, location_id: str = None,
-             location_name: str = None, order: str = None, org_id: str = None,
-             **params) -> Generator[CallParkExtension, None, None]:
+    def list(
+        self,
+        extension: str = None,
+        name: str = None,
+        location_id: str = None,
+        location_name: str = None,
+        order: str = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[CallParkExtension, None, None]:
         """
         Read the List of Call Park Extensions
 
@@ -106,7 +113,13 @@ class CallparkExtensionApi(ApiChild, base='telephony'):
         data = self.get(url, params=params)
         return CallParkExtension.model_validate(data)
 
-    def create(self, location_id: str, name: str, extension: str, org_id: str = None, ) -> str:
+    def create(
+        self,
+        location_id: str,
+        name: str,
+        extension: str,
+        org_id: str = None,
+    ) -> str:
         """
         Create a Call Park Extension
 
@@ -138,7 +151,7 @@ class CallparkExtensionApi(ApiChild, base='telephony'):
         body = {'name': name, 'extension': extension}
         url = self._endpoint(location_id=location_id)
         data = super().post(url=url, params=params, json=body)
-        return data["id"]
+        return data['id']
 
     def delete(self, location_id: str, cpe_id: str, org_id: str = None):
         """

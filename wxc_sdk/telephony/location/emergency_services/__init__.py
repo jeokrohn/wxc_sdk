@@ -49,8 +49,9 @@ class LocationEmergencyServicesApi(ApiChild, base='telephony/config/locations'):
     token with a scope of `spark-admin:telephony_config_write`.
     """
 
-    def read_emergency_call_notification(self, location_id: str,
-                                         org_id: str = None) -> LocationEmergencyCallNotification:
+    def read_emergency_call_notification(
+        self, location_id: str, org_id: str = None
+    ) -> LocationEmergencyCallNotification:
         """
         Get a Location Emergency Call Notification
 
@@ -79,8 +80,9 @@ class LocationEmergencyServicesApi(ApiChild, base='telephony/config/locations'):
         r = LocationEmergencyCallNotification.model_validate(data)
         return r
 
-    def update_emergency_call_notification(self, location_id: str, setting: LocationEmergencyCallNotification,
-                                           org_id: str = None):
+    def update_emergency_call_notification(
+        self, location_id: str, setting: LocationEmergencyCallNotification, org_id: str = None
+    ):
         """
         Update a location emergency call notification.
 

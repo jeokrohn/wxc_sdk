@@ -3,6 +3,7 @@ Not supported for Webex for Government (FedRAMP)
 Features: Announcement Repository support reading and writing of Webex Calling Announcement Repository settings for
 a specific organization.
 """
+
 import os
 from collections.abc import Generator
 from datetime import datetime
@@ -82,9 +83,17 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
     parameter.
     """
 
-    def list(self, location_id: str = None, order: str = None, file_name: str = None, file_type: str = None,
-             media_file_type: str = None, name: str = None, org_id: str = None,
-             **params) -> Generator[RepoAnnouncement, None, None]:
+    def list(
+        self,
+        location_id: str = None,
+        order: str = None,
+        file_name: str = None,
+        file_type: str = None,
+        media_file_type: str = None,
+        name: str = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[RepoAnnouncement, None, None]:
         """
         Fetch list of announcement greetings on location and organization level
 
@@ -129,15 +138,14 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
         if name is not None:
             params['name'] = name
         url = self.ep('announcements')
-        return self.session.follow_pagination(url=url, model=RepoAnnouncement, item_key='announcements',
-                                              params=params)
+        return self.session.follow_pagination(url=url, model=RepoAnnouncement, item_key='announcements', params=params)
 
     def _upload_or_modify(self, *, url, name, file, upload_as, params, is_upload) -> dict:
         """
 
         :meta private:
         """
-        '''async
+        """async
     async def _upload_or_modify(self, *, url, name, file, upload_as, params, is_upload) -> dict:
         if isinstance(file, str):
             upload_as = upload_as or os.path.basename(file)
@@ -160,7 +168,7 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
             if must_close:
                 file.close()
         return data
-        '''
+        """
         if isinstance(file, str):
             upload_as = upload_as or os.path.basename(file)
             file = open(file, mode='rb')
@@ -176,16 +184,20 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
         else:
             meth = super().put
         try:
-            data = meth(url, data=encoder, headers={'Content-Type': encoder.content_type},
-                        params=params)
+            data = meth(url, data=encoder, headers={'Content-Type': encoder.content_type}, params=params)
         finally:
             if must_close:
                 file.close()
         return data
 
-    def upload_announcement(self, name: str, file: Union[BufferedReader, str], upload_as: str = None,
-                            location_id: str = None,
-                            org_id: str = None) -> str:
+    def upload_announcement(
+        self,
+        name: str,
+        file: Union[BufferedReader, str],
+        upload_as: str = None,
+        location_id: str = None,
+        org_id: str = None,
+    ) -> str:
         """
         Upload a binary announcement greeting at organization or location level
 
@@ -236,7 +248,7 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
                                                                               upload_as='from_string.wav')
 
         """
-        '''async
+        """async
     async def upload_announcement(self, name: str, file: Union[BufferedReader, str], upload_as: str = None,
                             location_id: str = None,
                             org_id: str = None) -> str:
@@ -249,15 +261,14 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
                                       is_upload=True)
         return data["id"]
 
-        '''
+        """
         params = org_id and {'orgId': org_id} or None
         if location_id is None:
             url = self.ep('announcements')
         else:
             url = self.ep(f'locations/{location_id}/announcements')
-        data = self._upload_or_modify(url=url, name=name, file=file, upload_as=upload_as, params=params,
-                                      is_upload=True)
-        return data["id"]
+        data = self._upload_or_modify(url=url, name=name, file=file, upload_as=upload_as, params=params, is_upload=True)
+        return data['id']
 
     def usage(self, location_id: str = None, org_id: str = None) -> RepositoryUsage:
         """
@@ -330,8 +341,15 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
             url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')
         super().delete(url=url, params=params)
 
-    def modify(self, announcement_id: str, name: str, file: Union[BufferedReader, str],
-               upload_as: str = None, location_id: str = None, org_id: str = None):
+    def modify(
+        self,
+        announcement_id: str,
+        name: str,
+        file: Union[BufferedReader, str],
+        upload_as: str = None,
+        location_id: str = None,
+        org_id: str = None,
+    ):
         """
         Modify a binary announcement greeting at organization or location level
 
@@ -361,7 +379,7 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
         :type org_id: str
 
         """
-        '''async
+        """async
     async def modify(self, announcement_id: str, name: str, file: Union[BufferedReader, str],
                upload_as: str = None, location_id: str = None, org_id: str = None):
         params = org_id and {'orgId': org_id} or None
@@ -373,12 +391,13 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
                                       is_upload=False)
         return data["id"]
 
-        '''
+        """
         params = org_id and {'orgId': org_id} or None
         if location_id is None:
             url = self.ep(f'announcements/{announcement_id}')
         else:
             url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')
-        data = self._upload_or_modify(url=url, name=name, file=file, upload_as=upload_as, params=params,
-                                      is_upload=False)
-        return data["id"]
+        data = self._upload_or_modify(
+            url=url, name=name, file=file, upload_as=upload_as, params=params, is_upload=False
+        )
+        return data['id']

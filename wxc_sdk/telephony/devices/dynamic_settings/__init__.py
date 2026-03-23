@@ -7,9 +7,19 @@ from wxc_sdk.base import ApiModel, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 from wxc_sdk.common import SetOrClear
 
-__all__ = ['SettingsType', 'DeviceSettingsGroupTag', 'SettingsGroup', 'DynamicSettingsGroups', 'ValidationRule',
-           'DeviceTag', 'DevicePutItem', 'ParentLevel', 'DeviceDynamicTag', 'DeviceDynamicSettings',
-           'DevicesDynamicSettingsApi']
+__all__ = [
+    'SettingsType',
+    'DeviceSettingsGroupTag',
+    'SettingsGroup',
+    'DynamicSettingsGroups',
+    'ValidationRule',
+    'DeviceTag',
+    'DevicePutItem',
+    'ParentLevel',
+    'DeviceDynamicTag',
+    'DeviceDynamicSettings',
+    'DevicesDynamicSettingsApi',
+]
 
 
 class SettingsType(str, Enum):
@@ -124,9 +134,9 @@ class DevicesDynamicSettingsApi(ApiChild, base='telephony/config'):
     Telephony devices API
     """
 
-    def get_settings_groups(self, family_or_model_display_name: str = None,
-                            include_settings_type: SettingsType = None,
-                            org_id: str = None) -> DynamicSettingsGroups:
+    def get_settings_groups(
+        self, family_or_model_display_name: str = None, include_settings_type: SettingsType = None, org_id: str = None
+    ) -> DynamicSettingsGroups:
         """
         Get Settings Groups
 
@@ -182,8 +192,9 @@ class DevicesDynamicSettingsApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[DeviceTag]).validate_python(data['tags'])
         return r
 
-    def update_specified_settings_for_the_device(self, device_id: str, tags: list[DevicePutItem] = None,
-                                                 org_id: str = None):
+    def update_specified_settings_for_the_device(
+        self, device_id: str, tags: list[DevicePutItem] = None, org_id: str = None
+    ):
         """
         Update specified settings for the device.
 
@@ -209,13 +220,15 @@ class DevicesDynamicSettingsApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         if tags is not None:
-            body['tags'] = TypeAdapter(list[DevicePutItem]).dump_python(tags, mode='json', by_alias=True,
-                                                                        exclude_none=True)
+            body['tags'] = TypeAdapter(list[DevicePutItem]).dump_python(
+                tags, mode='json', by_alias=True, exclude_none=True
+            )
         url = self.ep(f'devices/{device_id}/dynamicSettings')
         super().put(url, params=params, json=body)
 
-    def get_customer_device_settings(self, family_or_model_display_name: str, tags: list[str] = None,
-                                     org_id: str = None) -> DeviceDynamicSettings:
+    def get_customer_device_settings(
+        self, family_or_model_display_name: str, tags: list[str] = None, org_id: str = None
+    ) -> DeviceDynamicSettings:
         """
         Get Customer Device Dynamic Settings
 
@@ -250,8 +263,7 @@ class DevicesDynamicSettingsApi(ApiChild, base='telephony/config'):
         r = DeviceDynamicSettings.model_validate(data)
         return r
 
-    def get_device_settings(self, device_id: str, tags: list[str] = None,
-                            org_id: str = None) -> DeviceDynamicSettings:
+    def get_device_settings(self, device_id: str, tags: list[str] = None, org_id: str = None) -> DeviceDynamicSettings:
         """
         Get Device Dynamic Settings
 
@@ -283,9 +295,9 @@ class DevicesDynamicSettingsApi(ApiChild, base='telephony/config'):
         r = DeviceDynamicSettings.model_validate(data)
         return r
 
-    def get_location_device_settings(self, location_id: str, family_or_model_display_name: str,
-                                     tags: list[str] = None,
-                                     org_id: str = None) -> DeviceDynamicSettings:
+    def get_location_device_settings(
+        self, location_id: str, family_or_model_display_name: str, tags: list[str] = None, org_id: str = None
+    ) -> DeviceDynamicSettings:
         """
         Get Location Device Dynamic Settings
 

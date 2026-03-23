@@ -1,6 +1,7 @@
+import builtins
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import Field, TypeAdapter
 
@@ -43,20 +44,24 @@ class PatternAndAction(ApiModel):
 
     @staticmethod
     def add(pattern: str) -> 'PatternAndAction':
-        return PatternAndAction(dial_pattern=pattern,
-                                action=PatternAction.add)
+        return PatternAndAction(dial_pattern=pattern, action=PatternAction.add)
 
     @staticmethod
     def delete(pattern: str) -> 'PatternAndAction':
-        return PatternAndAction(dial_pattern=pattern,
-                                action=PatternAction.delete)
+        return PatternAndAction(dial_pattern=pattern, action=PatternAction.delete)
 
 
 @dataclass(init=False, repr=False)
 class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
-
-    def list(self, dial_plan_name: str = None, route_group_name: str = None, trunk_name: str = None,
-             order: str = None, org_id: str = None, **params) -> Generator[DialPlan, None, None]:
+    def list(
+        self,
+        dial_plan_name: str = None,
+        route_group_name: str = None,
+        trunk_name: str = None,
+        order: str = None,
+        org_id: str = None,
+        **params,
+    ) -> Generator[DialPlan, None, None]:
         """
         List all Dial Plans for the organization.
 
@@ -80,14 +85,21 @@ class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
         :type org_id: str
         :return:
         """
-        params.update((to_camel(p), v) for i, (p, v) in enumerate(locals().items())
-                      if i and v is not None and p != 'params')
+        params.update(
+            (to_camel(p), v) for i, (p, v) in enumerate(locals().items()) if i and v is not None and p != 'params'
+        )
         url = self.ep()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=DialPlan, params=params, item_key='dialPlans')
 
-    def create(self, name: str, route_id: str, route_type: RouteType, dial_patterns: List[str] = None,
-               org_id: str = None) -> CreateResponse:
+    def create(
+        self,
+        name: str,
+        route_id: str,
+        route_type: RouteType,
+        dial_patterns: builtins.list[str] = None,
+        org_id: str = None,
+    ) -> CreateResponse:
         """
         Create a Dial Plan for the organization.
 
@@ -118,7 +130,7 @@ class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
             'name': name,
             'routeId': route_id,
             'routeType': route_type.value if isinstance(route_type, RouteType) else route_type,
-            'dialPatterns': dial_patterns or []
+            'dialPatterns': dial_patterns or [],
         }
         data = self.post(url=url, params=params, json=body)
         return CreateResponse.model_validate(data)
@@ -192,8 +204,9 @@ class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
         params = org_id and {'orgId': org_id} or None
         self.delete(url=url, params=params)
 
-    def patterns(self, dial_plan_id: str, org_id: str = None,
-                 dial_pattern: str = None, **params) -> Generator[str, None, None]:
+    def patterns(
+        self, dial_plan_id: str, org_id: str = None, dial_pattern: str = None, **params
+    ) -> Generator[str, None, None]:
         """
         Read the List of Dial Patterns
 
@@ -218,13 +231,14 @@ class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
         :return: list of patterns
         :rtype: list[str]
         """
-        params.update((to_camel(p), v) for i, (p, v) in enumerate(locals().items())
-                      if i > 1 and v is not None and p != 'params')
+        params.update(
+            (to_camel(p), v) for i, (p, v) in enumerate(locals().items()) if i > 1 and v is not None and p != 'params'
+        )
         url = self.ep(f'{dial_plan_id}/dialPatterns')
 
         return self.session.follow_pagination(url=url, params=params, item_key='dialPatterns')
 
-    def modify_patterns(self, dial_plan_id: str, dial_patterns: List[PatternAndAction], org_id: str = None):
+    def modify_patterns(self, dial_plan_id: str, dial_patterns: builtins.list[PatternAndAction], org_id: str = None):
         """
         Modify dial patterns for the Dial Plan.
 
@@ -247,9 +261,9 @@ class DialPlanApi(ApiChild, base='telephony/config/premisePstn/dialPlans'):
         url = self.ep(f'{dial_plan_id}/dialPatterns')
         params = org_id and {'orgId': org_id} or None
         body = dict()
-        body['dialPatterns'] = TypeAdapter(list[PatternAndAction]).dump_python(dial_patterns, mode='json',
-                                                                               by_alias=True,
-                                                                               exclude_none=True)
+        body['dialPatterns'] = TypeAdapter(list[PatternAndAction]).dump_python(
+            dial_patterns, mode='json', by_alias=True, exclude_none=True
+        )
         self.put(url=url, params=params, json=body)
 
     def delete_all_patterns(self, dial_plan_id: str, org_id: str = None):

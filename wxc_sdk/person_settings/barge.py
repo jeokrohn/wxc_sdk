@@ -12,6 +12,7 @@ class BargeSettings(ApiModel):
     """
     Barge settings
     """
+
     #: indicates if the Barge In feature is enabled.
     enabled: bool
     #: Indicates that a stutter dial tone will be played when a person is barging in on the active call.

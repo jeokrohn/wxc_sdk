@@ -1,6 +1,7 @@
 """
 Call Queue policy settings
 """
+
 from dataclasses import dataclass
 from typing import Optional
 
@@ -12,14 +13,24 @@ from ...common import AnnAudioFile, Greeting
 from ...common.schedules import ScheduleLevel
 from ...rest import RestSession
 
-__all__ = ['CPActionType', 'CQHolidaySchedule', 'HolidayService', 'AnnouncementMode', 'NightService',
-           'StrandedCalls', 'StrandedCallsAction', 'ForcedForward', 'CQPolicyApi']
+__all__ = [
+    'CPActionType',
+    'CQHolidaySchedule',
+    'HolidayService',
+    'AnnouncementMode',
+    'NightService',
+    'StrandedCalls',
+    'StrandedCallsAction',
+    'ForcedForward',
+    'CQPolicyApi',
+]
 
 
 class CPActionType(str, Enum):
     """
     Specifies call processing action type.
     """
+
     #: The caller hears a fast-busy tone.
     busy = 'BUSY'
     #: Transfers the call to number specified in transferPhoneNumber.
@@ -30,6 +41,7 @@ class CQHolidaySchedule(ApiModel):
     """
     pre-configured holiday schedule
     """
+
     #: Name of the schedule configured for a holiday service.
     schedule_name: str
     #: Indicates whether the schedule in scheduleName is specific to the organization or location.
@@ -40,6 +52,7 @@ class HolidayService(ApiModel):
     """
     Call Queue Holiday Service details
     """
+
     #: Whether or not the call queue holiday service routing policy is enabled.
     holiday_service_enabled: bool
     #: The call processing action type.
@@ -65,6 +78,7 @@ class AnnouncementMode(str, Enum):
     """
     Specifies the type of announcements to played.
     """
+
     #: Plays announcement as per audioMessageSelection.
     normal = 'NORMAL'
     #: Plays announcement as per manualAudioMessageSelection.
@@ -75,6 +89,7 @@ class NightService(ApiModel):
     """
     Call Queue Night service details
     """
+
     #: Whether or not the call queue night service routing policy is enabled.
     night_service_enabled: bool
     #: The call processing action type.
@@ -107,6 +122,7 @@ class StrandedCallsAction(str, Enum):
     """
     Specifies call processing action type for stranded calls
     """
+
     #: Call remains in the queue.
     none = 'NONE'
     #: The caller hears a fast-busy tone.
@@ -128,6 +144,7 @@ class StrandedCalls(ApiModel):
     """
     Call Queue Holiday Service details
     """
+
     #: The call processing action type.
     action: Optional[StrandedCallsAction] = None
     #: Call gets transferred to this number when action is set to TRANSFER. This can also be an extension.
@@ -142,6 +159,7 @@ class ForcedForward(ApiModel):
     """
     Call Queue policy Forced Forward details
     """
+
     #: Whether or not the call queue forced forward routing policy setting is enabled.
     forced_forward_enabled: bool
     #: All incoming calls are forwarded to this number. This can also be an extension.
