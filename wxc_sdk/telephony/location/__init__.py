@@ -499,7 +499,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
 
         Get location emergency callback number.
 
-        * To retrieve location callback number requires a full, user or read-only administrator or location
+        To retrieve location callback number requires a full, user or read-only administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param location_id: Update location attributes for this location.
@@ -524,7 +524,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
 
         Update details for a location emergency callback number.
 
-        * Updating a location callback number requires a full administrator or location administrator auth token with a
+        Updating a location callback number requires a full administrator or location administrator auth token with a
         scope of `spark-admin:telephony_config_write`.
 
         :param location_id: Update location attributes for this location.

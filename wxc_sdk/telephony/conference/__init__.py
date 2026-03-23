@@ -71,7 +71,7 @@ class ConferenceControlsApi(ApiChild, base='telephony/conference'):
         <https://developer.webex.com/docs/api/v1/call-controls/transfer>`_
         can be used to perform an attended transfer so that the participants remain connected.
 
-        param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
             device owned by the user invoking the API.
         :type line_owner_id: str:rtype: None
         """

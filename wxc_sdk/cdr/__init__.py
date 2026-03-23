@@ -432,6 +432,7 @@ class CDR(ApiModel):
     release_time: Optional[datetime] = None
     #: Each call consists of four UUIDs known as Local Session ID, Final Local Session ID, Remote Session ID and Final
     #: Remote Session ID.
+    #:
     #: * The Session ID comprises a Universally Unique Identifier (UUID) for each user-agent participating in a call.
     #: * It can be used for end-to-end tracking of a SIP session in IP-based multimedia communication systems in
     #:   compliance with RFC 7206 and draft-ietf-insipid-session-id-15.

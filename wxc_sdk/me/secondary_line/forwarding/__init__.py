@@ -17,10 +17,8 @@ class MeSecondaryLineForwardingApi(ApiChild, base='telephony/config/people/me'):
         Three types of call forwarding are supported:
 
         + Always - forwards all incoming calls to the destination you choose.
-
         + When busy - forwards all incoming calls to the destination you chose while the phone is in use or the person
-        is busy.
-
+          is busy.
         + When no answer - forwarding only occurs when you are away or not answering your phone.
 
         In addition, the Business Continuity feature will send calls to a destination of your choice if your phone is
@@ -49,10 +47,8 @@ class MeSecondaryLineForwardingApi(ApiChild, base='telephony/config/people/me'):
         Three types of call forwarding are supported:
 
         + Always - forwards all incoming calls to the destination you choose.
-
         + When busy - forwards all incoming calls to the destination you chose while the phone is in use or the person
-        is busy.
-
+          is busy.
         + When no answer - forwarding only occurs when you are away or not answering your phone.
 
         In addition, the Business Continuity feature will send calls to a destination of your choice if your phone is

@@ -205,8 +205,9 @@ class MeSchedulesApi(ApiChild, base='telephony/config/people/me'):
         This API requires a user auth token with a scope of `spark:telephony_config_read`.
 
         :param schedule_type: Type of the schedule.
-        * `businessHours` - Business hours schedule type.
-        * `holidays` - Holidays schedule type.
+
+            * `businessHours` - Business hours schedule type.
+            * `holidays` - Holidays schedule type.
         :type schedule_type: ScheduleType
         :param schedule_id: Retrieve the schedule with the matching ID.
         :type schedule_id: str
@@ -232,8 +233,9 @@ class MeSchedulesApi(ApiChild, base='telephony/config/people/me'):
         This API requires a user auth token with a scope of `spark:telephony_config_read`.
 
         :param schedule_type: Type of the schedule.
-        * `businessHours` - Business hours schedule type.
-        * `holidays` - Holidays schedule type.
+
+            * `businessHours` - Business hours schedule type.
+            * `holidays` - Holidays schedule type.
         :type schedule_type: ScheduleType
         :param schedule_id: Update an event for the specified schedule ID.
         :type schedule_id: str

@@ -1601,7 +1601,7 @@ class AsDevicesApi(AsApiChild, base='devices'):
         :param org_id: List devices in this organization. Only admin users of another organization (such as partners)
             may use this parameter.
         :param planned_maintenance:
-        List devices with this planned maintenance.
+            List devices with this planned maintenance.
         :type planned_maintenance: MaintenanceMode
         :type org_id: str
         :return: Generator yielding :class:`Device` instances
@@ -1714,7 +1714,7 @@ class AsDevicesApi(AsApiChild, base='devices'):
         :param org_id: List devices in this organization. Only admin users of another organization (such as partners)
             may use this parameter.
         :param planned_maintenance:
-        List devices with this planned maintenance.
+            List devices with this planned maintenance.
         :type planned_maintenance: MaintenanceMode
         :type org_id: str
         :return: Generator yielding :class:`Device` instances
@@ -3077,7 +3077,7 @@ class AsMoveUsersJobsApi(AsApiChild, base='telephony/config/jobs/person/moveLoca
             * The target location must be a calling location.
 
             * Only one new extension can be moved to the target location, which is optional. An empty value will
-            remove the
+              remove the
               already configured extension. If not provided, the existing extension will be retained to the user.
 
             * Only one new phone number belonging to the target location can be assigned to the user, which is optional.
@@ -3119,277 +3119,273 @@ class AsMoveUsersJobsApi(AsApiChild, base='telephony/config/jobs/person/moveLoca
 
         List of possible Errors:
 
-            + 4003 - `User Not Found`
+            + 4003 - User Not Found
 
-            + 4007 - `User Not Found`
+            + 4007 - User Not Found
 
-            + 4152 - `Location Not Found`
+            + 4152 - Location Not Found
 
-            + 5620 - `Location Not Found`
+            + 5620 - Location Not Found
 
-            + 4202 - `The extension is not available. It is already assigned to a user : {0}`
+            + 4202 - The extension is not available. It is already assigned to a user : {0}
 
-            + 8264 - `Routing profile is different with new group: {0}`
+            + 8264 - Routing profile is different with new group: {0}
 
-            + 19600 - `User has to be within an enterprise to be moved.`
+            + 19600 - User has to be within an enterprise to be moved.
 
-            + 19601 - `User can only be moved to a different group within the same enterprise.`
+            + 19601 - User can only be moved to a different group within the same enterprise.
 
-            + 19602 - `Only regular end user can be moved. Service instance virtual user cannot be moved.`
+            + 19602 - Only regular end user can be moved. Service instance virtual user cannot be moved.
 
-            + 19603 - `New group already reaches maximum number of user limits.`
+            + 19603 - New group already reaches maximum number of user limits.
 
-            + 19604 - `The {0} number of the user is the same as the calling line ID of the group.`
+            + 19604 - The {0} number of the user is the same as the calling line ID of the group.
 
-            + 19605 - `User is assigned services not authorized to the new group: {0}.`
+            + 19605 - User is assigned services not authorized to the new group: {0}.
 
-            + 19606 - `User is in an active hoteling/flexible seating association.`
+            + 19606 - User is in an active hoteling/flexible seating association.
 
-            + 19607 - `User is pilot user of a trunk group.`
+            + 19607 - User is pilot user of a trunk group.
 
-            + 19608 - `User is using group level device profiles which is used by other users in current group.
-            Following
-              are the device profiles shared with other users: {0}.`
+            + 19608 - User is using group level device profiles which is used by other users in current group.
+              Following re the device profiles shared with other users: {0}.
 
-            + 19609 - `Following device profiles cannot be moved to the new group because there are already devices with
-              the same name defined in the new group: {0}.`
+            + 19609 - Following device profiles cannot be moved to the new group because there are already devices with
+              the same name defined in the new group: {0}.
 
-            + 19610 - `The extension of the user is used as transfer to operator number for following Auto Attendent :
-              {0}.`
+            + 19610 - The extension of the user is used as transfer to operator number for following Auto Attendent :
+              {0}.
 
-            + 19611 - `Fail to move announcement file from {0} to {1}.`
+            + 19611 - Fail to move announcement file from {0} to {1}.
 
-            + 19612 - `Fail to move device management file from {0} to {1}.`
+            + 19612 - Fail to move device management file from {0} to {1}.
 
-            + 19613 - `User is assigned service packs not authorized to the new group: {0}.`
+            + 19613 - User is assigned service packs not authorized to the new group: {0}.
 
-            + 25008 - `Missing Mandatory field name: {0}`
+            + 25008 - Missing Mandatory field name: {0}
 
-            + 25110 - `{fieldName} cannot be less than {0} or greater than {1} characters.`
+            + 25110 - {fieldName} cannot be less than {0} or greater than {1} characters.
 
-            + 25378 - `Target location is same as user's current location.`
+            + 25378 - Target location is same as user's current location.
 
-            + 25379 - `Error Occurred while Fetching User's Current Location Id.`
+            + 25379 - Error Occurred while Fetching User's Current Location Id.
 
-            + 25381 - `Error Occurred while rolling back to Old Location Call recording Settings`
+            + 25381 - Error Occurred while rolling back to Old Location Call recording Settings
 
-            + 25382 - `Error Occurred while Disabling Call Recording for user which is required Before User can be
-            Moved`
+            + 25382 - Error Occurred while Disabling Call Recording for user which is required Before User can be
+              Moved
 
-            + 25383 - `OCI Error while moving user`
+            + 25383 - OCI Error while moving user
 
-            + 25384 - `Error Occurred while checking for Possible Call Recording Impact.`
+            + 25384 - Error Occurred while checking for Possible Call Recording Impact.
 
-            + 25385 - `Error Occurred while getting Call Recording Settings`
+            + 25385 - Error Occurred while getting Call Recording Settings
 
-            + 27559 - `The groupExternalId search criteria contains groups with different calling zone.`
+            + 27559 - The groupExternalId search criteria contains groups with different calling zone.
 
-            + 27960 - `Parameter isWebexCalling, newPhoneNumber, or newExtension can only be set in Webex Calling
-              deployment mode.`
+            + 27960 - Parameter isWebexCalling, newPhoneNumber, or newExtension can only be set in Webex Calling
+              deployment mode.
 
-            + 27961 - `Parameter isWebexCalling shall be set if newPhoneNumber or newExtension is set.`
+            + 27961 - Parameter isWebexCalling shall be set if newPhoneNumber or newExtension is set.
 
-            + 27962 - `Work space cannot be moved.`
+            + 27962 - Work space cannot be moved.
 
-            + 27963 - `Virtual profile user cannot be moved.`
+            + 27963 - Virtual profile user cannot be moved.
 
-            + 27965 - `The user's phone number: {0}, is same as the current group charge number.`
+            + 27965 - The user's phone number: {0}, is same as the current group charge number.
 
-            + 27966 - `The phone number, {0}, is not available in the new group.`
+            + 27966 - The phone number, {0}, is not available in the new group.
 
-            + 27967 - `User is configured as the ECBN user for another user in the current group.`
+            + 27967 - User is configured as the ECBN user for another user in the current group.
 
-            + 27968 - `User is configured as the ECBN user for the current group.`
+            + 27968 - User is configured as the ECBN user for the current group.
 
-            + 27969 - `User is associated with DECT handset(s): {0}`
+            + 27969 - User is associated with DECT handset(s): {0}
 
-            + 27970 - `User is using a customer managed device: {0}`
+            + 27970 - User is using a customer managed device: {0}
 
-            + 27971 - `User is using an ATA device: {0}`
+            + 27971 - User is using an ATA device: {0}
 
-            + 27972 - `User is in an active hotdesking association.`
+            + 27972 - User is in an active hotdesking association.
 
-            + 27975 - `Need to unassign CLID number from group before moving the number to the new group. Phone number:
-              {0}`
+            + 27975 - Need to unassign CLID number from group before moving the number to the new group. Phone number:
+              {0}
 
-            + 27976 - `Local Gateway configuration is different with new group. Phone number: {0}`
+            + 27976 - Local Gateway configuration is different with new group. Phone number: {0}
 
-            + 1026015 - `Error occurred while moving user number to target location`
+            + 1026015 - Error occurred while moving user number to target location
 
-            + 10010000 - `Total numbers exceeded maximum limit allowed`
+            + 10010000 - Total numbers exceeded maximum limit allowed
 
-            + 10010001 - `to-location and from-location cannot be same`
+            + 10010001 - to-location and from-location cannot be same
 
-            + 10010002 - `to-location and from-location should belong to same customer`
+            + 10010002 - to-location and from-location should belong to same customer
 
-            + 10010003 - `to-location must have a carrier`
+            + 10010003 - to-location must have a carrier
 
-            + 10010004 - `from-location must have a carrier`
+            + 10010004 - from-location must have a carrier
 
-            + 10010005 - `Different Carrier move is not supported for non-Cisco PSTN carriers.`
+            + 10010005 - Different Carrier move is not supported for non-Cisco PSTN carriers.
 
-            + 10010006 - `Number move not supported for WEBEX_DIRECT carriers.`
+            + 10010006 - Number move not supported for WEBEX_DIRECT carriers.
 
-            + 10010007 - `Numbers out of sync, missing on CPAPI`
+            + 10010007 - Numbers out of sync, missing on CPAPI
 
-            + 10010008 - `from-location not found or pstn connection missing in CPAPI`
+            + 10010008 - from-location not found or pstn connection missing in CPAPI
 
-            + 10010010 - `from-location is in transition`
+            + 10010010 - from-location is in transition
 
-            + 10010009 - `to-location not found or pstn connection missing in CPAPI`
+            + 10010009 - to-location not found or pstn connection missing in CPAPI
 
-            + 10010011 - `to-location is in transition`
+            + 10010011 - to-location is in transition
 
-            + 10010012 - `Numbers don't have a carrier Id`
+            + 10010012 - Numbers don't have a carrier Id
 
-            + 10010013 - `Location less numbers don't have a carrier Id`
+            + 10010013 - Location less numbers don't have a carrier Id
 
-            + 10010014 - `Different Carrier move is not supported for numbers with different country or region.`
+            + 10010014 - Different Carrier move is not supported for numbers with different country or region.
 
-            + 10010015 - `Numbers contain mobile and non-mobile types.`
+            + 10010015 - Numbers contain mobile and non-mobile types.
 
-            + 10010016 - `To/From location carriers must be same for mobile numbers.`
+            + 10010016 - To/From location carriers must be same for mobile numbers.
 
-            + 10010017 - `Move request for location less number not supported`
+            + 10010017 - Move request for location less number not supported
 
-            + 10010200 - `Move request for more than one block number is not supported`
+            + 10010200 - Move request for more than one block number is not supported
 
-            + 10010201 - `Cannot move block number as few numbers not from the block starting %s to %s`
+            + 10010201 - Cannot move block number as few numbers not from the block starting %s to %s
 
-            + 10010202 - `Cannot move block number as few numbers failed VERIFICATION from the block %s to %s`
+            + 10010202 - Cannot move block number as few numbers failed VERIFICATION from the block %s to %s
 
-            + 10010203 - `Cannot move block number as few numbers missing from the block %s to %s`
+            + 10010203 - Cannot move block number as few numbers missing from the block %s to %s
 
-            + 10010204 - `Cannot move number as it is NOT a part of the block %s to %s`
+            + 10010204 - Cannot move number as it is NOT a part of the block %s to %s
 
-            + 10010205 - `Move request for Cisco PSTN block order not supported.`
+            + 10010205 - Move request for Cisco PSTN block order not supported.
 
-            + 10010299 - `Move order couldn't be created as no valid number to move`
+            + 10010299 - Move order couldn't be created as no valid number to move
 
-            + 10030000 - `Number not found`
+            + 10030000 - Number not found
 
-            + 10030001 - `Number does not belong to from-location`
+            + 10030001 - Number does not belong to from-location
 
-            + 10030002 - `Number is not present in CPAPI`
+            + 10030002 - Number is not present in CPAPI
 
-            + 10030003 - `Number assigned to an user or device`
+            + 10030003 - Number assigned to an user or device
 
-            + 10030004 - `Number not in Active status`
+            + 10030004 - Number not in Active status
 
-            + 10030005 - `Number is set as main number of the location`
+            + 10030005 - Number is set as main number of the location
 
-            + 10030006 - `Number has pending order associated with it`
+            + 10030006 - Number has pending order associated with it
 
-            + 10030007 - `Number belongs to a location but a from-location was not set`
+            + 10030007 - Number belongs to a location but a from-location was not set
 
-            + 10030008 - `Numbers from multiple carrier ids are not supported`
+            + 10030008 - Numbers from multiple carrier ids are not supported
 
-            + 10030009 - `Location less number belongs to a location. from-location value is set to null or no
-            location id`
+            + 10030009 - Location less number belongs to a location. from-location value is set to null or no
+              location id
 
-            + 10030010 - `One or more numbers are not portable.`
+            + 10030010 - One or more numbers are not portable.
 
-            + 10030011 - `Mobile number carrier was not set`
+            + 10030011 - Mobile number carrier was not set
 
-            + 10030012 - `Number must be assigned for assigned move`
+            + 10030012 - Number must be assigned for assigned move
 
-            + 10050000 - `Failed to update customer reference for phone numbers on carrier`
+            + 10050000 - Failed to update customer reference for phone numbers on carrier
 
-            + 10050001 - `Failed to update customer reference`
+            + 10050001 - Failed to update customer reference
 
-            + 10050002 - `Order is not of operation type MOVE`
+            + 10050002 - Order is not of operation type MOVE
 
-            + 10050003 - `CPAPI delete call failed`
+            + 10050003 - CPAPI delete call failed
 
-            + 10050004 - `Not found in database`
+            + 10050004 - Not found in database
 
-            + 10050005 - `Error sending notification to WxcBillingService`
+            + 10050005 - Error sending notification to WxcBillingService
 
-            + 10050006 - `CPAPI provision number as active call failed with status %s ,reason %s`
+            + 10050006 - CPAPI provision number as active call failed with status %s ,reason %s
 
-            + 10050007 - `Failed to update E911 Service`
+            + 10050007 - Failed to update E911 Service
 
-            + 10050008 - `Target location does not have Inbound Toll Free license`
+            + 10050008 - Target location does not have Inbound Toll Free license
 
-            + 10050009 - `Source location or Target location subscription found cancelled or suspended`
+            + 10050009 - Source location or Target location subscription found cancelled or suspended
 
-            + 10050010 - `Moving On Premises or Non Integrated CCP numbers from one location to another is not
-            supported.`
+            + 10050010 - Moving On Premises or Non Integrated CCP numbers from one location to another is not
+              supported.
 
-            + 10099999 - `{Error Code} - {Error Message}`
+            + 10099999 - {Error Code} - {Error Message}
 
         List of possible Impacts:
 
-            + 19701 - `The identity/device profile the user is using is moved to the new group: {0}.`
+            + 19701 - The identity/device profile the user is using is moved to the new group: {0}.
 
-            + 19702 - `The user level customized incoming digit string setting is removed from the user. User is set
-            to use
-              the new group setting.`
+            + 19702 - The user level customized incoming digit string setting is removed from the user. User is set
+              to use the new group setting.
 
-            + 19703 - `The user level customized outgoing digit plan setting is removed from the user. User is set to
-            use
-              the new group setting.`
+            + 19703 - The user level customized outgoing digit plan setting is removed from the user. User is set to
+              use the new group setting.
 
-            + 19704 - `The user level customized enhanced outgoing calling plan setting is removed from the user.
-            User is
-              set to use the new group setting.`
+            + 19704 - The user level customized enhanced outgoing calling plan setting is removed from the user.
+              User is set to use the new group setting.
 
-            + 19705 - `User is removed from following group services: {0}.`
+            + 19705 - User is removed from following group services: {0}.
 
-            + 19706 - `The current group schedule used in any criteria is removed from the service settings.`
+            + 19706 - The current group schedule used in any criteria is removed from the service settings.
 
-            + 19707 - `User is removed from the department of the old group.`
+            + 19707 - User is removed from the department of the old group.
 
-            + 19708 - `User is changed to use the default communication barring profile of the new group.`
+            + 19708 - User is changed to use the default communication barring profile of the new group.
 
-            + 19709 - `The communication barring profile of the user is assigned to the new group: {0}.`
+            + 19709 - The communication barring profile of the user is assigned to the new group: {0}.
 
-            + 19710 - `The charge number for the user is removed.`
+            + 19710 - The charge number for the user is removed.
 
-            + 19711 - `The disabled FACs for the user are removed because they are not available in the new group.`
+            + 19711 - The disabled FACs for the user are removed because they are not available in the new group.
 
-            + 19712 - `User is removed from trunk group.`
+            + 19712 - User is removed from trunk group.
 
-            + 19713 - `The extension of the user is reset to empty due to either the length is out of bounds of the new
-              group, or the extension is already taken in new group.`
+            + 19713 - The extension of the user is reset to empty due to either the length is out of bounds of the new
+              group, or the extension is already taken in new group.
 
-            + 19714 - `The extension of the following alternate number is reset to empty due to either the length out of
-              bounds of the new group or the extension is already taken in new group: {0}.`
+            + 19714 - The extension of the following alternate number is reset to empty due to either the length out of
+              bounds of the new group or the extension is already taken in new group: {0}.
 
-            + 19715 - `The collaborate room using current group default collaborate bridge is moved to the default
-              collaborate bridge of the new group.`
+            + 19715 - The collaborate room using current group default collaborate bridge is moved to the default
+              collaborate bridge of the new group.
 
-            + 19716 - `Previously stored voice messages of the user are no longer available. The new voice message
-              will be stored on the mail server of the new group.`
+            + 19716 - Previously stored voice messages of the user are no longer available. The new voice message
+              will be stored on the mail server of the new group.
 
-            + 19717 - `The primary number, alternate numbers or fax messaging number of the user are assigned to the new
-              group: {0}.`
+            + 19717 - The primary number, alternate numbers or fax messaging number of the user are assigned to the new
+              group: {0}.
 
-            + 19718 - `Following domains are assigned to the new group: {0}.`
+            + 19718 - Following domains are assigned to the new group: {0}.
 
-            + 19719 - `The NCOS of the user is assigned to the new group: {0}.`
+            + 19719 - The NCOS of the user is assigned to the new group: {0}.
 
-            + 19720 - `The office zone of the user is assigned to the new group: {0}.`
+            + 19720 - The office zone of the user is assigned to the new group: {0}.
 
-            + 19721 - `The announcement media files are relocated to the new group directory.`
+            + 19721 - The announcement media files are relocated to the new group directory.
 
-            + 19722 - `User CLID number is set to use the new group CLID number: {0}.`
+            + 19722 - User CLID number is set to use the new group CLID number: {0}.
 
-            + 19723 - `New group CLID number is not configured.`
+            + 19723 - New group CLID number is not configured.
 
-            + 19724 - `The group level announcement file(s) are removed from the user's music on hold settings.`
+            + 19724 - The group level announcement file(s) are removed from the user's music on hold settings.
 
-            + 25388 - `Target Location Does not Have Vendor Configured. Call Recording for user will be disabled`
+            + 25388 - Target Location Does not Have Vendor Configured. Call Recording for user will be disabled
 
-            + 25389 - `Call Recording Vendor for user will be changed from:{0} to:{1}`
+            + 25389 - Call Recording Vendor for user will be changed from:{0} to:{1}
 
-            + 25390 - `Dub point of user is moved to new external group`
+            + 25390 - Dub point of user is moved to new external group
 
-            + 25391 - `Error Occurred while moving Call recording Settings to new location`
+            + 25391 - Error Occurred while moving Call recording Settings to new location
 
-            + 25392 - `Error Occurred while checking for Possible Call Recording Impact.`
+            + 25392 - Error Occurred while checking for Possible Call Recording Impact.
 
-            + 25393 - `Sending Billing Notification Failed`
+            + 25393 - Sending Billing Notification Failed
 
         This API requires a full administrator auth token with a scope
         of `spark-admin:telephony_config_write`, `spark-admin:people_write` and `identity:groups_rw`.
@@ -4486,7 +4482,7 @@ class AsLocationsApi(AsApiChild, base='locations'):
         * Specify the location ID in the `locationId` parameter in the URI.
 
         * Deleting a location in your organization requires a full administrator auth token with a scope of
-        `spark-admin:locations_write`.
+          `spark-admin:locations_write`.
 
         * NOTE: Disabling Webex Calling for a Webex Calling enabled location is required prior to deleting a location.
 
@@ -5708,10 +5704,8 @@ class AsMeForwardingApi(AsApiChild, base='telephony/config/people/me'):
         Three types of call forwarding are supported:
 
         + Always - forwards all incoming calls to the destination you choose.
-
         + When busy - forwards all incoming calls to the destination you chose while the phone is in use or the person
-        is busy.
-
+          is busy.
         + When no answer - forwarding only occurs when you are away or not answering your phone.
 
         In addition, the Business Continuity feature will send calls to a destination of your choice if your phone is
@@ -5736,10 +5730,8 @@ class AsMeForwardingApi(AsApiChild, base='telephony/config/people/me'):
         Three types of call forwarding are supported:
 
         + Always - forwards all incoming calls to the destination you choose.
-
         + When busy - forwards all incoming calls to the destination you chose while the phone is in use or the person
-        is busy.
-
+          is busy.
         + When no answer - forwarding only occurs when you are away or not answering your phone.
 
         In addition, the Business Continuity feature will send calls to a destination of your choice if your phone is
@@ -6496,8 +6488,9 @@ class AsMeSchedulesApi(AsApiChild, base='telephony/config/people/me'):
         This API requires a user auth token with a scope of `spark:telephony_config_read`.
 
         :param schedule_type: Type of the schedule.
-        * `businessHours` - Business hours schedule type.
-        * `holidays` - Holidays schedule type.
+
+            * `businessHours` - Business hours schedule type.
+            * `holidays` - Holidays schedule type.
         :type schedule_type: ScheduleType
         :param schedule_id: Retrieve the schedule with the matching ID.
         :type schedule_id: str
@@ -6523,8 +6516,9 @@ class AsMeSchedulesApi(AsApiChild, base='telephony/config/people/me'):
         This API requires a user auth token with a scope of `spark:telephony_config_read`.
 
         :param schedule_type: Type of the schedule.
-        * `businessHours` - Business hours schedule type.
-        * `holidays` - Holidays schedule type.
+
+            * `businessHours` - Business hours schedule type.
+            * `holidays` - Holidays schedule type.
         :type schedule_type: ScheduleType
         :param schedule_id: Update an event for the specified schedule ID.
         :type schedule_id: str
@@ -6754,7 +6748,7 @@ class AsMeSelectiveForwardApi(AsApiChild, base='telephony/config/people/me'):
         This API requires a user auth token with a scope of `spark:telephony_config_read`.
 
         :param criteria_id: The `criteria_id` parameter specifies the unique identifier for the selective call
-        forwarding criteria.
+          forwarding criteria.
         :type criteria_id: str
         :rtype: :class:`MeSelectiveForwardCriteria`
         """
@@ -11783,8 +11777,7 @@ class AsOrganizationContactsApi(AsApiChild, base='contacts/organizations'):
         :type keyword: str
         :param source: List contacts with source.
         :type source: str
-        :param limit: Limit the maximum number of contact in the response.
-        + Default: 100
+        :param limit: Limit the maximum number of contact in the response. Default: 100
         :type limit: int
         :param group_ids: Filter contacts based on groups.
         :type group_ids: list[str]
@@ -11823,8 +11816,7 @@ class AsOrganizationContactsApi(AsApiChild, base='contacts/organizations'):
         :type keyword: str
         :param source: List contacts with source.
         :type source: str
-        :param limit: Limit the maximum number of contact in the response.
-        + Default: 100
+        :param limit: Limit the maximum number of contact in the response. Default: 100
         :type limit: int
         :param group_ids: Filter contacts based on groups.
         :type group_ids: list[str]
@@ -24198,7 +24190,7 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
             call is diverted to the user's own voicemail. If a destination is specified, the call is diverted to the
             specified user's voicemail.
         :type to_voicemail: bool
-        line_owner_id: str = None
+        :param line_owner_id: str = None
         :rtype: None
         """
         body = dict()
@@ -24240,8 +24232,7 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
         `missed`, `received`) are returned.
 
         :param history_type: The type of call history records to retrieve. If not specified, then all call history
-        records are
-            retrieved.
+            records are retrieved.
         :type history_type: CallHistoryRecordTypeEnum
         :rtype: list[CallHistoryRecord]
         """
@@ -24545,10 +24536,10 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
 
         :param call_id: The call identifier of the call to start recording.
         :type call_id: str
-        ::param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
             device owned by the user invoking the API.
         :type line_owner_id: str
-        rtype: None
+        :rtype: None
         """
         body = dict()
         if call_id is not None:
@@ -24763,7 +24754,7 @@ class AsConferenceControlsApi(AsApiChild, base='telephony/conference'):
         <https://developer.webex.com/docs/api/v1/call-controls/transfer>`_
         can be used to perform an attended transfer so that the participants remain connected.
 
-        param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
             device owned by the user invoking the API.
         :type line_owner_id: str:rtype: None
         """
@@ -32155,8 +32146,8 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         :param extension: Search (Contains) based on extension.
         :type extension: str
         :param usage_type: Search for members eligible to become the owner of the device, or share line on the device.
-        * `DEVICE_OWNER` - Search for members eligible to become the owner of the device.
-        * `SHARED_LINE` - Search for members eligible to share line on the device.
+            * `DEVICE_OWNER` - Search for members eligible to become the owner of the device.
+            * `SHARED_LINE` - Search for members eligible to share line on the device.
         :type usage_type: UsageType
         :param org_id: Retrieves the count of available members on the device in this organization.
         :type org_id: str
@@ -32306,8 +32297,9 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         :param extension: Search (Contains) based on extension.
         :type extension: str
         :param usage_type: Search for members eligible to become the owner of the device, or share line on the device.
-        * `DEVICE_OWNER` - Search for members eligible to become the owner of the device.
-        * `SHARED_LINE` - Search for members eligible to share line on the device.
+
+            * `DEVICE_OWNER` - Search for members eligible to become the owner of the device.
+            * `SHARED_LINE` - Search for members eligible to share line on the device.
         :type usage_type: UsageType
         :param exclude_virtual_line: If true, filters out virtual lines from the available members list.
         :type exclude_virtual_line: bool
@@ -33689,7 +33681,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
 
         Get location emergency callback number.
 
-        * To retrieve location callback number requires a full, user or read-only administrator or location
+        To retrieve location callback number requires a full, user or read-only administrator or location
         administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param location_id: Update location attributes for this location.
@@ -33714,7 +33706,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
 
         Update details for a location emergency callback number.
 
-        * Updating a location callback number requires a full administrator or location administrator auth token with a
+        Updating a location callback number requires a full administrator or location administrator auth token with a
         scope of `spark-admin:telephony_config_write`.
 
         :param location_id: Update location attributes for this location.
@@ -35170,9 +35162,10 @@ class AsVirtualExtensionsApi(AsApiChild, base='telephony/config'):
         :param mode: Mode of the virtual extension. It can be either `STANDARD` or `ENHANCED`.
 
         + `STANDARD` -  Standard Virtual extension mode in which virtual extensions must be associated with a valid
-        E.164 number, but this requires no enhanced signaling support from the PSTN provider.
+          E.164 number, but this requires no enhanced signaling support from the PSTN provider.
         + `ENHANCED` - Enhanced signaling mode: only a few PSTN providers support this special network signaling
-        extension.
+          extension.
+
         :type mode: VirtualExtensionMode
         :param org_id: Unique identifier for the organization.
         :type org_id: str
@@ -38781,7 +38774,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         calendaring. The `orgId` parameter can only be used by admin users of another organization (such as partners).
 
         * Information for Webex Calling fields may be found here: `locations
-        <https://developer.webex.com/docs/api/v1/locations/list-locations>`_, `available numbers
+          <https://developer.webex.com/docs/api/v1/locations/list-locations>`_, `available numbers
 
         * The `locationId` and `supportedDevices` fields cannot be changed once configured.
 
@@ -38789,11 +38782,11 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
           or `extension` or both is required. Furthermore, it is possible to set the `licenses` field with a list of
           Webex Calling license IDs, if desired. If multiple license IDs are provided, the oldest suitable one will be
           applied. If no licenses are supplied, the oldest suitable one from the active subscriptions will be
-          automaticaly applied.
+          automatically applied.
 
         * When creating a hot desk only workspace, `phoneNumber` and `extension` fields are not applicable.
           Furthermore, `deviceHostedMeetingsEnabled`, and `calendar` services are not applicable. If any of these fields
-           are provided the API will return an error. The `calling` type is `webexCalling`.
+          are provided the API will return an error. The `calling` type is `webexCalling`.
 
         :param settings: settings for new Workspace
         :type settings: :class:`Workspace`
@@ -38846,7 +38839,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         `calendar` and `calling` fields do not change when omitted from the update request.
 
         * Information for Webex Calling fields may be found here: `locations
-        <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ and `available numbers
+          <https://developer.webex.com/docs/api/v1/locations/list-locations>`_ and `available numbers
 
         * Updating the `calling` parameter is only supported if the existing `calling` type is `freeCalling`, `none`,
           `thirdPartySipCalling` or `webexCalling`.

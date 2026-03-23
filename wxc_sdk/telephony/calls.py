@@ -212,8 +212,7 @@ class TelephonyCall(ApiModel):
     recording_state: Optional[RecordingState] = None
     #: The date and time the call was disconnected
     disconnected: Optional[datetime.datetime] = None
-    #: Indicates whether the call is capable of using the `mute
-    #: <https://developer.webex.com/docs/api/v1/call-controls/mute>`_ and `unmute
+    #: Indicates whether the call is capable of using the mute and unmute calls
     mute_capable: Optional[bool] = None
     #: Indicates whether the call is currently muted.
     muted: Optional[bool] = None
@@ -413,7 +412,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
             call is diverted to the user's own voicemail. If a destination is specified, the call is diverted to the
             specified user's voicemail.
         :type to_voicemail: bool
-        line_owner_id: str = None
+        :param line_owner_id: str = None
         :rtype: None
         """
         body = dict()
@@ -455,8 +454,7 @@ class CallsApi(ApiChild, base='telephony/calls'):
         `missed`, `received`) are returned.
 
         :param history_type: The type of call history records to retrieve. If not specified, then all call history
-        records are
-            retrieved.
+            records are retrieved.
         :type history_type: CallHistoryRecordTypeEnum
         :rtype: list[CallHistoryRecord]
         """
@@ -760,10 +758,10 @@ class CallsApi(ApiChild, base='telephony/calls'):
 
         :param call_id: The call identifier of the call to start recording.
         :type call_id: str
-        ::param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
+        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
             device owned by the user invoking the API.
         :type line_owner_id: str
-        rtype: None
+        :rtype: None
         """
         body = dict()
         if call_id is not None:

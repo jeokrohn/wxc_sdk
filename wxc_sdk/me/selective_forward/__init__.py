@@ -108,7 +108,7 @@ class MeSelectiveForwardApi(ApiChild, base='telephony/config/people/me'):
         This API requires a user auth token with a scope of `spark:telephony_config_read`.
 
         :param criteria_id: The `criteria_id` parameter specifies the unique identifier for the selective call
-        forwarding criteria.
+          forwarding criteria.
         :type criteria_id: str
         :rtype: :class:`MeSelectiveForwardCriteria`
         """

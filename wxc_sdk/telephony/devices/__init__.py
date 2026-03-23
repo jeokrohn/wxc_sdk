@@ -818,8 +818,8 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         :param extension: Search (Contains) based on extension.
         :type extension: str
         :param usage_type: Search for members eligible to become the owner of the device, or share line on the device.
-        * `DEVICE_OWNER` - Search for members eligible to become the owner of the device.
-        * `SHARED_LINE` - Search for members eligible to share line on the device.
+            * `DEVICE_OWNER` - Search for members eligible to become the owner of the device.
+            * `SHARED_LINE` - Search for members eligible to share line on the device.
         :type usage_type: UsageType
         :param org_id: Retrieves the count of available members on the device in this organization.
         :type org_id: str
@@ -969,8 +969,9 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         :param extension: Search (Contains) based on extension.
         :type extension: str
         :param usage_type: Search for members eligible to become the owner of the device, or share line on the device.
-        * `DEVICE_OWNER` - Search for members eligible to become the owner of the device.
-        * `SHARED_LINE` - Search for members eligible to share line on the device.
+
+            * `DEVICE_OWNER` - Search for members eligible to become the owner of the device.
+            * `SHARED_LINE` - Search for members eligible to share line on the device.
         :type usage_type: UsageType
         :param exclude_virtual_line: If true, filters out virtual lines from the available members list.
         :type exclude_virtual_line: bool

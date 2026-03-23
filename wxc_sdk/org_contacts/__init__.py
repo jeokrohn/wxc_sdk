@@ -317,8 +317,7 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations'):
         :type keyword: str
         :param source: List contacts with source.
         :type source: str
-        :param limit: Limit the maximum number of contact in the response.
-        + Default: 100
+        :param limit: Limit the maximum number of contact in the response. Default: 100
         :type limit: int
         :param group_ids: Filter contacts based on groups.
         :type group_ids: list[str]

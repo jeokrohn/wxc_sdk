@@ -251,7 +251,7 @@ class DevicesApi(ApiChild, base='devices'):
         :param org_id: List devices in this organization. Only admin users of another organization (such as partners)
             may use this parameter.
         :param planned_maintenance:
-        List devices with this planned maintenance.
+            List devices with this planned maintenance.
         :type planned_maintenance: MaintenanceMode
         :type org_id: str
         :return: Generator yielding :class:`Device` instances

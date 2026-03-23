@@ -63,15 +63,16 @@ class FeatureDetail(ApiModel):
     current_operating_mode_id: Optional[str] = None
     #: The current operating mode's end time in 12-hour format showing hour and minute only (no date information). This
     #: field's presence and meaning depends on the operational state:
-    #:  * Present during normal operation with the time at which the next mode change will occur.
-    #:  * Not present for Manual Switch Back exceptions.
-    #:  * For Automatic Switch Back (Early Start) exceptions it is when the exception ends and the feature automatically
-    #:    reverts to normal operation which is the mode's configured start time.
-    #:  * For Automatic Switch Back (Extension) exceptions it is when the exception ends and the feature automatically
-    #:    reverts to normal operation which is the mode's configured end time when the exception started plus the
-    #:    extension time.
-    #:  * For Automatic Switch Back (Standard) exceptions it is when the exception ends and the feature automatically
-    #:    reverts to normal operation which is the mode's configured end time.
+    #:
+    #: * Present during normal operation with the time at which the next mode change will occur.
+    #: * Not present for Manual Switch Back exceptions.
+    #: * For Automatic Switch Back (Early Start) exceptions it is when the exception ends and the feature automatically
+    #:   reverts to normal operation which is the mode's configured start time.
+    #: * For Automatic Switch Back (Extension) exceptions it is when the exception ends and the feature automatically
+    #:   reverts to normal operation which is the mode's configured end time when the exception started plus the
+    #:   extension time.
+    #: * For Automatic Switch Back (Standard) exceptions it is when the exception ends and the feature automatically
+    #:   reverts to normal operation which is the mode's configured end time.
     current_operating_mode_end_time: Optional[str] = None
     #: Forward destination for current operating mode
     current_operating_mode_forward_destination: Optional[str] = None

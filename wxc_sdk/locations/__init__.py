@@ -296,7 +296,7 @@ class LocationsApi(ApiChild, base='locations'):
         * Specify the location ID in the `locationId` parameter in the URI.
 
         * Deleting a location in your organization requires a full administrator auth token with a scope of
-        `spark-admin:locations_write`.
+          `spark-admin:locations_write`.
 
         * NOTE: Disabling Webex Calling for a Webex Calling enabled location is required prior to deleting a location.
 

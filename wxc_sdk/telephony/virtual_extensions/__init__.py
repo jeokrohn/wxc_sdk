@@ -641,9 +641,10 @@ class VirtualExtensionsApi(ApiChild, base='telephony/config'):
         :param mode: Mode of the virtual extension. It can be either `STANDARD` or `ENHANCED`.
 
         + `STANDARD` -  Standard Virtual extension mode in which virtual extensions must be associated with a valid
-        E.164 number, but this requires no enhanced signaling support from the PSTN provider.
+          E.164 number, but this requires no enhanced signaling support from the PSTN provider.
         + `ENHANCED` - Enhanced signaling mode: only a few PSTN providers support this special network signaling
-        extension.
+          extension.
+
         :type mode: VirtualExtensionMode
         :param org_id: Unique identifier for the organization.
         :type org_id: str
