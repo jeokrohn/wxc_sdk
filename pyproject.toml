@@ -124,7 +124,6 @@ exclude = [
     "developer.webex.com/generated",
     "apib/tests",
     "open_api/generated",
-    "wxc_sdk/as_api.py"
 ]
 
 [tool.ruff.format]

@@ -7,21 +7,27 @@
 # Default target builds everything
 all: clean types methref async docs package
 
+# Find all .py files in subdirectories of wxc_sdk (excludes wxc_sdk itself)
+WXC_SDK_PY_FILES := $(shell find wxc_sdk -mindepth 2 -name '*.py')
+
+wxc_sdk/all_types.py: $(WXC_SDK_PY_FILES)
+	@echo "==> Creating types.py"
+	python script/all_types.py
+types: wxc_sdk/all_types.py
+
+wxc_sdk/as_api.py: wxc_sdk/all_types.py
+	@echo "==> Creating as_api.py"
+	script/async_gen.py
+async: wxc_sdk/as_api.py
+
+docs/user/method_ref.rst: $(WXC_SDK_PY_FILES)
+	@echo "==> Creating method_ref.rst"
+	script/method_ref.py
+methref: docs/user/method_ref.rst
+
 clean:
 	@echo "==> Cleaning previous build artifacts"
 	script/clean
-
-types:
-	@echo "==> Creating types.py"
-	script/all_types.py
-
-methref:
-	@echo "==> Creating method_ref.rst"
-	script/method_ref.py
-
-async:
-	@echo "==> Creating as_api.py"
-	script/async_gen.py
 
 rst:
 	@echo "==> Building RST files"
