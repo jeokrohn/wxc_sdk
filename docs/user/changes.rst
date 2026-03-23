@@ -3,7 +3,7 @@ Release history
 
 1.31.1
 ------
-fix: NameError: name 'RedSkyAddress' is not defined
+- fix: NameError: name 'RedSkyAddress' is not defined
 
 1.31.0
 ------
