@@ -2,6 +2,8 @@
 API for /me/endpoints
 """
 
+from typing import Optional
+
 from pydantic import TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
@@ -40,7 +42,7 @@ class MeSecondaryLineEndpointsApi(ApiChild, base='telephony/config/people/me'):
         r = TypeAdapter(list[MeEndpoint]).validate_python(data['endpoints'])
         return r
 
-    def get_preferred_answer_endpoint(self, line_owner_id: str) -> MeEndpoint:
+    def get_preferred_answer_endpoint(self, line_owner_id: str) -> Optional[MeEndpoint]:
         """
         Get My Secondary Line Owner's Preferred Answer Endpoint
 
@@ -67,7 +69,7 @@ class MeSecondaryLineEndpointsApi(ApiChild, base='telephony/config/people/me'):
         r = MeEndpoint.model_validate(data)
         return r
 
-    def modify_preferred_answer_endpoint(self, line_owner_id: str, id: str):
+    def modify_preferred_answer_endpoint(self, line_owner_id: str, id: str) -> None:
         """
         Modify My Secondary Line Owner's Preferred Answer Endpoint
 
@@ -86,7 +88,6 @@ class MeSecondaryLineEndpointsApi(ApiChild, base='telephony/config/people/me'):
         :type line_owner_id: str
         :param id: Person’s preferred answer endpoint.
         :type id: str
-        :type org_id: str
         :rtype: None
         """
         body = dict()

@@ -1,6 +1,6 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import Field, TypeAdapter
 
@@ -44,7 +44,7 @@ SCHEMAS = [
 
 class PatchUserOperationOp(str, Enum):
     add = 'add'
-    replace = 'replace'
+    replace = 'replace'  # type: ignore[assignment]
     remove = 'remove'
 
 
@@ -122,7 +122,7 @@ class WebexUser(ApiModel):
     # TODO: undocumented
     train_site_names: Optional[list[str]] = None
     # TODO: undocumented
-    managed_sites: Optional[list[dict]] = None
+    managed_sites: Optional[list[dict[Any, Any]]] = None
     # TODO: undocumented
     teams_cluster_id: Optional[str] = None
     # TODO: undocumented
@@ -329,10 +329,10 @@ class ScimUser(ApiModel):
 
     # TODO: undocumented
     meta: Optional[ScimMeta] = None
-    entitlements: Optional[list[dict]] = None
-    roles: Optional[list[dict]] = None
+    entitlements: Optional[list[dict[Any, Any]]] = None
+    roles: Optional[list[dict[Any, Any]]] = None
 
-    def create_update(self) -> dict:
+    def create_update(self) -> dict[str, Any]:
         """
 
         :meta private:
@@ -580,7 +580,7 @@ class SCIM2UsersApi(ScimApiChild, base='identity/scim'):
         :type group_usage_types: str
         :rtype: :class:`SearchUserResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if filter is not None:
             params['filter'] = filter
         if attributes is not None:
@@ -641,7 +641,7 @@ class SCIM2UsersApi(ScimApiChild, base='identity/scim'):
                              excluded_attributes: str = None,
                              sort_by: str = None, sort_order: str = None, count: int = None, return_groups: str = None,
                              include_group_details: str = None,
-                             group_usage_types: str = None) -> AsyncGenerator[ScimUser, None, None]:
+                             group_usage_types: str = None) -> AsyncGenerator[ScimUser, None]:
         params = {k: v for k, v in locals().items()
                   if k not in {'self', 'count'} and v is not None}
         start_index = None
@@ -669,11 +669,11 @@ class SCIM2UsersApi(ScimApiChild, base='identity/scim'):
         start_index = None
         while True:
             paginated_result = self.search(**params, start_index=start_index, count=count)
-            yield from paginated_result.resources
+            yield from paginated_result.resources  # type: ignore[misc]
             # prepare getting the next page
             count = paginated_result.items_per_page
-            start_index = paginated_result.start_index + paginated_result.items_per_page
-            if start_index > paginated_result.total_results:
+            start_index = paginated_result.start_index + paginated_result.items_per_page  # type: ignore[operator]
+            if start_index > paginated_result.total_results:  # type: ignore[operator]
                 break
         return
 
@@ -728,7 +728,12 @@ class SCIM2UsersApi(ScimApiChild, base='identity/scim'):
         r = ScimUser.model_validate(data)
         return r
 
-    def patch(self, org_id: str, user_id: str, operations: list[PatchUserOperation]) -> ScimUser:
+    def patch(  # type: ignore[override]
+        self,
+        org_id: str,
+        user_id: str,
+        operations: list[PatchUserOperation],
+    ) -> ScimUser:
         """
         Update a user with PATCH
 
@@ -843,7 +848,7 @@ class SCIM2UsersApi(ScimApiChild, base='identity/scim'):
         r = ScimUser.model_validate(data)
         return r
 
-    def delete(self, org_id: str, user_id: str):
+    def delete(self, org_id: str, user_id: str) -> None:  # type: ignore[override]
         """
         Delete a user
 

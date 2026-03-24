@@ -1,6 +1,6 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import Field, TypeAdapter
 
@@ -114,7 +114,7 @@ class ScimGroup(ApiModel):
         alias='urn:scim:schemas:extension:cisco:webexidentity:2.0:Group', default=None
     )
 
-    def create_update(self) -> dict:
+    def create_update(self) -> dict[str, Any]:
         """
 
         :meta private:
@@ -319,7 +319,7 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
         :type member_type: str
         :rtype: :class:`SearchGroupResponse`
         """
-        params = {}
+        params: dict[str, Any] = {}
         if filter is not None:
             params['filter'] = filter
         if excluded_attributes is not None:
@@ -376,7 +376,7 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
                              attributes: str= None,
                              count: int = None, sort_by: str = None, sort_order: str = None,
                              include_members: bool = None, member_type: str = None) -> AsyncGenerator[ScimGroup,
-                             None, None]:
+                             None]:
         params = {k: v for k, v in locals().items()
                   if k not in {'self', 'count'} and v is not None}
         start_index = None
@@ -402,11 +402,11 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
         start_index = None
         while True:
             paginated_result = self.search(**params, start_index=start_index, count=count)
-            yield from paginated_result.resources
+            yield from paginated_result.resources  # type: ignore[misc]
             # prepare getting the next page
             count = paginated_result.items_per_page
-            start_index = paginated_result.start_index + paginated_result.items_per_page
-            if start_index > paginated_result.total_results:
+            start_index = paginated_result.start_index + paginated_result.items_per_page  # type: ignore[operator]
+            if start_index > paginated_result.total_results:  # type: ignore[operator]
                 break
         return
 
@@ -456,7 +456,7 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
         :type member_type: str
         :rtype: :class:`GroupMemberResponse`
         """
-        params = {}
+        params: dict[str, Any] = {}
         if start_index is not None:
             params['startIndex'] = start_index
         if count is not None:
@@ -485,7 +485,7 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
         """
         """async
     async def members_all_gen(self, org_id: str, group_id: str, start_index: int = None, count: int = None,
-                              member_type: str = None) -> AsyncGenerator[ScimGroupMember, None, None]:
+                              member_type: str = None) -> AsyncGenerator[ScimGroupMember, None]:
         params = {k: v for k, v in locals().items()
                   if k not in {'self', 'count'} and v is not None}
         start_index = None
@@ -511,11 +511,11 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
         start_index = None
         while True:
             paginated_result = self.members(**params, start_index=start_index, count=count)
-            yield from paginated_result.members
+            yield from paginated_result.members  # type: ignore[misc]
             # prepare getting the next page
             count = paginated_result.items_per_page
-            start_index = paginated_result.start_index + paginated_result.items_per_page
-            if start_index > paginated_result.member_size:
+            start_index = paginated_result.start_index + paginated_result.items_per_page  # type: ignore[operator]
+            if start_index > paginated_result.member_size:  # type: ignore[operator]
                 break
         return
 
@@ -566,7 +566,13 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
         r = ScimGroup.model_validate(data)
         return r
 
-    def patch(self, org_id: str, group_id: str, schemas: list[str], operations: list[PatchUserOperation]) -> ScimGroup:
+    def patch(  # type: ignore[override]
+        self,
+        org_id: str,
+        group_id: str,
+        schemas: list[str],
+        operations: list[PatchUserOperation],
+    ) -> ScimGroup:
         """
         Update a group with PATCH
 
@@ -690,7 +696,7 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
         r = ScimGroup.model_validate(data)
         return r
 
-    def delete(self, org_id: str, group_id: str):
+    def delete(self, org_id: str, group_id: str) -> None:  # type: ignore[override]
         """
         Delete a group
 

@@ -184,5 +184,10 @@ ignore_errors = true
 module = "wxc_sdk.as_rest"
 ignore_errors = true
 
+[[tool.mypy.overrides]]
+module = "wxc_sdk.me.*"
+disable_error_code = ["index"]
+
+
 
 

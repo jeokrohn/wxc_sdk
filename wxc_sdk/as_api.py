@@ -5294,7 +5294,7 @@ class AsMeEndpointsApi(AsApiChild, base='telephony/config/people/me'):
         r = MeEndpoint.model_validate(data)
         return r
 
-    async def update(self, endpoint_id: str, mobility_alerting_enabled: bool):
+    async def update(self, endpoint_id: str, mobility_alerting_enabled: bool) -> None:
         """
         Modify My Endpoints Details
 
@@ -5345,7 +5345,7 @@ class AsMeEndpointsApi(AsApiChild, base='telephony/config/people/me'):
         r = TypeAdapter(list[MeEndpoint]).validate_python(data['endpoints'])
         return r
 
-    async def get_preferred_answer_endpoint(self) -> MeEndpoint:
+    async def get_preferred_answer_endpoint(self) -> Optional[MeEndpoint]:
         """
         Get Preferred Answer Endpoint
 
@@ -5370,7 +5370,7 @@ class AsMeEndpointsApi(AsApiChild, base='telephony/config/people/me'):
         r = MeEndpoint.model_validate(data)
         return r
 
-    async def modify_preferred_answer_endpoint(self, id: str):
+    async def modify_preferred_answer_endpoint(self, id: str) -> None:
         """
         Modify Preferred Answer Endpoint
 
@@ -18586,7 +18586,7 @@ class AsSCIM2GroupsApi(AsScimApiChild, base='identity/scim'):
         :type member_type: str
         :rtype: :class:`SearchGroupResponse`
         """
-        params = {}
+        params: dict[str, Any] = {}
         if filter is not None:
             params['filter'] = filter
         if excluded_attributes is not None:
@@ -18683,7 +18683,7 @@ class AsSCIM2GroupsApi(AsScimApiChild, base='identity/scim'):
         :type member_type: str
         :rtype: :class:`GroupMemberResponse`
         """
-        params = {}
+        params: dict[str, Any] = {}
         if start_index is not None:
             params['startIndex'] = start_index
         if count is not None:
@@ -18765,7 +18765,13 @@ class AsSCIM2GroupsApi(AsScimApiChild, base='identity/scim'):
         r = ScimGroup.model_validate(data)
         return r
 
-    async def patch(self, org_id: str, group_id: str, schemas: list[str], operations: list[PatchUserOperation]) -> ScimGroup:
+    async def patch(  # type: ignore[override]
+        self,
+        org_id: str,
+        group_id: str,
+        schemas: list[str],
+        operations: list[PatchUserOperation],
+    ) -> ScimGroup:
         """
         Update a group with PATCH
 
@@ -18889,7 +18895,7 @@ class AsSCIM2GroupsApi(AsScimApiChild, base='identity/scim'):
         r = ScimGroup.model_validate(data)
         return r
 
-    async def delete(self, org_id: str, group_id: str):
+    async def delete(self, org_id: str, group_id: str) -> None:  # type: ignore[override]
         """
         Delete a group
 
@@ -19245,7 +19251,12 @@ class AsSCIM2UsersApi(AsScimApiChild, base='identity/scim'):
         r = ScimUser.model_validate(data)
         return r
 
-    async def patch(self, org_id: str, user_id: str, operations: list[PatchUserOperation]) -> ScimUser:
+    async def patch(  # type: ignore[override]
+        self,
+        org_id: str,
+        user_id: str,
+        operations: list[PatchUserOperation],
+    ) -> ScimUser:
         """
         Update a user with PATCH
 
@@ -19360,7 +19371,7 @@ class AsSCIM2UsersApi(AsScimApiChild, base='identity/scim'):
         r = ScimUser.model_validate(data)
         return r
 
-    async def delete(self, org_id: str, user_id: str):
+    async def delete(self, org_id: str, user_id: str) -> None:  # type: ignore[override]
         """
         Delete a user
 
@@ -29019,7 +29030,7 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
         return super().ep(f'locations/{location_id}/paging{paging_id}{path}')
 
     def list_gen(
-        self, location_id: str = None, name: str = None, phone_number: str = None, org_id: str = None, **params
+        self, location_id: str = None, name: str = None, phone_number: str = None, org_id: str = None, **params: Any
     ) -> AsyncGenerator[Paging, None]:
         """
         Read the List of Paging Groups
@@ -29051,7 +29062,7 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
         return self.session.follow_pagination(url=url, model=Paging, params=params, item_key='locationPaging')
 
     async def list(
-        self, location_id: str = None, name: str = None, phone_number: str = None, org_id: str = None, **params
+        self, location_id: str = None, name: str = None, phone_number: str = None, org_id: str = None, **params: Any
     ) -> builtins.list[Paging]:
         """
         Read the List of Paging Groups
@@ -29109,10 +29120,10 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
             raise TypeError('originator_caller_id_enabled required if originators are provided')
         url = self._endpoint(location_id=location_id)
         data = settings.create_or_update()
-        data = await self.post(url, json=data, params=params)
-        return data['id']
+        data: dict[str, str] = await self.post(url, json=data, params=params)  # type: ignore[no-redef]
+        return data['id']  # type: ignore[index]
 
-    async def delete_paging(self, location_id: str, paging_id: str, org_id: str = None):
+    async def delete_paging(self, location_id: str, paging_id: str, org_id: str = None) -> None:
         """
         Delete a Paging Group
 
@@ -29155,7 +29166,7 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
         url = self._endpoint(location_id=location_id, paging_id=paging_id)
         return Paging.model_validate(await self.get(url, params=params))
 
-    async def update(self, location_id: str, update: Paging, paging_id: str, org_id: str = None):
+    async def update(self, location_id: str, update: Paging, paging_id: str, org_id: str = None) -> None:
         """
         Update a Paging Group
 
@@ -29183,7 +29194,7 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
         await self.put(url, json=data, params=params)
 
     def primary_available_phone_numbers_gen(
-        self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
+        self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params: Any
     ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Paging Group Primary Available Phone Numbers
@@ -29216,7 +29227,7 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
         return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
 
     async def primary_available_phone_numbers(
-        self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
+        self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params: Any
     ) -> builtins.list[AvailableNumber]:
         """
         Get Paging Group Primary Available Phone Numbers

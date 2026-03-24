@@ -120,7 +120,7 @@ class MeEndpointsApi(ApiChild, base='telephony/config/people/me'):
         r = MeEndpoint.model_validate(data)
         return r
 
-    def update(self, endpoint_id: str, mobility_alerting_enabled: bool):
+    def update(self, endpoint_id: str, mobility_alerting_enabled: bool) -> None:
         """
         Modify My Endpoints Details
 
@@ -171,7 +171,7 @@ class MeEndpointsApi(ApiChild, base='telephony/config/people/me'):
         r = TypeAdapter(list[MeEndpoint]).validate_python(data['endpoints'])
         return r
 
-    def get_preferred_answer_endpoint(self) -> MeEndpoint:
+    def get_preferred_answer_endpoint(self) -> Optional[MeEndpoint]:
         """
         Get Preferred Answer Endpoint
 
@@ -196,7 +196,7 @@ class MeEndpointsApi(ApiChild, base='telephony/config/people/me'):
         r = MeEndpoint.model_validate(data)
         return r
 
-    def modify_preferred_answer_endpoint(self, id: str):
+    def modify_preferred_answer_endpoint(self, id: str) -> None:
         """
         Modify Preferred Answer Endpoint
 
@@ -213,7 +213,6 @@ class MeEndpointsApi(ApiChild, base='telephony/config/people/me'):
 
         :param id: Person’s preferred answer endpoint.
         :type id: str
-        :type org_id: str
         :rtype: None
         """
         body = dict()

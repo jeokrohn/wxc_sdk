@@ -6,7 +6,7 @@ Paging group API
 import builtins
 import json
 from collections.abc import Generator
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import Field
 
@@ -38,7 +38,7 @@ class PagingAgent(ApiModel):
     esn: Optional[str] = None
 
     @classmethod
-    def create_update_exclude(cls) -> dict:
+    def create_update_exclude(cls) -> dict[str, bool]:
         """
         What to exclude in JSON for create and update
 
@@ -101,7 +101,7 @@ class Paging(ApiModel):
     #: The name to be used for dial by name functions.
     dial_by_name: Optional[str] = None
 
-    def create_or_update(self) -> dict:
+    def create_or_update(self) -> str:
         """
         Get JSON for create or update call
 
@@ -126,7 +126,7 @@ class Paging(ApiModel):
         )
 
         # originators and targets are only ID lists
-        def to_id(key: str):
+        def to_id(key: str) -> None:
             if data.get(key):
                 data[key] = [e['id'] for e in data[key]]
 
@@ -174,7 +174,7 @@ class PagingApi(ApiChild, base='telephony/config'):
         return super().ep(f'locations/{location_id}/paging{paging_id}{path}')
 
     def list(
-        self, location_id: str = None, name: str = None, phone_number: str = None, org_id: str = None, **params
+        self, location_id: str = None, name: str = None, phone_number: str = None, org_id: str = None, **params: Any
     ) -> Generator[Paging, None, None]:
         """
         Read the List of Paging Groups
@@ -204,7 +204,6 @@ class PagingApi(ApiChild, base='telephony/config'):
         url = self._endpoint()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Paging, params=params, item_key='locationPaging')
-        pass
 
     def create(self, location_id: str, settings: Paging, org_id: str = None) -> str:
         """
@@ -233,10 +232,10 @@ class PagingApi(ApiChild, base='telephony/config'):
             raise TypeError('originator_caller_id_enabled required if originators are provided')
         url = self._endpoint(location_id=location_id)
         data = settings.create_or_update()
-        data = self.post(url, json=data, params=params)
-        return data['id']
+        data: dict[str, str] = self.post(url, json=data, params=params)  # type: ignore[no-redef]
+        return data['id']  # type: ignore[index]
 
-    def delete_paging(self, location_id: str, paging_id: str, org_id: str = None):
+    def delete_paging(self, location_id: str, paging_id: str, org_id: str = None) -> None:
         """
         Delete a Paging Group
 
@@ -279,7 +278,7 @@ class PagingApi(ApiChild, base='telephony/config'):
         url = self._endpoint(location_id=location_id, paging_id=paging_id)
         return Paging.model_validate(self.get(url, params=params))
 
-    def update(self, location_id: str, update: Paging, paging_id: str, org_id: str = None):
+    def update(self, location_id: str, update: Paging, paging_id: str, org_id: str = None) -> None:
         """
         Update a Paging Group
 
@@ -307,7 +306,7 @@ class PagingApi(ApiChild, base='telephony/config'):
         self.put(url, json=data, params=params)
 
     def primary_available_phone_numbers(
-        self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
+        self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params: Any
     ) -> Generator[AvailableNumber, None, None]:
         """
         Get Paging Group Primary Available Phone Numbers
