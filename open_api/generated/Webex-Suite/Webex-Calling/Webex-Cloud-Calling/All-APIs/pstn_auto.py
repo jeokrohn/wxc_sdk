@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -163,7 +164,7 @@ class PSTNApi(ApiChild, base='telephony/pstn'):
         :type org_id: str
         :rtype: :class:`ConnectionResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/connection')
@@ -172,7 +173,7 @@ class PSTNApi(ApiChild, base='telephony/pstn'):
         return r
 
     def setup_pstn_connection_for_a_location(self, location_id: str, id: str = None, premise_route_type: str = None,
-                                             premise_route_id: str = None, org_id: str = None):
+                                             premise_route_id: str = None, org_id: str = None) -> None:
         """
         Setup PSTN Connection for a Location
 
@@ -197,10 +198,10 @@ class PSTNApi(ApiChild, base='telephony/pstn'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if id is not None:
             body['id'] = id
         if premise_route_type is not None:
@@ -212,7 +213,7 @@ class PSTNApi(ApiChild, base='telephony/pstn'):
 
     def retrieve_pstn_connection_options_for_a_location(self, location_id: str,
                                                         service_types: list[AllowedServiceTypesFromHydra] = None,
-                                                        org_id: str = None) -> List[ConnectionOptionsResponse]:
+                                                        org_id: str = None) -> builtins.list[ConnectionOptionsResponse]:
         """
         Retrieve PSTN Connection Options for a Location
 
@@ -232,7 +233,7 @@ class PSTNApi(ApiChild, base='telephony/pstn'):
         :type org_id: str
         :rtype: list[ConnectionOptionsResponse]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         if service_types is not None:
@@ -275,10 +276,10 @@ class PSTNApi(ApiChild, base='telephony/pstn'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if address1 is not None:
             body['address1'] = address1
         if address2 is not None:
@@ -298,7 +299,7 @@ class PSTNApi(ApiChild, base='telephony/pstn'):
 
     def emergency_address_lookup(self, location_id: str, address1: str = None, address2: str = None, city: str = None,
                                  state: str = None, postal_code: str = None, country: str = None,
-                                 org_id: str = None) -> List[SuggestedEmergencyAddressObject]:
+                                 org_id: str = None) -> builtins.list[SuggestedEmergencyAddressObject]:
         """
         Emergency Address Lookup to Verify if Address is Valid
 
@@ -329,10 +330,10 @@ class PSTNApi(ApiChild, base='telephony/pstn'):
         :type org_id: str
         :rtype: list[SuggestedEmergencyAddressObject]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if address1 is not None:
             body['address1'] = address1
         if address2 is not None:
@@ -352,7 +353,8 @@ class PSTNApi(ApiChild, base='telephony/pstn'):
 
     def update_emergency_address_of_location(self, location_id: str, address_id: str, address1: str = None,
                                              address2: str = None, city: str = None, state: str = None,
-                                             postal_code: str = None, country: str = None, org_id: str = None):
+                                             postal_code: str = None, country: str = None,
+                                             org_id: str = None) -> None:
         """
         Update the Emergency Address of a Location
 
@@ -384,10 +386,10 @@ class PSTNApi(ApiChild, base='telephony/pstn'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if address1 is not None:
             body['address1'] = address1
         if address2 is not None:
@@ -405,7 +407,7 @@ class PSTNApi(ApiChild, base='telephony/pstn'):
 
     def update_emergency_address_for_phone_number(self, phone_number: str,
                                                   emergency_address: EmergencyAddressObject = None,
-                                                  org_id: str = None):
+                                                  org_id: str = None) -> None:
         """
         Update the emergency address for a phone number.
 
@@ -423,10 +425,10 @@ class PSTNApi(ApiChild, base='telephony/pstn'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if emergency_address is not None:
             body['emergencyAddress'] = emergency_address.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'numbers/{phone_number}/emergencyAddress')

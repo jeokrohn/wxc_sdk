@@ -7,7 +7,7 @@ from io import StringIO
 from itertools import chain
 from os.path import commonprefix
 from re import sub, subn
-from typing import Any, Optional, Type, Union
+from typing import Any, Optional, Union
 from urllib.parse import urljoin
 
 import dateutil.parser
@@ -364,7 +364,7 @@ class Endpoint:
             result_type = m.group(1)
             if paginated.referenced_class:
                 class_names.add(paginated.referenced_class)
-            param_line = f'{param_line}, **params)&->&Generator[{result_type},&None,&None]'
+            param_line = f'{param_line}, **params:&Any)&->&Generator[{result_type},&None,&None]'
         else:
             param_line = f'{param_line})'
             if self.result:
@@ -378,8 +378,10 @@ class Endpoint:
                         class_names.add(self.result_referenced_class)
                 # use List instead of list
                 if r_type.startswith('list['):
-                    r_type = 'L' + r_type[1:]
+                    r_type = 'builtins.' + r_type
                 param_line = f'{param_line}&->&{r_type}'
+            else:
+                param_line = f'{param_line}&->&None'
 
         # now write def with parameters to string
         def_line = f'{def_line}{param_line}:'
@@ -444,7 +446,7 @@ class Endpoint:
         Get a callable that can validate the body of the response
         """
 
-        def get_module_class(class_name: str) -> Type[ApiModel]:
+        def get_module_class(class_name: str) -> type[ApiModel]:
             model = getattr(module, class_name, None)
             if model is None:
                 raise ValueError(f'Failed to find class "{class_name}" in module')
@@ -569,7 +571,7 @@ class Endpoint:
         if self.params_required:
             if not self.paginated:
                 # methods with pagination have a **params argument
-                source.print('params = {}')
+                source.print('params: dict[str, Any] = dict()')
             for p in self.href_parameters_filtered():
                 if p.url_parameter:
                     continue
@@ -578,7 +580,7 @@ class Endpoint:
 
         # prepare body
         if self.body_parameter:
-            source.print('body = dict()')
+            source.print('body: dict[str, Any] = dict()')
             for p in self.body_parameter:
                 list(map(source.print, p.source_for_body_init()))
 
@@ -880,7 +882,7 @@ def guess_datetime_or_int(sample: Optional[str], type_hint: Optional[str]) -> tu
         # probably a string
         return sample, 'str'
     except Exception as e:
-        raise NotImplementedError(f'Unexpected error when trying to parse a string: {e}')
+        raise NotImplementedError(f'Unexpected error when trying to parse a string: {e}') from e
 
     # only assume datetime if sample doesn't parse as int
     try:

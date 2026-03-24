@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -128,7 +129,7 @@ class DeviceConfigurationsApi(ApiChild, base='deviceConfigurations'):
         :type key: str
         :rtype: :class:`DeviceConfigurationCollectionResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         params['deviceId'] = device_id
         if key is not None:
             params['key'] = key
@@ -152,9 +153,9 @@ class DeviceConfigurationsApi(ApiChild, base='deviceConfigurations'):
         :type path: str
         :rtype: :class:`DeviceConfigurationCollectionResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         params['deviceId'] = device_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if op is not None:
             body['op'] = enum_str(op)
         if path is not None:

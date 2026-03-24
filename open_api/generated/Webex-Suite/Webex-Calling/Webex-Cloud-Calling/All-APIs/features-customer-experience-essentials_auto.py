@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -221,7 +222,7 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
 
     def update_wrap_up_reason_settings(self, location_id: str, queue_id: str, wrapup_reasons: list[str] = None,
                                        default_wrapup_reason_id: str = None, wrapup_timer_enabled: bool = None,
-                                       wrapup_timer: int = None):
+                                       wrapup_timer: int = None) -> None:
         """
         Update Wrap Up Reason Settings
 
@@ -251,7 +252,7 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
         :type wrapup_timer: int
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if wrapup_reasons is not None:
             body['wrapupReasons'] = wrapup_reasons
         if default_wrapup_reason_id is not None:
@@ -263,7 +264,7 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
         url = self.ep(f'cxEssentials/locations/{location_id}/queues/{queue_id}/wrapup/settings')
         super().put(url, json=body)
 
-    def list_wrap_up_reasons(self) -> List[WrapUpReasonObject]:
+    def list_wrap_up_reasons(self) -> builtins.list[WrapUpReasonObject]:
         """
         List Wrap Up Reasons
 
@@ -312,7 +313,7 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
         :type assign_all_queues_enabled: bool
         :rtype: str
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         if description is not None:
             body['description'] = description
@@ -325,7 +326,7 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
         r = data['id']
         return r
 
-    def validate_wrap_up_reason(self, name: str):
+    def validate_wrap_up_reason(self, name: str) -> None:
         """
         Validate Wrap Up Reason
 
@@ -345,12 +346,12 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
         :type name: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         url = self.ep('cxEssentials/wrapup/reasons/actions/validateName/invoke')
         super().post(url, json=body)
 
-    def delete_wrap_up_reason(self, wrapup_reason_id: str):
+    def delete_wrap_up_reason(self, wrapup_reason_id: str) -> None:
         """
         Delete Wrap Up Reason
 
@@ -400,7 +401,8 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
 
     def update_wrap_up_reason(self, wrapup_reason_id: str, name: str = None, description: str = None,
                               queues_to_assign: list[str] = None, queues_to_unassign: list[str] = None,
-                              assign_all_queues_enabled: bool = None, unassign_all_queues_enabled: bool = None):
+                              assign_all_queues_enabled: bool = None,
+                              unassign_all_queues_enabled: bool = None) -> None:
         """
         Update Wrap Up Reason
 
@@ -432,7 +434,7 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
         :type unassign_all_queues_enabled: bool
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if name is not None:
             body['name'] = name
         if description is not None:
@@ -448,7 +450,7 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
         url = self.ep(f'cxEssentials/wrapup/reasons/{wrapup_reason_id}')
         super().put(url, json=body)
 
-    def read_available_queues(self, wrapup_reason_id: str) -> List[QueueObject]:
+    def read_available_queues(self, wrapup_reason_id: str) -> builtins.list[QueueObject]:
         """
         Read Available Queues
 
@@ -474,7 +476,7 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
         return r
 
     def list_available_agents(self, location_id: str, has_cx_essentials: bool = None,
-                              org_id: str = None) -> List[GetAvailableAgentsCallQueueObject]:
+                              org_id: str = None) -> builtins.list[GetAvailableAgentsCallQueueObject]:
         """
         List Available Agents
 
@@ -492,7 +494,7 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
         :type org_id: str
         :rtype: list[GetAvailableAgentsCallQueueObject]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         if has_cx_essentials is not None:
@@ -522,7 +524,7 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
         :type org_id: str
         :rtype: :class:`GetScreenPopConfigurationObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/cxEssentials/screenPop')
@@ -532,7 +534,7 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
 
     def update_screen_pop_configuration(self, location_id: str, queue_id: str, enabled: bool = None,
                                         screen_pop_url: str = None, desktop_label: str = None,
-                                        query_params: QueryParamsObject = None, org_id: str = None):
+                                        query_params: QueryParamsObject = None, org_id: str = None) -> None:
         """
         Update Screen Pop Configuration
 
@@ -560,10 +562,10 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if screen_pop_url is not None:

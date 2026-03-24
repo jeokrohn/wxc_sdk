@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -614,7 +615,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
     """
 
     def read_the_list_of_hunt_groups(self, location_id: str = None, name: str = None, phone_number: str = None,
-                                     org_id: str = None, **params) -> Generator[ListHuntGroupObject, None, None]:
+                                     org_id: str = None, **params: Any) -> Generator[ListHuntGroupObject, None, None]:
         """
         Read the List of Hunt Groups
 
@@ -705,10 +706,10 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         if phone_number is not None:
             body['phoneNumber'] = phone_number
@@ -738,7 +739,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
 
     def get_hunt_group_alternate_available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
                                                          org_id: str = None,
-                                                         **params) -> Generator[HuntGroupPrimaryAvailableNumberObject, None, None]:
+                                                         **params: Any) -> Generator[HuntGroupPrimaryAvailableNumberObject, None, None]:
         """
         Get Hunt Group Alternate Available Phone Numbers
 
@@ -772,7 +773,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
 
     def get_hunt_group_primary_available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
                                                        org_id: str = None,
-                                                       **params) -> Generator[HuntGroupPrimaryAvailableNumberObject, None, None]:
+                                                       **params: Any) -> Generator[HuntGroupPrimaryAvailableNumberObject, None, None]:
         """
         Get Hunt Group Primary Available Phone Numbers
 
@@ -807,7 +808,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
     def get_hunt_group_call_forward_available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
                                                             owner_name: str = None, extension: str = None,
                                                             org_id: str = None,
-                                                            **params) -> Generator[HuntGroupCallForwardAvailableNumberObject, None, None]:
+                                                            **params: Any) -> Generator[HuntGroupCallForwardAvailableNumberObject, None, None]:
         """
         Get Hunt Group Call Forward Available Phone Numbers
 
@@ -848,7 +849,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/huntGroups/callForwarding/availableNumbers')
         return self.session.follow_pagination(url=url, model=HuntGroupCallForwardAvailableNumberObject, item_key='phoneNumbers', params=params)
 
-    def delete_a_hunt_group(self, location_id: str, hunt_group_id: str, org_id: str = None):
+    def delete_a_hunt_group(self, location_id: str, hunt_group_id: str, org_id: str = None) -> None:
         """
         Delete a Hunt Group
 
@@ -868,7 +869,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}')
@@ -898,7 +899,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetHuntGroupObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}')
@@ -914,7 +915,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
                             agents: list[PostPersonPlaceVirtualLineHuntGroupObject] = None,
                             hunt_group_caller_id_for_outgoing_calls_enabled: bool = None,
                             direct_line_caller_id_name: DirectLineCallerIdNameObject = None, dial_by_name: str = None,
-                            org_id: str = None):
+                            org_id: str = None) -> None:
         """
         Update a Hunt Group
 
@@ -976,10 +977,10 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if name is not None:
@@ -1037,7 +1038,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: CallForwardSettingsGetCallForwarding
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding')
@@ -1047,7 +1048,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
 
     def update_call_forwarding_settings_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
                                                          call_forwarding: ModifyCallForwardingObjectCallForwarding = None,
-                                                         org_id: str = None):
+                                                         org_id: str = None) -> None:
         """
         Update Call Forwarding Settings for a Hunt Group
 
@@ -1072,17 +1073,17 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if call_forwarding is not None:
             body['callForwarding'] = call_forwarding.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding')
         super().put(url, params=params, json=body)
 
     def switch_mode_for_call_forwarding_settings_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
-                                                                  org_id: str = None):
+                                                                  org_id: str = None) -> None:
         """
         Switch Mode for Call Forwarding Settings for a Hunt Group
 
@@ -1099,7 +1100,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding/actions/switchMode/invoke')
@@ -1152,10 +1153,10 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         if enabled is not None:
             body['enabled'] = enabled
@@ -1173,7 +1174,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         return r
 
     def delete_a_selective_call_forwarding_rule_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
-                                                                 rule_id: str, org_id: str = None):
+                                                                 rule_id: str, org_id: str = None) -> None:
         """
         Delete a Selective Call Forwarding Rule for a Hunt Group
 
@@ -1199,7 +1200,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding/selectiveRules/{rule_id}')
@@ -1232,7 +1233,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetForwardingRuleObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding/selectiveRules/{rule_id}')
@@ -1290,10 +1291,10 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if name is not None:
             body['name'] = name
         if enabled is not None:

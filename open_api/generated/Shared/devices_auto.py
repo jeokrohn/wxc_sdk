@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -185,7 +186,7 @@ class DevicesApi(ApiChild, base='devices'):
                      capability: DeviceCapabilities = None, permission: str = None, location_id: str = None,
                      workspace_location_id: str = None, mac: str = None, device_platform: DevicePlatform = None,
                      planned_maintenance: MaintenanceMode = None, org_id: str = None,
-                     **params) -> Generator[Device, None, None]:
+                     **params: Any) -> Generator[Device, None, None]:
         """
         List Devices
 
@@ -332,10 +333,10 @@ class DevicesApi(ApiChild, base='devices'):
         :type org_id: str
         :rtype: :class:`Device`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['mac'] = mac
         body['model'] = model
         if workspace_id is not None:
@@ -385,10 +386,10 @@ class DevicesApi(ApiChild, base='devices'):
         :type org_id: str
         :rtype: :class:`ActivationCode`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if workspace_id is not None:
             body['workspaceId'] = workspace_id
         if person_id is not None:
@@ -400,7 +401,7 @@ class DevicesApi(ApiChild, base='devices'):
         r = ActivationCode.model_validate(data)
         return r
 
-    def delete_a_device(self, device_id: str, org_id: str = None):
+    def delete_a_device(self, device_id: str, org_id: str = None) -> None:
         """
         Delete a Device
 
@@ -420,7 +421,7 @@ class DevicesApi(ApiChild, base='devices'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{device_id}')
@@ -443,7 +444,7 @@ class DevicesApi(ApiChild, base='devices'):
         :type org_id: str
         :rtype: :class:`Device`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{device_id}')
@@ -480,10 +481,10 @@ class DevicesApi(ApiChild, base='devices'):
         :type org_id: str
         :rtype: :class:`Device`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if op is not None:
             body['op'] = enum_str(op)
         if path is not None:

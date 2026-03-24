@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -509,7 +510,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         :type org_id: str
         :rtype: :class:`ModifyPlaceCallForwardSettings`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/features/callForwarding')
@@ -520,7 +521,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
     def modify_call_forwarding_settings_for_a_workspace(self, workspace_id: str,
                                                         call_forwarding: CallForwardingPlaceSettingGet,
                                                         business_continuity: CallForwardingBusyGet,
-                                                        org_id: str = None):
+                                                        org_id: str = None) -> None:
         """
         Modify call forwarding settings for a Workspace.
 
@@ -555,10 +556,10 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['callForwarding'] = call_forwarding.model_dump(mode='json', by_alias=True, exclude_none=True)
         body['businessContinuity'] = business_continuity.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{workspace_id}/features/callForwarding')
@@ -583,7 +584,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         :type org_id: str
         :rtype: bool
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/features/callWaiting')
@@ -592,7 +593,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         return r
 
     def modify_call_waiting_settings_for_a_workspace(self, workspace_id: str, enabled: bool = None,
-                                                     org_id: str = None):
+                                                     org_id: str = None) -> None:
         """
         Modify Call Waiting Settings for a Workspace.
 
@@ -613,10 +614,10 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         url = self.ep(f'{workspace_id}/features/callWaiting')
@@ -645,7 +646,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         :type org_id: str
         :rtype: :class:`PlaceCallerIdGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/features/callerId')
@@ -661,7 +662,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
                                                      custom_external_caller_id_name: str = None,
                                                      location_external_caller_id_name: str = None,
                                                      direct_line_caller_id_name: DirectLineCallerIdNameObject = None,
-                                                     dial_by_name: str = None, org_id: str = None):
+                                                     dial_by_name: str = None, org_id: str = None) -> None:
         """
         Configure Caller ID Settings for a Workspace
 
@@ -713,10 +714,10 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['selected'] = enum_str(selected)
         if custom_number is not None:
             body['customNumber'] = custom_number
@@ -759,7 +760,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         :type org_id: str
         :rtype: :class:`UserInboundPermissionGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/features/incomingPermission')
@@ -770,7 +771,8 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
     def modify_incoming_permission_settings_for_a_workspace(self, workspace_id: str, use_custom_enabled: bool = None,
                                                             external_transfer: UserInboundPermissionGetExternalTransfer = None,
                                                             internal_calls_enabled: bool = None,
-                                                            collect_calls_enabled: bool = None, org_id: str = None):
+                                                            collect_calls_enabled: bool = None,
+                                                            org_id: str = None) -> None:
         """
         Modify Incoming Permission settings for a Workspace.
 
@@ -797,10 +799,10 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if use_custom_enabled is not None:
             body['useCustomEnabled'] = use_custom_enabled
         if external_transfer is not None:
@@ -835,7 +837,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         :type org_id: str
         :rtype: :class:`InterceptGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/features/intercept')
@@ -845,7 +847,8 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
 
     def configure_call_intercept_settings_for_a_workspace(self, workspace_id: str, enabled: bool = None,
                                                           incoming: InterceptIncomingPatch = None,
-                                                          outgoing: InterceptOutGoingGet = None, org_id: str = None):
+                                                          outgoing: InterceptOutGoingGet = None,
+                                                          org_id: str = None) -> None:
         """
         Configure Call Intercept Settings for a Workspace
 
@@ -874,10 +877,10 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if incoming is not None:
@@ -909,7 +912,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         :type org_id: str
         :rtype: :class:`UserMonitoringGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/features/monitoring')
@@ -918,7 +921,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         return r
 
     def modify_monitoring_settings_for_a_workspace(self, workspace_id: str, enable_call_park_notification: bool = None,
-                                                   monitored_elements: list[str] = None, org_id: str = None):
+                                                   monitored_elements: list[str] = None, org_id: str = None) -> None:
         """
         Modify Monitoring settings for a Workspace.
 
@@ -944,10 +947,10 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if enable_call_park_notification is not None:
             body['enableCallParkNotification'] = enable_call_park_notification
         if monitored_elements is not None:
@@ -973,7 +976,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         :type org_id: str
         :rtype: :class:`PlaceGetNumbersResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/features/numbers')
@@ -1001,7 +1004,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         :type org_id: str
         :rtype: :class:`UserOutgoingPermissionGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/features/outgoingPermission')
@@ -1012,7 +1015,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
     def modify_outgoing_permission_settings_for_a_workspace(self, workspace_id: str, use_custom_enabled: bool = None,
                                                             use_custom_permissions: bool = None,
                                                             calling_permissions: list[ModifyCallingPermission] = None,
-                                                            org_id: str = None):
+                                                            org_id: str = None) -> None:
         """
         Modify Outgoing Permission Settings for a Workspace
 
@@ -1041,10 +1044,10 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if use_custom_enabled is not None:
             body['useCustomEnabled'] = use_custom_enabled
         if use_custom_permissions is not None:
@@ -1054,7 +1057,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         url = self.ep(f'{workspace_id}/features/outgoingPermission')
         super().put(url, params=params, json=body)
 
-    def delete_all_access_codes_for_a_workspace(self, workspace_id: str, org_id: str = None):
+    def delete_all_access_codes_for_a_workspace(self, workspace_id: str, org_id: str = None) -> None:
         """
         Delete all Access Codes for a Workspace
 
@@ -1074,13 +1077,14 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/features/outgoingPermission/accessCodes')
         super().delete(url, params=params)
 
-    def retrieve_access_codes_for_a_workspace(self, workspace_id: str, org_id: str = None) -> List[AuthorizationCode]:
+    def retrieve_access_codes_for_a_workspace(self, workspace_id: str,
+                                              org_id: str = None) -> builtins.list[AuthorizationCode]:
         """
         Retrieve Access codes for a Workspace.
 
@@ -1098,7 +1102,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         :type org_id: str
         :rtype: list[AuthorizationCode]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/features/outgoingPermission/accessCodes')
@@ -1106,7 +1110,8 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         r = TypeAdapter(list[AuthorizationCode]).validate_python(data['accessCodes'])
         return r
 
-    def create_access_codes_for_a_workspace(self, workspace_id: str, code: str, description: str, org_id: str = None):
+    def create_access_codes_for_a_workspace(self, workspace_id: str, code: str, description: str,
+                                            org_id: str = None) -> None:
         """
         Create Access Codes for a Workspace
 
@@ -1130,17 +1135,17 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['code'] = code
         body['description'] = description
         url = self.ep(f'{workspace_id}/features/outgoingPermission/accessCodes')
         super().post(url, params=params, json=body)
 
     def modify_access_codes_for_a_workspace(self, workspace_id: str, delete_codes: list[str] = None,
-                                            org_id: str = None):
+                                            org_id: str = None) -> None:
         """
         Modify Access codes for a workspace.
 
@@ -1160,10 +1165,10 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if delete_codes is not None:
             body['deleteCodes'] = delete_codes
         url = self.ep(f'{workspace_id}/features/outgoingPermission/accessCodes')
@@ -1190,7 +1195,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         :type org_id: str
         :rtype: :class:`TransferNumberGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/features/outgoingPermission/autoTransferNumbers')
@@ -1201,7 +1206,8 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
     def modify_transfer_numbers_settings_for_a_workspace(self, workspace_id: str, use_custom_transfer_numbers: bool,
                                                          auto_transfer_number1: str = None,
                                                          auto_transfer_number2: str = None,
-                                                         auto_transfer_number3: str = None, org_id: str = None):
+                                                         auto_transfer_number3: str = None,
+                                                         org_id: str = None) -> None:
         """
         Modify Transfer Numbers Settings for a Workspace
 
@@ -1235,10 +1241,10 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['useCustomTransferNumbers'] = use_custom_transfer_numbers
         if auto_transfer_number1 is not None:
             body['autoTransferNumber1'] = auto_transfer_number1

@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -2088,10 +2089,10 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: int
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['action'] = enum_str(action)
         body['templateId'] = template_id
         if location_ids is not None:
@@ -2124,10 +2125,10 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`MACAddressResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['macs'] = macs
         url = self.ep('devices/actions/validateMacs/invoke')
         data = super().post(url, params=params, json=body)
@@ -2168,7 +2169,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: int
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         if member_name is not None:
@@ -2206,10 +2207,10 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`DeleteDeviceBackgroundImagesResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['backgroundImages'] = TypeAdapter(list[DeleteImageRequestObject]).dump_python(background_images, mode='json', by_alias=True, exclude_none=True)
         url = self.ep('devices/backgroundImages')
         data = super().delete(url, params=params, json=body)
@@ -2232,7 +2233,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`ReadTheListOfBackgroundImagesResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('devices/backgroundImages')
@@ -2240,7 +2241,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = ReadTheListOfBackgroundImagesResponse.model_validate(data)
         return r
 
-    def read_the_dect_device_type_list(self, org_id: str = None) -> List[DectDeviceList]:
+    def read_the_dect_device_type_list(self, org_id: str = None) -> builtins.list[DectDeviceList]:
         """
         Read the DECT device type list
 
@@ -2255,7 +2256,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: list[DectDeviceList]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('devices/dectNetworks/supportedDevices')
@@ -2263,7 +2264,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[DectDeviceList]).validate_python(data['devices'])
         return r
 
-    def read_the_dect_device_type_list_deprecated(self, org_id: str = None) -> List[DectDeviceList]:
+    def read_the_dect_device_type_list_deprecated(self, org_id: str = None) -> builtins.list[DectDeviceList]:
         """
         Read the DECT device type list - Deprecated
 
@@ -2282,7 +2283,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: list[DectDeviceList]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('devices/dects/supportedDevices')
@@ -2311,7 +2312,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`DeviceDynamicSettingsSettingsGroupsGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         if family_or_model_display_name is not None:
@@ -2323,7 +2324,8 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = DeviceDynamicSettingsSettingsGroupsGet.model_validate(data)
         return r
 
-    def get_validation_schema(self, family_or_model_display_name: str = None, org_id: str = None) -> List[DeviceTag]:
+    def get_validation_schema(self, family_or_model_display_name: str = None,
+                              org_id: str = None) -> builtins.list[DeviceTag]:
         """
         Get Validation Schema
 
@@ -2338,7 +2340,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: list[DeviceTag]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         if family_or_model_display_name is not None:
@@ -2348,7 +2350,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[DeviceTag]).validate_python(data['tags'])
         return r
 
-    def read_list_of_line_key_templates(self, org_id: str = None) -> List[LineKeyTemplatesResponse]:
+    def read_list_of_line_key_templates(self, org_id: str = None) -> builtins.list[LineKeyTemplatesResponse]:
         """
         Read the list of Line Key Templates
 
@@ -2367,7 +2369,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: list[LineKeyTemplatesResponse]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('devices/lineKeyTemplates')
@@ -2404,10 +2406,10 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['templateName'] = template_name
         body['deviceModel'] = device_model
         if user_reorder_enabled is not None:
@@ -2418,7 +2420,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = data['id']
         return r
 
-    def delete_line_key_template(self, template_id: str, org_id: str = None):
+    def delete_line_key_template(self, template_id: str, org_id: str = None) -> None:
         """
         Delete a Line Key Template
 
@@ -2439,7 +2441,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'devices/lineKeyTemplates/{template_id}')
@@ -2466,7 +2468,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetLineKeyTemplateResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'devices/lineKeyTemplates/{template_id}')
@@ -2475,7 +2477,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def modify_line_key_template(self, template_id: str, line_keys: list[ProgrammableLineKeys],
-                                 user_reorder_enabled: bool = None, org_id: str = None):
+                                 user_reorder_enabled: bool = None, org_id: str = None) -> None:
         """
         Modify a Line Key Template
 
@@ -2500,10 +2502,10 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if user_reorder_enabled is not None:
             body['userReorderEnabled'] = user_reorder_enabled
         body['lineKeys'] = TypeAdapter(list[ProgrammableLineKeys]).dump_python(line_keys, mode='json', by_alias=True, exclude_none=True)
@@ -2523,7 +2525,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`ListDeviceSettingsObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('devices/settings')
@@ -2553,7 +2555,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetThirdPartyDeviceObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'devices/{device_id}')
@@ -2561,7 +2563,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = GetThirdPartyDeviceObject.model_validate(data)
         return r
 
-    def update_third_party_device(self, device_id: str, sip_password: str, org_id: str = None):
+    def update_third_party_device(self, device_id: str, sip_password: str, org_id: str = None) -> None:
         """
         Update Third Party Device
 
@@ -2580,15 +2582,15 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['sipPassword'] = sip_password
         url = self.ep(f'devices/{device_id}')
         super().put(url, params=params, json=body)
 
-    def apply_changes_for_aspecific_device(self, device_id: str, org_id: str = None):
+    def apply_changes_for_aspecific_device(self, device_id: str, org_id: str = None) -> None:
         """
         Apply Changes for a specific device
 
@@ -2603,7 +2605,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'devices/{device_id}/actions/applyChanges/invoke')
@@ -2635,7 +2637,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`UploadAdeviceBackgroundImageResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'devices/{device_id}/actions/backgroundImageUpload/invoke')
@@ -2645,7 +2647,8 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
 
     def search_members(self, device_id: str, member_name: str = None, phone_number: str = None,
                        location_id: str = None, extension: str = None, usage_type: UsageType = None,
-                       order: str = None, org_id: str = None, **params) -> Generator[SearchMemberObject, None, None]:
+                       order: str = None, org_id: str = None,
+                       **params: Any) -> Generator[SearchMemberObject, None, None]:
         """
         Search Members
 
@@ -2723,7 +2726,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: int
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         if member_name is not None:
@@ -2742,7 +2745,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def update_specified_settings_for_the_device(self, device_id: str, tags: list[DevicePutItem] = None,
-                                                 org_id: str = None):
+                                                 org_id: str = None) -> None:
         """
         Update Device Dynamic Settings
 
@@ -2763,10 +2766,10 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if tags is not None:
             body['tags'] = TypeAdapter(list[DevicePutItem]).dump_python(tags, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'devices/{device_id}/dynamicSettings')
@@ -2790,7 +2793,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`DeviceLayout`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'devices/{device_id}/layout')
@@ -2801,7 +2804,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
     def modify_device_layout_by_device_id(self, device_id: str, layout_mode: LayoutMode,
                                           line_keys: list[ProgrammableLineKeys], user_reorder_enabled: bool = None,
                                           kem_module_type: KemModuleType = None, kem_keys: list[KEMKeys] = None,
-                                          org_id: str = None):
+                                          org_id: str = None) -> None:
         """
         Modify Device Layout by Device ID
 
@@ -2830,10 +2833,10 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['layoutMode'] = enum_str(layout_mode)
         if user_reorder_enabled is not None:
             body['userReorderEnabled'] = user_reorder_enabled
@@ -2864,7 +2867,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetMemberResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'devices/{device_id}/members')
@@ -2872,7 +2875,8 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = GetMemberResponse.model_validate(data)
         return r
 
-    def update_members_on_device(self, device_id: str, members: list[PutMemberObject] = None, org_id: str = None):
+    def update_members_on_device(self, device_id: str, members: list[PutMemberObject] = None,
+                                 org_id: str = None) -> None:
         """
         Update Members on the device
 
@@ -2894,10 +2898,10 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if members is not None:
             body['members'] = TypeAdapter(list[PutMemberObject]).dump_python(members, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'devices/{device_id}/members')
@@ -2924,7 +2928,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`DeviceSettingsObjectForDeviceLevel`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         if device_model is not None:
@@ -2935,7 +2939,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def update_device_settings(self, device_id: str, customizations: CustomizationDeviceLevelObjectDevice,
-                               custom_enabled: bool, device_model: str = None, org_id: str = None):
+                               custom_enabled: bool, device_model: str = None, org_id: str = None) -> None:
         """
         Update device settings
 
@@ -2961,18 +2965,19 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         if device_model is not None:
             params['deviceModel'] = device_model
-        body = dict()
+        body: dict[str, Any] = dict()
         body['customizations'] = customizations.model_dump(mode='json', by_alias=True, exclude_none=True)
         body['customEnabled'] = custom_enabled
         url = self.ep(f'devices/{device_id}/settings')
         super().put(url, params=params, json=body)
 
-    def get_list_of_apply_line_key_templates_jobs(self, org_id: str = None) -> List[ApplyLineKeyTemplateJobDetails]:
+    def get_list_of_apply_line_key_templates_jobs(self,
+                                                  org_id: str = None) -> builtins.list[ApplyLineKeyTemplateJobDetails]:
         """
         Get List of Apply Line Key Template jobs
 
@@ -2991,7 +2996,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: list[ApplyLineKeyTemplateJobDetails]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('jobs/devices/applyLineKeyTemplate')
@@ -3037,10 +3042,10 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`ApplyLineKeyTemplateJobDetails`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['action'] = enum_str(action)
         body['templateId'] = template_id
         if location_ids is not None:
@@ -3080,7 +3085,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`ApplyLineKeyTemplateJobDetails`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'jobs/devices/applyLineKeyTemplate/{job_id}')
@@ -3111,7 +3116,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`ApplyLineKeyTemplateJobErrors`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'jobs/devices/applyLineKeyTemplate/{job_id}/errors')
@@ -3120,7 +3125,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def list_change_device_settings_jobs(self, org_id: str = None,
-                                         **params) -> Generator[StartJobResponse, None, None]:
+                                         **params: Any) -> Generator[StartJobResponse, None, None]:
         """
         List change device settings jobs.
 
@@ -3175,10 +3180,10 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`StartJobResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if location_id is not None:
             body['locationId'] = location_id
         if location_customizations_enabled is not None:
@@ -3209,7 +3214,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def list_change_device_settings_job_errors(self, job_id: str, org_id: str = None,
-                                               **params) -> Generator[ItemObject, None, None]:
+                                               **params: Any) -> Generator[ItemObject, None, None]:
         """
         List change device settings job errors.
 
@@ -3230,7 +3235,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         return self.session.follow_pagination(url=url, model=ItemObject, item_key='items', params=params)
 
     def list_dynamic_device_settings_jobs(self, org_id: str = None,
-                                          **params) -> Generator[PostDynamicDeviceSettingsJobResponse, None, None]:
+                                          **params: Any) -> Generator[PostDynamicDeviceSettingsJobResponse, None, None]:
         """
         List device dynamic settings jobs.
 
@@ -3280,10 +3285,10 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`PostDynamicDeviceSettingsJobResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if location_id is not None:
             body['locationId'] = location_id
         body['tags'] = TypeAdapter(list[DynamicSettingsUpdateJobDevicePostItem]).dump_python(tags, mode='json', by_alias=True, exclude_none=True)
@@ -3311,7 +3316,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def list_dynamic_device_settings_job_errors(self, job_id: str, org_id: str = None,
-                                                **params) -> Generator[ItemObject, None, None]:
+                                                **params: Any) -> Generator[ItemObject, None, None]:
         """
         List Device Dynamic Settings Job Errors
 
@@ -3333,7 +3338,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'jobs/devices/dynamicDeviceSettings/{job_id}/errors')
         return self.session.follow_pagination(url=url, model=ItemObject, item_key='items', params=params)
 
-    def list_rebuild_phones_jobs(self, org_id: str = None) -> List[RebuildPhonesJob]:
+    def list_rebuild_phones_jobs(self, org_id: str = None) -> builtins.list[RebuildPhonesJob]:
         """
         List Rebuild Phones Jobs
 
@@ -3350,7 +3355,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: list[RebuildPhonesJob]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('jobs/devices/rebuildPhones')
@@ -3377,10 +3382,10 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`RebuildPhonesJob`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['locationId'] = location_id
         url = self.ep('jobs/devices/rebuildPhones')
         data = super().post(url, params=params, json=body)
@@ -3406,7 +3411,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`RebuildPhonesJob`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'jobs/devices/rebuildPhones/{job_id}')
@@ -3414,7 +3419,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = RebuildPhonesJob.model_validate(data)
         return r
 
-    def get_job_errors_for_arebuild_phones_job(self, job_id: str, org_id: str = None) -> List[ItemObject]:
+    def get_job_errors_for_arebuild_phones_job(self, job_id: str, org_id: str = None) -> builtins.list[ItemObject]:
         """
         Get Job Errors for a Rebuild Phones Job
 
@@ -3433,7 +3438,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: list[ItemObject]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'jobs/devices/rebuildPhones/{job_id}/errors')
@@ -3465,11 +3470,11 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`CustomerDeviceDynamicSettingsListPostResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         params['familyOrModelDisplayName'] = family_or_model_display_name
-        body = dict()
+        body: dict[str, Any] = dict()
         if tags is not None:
             body['tags'] = tags
         url = self.ep('lists/devices/dynamicSettings/actions/getSettings/invoke')
@@ -3499,10 +3504,10 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`DeviceDynamicSettingsListPostResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if tags is not None:
             body['tags'] = tags
         url = self.ep(f'lists/devices/{device_id}/dynamicSettings/actions/getSettings/invoke')
@@ -3537,11 +3542,11 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`LocationDeviceDynamicSettingsListPostResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         params['familyOrModelDisplayName'] = family_or_model_display_name
-        body = dict()
+        body: dict[str, Any] = dict()
         if tags is not None:
             body['tags'] = tags
         url = self.ep(f'lists/locations/{location_id}/devices/dynamicSettings/actions/getSettings/invoke')
@@ -3563,7 +3568,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`DeviceSettingsObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/devices/settings')
@@ -3586,7 +3591,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`DeviceList`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'people/{person_id}/devices')
@@ -3612,7 +3617,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`UserDeviceCount`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'people/{person_id}/devices/count')
@@ -3638,7 +3643,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: Compression
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'people/{person_id}/devices/settings')
@@ -3646,7 +3651,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = Compression.model_validate(data['compression'])
         return r
 
-    def update_device_settings_for_aperson(self, person_id: str, compression: Compression, org_id: str = None):
+    def update_device_settings_for_aperson(self, person_id: str, compression: Compression, org_id: str = None) -> None:
         """
         Update Device Settings for a Person
 
@@ -3666,16 +3671,16 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['compression'] = enum_str(compression)
         url = self.ep(f'people/{person_id}/devices/settings')
         super().put(url, params=params, json=body)
 
     def modefy_hoteling_settings_for_persons_primary_devices(self, person_id: str, hoteling: Hoteling,
-                                                             org_id: str = None):
+                                                             org_id: str = None) -> None:
         """
         Modify Hoteling Settings for a Person's Primary Devices
 
@@ -3695,10 +3700,10 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['hoteling'] = hoteling.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'people/{person_id}/devices/settings/hoteling')
         super().put(url, params=params, json=body)
@@ -3722,7 +3727,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`SupportedDevicesObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         if allow_configure_layout_enabled is not None:
@@ -3748,7 +3753,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`PlaceDeviceList`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'workspaces/{workspace_id}/devices')
@@ -3757,7 +3762,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def modify_workspace_devices(self, workspace_id: str, enabled: bool, limit_guest_use: bool = None,
-                                 guest_hours_limit: int = None, org_id: str = None):
+                                 guest_hours_limit: int = None, org_id: str = None) -> None:
         """
         Modify Workspace Devices
 
@@ -3784,10 +3789,10 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         if limit_guest_use is not None:
             body['limitGuestUse'] = limit_guest_use
@@ -3814,7 +3819,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: Compression
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'workspaces/{workspace_id}/devices/settings')
@@ -3822,7 +3827,8 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         r = Compression.model_validate(data['compression'])
         return r
 
-    def update_device_settings_for_aworkspace(self, workspace_id: str, compression: Compression, org_id: str = None):
+    def update_device_settings_for_aworkspace(self, workspace_id: str, compression: Compression,
+                                              org_id: str = None) -> None:
         """
         Update Device Settings for a Workspace
 
@@ -3842,10 +3848,10 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['compression'] = enum_str(compression)
         url = self.ep(f'workspaces/{workspace_id}/devices/settings')
         super().put(url, params=params, json=body)

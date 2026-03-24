@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -72,7 +73,7 @@ class LocationsApi(ApiChild, base='locations'):
     """
 
     def list_locations(self, name: str = None, id: str = None, org_id: str = None,
-                       **params) -> Generator[Location, None, None]:
+                       **params: Any) -> Generator[Location, None, None]:
         """
         List Locations
 
@@ -153,10 +154,10 @@ class LocationsApi(ApiChild, base='locations'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['timeZone'] = time_zone
         body['preferredLanguage'] = preferred_language
@@ -173,7 +174,7 @@ class LocationsApi(ApiChild, base='locations'):
         r = data['id']
         return r
 
-    def delete_location(self, location_id: str, org_id: str = None):
+    def delete_location(self, location_id: str, org_id: str = None) -> None:
         """
         Delete Location
 
@@ -192,7 +193,7 @@ class LocationsApi(ApiChild, base='locations'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{location_id}')
@@ -221,7 +222,7 @@ class LocationsApi(ApiChild, base='locations'):
         :type org_id: str
         :rtype: :class:`Location`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{location_id}')
@@ -230,7 +231,8 @@ class LocationsApi(ApiChild, base='locations'):
         return r
 
     def update_a_location(self, location_id: str, name: str = None, time_zone: str = None,
-                          preferred_language: str = None, address: LocationAddress = None, org_id: str = None):
+                          preferred_language: str = None, address: LocationAddress = None,
+                          org_id: str = None) -> None:
         """
         Update a Location
 
@@ -263,10 +265,10 @@ class LocationsApi(ApiChild, base='locations'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if name is not None:
             body['name'] = name
         if time_zone is not None:
@@ -278,7 +280,7 @@ class LocationsApi(ApiChild, base='locations'):
         url = self.ep(f'{location_id}')
         super().put(url, params=params, json=body)
 
-    def list_location_floors(self, location_id: str) -> List[Floor]:
+    def list_location_floors(self, location_id: str) -> builtins.list[Floor]:
         """
         List location floors.
         Requires an administrator auth token with the `spark-admin:locations_read` scope.
@@ -308,7 +310,7 @@ class LocationsApi(ApiChild, base='locations'):
         :type display_name: str
         :rtype: :class:`Floor`
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['floorNumber'] = floor_number
         if display_name is not None:
             body['displayName'] = display_name
@@ -317,7 +319,7 @@ class LocationsApi(ApiChild, base='locations'):
         r = Floor.model_validate(data)
         return r
 
-    def delete_a_location_floor(self, location_id: str, floor_id: str):
+    def delete_a_location_floor(self, location_id: str, floor_id: str) -> None:
         """
         Delete a Location Floor
 
@@ -372,7 +374,7 @@ class LocationsApi(ApiChild, base='locations'):
         :type display_name: str
         :rtype: :class:`Floor`
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['floorNumber'] = floor_number
         if display_name is not None:
             body['displayName'] = display_name

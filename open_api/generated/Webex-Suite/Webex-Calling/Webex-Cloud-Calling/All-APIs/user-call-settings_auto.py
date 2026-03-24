@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -999,7 +1000,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: :class:`ApplicationsSetting`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/applications')
@@ -1014,7 +1015,8 @@ class UserCallSettings12Api(ApiChild, base='people'):
                                                         browser_client_enabled: bool = None,
                                                         desktop_client_enabled: bool = None,
                                                         tablet_client_enabled: bool = None,
-                                                        mobile_client_enabled: bool = None, org_id: str = None):
+                                                        mobile_client_enabled: bool = None,
+                                                        org_id: str = None) -> None:
         """
         Modify a person's Application Services Settings
 
@@ -1047,10 +1049,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if ring_devices_for_click_to_dial_calls_enabled is not None:
             body['ringDevicesForClickToDialCallsEnabled'] = ring_devices_for_click_to_dial_calls_enabled
         if ring_devices_for_group_page_enabled is not None:
@@ -1089,7 +1091,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: :class:`BargeInInfo`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/bargeIn')
@@ -1098,7 +1100,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         return r
 
     def configure_barge_in_settings_for_a_person(self, person_id: str, enabled: bool = None, tone_enabled: bool = None,
-                                                 org_id: str = None):
+                                                 org_id: str = None) -> None:
         """
         Configure Barge In Settings for a Person
 
@@ -1124,10 +1126,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if tone_enabled is not None:
@@ -1166,7 +1168,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: :class:`CallForwardingInfo`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/callForwarding')
@@ -1177,7 +1179,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
     def configure_call_forwarding_settings_for_a_person(self, person_id: str,
                                                         call_forwarding: CallForwardingPutCallForwarding = None,
                                                         business_continuity: CallForwardingInfoCallForwardingBusy = None,
-                                                        org_id: str = None):
+                                                        org_id: str = None) -> None:
         """
         Configure Call Forwarding Settings for a Person
 
@@ -1214,10 +1216,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if call_forwarding is not None:
             body['callForwarding'] = call_forwarding.model_dump(mode='json', by_alias=True, exclude_none=True)
         if business_continuity is not None:
@@ -1248,7 +1250,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: :class:`CallRecordingInfo`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/callRecording')
@@ -1263,7 +1265,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
                                                        notification: CallRecordingPutNotification = None,
                                                        repeat: CallRecordingInfoRepeat = None,
                                                        start_stop_announcement: CallRecordingInfoStartStopAnnouncement = None,
-                                                       org_id: str = None):
+                                                       org_id: str = None) -> None:
         """
         Configure Call Recording Settings for a Person
 
@@ -1301,10 +1303,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if record is not None:
@@ -1343,7 +1345,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: bool
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/callWaiting')
@@ -1351,7 +1353,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         r = data['enabled']
         return r
 
-    def configure_call_waiting_settings_for_a_person(self, person_id: str, enabled: bool, org_id: str = None):
+    def configure_call_waiting_settings_for_a_person(self, person_id: str, enabled: bool, org_id: str = None) -> None:
         """
         Configure Call Waiting Settings for a Person
 
@@ -1374,10 +1376,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         url = self.ep(f'{person_id}/features/callWaiting')
         super().put(url, params=params, json=body)
@@ -1404,7 +1406,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: :class:`CallerIdInfo`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/callerId')
@@ -1422,7 +1424,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
                                                   additional_external_caller_id_custom_number: str = None,
                                                   direct_line_caller_id_name: DirectLineCallerIdNameObject = None,
                                                   dial_by_first_name: str = None, dial_by_last_name: str = None,
-                                                  org_id: str = None):
+                                                  org_id: str = None) -> None:
         """
         Configure Caller ID Settings for a Person
 
@@ -1486,10 +1488,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['selected'] = enum_str(selected)
         if custom_number is not None:
             body['customNumber'] = custom_number
@@ -1547,7 +1549,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: :class:`GetCallingBehaviorObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/callingBehavior')
@@ -1557,7 +1559,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
 
     def configure_a_person_s_calling_behavior(self, person_id: str,
                                               behavior_type: GetCallingBehaviorObjectBehaviorType = None,
-                                              profile_id: str = None, org_id: str = None):
+                                              profile_id: str = None, org_id: str = None) -> None:
         """
         Configure a person's Calling Behavior
 
@@ -1592,10 +1594,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if behavior_type is not None:
             body['behaviorType'] = enum_str(behavior_type)
         if profile_id is not None:
@@ -1624,7 +1626,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: :class:`DoNotDisturbInfo`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/doNotDisturb')
@@ -1634,7 +1636,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
 
     def configure_do_not_disturb_settings_for_a_person(self, person_id: str, webex_go_override_enabled: bool,
                                                        enabled: bool = None, ring_splash_enabled: bool = None,
-                                                       org_id: str = None):
+                                                       org_id: str = None) -> None:
         """
         Configure Do Not Disturb Settings for a Person
 
@@ -1661,10 +1663,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if ring_splash_enabled is not None:
@@ -1695,7 +1697,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: RetrieveExecutiveAssistantSettingsForAPersonResponseType
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/executiveAssistant')
@@ -1705,7 +1707,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
 
     def modify_executive_assistant_settings_for_a_person(self, person_id: str,
                                                          type: RetrieveExecutiveAssistantSettingsForAPersonResponseType = None,
-                                                         org_id: str = None):
+                                                         org_id: str = None) -> None:
         """
         Modify Executive Assistant Settings for a Person
 
@@ -1728,10 +1730,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if type is not None:
             body['type'] = enum_str(type)
         url = self.ep(f'{person_id}/features/executiveAssistant')
@@ -1757,7 +1759,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: bool
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/hoteling')
@@ -1765,7 +1767,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         r = data['enabled']
         return r
 
-    def configure_hoteling_settings_for_a_person(self, person_id: str, enabled: bool, org_id: str = None):
+    def configure_hoteling_settings_for_a_person(self, person_id: str, enabled: bool, org_id: str = None) -> None:
         """
         Configure Hoteling Settings for a Person
 
@@ -1787,10 +1789,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         url = self.ep(f'{person_id}/features/hoteling')
         super().put(url, params=params, json=body)
@@ -1816,7 +1818,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: :class:`IncomingPermissionSetting`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/incomingPermission')
@@ -1827,7 +1829,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
     def configure_incoming_permission_settings_for_a_person(self, person_id: str, use_custom_enabled: bool,
                                                             external_transfer: IncomingPermissionSettingExternalTransfer,
                                                             internal_calls_enabled: bool, collect_calls_enabled: bool,
-                                                            org_id: str = None):
+                                                            org_id: str = None) -> None:
         """
         Configure Incoming Permission Settings for a Person
 
@@ -1856,10 +1858,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['useCustomEnabled'] = use_custom_enabled
         body['externalTransfer'] = enum_str(external_transfer)
         body['internalCallsEnabled'] = internal_calls_enabled
@@ -1889,7 +1891,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: :class:`CallInterceptInfo`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/intercept')
@@ -1900,7 +1902,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
     def configure_call_intercept_settings_for_a_person(self, person_id: str, enabled: bool = None,
                                                        incoming: CallInterceptPutIncoming = None,
                                                        outgoing: CallInterceptInfoOutgoing = None,
-                                                       org_id: str = None):
+                                                       org_id: str = None) -> None:
         """
         Configure Call Intercept Settings for a Person
 
@@ -1928,10 +1930,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if incoming is not None:
@@ -1941,7 +1943,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         url = self.ep(f'{person_id}/features/intercept')
         super().put(url, params=params, json=body)
 
-    def configure_call_intercept_greeting_for_a_person(self, person_id: str, org_id: str = None):
+    def configure_call_intercept_greeting_for_a_person(self, person_id: str, org_id: str = None) -> None:
         """
         Configure Call Intercept Greeting for a Person
 
@@ -1962,7 +1964,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/intercept/actions/announcementUpload/invoke')
@@ -1988,7 +1990,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: :class:`MonitoringSettings`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/monitoring')
@@ -1997,7 +1999,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         return r
 
     def modify_a_person_s_monitoring_settings(self, person_id: str, enable_call_park_notification: bool,
-                                              monitored_elements: list[str], org_id: str = None):
+                                              monitored_elements: list[str], org_id: str = None) -> None:
         """
         Modify a person's Monitoring Settings
 
@@ -2023,10 +2025,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enableCallParkNotification'] = enable_call_park_notification
         body['monitoredElements'] = monitored_elements
         url = self.ep(f'{person_id}/features/monitoring')
@@ -2060,7 +2062,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: :class:`GetNumbers`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         if prefer_e164_format is not None:
@@ -2090,7 +2092,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: :class:`OutgoingCallingPermissionsSettingGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/outgoingPermission')
@@ -2102,7 +2104,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
                                                                 calling_permissions: list[OutgoingCallingPermissionsSettingPutCallingPermissionsItem],
                                                                 use_custom_enabled: bool = None,
                                                                 use_custom_permissions: bool = None,
-                                                                org_id: str = None):
+                                                                org_id: str = None) -> None:
         """
         Modify a person's Outgoing Calling Permissions settings.
 
@@ -2129,10 +2131,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if use_custom_enabled is not None:
             body['useCustomEnabled'] = use_custom_enabled
         if use_custom_permissions is not None:
@@ -2161,7 +2163,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: :class:`PrivacyGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/privacy')
@@ -2173,7 +2175,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
                                               aa_naming_dialing_enabled: bool = None,
                                               enable_phone_status_directory_privacy: bool = None,
                                               enable_phone_status_pickup_barge_in_privacy: bool = None,
-                                              monitoring_agents: list[str] = None, org_id: str = None):
+                                              monitoring_agents: list[str] = None, org_id: str = None) -> None:
         """
         Configure a person's Privacy Settings
 
@@ -2204,10 +2206,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if aa_extension_dialing_enabled is not None:
             body['aaExtensionDialingEnabled'] = aa_extension_dialing_enabled
         if aa_naming_dialing_enabled is not None:
@@ -2241,7 +2243,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: :class:`PushToTalkInfo`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/pushToTalk')
@@ -2252,7 +2254,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
     def configure_push_to_talk_settings_for_a_person(self, person_id: str, allow_auto_answer: bool = None,
                                                      connection_type: PushToTalkConnectionType = None,
                                                      access_type: PushToTalkAccessType = None,
-                                                     members: list[str] = None, org_id: str = None):
+                                                     members: list[str] = None, org_id: str = None) -> None:
         """
         Configure Push-to-Talk Settings for a Person
 
@@ -2280,10 +2282,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if allow_auto_answer is not None:
             body['allowAutoAnswer'] = allow_auto_answer
         if connection_type is not None:
@@ -2315,7 +2317,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: :class:`ReceptionInfo`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/reception')
@@ -2324,7 +2326,8 @@ class UserCallSettings12Api(ApiChild, base='people'):
         return r
 
     def configure_receptionist_client_settings_for_a_person(self, person_id: str, reception_enabled: bool,
-                                                            monitored_members: list[str] = None, org_id: str = None):
+                                                            monitored_members: list[str] = None,
+                                                            org_id: str = None) -> None:
         """
         Configure Receptionist Client Settings for a Person
 
@@ -2348,10 +2351,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['receptionEnabled'] = reception_enabled
         if monitored_members is not None:
             body['monitoredMembers'] = monitored_members
@@ -2359,7 +2362,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         super().put(url, params=params, json=body)
 
     def list_of_schedules_for_a_person(self, person_id: str, name: str = None, type: str = None, org_id: str = None,
-                                       **params) -> Generator[ScheduleShortDetails, None, None]:
+                                       **params: Any) -> Generator[ScheduleShortDetails, None, None]:
         """
         List of Schedules for a Person
 
@@ -2423,10 +2426,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['type'] = enum_str(type)
         if events is not None:
@@ -2436,7 +2439,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         r = data['id']
         return r
 
-    def delete_a_schedule(self, person_id: str, schedule_type: str, schedule_id: str, org_id: str = None):
+    def delete_a_schedule(self, person_id: str, schedule_type: str, schedule_id: str, org_id: str = None) -> None:
         """
         Delete a Schedule
 
@@ -2461,7 +2464,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/schedules/{schedule_type}/{schedule_id}')
@@ -2494,7 +2497,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: :class:`ScheduleLongDetails`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/schedules/{schedule_type}/{schedule_id}')
@@ -2536,10 +2539,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['newName'] = new_name
         body['name'] = name
         body['type'] = enum_str(type)
@@ -2596,10 +2599,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['startDate'] = start_date
         body['endDate'] = end_date
@@ -2615,7 +2618,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         return r
 
     def delete_an_event_for_a_person_s_schedule(self, person_id: str, schedule_type: str, schedule_id: str,
-                                                event_id: str, org_id: str = None):
+                                                event_id: str, org_id: str = None) -> None:
         """
         Delete an Event for a person's Schedule
 
@@ -2641,7 +2644,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/schedules/{schedule_type}/{schedule_id}/events/{event_id}')
@@ -2675,7 +2678,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: :class:`GetEvent`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/schedules/{schedule_type}/{schedule_id}/events/{event_id}')
@@ -2734,10 +2737,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['newName'] = new_name
         body['name'] = name
         body['startDate'] = start_date
@@ -2777,7 +2780,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: :class:`VoicemailInfo`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/voicemail')
@@ -2793,7 +2796,8 @@ class UserCallSettings12Api(ApiChild, base='people'):
                                                   send_unanswered_calls: VoicemailPutSendUnansweredCalls = None,
                                                   email_copy_of_message: VoicemailInfoEmailCopyOfMessage = None,
                                                   message_storage: VoicemailInfoMessageStorage = None,
-                                                  fax_message: VoicemailInfoFaxMessage = None, org_id: str = None):
+                                                  fax_message: VoicemailInfoFaxMessage = None,
+                                                  org_id: str = None) -> None:
         """
         Configure Voicemail Settings for a Person
 
@@ -2836,10 +2840,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if send_all_calls is not None:
@@ -2859,7 +2863,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         url = self.ep(f'{person_id}/features/voicemail')
         super().put(url, params=params, json=body)
 
-    def reset_voicemail_pin(self, person_id: str, org_id: str = None):
+    def reset_voicemail_pin(self, person_id: str, org_id: str = None) -> None:
         """
         Reset Voicemail PIN
 
@@ -2882,13 +2886,13 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/voicemail/actions/resetPin/invoke')
         super().post(url, params=params)
 
-    def configure_busy_voicemail_greeting_for_a_person(self, person_id: str, org_id: str = None):
+    def configure_busy_voicemail_greeting_for_a_person(self, person_id: str, org_id: str = None) -> None:
         """
         Configure Busy Voicemail Greeting for a Person
 
@@ -2910,13 +2914,13 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/voicemail/actions/uploadBusyGreeting/invoke')
         super().post(url, params=params)
 
-    def configure_no_answer_voicemail_greeting_for_a_person(self, person_id: str, org_id: str = None):
+    def configure_no_answer_voicemail_greeting_for_a_person(self, person_id: str, org_id: str = None) -> None:
         """
         Configure No Answer Voicemail Greeting for a Person
 
@@ -2938,7 +2942,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/voicemail/actions/uploadNoAnswerGreeting/invoke')

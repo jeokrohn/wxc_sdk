@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -1566,7 +1567,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`ApplicationsSetting`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'people/{person_id}/features/applications')
@@ -1574,7 +1575,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = ApplicationsSetting.model_validate(data)
         return r
 
-    def list_move_users_jobs(self, org_id: str = None, **params) -> Generator[JobDetailsResponse, None, None]:
+    def list_move_users_jobs(self, org_id: str = None, **params: Any) -> Generator[JobDetailsResponse, None, None]:
         """
         List Move Users Jobs
 
@@ -1594,7 +1595,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         return self.session.follow_pagination(url=url, model=JobDetailsResponse, item_key='items', params=params)
 
     def validate_or_initiate_move_users_job(self, users_list: list[UsersListItem],
-                                            org_id: str = None) -> List[UserListItem]:
+                                            org_id: str = None) -> builtins.list[UserListItem]:
         """
         Validate or Initiate Move Users Job
 
@@ -1949,10 +1950,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: list[UserListItem]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['usersList'] = TypeAdapter(list[UsersListItem]).dump_python(users_list, mode='json', by_alias=True, exclude_none=True)
         url = self.ep('telephony/config/jobs/person/moveLocation')
         data = super().post(url, params=params, json=body)
@@ -1974,7 +1975,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`JobDetailsResponseById`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/jobs/person/moveLocation/{job_id}')
@@ -1982,7 +1983,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = JobDetailsResponseById.model_validate(data)
         return r
 
-    def pause_move_users_job(self, job_id: str, org_id: str = None):
+    def pause_move_users_job(self, job_id: str, org_id: str = None) -> None:
         """
         Pause the Move Users Job
 
@@ -1996,13 +1997,13 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/jobs/person/moveLocation/{job_id}/actions/pause/invoke')
         super().post(url, params=params)
 
-    def resume_move_users_job(self, job_id: str, org_id: str = None):
+    def resume_move_users_job(self, job_id: str, org_id: str = None) -> None:
         """
         Resume the Move Users Job
 
@@ -2016,14 +2017,14 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/jobs/person/moveLocation/{job_id}/actions/resume/invoke')
         super().post(url, params=params)
 
     def list_move_users_job_errors(self, job_id: str, org_id: str = None,
-                                   **params) -> Generator[ItemObject, None, None]:
+                                   **params: Any) -> Generator[ItemObject, None, None]:
         """
         List Move Users Job errors
 
@@ -2046,7 +2047,7 @@ class UserCallSettings22Api(ApiChild, base=''):
 
     def get_person_primary_available_phone_numbers(self, location_id: str = None, phone_number: list[str] = None,
                                                    license_type: LicenseType = None, org_id: str = None,
-                                                   **params) -> Generator[PersonPrimaryAvailableNumberObject, None, None]:
+                                                   **params: Any) -> Generator[PersonPrimaryAvailableNumberObject, None, None]:
         """
         Get Person Primary Available Phone Numbers
 
@@ -2133,7 +2134,7 @@ class UserCallSettings22Api(ApiChild, base=''):
                                                            voicemail_notifications: AccessLevel = None,
                                                            voicemail_transfer_number: AccessLevel = None,
                                                            generate_activation_code: AccessLevel = None,
-                                                           voicemail_download: AccessLevel = None):
+                                                           voicemail_download: AccessLevel = None) -> None:
         """
         Update Default Person Feature Access Configuration
 
@@ -2227,7 +2228,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type voicemail_download: AccessLevel
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if anonymous_call_rejection is not None:
             body['anonymousCallRejection'] = enum_str(anonymous_call_rejection)
         if barge_in is not None:
@@ -2282,7 +2283,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         super().put(url, json=body)
 
     def retrieve_agents_list_of_available_caller_ids(self, person_id: str,
-                                                     org_id: str = None) -> List[AvailableCallerIdObject]:
+                                                     org_id: str = None) -> builtins.list[AvailableCallerIdObject]:
         """
         Retrieve Agent's List of Available Caller IDs
 
@@ -2299,7 +2300,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: list[AvailableCallerIdObject]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/agent/availableCallerIds')
@@ -2328,7 +2329,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = AvailableCallerIdObject.model_validate(data['selectedCallerId'])
         return r
 
-    def modify_agent_caller_id_information(self, person_id: str, selected_caller_id: str):
+    def modify_agent_caller_id_information(self, person_id: str, selected_caller_id: str) -> None:
         """
         Modify Agent's Caller ID Information.
 
@@ -2345,14 +2346,14 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type selected_caller_id: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['selectedCallerId'] = selected_caller_id
         url = self.ep(f'telephony/config/people/{person_id}/agent/callerId')
         super().put(url, json=body)
 
     def search_shared_line_appearance_members_new(self, person_id: str, order: str = None, location: str = None,
                                                   name: str = None, phone_number: str = None, extension: str = None,
-                                                  **params) -> Generator[AvailableSharedLineMemberItem, None, None]:
+                                                  **params: Any) -> Generator[AvailableSharedLineMemberItem, None, None]:
         """
         Search Shared-Line Appearance Members New
 
@@ -2418,7 +2419,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: int
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         if location_id is not None:
@@ -2456,7 +2457,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         return r
 
     def put_shared_line_appearance_members_new(self, person_id: str,
-                                               members: list[ApplicationPutSharedLineMemberItem] = None):
+                                               members: list[ApplicationPutSharedLineMemberItem] = None) -> None:
         """
         Put Shared-Line Appearance Members New
 
@@ -2474,7 +2475,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type members: list[ApplicationPutSharedLineMemberItem]
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if members is not None:
             body['members'] = TypeAdapter(list[ApplicationPutSharedLineMemberItem]).dump_python(members, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'telephony/config/people/{person_id}/applications/members')
@@ -2483,7 +2484,7 @@ class UserCallSettings22Api(ApiChild, base=''):
     def search_shared_line_appearance_members(self, person_id: str, application_id: str, location: str = None,
                                               name: str = None, number: str = None, order: str = None,
                                               extension: str = None,
-                                              **params) -> Generator[AvailableSharedLineMemberItem, None, None]:
+                                              **params: Any) -> Generator[AvailableSharedLineMemberItem, None, None]:
         """
         Search Shared-Line Appearance Members
 
@@ -2542,7 +2543,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         return r
 
     def modify_shared_line_appearance_members(self, person_id: str, application_id: str,
-                                              members: list[PutSharedLineMemberItem] = None):
+                                              members: list[PutSharedLineMemberItem] = None) -> None:
         """
         Put Shared-Line Appearance Members
 
@@ -2559,7 +2560,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type members: list[PutSharedLineMemberItem]
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if members is not None:
             body['members'] = TypeAdapter(list[PutSharedLineMemberItem]).dump_python(members, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'telephony/config/people/{person_id}/applications/{application_id}/members')
@@ -2586,7 +2587,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`GetUserCallCaptionsObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/callCaptions')
@@ -2596,7 +2597,7 @@ class UserCallSettings22Api(ApiChild, base=''):
 
     def modify_user_call_captions_settings(self, person_id: str, user_closed_captions_enabled: bool = None,
                                            user_transcripts_enabled: bool = None,
-                                           use_location_settings_enabled: bool = None, org_id: str = None):
+                                           use_location_settings_enabled: bool = None, org_id: str = None) -> None:
         """
         Update the user call captions settings
 
@@ -2624,10 +2625,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if user_closed_captions_enabled is not None:
             body['userClosedCaptionsEnabled'] = user_closed_captions_enabled
         if user_transcripts_enabled is not None:
@@ -2640,7 +2641,7 @@ class UserCallSettings22Api(ApiChild, base=''):
     def get_person_call_forward_available_phone_numbers(self, person_id: str, phone_number: list[str] = None,
                                                         owner_name: str = None, extension: str = None,
                                                         org_id: str = None,
-                                                        **params) -> Generator[PersonCallForwardAvailableNumberObject, None, None]:
+                                                        **params: Any) -> Generator[PersonCallForwardAvailableNumberObject, None, None]:
         """
         Get Person Call Forward Available Phone Numbers
 
@@ -2682,7 +2683,7 @@ class UserCallSettings22Api(ApiChild, base=''):
     def get_person_call_intercept_available_phone_numbers(self, person_id: str, phone_number: list[str] = None,
                                                           owner_name: str = None, extension: str = None,
                                                           org_id: str = None,
-                                                          **params) -> Generator[PersonCallForwardAvailableNumberObject, None, None]:
+                                                          **params: Any) -> Generator[PersonCallForwardAvailableNumberObject, None, None]:
         """
         Get Person Call Intercept Available Phone Numbers
 
@@ -2724,7 +2725,7 @@ class UserCallSettings22Api(ApiChild, base=''):
 
     def get_person_ecbn_available_phone_numbers(self, person_id: str, phone_number: list[str] = None,
                                                 owner_name: str = None, org_id: str = None,
-                                                **params) -> Generator[PersonECBNAvailableNumberObject, None, None]:
+                                                **params: Any) -> Generator[PersonECBNAvailableNumberObject, None, None]:
         """
         Get Person ECBN Available Phone Numbers
 
@@ -2778,7 +2779,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`ExecutiveAlertGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/executive/alert')
@@ -2796,7 +2797,7 @@ class UserCallSettings22Api(ApiChild, base=''):
                                                clid_name_mode: ExecutiveAlertGetClidNameMode = None,
                                                custom_clidname: str = None, custom_clidname_in_unicode: str = None,
                                                clid_phone_number_mode: ExecutiveAlertGetClidPhoneNumberMode = None,
-                                               custom_clidphone_number: str = None, org_id: str = None):
+                                               custom_clidphone_number: str = None, org_id: str = None) -> None:
         """
         Modify Person Executive Alert Settings
 
@@ -2844,10 +2845,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if alerting_mode is not None:
             body['alertingMode'] = enum_str(alerting_mode)
         if next_assistant_number_of_rings is not None:
@@ -2873,7 +2874,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/executive/alert')
         super().put(url, params=params, json=body)
 
-    def get_person_executive_assigned_assistants(self, person_id: str, org_id: str = None) -> List[Assistant]:
+    def get_person_executive_assigned_assistants(self, person_id: str, org_id: str = None) -> builtins.list[Assistant]:
         """
         Get Person Executive Assigned Assistants
 
@@ -2891,7 +2892,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: list[Assistant]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/executive/assignedAssistants')
@@ -2900,7 +2901,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         return r
 
     def modify_person_executive_assigned_assistants(self, person_id: str, assistant_ids: list[str] = None,
-                                                    org_id: str = None):
+                                                    org_id: str = None) -> None:
         """
         Modify Person Executive Assigned Assistants
 
@@ -2921,10 +2922,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if assistant_ids is not None:
             body['assistantIds'] = assistant_ids
         url = self.ep(f'telephony/config/people/{person_id}/executive/assignedAssistants')
@@ -2949,7 +2950,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`ExecutiveAssistantSettingsGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/executive/assistant')
@@ -2959,7 +2960,7 @@ class UserCallSettings22Api(ApiChild, base=''):
 
     def modify_person_executive_assistant_settings(self, person_id: str, forward_filtered_calls_enabled: bool = None,
                                                    forward_to_phone_number: str = None,
-                                                   executives: list[ExecutivePut] = None, org_id: str = None):
+                                                   executives: list[ExecutivePut] = None, org_id: str = None) -> None:
         """
         Modify Person Executive Assistant Settings
 
@@ -2985,10 +2986,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if forward_filtered_calls_enabled is not None:
             body['forwardFilteredCallsEnabled'] = forward_filtered_calls_enabled
         if forward_to_phone_number is not None:
@@ -3000,7 +3001,7 @@ class UserCallSettings22Api(ApiChild, base=''):
 
     def get_person_executive_available_assistants(self, person_id: str, name: str = None, phone_number: str = None,
                                                   org_id: str = None,
-                                                  **params) -> Generator[AvailableAssistant, None, None]:
+                                                  **params: Any) -> Generator[AvailableAssistant, None, None]:
         """
         Get Person Executive Available Assistants
 
@@ -3051,7 +3052,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`ExecutiveCallFilteringGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/executive/callFiltering')
@@ -3062,7 +3063,7 @@ class UserCallSettings22Api(ApiChild, base=''):
     def update_person_executive_call_filtering_settings(self, person_id: str, enabled: bool = None,
                                                         filter_type: ExecutiveCallFilteringGetFilterType = None,
                                                         criteria_activation: list[ExecutiveCallFilteringPatchCriteriaActivationItem] = None,
-                                                        org_id: str = None):
+                                                        org_id: str = None) -> None:
         """
         Modify Person Executive Call Filtering Settings
 
@@ -3087,10 +3088,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if filter_type is not None:
@@ -3156,10 +3157,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['filterName'] = filter_name
         if schedule_name is not None:
             body['scheduleName'] = schedule_name
@@ -3182,7 +3183,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = data['id']
         return r
 
-    def delete_person_executive_call_filtering_criteria(self, person_id: str, id: str, org_id: str = None):
+    def delete_person_executive_call_filtering_criteria(self, person_id: str, id: str, org_id: str = None) -> None:
         """
         Delete Person Executive Call Filtering Criteria
 
@@ -3203,7 +3204,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/executive/callFiltering/criteria/{id}')
@@ -3231,7 +3232,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`ExecutiveCallFilteringCriteriaGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/executive/callFiltering/criteria/{id}')
@@ -3247,7 +3248,7 @@ class UserCallSettings22Api(ApiChild, base=''):
                                                         unavailable_callers_enabled: bool = None,
                                                         phone_numbers: list[str] = None, filter_enabled: bool = None,
                                                         calls_to_numbers: list[ExecutiveCallFilteringCriteriaGetCallsToNumbersItem] = None,
-                                                        org_id: str = None):
+                                                        org_id: str = None) -> None:
         """
         Modify Person Executive Call Filtering Criteria Settings
 
@@ -3296,10 +3297,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if schedule_name is not None:
             body['scheduleName'] = schedule_name
         if schedule_type is not None:
@@ -3340,7 +3341,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`ExecutiveScreeningGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/executive/screening')
@@ -3353,7 +3354,7 @@ class UserCallSettings22Api(ApiChild, base=''):
                                                    alert_anywhere_location_enabled: bool = None,
                                                    alert_mobility_location_enabled: bool = None,
                                                    alert_shared_call_appearance_location_enabled: bool = None,
-                                                   org_id: str = None):
+                                                   org_id: str = None) -> None:
         """
         Modify Person Executive Screening Settings
 
@@ -3383,10 +3384,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if alert_type is not None:
@@ -3402,7 +3403,7 @@ class UserCallSettings22Api(ApiChild, base=''):
 
     def get_person_fax_message_available_phone_numbers(self, person_id: str, phone_number: list[str] = None,
                                                        org_id: str = None,
-                                                       **params) -> Generator[PersonSecondaryAvailableNumberObject, None, None]:
+                                                       **params: Any) -> Generator[PersonSecondaryAvailableNumberObject, None, None]:
         """
         Get Person Fax Message Available Phone Numbers
 
@@ -3449,7 +3450,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: bool
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/features/callBridge')
@@ -3458,7 +3459,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         return r
 
     def configure_call_bridge_settings_person(self, person_id: str, warning_tone_enabled: bool = None,
-                                              org_id: str = None):
+                                              org_id: str = None) -> None:
         """
         Configure Call Bridge Settings for a Person
 
@@ -3478,10 +3479,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if warning_tone_enabled is not None:
             body['warningToneEnabled'] = warning_tone_enabled
         url = self.ep(f'telephony/config/people/{person_id}/features/callBridge')
@@ -3504,7 +3505,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`PersonalAssistantGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/features/personalAssistant')
@@ -3516,7 +3517,7 @@ class UserCallSettings22Api(ApiChild, base=''):
                                   presence: PersonalAssistantGetPresence = None, until_date_time: Union[str,
                                   datetime] = None, transfer_enabled: bool = None, transfer_number: str = None,
                                   alerting: PersonalAssistantGetAlerting = None,
-                                  alert_me_first_number_of_rings: int = None, org_id: str = None):
+                                  alert_me_first_number_of_rings: int = None, org_id: str = None) -> None:
         """
         Update Personal Assistant
 
@@ -3547,10 +3548,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if presence is not None:
@@ -3570,7 +3571,7 @@ class UserCallSettings22Api(ApiChild, base=''):
 
     def get_list_of_available_features(self, person_id: str, name: str = None, phone_number: str = None,
                                        extension: str = None, order: str = None, org_id: str = None,
-                                       **params) -> Generator[UserModeManagementAvailableFeaturesObject, None, None]:
+                                       **params: Any) -> Generator[UserModeManagementAvailableFeaturesObject, None, None]:
         """
         Retrieve the List of Available Features
 
@@ -3611,7 +3612,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         return self.session.follow_pagination(url=url, model=UserModeManagementAvailableFeaturesObject, item_key='features', params=params)
 
     def get_list_of_features_assigned_to_auser_mode_management(self, person_id: str,
-                                                               org_id: str = None) -> List[UserModeManagementFeatureObject]:
+                                                               org_id: str = None) -> builtins.list[UserModeManagementFeatureObject]:
         """
         Retrieve the List of Features Assigned to a User for Mode Management
 
@@ -3630,7 +3631,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: list[UserModeManagementFeatureObject]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/modeManagement/features')
@@ -3639,7 +3640,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         return r
 
     def assign_list_of_features_to_auser_mode_management(self, person_id: str, feature_ids: list[str],
-                                                         org_id: str = None):
+                                                         org_id: str = None) -> None:
         """
         Assign a List of Features to a User for Mode Management
 
@@ -3658,10 +3659,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['featureIds'] = feature_ids
         url = self.ep(f'telephony/config/people/{person_id}/modeManagement/features')
         super().put(url, params=params, json=body)
@@ -3685,7 +3686,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`GetMusicOnHoldObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/musicOnHold')
@@ -3696,7 +3697,7 @@ class UserCallSettings22Api(ApiChild, base=''):
     def configure_music_on_hold_settings_for_person(self, person_id: str, moh_enabled: bool = None,
                                                     greeting: GetMusicOnHoldObjectGreeting = None,
                                                     audio_announcement_file: AudioAnnouncementFileGetObject = None,
-                                                    org_id: str = None):
+                                                    org_id: str = None) -> None:
         """
         Configure Music On Hold Settings for a Person
 
@@ -3723,10 +3724,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if moh_enabled is not None:
             body['mohEnabled'] = moh_enabled
         if greeting is not None:
@@ -3737,7 +3738,8 @@ class UserCallSettings22Api(ApiChild, base=''):
         super().put(url, params=params, json=body)
 
     def assign_or_unassign_numbers_to_aperson(self, person_id: str, phone_numbers: list[PhoneNumber],
-                                              enable_distinctive_ring_pattern: bool = None, org_id: str = None):
+                                              enable_distinctive_ring_pattern: bool = None,
+                                              org_id: str = None) -> None:
         """
         Assign or Unassign numbers to a person
 
@@ -3760,17 +3762,17 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if enable_distinctive_ring_pattern is not None:
             body['enableDistinctiveRingPattern'] = enable_distinctive_ring_pattern
         body['phoneNumbers'] = TypeAdapter(list[PhoneNumber]).dump_python(phone_numbers, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'telephony/config/people/{person_id}/numbers')
         super().put(url, params=params, json=body)
 
-    def delete_access_codes_for_person(self, person_id: str, org_id: str = None):
+    def delete_access_codes_for_person(self, person_id: str, org_id: str = None) -> None:
         """
         Delete Access Codes for a Person
 
@@ -3789,7 +3791,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/accessCodes')
@@ -3815,7 +3817,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`UserPlaceAuthorizationCodeListGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/accessCodes')
@@ -3823,7 +3825,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = UserPlaceAuthorizationCodeListGet.model_validate(data)
         return r
 
-    def create_access_codes_for_person(self, person_id: str, code: str, description: str, org_id: str = None):
+    def create_access_codes_for_person(self, person_id: str, code: str, description: str, org_id: str = None) -> None:
         """
         Create Access Codes for a Person
 
@@ -3846,17 +3848,17 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['code'] = code
         body['description'] = description
         url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/accessCodes')
         super().post(url, params=params, json=body)
 
     def modify_access_codes_for_person(self, person_id: str, use_custom_access_codes: bool = None,
-                                       delete_codes: list[str] = None, org_id: str = None):
+                                       delete_codes: list[str] = None, org_id: str = None) -> None:
         """
         Modify Access Codes for a Person
 
@@ -3880,10 +3882,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if use_custom_access_codes is not None:
             body['useCustomAccessCodes'] = use_custom_access_codes
         if delete_codes is not None:
@@ -3912,7 +3914,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`TransferNumberGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/autoTransferNumbers')
@@ -3922,7 +3924,7 @@ class UserCallSettings22Api(ApiChild, base=''):
 
     def modify_transfer_numbers_for_person(self, person_id: str, use_custom_transfer_numbers: bool,
                                            auto_transfer_number1: str = None, auto_transfer_number2: str = None,
-                                           auto_transfer_number3: str = None, org_id: str = None):
+                                           auto_transfer_number3: str = None, org_id: str = None) -> None:
         """
         Modify Transfer Numbers for a Person
 
@@ -3958,10 +3960,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['useCustomTransferNumbers'] = use_custom_transfer_numbers
         if auto_transfer_number1 is not None:
             body['autoTransferNumber1'] = auto_transfer_number1
@@ -3972,7 +3974,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/autoTransferNumbers')
         super().put(url, params=params, json=body)
 
-    def delete_all_digit_patterns_person(self, person_id: str, org_id: str = None):
+    def delete_all_digit_patterns_person(self, person_id: str, org_id: str = None) -> None:
         """
         Delete all digit patterns for a Person.
 
@@ -3989,7 +3991,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/digitPatterns')
@@ -4015,7 +4017,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`UserOutgoingPermissionDigitPatternGetListObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/digitPatterns')
@@ -4051,10 +4053,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['pattern'] = pattern
         body['action'] = enum_str(action)
@@ -4066,7 +4068,7 @@ class UserCallSettings22Api(ApiChild, base=''):
 
     def modify_digit_pattern_category_control_settings_for_person(self, person_id: str,
                                                                   use_custom_digit_patterns: bool = None,
-                                                                  org_id: str = None):
+                                                                  org_id: str = None) -> None:
         """
         Modify the Digit Pattern Category Control Settings for a Person
 
@@ -4086,16 +4088,16 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if use_custom_digit_patterns is not None:
             body['useCustomDigitPatterns'] = use_custom_digit_patterns
         url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/digitPatterns')
         super().put(url, params=params, json=body)
 
-    def delete_adigit_pattern_person(self, person_id: str, digit_pattern_id: str, org_id: str = None):
+    def delete_adigit_pattern_person(self, person_id: str, digit_pattern_id: str, org_id: str = None) -> None:
         """
         Delete a digit pattern for a Person.
 
@@ -4114,7 +4116,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/digitPatterns/{digit_pattern_id}')
@@ -4142,7 +4144,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`UserDigitPatternObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/outgoingPermission/digitPatterns/{digit_pattern_id}')
@@ -4152,7 +4154,7 @@ class UserCallSettings22Api(ApiChild, base=''):
 
     def modify_digit_pattern_for_person(self, person_id: str, digit_pattern_id: str, name: str = None,
                                         pattern: str = None, action: Action = None, transfer_enabled: bool = None,
-                                        org_id: str = None):
+                                        org_id: str = None) -> None:
         """
         Modify a digit pattern for a Person.
 
@@ -4179,10 +4181,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if name is not None:
             body['name'] = name
         if pattern is not None:
@@ -4228,7 +4230,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`EndpointInformation`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/preferredAnswerEndpoint')
@@ -4236,7 +4238,8 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = EndpointInformation.model_validate(data)
         return r
 
-    def modify_preferred_answer_endpoint(self, person_id: str, preferred_answer_endpoint_id: str, org_id: str = None):
+    def modify_preferred_answer_endpoint(self, person_id: str, preferred_answer_endpoint_id: str,
+                                         org_id: str = None) -> None:
         """
         Modify Preferred Answer Endpoint
 
@@ -4254,17 +4257,17 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['preferredAnswerEndpointId'] = preferred_answer_endpoint_id
         url = self.ep(f'telephony/config/people/{person_id}/preferredAnswerEndpoint')
         super().put(url, params=params, json=body)
 
     def get_person_secondary_available_phone_numbers(self, person_id: str, phone_number: list[str] = None,
                                                      org_id: str = None,
-                                                     **params) -> Generator[PersonSecondaryAvailableNumberObject, None, None]:
+                                                     **params: Any) -> Generator[PersonSecondaryAvailableNumberObject, None, None]:
         """
         Get Person Secondary Available Phone Numbers
 
@@ -4313,7 +4316,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`SelectiveAcceptCallGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/selectiveAccept')
@@ -4321,7 +4324,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = SelectiveAcceptCallGet.model_validate(data)
         return r
 
-    def update_user_selective_call_accept_criteria(self, person_id: str, enabled: bool, org_id: str = None):
+    def update_user_selective_call_accept_criteria(self, person_id: str, enabled: bool, org_id: str = None) -> None:
         """
         Update User’s Selective Call Accept Criteria
 
@@ -4341,10 +4344,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         url = self.ep(f'telephony/config/people/{person_id}/selectiveAccept')
         super().put(url, params=params, json=body)
@@ -4394,10 +4397,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if schedule_name is not None:
             body['scheduleName'] = schedule_name
         if schedule_type is not None:
@@ -4417,7 +4420,8 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = data['id']
         return r
 
-    def delete_criteria_from_user_selective_call_accept_service(self, person_id: str, id: str, org_id: str = None):
+    def delete_criteria_from_user_selective_call_accept_service(self, person_id: str, id: str,
+                                                                org_id: str = None) -> None:
         """
         Delete a Criteria From the User’s Selective Call Accept service
 
@@ -4437,7 +4441,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/selectiveAccept/criteria/{id}')
@@ -4464,7 +4468,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`SelectiveAcceptCallCriteriaGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/selectiveAccept/criteria/{id}')
@@ -4479,7 +4483,8 @@ class UserCallSettings22Api(ApiChild, base=''):
                                                                 schedule_level: ScheduleLevel = None,
                                                                 anonymous_callers_enabled: bool = None,
                                                                 unavailable_callers_enabled: bool = None,
-                                                                phone_numbers: list[str] = None, org_id: str = None):
+                                                                phone_numbers: list[str] = None,
+                                                                org_id: str = None) -> None:
         """
         Modify a Criteria From the User’s Selective Call Accept Service
 
@@ -4518,10 +4523,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if schedule_name is not None:
             body['scheduleName'] = schedule_name
         if schedule_type is not None:
@@ -4557,7 +4562,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`SelectiveForwardCallGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/selectiveForward')
@@ -4569,7 +4574,7 @@ class UserCallSettings22Api(ApiChild, base=''):
                                                             default_phone_number_to_forward: str = None,
                                                             ring_reminder_enabled: bool = None,
                                                             send_to_voicemail_enabled: bool = None,
-                                                            org_id: str = None):
+                                                            org_id: str = None) -> None:
         """
         Update User’s Selective Call Forwarding Criteria List
 
@@ -4596,10 +4601,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         if default_phone_number_to_forward is not None:
             body['defaultPhoneNumberToForward'] = default_phone_number_to_forward
@@ -4659,10 +4664,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['forwardToPhoneNumber'] = forward_to_phone_number
         body['sendToVoicemailEnabled'] = send_to_voicemail_enabled
         if schedule_name is not None:
@@ -4685,7 +4690,8 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = data['id']
         return r
 
-    def delete_criteria_from_user_selective_call_forwarding_service(self, person_id: str, id: str, org_id: str = None):
+    def delete_criteria_from_user_selective_call_forwarding_service(self, person_id: str, id: str,
+                                                                    org_id: str = None) -> None:
         """
         Delete a Criteria From the User’s Selective Call Forwarding Service
 
@@ -4705,7 +4711,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/selectiveForward/criteria/{id}')
@@ -4732,7 +4738,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`SelectiveForwardCallCriteriaGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/selectiveForward/criteria/{id}')
@@ -4750,7 +4756,8 @@ class UserCallSettings22Api(ApiChild, base=''):
                                                                    anonymous_callers_enabled: bool = None,
                                                                    unavailable_callers_enabled: bool = None,
                                                                    phone_numbers: list[str] = None,
-                                                                   forward_enabled: bool = None, org_id: str = None):
+                                                                   forward_enabled: bool = None,
+                                                                   org_id: str = None) -> None:
         """
         Modify a Criteria for the User’s Selective Call Forwarding Service
 
@@ -4793,10 +4800,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['forwardToPhoneNumber'] = forward_to_phone_number
         body['sendToVoicemailEnabled'] = send_to_voicemail_enabled
         if schedule_name is not None:
@@ -4836,7 +4843,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`SelectiveRejectCallGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/selectiveReject')
@@ -4844,7 +4851,8 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = SelectiveRejectCallGet.model_validate(data)
         return r
 
-    def update_user_selective_call_rejection_criteria_list(self, person_id: str, enabled: bool, org_id: str = None):
+    def update_user_selective_call_rejection_criteria_list(self, person_id: str, enabled: bool,
+                                                           org_id: str = None) -> None:
         """
         Update User’s Selective Call Rejection Criteria List
 
@@ -4864,10 +4872,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         url = self.ep(f'telephony/config/people/{person_id}/selectiveReject')
         super().put(url, params=params, json=body)
@@ -4916,10 +4924,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if schedule_name is not None:
             body['scheduleName'] = schedule_name
         if schedule_type is not None:
@@ -4939,7 +4947,8 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = data['id']
         return r
 
-    def delete_criteria_from_user_selective_call_rejection_service(self, person_id: str, id: str, org_id: str = None):
+    def delete_criteria_from_user_selective_call_rejection_service(self, person_id: str, id: str,
+                                                                   org_id: str = None) -> None:
         """
         Delete a Criteria From the User’s Selective Call Rejection Service
 
@@ -4959,7 +4968,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/selectiveReject/criteria/{id}')
@@ -4986,7 +4995,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`SelectiveRejectCallCriteriaGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/selectiveReject/criteria/{id}')
@@ -5001,7 +5010,7 @@ class UserCallSettings22Api(ApiChild, base=''):
                                                                   anonymous_callers_enabled: bool = None,
                                                                   unavailable_callers_enabled: bool = None,
                                                                   phone_numbers: list[str] = None,
-                                                                  org_id: str = None):
+                                                                  org_id: str = None) -> None:
         """
         Modify a Criteria for the User’s Selective Call Rejection Service
 
@@ -5040,10 +5049,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if schedule_name is not None:
             body['scheduleName'] = schedule_name
         if schedule_type is not None:
@@ -5083,7 +5092,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: :class:`GetUserMSTeamsSettingsObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/settings/msTeams')
@@ -5093,7 +5102,7 @@ class UserCallSettings22Api(ApiChild, base=''):
 
     def configure_person_msteams_setting(self, person_id: str,
                                          setting_name: ModifyUserMSTeamsSettingsObjectSettingName, value: bool,
-                                         org_id: str = None):
+                                         org_id: str = None) -> None:
         """
         Configure a Person's MS Teams Setting
 
@@ -5118,10 +5127,10 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['settingName'] = enum_str(setting_name)
         body['value'] = value
         url = self.ep(f'telephony/config/people/{person_id}/settings/msTeams')
@@ -5175,7 +5184,7 @@ class UserCallSettings22Api(ApiChild, base=''):
                                                    voicemail_notifications: AccessLevel = None,
                                                    voicemail_transfer_number: AccessLevel = None,
                                                    generate_activation_code: AccessLevel = None,
-                                                   voicemail_download: AccessLevel = None):
+                                                   voicemail_download: AccessLevel = None) -> None:
         """
         Update a Person’s Feature Access Configuration
 
@@ -5273,7 +5282,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type voicemail_download: AccessLevel
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if anonymous_call_rejection is not None:
             body['anonymousCallRejection'] = enum_str(anonymous_call_rejection)
         if barge_in is not None:
@@ -5327,7 +5336,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/settings/permissions')
         super().put(url, json=body)
 
-    def reset_person_feature_access_config_to_org_default(self, person_id: str):
+    def reset_person_feature_access_config_to_org_default(self, person_id: str) -> None:
         """
         Reset a Person’s Feature Access Configuration to the Organization’s Default Settings
 
@@ -5357,7 +5366,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/settings/permissions/actions/reset/invoke')
         super().post(url)
 
-    def modify_person_voicemail_passcode(self, person_id: str, passcode: str, org_id: str = None):
+    def modify_person_voicemail_passcode(self, person_id: str, passcode: str, org_id: str = None) -> None:
         """
         Modify a person's voicemail passcode.
 
@@ -5373,15 +5382,15 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['passcode'] = passcode
         url = self.ep(f'telephony/config/people/{person_id}/voicemail/passcode')
         super().put(url, params=params, json=body)
 
-    def list_messages(self, line_owner_id: str = None) -> List[VoiceMessageDetails]:
+    def list_messages(self, line_owner_id: str = None) -> builtins.list[VoiceMessageDetails]:
         """
         List Messages
 
@@ -5392,7 +5401,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type line_owner_id: str
         :rtype: list[VoiceMessageDetails]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if line_owner_id is not None:
             params['lineOwnerId'] = line_owner_id
         url = self.ep('telephony/voiceMessages')
@@ -5400,7 +5409,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = TypeAdapter(list[VoiceMessageDetails]).validate_python(data['items'])
         return r
 
-    def mark_as_read(self, message_id: str = None, line_owner_id: str = None):
+    def mark_as_read(self, message_id: str = None, line_owner_id: str = None) -> None:
         """
         Mark As Read
 
@@ -5417,7 +5426,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type line_owner_id: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if message_id is not None:
             body['messageId'] = message_id
         if line_owner_id is not None:
@@ -5425,7 +5434,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep('telephony/voiceMessages/markAsRead')
         super().post(url, json=body)
 
-    def mark_as_unread(self, message_id: str = None, line_owner_id: str = None):
+    def mark_as_unread(self, message_id: str = None, line_owner_id: str = None) -> None:
         """
         Mark As Unread
 
@@ -5442,7 +5451,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         :type line_owner_id: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if message_id is not None:
             body['messageId'] = message_id
         if line_owner_id is not None:
@@ -5463,7 +5472,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = GetMessageSummaryResponse.model_validate(data)
         return r
 
-    def delete_message(self, message_id: str):
+    def delete_message(self, message_id: str) -> None:
         """
         Delete Message
 

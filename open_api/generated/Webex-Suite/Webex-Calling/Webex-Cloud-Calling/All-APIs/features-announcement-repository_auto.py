@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -140,7 +141,7 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
                                                                                 file_type: str = None,
                                                                                 media_file_type: str = None,
                                                                                 name: str = None, org_id: str = None,
-                                                                                **params) -> Generator[AnnouncementsListResponse, None, None]:
+                                                                                **params: Any) -> Generator[AnnouncementsListResponse, None, None]:
         """
         Fetch list of announcement greetings on location and organization level
 
@@ -210,10 +211,10 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         if file is not None:
             body['file'] = file
@@ -236,7 +237,7 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`AnnouncementUsageResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('announcements/usage')
@@ -244,7 +245,7 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         r = AnnouncementUsageResponse.model_validate(data)
         return r
 
-    def delete_an_announcement_greeting_of_the_organization(self, announcement_id: str, org_id: str = None):
+    def delete_an_announcement_greeting_of_the_organization(self, announcement_id: str, org_id: str = None) -> None:
         """
         Delete an announcement greeting of the organization
 
@@ -258,7 +259,7 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'announcements/{announcement_id}')
@@ -282,7 +283,7 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`AnnouncementResponseWithPlaylist`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'announcements/{announcement_id}')
@@ -290,7 +291,8 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         r = AnnouncementResponseWithPlaylist.model_validate(data)
         return r
 
-    def modify_a_binary_announcement_greeting_at_organization_level(self, announcement_id: str, org_id: str = None):
+    def modify_a_binary_announcement_greeting_at_organization_level(self, announcement_id: str,
+                                                                    org_id: str = None) -> None:
         """
         Modify a binary announcement greeting at organization level
 
@@ -310,7 +312,7 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'announcements/{announcement_id}')
@@ -344,10 +346,10 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         if file is not None:
             body['file'] = file
@@ -372,7 +374,7 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`AnnouncementUsageResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/announcements/usage')
@@ -381,7 +383,7 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         return r
 
     def delete_an_announcement_greeting_in_a_location(self, location_id: str, announcement_id: str,
-                                                      org_id: str = None):
+                                                      org_id: str = None) -> None:
         """
         Delete an announcement greeting in a location.
 
@@ -396,7 +398,7 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')
@@ -422,7 +424,7 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`AnnouncementResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')
@@ -431,7 +433,7 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         return r
 
     def modify_a_binary_announcement_greeting_at_location_level(self, location_id: str, announcement_id: str,
-                                                                org_id: str = None):
+                                                                org_id: str = None) -> None:
         """
         Modify a binary announcement greeting at location level
 
@@ -453,7 +455,7 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')

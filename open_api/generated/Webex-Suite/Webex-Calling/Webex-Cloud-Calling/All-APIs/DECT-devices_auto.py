@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -298,7 +299,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
     """
 
     def get_the_list_of_dect_networks_for_an_organization(self, name: str = None, location_id: str = None,
-                                                          org_id: str = None) -> List[DECTNetworkDetail]:
+                                                          org_id: str = None) -> builtins.list[DECTNetworkDetail]:
         """
         Get the List of DECT Networks for an organization
 
@@ -318,7 +319,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: list[DECTNetworkDetail]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         if name is not None:
@@ -333,7 +334,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
     def search_available_members(self, member_name: str = None, phone_number: str = None, extension: str = None,
                                  order: str = None, location_id: str = None, exclude_virtual_line: bool = None,
                                  usage_type: UsageType = None, org_id: str = None,
-                                 **params) -> Generator[AvailableMember, None, None]:
+                                 **params: Any) -> Generator[AvailableMember, None, None]:
         """
         Search Available Members
 
@@ -415,10 +416,10 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         if display_name is not None:
             body['displayName'] = display_name
@@ -430,7 +431,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         r = data['dectNetworkId']
         return r
 
-    def delete_dect_network(self, location_id: str, dect_network_id: str, org_id: str = None):
+    def delete_dect_network(self, location_id: str, dect_network_id: str, org_id: str = None) -> None:
         """
         Delete DECT Network
 
@@ -450,7 +451,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}')
@@ -477,7 +478,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`DECTNetworkDetail`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}')
@@ -486,7 +487,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def update_dect_network(self, location_id: str, dect_network_id: str, name: str, default_access_code_enabled: bool,
-                            default_access_code: str, display_name: str = None, org_id: str = None):
+                            default_access_code: str, display_name: str = None, org_id: str = None) -> None:
         """
         Update DECT Network
 
@@ -517,10 +518,10 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         if display_name is not None:
             body['displayName'] = display_name
@@ -529,7 +530,8 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}')
         super().put(url, params=params, json=body)
 
-    def delete_bulk_dect_network_base_stations(self, location_id: str, dect_network_id: str, org_id: str = None):
+    def delete_bulk_dect_network_base_stations(self, location_id: str, dect_network_id: str,
+                                               org_id: str = None) -> None:
         """
         Delete bulk DECT Network Base Stations
 
@@ -549,14 +551,14 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/baseStations')
         super().delete(url, params=params)
 
     def get_a_list_of_dect_network_base_stations(self, location_id: str, dect_network_id: str,
-                                                 org_id: str = None) -> List[BaseStationsResponse]:
+                                                 org_id: str = None) -> builtins.list[BaseStationsResponse]:
         """
         Get a list of DECT Network Base Stations
 
@@ -577,7 +579,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: list[BaseStationsResponse]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/baseStations')
@@ -586,7 +588,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def create_multiple_base_stations(self, location_id: str, dect_network_id: str, base_station_macs: list[str],
-                                      org_id: str = None) -> List[BaseStationResponse]:
+                                      org_id: str = None) -> builtins.list[BaseStationResponse]:
         """
         Create Multiple Base Stations
 
@@ -605,10 +607,10 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: list[BaseStationResponse]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['baseStationMacs'] = base_station_macs
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/baseStations')
         data = super().post(url, params=params, json=body)
@@ -616,7 +618,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def delete_a_specific_dect_network_base_station(self, location_id: str, dect_network_id: str, base_station_id: str,
-                                                    org_id: str = None):
+                                                    org_id: str = None) -> None:
         """
         Delete a specific DECT Network Base Station
 
@@ -638,7 +640,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/baseStations/{base_station_id}')
@@ -669,7 +671,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`BaseStationDetailResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/baseStations/{base_station_id}')
@@ -704,7 +706,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`DECTHandsetList`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         if basestation_id is not None:
@@ -717,7 +719,8 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def add_a_handset_to_a_dect_network(self, location_id: str, dect_network_id: str, line1_member_id: str,
-                                        custom_display_name: str, line2_member_id: str = None, org_id: str = None):
+                                        custom_display_name: str, line2_member_id: str = None,
+                                        org_id: str = None) -> None:
         """
         Add a Handset to a DECT Network
 
@@ -748,10 +751,10 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['line1MemberId'] = line1_member_id
         if line2_member_id is not None:
             body['line2MemberId'] = line2_member_id
@@ -760,7 +763,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         super().post(url, params=params, json=body)
 
     def delete_multiple_handsets(self, location_id: str, dect_network_id: str, handset_ids: list[str],
-                                 delete_all: bool = None, org_id: str = None):
+                                 delete_all: bool = None, org_id: str = None) -> None:
         """
         Delete multiple handsets
 
@@ -790,10 +793,10 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['handsetIds'] = handset_ids
         if delete_all is not None:
             body['deleteAll'] = delete_all
@@ -802,7 +805,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
 
     def add_a_list_of_handsets_to_a_dect_network(self, location_id: str, dect_network_id: str,
                                                  items: list[AddDECTHandset],
-                                                 org_id: str = None) -> List[AddDECTHandsetBulkSuccessResponse]:
+                                                 org_id: str = None) -> builtins.list[AddDECTHandsetBulkSuccessResponse]:
         """
         Add a List of Handsets to a DECT Network
 
@@ -833,10 +836,10 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: list[AddDECTHandsetBulkSuccessResponse]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['items'] = TypeAdapter(list[AddDECTHandset]).dump_python(items, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/handsets/bulk')
         data = super().post(url, params=params, json=body)
@@ -844,7 +847,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def delete_specific_dect_network_handset_details(self, location_id: str, dect_network_id: str, handset_id: str,
-                                                     org_id: str = None):
+                                                     org_id: str = None) -> None:
         """
         Delete specific DECT Network Handset Details
 
@@ -872,7 +875,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/handsets/{handset_id}')
@@ -902,7 +905,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`DECTHandsetGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/handsets/{handset_id}')
@@ -912,7 +915,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
 
     def update_dect_network_handset(self, location_id: str, dect_network_id: str, handset_id: str,
                                     line1_member_id: str, custom_display_name: str, line2_member_id: str = None,
-                                    org_id: str = None):
+                                    org_id: str = None) -> None:
         """
         Update DECT Network Handset
 
@@ -950,10 +953,10 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['line1MemberId'] = line1_member_id
         if line2_member_id is not None:
             body['line2MemberId'] = line2_member_id
@@ -986,7 +989,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: bool
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/serviceabilityPassword')
@@ -995,7 +998,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def update_dect_serviceability_password_status(self, location_id: str, dect_network_id: str, enabled: bool,
-                                                   org_id: str = None):
+                                                   org_id: str = None) -> None:
         """
         Update DECT Serviceability Password status
 
@@ -1026,10 +1029,10 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/serviceabilityPassword')
         super().put(url, params=params, json=body)
@@ -1058,7 +1061,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/serviceabilityPassword/actions/generate/invoke')
@@ -1067,7 +1070,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def get_list_of_dect_networks_associated_with_a_person(self, person_id: str,
-                                                           org_id: str = None) -> List[DECTNetworkItem]:
+                                                           org_id: str = None) -> builtins.list[DECTNetworkItem]:
         """
         GET List of DECT networks associated with a Person
 
@@ -1085,7 +1088,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: list[DECTNetworkItem]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'people/{person_id}/dectNetworks')
@@ -1094,7 +1097,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def get_list_of_dect_networks_associated_with_a_workspace(self, workspace_id: str,
-                                                              org_id: str = None) -> List[DECTNetworkItem]:
+                                                              org_id: str = None) -> builtins.list[DECTNetworkItem]:
         """
         GET List of DECT networks associated with a workspace
 
@@ -1112,7 +1115,7 @@ class DECTDevicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: list[DECTNetworkItem]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'workspaces/{workspace_id}/dectNetworks')

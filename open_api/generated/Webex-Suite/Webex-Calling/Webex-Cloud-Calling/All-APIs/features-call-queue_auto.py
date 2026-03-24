@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -1314,12 +1315,12 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         if has_cx_essentials is not None:
             params['hasCxEssentials'] = str(has_cx_essentials).lower()
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         if phone_number is not None:
             body['phoneNumber'] = phone_number
@@ -1355,7 +1356,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
 
     def get_call_queue_alternate_available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
                                                          org_id: str = None,
-                                                         **params) -> Generator[CallQueuePrimaryAvailableNumberObject, None, None]:
+                                                         **params: Any) -> Generator[CallQueuePrimaryAvailableNumberObject, None, None]:
         """
         Get Call Queue Alternate Available Phone Numbers
 
@@ -1389,7 +1390,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
 
     def get_call_queue_primary_available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
                                                        org_id: str = None,
-                                                       **params) -> Generator[CallQueuePrimaryAvailableNumberObject, None, None]:
+                                                       **params: Any) -> Generator[CallQueuePrimaryAvailableNumberObject, None, None]:
         """
         Get Call Queue Primary Available Phone Numbers
 
@@ -1424,7 +1425,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
     def get_call_queue_call_forward_available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
                                                             owner_name: str = None, extension: str = None,
                                                             org_id: str = None,
-                                                            **params) -> Generator[CallQueueCallForwardAvailableNumberObject, None, None]:
+                                                            **params: Any) -> Generator[CallQueueCallForwardAvailableNumberObject, None, None]:
         """
         Get Call Queue Call Forward Available Phone Numbers
 
@@ -1465,7 +1466,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/queues/callForwarding/availableNumbers')
         return self.session.follow_pagination(url=url, model=CallQueueCallForwardAvailableNumberObject, item_key='phoneNumbers', params=params)
 
-    def delete_a_call_queue(self, location_id: str, queue_id: str, org_id: str = None):
+    def delete_a_call_queue(self, location_id: str, queue_id: str, org_id: str = None) -> None:
         """
         Delete a Call Queue
 
@@ -1490,7 +1491,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}')
@@ -1529,7 +1530,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetCallQueueEssentialsObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         if has_cx_essentials is not None:
@@ -1552,7 +1553,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                             allow_agent_join_enabled: bool = None,
                             phone_number_for_outgoing_calls_enabled: bool = None,
                             direct_line_caller_id_name: DirectLineCallerIdNameObject = None, dial_by_name: str = None,
-                            org_id: str = None):
+                            org_id: str = None) -> None:
         """
         Update a Call Queue
 
@@ -1627,10 +1628,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if name is not None:
@@ -1672,7 +1673,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         super().put(url, params=params, json=body)
 
     def read_the_list_of_call_queue_announcement_files(self, location_id: str, queue_id: str,
-                                                       org_id: str = None) -> List[GetAnnouncementFileInfo]:
+                                                       org_id: str = None) -> builtins.list[GetAnnouncementFileInfo]:
         """
         Read the List of Call Queue Announcement Files
 
@@ -1695,7 +1696,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: list[GetAnnouncementFileInfo]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/announcements')
@@ -1704,7 +1705,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         return r
 
     def delete_a_call_queue_announcement_file(self, location_id: str, queue_id: str, file_name: str,
-                                              org_id: str = None):
+                                              org_id: str = None) -> None:
         """
         Delete a Call Queue Announcement File
 
@@ -1726,7 +1727,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/announcements/{file_name}')
@@ -1756,7 +1757,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: CallForwardSettingsGetCallForwarding
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding')
@@ -1766,7 +1767,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
 
     def update_call_forwarding_settings_for_a_call_queue(self, location_id: str, queue_id: str,
                                                          call_forwarding: ModifyCallForwardingObjectCallForwarding = None,
-                                                         org_id: str = None):
+                                                         org_id: str = None) -> None:
         """
         Update Call Forwarding Settings for a Call Queue
 
@@ -1791,17 +1792,17 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if call_forwarding is not None:
             body['callForwarding'] = call_forwarding.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding')
         super().put(url, params=params, json=body)
 
     def switch_mode_for_call_forwarding_settings_for_a_call_queue(self, location_id: str, queue_id: str,
-                                                                  org_id: str = None):
+                                                                  org_id: str = None) -> None:
         """
         Switch Mode for Call Forwarding Settings for a Call Queue
 
@@ -1818,7 +1819,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding/actions/switchMode/invoke')
@@ -1871,10 +1872,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         if enabled is not None:
             body['enabled'] = enabled
@@ -1892,7 +1893,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         return r
 
     def delete_a_selective_call_forwarding_rule_for_a_call_queue(self, location_id: str, queue_id: str, rule_id: str,
-                                                                 org_id: str = None):
+                                                                 org_id: str = None) -> None:
         """
         Delete a Selective Call Forwarding Rule for a Call Queue
 
@@ -1918,7 +1919,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding/selectiveRules/{rule_id}')
@@ -1951,7 +1952,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetForwardingRuleObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding/selectiveRules/{rule_id}')
@@ -2009,10 +2010,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if name is not None:
             body['name'] = name
         if enabled is not None:
@@ -2052,7 +2053,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetCallQueueForcedForwardObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/forcedForward')
@@ -2065,7 +2066,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                                                    audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
                                                    transfer_phone_number: str = None,
                                                    audio_files: list[AudioAnnouncementFileFeatureGetObject] = None,
-                                                   org_id: str = None):
+                                                   org_id: str = None) -> None:
         """
         Update a Call Queue Forced Forward service
 
@@ -2098,10 +2099,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['forcedForwardEnabled'] = forced_forward_enabled
         if transfer_phone_number is not None:
             body['transferPhoneNumber'] = transfer_phone_number
@@ -2132,7 +2133,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetCallQueueHolidayObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/holidayService')
@@ -2147,7 +2148,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                                             audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
                                             holiday_schedule_name: str = None, transfer_phone_number: str = None,
                                             audio_files: list[AudioAnnouncementFileFeatureGetObject] = None,
-                                            org_id: str = None):
+                                            org_id: str = None) -> None:
         """
         Update a Call Queue Holiday Service
 
@@ -2186,10 +2187,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['holidayServiceEnabled'] = holiday_service_enabled
         body['action'] = enum_str(action)
         body['holidayScheduleLevel'] = enum_str(holiday_schedule_level)
@@ -2225,7 +2226,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetCallQueueNightServiceObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/nightService')
@@ -2245,7 +2246,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                                           business_hours_name: str = None,
                                           business_hours_level: CallQueueHolidaySchedulesObjectScheduleLevel = None,
                                           manual_audio_files: list[AudioAnnouncementFileFeatureGetObject] = None,
-                                          org_id: str = None):
+                                          org_id: str = None) -> None:
         """
         Update a Call Queue Night Service
 
@@ -2295,10 +2296,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['nightServiceEnabled'] = night_service_enabled
         if action is not None:
             body['action'] = enum_str(action)
@@ -2343,7 +2344,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetCallQueueStrandedCallsObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/strandedCalls')
@@ -2356,7 +2357,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                                                    audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
                                                    transfer_phone_number: str = None,
                                                    audio_files: list[AudioAnnouncementFileFeatureGetObject] = None,
-                                                   org_id: str = None):
+                                                   org_id: str = None) -> None:
         """
         Update a Call Queue Stranded Calls service
 
@@ -2384,10 +2385,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['action'] = enum_str(action)
         if transfer_phone_number is not None:
             body['transferPhoneNumber'] = transfer_phone_number
@@ -2403,7 +2404,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                                                                          department_name: str = None,
                                                                          has_cx_essentials: bool = None,
                                                                          org_id: str = None,
-                                                                         **params) -> Generator[ListCallQueueEssentialsObject, None, None]:
+                                                                         **params: Any) -> Generator[ListCallQueueEssentialsObject, None, None]:
         """
         Read the List of Call Queues with Customer Experience Essentials
 
@@ -2459,7 +2460,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                                                                                join_enabled: bool = None,
                                                                                has_cx_essentials: bool = None,
                                                                                order: str = None, org_id: str = None,
-                                                                               **params) -> Generator[ListCallQueueAgentObject, None, None]:
+                                                                               **params: Any) -> Generator[ListCallQueueAgentObject, None, None]:
         """
         Read the List of Call Queue Agents with Customer Experience Essentials
 
@@ -2515,7 +2516,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
 
     def get_call_queue_available_agents(self, location_id: str, name: str = None, phone_number: str = None,
                                         order: str = None, org_id: str = None,
-                                        **params) -> Generator[AvailableAgentObject, None, None]:
+                                        **params: Any) -> Generator[AvailableAgentObject, None, None]:
         """
         Get Call Queue Available Agents
 
@@ -2589,7 +2590,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetCallQueueAgentObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         if has_cx_essentials is not None:
@@ -2604,7 +2605,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
     def update_an_agent_s_settings_of_one_or_more_call_queues_with_customer_experience_essentials(self, id: str,
                                                                                                   settings: list[ModifyAgentsForCallQueueObjectSettingsItem],
                                                                                                   has_cx_essentials: bool = None,
-                                                                                                  org_id: str = None):
+                                                                                                  org_id: str = None) -> None:
         """
         Update an Agent's Settings of One or More Call Queues with Customer Experience Essentials
 
@@ -2626,17 +2627,17 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         if has_cx_essentials is not None:
             params['hasCxEssentials'] = str(has_cx_essentials).lower()
-        body = dict()
+        body: dict[str, Any] = dict()
         body['settings'] = TypeAdapter(list[ModifyAgentsForCallQueueObjectSettingsItem]).dump_python(settings, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'queues/agents/{id}/settings')
         super().put(url, params=params, json=body)
 
-    def delete_bulk_supervisors(self, supervisor_ids: list[str], delete_all: bool = None, org_id: str = None):
+    def delete_bulk_supervisors(self, supervisor_ids: list[str], delete_all: bool = None, org_id: str = None) -> None:
         """
         Delete Bulk supervisors
 
@@ -2655,10 +2656,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['supervisorIds'] = supervisor_ids
         if delete_all is not None:
             body['deleteAll'] = delete_all
@@ -2668,7 +2669,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
     def get_list_of_supervisors_with_customer_experience_essentials(self, name: str = None, phone_number: str = None,
                                                                     order: str = None, has_cx_essentials: bool = None,
                                                                     org_id: str = None,
-                                                                    **params) -> Generator[ListSupervisorObject, None, None]:
+                                                                    **params: Any) -> Generator[ListSupervisorObject, None, None]:
         """
         Get List of Supervisors with Customer Experience Essentials
 
@@ -2708,7 +2709,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
 
     def create_a_supervisor_with_customer_experience_essentials(self, id: str,
                                                                 agents: list[PostPersonPlaceVirtualLineSupervisorObject],
-                                                                has_cx_essentials: bool = None, org_id: str = None):
+                                                                has_cx_essentials: bool = None,
+                                                                org_id: str = None) -> None:
         """
         Create a Supervisor with Customer Experience Essentials
 
@@ -2731,12 +2733,12 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         if has_cx_essentials is not None:
             params['hasCxEssentials'] = str(has_cx_essentials).lower()
-        body = dict()
+        body: dict[str, Any] = dict()
         body['id'] = id
         body['agents'] = TypeAdapter(list[PostPersonPlaceVirtualLineSupervisorObject]).dump_python(agents, mode='json', by_alias=True, exclude_none=True)
         url = self.ep('supervisors')
@@ -2745,7 +2747,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
     def list_available_agents_with_customer_experience_essentials(self, name: str = None, phone_number: str = None,
                                                                   order: str = None, has_cx_essentials: bool = None,
                                                                   org_id: str = None,
-                                                                  **params) -> Generator[AvailableAgentListObject, None, None]:
+                                                                  **params: Any) -> Generator[AvailableAgentListObject, None, None]:
         """
         List Available Agents with Customer Experience Essentials
 
@@ -2788,7 +2790,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                                                                        phone_number: str = None, order: str = None,
                                                                        has_cx_essentials: bool = None,
                                                                        org_id: str = None,
-                                                                       **params) -> Generator[AvailableSupervisorsListObject, None, None]:
+                                                                       **params: Any) -> Generator[AvailableSupervisorsListObject, None, None]:
         """
         List Available Supervisors with Customer Experience Essentials
 
@@ -2827,7 +2829,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep('supervisors/availableSupervisors')
         return self.session.follow_pagination(url=url, model=AvailableSupervisorsListObject, item_key='supervisors', params=params)
 
-    def delete_a_supervisor(self, supervisor_id: str, org_id: str = None):
+    def delete_a_supervisor(self, supervisor_id: str, org_id: str = None) -> None:
         """
         Delete A Supervisor
 
@@ -2843,7 +2845,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'supervisors/{supervisor_id}')
@@ -2885,7 +2887,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetSupervisorDetailWithCustomerExperienceEssentialsResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         if max_ is not None:
@@ -2908,7 +2910,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
     def assign_or_unassign_agents_to_supervisor_with_customer_experience_essentials(self, supervisor_id: str,
                                                                                     agents: list[PutPersonPlaceVirtualLineAgentObject],
                                                                                     has_cx_essentials: bool = None,
-                                                                                    org_id: str = None):
+                                                                                    org_id: str = None) -> None:
         """
         Assign or Unassign Agents to Supervisor with Customer Experience Essentials
 
@@ -2932,12 +2934,12 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         if has_cx_essentials is not None:
             params['hasCxEssentials'] = str(has_cx_essentials).lower()
-        body = dict()
+        body: dict[str, Any] = dict()
         body['agents'] = TypeAdapter(list[PutPersonPlaceVirtualLineAgentObject]).dump_python(agents, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'supervisors/{supervisor_id}')
         super().put(url, params=params, json=body)

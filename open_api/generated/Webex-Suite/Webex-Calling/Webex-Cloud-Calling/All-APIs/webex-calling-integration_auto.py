@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -98,7 +99,7 @@ class WebexCallingIntegrationApi(ApiChild, base='telephony/config/serviceSetting
         :type organization_id: str
         :rtype: :class:`CallerReputationProviderSettings`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if organization_id is not None:
             params['organizationId'] = organization_id
         url = self.ep()
@@ -109,7 +110,7 @@ class WebexCallingIntegrationApi(ApiChild, base='telephony/config/serviceSetting
     def update_caller_reputation_provider_settings(self, organization_id: str = None, enabled: bool = None,
                                                    id: str = None, name: str = None, client_id: str = None,
                                                    client_secret: str = None, call_block_score_threshold: str = None,
-                                                   call_allow_score_threshold: str = None):
+                                                   call_allow_score_threshold: str = None) -> None:
         """
         Update Caller Reputation Provider Service Settings
 
@@ -134,10 +135,10 @@ class WebexCallingIntegrationApi(ApiChild, base='telephony/config/serviceSetting
         :type call_allow_score_threshold: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if organization_id is not None:
             params['organizationId'] = organization_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if id is not None:
@@ -155,7 +156,7 @@ class WebexCallingIntegrationApi(ApiChild, base='telephony/config/serviceSetting
         url = self.ep()
         super().put(url, params=params, json=body)
 
-    def unlock_caller_reputation_provider(self, id: str, organization_id: str = None):
+    def unlock_caller_reputation_provider(self, id: str, organization_id: str = None) -> None:
         """
         Unlock Caller Reputation Provider
 
@@ -167,16 +168,16 @@ class WebexCallingIntegrationApi(ApiChild, base='telephony/config/serviceSetting
         :type organization_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if organization_id is not None:
             params['organizationId'] = organization_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['id'] = id
         url = self.ep('actions/unlock/invoke')
         super().post(url, params=params, json=body)
 
     def get_caller_reputation_provider_providers(self,
-                                                 organization_id: str = None) -> List[CallerReputationProviderProvider]:
+                                                 organization_id: str = None) -> builtins.list[CallerReputationProviderProvider]:
         """
         Get Caller Reputation Provider Providers
 
@@ -186,7 +187,7 @@ class WebexCallingIntegrationApi(ApiChild, base='telephony/config/serviceSetting
         :type organization_id: str
         :rtype: list[CallerReputationProviderProvider]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if organization_id is not None:
             params['organizationId'] = organization_id
         url = self.ep('providers')
@@ -204,7 +205,7 @@ class WebexCallingIntegrationApi(ApiChild, base='telephony/config/serviceSetting
         :type organization_id: str
         :rtype: :class:`CallerReputationProviderStatus`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if organization_id is not None:
             params['organizationId'] = organization_id
         url = self.ep('status')

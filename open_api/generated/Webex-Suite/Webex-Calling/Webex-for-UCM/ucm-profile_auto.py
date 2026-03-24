@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -49,7 +50,7 @@ class UCMProfileApi(ApiChild, base='telephony/config/callingProfiles'):
     query parameter.
     """
 
-    def read_the_list_of_uc_manager_profiles(self, org_id: str = None) -> List[GetManagerProfileObject]:
+    def read_the_list_of_uc_manager_profiles(self, org_id: str = None) -> builtins.list[GetManagerProfileObject]:
         """
         Read the List of UC Manager Profiles
 
@@ -69,7 +70,7 @@ class UCMProfileApi(ApiChild, base='telephony/config/callingProfiles'):
         :type org_id: str
         :rtype: list[GetManagerProfileObject]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep()

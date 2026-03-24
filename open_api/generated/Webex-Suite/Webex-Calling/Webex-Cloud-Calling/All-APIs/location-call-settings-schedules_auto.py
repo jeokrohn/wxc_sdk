@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -202,7 +203,7 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
     """
 
     def read_the_list_of_schedules(self, location_id: str, name: str = None, type: GetScheduleObjectType = None,
-                                   org_id: str = None, **params) -> Generator[ListScheduleObject, None, None]:
+                                   org_id: str = None, **params: Any) -> Generator[ListScheduleObject, None, None]:
         """
         Read the List of Schedules
 
@@ -258,10 +259,10 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['type'] = enum_str(type)
         body['name'] = name
         if events is not None:
@@ -271,7 +272,8 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         r = data['id']
         return r
 
-    def delete_a_schedule(self, location_id: str, type: GetScheduleObjectType, schedule_id: str, org_id: str = None):
+    def delete_a_schedule(self, location_id: str, type: GetScheduleObjectType, schedule_id: str,
+                          org_id: str = None) -> None:
         """
         Delete a Schedule
 
@@ -293,7 +295,7 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{location_id}/schedules/{enum_str(type)}/{schedule_id}')
@@ -322,7 +324,7 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         :type org_id: str
         :rtype: :class:`GetScheduleObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{location_id}/schedules/{enum_str(type)}/{schedule_id}')
@@ -359,10 +361,10 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         if events is not None:
             body['events'] = TypeAdapter(list[ModifyScheduleEventListObject]).dump_python(events, mode='json', by_alias=True, exclude_none=True)
@@ -411,10 +413,10 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['startDate'] = start_date
         body['endDate'] = end_date
@@ -432,7 +434,7 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         return r
 
     def delete_a_schedule_event(self, location_id: str, type: GetScheduleObjectType, schedule_id: str, event_id: str,
-                                org_id: str = None):
+                                org_id: str = None) -> None:
         """
         Delete a Schedule Event
 
@@ -456,7 +458,7 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{location_id}/schedules/{enum_str(type)}/{schedule_id}/events/{event_id}')
@@ -487,7 +489,7 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         :type org_id: str
         :rtype: :class:`GetScheduleEventObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{location_id}/schedules/{enum_str(type)}/{schedule_id}/events/{event_id}')
@@ -543,10 +545,10 @@ class LocationCallSettingsSchedulesApi(ApiChild, base='telephony/config/location
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['startDate'] = start_date
         body['endDate'] = end_date

@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -87,7 +88,7 @@ class FeaturesSingleNumberReachApi(ApiChild, base='telephony/config'):
 
     def get_single_number_reach_primary_available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
                                                                 org_id: str = None,
-                                                                **params) -> Generator[SingleNumberReachPrimaryAvailableNumberObject, None, None]:
+                                                                **params: Any) -> Generator[SingleNumberReachPrimaryAvailableNumberObject, None, None]:
         """
         Get Single Number Reach Primary Available Phone Numbers
 
@@ -142,7 +143,7 @@ class FeaturesSingleNumberReachApi(ApiChild, base='telephony/config'):
         return r
 
     def update_single_number_reach_settings_for_a_person(self, person_id: str,
-                                                         alert_all_numbers_for_click_to_dial_calls_enabled: bool = None):
+                                                         alert_all_numbers_for_click_to_dial_calls_enabled: bool = None) -> None:
         """
         Update Single number reach settings for a person.
 
@@ -160,7 +161,7 @@ class FeaturesSingleNumberReachApi(ApiChild, base='telephony/config'):
         :type alert_all_numbers_for_click_to_dial_calls_enabled: bool
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if alert_all_numbers_for_click_to_dial_calls_enabled is not None:
             body['alertAllNumbersForClickToDialCallsEnabled'] = alert_all_numbers_for_click_to_dial_calls_enabled
         url = self.ep(f'people/{person_id}/singleNumberReach')
@@ -197,7 +198,7 @@ class FeaturesSingleNumberReachApi(ApiChild, base='telephony/config'):
         :type answer_confirmation_enabled: bool
         :rtype: str
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['phoneNumber'] = phone_number
         body['enabled'] = enabled
         body['name'] = name
@@ -210,7 +211,7 @@ class FeaturesSingleNumberReachApi(ApiChild, base='telephony/config'):
         r = data['id']
         return r
 
-    def delete_a_single_number_reach_number(self, person_id: str, id: str, org_id: str = None):
+    def delete_a_single_number_reach_number(self, person_id: str, id: str, org_id: str = None) -> None:
         """
         Delete A Single Number Reach Number
 
@@ -231,7 +232,7 @@ class FeaturesSingleNumberReachApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'people/{person_id}/singleNumberReach/numbers/{id}')
@@ -272,7 +273,7 @@ class FeaturesSingleNumberReachApi(ApiChild, base='telephony/config'):
         :type answer_confirmation_enabled: bool
         :rtype: str
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['phoneNumber'] = phone_number
         body['enabled'] = enabled
         body['name'] = name

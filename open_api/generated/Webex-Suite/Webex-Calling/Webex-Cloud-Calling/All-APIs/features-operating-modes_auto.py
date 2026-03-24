@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -319,7 +320,7 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
     """
 
     def retrieve_the_list_of_available_operating_modes_in_a_location(self, location_id: str,
-                                                                     org_id: str = None) -> List[LocationObject]:
+                                                                     org_id: str = None) -> builtins.list[LocationObject]:
         """
         Retrieve the List of Available Operating Modes in a Location
 
@@ -339,7 +340,7 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: list[LocationObject]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/operatingModes/availableOperatingModes')
@@ -350,7 +351,7 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
     def get_operating_mode_call_forward_available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
                                                                 owner_name: str = None, extension: str = None,
                                                                 org_id: str = None,
-                                                                **params) -> Generator[OperatingModeCallForwardAvailableNumberObject, None, None]:
+                                                                **params: Any) -> Generator[OperatingModeCallForwardAvailableNumberObject, None, None]:
         """
         Get Operating Mode Call Forward Available Phone Numbers
 
@@ -395,7 +396,7 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
     def read_the_list_of_operating_modes(self, limit_to_location_id: str, name: str = None,
                                          limit_to_org_level_enabled: bool = None, order: str = None,
                                          org_id: str = None,
-                                         **params) -> Generator[OperatingModeListGetObject, None, None]:
+                                         **params: Any) -> Generator[OperatingModeListGetObject, None, None]:
         """
         Read the List of Operating Modes
 
@@ -471,10 +472,10 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['type'] = enum_str(type)
         body['level'] = enum_str(level)
@@ -492,7 +493,7 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
         r = data['id']
         return r
 
-    def delete_an_operating_mode(self, mode_id: str, org_id: str = None):
+    def delete_an_operating_mode(self, mode_id: str, org_id: str = None) -> None:
         """
         Delete an Operating Mode
 
@@ -507,7 +508,7 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'operatingModes/{mode_id}')
@@ -531,7 +532,7 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`OperatingModeGetObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'operatingModes/{mode_id}')
@@ -543,7 +544,7 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
                                  same_hours_daily: OperatingModeSameHoursDailyScheduleObject = None,
                                  different_hours_daily: OperatingModeDifferentHoursDailyScheduleObject = None,
                                  holidays: list[OperatingModeHolidayObject] = None,
-                                 call_forwarding: OperatingModeCallForwarding = None, org_id: str = None):
+                                 call_forwarding: OperatingModeCallForwarding = None, org_id: str = None) -> None:
         """
         Modify an Operating Mode
 
@@ -571,10 +572,10 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if name is not None:
             body['name'] = name
         if same_hours_daily is not None:
@@ -624,10 +625,10 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['allDayEnabled'] = all_day_enabled
         body['startDate'] = start_date
@@ -643,7 +644,7 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
         r = data['id']
         return r
 
-    def delete_an_operating_mode_holiday(self, mode_id: str, holiday_id: str, org_id: str = None):
+    def delete_an_operating_mode_holiday(self, mode_id: str, holiday_id: str, org_id: str = None) -> None:
         """
         Delete an Operating Mode Holiday
 
@@ -660,7 +661,7 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'operatingModes/{mode_id}/holidays/{holiday_id}')
@@ -686,7 +687,7 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`OperatingModeHolidayGetObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'operatingModes/{mode_id}/holidays/{holiday_id}')
@@ -698,7 +699,7 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
                                          all_day_enabled: bool = None, start_date: Union[str, datetime] = None,
                                          end_date: Union[str, datetime] = None, start_time: str = None,
                                          end_time: str = None, recurrence: OperatingModeRecurrenceObject = None,
-                                         org_id: str = None):
+                                         org_id: str = None) -> None:
         """
         Modify an Operating Mode Holiday
 
@@ -730,10 +731,10 @@ class FeaturesOperatingModesApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if name is not None:
             body['name'] = name
         if all_day_enabled is not None:

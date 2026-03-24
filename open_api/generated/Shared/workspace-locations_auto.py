@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -72,7 +73,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
     """
 
     def list_workspace_locations(self, display_name: str = None, address: str = None, country_code: str = None,
-                                 city_name: str = None, org_id: str = None) -> List[Location]:
+                                 city_name: str = None, org_id: str = None) -> builtins.list[Location]:
         """
         List Workspace Locations
 
@@ -100,7 +101,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type org_id: str
         :rtype: list[Location]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         if display_name is not None:
@@ -146,7 +147,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type notes: str
         :rtype: :class:`Location`
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['displayName'] = display_name
         body['address'] = address
         body['countryCode'] = country_code
@@ -161,7 +162,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         r = Location.model_validate(data)
         return r
 
-    def delete_a_workspace_location(self, location_id: str):
+    def delete_a_workspace_location(self, location_id: str) -> None:
         """
         Delete a Workspace Location
 
@@ -240,7 +241,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type notes: str
         :rtype: :class:`Location`
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if id is not None:
             body['id'] = id
         body['displayName'] = display_name
@@ -257,7 +258,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         r = Location.model_validate(data)
         return r
 
-    def list_workspace_location_floors(self, location_id: str) -> List[Floor]:
+    def list_workspace_location_floors(self, location_id: str) -> builtins.list[Floor]:
         """
         List Workspace Location Floors
 
@@ -300,7 +301,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type display_name: str
         :rtype: :class:`Floor`
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['floorNumber'] = floor_number
         if display_name is not None:
             body['displayName'] = display_name
@@ -309,7 +310,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         r = Floor.model_validate(data)
         return r
 
-    def delete_a_workspace_location_floor(self, location_id: str, floor_id: str):
+    def delete_a_workspace_location_floor(self, location_id: str, floor_id: str) -> None:
         """
         Delete a Workspace Location Floor
 
@@ -379,7 +380,7 @@ class WorkspaceLocationsApi(ApiChild, base='workspaceLocations'):
         :type display_name: str
         :rtype: :class:`Floor`
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['floorNumber'] = floor_number
         if display_name is not None:
             body['displayName'] = display_name

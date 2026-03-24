@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -136,7 +137,7 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
     query parameter.
     """
 
-    def read_the_list_of_announcement_languages(self) -> List[Language]:
+    def read_the_list_of_announcement_languages(self) -> builtins.list[Language]:
         """
         Read the List of Announcement Languages
 
@@ -168,7 +169,7 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetCallCaptionsObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('callCaptions')
@@ -177,7 +178,8 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def update_the_organization_call_captions_settings(self, org_closed_captions_enabled: bool = None,
-                                                       org_transcripts_enabled: bool = None, org_id: str = None):
+                                                       org_transcripts_enabled: bool = None,
+                                                       org_id: str = None) -> None:
         """
         Update the organization call captions settings
 
@@ -196,10 +198,10 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if org_closed_captions_enabled is not None:
             body['orgClosedCaptionsEnabled'] = org_closed_captions_enabled
         if org_transcripts_enabled is not None:
@@ -223,7 +225,7 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`OrganizationStatusGetObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('largeOrgStatus')
@@ -241,7 +243,7 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('moh/settings')
@@ -249,7 +251,8 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         r = data['defaultOrgMoh']
         return r
 
-    def update_the_organization_music_on_hold_configuration(self, default_org_moh: str = None, org_id: str = None):
+    def update_the_organization_music_on_hold_configuration(self, default_org_moh: str = None,
+                                                            org_id: str = None) -> None:
         """
         Update the organization Music on Hold configuration
 
@@ -262,10 +265,10 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if default_org_moh is not None:
             body['defaultOrgMoh'] = default_org_moh
         url = self.ep('moh/settings')
@@ -287,7 +290,7 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetVoicemailRulesObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('voicemail/rules')
@@ -299,7 +302,7 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
                                expire_passcode: GetVoicemailRulesObjectExpirePasscode = None,
                                change_passcode: GetVoicemailRulesObjectExpirePasscode = None,
                                block_previous_passcodes: GetVoicemailRulesObjectBlockPreviousPasscodes = None,
-                               org_id: str = None):
+                               org_id: str = None) -> None:
         """
         Update Voicemail Rules
 
@@ -328,10 +331,10 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if default_voicemail_pin_enabled is not None:
             body['defaultVoicemailPinEnabled'] = default_voicemail_pin_enabled
         if default_voicemail_pin is not None:
@@ -361,7 +364,7 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetVoicemailSettingsObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('voicemail/settings')
@@ -371,7 +374,7 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
 
     def update_voicemail_settings(self, message_expiry_enabled: bool, number_of_days_for_message_expiry: int,
                                   strict_deletion_enabled: bool = None, voice_message_forwarding_enabled: bool = None,
-                                  org_id: str = None):
+                                  org_id: str = None) -> None:
         """
         Update Voicemail Settings
 
@@ -398,10 +401,10 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['messageExpiryEnabled'] = message_expiry_enabled
         body['numberOfDaysForMessageExpiry'] = number_of_days_for_message_expiry
         if strict_deletion_enabled is not None:

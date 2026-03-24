@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -223,10 +224,10 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         if phone_number is not None:
             body['phoneNumber'] = phone_number
@@ -255,7 +256,7 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
 
     def get_paging_group_primary_available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
                                                          org_id: str = None,
-                                                         **params) -> Generator[PagingGroupPrimaryAvailableNumberObject, None, None]:
+                                                         **params: Any) -> Generator[PagingGroupPrimaryAvailableNumberObject, None, None]:
         """
         Get Paging Group Primary Available Phone Numbers
 
@@ -287,7 +288,7 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/paging/availableNumbers')
         return self.session.follow_pagination(url=url, model=PagingGroupPrimaryAvailableNumberObject, item_key='phoneNumbers', params=params)
 
-    def delete_a_paging_group(self, location_id: str, paging_id: str, org_id: str = None):
+    def delete_a_paging_group(self, location_id: str, paging_id: str, org_id: str = None) -> None:
         """
         Delete a Paging Group
 
@@ -308,7 +309,7 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/paging/{paging_id}')
@@ -340,7 +341,7 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetPagingGroupObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/paging/{paging_id}')
@@ -354,7 +355,7 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
                               originator_caller_id_enabled: bool = None, originators: list[str] = None,
                               targets: list[str] = None,
                               direct_line_caller_id_name: DirectLineCallerIdNameObject = None,
-                              dial_by_name: str = None, org_id: str = None):
+                              dial_by_name: str = None, org_id: str = None) -> None:
         """
         Update a Paging Group
 
@@ -412,10 +413,10 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if name is not None:
@@ -444,7 +445,8 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         super().put(url, params=params, json=body)
 
     def read_the_list_of_paging_groups(self, location_id: str = None, name: str = None, phone_number: str = None,
-                                       org_id: str = None, **params) -> Generator[ListPagingGroupObject, None, None]:
+                                       org_id: str = None,
+                                       **params: Any) -> Generator[ListPagingGroupObject, None, None]:
         """
         Read the List of Paging Groups
 

@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -224,7 +225,7 @@ class PeopleApi(ApiChild, base='people'):
 
     def list_people(self, email: str = None, display_name: str = None, id: str = None, roles: str = None,
                     calling_data: bool = None, location_id: str = None, exclude_status: bool = None,
-                    org_id: str = None, **params) -> Generator[Person, None, None]:
+                    org_id: str = None, **params: Any) -> Generator[Person, None, None]:
         """
         List People
 
@@ -379,12 +380,12 @@ class PeopleApi(ApiChild, base='people'):
         :type org_id: str
         :rtype: :class:`Person`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if calling_data is not None:
             params['callingData'] = str(calling_data).lower()
         if min_response is not None:
             params['minResponse'] = str(min_response).lower()
-        body = dict()
+        body: dict[str, Any] = dict()
         body['emails'] = emails
         if phone_numbers is not None:
             body['phoneNumbers'] = TypeAdapter(list[PhoneNumbersItem]).dump_python(phone_numbers, mode='json', by_alias=True, exclude_none=True)
@@ -437,7 +438,7 @@ class PeopleApi(ApiChild, base='people'):
         :type calling_data: bool
         :rtype: :class:`Person`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if calling_data is not None:
             params['callingData'] = str(calling_data).lower()
         url = self.ep('me')
@@ -445,7 +446,7 @@ class PeopleApi(ApiChild, base='people'):
         r = Person.model_validate(data)
         return r
 
-    def delete_a_person(self, person_id: str):
+    def delete_a_person(self, person_id: str) -> None:
         """
         Delete a Person
 
@@ -496,7 +497,7 @@ class PeopleApi(ApiChild, base='people'):
         :type calling_data: bool
         :rtype: :class:`Person`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if calling_data is not None:
             params['callingData'] = str(calling_data).lower()
         url = self.ep(f'{person_id}')
@@ -616,14 +617,14 @@ class PeopleApi(ApiChild, base='people'):
         :type org_id: str
         :rtype: :class:`Person`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if calling_data is not None:
             params['callingData'] = str(calling_data).lower()
         if show_all_types is not None:
             params['showAllTypes'] = str(show_all_types).lower()
         if min_response is not None:
             params['minResponse'] = str(min_response).lower()
-        body = dict()
+        body: dict[str, Any] = dict()
         if emails is not None:
             body['emails'] = emails
         if phone_numbers is not None:

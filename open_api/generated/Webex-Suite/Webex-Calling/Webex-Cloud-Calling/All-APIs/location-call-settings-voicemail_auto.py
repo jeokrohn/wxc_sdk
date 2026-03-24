@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -324,7 +325,7 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetVoicePortalObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/voicePortal')
@@ -336,7 +337,7 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
                             phone_number: str = None, first_name: str = None, last_name: str = None,
                             passcode: PutVoicePortalObjectPasscode = None,
                             direct_line_caller_id_name: DirectLineCallerIdNameObject = None, dial_by_name: str = None,
-                            org_id: str = None):
+                            org_id: str = None) -> None:
         """
         Update VoicePortal
 
@@ -380,10 +381,10 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if name is not None:
             body['name'] = name
         if language_code is not None:
@@ -407,7 +408,7 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
 
     def get_voice_portal_available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
                                                  org_id: str = None,
-                                                 **params) -> Generator[VoicePortalAvailableNumberObject, None, None]:
+                                                 **params: Any) -> Generator[VoicePortalAvailableNumberObject, None, None]:
         """
         Get VoicePortal Available Phone Numbers
 
@@ -457,7 +458,7 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetVoicePortalPasscodeRuleObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/voicePortal/passcodeRules')
@@ -482,7 +483,7 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: bool
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/voicemail')
@@ -490,7 +491,8 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         r = data['voicemailTranscriptionEnabled']
         return r
 
-    def update_location_voicemail(self, location_id: str, voicemail_transcription_enabled: bool, org_id: str = None):
+    def update_location_voicemail(self, location_id: str, voicemail_transcription_enabled: bool,
+                                  org_id: str = None) -> None:
         """
         Update Location Voicemail
 
@@ -509,10 +511,10 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['voicemailTranscriptionEnabled'] = voicemail_transcription_enabled
         url = self.ep(f'locations/{location_id}/voicemail')
         super().put(url, params=params, json=body)
@@ -579,10 +581,10 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         if phone_number is not None:
             body['phoneNumber'] = phone_number
@@ -609,7 +611,7 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
 
     def get_voicemail_group_available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
                                                     org_id: str = None,
-                                                    **params) -> Generator[VoicePortalAvailableNumberObject, None, None]:
+                                                    **params: Any) -> Generator[VoicePortalAvailableNumberObject, None, None]:
         """
         Get Voicemail Group Available Phone Numbers
 
@@ -643,7 +645,7 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
 
     def get_voicemail_group_fax_message_available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
                                                                 org_id: str = None,
-                                                                **params) -> Generator[VoicePortalAvailableNumberObject, None, None]:
+                                                                **params: Any) -> Generator[VoicePortalAvailableNumberObject, None, None]:
         """
         Get Voicemail Group Fax Message Available Phone Numbers
 
@@ -675,7 +677,8 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/voicemailGroups/faxMessage/availableNumbers')
         return self.session.follow_pagination(url=url, model=VoicePortalAvailableNumberObject, item_key='phoneNumbers', params=params)
 
-    def delete_a_voicemail_group_for_a_location(self, location_id: str, voicemail_group_id: str, org_id: str = None):
+    def delete_a_voicemail_group_for_a_location(self, location_id: str, voicemail_group_id: str,
+                                                org_id: str = None) -> None:
         """
         Delete a Voicemail Group for a Location
 
@@ -692,7 +695,7 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/voicemailGroups/{voicemail_group_id}')
@@ -722,7 +725,7 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetLocationVoicemailGroupObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/voicemailGroups/{voicemail_group_id}')
@@ -742,7 +745,7 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
                                         transfer_to_number: GetLocationVoicemailGroupObjectNotifications = None,
                                         email_copy_of_message: GetLocationVoicemailGroupObjectEmailCopyOfMessage = None,
                                         direct_line_caller_id_name: DirectLineCallerIdNameObject = None,
-                                        dial_by_name: str = None, org_id: str = None):
+                                        dial_by_name: str = None, org_id: str = None) -> None:
         """
         Modify Location Voicemail Group
 
@@ -804,10 +807,10 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if name is not None:
             body['name'] = name
         if phone_number is not None:
@@ -846,7 +849,7 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         super().put(url, params=params, json=body)
 
     def list_voicemail_group(self, location_id: str = None, name: str = None, phone_number: str = None,
-                             org_id: str = None, **params) -> Generator[GetVoicemailGroupObject, None, None]:
+                             org_id: str = None, **params: Any) -> Generator[GetVoicemailGroupObject, None, None]:
         """
         List VoicemailGroup
 

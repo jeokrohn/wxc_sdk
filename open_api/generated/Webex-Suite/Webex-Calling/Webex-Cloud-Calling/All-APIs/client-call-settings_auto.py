@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -82,7 +83,7 @@ class ClientCallSettingsApi(ApiChild, base='telephony/config/settings/msTeams'):
         :type org_id: str
         :rtype: :class:`GetCustomerMSTeamsSettingsObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep()
@@ -91,7 +92,7 @@ class ClientCallSettingsApi(ApiChild, base='telephony/config/settings/msTeams'):
         return r
 
     def update_an_organization_s_ms_teams_setting(self, setting_name: SettingsObjectSettingName, value: bool,
-                                                  org_id: str = None):
+                                                  org_id: str = None) -> None:
         """
         Update an Organization's MS Teams Setting
 
@@ -112,10 +113,10 @@ class ClientCallSettingsApi(ApiChild, base='telephony/config/settings/msTeams'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['settingName'] = enum_str(setting_name)
         body['value'] = value
         url = self.ep()

@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -87,7 +88,7 @@ class AuthorizationsApi(ApiChild, base='authorizations'):
     `identity:tokens_read.`
     """
 
-    def delete_authorization_of_org_and_client_id(self, client_id: str, org_id: str = None):
+    def delete_authorization_of_org_and_client_id(self, client_id: str, org_id: str = None) -> None:
         """
         Delete authorization of org and client ID
 
@@ -100,14 +101,15 @@ class AuthorizationsApi(ApiChild, base='authorizations'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         params['clientId'] = client_id
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep()
         super().delete(url, params=params)
 
-    def list_authorizations_for_user(self, person_id: str = None, person_email: str = None) -> List[Authorization]:
+    def list_authorizations_for_user(self, person_id: str = None,
+                                     person_email: str = None) -> builtins.list[Authorization]:
         """
         List authorizations for a user
 
@@ -120,7 +122,7 @@ class AuthorizationsApi(ApiChild, base='authorizations'):
         :type person_email: str
         :rtype: list[Authorization]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if person_id is not None:
             params['personId'] = person_id
         if person_email is not None:
@@ -143,7 +145,7 @@ class AuthorizationsApi(ApiChild, base='authorizations'):
         r = data['exp']
         return r
 
-    def delete_authorization(self, authorization_id: str):
+    def delete_authorization(self, authorization_id: str) -> None:
         """
         Delete authorization
 

@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -193,7 +194,7 @@ class CallControlsMembersApi(ApiChild, base='telephony/calls/members'):
     UCM, including Dedicated Instance users.
     """
 
-    def answer_by_member_id(self, member_id: str, call_id: str, endpoint_id: str = None, org_id: str = None):
+    def answer_by_member_id(self, member_id: str, call_id: str, endpoint_id: str = None, org_id: str = None) -> None:
         """
         Answer by Member ID
 
@@ -217,17 +218,17 @@ class CallControlsMembersApi(ApiChild, base='telephony/calls/members'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['callId'] = call_id
         if endpoint_id is not None:
             body['endpointId'] = endpoint_id
         url = self.ep(f'{member_id}/answer')
         super().post(url, params=params, json=body)
 
-    def list_calls_by_member_id(self, member_id: str, org_id: str = None) -> List[Call]:
+    def list_calls_by_member_id(self, member_id: str, org_id: str = None) -> builtins.list[Call]:
         """
         List Calls by Member ID
 
@@ -242,7 +243,7 @@ class CallControlsMembersApi(ApiChild, base='telephony/calls/members'):
         :type org_id: str
         :rtype: list[Call]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{member_id}/calls')
@@ -267,7 +268,7 @@ class CallControlsMembersApi(ApiChild, base='telephony/calls/members'):
         :type org_id: str
         :rtype: :class:`Call`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{member_id}/calls/{call_id}')
@@ -302,10 +303,10 @@ class CallControlsMembersApi(ApiChild, base='telephony/calls/members'):
         :type org_id: str
         :rtype: :class:`DialByMemberIdResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['destination'] = destination
         if endpoint_id is not None:
             body['endpointId'] = endpoint_id
@@ -314,7 +315,7 @@ class CallControlsMembersApi(ApiChild, base='telephony/calls/members'):
         r = DialByMemberIdResponse.model_validate(data)
         return r
 
-    def hangup_by_member_id(self, member_id: str, call_id: str, org_id: str = None):
+    def hangup_by_member_id(self, member_id: str, call_id: str, org_id: str = None) -> None:
         """
         Hangup by Member ID
 
@@ -331,10 +332,10 @@ class CallControlsMembersApi(ApiChild, base='telephony/calls/members'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['callId'] = call_id
         url = self.ep(f'{member_id}/hangup')
         super().post(url, params=params, json=body)

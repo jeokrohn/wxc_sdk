@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -442,7 +443,7 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`OrgCallNotificationObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('emergencyCallNotification')
@@ -452,7 +453,7 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
 
     def update_an_organization_emergency_call_notification(self, emergency_call_notification_enabled: bool = None,
                                                            allow_email_notification_all_location_enabled: bool = None,
-                                                           email_address: str = None, org_id: str = None):
+                                                           email_address: str = None, org_id: str = None) -> None:
         """
         Update an organization emergency call notification.
 
@@ -480,10 +481,10 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if emergency_call_notification_enabled is not None:
             body['emergencyCallNotificationEnabled'] = emergency_call_notification_enabled
         if allow_email_notification_all_location_enabled is not None:
@@ -512,7 +513,7 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`VirtualLinesECBNDependenciesObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'huntGroups/{hunt_group_id}/emergencyCallbackNumber/dependencies')
@@ -542,7 +543,7 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetLocationCallNotificationObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/emergencyCallNotification')
@@ -552,7 +553,7 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
 
     def update_a_location_emergency_call_notification(self, location_id: str,
                                                       emergency_call_notification_enabled: bool = None,
-                                                      email_address: str = None, org_id: str = None):
+                                                      email_address: str = None, org_id: str = None) -> None:
         """
         Update a location emergency call notification.
 
@@ -581,10 +582,10 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if emergency_call_notification_enabled is not None:
             body['emergencyCallNotificationEnabled'] = emergency_call_notification_enabled
         if email_address is not None:
@@ -612,7 +613,7 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetLocationCallingParamtersResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/redSky')
@@ -622,7 +623,7 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
 
     def create_a_red_sky_building_address_and_alert_email_for_a_location(self, location_id: str, alerting_email: str,
                                                                          address: AddressObject = None,
-                                                                         org_id: str = None):
+                                                                         org_id: str = None) -> None:
         """
         Create a RedSky Building Address and Alert Email for a Location
 
@@ -645,10 +646,10 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['alertingEmail'] = alerting_email
         if address is not None:
             body['address'] = address.model_dump(mode='json', by_alias=True, exclude_none=True)
@@ -656,7 +657,7 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         super().post(url, params=params, json=body)
 
     def update_a_red_sky_building_address_for_a_location(self, location_id: str, address: AddressObject = None,
-                                                         org_id: str = None):
+                                                         org_id: str = None) -> None:
         """
         Update a RedSky Building Address for a Location
 
@@ -677,10 +678,10 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if address is not None:
             body['address'] = address.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/redSky/building')
@@ -706,7 +707,7 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetLocationComplianceStatusResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/redSky/status')
@@ -739,10 +740,10 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: ComplianceStatusLocationStatusObject
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['complianceStatus'] = enum_str(compliance_status)
         url = self.ep(f'locations/{location_id}/redSky/status')
         data = super().put(url, params=params, json=body)
@@ -772,7 +773,7 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`VirtualLinesECBNObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'people/{person_id}/emergencyCallbackNumber')
@@ -781,7 +782,7 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def update_a_person_s_emergency_callback_number(self, person_id: str, selected: CallBackSelectedPatch,
-                                                    location_member_id: str = None, org_id: str = None):
+                                                    location_member_id: str = None, org_id: str = None) -> None:
         """
         Update a Person's Emergency Callback Number
 
@@ -809,10 +810,10 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['selected'] = enum_str(selected)
         if location_member_id is not None:
             body['locationMemberId'] = location_member_id
@@ -840,7 +841,7 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`VirtualLinesECBNDependenciesObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'people/{person_id}/emergencyCallbackNumber/dependencies')
@@ -863,7 +864,7 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`RedSkyGetObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('redSky')
@@ -872,7 +873,7 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def create_an_account_and_admin_in_red_sky(self, email: str, org_prefix: OrgPrefixObject = None,
-                                               partner_redsky_org_id: str = None, org_id: str = None):
+                                               partner_redsky_org_id: str = None, org_id: str = None) -> None:
         """
         Create an account and admin in RedSky.
 
@@ -894,10 +895,10 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if org_prefix is not None:
             body['orgPrefix'] = enum_str(org_prefix)
         body['email'] = email
@@ -930,10 +931,10 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`LoginResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['email'] = email
         body['password'] = password
         if red_sky_org_id is not None:
@@ -969,7 +970,7 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetComplianceStatusResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         if start is not None:
@@ -985,7 +986,7 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
 
     def update_red_sky_service_settings(self, enabled: bool, company_id: str = None, secret: str = None,
                                         external_tenant_enabled: bool = None, email: str = None, password: str = None,
-                                        org_id: str = None):
+                                        org_id: str = None) -> None:
         """
         Update RedSky Service Settings
 
@@ -1015,10 +1016,10 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         if company_id is not None:
             body['companyId'] = company_id
@@ -1052,7 +1053,7 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`ComplianceStatusResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('redSky/status')
@@ -1083,10 +1084,10 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`ComplianceStatusResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['complianceStatus'] = enum_str(compliance_status)
         url = self.ep('redSky/status')
         data = super().put(url, params=params, json=body)
@@ -1112,7 +1113,7 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`VirtualLinesECBNObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'virtualLines/{virtual_line_id}/emergencyCallbackNumber')
@@ -1122,7 +1123,8 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
 
     def update_a_virtual_line_s_emergency_callback_settings(self, virtual_line_id: str,
                                                             selected: CallBackSelectedPatch,
-                                                            location_member_id: str = None, org_id: str = None):
+                                                            location_member_id: str = None,
+                                                            org_id: str = None) -> None:
         """
         Update a Virtual Line's Emergency Callback settings
 
@@ -1146,10 +1148,10 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['selected'] = enum_str(selected)
         if location_member_id is not None:
             body['locationMemberId'] = location_member_id
@@ -1175,7 +1177,7 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`VirtualLinesECBNDependenciesObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'virtualLines/{virtual_line_id}/emergencyCallbackNumber/dependencies')
@@ -1205,7 +1207,7 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`VirtualLinesECBNObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'workspaces/{workspace_id}/emergencyCallbackNumber')
@@ -1214,7 +1216,7 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def update_a_workspace_emergency_callback_number(self, workspace_id: str, selected: CallBackSelectedPatch,
-                                                     location_member_id: str = None, org_id: str = None):
+                                                     location_member_id: str = None, org_id: str = None) -> None:
         """
         Update a Workspace Emergency Callback Number
 
@@ -1240,10 +1242,10 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['selected'] = enum_str(selected)
         if location_member_id is not None:
             body['locationMemberId'] = location_member_id
@@ -1271,7 +1273,7 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`VirtualLinesECBNDependenciesObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'workspaces/{workspace_id}/emergencyCallbackNumber/dependencies')

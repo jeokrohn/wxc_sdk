@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -942,7 +943,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
 
     def get_available_numbers_for_my_location(self, name: str = None, phone_number: str = None, extension: str = None,
                                               order: str = None,
-                                              **params) -> Generator[LocationAssignedNumber, None, None]:
+                                              **params: Any) -> Generator[LocationAssignedNumber, None, None]:
         """
         Get Available Numbers for User's Location.
 
@@ -997,7 +998,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         r = UserLocationScheduleGetResponse.model_validate(data)
         return r
 
-    def get_my_schedules(self) -> List[UserSchedule]:
+    def get_my_schedules(self) -> builtins.list[UserSchedule]:
         """
         Get User (and Location) Schedules
 
@@ -1036,7 +1037,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type events: list[ScheduleEventObject]
         :rtype: str
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['type'] = enum_str(type)
         body['name'] = name
         if events is not None:
@@ -1046,7 +1047,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         r = data['id']
         return r
 
-    def delete_my_user_schedule(self, schedule_type: UserScheduleType, schedule_id: str):
+    def delete_my_user_schedule(self, schedule_type: UserScheduleType, schedule_id: str) -> None:
         """
         Delete a User Schedule
 
@@ -1095,7 +1096,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         return r
 
     def update_my_schedule(self, schedule_type: UserScheduleType, schedule_id: str, name: str,
-                           events: list[UserScheduleEventPatch] = None):
+                           events: list[UserScheduleEventPatch] = None) -> None:
         """
         Modify User Schedule
 
@@ -1119,7 +1120,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type events: list[UserScheduleEventPatch]
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         if events is not None:
             body['events'] = TypeAdapter(list[UserScheduleEventPatch]).dump_python(events, mode='json', by_alias=True, exclude_none=True)
@@ -1163,7 +1164,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type recurrence: UserScheduleRecurrenceObject
         :rtype: str
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['startDate'] = start_date
         body['endDate'] = end_date
@@ -1179,7 +1180,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         r = data['id']
         return r
 
-    def delete_my_user_schedule_event(self, schedule_type: UserScheduleType, schedule_id: str, event_id: str):
+    def delete_my_user_schedule_event(self, schedule_type: UserScheduleType, schedule_id: str, event_id: str) -> None:
         """
         Delete User a Schedule Event
 
@@ -1235,7 +1236,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
     def update_my_schedule_event(self, schedule_type: UserScheduleType, schedule_id: str, event_id: str, name: str,
                                  start_date: Union[str, datetime], end_date: Union[str, datetime],
                                  all_day_enabled: bool, new_name: str = None, start_time: str = None,
-                                 end_time: str = None, recurrence: UserScheduleRecurrenceObject = None):
+                                 end_time: str = None, recurrence: UserScheduleRecurrenceObject = None) -> None:
         """
         Modify User Schedule Event
 
@@ -1273,7 +1274,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type recurrence: UserScheduleRecurrenceObject
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         if new_name is not None:
             body['newName'] = new_name
@@ -1306,7 +1307,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         r = data['enabled']
         return r
 
-    def update_my_anonymous_call_reject_settings(self, enabled: bool):
+    def update_my_anonymous_call_reject_settings(self, enabled: bool) -> None:
         """
         Modify Anonymous Call Rejection Settings for User
 
@@ -1320,7 +1321,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type enabled: bool
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         url = self.ep('settings/anonymousCallReject')
         super().put(url, json=body)
@@ -1343,7 +1344,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         r = CallNotifyGet.model_validate(data)
         return r
 
-    def update_my_call_notify_settings(self, enabled: bool, email_address: str = None):
+    def update_my_call_notify_settings(self, enabled: bool, email_address: str = None) -> None:
         """
         Modify Call Notify Settings for User
 
@@ -1360,7 +1361,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type email_address: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         if email_address is not None:
             body['emailAddress'] = email_address
@@ -1408,7 +1409,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type notification_enabled: bool
         :rtype: str
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if schedule_name is not None:
             body['scheduleName'] = schedule_name
         if schedule_type is not None:
@@ -1430,7 +1431,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         r = data['id']
         return r
 
-    def delete_my_call_notify_criteria(self, id: str):
+    def delete_my_call_notify_criteria(self, id: str) -> None:
         """
         Delete a Call Notify Criteria
 
@@ -1476,7 +1477,8 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
                                                 calls_from: PriorityAlertCriteriaGetCallsFrom = None,
                                                 anonymous_callers_enabled: bool = None,
                                                 unavailable_callers_enabled: bool = None,
-                                                phone_numbers: list[str] = None, notification_enabled: bool = None):
+                                                phone_numbers: list[str] = None,
+                                                notification_enabled: bool = None) -> None:
         """
         Modify a Call Notify Criteria
 
@@ -1515,7 +1517,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type notification_enabled: bool
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if schedule_name is not None:
             body['scheduleName'] = schedule_name
         if schedule_type is not None:
@@ -1553,7 +1555,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         r = data['enabled']
         return r
 
-    def update_my_call_waiting_settings(self, enabled: bool):
+    def update_my_call_waiting_settings(self, enabled: bool) -> None:
         """
         Modify Call Waiting Settings for User
 
@@ -1568,12 +1570,12 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type enabled: bool
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         url = self.ep('settings/callWaiting')
         super().put(url, json=body)
 
-    def get_my_guest_calling_numbers(self) -> List[GuestCallingNumber]:
+    def get_my_guest_calling_numbers(self) -> builtins.list[GuestCallingNumber]:
         """
         Retrieve My Guest Calling Numbers
 
@@ -1590,7 +1592,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         r = TypeAdapter(list[GuestCallingNumber]).validate_python(data['phoneNumbers'])
         return r
 
-    def get_mode_management_features(self) -> List[ModeManagementFeaturesResponseFeaturesItem]:
+    def get_mode_management_features(self) -> builtins.list[ModeManagementFeaturesResponseFeaturesItem]:
         """
         Get Mode Management Features
 
@@ -1612,7 +1614,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         r = TypeAdapter(list[ModeManagementFeaturesResponseFeaturesItem]).validate_python(data['features'])
         return r
 
-    def switch_mode_multiple_features(self, feature_ids: list[str], operating_mode_name: str):
+    def switch_mode_multiple_features(self, feature_ids: list[str], operating_mode_name: str) -> None:
         """
         Switch Mode for Multiple Features
 
@@ -1633,13 +1635,13 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type operating_mode_name: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['featureIds'] = feature_ids
         body['operatingModeName'] = operating_mode_name
         url = self.ep('settings/modeManagement/features/actions/switchMode/invoke')
         super().post(url, json=body)
 
-    def get_common_modes(self, feature_ids: list[str]) -> List[str]:
+    def get_common_modes(self, feature_ids: list[str]) -> builtins.list[str]:
         """
         Get Common Modes
 
@@ -1657,7 +1659,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type feature_ids: list[str]
         :rtype: list[str]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         params['featureIds'] = ','.join(feature_ids)
         url = self.ep('settings/modeManagement/features/commonModes')
         data = super().get(url, params=params)
@@ -1687,7 +1689,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         r = ModeManagementFeatureResponse.model_validate(data)
         return r
 
-    def extend_mode(self, feature_id: str, operating_mode_id: str, extension_time: int = None):
+    def extend_mode(self, feature_id: str, operating_mode_id: str, extension_time: int = None) -> None:
         """
         Extend Current Operating Mode Duration
 
@@ -1711,7 +1713,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type extension_time: int
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['operatingModeId'] = operating_mode_id
         if extension_time is not None:
             body['extensionTime'] = extension_time
@@ -1719,7 +1721,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         super().post(url, json=body)
 
     def switch_mode_for_feature(self, feature_id: str, operating_mode_id: str,
-                                is_manual_switchback_enabled: bool = None):
+                                is_manual_switchback_enabled: bool = None) -> None:
         """
         Switch Mode for Single Feature
 
@@ -1743,14 +1745,14 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type is_manual_switchback_enabled: bool
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['operatingModeId'] = operating_mode_id
         if is_manual_switchback_enabled is not None:
             body['isManualSwitchbackEnabled'] = is_manual_switchback_enabled
         url = self.ep(f'settings/modeManagement/features/{feature_id}/actions/switchMode/invoke')
         super().post(url, json=body)
 
-    def switch_to_normal_operation(self, feature_id: str):
+    def switch_to_normal_operation(self, feature_id: str) -> None:
         """
         Switch to Normal Operation
 
@@ -1836,7 +1838,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         r = PriorityAlertGet.model_validate(data)
         return r
 
-    def update_my_priority_alert_settings(self, enabled: bool):
+    def update_my_priority_alert_settings(self, enabled: bool) -> None:
         """
         Modify Priority Alert Settings for User
 
@@ -1851,7 +1853,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type enabled: bool
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         url = self.ep('settings/priorityAlert')
         super().put(url, json=body)
@@ -1897,7 +1899,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type notification_enabled: bool
         :rtype: str
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if schedule_name is not None:
             body['scheduleName'] = schedule_name
         if schedule_type is not None:
@@ -1919,7 +1921,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         r = data['id']
         return r
 
-    def delete_my_priority_alert_criteria(self, id: str):
+    def delete_my_priority_alert_criteria(self, id: str) -> None:
         """
         Delete a Priority Alert Criteria
 
@@ -1966,7 +1968,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
                                                    anonymous_callers_enabled: bool = None,
                                                    unavailable_callers_enabled: bool = None,
                                                    phone_numbers: list[str] = None,
-                                                   notification_enabled: bool = None):
+                                                   notification_enabled: bool = None) -> None:
         """
         Modify Settings for a Priority Alert Criteria
 
@@ -2005,7 +2007,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type notification_enabled: bool
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if schedule_name is not None:
             body['scheduleName'] = schedule_name
         if schedule_type is not None:
@@ -2043,7 +2045,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         r = SelectiveAcceptCallSettingsGet.model_validate(data)
         return r
 
-    def update_my_selective_accept_settings(self, enabled: bool):
+    def update_my_selective_accept_settings(self, enabled: bool) -> None:
         """
         Modify Selective Call Accept Settings for User
 
@@ -2058,7 +2060,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type enabled: bool
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         url = self.ep('settings/selectiveAccept')
         super().put(url, json=body)
@@ -2104,7 +2106,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type phone_numbers: list[str]
         :rtype: str
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['scheduleName'] = schedule_name
         body['scheduleType'] = enum_str(schedule_type)
         body['scheduleLevel'] = enum_str(schedule_level)
@@ -2121,7 +2123,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         r = data['id']
         return r
 
-    def delete_my_selective_call_accept_criteria(self, id: str):
+    def delete_my_selective_call_accept_criteria(self, id: str) -> None:
         """
         Delete a Selective Call Accept Criteria
 
@@ -2170,7 +2172,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
                                                           anonymous_callers_enabled: bool = None,
                                                           unavailable_callers_enabled: bool = None,
                                                           phone_numbers: list[str] = None,
-                                                          accept_enabled: bool = None):
+                                                          accept_enabled: bool = None) -> None:
         """
         Modify a Selective Call Accept Criteria
 
@@ -2211,7 +2213,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type accept_enabled: bool
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if schedule_name is not None:
             body['scheduleName'] = schedule_name
         if schedule_type is not None:
@@ -2251,7 +2253,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
 
     def update_my_selective_forward_settings(self, enabled: bool, default_phone_number_to_forward: str = None,
                                              ring_reminder_enabled: bool = None,
-                                             destination_voicemail_enabled: bool = None):
+                                             destination_voicemail_enabled: bool = None) -> None:
         """
         Modify Selective Call Forward Settings for User
 
@@ -2275,7 +2277,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type destination_voicemail_enabled: bool
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         if default_phone_number_to_forward is not None:
             body['defaultPhoneNumberToForward'] = default_phone_number_to_forward
@@ -2336,7 +2338,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type forward_enabled: bool
         :rtype: str
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if forward_to_phone_number is not None:
             body['forwardToPhoneNumber'] = forward_to_phone_number
         if destination_voicemail_enabled is not None:
@@ -2362,7 +2364,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         r = data['id']
         return r
 
-    def delete_my_selective_call_forwarding_criteria(self, id: str):
+    def delete_my_selective_call_forwarding_criteria(self, id: str) -> None:
         """
         Delete a Selective Call Forwarding Criteria
 
@@ -2411,7 +2413,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
                                                               anonymous_callers_enabled: bool = None,
                                                               unavailable_callers_enabled: bool = None,
                                                               phone_numbers: list[str] = None,
-                                                              forward_enabled: bool = None):
+                                                              forward_enabled: bool = None) -> None:
         """
         Modify Settings for a Selective Call Forwarding Criteria
 
@@ -2456,7 +2458,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type forward_enabled: bool
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if forward_to_phone_number is not None:
             body['forwardToPhoneNumber'] = forward_to_phone_number
         if destination_voicemail_enabled is not None:
@@ -2498,7 +2500,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         r = SelectiveRejectCallSettingsGet.model_validate(data)
         return r
 
-    def update_my_selective_reject_settings(self, enabled: bool):
+    def update_my_selective_reject_settings(self, enabled: bool) -> None:
         """
         Modify Selective Call Reject Settings for User
 
@@ -2513,7 +2515,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type enabled: bool
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         url = self.ep('settings/selectiveReject')
         super().put(url, json=body)
@@ -2558,7 +2560,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type phone_numbers: list[str]
         :rtype: str
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['scheduleName'] = schedule_name
         body['scheduleType'] = enum_str(schedule_type)
         body['scheduleLevel'] = enum_str(schedule_level)
@@ -2575,7 +2577,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         r = data['id']
         return r
 
-    def delete_my_selective_call_reject_criteria(self, id: str):
+    def delete_my_selective_call_reject_criteria(self, id: str) -> None:
         """
         Delete a Selective Call Reject Criteria
 
@@ -2624,7 +2626,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
                                                           anonymous_callers_enabled: bool = None,
                                                           unavailable_callers_enabled: bool = None,
                                                           phone_numbers: list[str] = None,
-                                                          reject_enabled: bool = None):
+                                                          reject_enabled: bool = None) -> None:
         """
         Modify a Selective Call Reject Criteria
 
@@ -2664,7 +2666,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type reject_enabled: bool
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if schedule_name is not None:
             body['scheduleName'] = schedule_name
         if schedule_type is not None:
@@ -2706,7 +2708,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
                                            base_location_number_of_rings: int = None,
                                            continue_if_base_location_is_busy_enabled: bool = None,
                                            calls_to_voicemail_enabled: bool = None,
-                                           phone_numbers: list[SequentialRingNumber] = None):
+                                           phone_numbers: list[SequentialRingNumber] = None) -> None:
         """
         Modify Sequential Ring Settings for User
 
@@ -2736,7 +2738,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type phone_numbers: list[SequentialRingNumber]
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         if ring_base_location_first_enabled is not None:
             body['ringBaseLocationFirstEnabled'] = ring_base_location_first_enabled
@@ -2790,7 +2792,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type phone_numbers: list[str]
         :rtype: str
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['scheduleName'] = schedule_name
         body['scheduleType'] = enum_str(schedule_type)
         body['scheduleLevel'] = enum_str(schedule_level)
@@ -2807,7 +2809,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         r = data['id']
         return r
 
-    def delete_my_sequential_ring_criteria(self, id: str):
+    def delete_my_sequential_ring_criteria(self, id: str) -> None:
         """
         Delete Sequential Ring Criteria
 
@@ -2853,7 +2855,8 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
                                                     calls_from: PriorityAlertCriteriaGetCallsFrom = None,
                                                     anonymous_callers_enabled: bool = None,
                                                     unavailable_callers_enabled: bool = None,
-                                                    phone_numbers: list[str] = None, ring_enabled: bool = None):
+                                                    phone_numbers: list[str] = None,
+                                                    ring_enabled: bool = None) -> None:
         """
         Modify Sequential Ring Criteria Settings for User
 
@@ -2890,7 +2893,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type ring_enabled: bool
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if schedule_name is not None:
             body['scheduleName'] = schedule_name
         if schedule_type is not None:
@@ -2931,7 +2934,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
 
     def update_my_simultaneous_ring_settings(self, enabled: bool = None, do_not_ring_if_on_call_enabled: bool = None,
                                              phone_numbers: list[SimultaneousRingNumber] = None,
-                                             criterias_enabled: bool = None):
+                                             criterias_enabled: bool = None) -> None:
         """
         Modify My Simultaneous Ring Settings
 
@@ -2954,7 +2957,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type criterias_enabled: bool
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if do_not_ring_if_on_call_enabled is not None:
@@ -3005,7 +3008,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type phone_numbers: list[str]
         :rtype: str
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['scheduleName'] = schedule_name
         body['scheduleType'] = enum_str(schedule_type)
         body['scheduleLevel'] = enum_str(schedule_level)
@@ -3022,7 +3025,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         r = data['id']
         return r
 
-    def delete_my_simultaneous_ring_criteria(self, id: str):
+    def delete_my_simultaneous_ring_criteria(self, id: str) -> None:
         """
         Delete My Simultaneous Ring Criteria
 
@@ -3068,7 +3071,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
                                              calls_from: PriorityAlertCriteriaGetCallsFrom = None,
                                              anonymous_callers_enabled: bool = None,
                                              unavailable_callers_enabled: bool = None,
-                                             phone_numbers: list[str] = None, ring_enabled: bool = None):
+                                             phone_numbers: list[str] = None, ring_enabled: bool = None) -> None:
         """
         Modify My Simultaneous Ring Criteria
 
@@ -3104,7 +3107,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type ring_enabled: bool
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if schedule_name is not None:
             body['scheduleName'] = schedule_name
         if schedule_type is not None:
@@ -3124,7 +3127,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         url = self.ep(f'settings/simultaneousRing/criteria/{id}')
         super().put(url, json=body)
 
-    def upload_voicemail_busy_greeting(self, file: str):
+    def upload_voicemail_busy_greeting(self, file: str) -> None:
         """
         Upload Voicemail Busy Greeting
 
@@ -3141,12 +3144,12 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type file: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['file'] = file
         url = self.ep('settings/voicemail/actions/busyGreetingUpload/invoke')
         super().post(url, json=body)
 
-    def upload_voicemail_no_answer_greeting(self, file: str):
+    def upload_voicemail_no_answer_greeting(self, file: str) -> None:
         """
         Upload Voicemail No Answer Greeting
 
@@ -3163,7 +3166,7 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         :type file: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['file'] = file
         url = self.ep('settings/voicemail/actions/noAnswerGreetingUpload/invoke')
         super().post(url, json=body)

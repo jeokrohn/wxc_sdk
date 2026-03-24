@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -259,10 +260,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if generate is not None:
             body['generate'] = TypeAdapter(list[PasswordGenerate]).dump_python(generate, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{location_id}/actions/generatePassword/invoke')
@@ -288,7 +289,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: :class:`GetLocationInterceptObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{location_id}/intercept')
@@ -298,7 +299,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
 
     def put_location_intercept(self, location_id: str, enabled: bool,
                                incoming: GetLocationInterceptObjectIncoming = None,
-                               outgoing: GetLocationInterceptObjectOutgoing = None, org_id: str = None):
+                               outgoing: GetLocationInterceptObjectOutgoing = None, org_id: str = None) -> None:
         """
         Put Location Intercept
 
@@ -323,10 +324,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         if incoming is not None:
             body['incoming'] = incoming.model_dump(mode='json', by_alias=True, exclude_none=True)
@@ -354,7 +355,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: :class:`InternalDialingGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{location_id}/internalDialing')
@@ -365,7 +366,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
     def modify_the_internal_dialing_configuration_for_a_location(self, location_id: str,
                                                                  enable_unknown_extension_route_policy: bool = None,
                                                                  unknown_extension_route_identity: UnknownExtensionRouteIdentity = None,
-                                                                 org_id: str = None):
+                                                                 org_id: str = None) -> None:
         """
         Modify the Internal Dialing configuration for a location
 
@@ -388,10 +389,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if enable_unknown_extension_route_policy is not None:
             body['enableUnknownExtensionRoutePolicy'] = enable_unknown_extension_route_policy
         if unknown_extension_route_identity is not None:
@@ -399,7 +400,8 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         url = self.ep(f'{location_id}/internalDialing')
         super().put(url, params=params, json=body)
 
-    def get_location_outgoing_permission(self, location_id: str, org_id: str = None) -> List[CallingPermissionObject]:
+    def get_location_outgoing_permission(self, location_id: str,
+                                         org_id: str = None) -> builtins.list[CallingPermissionObject]:
         """
         Get Location Outgoing Permission
 
@@ -418,7 +420,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: list[CallingPermissionObject]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{location_id}/outgoingPermission')
@@ -428,7 +430,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
 
     def update_location_outgoing_permission(self, location_id: str,
                                             calling_permissions: list[CallingPermissionPatchObject] = None,
-                                            org_id: str = None):
+                                            org_id: str = None) -> None:
         """
         Update Location Outgoing Permission
 
@@ -448,16 +450,16 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if calling_permissions is not None:
             body['callingPermissions'] = TypeAdapter(list[CallingPermissionPatchObject]).dump_python(calling_permissions, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{location_id}/outgoingPermission')
         super().put(url, params=params, json=body)
 
-    def delete_all_outgoing_permission_access_code_for_a_location(self, location_id: str, org_id: str = None):
+    def delete_all_outgoing_permission_access_code_for_a_location(self, location_id: str, org_id: str = None) -> None:
         """
         Delete all Outgoing Permission Access Code for a Location
 
@@ -474,7 +476,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{location_id}/outgoingPermission/accessCodes')
@@ -498,7 +500,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: GetLocationAccessCodeObjectAccessCodes
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{location_id}/outgoingPermission/accessCodes')
@@ -508,7 +510,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
 
     def create_outgoing_permission_a_new_access_code_for_a_customer_location(self, location_id: str,
                                                                              access_codes: GetLocationAccessCodeObjectAccessCodes = None,
-                                                                             org_id: str = None):
+                                                                             org_id: str = None) -> None:
         """
         Create Outgoing Permission a new access code for a customer location
 
@@ -527,17 +529,17 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if access_codes is not None:
             body['accessCodes'] = access_codes.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{location_id}/outgoingPermission/accessCodes')
         super().post(url, params=params, json=body)
 
     def delete_outgoing_permission_access_code_location(self, location_id: str, delete_codes: list[str],
-                                                        org_id: str = None):
+                                                        org_id: str = None) -> None:
         """
         Delete Outgoing Permission Access Code Location
 
@@ -556,10 +558,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['deleteCodes'] = delete_codes
         url = self.ep(f'{location_id}/outgoingPermission/accessCodes')
         super().put(url, params=params, json=body)
@@ -583,7 +585,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: :class:`GetAutoTransferNumberObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{location_id}/outgoingPermission/autoTransferNumbers')
@@ -593,7 +595,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
 
     def put_outgoing_permission_auto_transfer_number(self, location_id: str, auto_transfer_number1: str = None,
                                                      auto_transfer_number2: str = None,
-                                                     auto_transfer_number3: str = None, org_id: str = None):
+                                                     auto_transfer_number3: str = None, org_id: str = None) -> None:
         """
         Put Outgoing Permission Auto Transfer Number
 
@@ -620,10 +622,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if auto_transfer_number1 is not None:
             body['autoTransferNumber1'] = auto_transfer_number1
         if auto_transfer_number2 is not None:
@@ -633,7 +635,8 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         url = self.ep(f'{location_id}/outgoingPermission/autoTransferNumbers')
         super().put(url, params=params, json=body)
 
-    def delete_all_outgoing_permission_digit_patterns_for_a_location(self, location_id: str, org_id: str = None):
+    def delete_all_outgoing_permission_digit_patterns_for_a_location(self, location_id: str,
+                                                                     org_id: str = None) -> None:
         """
         Delete all Outgoing Permission Digit Patterns for a Location
 
@@ -650,14 +653,14 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{location_id}/outgoingPermission/digitPatterns')
         super().delete(url, params=params)
 
     def get_outgoing_permission_digit_pattern_for_a_location(self, location_id: str,
-                                                             org_id: str = None) -> List[LocationDigitPatternObject]:
+                                                             org_id: str = None) -> builtins.list[LocationDigitPatternObject]:
         """
         Get Outgoing Permission Digit Pattern for a Location
 
@@ -674,7 +677,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: list[LocationDigitPatternObject]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{location_id}/outgoingPermission/digitPatterns')
@@ -710,10 +713,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['pattern'] = pattern
         body['action'] = enum_str(action)
@@ -724,7 +727,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         return r
 
     def delete_a_outgoing_permission_digit_pattern_for_a_location(self, location_id: str, digit_pattern_id: str,
-                                                                  org_id: str = None):
+                                                                  org_id: str = None) -> None:
         """
         Delete a Outgoing Permission Digit Pattern for a Location
 
@@ -743,7 +746,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{location_id}/outgoingPermission/digitPatterns/{digit_pattern_id}')
@@ -770,7 +773,7 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: :class:`LocationDigitPatternObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{location_id}/outgoingPermission/digitPatterns/{digit_pattern_id}')
@@ -781,7 +784,8 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
     def update_a_outgoing_permission_digit_pattern_for_a_location(self, location_id: str, digit_pattern_id: str,
                                                                   name: str = None, pattern: str = None,
                                                                   action: CallingPermissionObjectAction = None,
-                                                                  transfer_enabled: bool = None, org_id: str = None):
+                                                                  transfer_enabled: bool = None,
+                                                                  org_id: str = None) -> None:
         """
         Update a Outgoing Permission Digit Pattern for a Location
 
@@ -808,10 +812,10 @@ class LocationCallSettingsCallHandlingApi(ApiChild, base='telephony/config/locat
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if name is not None:
             body['name'] = name
         if pattern is not None:

@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -237,7 +238,7 @@ class CallControlsApi(ApiChild, base='telephony'):
     support.
     """
 
-    def listcalls(self, line_owner_id: str = None) -> List[Call]:
+    def listcalls(self, line_owner_id: str = None) -> builtins.list[Call]:
         """
         List Calls
 
@@ -248,7 +249,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type line_owner_id: str
         :rtype: list[Call]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if line_owner_id is not None:
             params['lineOwnerId'] = line_owner_id
         url = self.ep('calls')
@@ -256,7 +257,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         r = TypeAdapter(list[Call]).validate_python(data['items'])
         return r
 
-    def answer(self, call_id: str, endpoint_id: str = None, line_owner_id: str = None):
+    def answer(self, call_id: str, endpoint_id: str = None, line_owner_id: str = None) -> None:
         """
         Answer
 
@@ -276,7 +277,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type line_owner_id: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['callId'] = call_id
         if endpoint_id is not None:
             body['endpointId'] = endpoint_id
@@ -305,7 +306,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type line_owner_id: str
         :rtype: :class:`BargeinResponse`
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['target'] = target
         if endpoint_id is not None:
             body['endpointId'] = endpoint_id
@@ -338,7 +339,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type line_owner_id: str
         :rtype: :class:`BargeinResponse`
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['destination'] = destination
         if endpoint_id is not None:
             body['endpointId'] = endpoint_id
@@ -349,7 +350,8 @@ class CallControlsApi(ApiChild, base='telephony'):
         r = BargeinResponse.model_validate(data)
         return r
 
-    def divert(self, call_id: str, destination: str = None, to_voicemail: bool = None, line_owner_id: str = None):
+    def divert(self, call_id: str, destination: str = None, to_voicemail: bool = None,
+               line_owner_id: str = None) -> None:
         """
         Divert
 
@@ -370,7 +372,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type line_owner_id: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['callId'] = call_id
         if destination is not None:
             body['destination'] = destination
@@ -381,7 +383,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         url = self.ep('calls/divert')
         super().post(url, json=body)
 
-    def hangup(self, call_id: str, line_owner_id: str = None):
+    def hangup(self, call_id: str, line_owner_id: str = None) -> None:
         """
         Hangup
 
@@ -394,14 +396,14 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type line_owner_id: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['callId'] = call_id
         if line_owner_id is not None:
             body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/hangup')
         super().post(url, json=body)
 
-    def listcallhistory(self, type: CallHistoryRecordTypeEnum = None) -> List[CallHistoryRecord]:
+    def listcallhistory(self, type: CallHistoryRecordTypeEnum = None) -> builtins.list[CallHistoryRecord]:
         """
         List Call History
 
@@ -413,7 +415,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type type: CallHistoryRecordTypeEnum
         :rtype: list[CallHistoryRecord]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if type is not None:
             params['type'] = enum_str(type)
         url = self.ep('calls/history')
@@ -421,7 +423,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         r = TypeAdapter(list[CallHistoryRecord]).validate_python(data['items'])
         return r
 
-    def hold(self, call_id: str, line_owner_id: str = None):
+    def hold(self, call_id: str, line_owner_id: str = None) -> None:
         """
         Hold
 
@@ -434,14 +436,14 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type line_owner_id: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['callId'] = call_id
         if line_owner_id is not None:
             body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/hold')
         super().post(url, json=body)
 
-    def mute(self, call_id: str, line_owner_id: str = None):
+    def mute(self, call_id: str, line_owner_id: str = None) -> None:
         """
         Mute
 
@@ -455,7 +457,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type line_owner_id: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['callId'] = call_id
         if line_owner_id is not None:
             body['lineOwnerId'] = line_owner_id
@@ -484,7 +486,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type line_owner_id: str
         :rtype: PartyInformation
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['callId'] = call_id
         if destination is not None:
             body['destination'] = destination
@@ -497,7 +499,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         r = PartyInformation.model_validate(data['parkedAgainst'])
         return r
 
-    def pauserecording(self, call_id: str = None, line_owner_id: str = None):
+    def pauserecording(self, call_id: str = None, line_owner_id: str = None) -> None:
         """
         Pause Recording
 
@@ -511,7 +513,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type line_owner_id: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if call_id is not None:
             body['callId'] = call_id
         if line_owner_id is not None:
@@ -541,7 +543,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type line_owner_id: str
         :rtype: :class:`BargeinResponse`
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if target is not None:
             body['target'] = target
         if endpoint_id is not None:
@@ -570,7 +572,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type line_owner_id: str
         :rtype: :class:`BargeinResponse`
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if endpoint_id is not None:
             body['endpointId'] = endpoint_id
         if line_owner_id is not None:
@@ -580,7 +582,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         r = BargeinResponse.model_validate(data)
         return r
 
-    def push(self, call_id: str = None, line_owner_id: str = None):
+    def push(self, call_id: str = None, line_owner_id: str = None) -> None:
         """
         Push
 
@@ -594,7 +596,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type line_owner_id: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if call_id is not None:
             body['callId'] = call_id
         if line_owner_id is not None:
@@ -602,7 +604,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         url = self.ep('calls/push')
         super().post(url, json=body)
 
-    def reject(self, call_id: str, action: RejectActionEnum = None, line_owner_id: str = None):
+    def reject(self, call_id: str, action: RejectActionEnum = None, line_owner_id: str = None) -> None:
         """
         Reject
 
@@ -618,7 +620,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type line_owner_id: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['callId'] = call_id
         if action is not None:
             body['action'] = enum_str(action)
@@ -627,7 +629,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         url = self.ep('calls/reject')
         super().post(url, json=body)
 
-    def resume(self, call_id: str, line_owner_id: str = None):
+    def resume(self, call_id: str, line_owner_id: str = None) -> None:
         """
         Resume
 
@@ -640,14 +642,14 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type line_owner_id: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['callId'] = call_id
         if line_owner_id is not None:
             body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/resume')
         super().post(url, json=body)
 
-    def resumerecording(self, call_id: str = None, line_owner_id: str = None):
+    def resumerecording(self, call_id: str = None, line_owner_id: str = None) -> None:
         """
         Resume Recording
 
@@ -661,7 +663,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type line_owner_id: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if call_id is not None:
             body['callId'] = call_id
         if line_owner_id is not None:
@@ -691,7 +693,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type line_owner_id: str
         :rtype: :class:`BargeinResponse`
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if destination is not None:
             body['destination'] = destination
         if endpoint_id is not None:
@@ -703,7 +705,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         r = BargeinResponse.model_validate(data)
         return r
 
-    def startrecording(self, call_id: str = None, line_owner_id: str = None):
+    def startrecording(self, call_id: str = None, line_owner_id: str = None) -> None:
         """
         Start Recording
 
@@ -717,7 +719,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type line_owner_id: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if call_id is not None:
             body['callId'] = call_id
         if line_owner_id is not None:
@@ -725,7 +727,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         url = self.ep('calls/startRecording')
         super().post(url, json=body)
 
-    def stoprecording(self, call_id: str = None, line_owner_id: str = None):
+    def stoprecording(self, call_id: str = None, line_owner_id: str = None) -> None:
         """
         Stop Recording
 
@@ -739,7 +741,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type line_owner_id: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if call_id is not None:
             body['callId'] = call_id
         if line_owner_id is not None:
@@ -786,7 +788,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type line_owner_id: str
         :rtype: :class:`BargeinResponse`
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if call_id1 is not None:
             body['callId1'] = call_id1
         if call_id2 is not None:
@@ -800,7 +802,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         r = BargeinResponse.model_validate(data)
         return r
 
-    def transmitdtmf(self, call_id: str = None, dtmf: str = None, line_owner_id: str = None):
+    def transmitdtmf(self, call_id: str = None, dtmf: str = None, line_owner_id: str = None) -> None:
         """
         Transmit DTMF
 
@@ -818,7 +820,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type line_owner_id: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if call_id is not None:
             body['callId'] = call_id
         if dtmf is not None:
@@ -828,7 +830,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         url = self.ep('calls/transmitDtmf')
         super().post(url, json=body)
 
-    def unmute(self, call_id: str, line_owner_id: str = None):
+    def unmute(self, call_id: str, line_owner_id: str = None) -> None:
         """
         Unmute
 
@@ -842,7 +844,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type line_owner_id: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['callId'] = call_id
         if line_owner_id is not None:
             body['lineOwnerId'] = line_owner_id
@@ -862,7 +864,7 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type line_owner_id: str
         :rtype: :class:`Call`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if line_owner_id is not None:
             params['lineOwnerId'] = line_owner_id
         url = self.ep(f'calls/{call_id}')
@@ -870,7 +872,8 @@ class CallControlsApi(ApiChild, base='telephony'):
         r = Call.model_validate(data)
         return r
 
-    def post_external_voicemail_mwi(self, id: str, action: ExternalVoicemailMwiRequestAction, org_id: str = None):
+    def post_external_voicemail_mwi(self, id: str, action: ExternalVoicemailMwiRequestAction,
+                                    org_id: str = None) -> None:
         """
         Set or Clear Message Waiting Indicator (MWI) Status
 
@@ -902,11 +905,11 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         params['id'] = id
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['action'] = enum_str(action)
         url = self.ep('externalVoicemail/mwi')
         super().post(url, params=params, json=body)

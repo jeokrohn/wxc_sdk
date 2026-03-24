@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -353,7 +354,7 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetCallRecordingObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('callRecording')
@@ -361,7 +362,7 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         r = GetCallRecordingObject.model_validate(data)
         return r
 
-    def update_call_recording_settings(self, enabled: bool, org_id: str = None):
+    def update_call_recording_settings(self, enabled: bool, org_id: str = None) -> None:
         """
         Update Call Recording Settings
 
@@ -381,10 +382,10 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         url = self.ep('callRecording')
         super().put(url, params=params, json=body)
@@ -407,7 +408,7 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetOrgComplianceAnnouncementObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('callRecording/complianceAnnouncement')
@@ -418,7 +419,7 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
     def update_the_organization_compliance_announcement(self, inbound_pstncalls_enabled: bool = None,
                                                         outbound_pstncalls_enabled: bool = None,
                                                         outbound_pstncalls_delay_enabled: bool = None,
-                                                        delay_in_seconds: int = None, org_id: str = None):
+                                                        delay_in_seconds: int = None, org_id: str = None) -> None:
         """
         Update the organization compliance announcement.
 
@@ -444,10 +445,10 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if inbound_pstncalls_enabled is not None:
             body['inboundPSTNCallsEnabled'] = inbound_pstncalls_enabled
         if outbound_pstncalls_enabled is not None:
@@ -459,7 +460,7 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         url = self.ep('callRecording/complianceAnnouncement')
         super().put(url, params=params, json=body)
 
-    def get_call_recording_regions(self, org_id: str = None) -> List[Regions]:
+    def get_call_recording_regions(self, org_id: str = None) -> builtins.list[Regions]:
         """
         Get Call Recording Regions
 
@@ -475,7 +476,7 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: list[Regions]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('callRecording/regions')
@@ -508,10 +509,10 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['vendorId'] = vendor_id
         if storage_region is not None:
             body['storageRegion'] = storage_region
@@ -546,7 +547,7 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`CallRecordingVendorUsersResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         if max_ is not None:
@@ -576,7 +577,7 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`CallRecordingVendorsList`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('callRecording/vendors')
@@ -603,7 +604,7 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetCallRecordingTermsOfServiceObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'callRecording/vendors/{vendor_id}/termsOfService')
@@ -612,7 +613,7 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         return r
 
     def update_call_recording_terms_of_service_settings(self, vendor_id: str, terms_of_service_enabled: bool,
-                                                        org_id: str = None):
+                                                        org_id: str = None) -> None:
         """
         Update Call Recording Terms Of Service Settings
 
@@ -632,15 +633,16 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['termsOfServiceEnabled'] = terms_of_service_enabled
         url = self.ep(f'callRecording/vendors/{vendor_id}/termsOfService')
         super().put(url, params=params, json=body)
 
-    def list_call_recording_jobs(self, org_id: str = None, **params) -> Generator[CallRecordingJobStatus, None, None]:
+    def list_call_recording_jobs(self, org_id: str = None,
+                                 **params: Any) -> Generator[CallRecordingJobStatus, None, None]:
         """
         List Call Recording Jobs
 
@@ -679,7 +681,7 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`CallRecordingJobStatus`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'jobs/callRecording/{job_id}')
@@ -688,7 +690,7 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         return r
 
     def get_job_errors_for_a_call_recording_job(self, job_id: str, org_id: str = None,
-                                                **params) -> Generator[ItemObject, None, None]:
+                                                **params: Any) -> Generator[ItemObject, None, None]:
         """
         Get Job Errors for a Call Recording Job
 
@@ -731,7 +733,7 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetComplianceAnnouncementObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/callRecording/complianceAnnouncement')
@@ -743,7 +745,7 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
                                                     use_org_settings_enabled: bool = None,
                                                     outbound_pstncalls_enabled: bool = None,
                                                     outbound_pstncalls_delay_enabled: bool = None,
-                                                    delay_in_seconds: int = None, org_id: str = None):
+                                                    delay_in_seconds: int = None, org_id: str = None) -> None:
         """
         Update the location compliance announcement.
 
@@ -774,10 +776,10 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if inbound_pstncalls_enabled is not None:
             body['inboundPSTNCallsEnabled'] = inbound_pstncalls_enabled
         if use_org_settings_enabled is not None:
@@ -827,10 +829,10 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if id is not None:
             body['id'] = id
         if org_default_enabled is not None:
@@ -875,7 +877,7 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`CallRecordingVendorUsersResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         if max_ is not None:
@@ -908,7 +910,7 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`CallRecordingLocationVendorsResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/callRecording/vendors')

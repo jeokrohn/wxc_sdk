@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -189,7 +190,7 @@ class LicensesApi(ApiChild, base='licenses'):
     <https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses>`_ guide.
     """
 
-    def list_licenses(self, org_id: str = None) -> List[License]:
+    def list_licenses(self, org_id: str = None) -> builtins.list[License]:
         """
         List Licenses
 
@@ -202,7 +203,7 @@ class LicensesApi(ApiChild, base='licenses'):
         :type org_id: str
         :rtype: list[License]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep()
@@ -240,7 +241,7 @@ class LicensesApi(ApiChild, base='licenses'):
         :type org_id: str
         :rtype: :class:`UserLicensesResponse`
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if email is not None:
             body['email'] = email
         if person_id is not None:
@@ -282,7 +283,7 @@ class LicensesApi(ApiChild, base='licenses'):
         :type limit: int
         :rtype: :class:`LicensewithUsers`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if include_assigned_to is not None:
             params['includeAssignedTo'] = enum_str(include_assigned_to)
         if next is not None:

@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -282,7 +283,7 @@ class ConvergedRecordingsApi(ApiChild, base=''):
                                                         owner_type: RecordingObjectOwnerType = None,
                                                         storage_region: StorageRegion = None, location_id: str = None,
                                                         topic: str = None, timezone: str = None,
-                                                        **params) -> Generator[RecordingObject, None, None]:
+                                                        **params: Any) -> Generator[RecordingObject, None, None]:
         """
         List Recordings for Admin or Compliance officer
 
@@ -377,7 +378,7 @@ class ConvergedRecordingsApi(ApiChild, base=''):
                         service_type: RecordingObjectServiceType = None, format_: RecordingObjectFormat = None,
                         owner_type: RecordingObjectOwnerType = None, storage_region: StorageRegion = None,
                         location_id: str = None, topic: str = None, timezone: str = None,
-                        **params) -> Generator[RecordingObject, None, None]:
+                        **params: Any) -> Generator[RecordingObject, None, None]:
         """
         List Recordings
 
@@ -460,7 +461,7 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         return self.session.follow_pagination(url=url, model=RecordingObject, item_key='items', params=params)
 
     def purge_recordings_from_recycle_bin(self, purge_all: bool = None, owner_email: str = None,
-                                          recording_ids: list[str] = None):
+                                          recording_ids: list[str] = None) -> None:
         """
         Purge Recordings from Recycle Bin
 
@@ -503,7 +504,7 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         :type recording_ids: list[str]
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if purge_all is not None:
             body['purgeAll'] = purge_all
         if owner_email is not None:
@@ -514,7 +515,7 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         super().post(url, json=body)
 
     def reassign_recordings(self, reassign_owner_email: str, owner_email: str = None, owner_id: str = None,
-                            recording_ids: list[str] = None):
+                            recording_ids: list[str] = None) -> None:
         """
         Reassign Recordings
 
@@ -554,7 +555,7 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         :type recording_ids: list[str]
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if owner_email is not None:
             body['ownerEmail'] = owner_email
         if owner_id is not None:
@@ -566,7 +567,7 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         super().post(url, json=body)
 
     def restore_recordings_from_recycle_bin(self, restore_all: bool = None, owner_email: str = None,
-                                            recording_ids: list[str] = None):
+                                            recording_ids: list[str] = None) -> None:
         """
         Restore Recordings from Recycle Bin
 
@@ -609,7 +610,7 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         :type recording_ids: list[str]
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if restore_all is not None:
             body['restoreAll'] = restore_all
         if owner_email is not None:
@@ -620,7 +621,7 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         super().post(url, json=body)
 
     def move_recordings_into_the_recycle_bin(self, trash_all: bool = None, owner_email: str = None,
-                                             recording_ids: list[str] = None):
+                                             recording_ids: list[str] = None) -> None:
         """
         Move Recordings into the Recycle Bin
 
@@ -668,7 +669,7 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         :type recording_ids: list[str]
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if trash_all is not None:
             body['trashAll'] = trash_all
         if owner_email is not None:
@@ -678,7 +679,7 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         url = self.ep('convergedRecordings/softDelete')
         super().post(url, json=body)
 
-    def delete_a_recording(self, recording_id: str, reason: str = None, comment: str = None):
+    def delete_a_recording(self, recording_id: str, reason: str = None, comment: str = None) -> None:
         """
         Delete a Recording
 
@@ -700,7 +701,7 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         :type comment: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if reason is not None:
             body['reason'] = reason
         if comment is not None:
@@ -731,7 +732,7 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         :type timezone: str
         :rtype: :class:`RecordingObjectWithDirectDownloadLinks`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if timezone is not None:
             params['timezone'] = timezone
         url = self.ep(f'convergedRecordings/{recording_id}')
@@ -763,7 +764,7 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         :type show_all_types: bool
         :rtype: :class:`GetRecordingMetadataResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if show_all_types is not None:
             params['showAllTypes'] = str(show_all_types).lower()
         url = self.ep(f'convergedRecordings/{recording_id}/metadata')

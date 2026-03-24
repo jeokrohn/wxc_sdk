@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -876,10 +877,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`TestCallRoutingPostResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['originatorId'] = originator_id
         body['originatorType'] = enum_str(originator_type)
         if originator_number is not None:
@@ -895,7 +896,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
     def retrieve_the_list_of_translation_patterns(self, limit_to_location_id: str = None,
                                                   limit_to_org_level_enabled: str = None, order: str = None,
                                                   name: str = None, matching_pattern: str = None, org_id: str = None,
-                                                  **params) -> Generator[TranslationPatternItem, None, None]:
+                                                  **params: Any) -> Generator[TranslationPatternItem, None, None]:
         """
         Retrieve the list of Translation Patterns
 
@@ -962,10 +963,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['matchingPattern'] = matching_pattern
         body['replacementPattern'] = replacement_pattern
@@ -974,7 +975,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         r = data['id']
         return r
 
-    def delete_a_specific_translation_pattern(self, translation_id: str, org_id: str = None):
+    def delete_a_specific_translation_pattern(self, translation_id: str, org_id: str = None) -> None:
         """
         Delete a specific Translation Pattern
 
@@ -992,7 +993,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'callRouting/translationPatterns/{translation_id}')
@@ -1017,7 +1018,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`LocationTranslationPatternGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'callRouting/translationPatterns/{translation_id}')
@@ -1028,7 +1029,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
     def modify_a_specific_translation_pattern_for_an_organization(self, translation_id: str, name: str = None,
                                                                   matching_pattern: str = None,
                                                                   replacement_pattern: str = None,
-                                                                  org_id: str = None):
+                                                                  org_id: str = None) -> None:
         """
         Modify a specific Translation Pattern for an Organization
 
@@ -1052,10 +1053,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if name is not None:
             body['name'] = name
         if matching_pattern is not None:
@@ -1091,10 +1092,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['matchingPattern'] = matching_pattern
         body['replacementPattern'] = replacement_pattern
@@ -1104,7 +1105,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         return r
 
     def delete_a_specific_translation_pattern_for_a_location(self, location_id: str, translation_id: str,
-                                                             org_id: str = None):
+                                                             org_id: str = None) -> None:
         """
         Delete a specific Translation Pattern for a Location
 
@@ -1125,7 +1126,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/callRouting/translationPatterns/{translation_id}')
@@ -1153,7 +1154,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`LocationTranslationPatternGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/callRouting/translationPatterns/{translation_id}')
@@ -1163,7 +1164,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
 
     def modify_a_specific_translation_pattern_for_a_location(self, location_id: str, translation_id: str,
                                                              name: str = None, matching_pattern: str = None,
-                                                             replacement_pattern: str = None, org_id: str = None):
+                                                             replacement_pattern: str = None,
+                                                             org_id: str = None) -> None:
         """
         Modify a specific Translation Pattern for a Location
 
@@ -1190,10 +1192,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if name is not None:
             body['name'] = name
         if matching_pattern is not None:
@@ -1222,10 +1224,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`DialPatternValidateResult`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['dialPatterns'] = dial_patterns
         url = self.ep('premisePstn/actions/validateDialPatterns/invoke')
         data = super().post(url, params=params, json=body)
@@ -1234,7 +1236,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
 
     def read_the_list_of_dial_plans(self, dial_plan_name: str = None, route_group_name: str = None,
                                     trunk_name: str = None, order: str = None, org_id: str = None,
-                                    **params) -> Generator[DialPlan, None, None]:
+                                    **params: Any) -> Generator[DialPlan, None, None]:
         """
         Read the List of Dial Plans
 
@@ -1301,10 +1303,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['routeId'] = route_id
         body['routeType'] = enum_str(route_type)
@@ -1315,7 +1317,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         r = data['id']
         return r
 
-    def delete_a_dial_plan(self, dial_plan_id: str, org_id: str = None):
+    def delete_a_dial_plan(self, dial_plan_id: str, org_id: str = None) -> None:
         """
         Delete a Dial Plan
 
@@ -1336,7 +1338,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/dialPlans/{dial_plan_id}')
@@ -1363,7 +1365,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`DialPlanGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/dialPlans/{dial_plan_id}')
@@ -1372,7 +1374,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         return r
 
     def modify_a_dial_plan(self, dial_plan_id: str, name: str, route_id: str, route_type: RouteType,
-                           org_id: str = None):
+                           org_id: str = None) -> None:
         """
         Modify a Dial Plan
 
@@ -1399,10 +1401,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['routeId'] = route_id
         body['routeType'] = enum_str(route_type)
@@ -1410,7 +1412,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         super().put(url, params=params, json=body)
 
     def modify_dial_patterns(self, dial_plan_id: str, dial_patterns: list[DialPattern] = None,
-                             delete_all_dial_patterns: bool = None, org_id: str = None):
+                             delete_all_dial_patterns: bool = None, org_id: str = None) -> None:
         """
         Modify Dial Patterns
 
@@ -1436,10 +1438,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if dial_patterns is not None:
             body['dialPatterns'] = TypeAdapter(list[DialPattern]).dump_python(dial_patterns, mode='json', by_alias=True, exclude_none=True)
         if delete_all_dial_patterns is not None:
@@ -1448,7 +1450,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         super().put(url, params=params, json=body)
 
     def read_the_list_of_routing_groups(self, name: str = None, order: str = None, org_id: str = None,
-                                        **params) -> Generator[RouteGroup, None, None]:
+                                        **params: Any) -> Generator[RouteGroup, None, None]:
         """
         Read the List of Routing Groups
 
@@ -1497,10 +1499,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['localGateways'] = TypeAdapter(list[LocalGateways]).dump_python(local_gateways, mode='json', by_alias=True, exclude_none=True)
         url = self.ep('premisePstn/routeGroups')
@@ -1508,7 +1510,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         r = data['id']
         return r
 
-    def remove_a_route_group_from_an_organization(self, route_group_id: str, org_id: str = None):
+    def remove_a_route_group_from_an_organization(self, route_group_id: str, org_id: str = None) -> None:
         """
         Remove a Route Group from an Organization
 
@@ -1526,7 +1528,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}')
@@ -1550,7 +1552,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`RouteGroupGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}')
@@ -1559,7 +1561,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         return r
 
     def modify_a_route_group_for_a_organization(self, route_group_id: str, name: str,
-                                                local_gateways: list[LocalGateways], org_id: str = None):
+                                                local_gateways: list[LocalGateways], org_id: str = None) -> None:
         """
         Modify a Route Group for a Organization
 
@@ -1581,10 +1583,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['localGateways'] = TypeAdapter(list[LocalGateways]).dump_python(local_gateways, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}')
@@ -1613,7 +1615,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`ReadTheUsageOfARoutingGroupResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/routeGroups/{route_group_id}/usage')
@@ -1623,7 +1625,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
 
     def read_the_call_to_extension_locations_of_a_routing_group(self, route_group_id: str, location_name: str = None,
                                                                 order: str = None, org_id: str = None,
-                                                                **params) -> Generator[Customer, None, None]:
+                                                                **params: Any) -> Generator[Customer, None, None]:
         """
         Read the Call to Extension Locations of a Routing Group
 
@@ -1655,7 +1657,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
 
     def read_the_dial_plan_locations_of_a_routing_group(self, route_group_id: str, location_name: str = None,
                                                         order: str = None, org_id: str = None,
-                                                        **params) -> Generator[Customer, None, None]:
+                                                        **params: Any) -> Generator[Customer, None, None]:
         """
         Read the Dial Plan Locations of a Routing Group
 
@@ -1690,7 +1692,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
 
     def read_the_pstn_connection_locations_of_a_routing_group(self, route_group_id: str, location_name: str = None,
                                                               order: str = None, org_id: str = None,
-                                                              **params) -> Generator[Customer, None, None]:
+                                                              **params: Any) -> Generator[Customer, None, None]:
         """
         Read the PSTN Connection Locations of a Routing Group
 
@@ -1721,7 +1723,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
 
     def read_the_route_lists_of_a_routing_group(self, route_group_id: str, name: str = None, order: str = None,
                                                 org_id: str = None,
-                                                **params) -> Generator[RouteGroupUsageRouteListGet, None, None]:
+                                                **params: Any) -> Generator[RouteGroupUsageRouteListGet, None, None]:
         """
         Read the Route Lists of a Routing Group
 
@@ -1751,7 +1753,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         return self.session.follow_pagination(url=url, model=RouteGroupUsageRouteListGet, item_key='routeGroupUsageRouteListGet', params=params)
 
     def read_the_list_of_route_lists(self, order: str = None, name: list[str] = None, location_id: list[str] = None,
-                                     org_id: str = None, **params) -> Generator[RouteList, None, None]:
+                                     org_id: str = None, **params: Any) -> Generator[RouteList, None, None]:
         """
         Read the List of Route Lists
 
@@ -1807,10 +1809,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['locationId'] = location_id
         body['routeGroupId'] = route_group_id
@@ -1819,7 +1821,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         r = data['id']
         return r
 
-    def delete_a_route_list(self, route_list_id: str, org_id: str = None):
+    def delete_a_route_list(self, route_list_id: str, org_id: str = None) -> None:
         """
         Delete a Route List
 
@@ -1837,7 +1839,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/routeLists/{route_list_id}')
@@ -1861,7 +1863,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`RouteListGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/routeLists/{route_list_id}')
@@ -1870,7 +1872,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         return r
 
     def modify_a_route_list(self, route_list_id: str, name: str = None, route_group_id: str = None,
-                            org_id: str = None):
+                            org_id: str = None) -> None:
         """
         Modify a Route List
 
@@ -1892,10 +1894,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if name is not None:
             body['name'] = name
         if route_group_id is not None:
@@ -1904,7 +1906,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         super().put(url, params=params, json=body)
 
     def get_numbers_assigned_to_a_route_list(self, route_list_id: str, number: str = None, order: str = None,
-                                             org_id: str = None, **params) -> Generator[str, None, None]:
+                                             org_id: str = None, **params: Any) -> Generator[str, None, None]:
         """
         Get numbers assigned to a Route List
 
@@ -1935,7 +1937,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
 
     def modify_numbers_for_route_list(self, route_list_id: str, numbers: list[RouteListNumberPatch] = None,
                                       delete_all_numbers: bool = None,
-                                      org_id: str = None) -> List[RouteListNumberPatchResponse]:
+                                      org_id: str = None) -> builtins.list[RouteListNumberPatchResponse]:
         """
         Modify Numbers for Route List
 
@@ -1958,10 +1960,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: list[RouteListNumberPatchResponse]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if numbers is not None:
             body['numbers'] = TypeAdapter(list[RouteListNumberPatch]).dump_python(numbers, mode='json', by_alias=True, exclude_none=True)
         if delete_all_numbers is not None:
@@ -1972,7 +1974,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         return r
 
     def read_the_list_of_trunks(self, name: list[str] = None, location_name: list[str] = None, trunk_type: str = None,
-                                order: str = None, org_id: str = None, **params) -> Generator[Trunk, None, None]:
+                                order: str = None, org_id: str = None, **params: Any) -> Generator[Trunk, None, None]:
         """
         Read the List of Trunks
 
@@ -2055,10 +2057,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['locationId'] = location_id
         body['password'] = password
@@ -2083,7 +2085,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         return r
 
     def validate_local_gateway_fqdn_and_domain_for_a_trunk(self, address: str = None, domain: str = None,
-                                                           port: int = None, org_id: str = None):
+                                                           port: int = None, org_id: str = None) -> None:
         """
         Validate Local Gateway FQDN and Domain for a Trunk
 
@@ -2107,10 +2109,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if address is not None:
             body['address'] = address
         if domain is not None:
@@ -2120,7 +2122,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         url = self.ep('premisePstn/trunks/actions/fqdnValidation/invoke')
         super().post(url, params=params, json=body)
 
-    def read_the_list_of_trunk_types(self, org_id: str = None) -> List[TrunkTypeWithDeviceType]:
+    def read_the_list_of_trunk_types(self, org_id: str = None) -> builtins.list[TrunkTypeWithDeviceType]:
         """
         Read the List of Trunk Types
 
@@ -2139,7 +2141,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: list[TrunkTypeWithDeviceType]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('premisePstn/trunks/trunkTypes')
@@ -2147,7 +2149,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[TrunkTypeWithDeviceType]).validate_python(data['trunkTypes'])
         return r
 
-    def delete_a_trunk(self, trunk_id: str, org_id: str = None):
+    def delete_a_trunk(self, trunk_id: str, org_id: str = None) -> None:
         """
         Delete a Trunk
 
@@ -2166,7 +2168,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/trunks/{trunk_id}')
@@ -2192,7 +2194,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`TrunkGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/trunks/{trunk_id}')
@@ -2202,7 +2204,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
 
     def modify_a_trunk(self, trunk_id: str, name: str, password: str, dual_identity_support_enabled: bool = None,
                        max_concurrent_calls: int = None,
-                       p_charge_info_support_policy: PChargeInfoSupportPolicyType = None, org_id: str = None):
+                       p_charge_info_support_policy: PChargeInfoSupportPolicyType = None, org_id: str = None) -> None:
         """
         Modify a Trunk
 
@@ -2232,10 +2234,10 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['password'] = password
         if dual_identity_support_enabled is not None:
@@ -2265,7 +2267,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`LocalGatewayUsageCount`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/trunks/{trunk_id}/usage')
@@ -2275,7 +2277,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
 
     def get_local_gateway_call_to_on_premises_extension_usage_for_a_trunk(self, trunk_id: str, order: str = None,
                                                                           name: list[str] = None, org_id: str = None,
-                                                                          **params) -> Generator[Customer, None, None]:
+                                                                          **params: Any) -> Generator[Customer, None, None]:
         """
         Get local gateway call to on-premises extension usage for a trunk.
 
@@ -2309,7 +2311,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
 
     def get_local_gateway_dial_plan_usage_for_a_trunk(self, trunk_id: str, order: str = None, name: list[str] = None,
                                                       org_id: str = None,
-                                                      **params) -> Generator[Customer, None, None]:
+                                                      **params: Any) -> Generator[Customer, None, None]:
         """
         Get Local Gateway Dial Plan Usage for a Trunk.
 
@@ -2342,7 +2344,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         return self.session.follow_pagination(url=url, model=Customer, item_key='dialPlans', params=params)
 
     def get_locations_using_the_local_gateway_as_pstn_connection_routing(self, trunk_id: str,
-                                                                         org_id: str = None) -> List[Customer]:
+                                                                         org_id: str = None) -> builtins.list[Customer]:
         """
         Get Locations Using the Local Gateway as PSTN Connection Routing.
 
@@ -2360,7 +2362,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: list[Customer]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/trunks/{trunk_id}/usagePstnConnection')
@@ -2368,7 +2370,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[Customer]).validate_python(data['locations'])
         return r
 
-    def get_route_groups_using_the_local_gateway(self, trunk_id: str, org_id: str = None) -> List[RouteGroup]:
+    def get_route_groups_using_the_local_gateway(self, trunk_id: str, org_id: str = None) -> builtins.list[RouteGroup]:
         """
         Get Route Groups Using the Local Gateway.
 
@@ -2386,7 +2388,7 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: list[RouteGroup]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'premisePstn/trunks/{trunk_id}/usageRouteGroup')

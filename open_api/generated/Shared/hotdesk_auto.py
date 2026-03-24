@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -33,7 +34,8 @@ class HotDeskApi(ApiChild, base='hotdesk/sessions'):
     
     """
 
-    def list_sessions(self, person_id: str = None, workspace_id: str = None, org_id: str = None) -> List[HotDesk]:
+    def list_sessions(self, person_id: str = None, workspace_id: str = None,
+                      org_id: str = None) -> builtins.list[HotDesk]:
         """
         List Sessions
 
@@ -54,7 +56,7 @@ class HotDeskApi(ApiChild, base='hotdesk/sessions'):
         :type org_id: str
         :rtype: list[HotDesk]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         if person_id is not None:
@@ -66,7 +68,7 @@ class HotDeskApi(ApiChild, base='hotdesk/sessions'):
         r = TypeAdapter(list[HotDesk]).validate_python(data['items'])
         return r
 
-    def delete_session(self, session_id: str):
+    def delete_session(self, session_id: str) -> None:
         """
         Delete Session
 

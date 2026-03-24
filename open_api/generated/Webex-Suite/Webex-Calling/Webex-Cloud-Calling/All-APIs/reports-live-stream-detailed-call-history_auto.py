@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -656,7 +657,7 @@ class ReportsLiveStreamDetailedCallHistoryApi(ApiChild, base='cdr_stream'):
     """
 
     def get_live_stream_detailed_call_history(self, start_time: Union[str, datetime], end_time: Union[str, datetime],
-                                              locations: str = None, **params) -> Generator[CDR, None, None]:
+                                              locations: str = None, **params: Any) -> Generator[CDR, None, None]:
         """
         Get Live Stream Detailed Call History
 

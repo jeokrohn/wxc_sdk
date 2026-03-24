@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -148,7 +149,7 @@ class WebhooksApi(ApiChild, base='webhooks'):
     <https://developer.webex.com/docs/basics#pagination>`_.
     """
 
-    def list_webhooks(self, owned_by: str = None, **params) -> Generator[Webhook, None, None]:
+    def list_webhooks(self, owned_by: str = None, **params: Any) -> Generator[Webhook, None, None]:
         """
         List Webhooks
 
@@ -197,7 +198,7 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :type owned_by: str
         :rtype: :class:`Webhook`
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['targetUrl'] = target_url
         body['resource'] = enum_str(resource)
@@ -213,7 +214,7 @@ class WebhooksApi(ApiChild, base='webhooks'):
         r = Webhook.model_validate(data)
         return r
 
-    def delete_a_webhook(self, webhook_id: str):
+    def delete_a_webhook(self, webhook_id: str) -> None:
         """
         Delete a Webhook
 
@@ -275,7 +276,7 @@ class WebhooksApi(ApiChild, base='webhooks'):
         :type status: Status
         :rtype: :class:`Webhook`
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['targetUrl'] = target_url
         if secret is not None:

@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -661,7 +662,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
 
     def read_the_list_of_auto_attendants(self, location_id: str = None, name: str = None, phone_number: str = None,
                                          org_id: str = None,
-                                         **params) -> Generator[ListAutoAttendantObject, None, None]:
+                                         **params: Any) -> Generator[ListAutoAttendantObject, None, None]:
         """
         Read the List of Auto Attendants
 
@@ -760,10 +761,10 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         if phone_number is not None:
             body['phoneNumber'] = phone_number
@@ -799,7 +800,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
 
     def get_auto_attendant_alternate_available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
                                                              org_id: str = None,
-                                                             **params) -> Generator[AutoAttendantPrimaryAvailableNumberObject, None, None]:
+                                                             **params: Any) -> Generator[AutoAttendantPrimaryAvailableNumberObject, None, None]:
         """
         Get Auto Attendant Alternate Available Phone Numbers
 
@@ -833,7 +834,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
 
     def get_auto_attendant_primary_available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
                                                            org_id: str = None,
-                                                           **params) -> Generator[AutoAttendantPrimaryAvailableNumberObject, None, None]:
+                                                           **params: Any) -> Generator[AutoAttendantPrimaryAvailableNumberObject, None, None]:
         """
         Get Auto Attendant Primary Available Phone Numbers
 
@@ -868,7 +869,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
     def get_auto_attendant_call_forward_available_phone_numbers(self, location_id: str, phone_number: list[str] = None,
                                                                 owner_name: str = None, extension: str = None,
                                                                 org_id: str = None,
-                                                                **params) -> Generator[AutoAttendantCallForwardAvailableNumberObject, None, None]:
+                                                                **params: Any) -> Generator[AutoAttendantCallForwardAvailableNumberObject, None, None]:
         """
         Get Auto Attendant Call Forward Available Phone Numbers
 
@@ -909,7 +910,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/autoAttendants/callForwarding/availableNumbers')
         return self.session.follow_pagination(url=url, model=AutoAttendantCallForwardAvailableNumberObject, item_key='phoneNumbers', params=params)
 
-    def delete_an_auto_attendant(self, location_id: str, auto_attendant_id: str, org_id: str = None):
+    def delete_an_auto_attendant(self, location_id: str, auto_attendant_id: str, org_id: str = None) -> None:
         """
         Delete an Auto Attendant
 
@@ -929,7 +930,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
@@ -959,7 +960,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetAutoAttendantObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
@@ -977,7 +978,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
                                  business_hours_menu: HoursMenuGetObject = None,
                                  after_hours_menu: HoursMenuGetObject = None,
                                  direct_line_caller_id_name: DirectLineCallerIdNameObjectForPut = None,
-                                 dial_by_name: str = None, org_id: str = None):
+                                 dial_by_name: str = None, org_id: str = None) -> None:
         """
         Update an Auto Attendant
 
@@ -1038,10 +1039,10 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if name is not None:
             body['name'] = name
         if phone_number is not None:
@@ -1078,7 +1079,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         super().put(url, params=params, json=body)
 
     def read_the_list_of_auto_attendant_announcement_files(self, location_id: str, auto_attendant_id: str,
-                                                           org_id: str = None) -> List[GetAnnouncementFileInfo]:
+                                                           org_id: str = None) -> builtins.list[GetAnnouncementFileInfo]:
         """
         Read the List of Auto Attendant Announcement Files
 
@@ -1101,7 +1102,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: list[GetAnnouncementFileInfo]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/announcements')
@@ -1110,7 +1111,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         return r
 
     def delete_a_auto_attendant_announcement_file(self, location_id: str, auto_attendant_id: str, file_name: str,
-                                                  org_id: str = None):
+                                                  org_id: str = None) -> None:
         """
         Delete a Auto Attendant Announcement File
 
@@ -1132,7 +1133,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/announcements/{file_name}')
@@ -1163,7 +1164,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: AutoAttendantCallForwardSettingsDetailsObject
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding')
@@ -1173,7 +1174,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
 
     def update_call_forwarding_settings_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
                                                               call_forwarding: AutoAttendantCallForwardSettingsModifyDetailsObject,
-                                                              org_id: str = None):
+                                                              org_id: str = None) -> None:
         """
         Update Call Forwarding Settings for an Auto Attendant
 
@@ -1198,16 +1199,16 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['callForwarding'] = call_forwarding.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding')
         super().put(url, params=params, json=body)
 
     def switch_mode_for_call_forwarding_settings_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
-                                                                       org_id: str = None):
+                                                                       org_id: str = None) -> None:
         """
         Switch Mode for Call Forwarding Settings for an Auto Attendant
 
@@ -1224,7 +1225,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding/actions/switchMode/invoke')
@@ -1280,10 +1281,10 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         if enabled is not None:
             body['enabled'] = enabled
@@ -1301,7 +1302,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         return r
 
     def delete_a_selective_call_forwarding_rule_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
-                                                                      rule_id: str, org_id: str = None):
+                                                                      rule_id: str, org_id: str = None) -> None:
         """
         Delete a Selective Call Forwarding Rule for an Auto Attendant
 
@@ -1328,7 +1329,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding/selectiveRules/{rule_id}')
@@ -1363,7 +1364,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetAutoAttendantCallForwardSelectiveRuleObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding/selectiveRules/{rule_id}')
@@ -1422,10 +1423,10 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         if enabled is not None:
             body['enabled'] = enabled

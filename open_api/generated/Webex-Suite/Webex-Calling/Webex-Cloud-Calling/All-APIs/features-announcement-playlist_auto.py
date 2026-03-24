@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -132,7 +133,7 @@ class FeaturesAnnouncementPlaylistApi(ApiChild, base='telephony/config/announcem
     query parameter.
     """
 
-    def list_announcement_playlists(self, org_id: str = None) -> List[PlaylistObject]:
+    def list_announcement_playlists(self, org_id: str = None) -> builtins.list[PlaylistObject]:
         """
         List Announcement Playlists
 
@@ -145,7 +146,7 @@ class FeaturesAnnouncementPlaylistApi(ApiChild, base='telephony/config/announcem
         :type org_id: str
         :rtype: list[PlaylistObject]
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep()
@@ -170,10 +171,10 @@ class FeaturesAnnouncementPlaylistApi(ApiChild, base='telephony/config/announcem
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['announcementIds'] = announcement_ids
         url = self.ep()
@@ -191,7 +192,7 @@ class FeaturesAnnouncementPlaylistApi(ApiChild, base='telephony/config/announcem
         :type playlist_usage_type: PlaylistUsageType
         :rtype: :class:`PlaylistUsage`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if playlist_usage_type is not None:
             params['playlistUsageType'] = enum_str(playlist_usage_type)
         url = self.ep(f'{play_list_id}/usage')
@@ -199,7 +200,7 @@ class FeaturesAnnouncementPlaylistApi(ApiChild, base='telephony/config/announcem
         r = PlaylistUsage.model_validate(data)
         return r
 
-    def delete_announcement_playlist(self, playlist_id: str, org_id: str = None):
+    def delete_announcement_playlist(self, playlist_id: str, org_id: str = None) -> None:
         """
         Delete Announcement Playlist
 
@@ -213,7 +214,7 @@ class FeaturesAnnouncementPlaylistApi(ApiChild, base='telephony/config/announcem
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{playlist_id}')
@@ -234,7 +235,7 @@ class FeaturesAnnouncementPlaylistApi(ApiChild, base='telephony/config/announcem
         :type org_id: str
         :rtype: :class:`AnnouncementPlaylistGetResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{playlist_id}')
@@ -243,7 +244,7 @@ class FeaturesAnnouncementPlaylistApi(ApiChild, base='telephony/config/announcem
         return r
 
     def update_announcement_playlist(self, playlist_id: str, name: str = None, announcement_ids: list[str] = None,
-                                     org_id: str = None):
+                                     org_id: str = None) -> None:
         """
         Update Announcement Playlist
 
@@ -261,10 +262,10 @@ class FeaturesAnnouncementPlaylistApi(ApiChild, base='telephony/config/announcem
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if name is not None:
             body['name'] = name
         if announcement_ids is not None:
@@ -287,7 +288,7 @@ class FeaturesAnnouncementPlaylistApi(ApiChild, base='telephony/config/announcem
         :type org_id: str
         :rtype: :class:`PlaylistAssignedLocationResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{playlist_id}/locations')
@@ -295,7 +296,7 @@ class FeaturesAnnouncementPlaylistApi(ApiChild, base='telephony/config/announcem
         r = PlaylistAssignedLocationResponse.model_validate(data)
         return r
 
-    def update_playlist_locations(self, playlist_id: str, location_ids: list[str], org_id: str = None):
+    def update_playlist_locations(self, playlist_id: str, location_ids: list[str], org_id: str = None) -> None:
         """
         Update Playlist Locations
 
@@ -312,10 +313,10 @@ class FeaturesAnnouncementPlaylistApi(ApiChild, base='telephony/config/announcem
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['locationIds'] = location_ids
         url = self.ep(f'{playlist_id}/locations')
         super().put(url, params=params, json=body)

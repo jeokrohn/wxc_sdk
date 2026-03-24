@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -154,7 +155,7 @@ class SendActivationEmailApi(ApiChild, base='identity/organizations'):
         return r
 
     def get_bulk_activation_email_resend_job_errors(self, org_id: str, job_id: str,
-                                                    **params) -> Generator[ItemObject, None, None]:
+                                                    **params: Any) -> Generator[ItemObject, None, None]:
         """
         Get Bulk Activation Email Resend Job Errors
 

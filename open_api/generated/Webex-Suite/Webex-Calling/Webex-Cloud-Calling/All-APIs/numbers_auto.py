@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -474,17 +475,18 @@ class NumbersApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`ValidateNumbersResponse`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['phoneNumbers'] = phone_numbers
         url = self.ep('actions/validateNumbers/invoke')
         data = super().post(url, params=params, json=body)
         r = ValidateNumbersResponse.model_validate(data)
         return r
 
-    def list_manage_numbers_jobs(self, org_id: str = None, **params) -> Generator[JobListResponseObject, None, None]:
+    def list_manage_numbers_jobs(self, org_id: str = None,
+                                 **params: Any) -> Generator[JobListResponseObject, None, None]:
         """
         List Manage Numbers Jobs
 
@@ -556,7 +558,7 @@ class NumbersApi(ApiChild, base='telephony/config'):
         :type number_usage_type: str
         :rtype: :class:`StartJobResponse`
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['operation'] = operation
         if target_location_id is not None:
             body['targetLocationId'] = target_location_id
@@ -586,7 +588,7 @@ class NumbersApi(ApiChild, base='telephony/config'):
         r = JobIdResponseObject.model_validate(data)
         return r
 
-    def pause_the_manage_numbers_job(self, job_id: str, org_id: str = None):
+    def pause_the_manage_numbers_job(self, job_id: str, org_id: str = None) -> None:
         """
         Pause the Manage Numbers Job
 
@@ -600,13 +602,13 @@ class NumbersApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'jobs/numbers/manageNumbers/{job_id}/actions/pause/invoke')
         super().post(url, params=params)
 
-    def resume_the_manage_numbers_job(self, job_id: str, org_id: str = None):
+    def resume_the_manage_numbers_job(self, job_id: str, org_id: str = None) -> None:
         """
         Resume the Manage Numbers Job
 
@@ -620,14 +622,14 @@ class NumbersApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'jobs/numbers/manageNumbers/{job_id}/actions/resume/invoke')
         super().post(url, params=params)
 
     def list_manage_numbers_job_errors(self, job_id: str, org_id: str = None,
-                                       **params) -> Generator[ItemObject, None, None]:
+                                       **params: Any) -> Generator[ItemObject, None, None]:
         """
         List Manage Numbers Job errors
 
@@ -662,7 +664,8 @@ class NumbersApi(ApiChild, base='telephony/config'):
         url = self.ep(f'jobs/numbers/manageNumbers/{job_id}/errors')
         return self.session.follow_pagination(url=url, model=ItemObject, item_key='items', params=params)
 
-    def remove_phone_numbers_from_a_location(self, location_id: str, phone_numbers: list[str], org_id: str = None):
+    def remove_phone_numbers_from_a_location(self, location_id: str, phone_numbers: list[str],
+                                             org_id: str = None) -> None:
         """
         Remove phone numbers from a location
 
@@ -691,10 +694,10 @@ class NumbersApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['phoneNumbers'] = phone_numbers
         url = self.ep(f'locations/{location_id}/numbers')
         super().delete(url, params=params, json=body)
@@ -703,7 +706,7 @@ class NumbersApi(ApiChild, base='telephony/config'):
                                         number_type: NumberTypeOptions = None,
                                         number_usage_type: NumberUsageTypeOptions = None,
                                         state: NumberStateOptions = None, subscription_id: str = None,
-                                        carrier_id: str = None, org_id: str = None):
+                                        carrier_id: str = None, org_id: str = None) -> None:
         """
         Add Phone Numbers to a location
 
@@ -748,10 +751,10 @@ class NumbersApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['phoneNumbers'] = phone_numbers
         if number_type is not None:
             body['numberType'] = enum_str(number_type)
@@ -767,7 +770,7 @@ class NumbersApi(ApiChild, base='telephony/config'):
         super().post(url, params=params, json=body)
 
     def manage_number_state_in_a_location(self, location_id: str, phone_numbers: list[str],
-                                          action: NumbersRequestAction = None, org_id: str = None):
+                                          action: NumbersRequestAction = None, org_id: str = None) -> None:
         """
         Manage Number State in a location
 
@@ -803,10 +806,10 @@ class NumbersApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['phoneNumbers'] = phone_numbers
         if action is not None:
             body['action'] = enum_str(action)
@@ -826,7 +829,7 @@ class NumbersApi(ApiChild, base='telephony/config'):
                                                                   restricted_non_geo_numbers: bool = None,
                                                                   included_telephony_types: str = None,
                                                                   service_number: bool = None, org_id: str = None,
-                                                                  **params) -> Generator[NumberObject, None, None]:
+                                                                  **params: Any) -> Generator[NumberObject, None, None]:
         """
         Get Phone Numbers for an Organization with Given Criteria
 

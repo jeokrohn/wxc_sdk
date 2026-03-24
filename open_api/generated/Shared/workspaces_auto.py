@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -355,7 +356,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
                         device_platform: WorkspaceDevicePlatform = None, health_level: WorkspaceHealthLevel = None,
                         include_devices: bool = None, include_capabilities: bool = None,
                         planned_maintenance: WorkspacePlannedMaintenanceMode = None, custom_attribute: str = None,
-                        org_id: str = None, **params) -> Generator[Workspace, None, None]:
+                        org_id: str = None, **params: Any) -> Generator[Workspace, None, None]:
         """
         List workspaces.
 
@@ -511,7 +512,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type org_id: str
         :rtype: :class:`Workspace`
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['displayName'] = display_name
         if org_id is not None:
             body['orgId'] = org_id
@@ -546,7 +547,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         r = Workspace.model_validate(data)
         return r
 
-    def delete_workspace(self, workspace_id: str):
+    def delete_workspace(self, workspace_id: str) -> None:
         """
         Delete a Workspace
 
@@ -582,7 +583,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type include_capabilities: bool
         :rtype: :class:`Workspace`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if include_devices is not None:
             params['includeDevices'] = str(include_devices).lower()
         if include_capabilities is not None:
@@ -668,7 +669,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         :type indoor_navigation: WorkspaceIndoorNavigation
         :rtype: :class:`Workspace`
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if display_name is not None:
             body['displayName'] = display_name
         if location_id is not None:

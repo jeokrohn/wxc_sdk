@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -201,7 +202,7 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
     def read_the_list_of_call_park_extensions(self, location_id: str = None, extension: str = None,
                                               location_name: str = None, name: str = None, order: str = None,
                                               org_id: str = None,
-                                              **params) -> Generator[ListCallParkExtensionObject, None, None]:
+                                              **params: Any) -> Generator[ListCallParkExtensionObject, None, None]:
         """
         Read the List of Call Park Extensions
 
@@ -269,10 +270,10 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['extension'] = extension
         url = self.ep(f'locations/{location_id}/callParkExtensions')
@@ -280,7 +281,7 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         r = data['id']
         return r
 
-    def delete_a_call_park_extension(self, location_id: str, call_park_extension_id: str, org_id: str = None):
+    def delete_a_call_park_extension(self, location_id: str, call_park_extension_id: str, org_id: str = None) -> None:
         """
         Delete a Call Park Extension
 
@@ -302,7 +303,7 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/callParkExtensions/{call_park_extension_id}')
@@ -330,7 +331,7 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetCallParkExtensionObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/callParkExtensions/{call_park_extension_id}')
@@ -339,7 +340,7 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         return r
 
     def update_a_call_park_extension(self, location_id: str, call_park_extension_id: str, name: str = None,
-                                     extension: str = None, org_id: str = None):
+                                     extension: str = None, org_id: str = None) -> None:
         """
         Update a Call Park Extension
 
@@ -366,10 +367,10 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if name is not None:
             body['name'] = name
         if extension is not None:
@@ -378,7 +379,7 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         super().put(url, params=params, json=body)
 
     def read_the_list_of_call_parks(self, location_id: str, order: str = None, name: str = None, org_id: str = None,
-                                    **params) -> Generator[ListCallParkObject, None, None]:
+                                    **params: Any) -> Generator[ListCallParkObject, None, None]:
         """
         Read the List of Call Parks
 
@@ -441,10 +442,10 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['recall'] = recall.model_dump(mode='json', by_alias=True, exclude_none=True)
         if agents is not None:
@@ -460,7 +461,7 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
 
     def get_available_recall_hunt_groups_from_call_parks(self, location_id: str, name: str = None, order: str = None,
                                                          org_id: str = None,
-                                                         **params) -> Generator[GetAvailableRecallHuntGroupsObject, None, None]:
+                                                         **params: Any) -> Generator[GetAvailableRecallHuntGroupsObject, None, None]:
         """
         Get available recall hunt groups from Call Parks
 
@@ -493,7 +494,7 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
 
     def get_available_agents_from_call_parks(self, location_id: str, call_park_name: str = None, name: str = None,
                                              phone_number: str = None, order: str = None, org_id: str = None,
-                                             **params) -> Generator[GetPersonPlaceVirtualLineCallParksObject, None, None]:
+                                             **params: Any) -> Generator[GetPersonPlaceVirtualLineCallParksObject, None, None]:
         """
         Get available agents from Call Parks
 
@@ -550,7 +551,7 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetCallParkSettingsObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/callParks/settings')
@@ -559,7 +560,7 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         return r
 
     def update_call_park_settings(self, location_id: str, call_park_recall: PutRecallHuntGroupObject = None,
-                                  call_park_settings: CallParkSettingsObject = None, org_id: str = None):
+                                  call_park_settings: CallParkSettingsObject = None, org_id: str = None) -> None:
         """
         Update Call Park settings
 
@@ -580,10 +581,10 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if call_park_recall is not None:
             body['callParkRecall'] = call_park_recall.model_dump(mode='json', by_alias=True, exclude_none=True)
         if call_park_settings is not None:
@@ -591,7 +592,7 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/callParks/settings')
         super().put(url, params=params, json=body)
 
-    def delete_a_call_park(self, location_id: str, call_park_id: str, org_id: str = None):
+    def delete_a_call_park(self, location_id: str, call_park_id: str, org_id: str = None) -> None:
         """
         Delete a Call Park
 
@@ -612,7 +613,7 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/callParks/{call_park_id}')
@@ -640,7 +641,7 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetCallParkObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/callParks/{call_park_id}')
@@ -683,10 +684,10 @@ class FeaturesCallParkApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if name is not None:
             body['name'] = name
         if recall is not None:

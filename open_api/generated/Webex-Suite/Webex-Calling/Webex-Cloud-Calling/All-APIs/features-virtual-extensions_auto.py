@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -160,7 +161,7 @@ class FeaturesVirtualExtensionsApi(ApiChild, base='telephony/config'):
     def get_a_list_of_a_virtual_extension_range(self, order: str = None, name: str = None, prefix: str = None,
                                                 location_id: str = None, org_level_only: bool = None,
                                                 org_id: str = None,
-                                                **params) -> Generator[GetVirtualExtensionRangeListObject, None, None]:
+                                                **params: Any) -> Generator[GetVirtualExtensionRangeListObject, None, None]:
         """
         Get a list of a Virtual Extension Range
 
@@ -241,10 +242,10 @@ class FeaturesVirtualExtensionsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['prefix'] = prefix
         if patterns is not None:
@@ -289,10 +290,10 @@ class FeaturesVirtualExtensionsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`ValidateVirtualExtensionRangeResponseObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if location_id is not None:
             body['locationId'] = location_id
         if name is not None:
@@ -308,7 +309,7 @@ class FeaturesVirtualExtensionsApi(ApiChild, base='telephony/config'):
         r = ValidateVirtualExtensionRangeResponseObject.model_validate(data)
         return r
 
-    def delete_a_virtual_extension_range(self, extension_range_id: str, org_id: str = None):
+    def delete_a_virtual_extension_range(self, extension_range_id: str, org_id: str = None) -> None:
         """
         Delete a Virtual Extension Range
 
@@ -329,7 +330,7 @@ class FeaturesVirtualExtensionsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'virtualExtensionRanges/{extension_range_id}')
@@ -357,7 +358,7 @@ class FeaturesVirtualExtensionsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetVirtualExtensionRangeDetailsObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'virtualExtensionRanges/{extension_range_id}')
@@ -367,7 +368,8 @@ class FeaturesVirtualExtensionsApi(ApiChild, base='telephony/config'):
 
     def modify_virtual_extension_range(self, extension_range_id: str, name: str = None, prefix: str = None,
                                        patterns: list[str] = None,
-                                       action: PutVirtualExtensionRangeObjectAction = None, org_id: str = None):
+                                       action: PutVirtualExtensionRangeObjectAction = None,
+                                       org_id: str = None) -> None:
         """
         Modify Virtual Extension Range
 
@@ -398,10 +400,10 @@ class FeaturesVirtualExtensionsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if name is not None:
             body['name'] = name
         if prefix is not None:
@@ -416,7 +418,7 @@ class FeaturesVirtualExtensionsApi(ApiChild, base='telephony/config'):
     def read_the_list_of_virtual_extensions(self, order: str = None, extension: str = None, phone_number: str = None,
                                             name: str = None, location_name: str = None, location_id: str = None,
                                             org_level_only: bool = None, org_id: str = None,
-                                            **params) -> Generator[GetVirtualExtensionObject, None, None]:
+                                            **params: Any) -> Generator[GetVirtualExtensionObject, None, None]:
         """
         Read the List of Virtual Extensions
 
@@ -506,10 +508,10 @@ class FeaturesVirtualExtensionsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if first_name is not None:
             body['firstName'] = first_name
         if last_name is not None:
@@ -546,10 +548,10 @@ class FeaturesVirtualExtensionsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['phoneNumbers'] = phone_numbers
         url = self.ep('virtualExtensions/actions/validateNumbers/invoke')
         data = super().post(url, params=params, json=body)
@@ -576,7 +578,7 @@ class FeaturesVirtualExtensionsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: GetVirtualExtensionSettingsObjectMode
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('virtualExtensions/settings')
@@ -584,7 +586,8 @@ class FeaturesVirtualExtensionsApi(ApiChild, base='telephony/config'):
         r = GetVirtualExtensionSettingsObjectMode.model_validate(data['mode'])
         return r
 
-    def modify_virtual_extension_settings(self, mode: GetVirtualExtensionSettingsObjectMode, org_id: str = None):
+    def modify_virtual_extension_settings(self, mode: GetVirtualExtensionSettingsObjectMode,
+                                          org_id: str = None) -> None:
         """
         Modify Virtual Extension Settings
 
@@ -608,15 +611,15 @@ class FeaturesVirtualExtensionsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['mode'] = enum_str(mode)
         url = self.ep('virtualExtensions/settings')
         super().put(url, params=params, json=body)
 
-    def delete_a_virtual_extension(self, extension_id: str, org_id: str = None):
+    def delete_a_virtual_extension(self, extension_id: str, org_id: str = None) -> None:
         """
         Delete a Virtual Extension
 
@@ -635,7 +638,7 @@ class FeaturesVirtualExtensionsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'virtualExtensions/{extension_id}')
@@ -661,7 +664,7 @@ class FeaturesVirtualExtensionsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`GetVirtualExtensionObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'virtualExtensions/{extension_id}')
@@ -671,7 +674,7 @@ class FeaturesVirtualExtensionsApi(ApiChild, base='telephony/config'):
 
     def update_a_virtual_extension(self, extension_id: str, first_name: str = None, last_name: str = None,
                                    display_name: str = None, phone_number: str = None, extension: str = None,
-                                   org_id: str = None):
+                                   org_id: str = None) -> None:
         """
         Update a Virtual Extension
 
@@ -700,10 +703,10 @@ class FeaturesVirtualExtensionsApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if first_name is not None:
             body['firstName'] = first_name
         if last_name is not None:

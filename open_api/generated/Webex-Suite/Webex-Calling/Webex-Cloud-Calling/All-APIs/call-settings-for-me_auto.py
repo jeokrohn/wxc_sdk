@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -1222,7 +1223,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         r = UserProfileGetResponseObject.model_validate(data)
         return r
 
-    def get_announcement_languages_for_me(self) -> List[GetAnnouncementLanguagesForMeResponseLanguagesItem]:
+    def get_announcement_languages_for_me(self) -> builtins.list[GetAnnouncementLanguagesForMeResponseLanguagesItem]:
         """
         Get announcement languages for the authenticated user
 
@@ -1260,7 +1261,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         r = GetCountryTelephonyConfigRequirementsResponse.model_validate(data)
         return r
 
-    def get_my_endpoints_list(self) -> List[Endpoint]:
+    def get_my_endpoints_list(self) -> builtins.list[Endpoint]:
         """
         Read the List of My Endpoints
 
@@ -1298,7 +1299,8 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         r = Endpoint.model_validate(data)
         return r
 
-    def modify_my_endpoint_details(self, endpoint_id: str, mobility_settings: ModifyEndpointObjectMobilitySettings):
+    def modify_my_endpoint_details(self, endpoint_id: str,
+                                   mobility_settings: ModifyEndpointObjectMobilitySettings) -> None:
         """
         Modify My Endpoints Details
 
@@ -1315,12 +1317,12 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type mobility_settings: ModifyEndpointObjectMobilitySettings
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['mobilitySettings'] = mobility_settings.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'endpoints/{endpoint_id}')
         super().put(url, json=body)
 
-    def get_my_available_caller_idlist(self) -> List[SelectedCallerIdSettingsGetSelected]:
+    def get_my_available_caller_idlist(self) -> builtins.list[SelectedCallerIdSettingsGetSelected]:
         """
         Get My Available Caller ID List
 
@@ -1338,7 +1340,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         r = TypeAdapter(list[SelectedCallerIdSettingsGetSelected]).validate_python(data['availableCallerIds'])
         return r
 
-    def get_list_available_preferred_answer_endpoints(self) -> List[Endpoints]:
+    def get_list_available_preferred_answer_endpoints(self) -> builtins.list[Endpoints]:
         """
         Get List Available Preferred Answer Endpoints
 
@@ -1379,7 +1381,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         r = BargeInInfo.model_validate(data)
         return r
 
-    def configure_barge_in_settings(self, enabled: bool = None, tone_enabled: bool = None):
+    def configure_barge_in_settings(self, enabled: bool = None, tone_enabled: bool = None) -> None:
         """
         Configure Barge-In Settings
 
@@ -1397,7 +1399,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type tone_enabled: bool
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if tone_enabled is not None:
@@ -1405,7 +1407,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         url = self.ep('settings/bargeIn')
         super().put(url, json=body)
 
-    def get_my_call_block_settings(self) -> List[Numbers]:
+    def get_my_call_block_settings(self) -> builtins.list[Numbers]:
         """
         Get My Call Block Settings
 
@@ -1436,14 +1438,14 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type phone_number: str
         :rtype: str
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['phoneNumber'] = phone_number
         url = self.ep('settings/callBlock/numbers')
         data = super().post(url, json=body)
         r = data['id']
         return r
 
-    def delete_my_call_block_number(self, phone_number_id: str):
+    def delete_my_call_block_number(self, phone_number_id: str) -> None:
         """
         Delete User Call Block Number
 
@@ -1529,7 +1531,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         return r
 
     def modify_my_call_forwarding_settings(self, call_forwarding: CallForwardingPutCallForwarding = None,
-                                           business_continuity: CallForwardingInfoCallForwardingBusy = None):
+                                           business_continuity: CallForwardingInfoCallForwardingBusy = None) -> None:
         """
         Configure My Call Forwarding Settings
 
@@ -1558,7 +1560,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type business_continuity: CallForwardingInfoCallForwardingBusy
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if call_forwarding is not None:
             body['callForwarding'] = call_forwarding.model_dump(mode='json', by_alias=True, exclude_none=True)
         if business_continuity is not None:
@@ -1620,7 +1622,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         return r
 
     def update_my_call_policies_settings(self,
-                                         connected_line_id_privacy_on_redirected_calls: UserCallPoliciesGetConnectedLineIdPrivacyOnRedirectedCalls = None):
+                                         connected_line_id_privacy_on_redirected_calls: UserCallPoliciesGetConnectedLineIdPrivacyOnRedirectedCalls = None) -> None:
         """
         Modify Call Policies Settings for User
 
@@ -1636,7 +1638,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type connected_line_id_privacy_on_redirected_calls: UserCallPoliciesGetConnectedLineIdPrivacyOnRedirectedCalls
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if connected_line_id_privacy_on_redirected_calls is not None:
             body['connectedLineIdPrivacyOnRedirectedCalls'] = enum_str(connected_line_id_privacy_on_redirected_calls)
         url = self.ep('settings/callPolicies')
@@ -1681,7 +1683,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         return r
 
     def modify_my_caller_idsettings(self, calling_line_id_delivery_blocking_enabled: bool = None,
-                                    connected_line_identification_restriction_enabled: bool = None):
+                                    connected_line_identification_restriction_enabled: bool = None) -> None:
         """
         Modify My Caller ID Settings
 
@@ -1702,7 +1704,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type connected_line_identification_restriction_enabled: bool
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if calling_line_id_delivery_blocking_enabled is not None:
             body['callingLineIdDeliveryBlockingEnabled'] = calling_line_id_delivery_blocking_enabled
         if connected_line_identification_restriction_enabled is not None:
@@ -1730,7 +1732,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         return r
 
     def update_my_do_not_disturb_settings(self, enabled: bool = None, ring_splash_enabled: bool = None,
-                                          webex_go_override_enabled: bool = None):
+                                          webex_go_override_enabled: bool = None) -> None:
         """
         Modify Do Not Disturb Settings for User
 
@@ -1750,7 +1752,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type webex_go_override_enabled: bool
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if ring_splash_enabled is not None:
@@ -1787,7 +1789,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
                                            clid_name_mode: ExecutiveAlertGetClidNameMode = None,
                                            custom_clidname: str = None, custom_clidname_in_unicode: str = None,
                                            clid_phone_number_mode: ExecutiveAlertGetClidPhoneNumberMode = None,
-                                           custom_clidphone_number: str = None):
+                                           custom_clidphone_number: str = None) -> None:
         """
         Modify User Executive Alert Settings
 
@@ -1832,7 +1834,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type custom_clidphone_number: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if alerting_mode is not None:
             body['alertingMode'] = enum_str(alerting_mode)
         if next_assistant_number_of_rings is not None:
@@ -1877,7 +1879,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         return r
 
     def modify_my_executive_assigned_assistants(self, allow_opt_in_out_enabled: bool = None,
-                                                assistant_ids: list[str] = None):
+                                                assistant_ids: list[str] = None) -> None:
         """
         Modify My Executive Assigned Assistants
 
@@ -1895,7 +1897,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type assistant_ids: list[str]
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if allow_opt_in_out_enabled is not None:
             body['allowOptInOutEnabled'] = allow_opt_in_out_enabled
         if assistant_ids is not None:
@@ -1923,7 +1925,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
 
     def modify_my_executive_assistant_settings(self, forward_filtered_calls_enabled: bool = None,
                                                forward_to_phone_number: str = None,
-                                               executives: list[ExecutivePut] = None):
+                                               executives: list[ExecutivePut] = None) -> None:
         """
         Modify My Executive Assistant Settings
 
@@ -1944,7 +1946,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type executives: list[ExecutivePut]
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if forward_filtered_calls_enabled is not None:
             body['forwardFilteredCallsEnabled'] = forward_filtered_calls_enabled
         if forward_to_phone_number is not None:
@@ -1954,7 +1956,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         url = self.ep('settings/executive/assistant')
         super().put(url, json=body)
 
-    def get_my_executive_available_assistants(self) -> List[AvailableAssistant]:
+    def get_my_executive_available_assistants(self) -> builtins.list[AvailableAssistant]:
         """
         Get My Executive Available Assistants
 
@@ -1993,7 +1995,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
 
     def update_my_executive_call_filtering_settings(self, enabled: bool = None,
                                                     filter_type: ExecutiveCallFilteringGetFilterType = None,
-                                                    criteria_activation: list[ExecutiveCallFilteringPatchCriteriaActivationItem] = None):
+                                                    criteria_activation: list[ExecutiveCallFilteringPatchCriteriaActivationItem] = None) -> None:
         """
         Modify User Executive Call Filtering Settings
 
@@ -2013,7 +2015,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type criteria_activation: list[ExecutiveCallFilteringPatchCriteriaActivationItem]
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if filter_type is not None:
@@ -2066,7 +2068,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type calls_to_numbers: list[ExecutiveCallFilteringCriteriaPatchCallsToNumbersItem]
         :rtype: str
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if filter_name is not None:
             body['filterName'] = filter_name
         if schedule_name is not None:
@@ -2092,7 +2094,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         r = data['id']
         return r
 
-    def delete_my_executive_call_filtering_criteria(self, id: str):
+    def delete_my_executive_call_filtering_criteria(self, id: str) -> None:
         """
         Delete User Executive Call Filtering Criteria
 
@@ -2179,7 +2181,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type calls_to_numbers: list[ExecutiveCallFilteringCriteriaPatchCallsToNumbersItem]
         :rtype: str
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if filter_name is not None:
             body['filterName'] = filter_name
         if schedule_name is not None:
@@ -2228,7 +2230,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
                                                alert_type: ExecutiveScreeningGetAlertType = None,
                                                alert_anywhere_location_enabled: bool = None,
                                                alert_mobility_location_enabled: bool = None,
-                                               alert_shared_call_appearance_location_enabled: bool = None):
+                                               alert_shared_call_appearance_location_enabled: bool = None) -> None:
         """
         Modify User Executive Screening Settings
 
@@ -2253,7 +2255,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type alert_shared_call_appearance_location_enabled: bool
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if alert_type is not None:
@@ -2267,7 +2269,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         url = self.ep('settings/executive/screening')
         super().put(url, json=body)
 
-    def get_my_feature_access_codes(self) -> List[FeatureAccessCode]:
+    def get_my_feature_access_codes(self) -> builtins.list[FeatureAccessCode]:
         """
         Get My Feature Access Codes
 
@@ -2324,7 +2326,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
     def modify_my_personal_assistant(self, enabled: bool = None, presence: PersonalAssistantGetPresence = None,
                                      until_date_time: Union[str, datetime] = None, transfer_enabled: bool = None,
                                      transfer_number: str = None, alerting: PersonalAssistantGetAlerting = None,
-                                     alert_me_first_number_of_rings: int = None):
+                                     alert_me_first_number_of_rings: int = None) -> None:
         """
         Modify My Personal Assistant
 
@@ -2350,7 +2352,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type alert_me_first_number_of_rings: int
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if presence is not None:
@@ -2390,7 +2392,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         r = PreferredAnswerEndpoint.model_validate(data)
         return r
 
-    def modify_my_preferred_answer_endpoint(self, id: str):
+    def modify_my_preferred_answer_endpoint(self, id: str) -> None:
         """
         Modify Preferred Answer Endpoint
 
@@ -2409,7 +2411,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type id: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['id'] = id
         url = self.ep('settings/preferredAnswerEndpoint')
         super().put(url, json=body)
@@ -2434,7 +2436,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         return r
 
     def modify_my_call_center_settings(self, agent_acdstate: AgentACDStateType = None,
-                                       queues: list[CallQueuePut] = None):
+                                       queues: list[CallQueuePut] = None) -> None:
         """
         Modify My Call Center Settings
 
@@ -2453,7 +2455,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type queues: list[CallQueuePut]
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if agent_acdstate is not None:
             body['agentACDState'] = enum_str(agent_acdstate)
         if queues is not None:
@@ -2461,7 +2463,8 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         url = self.ep('settings/queues')
         super().put(url, json=body)
 
-    def get_secondary_lines_available_preferred_answer_endpoint_list(self, line_owner_id: str) -> List[Endpoints]:
+    def get_secondary_lines_available_preferred_answer_endpoint_list(self,
+                                                                     line_owner_id: str) -> builtins.list[Endpoints]:
         """
         Get My Secondary Line Owner's Available Preferred Answer Endpoint List
 
@@ -2509,7 +2512,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         r = PreferredAnswerEndpoint.model_validate(data)
         return r
 
-    def modify_my_secondary_lines_preferred_answer_endpoint(self, line_owner_id: str, id: str):
+    def modify_my_secondary_lines_preferred_answer_endpoint(self, line_owner_id: str, id: str) -> None:
         """
         Modify My Secondary Line Owner's Preferred Answer Endpoint
 
@@ -2530,13 +2533,13 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type id: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['id'] = id
         url = self.ep(f'settings/secondaryLines/{line_owner_id}/preferredAnswerEndpoint')
         super().put(url, json=body)
 
     def get_my_secondary_lines_available_caller_idlist(self,
-                                                       lineowner_id: str) -> List[SelectedCallerIdSettingsGetSelected]:
+                                                       lineowner_id: str) -> builtins.list[SelectedCallerIdSettingsGetSelected]:
         """
         Get My Secondary Line Owner's Available Caller ID List
 
@@ -2592,7 +2595,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
 
     def modify_my_secondary_lines_call_forwarding_settings(self, lineowner_id: str,
                                                            call_forwarding: CallForwardingPutCallForwarding = None,
-                                                           business_continuity: CallForwardingInfoCallForwardingBusy = None):
+                                                           business_continuity: CallForwardingInfoCallForwardingBusy = None) -> None:
         """
         Modify My Secondary Line Owner's Call Forwarding Settings
 
@@ -2625,7 +2628,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type business_continuity: CallForwardingInfoCallForwardingBusy
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if call_forwarding is not None:
             body['callForwarding'] = call_forwarding.model_dump(mode='json', by_alias=True, exclude_none=True)
         if business_continuity is not None:
@@ -2724,7 +2727,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
 
     def modify_my_secondary_lines_caller_idsettings(self, lineowner_id: str,
                                                     calling_line_id_delivery_blocking_enabled: bool = None,
-                                                    connected_line_identification_restriction_enabled: bool = None):
+                                                    connected_line_identification_restriction_enabled: bool = None) -> None:
         """
         Modify My Secondary Line Owner Caller ID Settings
 
@@ -2749,7 +2752,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type connected_line_identification_restriction_enabled: bool
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if calling_line_id_delivery_blocking_enabled is not None:
             body['callingLineIdDeliveryBlockingEnabled'] = calling_line_id_delivery_blocking_enabled
         if connected_line_identification_restriction_enabled is not None:
@@ -2757,7 +2760,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         url = self.ep(f'settings/secondaryLines/{lineowner_id}/callerId')
         super().put(url, json=body)
 
-    def get_my_secondary_lines_feature_access_codes(self, lineowner_id: str) -> List[FeatureAccessCode]:
+    def get_my_secondary_lines_feature_access_codes(self, lineowner_id: str) -> builtins.list[FeatureAccessCode]:
         """
         Get My Feature Access Codes For Secondary Line Owner
 
@@ -2803,7 +2806,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
 
     def modify_my_secondary_lines_call_center_settings(self, lineowner_id: str,
                                                        agent_acdstate: AgentACDStateType = None,
-                                                       queues: list[CallQueuePut] = None):
+                                                       queues: list[CallQueuePut] = None) -> None:
         """
         Modify My Secondary Line Owner's Call Center Settings
 
@@ -2825,7 +2828,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type queues: list[CallQueuePut]
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if agent_acdstate is not None:
             body['agentACDState'] = enum_str(agent_acdstate)
         if queues is not None:
@@ -2858,7 +2861,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         return r
 
     def modify_my_secondary_lines_selected_caller_idsettings(self, lineowner_id: str,
-                                                             selected: SelectedCallerIdSettingsPutSelected):
+                                                             selected: SelectedCallerIdSettingsPutSelected) -> None:
         """
         Modify My Secondary Line Owner's Selected Caller ID Settings
 
@@ -2878,12 +2881,12 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type selected: SelectedCallerIdSettingsPutSelected
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['selected'] = selected.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'settings/secondaryLines/{lineowner_id}/selectedCallerId')
         super().put(url, json=body)
 
-    def get_my_secondary_lines_calling_services_list(self, lineowner_id: str) -> List[ServicesEnum]:
+    def get_my_secondary_lines_calling_services_list(self, lineowner_id: str) -> builtins.list[ServicesEnum]:
         """
         Get My Secondary Line Owner Calling Services List
 
@@ -2935,7 +2938,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
                                                      send_unanswered_calls: VoicemailPutSendUnansweredCalls = None,
                                                      email_copy_of_message: VoicemailInfoEmailCopyOfMessage = None,
                                                      message_storage: VoicemailInfoMessageStorage = None,
-                                                     fax_message: VoicemailInfoFaxMessage = None):
+                                                     fax_message: VoicemailInfoFaxMessage = None) -> None:
         """
         Modify My Secondary Line Owner's Voicemail Settings
 
@@ -2972,7 +2975,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type fax_message: VoicemailInfoFaxMessage
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if send_all_calls is not None:
@@ -3011,7 +3014,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         r = SelectedCallerIdSettingsGetSelected.model_validate(data['selected'])
         return r
 
-    def modify_my_selected_caller_idsettings(self, selected: SelectedCallerIdSettingsPutSelected):
+    def modify_my_selected_caller_idsettings(self, selected: SelectedCallerIdSettingsPutSelected) -> None:
         """
         Configure My Selected Caller ID Settings
 
@@ -3027,12 +3030,12 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type selected: SelectedCallerIdSettingsPutSelected
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['selected'] = selected.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep('settings/selectedCallerId')
         super().put(url, json=body)
 
-    def get_my_calling_services_list(self) -> List[ServicesEnum]:
+    def get_my_calling_services_list(self) -> builtins.list[ServicesEnum]:
         """
         Get My Calling Services List
 
@@ -3069,7 +3072,8 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         r = GetSingleNumberReachObject.model_validate(data)
         return r
 
-    def modify_my_single_number_reach_settings(self, alert_all_locations_for_click_to_dial_calls_enabled: bool = None):
+    def modify_my_single_number_reach_settings(self,
+                                               alert_all_locations_for_click_to_dial_calls_enabled: bool = None) -> None:
         """
         Modify User's Single Number Reach Settings
 
@@ -3086,7 +3090,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type alert_all_locations_for_click_to_dial_calls_enabled: bool
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if alert_all_locations_for_click_to_dial_calls_enabled is not None:
             body['alertAllLocationsForClickToDialCallsEnabled'] = alert_all_locations_for_click_to_dial_calls_enabled
         url = self.ep('settings/singleNumberReach')
@@ -3120,7 +3124,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type answer_confirmation_enabled: bool
         :rtype: str
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['phoneNumber'] = phone_number
         body['name'] = name
         body['enabled'] = enabled
@@ -3133,7 +3137,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         r = data['id']
         return r
 
-    def delete_my_single_number_reach_contact_settings(self, phone_number_id: str):
+    def delete_my_single_number_reach_contact_settings(self, phone_number_id: str) -> None:
         """
         Delete User's Single Number Reach Contact Settings
 
@@ -3154,7 +3158,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
 
     def modify_my_single_number_reach_contact_settings(self, phone_number_id: str, phone_number: str, name: str,
                                                        enabled: bool, do_not_forward_calls_enabled: bool,
-                                                       answer_confirmation_enabled: bool):
+                                                       answer_confirmation_enabled: bool) -> None:
         """
         Modify User's Single Number Reach Contact Settings
 
@@ -3180,7 +3184,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type answer_confirmation_enabled: bool
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['phoneNumber'] = phone_number
         body['name'] = name
         body['enabled'] = enabled
@@ -3217,7 +3221,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
                                      send_unanswered_calls: VoicemailPutSendUnansweredCalls = None,
                                      email_copy_of_message: VoicemailInfoEmailCopyOfMessage = None,
                                      message_storage: VoicemailInfoMessageStorage = None,
-                                     fax_message: VoicemailInfoFaxMessage = None):
+                                     fax_message: VoicemailInfoFaxMessage = None) -> None:
         """
         Configure Voicemail Settings for a Person
 
@@ -3252,7 +3256,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type fax_message: VoicemailInfoFaxMessage
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if send_all_calls is not None:
@@ -3293,7 +3297,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         r = data['enabled']
         return r
 
-    def modify_my_webex_go_override_settings(self, enabled: bool = None):
+    def modify_my_webex_go_override_settings(self, enabled: bool = None) -> None:
         """
         Modify My WebexGoOverride Settings
 
@@ -3311,7 +3315,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         :type enabled: bool
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         url = self.ep('settings/webexGoOverride')

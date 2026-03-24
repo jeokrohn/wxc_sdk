@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -934,7 +935,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
 
     def get_workspace_available_phone_numbers(self, location_id: str = None, phone_number: list[str] = None,
                                               org_id: str = None,
-                                              **params) -> Generator[WorkspaceAvailableNumberObject, None, None]:
+                                              **params: Any) -> Generator[WorkspaceAvailableNumberObject, None, None]:
         """
         Get Workspace Available Phone Numbers
 
@@ -967,7 +968,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         url = self.ep('availableNumbers')
         return self.session.follow_pagination(url=url, model=WorkspaceAvailableNumberObject, item_key='phoneNumbers', params=params)
 
-    def modify_voicemail_passcode_for_a_workspace(self, place_id: str, passcode: str, org_id: str = None):
+    def modify_voicemail_passcode_for_a_workspace(self, place_id: str, passcode: str, org_id: str = None) -> None:
         """
         Modify voicemail passcode for a workspace.
 
@@ -983,10 +984,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['passcode'] = passcode
         url = self.ep(f'{place_id}/voicemail/passcode')
         super().put(url, params=params, json=body)
@@ -1011,7 +1012,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: bool
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/anonymousCallReject')
@@ -1019,7 +1020,8 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         r = data['enabled']
         return r
 
-    def modify_anonymous_call_settings_for_a_workspace(self, workspace_id: str, enabled: bool, org_id: str = None):
+    def modify_anonymous_call_settings_for_a_workspace(self, workspace_id: str, enabled: bool,
+                                                       org_id: str = None) -> None:
         """
         Modify Anonymous Call Settings for a Workspace.
 
@@ -1040,10 +1042,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         url = self.ep(f'{workspace_id}/anonymousCallReject')
         super().put(url, params=params, json=body)
@@ -1069,7 +1071,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: :class:`UserBargeInGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/bargeIn')
@@ -1078,7 +1080,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         return r
 
     def modify_barge_in_call_settings_for_a_workspace(self, workspace_id: str, enabled: bool,
-                                                      tone_enabled: bool = None, org_id: str = None):
+                                                      tone_enabled: bool = None, org_id: str = None) -> None:
         """
         Modify Barge In Call Settings for a Workspace.
 
@@ -1102,10 +1104,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         if tone_enabled is not None:
             body['toneEnabled'] = tone_enabled
@@ -1134,7 +1136,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: bool
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/callBridge')
@@ -1143,7 +1145,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         return r
 
     def modify_call_bridge_warning_tone_settings_for_a_workspace(self, workspace_id: str, warning_tone_enabled: bool,
-                                                                 org_id: str = None):
+                                                                 org_id: str = None) -> None:
         """
         Modify Call Bridge Warning Tone Settings for a Workspace.
 
@@ -1165,10 +1167,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['warningToneEnabled'] = warning_tone_enabled
         url = self.ep(f'{workspace_id}/callBridge')
         super().put(url, params=params, json=body)
@@ -1176,7 +1178,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
     def get_workspace_call_forward_available_phone_numbers(self, workspace_id: str, phone_number: list[str] = None,
                                                            owner_name: str = None, extension: str = None,
                                                            org_id: str = None,
-                                                           **params) -> Generator[WorkspaceCallForwardAvailableNumberObject, None, None]:
+                                                           **params: Any) -> Generator[WorkspaceCallForwardAvailableNumberObject, None, None]:
         """
         Get Workspace Call Forward Available Phone Numbers
 
@@ -1219,7 +1221,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
     def get_workspace_call_intercept_available_phone_numbers(self, workspace_id: str, phone_number: list[str] = None,
                                                              owner_name: str = None, extension: str = None,
                                                              org_id: str = None,
-                                                             **params) -> Generator[WorkspaceCallForwardAvailableNumberObject, None, None]:
+                                                             **params: Any) -> Generator[WorkspaceCallForwardAvailableNumberObject, None, None]:
         """
         Get Workspace Call Intercept Available Phone Numbers
 
@@ -1282,7 +1284,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: UserCallPoliciesGetConnectedLineIdPrivacyOnRedirectedCalls
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/callPolicies')
@@ -1292,7 +1294,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
 
     def configure_call_policy_settings_for_a_workspace(self, workspace_id: str,
                                                        connected_line_id_privacy_on_redirected_calls: UserCallPoliciesGetConnectedLineIdPrivacyOnRedirectedCalls,
-                                                       org_id: str = None):
+                                                       org_id: str = None) -> None:
         """
         Configure Call Policy Settings for a Workspace
 
@@ -1316,10 +1318,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['connectedLineIdPrivacyOnRedirectedCalls'] = enum_str(connected_line_id_privacy_on_redirected_calls)
         url = self.ep(f'{workspace_id}/callPolicies')
         super().put(url, params=params, json=body)
@@ -1346,7 +1348,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: :class:`PlaceDoNotDisturbGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/doNotDisturb')
@@ -1355,7 +1357,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         return r
 
     def modify_do_not_disturb_settings_for_a_workspace(self, workspace_id: str, enabled: bool = None,
-                                                       ring_splash_enabled: bool = None, org_id: str = None):
+                                                       ring_splash_enabled: bool = None, org_id: str = None) -> None:
         """
         Modify DoNotDisturb Settings for a Workspace.
 
@@ -1380,10 +1382,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if ring_splash_enabled is not None:
@@ -1393,7 +1395,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
 
     def get_workspace_ecbn_available_phone_numbers(self, workspace_id: str, phone_number: list[str] = None,
                                                    owner_name: str = None, org_id: str = None,
-                                                   **params) -> Generator[WorkspaceECBNAvailableNumberObject, None, None]:
+                                                   **params: Any) -> Generator[WorkspaceECBNAvailableNumberObject, None, None]:
         """
         Get Workspace ECBN Available Phone Numbers
 
@@ -1430,7 +1432,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
 
     def get_workspace_fax_message_available_phone_numbers(self, workspace_id: str, phone_number: list[str] = None,
                                                           org_id: str = None,
-                                                          **params) -> Generator[WorkspaceAvailableNumberObject, None, None]:
+                                                          **params: Any) -> Generator[WorkspaceAvailableNumberObject, None, None]:
         """
         Get Workspace Fax Message Available Phone Numbers
 
@@ -1463,7 +1465,8 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         url = self.ep(f'{workspace_id}/faxMessage/availableNumbers')
         return self.session.follow_pagination(url=url, model=WorkspaceAvailableNumberObject, item_key='phoneNumbers', params=params)
 
-    def delete_a_specific_access_code_for_a_workspace(self, workspace_id: str, access_code: str, org_id: str = None):
+    def delete_a_specific_access_code_for_a_workspace(self, workspace_id: str, access_code: str,
+                                                      org_id: str = None) -> None:
         """
         Delete a Specific Access Code for a Workspace
 
@@ -1484,7 +1487,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/features/accessCodes/{access_code}')
@@ -1509,7 +1512,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: :class:`CallRecordingInfo`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/features/callRecordings')
@@ -1523,7 +1526,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
                                                        notification: CallRecordingPutNotification = None,
                                                        repeat: CallRecordingInfoRepeat = None,
                                                        start_stop_announcement: CallRecordingInfoStartStopAnnouncement = None,
-                                                       org_id: str = None):
+                                                       org_id: str = None) -> None:
         """
         Modify Call Recording Settings for a Workspace
 
@@ -1558,10 +1561,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if record is not None:
@@ -1577,7 +1580,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         url = self.ep(f'{workspace_id}/features/callRecordings')
         super().put(url, params=params, json=body)
 
-    def upload_call_intercept_announcement_file_for_a_workspace(self, workspace_id: str, org_id: str = None):
+    def upload_call_intercept_announcement_file_for_a_workspace(self, workspace_id: str, org_id: str = None) -> None:
         """
         Upload call intercept announcement file for a workspace.
 
@@ -1595,7 +1598,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/features/intercept/actions/announcementUpload/invoke')
@@ -1619,7 +1622,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: :class:`GetMusicOnHoldObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/musicOnHold')
@@ -1630,7 +1633,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
     def modify_music_on_hold_settings_for_a_workspace(self, workspace_id: str, moh_enabled: bool = None,
                                                       greeting: GetMusicOnHoldObjectGreeting = None,
                                                       audio_announcement_file: AudioAnnouncementFileGetObject = None,
-                                                      org_id: str = None):
+                                                      org_id: str = None) -> None:
         """
         Modify music on hold settings for a Workspace.
 
@@ -1655,10 +1658,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if moh_enabled is not None:
             body['mohEnabled'] = moh_enabled
         if greeting is not None:
@@ -1671,7 +1674,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
     def assign_or_unassign_numbers_associated_with_a_specific_workspace(self, workspace_id: str,
                                                                         phone_numbers: list[PhoneNumber],
                                                                         distinctive_ring_enabled: bool = None,
-                                                                        org_id: str = None):
+                                                                        org_id: str = None) -> None:
         """
         Assign or Unassign numbers associated with a specific workspace
 
@@ -1698,17 +1701,17 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if distinctive_ring_enabled is not None:
             body['distinctiveRingEnabled'] = distinctive_ring_enabled
         body['phoneNumbers'] = TypeAdapter(list[PhoneNumber]).dump_python(phone_numbers, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{workspace_id}/numbers')
         super().put(url, params=params, json=body)
 
-    def delete_all_digit_patterns_for_a_workspace(self, workspace_id: str, org_id: str = None):
+    def delete_all_digit_patterns_for_a_workspace(self, workspace_id: str, org_id: str = None) -> None:
         """
         Delete all digit patterns for a Workspace.
 
@@ -1725,7 +1728,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/outgoingPermission/digitPatterns')
@@ -1749,7 +1752,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: :class:`WorkspaceOutgoingPermissionDigitPatternGetListObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/outgoingPermission/digitPatterns')
@@ -1785,10 +1788,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['pattern'] = pattern
         body['action'] = enum_str(action)
@@ -1800,7 +1803,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
 
     def modify_the_digit_pattern_category_control_settings_for_the_workspace(self, workspace_id: str,
                                                                              use_custom_digit_patterns: bool = None,
-                                                                             org_id: str = None):
+                                                                             org_id: str = None) -> None:
         """
         Modify the Digit Pattern Category Control Settings for the Workspace
 
@@ -1820,16 +1823,17 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if use_custom_digit_patterns is not None:
             body['useCustomDigitPatterns'] = use_custom_digit_patterns
         url = self.ep(f'{workspace_id}/outgoingPermission/digitPatterns')
         super().put(url, params=params, json=body)
 
-    def delete_a_digit_pattern_for_the_workspace(self, workspace_id: str, digit_pattern_id: str, org_id: str = None):
+    def delete_a_digit_pattern_for_the_workspace(self, workspace_id: str, digit_pattern_id: str,
+                                                 org_id: str = None) -> None:
         """
         Delete a Digit Pattern for the Workspace
 
@@ -1850,7 +1854,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/outgoingPermission/digitPatterns/{digit_pattern_id}')
@@ -1878,7 +1882,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: :class:`WorkspaceDigitPatternObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/outgoingPermission/digitPatterns/{digit_pattern_id}')
@@ -1888,7 +1892,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
 
     def modify_a_digit_pattern_for_the_workspace(self, workspace_id: str, digit_pattern_id: str, name: str = None,
                                                  pattern: str = None, action: Action = None,
-                                                 transfer_enabled: bool = None, org_id: str = None):
+                                                 transfer_enabled: bool = None, org_id: str = None) -> None:
         """
         Modify a Digit Pattern for the Workspace
 
@@ -1917,10 +1921,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if name is not None:
             body['name'] = name
         if pattern is not None:
@@ -1954,7 +1958,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: :class:`PriorityAlertGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/priorityAlert')
@@ -1962,7 +1966,8 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         r = PriorityAlertGet.model_validate(data)
         return r
 
-    def configure_priority_alert_settings_for_a_workspace(self, workspace_id: str, enabled: bool, org_id: str = None):
+    def configure_priority_alert_settings_for_a_workspace(self, workspace_id: str, enabled: bool,
+                                                          org_id: str = None) -> None:
         """
         Configure Priority Alert Settings for a Workspace
 
@@ -1986,10 +1991,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         url = self.ep(f'{workspace_id}/priorityAlert')
         super().put(url, params=params, json=body)
@@ -2046,10 +2051,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['scheduleName'] = schedule_name
         body['scheduleType'] = enum_str(schedule_type)
         body['scheduleLevel'] = enum_str(schedule_level)
@@ -2066,7 +2071,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         r = data['id']
         return r
 
-    def delete_priority_alert_criteria_for_a_workspace(self, workspace_id: str, id: str, org_id: str = None):
+    def delete_priority_alert_criteria_for_a_workspace(self, workspace_id: str, id: str, org_id: str = None) -> None:
         """
         Delete Priority Alert Criteria for a Workspace
 
@@ -2092,7 +2097,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/priorityAlert/criteria/{id}')
@@ -2126,7 +2131,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: :class:`PlacePriorityAlertCriteriaGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/priorityAlert/criteria/{id}')
@@ -2141,7 +2146,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
                                                        anonymous_callers_enabled: bool = None,
                                                        unavailable_callers_enabled: bool = None,
                                                        phone_numbers: list[str] = None,
-                                                       notification_enabled: bool = None, org_id: str = None):
+                                                       notification_enabled: bool = None, org_id: str = None) -> None:
         """
         Modify Priority Alert Criteria for a Workspace
 
@@ -2185,10 +2190,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if schedule_name is not None:
             body['scheduleName'] = schedule_name
         if schedule_type is not None:
@@ -2228,7 +2233,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: :class:`PrivacyGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/privacy')
@@ -2240,7 +2245,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
                                                 aa_naming_dialing_enabled: bool = None,
                                                 enable_phone_status_directory_privacy: bool = None,
                                                 enable_phone_status_pickup_barge_in_privacy: bool = None,
-                                                monitoring_agents: list[str] = None, org_id: str = None):
+                                                monitoring_agents: list[str] = None, org_id: str = None) -> None:
         """
         Modify Privacy Settings for a Workspace.
 
@@ -2271,10 +2276,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if aa_extension_dialing_enabled is not None:
             body['aaExtensionDialingEnabled'] = aa_extension_dialing_enabled
         if aa_naming_dialing_enabled is not None:
@@ -2310,7 +2315,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: :class:`PushToTalkInfo`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/pushToTalk')
@@ -2321,7 +2326,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
     def configure_push_to_talk_settings_for_a_workspace(self, workspace_id: str, allow_auto_answer: bool = None,
                                                         connection_type: PushToTalkConnectionType = None,
                                                         access_type: PushToTalkAccessType = None,
-                                                        members: list[str] = None, org_id: str = None):
+                                                        members: list[str] = None, org_id: str = None) -> None:
         """
         Configure Push-to-Talk settings for a workspace.
 
@@ -2349,10 +2354,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if allow_auto_answer is not None:
             body['allowAutoAnswer'] = allow_auto_answer
         if connection_type is not None:
@@ -2366,7 +2371,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
 
     def get_workspace_secondary_available_phone_numbers(self, workspace_id: str, phone_number: list[str] = None,
                                                         org_id: str = None,
-                                                        **params) -> Generator[WorkspaceAvailableNumberObject, None, None]:
+                                                        **params: Any) -> Generator[WorkspaceAvailableNumberObject, None, None]:
         """
         Get Workspace Secondary Available Phone Numbers
 
@@ -2421,7 +2426,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: :class:`SelectiveAcceptCallGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/selectiveAccept')
@@ -2429,7 +2434,8 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         r = SelectiveAcceptCallGet.model_validate(data)
         return r
 
-    def modify_selective_accept_settings_for_a_workspace(self, workspace_id: str, enabled: bool, org_id: str = None):
+    def modify_selective_accept_settings_for_a_workspace(self, workspace_id: str, enabled: bool,
+                                                         org_id: str = None) -> None:
         """
         Modify Selective Accept Settings for a Workspace.
 
@@ -2451,10 +2457,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         url = self.ep(f'{workspace_id}/selectiveAccept')
         super().put(url, params=params, json=body)
@@ -2509,10 +2515,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['scheduleName'] = schedule_name
         body['scheduleType'] = enum_str(schedule_type)
         body['scheduleLevel'] = enum_str(schedule_level)
@@ -2529,7 +2535,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         r = data['id']
         return r
 
-    def delete_selective_accept_criteria_for_a_workspace(self, workspace_id: str, id: str, org_id: str = None):
+    def delete_selective_accept_criteria_for_a_workspace(self, workspace_id: str, id: str, org_id: str = None) -> None:
         """
         Delete Selective Accept Criteria for a Workspace
 
@@ -2553,7 +2559,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/selectiveAccept/criteria/{id}')
@@ -2585,7 +2591,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: :class:`PlaceSelectiveAcceptCallCriteriaGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/selectiveAccept/criteria/{id}')
@@ -2600,7 +2606,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
                                                          anonymous_callers_enabled: bool = None,
                                                          unavailable_callers_enabled: bool = None,
                                                          phone_numbers: list[str] = None, accept_enabled: bool = None,
-                                                         org_id: str = None):
+                                                         org_id: str = None) -> None:
         """
         Modify Selective Accept Criteria for a Workspace
 
@@ -2642,10 +2648,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if schedule_name is not None:
             body['scheduleName'] = schedule_name
         if schedule_type is not None:
@@ -2690,7 +2696,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: :class:`SelectiveForwardCallGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/selectiveForward')
@@ -2702,7 +2708,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
                                                           default_phone_number_to_forward: str = None,
                                                           ring_reminder_enabled: bool = None,
                                                           destination_voicemail_enabled: bool = None,
-                                                          org_id: str = None):
+                                                          org_id: str = None) -> None:
         """
         Modify Selective Forward Settings for a Workspace
 
@@ -2734,10 +2740,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if default_phone_number_to_forward is not None:
@@ -2806,10 +2812,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if forward_to_phone_number is not None:
             body['forwardToPhoneNumber'] = forward_to_phone_number
         if destination_voicemail_enabled is not None:
@@ -2834,7 +2840,8 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         r = data['id']
         return r
 
-    def delete_selective_forward_criteria_for_a_workspace(self, workspace_id: str, id: str, org_id: str = None):
+    def delete_selective_forward_criteria_for_a_workspace(self, workspace_id: str, id: str,
+                                                          org_id: str = None) -> None:
         """
         Delete Selective Forward Criteria for a Workspace
 
@@ -2859,7 +2866,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/selectiveForward/criteria/{id}')
@@ -2892,7 +2899,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: :class:`PlaceSelectiveForwardCallCriteriaGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/selectiveForward/criteria/{id}')
@@ -2910,7 +2917,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
                                                           anonymous_callers_enabled: bool = None,
                                                           unavailable_callers_enabled: bool = None,
                                                           numbers: list[str] = None, forward_enabled: bool = None,
-                                                          org_id: str = None):
+                                                          org_id: str = None) -> None:
         """
         Modify Selective Forward Criteria for a Workspace
 
@@ -2959,10 +2966,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if forward_to_phone_number is not None:
             body['forwardToPhoneNumber'] = forward_to_phone_number
         if destination_voicemail_enabled is not None:
@@ -3008,7 +3015,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: :class:`SelectiveRejectCallGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/selectiveReject')
@@ -3016,7 +3023,8 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         r = SelectiveRejectCallGet.model_validate(data)
         return r
 
-    def modify_selective_reject_settings_for_a_workspace(self, workspace_id: str, enabled: bool, org_id: str = None):
+    def modify_selective_reject_settings_for_a_workspace(self, workspace_id: str, enabled: bool,
+                                                         org_id: str = None) -> None:
         """
         Modify Selective Reject Settings for a Workspace.
 
@@ -3039,10 +3047,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         url = self.ep(f'{workspace_id}/selectiveReject')
         super().put(url, params=params, json=body)
@@ -3097,10 +3105,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['scheduleName'] = schedule_name
         body['scheduleType'] = enum_str(schedule_type)
         body['scheduleLevel'] = enum_str(schedule_level)
@@ -3117,7 +3125,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         r = data['id']
         return r
 
-    def delete_selective_reject_criteria_for_a_workspace(self, workspace_id: str, id: str, org_id: str = None):
+    def delete_selective_reject_criteria_for_a_workspace(self, workspace_id: str, id: str, org_id: str = None) -> None:
         """
         Delete Selective Reject Criteria for a Workspace
 
@@ -3142,7 +3150,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/selectiveReject/criteria/{id}')
@@ -3175,7 +3183,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: :class:`PlaceSelectiveRejectCallCriteriaGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/selectiveReject/criteria/{id}')
@@ -3190,7 +3198,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
                                                          anonymous_callers_enabled: bool = None,
                                                          unavailable_callers_enabled: bool = None,
                                                          phone_numbers: list[str] = None, reject_enabled: bool = None,
-                                                         org_id: str = None):
+                                                         org_id: str = None) -> None:
         """
         Modify Selective Reject Criteria for a Workspace
 
@@ -3233,10 +3241,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if schedule_name is not None:
             body['scheduleName'] = schedule_name
         if schedule_type is not None:
@@ -3277,7 +3285,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: :class:`SequentialRingGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/sequentialRing')
@@ -3291,7 +3299,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
                                                         continue_if_base_location_is_busy_enabled: bool = None,
                                                         calls_to_voicemail_enabled: bool = None,
                                                         phone_numbers: list[SequentialRingNumber] = None,
-                                                        org_id: str = None):
+                                                        org_id: str = None) -> None:
         """
         Modify sequential ring settings for a workspace.
 
@@ -3325,10 +3333,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if ring_base_location_first_enabled is not None:
@@ -3394,10 +3402,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if schedule_name is not None:
             body['scheduleName'] = schedule_name
         if schedule_type is not None:
@@ -3417,7 +3425,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         r = data['id']
         return r
 
-    def delete_sequential_ring_criteria_for_a_workspace(self, workspace_id: str, id: str, org_id: str = None):
+    def delete_sequential_ring_criteria_for_a_workspace(self, workspace_id: str, id: str, org_id: str = None) -> None:
         """
         Delete sequential ring criteria for a workspace.
 
@@ -3441,7 +3449,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/sequentialRing/criteria/{id}')
@@ -3472,7 +3480,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: :class:`SequentialRingCriteriaGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/sequentialRing/criteria/{id}')
@@ -3487,7 +3495,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
                                                         anonymous_callers_enabled: bool = None,
                                                         unavailable_callers_enabled: bool = None,
                                                         phone_numbers: list[str] = None, ring_enabled: bool = None,
-                                                        org_id: str = None):
+                                                        org_id: str = None) -> None:
         """
         Modify sequential ring criteria for a workspace.
 
@@ -3532,10 +3540,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if schedule_name is not None:
             body['scheduleName'] = schedule_name
         if schedule_type is not None:
@@ -3578,7 +3586,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: :class:`SimultaneousRingGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/simultaneousRing')
@@ -3590,7 +3598,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
                                                           enabled: bool = None,
                                                           do_not_ring_if_on_call_enabled: bool = None,
                                                           phone_numbers: list[SimultaneousRingNumberGet] = None,
-                                                          org_id: str = None):
+                                                          org_id: str = None) -> None:
         """
         Modify Simultaneous Ring Settings for a Workspace.
 
@@ -3621,10 +3629,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if do_not_ring_if_on_call_enabled is not None:
@@ -3686,10 +3694,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['scheduleName'] = schedule_name
         body['scheduleType'] = enum_str(schedule_type)
         body['scheduleLevel'] = enum_str(schedule_level)
@@ -3706,7 +3714,8 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         r = data['id']
         return r
 
-    def delete_simultaneous_ring_criteria_for_a_workspace(self, workspace_id: str, id: str, org_id: str = None):
+    def delete_simultaneous_ring_criteria_for_a_workspace(self, workspace_id: str, id: str,
+                                                          org_id: str = None) -> None:
         """
         Delete Simultaneous Ring Criteria for a Workspace
 
@@ -3732,7 +3741,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/simultaneousRing/criteria/{id}')
@@ -3766,7 +3775,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: :class:`SequentialRingCriteriaGet`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/simultaneousRing/criteria/{id}')
@@ -3781,7 +3790,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
                                                           anonymous_callers_enabled: bool = None,
                                                           unavailable_callers_enabled: bool = None,
                                                           phone_numbers: list[str] = None, ring_enabled: bool = None,
-                                                          org_id: str = None):
+                                                          org_id: str = None) -> None:
         """
         Modify Simultaneous Ring Criteria for a Workspace
 
@@ -3825,10 +3834,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if schedule_name is not None:
             body['scheduleName'] = schedule_name
         if schedule_type is not None:
@@ -3873,7 +3882,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: :class:`VoicemailInfo`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/voicemail')
@@ -3890,7 +3899,8 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
                                                      send_unanswered_calls: VoicemailPutSendUnansweredCalls = None,
                                                      email_copy_of_message: VoicemailInfoEmailCopyOfMessage = None,
                                                      message_storage: VoicemailInfoMessageStorage = None,
-                                                     fax_message: VoicemailInfoFaxMessage = None, org_id: str = None):
+                                                     fax_message: VoicemailInfoFaxMessage = None,
+                                                     org_id: str = None) -> None:
         """
         Configure Voicemail Settings for a Workspace
 
@@ -3934,10 +3944,10 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
         if send_all_calls is not None:
@@ -3957,7 +3967,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         url = self.ep(f'{workspace_id}/voicemail')
         super().put(url, params=params, json=body)
 
-    def configure_busy_voicemail_greeting_for_a_place(self, workspace_id: str, org_id: str = None):
+    def configure_busy_voicemail_greeting_for_a_place(self, workspace_id: str, org_id: str = None) -> None:
         """
         Configure Busy Voicemail Greeting for a Place
 
@@ -3980,13 +3990,13 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/voicemail/actions/uploadBusyGreeting/invoke')
         super().post(url, params=params)
 
-    def configure_no_answer_voicemail_greeting_for_a_place(self, workspace_id: str, org_id: str = None):
+    def configure_no_answer_voicemail_greeting_for_a_place(self, workspace_id: str, org_id: str = None) -> None:
         """
         Configure No Answer Voicemail Greeting for a Place
 
@@ -4009,7 +4019,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/voicemail/actions/uploadNoAnswerGreeting/invoke')

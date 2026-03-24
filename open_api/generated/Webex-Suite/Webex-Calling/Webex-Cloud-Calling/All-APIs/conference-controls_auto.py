@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -64,7 +65,7 @@ class ConferenceControlsApi(ApiChild, base='telephony/conference'):
     scope.
     """
 
-    def release_conference(self, line_owner_id: str = None):
+    def release_conference(self, line_owner_id: str = None) -> None:
         """
         Release Conference
 
@@ -77,7 +78,7 @@ class ConferenceControlsApi(ApiChild, base='telephony/conference'):
         :type line_owner_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if line_owner_id is not None:
             params['lineOwnerId'] = line_owner_id
         url = self.ep()
@@ -94,7 +95,7 @@ class ConferenceControlsApi(ApiChild, base='telephony/conference'):
         :type line_owner_id: str
         :rtype: :class:`ConferenceDetails`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if line_owner_id is not None:
             params['lineOwnerId'] = line_owner_id
         url = self.ep()
@@ -102,7 +103,7 @@ class ConferenceControlsApi(ApiChild, base='telephony/conference'):
         r = ConferenceDetails.model_validate(data)
         return r
 
-    def start_conference(self, call_ids: list[str], line_owner_id: str = None):
+    def start_conference(self, call_ids: list[str], line_owner_id: str = None) -> None:
         """
         Start Conference
 
@@ -118,14 +119,14 @@ class ConferenceControlsApi(ApiChild, base='telephony/conference'):
         :type line_owner_id: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['callIds'] = call_ids
         if line_owner_id is not None:
             body['lineOwnerId'] = line_owner_id
         url = self.ep()
         super().post(url, json=body)
 
-    def add_participant(self, call_id: str, line_owner_id: str = None):
+    def add_participant(self, call_id: str, line_owner_id: str = None) -> None:
         """
         Add Participant
 
@@ -138,14 +139,14 @@ class ConferenceControlsApi(ApiChild, base='telephony/conference'):
         :type line_owner_id: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['callId'] = call_id
         if line_owner_id is not None:
             body['lineOwnerId'] = line_owner_id
         url = self.ep('addParticipant')
         super().post(url, json=body)
 
-    def deafen_participant(self, call_id: str):
+    def deafen_participant(self, call_id: str) -> None:
         """
         Deafen Participant
 
@@ -156,12 +157,12 @@ class ConferenceControlsApi(ApiChild, base='telephony/conference'):
         :type call_id: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['callId'] = call_id
         url = self.ep('deafen')
         super().post(url, json=body)
 
-    def hold(self, line_owner_id: str = None):
+    def hold(self, line_owner_id: str = None) -> None:
         """
         Hold
 
@@ -172,13 +173,13 @@ class ConferenceControlsApi(ApiChild, base='telephony/conference'):
         :type line_owner_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if line_owner_id is not None:
             params['lineOwnerId'] = line_owner_id
         url = self.ep('hold')
         super().post(url, params=params)
 
-    def mute(self, call_id: str = None):
+    def mute(self, call_id: str = None) -> None:
         """
         Mute
 
@@ -191,13 +192,13 @@ class ConferenceControlsApi(ApiChild, base='telephony/conference'):
         :type call_id: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if call_id is not None:
             body['callId'] = call_id
         url = self.ep('mute')
         super().post(url, json=body)
 
-    def resume(self, line_owner_id: str = None):
+    def resume(self, line_owner_id: str = None) -> None:
         """
         Resume
 
@@ -208,13 +209,13 @@ class ConferenceControlsApi(ApiChild, base='telephony/conference'):
         :type line_owner_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if line_owner_id is not None:
             params['lineOwnerId'] = line_owner_id
         url = self.ep('resume')
         super().post(url, params=params)
 
-    def undeafen_participant(self, call_id: str):
+    def undeafen_participant(self, call_id: str) -> None:
         """
         Undeafen Participant
 
@@ -225,12 +226,12 @@ class ConferenceControlsApi(ApiChild, base='telephony/conference'):
         :type call_id: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['callId'] = call_id
         url = self.ep('undeafen')
         super().post(url, json=body)
 
-    def unmute(self, call_id: str = None):
+    def unmute(self, call_id: str = None) -> None:
         """
         Unmute
 
@@ -243,7 +244,7 @@ class ConferenceControlsApi(ApiChild, base='telephony/conference'):
         :type call_id: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if call_id is not None:
             body['callId'] = call_id
         url = self.ep('unmute')

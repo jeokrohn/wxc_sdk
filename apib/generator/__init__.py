@@ -9,7 +9,8 @@ from apib.class_registry import PythonClassRegistry
 from apib.python_class import Endpoint
 from apib.tools import break_line
 
-PREAMBLE = """from collections.abc import Generator
+PREAMBLE = """import builtins
+from collections.abc import Generator
 from datetime import datetime
 from json import loads
 from typing import Optional, Union, Any, List
@@ -117,7 +118,7 @@ class CodeGenerator:
                 class_sources.append(class_source)
 
         # __all__ with all class names
-        auto_src = f"""__all__ = [{", ".join(f"'{c}'" for c in sorted(referenced_classes))}]"""
+        auto_src = f"""__all__ = [{', '.join(f"'{c}'" for c in sorted(referenced_classes))}]"""
         auto_src = '\n'.join(break_line(auto_src, width=120, prefix=' ' * 11, prefix_first_line=''))
 
         source = '\n\n\n'.join(chain.from_iterable(((PREAMBLE, auto_src), class_sources)))

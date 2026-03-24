@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -46,7 +47,7 @@ class FeaturesHotDeskingSigninViaVoicePortalApi(ApiChild, base='telephony/config
         :type org_id: str
         :rtype: bool
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/features/hotDesking')
@@ -56,7 +57,7 @@ class FeaturesHotDeskingSigninViaVoicePortalApi(ApiChild, base='telephony/config
 
     def update_voice_portal_hot_desking_sign_in_details_for_a_location(self, location_id: str,
                                                                        voice_portal_hot_desk_sign_in_enabled: bool = None,
-                                                                       org_id: str = None):
+                                                                       org_id: str = None) -> None:
         """
         Update Voice Portal Hot desking sign in details for a location
 
@@ -73,10 +74,10 @@ class FeaturesHotDeskingSigninViaVoicePortalApi(ApiChild, base='telephony/config
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if voice_portal_hot_desk_sign_in_enabled is not None:
             body['voicePortalHotDeskSignInEnabled'] = voice_portal_hot_desk_sign_in_enabled
         url = self.ep(f'locations/{location_id}/features/hotDesking')
@@ -97,7 +98,7 @@ class FeaturesHotDeskingSigninViaVoicePortalApi(ApiChild, base='telephony/config
         :type org_id: str
         :rtype: bool
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'people/{person_id}/features/hotDesking/guest')
@@ -107,7 +108,7 @@ class FeaturesHotDeskingSigninViaVoicePortalApi(ApiChild, base='telephony/config
 
     def update_voice_portal_hot_desking_sign_in_details_for_a_user(self, person_id: str,
                                                                    voice_portal_hot_desk_sign_in_enabled: bool = None,
-                                                                   org_id: str = None):
+                                                                   org_id: str = None) -> None:
         """
         Update Voice Portal Hot desking sign in details for a user
 
@@ -124,10 +125,10 @@ class FeaturesHotDeskingSigninViaVoicePortalApi(ApiChild, base='telephony/config
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if voice_portal_hot_desk_sign_in_enabled is not None:
             body['voicePortalHotDeskSignInEnabled'] = voice_portal_hot_desk_sign_in_enabled
         url = self.ep(f'people/{person_id}/features/hotDesking/guest')

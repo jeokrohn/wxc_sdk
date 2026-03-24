@@ -1,3 +1,4 @@
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
@@ -114,7 +115,7 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations'):
     """
 
     def read_the_list_of_call_pickups(self, location_id: str, order: str = None, name: str = None, org_id: str = None,
-                                      **params) -> Generator[ListCallPickupObject, None, None]:
+                                      **params: Any) -> Generator[ListCallPickupObject, None, None]:
         """
         Read the List of Call Pickups
 
@@ -179,10 +180,10 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         if notification_type is not None:
             body['notificationType'] = enum_str(notification_type)
@@ -197,7 +198,7 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations'):
 
     def get_available_agents_from_call_pickups(self, location_id: str, call_pickup_name: str = None, name: str = None,
                                                phone_number: str = None, order: str = None, org_id: str = None,
-                                               **params) -> Generator[GetPersonPlaceVirtualLineCallPickupObject, None, None]:
+                                               **params: Any) -> Generator[GetPersonPlaceVirtualLineCallPickupObject, None, None]:
         """
         Get available agents from Call Pickups
 
@@ -237,7 +238,7 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations'):
         url = self.ep(f'{location_id}/callPickups/availableUsers')
         return self.session.follow_pagination(url=url, model=GetPersonPlaceVirtualLineCallPickupObject, item_key='agents', params=params)
 
-    def delete_a_call_pickup(self, location_id: str, call_pickup_id: str, org_id: str = None):
+    def delete_a_call_pickup(self, location_id: str, call_pickup_id: str, org_id: str = None) -> None:
         """
         Delete a Call Pickup
 
@@ -258,7 +259,7 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations'):
         :type org_id: str
         :rtype: None
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{location_id}/callPickups/{call_pickup_id}')
@@ -286,7 +287,7 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations'):
         :type org_id: str
         :rtype: :class:`GetCallPickupObject`
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'{location_id}/callPickups/{call_pickup_id}')
@@ -329,10 +330,10 @@ class FeaturesCallPickupApi(ApiChild, base='telephony/config/locations'):
         :type org_id: str
         :rtype: str
         """
-        params = {}
+        params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if name is not None:
             body['name'] = name
         if notification_type is not None:
