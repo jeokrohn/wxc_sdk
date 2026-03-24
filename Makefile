@@ -7,8 +7,8 @@
 # Default target builds everything
 all: clean types methref async docs package
 
-# Find all .py files in subdirectories of wxc_sdk (excludes wxc_sdk itself)
-WXC_SDK_PY_FILES := $(shell find wxc_sdk -mindepth 2 -name '*.py')
+# Find all .py files in wxc_sdk (w/ the exception of two auto-generated files)
+WXC_SDK_PY_FILES := $(shell find wxc_sdk -mindepth 1 -name '*.py' -not -name 'as_api.py' -not -name 'all_types.py')
 
 wxc_sdk/all_types.py: $(WXC_SDK_PY_FILES)
 	@echo "==> Creating types.py"
