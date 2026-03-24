@@ -174,5 +174,10 @@ strict = true
 ignore_missing_imports = false
 # disable_error_code = ["import-untyped"]
 no_implicit_optional=false
+warn_unused_configs = true
+
+[[tool.mypy.overrides]]
+module = "wxc_sdk.as_api"
+ignore_errors = true
 
 

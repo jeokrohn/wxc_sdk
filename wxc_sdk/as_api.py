@@ -38877,7 +38877,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         data = await self.put(url, json=j_data)
         return Workspace.model_validate(data)
 
-    async def delete_workspace(self, workspace_id: str) -> None:
+    async def delete_workspace(self, workspace_id: str):
         """
         Delete a Workspace
 
