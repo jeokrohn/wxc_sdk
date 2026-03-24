@@ -30,7 +30,7 @@ from dataclasses import dataclass, field, fields, is_dataclass
 from importlib import import_module
 from itertools import chain
 from pathlib import Path
-from typing import Any, ClassVar, Optional, Union
+from typing import Any, ClassVar, Optional
 
 from wxc_sdk import WebexSimpleApi
 
@@ -52,7 +52,7 @@ from dataclasses import dataclass
 from datetime import datetime, date, timedelta
 from enum import Enum
 from io import BufferedReader
-from typing import Union, Optional, Literal, List
+from typing import Any, Union, Optional, Literal, List
 
 import pytz
 from dateutil import tz
@@ -171,7 +171,7 @@ class Module:
     #: module registry
     registry: ClassVar[dict[str, 'Module']] = {}
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """
         Initialize module from path
         """
@@ -196,12 +196,11 @@ class Module:
 
     # noinspection PyShadowingNames
     @classmethod
-    def init_imports(cls):
+    def init_imports(cls) -> None:
         """
         Initialize imported_by and imports attributes of all registered modules
         """
         for module in cls.registry.values():
-            module: Module
             module.imports = list(module.imported())
             imported_from = set(imp.module_name for imp in module.imports)
             for imported_from_module_name in imported_from:
@@ -281,7 +280,6 @@ class Module:
 
         def visit(module_name: str) -> Generator['Module', None, None]:
             mod = self.registry[module_name]
-            mod: Module
             if mod.module_name in visited:
                 return
             visited.add(mod.module_name)
@@ -313,7 +311,7 @@ class Import:
     #: imported into which modules
     imported_in_module_names: set[str] = field(init=False)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.imported_in_module_names = set()
         self.qualident = f'{self.module_name}.{self.name}'
         self.registry[self.qualident] = self
@@ -375,7 +373,7 @@ class ClassDef:
         visited = set()
         visited.add(self.class_name)
 
-        def visit(*, base: ClassDef, skip_super=False) -> Generator['ClassDef', None, None]:
+        def visit(*, base: ClassDef, skip_super: bool = False) -> Generator['ClassDef', None, None]:
             if skip_super or base.class_name in visited:
                 return
             visited.add(base.class_name)
@@ -411,10 +409,9 @@ class ClassDef:
         return cd
 
     @classmethod
-    def register_as_base(cls, *, class_name: str, is_base_of: str):
+    def register_as_base(cls, *, class_name: str, is_base_of: str) -> None:
         cd = cls.registry.get(is_base_of)
         if cd:
-            cd: ClassDef
             cd.base_classes.add(class_name)
         else:
             cls.register_class(class_name=is_base_of, bases=class_name, source=None, module_name=None, decorator=None)
@@ -422,7 +419,7 @@ class ClassDef:
         base.is_base_of.add(is_base_of)
 
     @classmethod
-    def from_path(cls, path: Union[str, Path]) -> Generator['ClassDef', None, None]:
+    def from_path(cls, path: Path) -> Generator['ClassDef', None, None]:
         class_re = re.compile(
             r'(?:^@(?P<decorator>\w+).*$\n)?^class\s+(?P<class_name>\w+)(?:\((?P<bases>.+)\))?:\s*$('
             r'?:\n^(?:\W.*)?$)+',
@@ -449,7 +446,7 @@ def class_sources(*, target: type) -> Generator[str, None, None]:
     VISITED_FOR_CLASS_SOURCES.add('RestSession')
 
     def act_on(*, target_class_name: str, level: int = 0) -> Generator[str, None, None]:
-        def logger(message: str):
+        def logger(message: str) -> None:
             log.debug(f'{" " * (level * 2)}act_on ({target_class_name}): {message}')
 
         logger('start')
@@ -464,7 +461,6 @@ def class_sources(*, target: type) -> Generator[str, None, None]:
         class_def = ClassDef.registry.get(target_class_name)
         if not class_def:
             raise KeyError(f'No ClassDef for {target_class_name}')
-        class_def: ClassDef
 
         # load module the target
         module_name = class_def.module_name
@@ -479,7 +475,6 @@ def class_sources(*, target: type) -> Generator[str, None, None]:
         except KeyError:
             logger(f'no module infor for module {module_name}')
             raise
-        module_info: Module
 
         imported_module = module_info.imported_module
         try:
@@ -491,16 +486,16 @@ def class_sources(*, target: type) -> Generator[str, None, None]:
         # check for attributes of the class
         if is_dataclass(target_class):
             attributes = fields(target_class)
-            attributes = sorted(attributes, key=lambda a: a.name)
-            logger(f'attributes {", ".join(f"{a.name}: {a.type.__name__}" for a in attributes)}')
+            attributes = tuple(sorted(attributes, key=lambda a: a.name))
+            logger(f'attributes {", ".join(f"{a.name}: {a.type.__name__}" for a in attributes)}')  # type: ignore[union-attr]
         else:
-            attributes = []
+            attributes = tuple()
 
         # determine classes we depend on by looking at the types of the attributes
         # make sure to ignore built-in types
         depends_on_class_names = set()
         for attribute in attributes:
-            type_name = attribute.type.__name__
+            type_name = attribute.type.__name__  # type: ignore[union-attr]
             if type_name in {'int', 'str', 'bool'}:
                 continue
             depends_on_class_names.add(type_name)
@@ -519,7 +514,7 @@ def class_sources(*, target: type) -> Generator[str, None, None]:
 
         logger('dependencies addressed')
 
-        yield class_def.source
+        yield class_def.source or ''
 
     return act_on(target_class_name=target.__name__)
 
@@ -527,12 +522,12 @@ def class_sources(*, target: type) -> Generator[str, None, None]:
 @dataclass
 class ClassTransform:
     class_name: str
-    regex: re.Pattern
+    regex: re.Pattern[str]
     replacement: str
 
     registry: ClassVar[dict[str, 'ClassTransform']] = dict()
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.registry[self.class_name] = self
 
     def apply(self, *, source: str) -> tuple[str, int]:
@@ -567,14 +562,13 @@ class ClassTransform:
         """
         total_subs = 0
         for transform in cls.registry.values():
-            transform: ClassTransform
             source, subs = transform.apply(source=source)
             total_subs += subs
         return source, total_subs
 
 
 def transform_classes_to_async(sources: Iterable[str]) -> Generator[str, None, None]:
-    def transform_method(*, class_name: str, method_match: re.Match) -> str:
+    def transform_method(*, class_name: str, method_match: re.Match[str]) -> str:
         """
         Transform source of one method
 
@@ -689,7 +683,7 @@ def transform_classes_to_async(sources: Iterable[str]) -> Generator[str, None, N
         yield transform_class(source=class_source)
 
 
-def gen():
+def gen() -> None:
     # start with WebexSimpleApi
     as_api_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'wxc_sdk', AS_API_SOURCE))
     with open(as_api_path, mode='w') as combined:
@@ -713,7 +707,7 @@ def gen():
     return
 
 
-def import_as_api():
+def import_as_api() -> None:
     # try to import the generated source
     try:
         from wxc_sdk.as_api import AsWebexSimpleApi  # noqa: F401
@@ -742,7 +736,6 @@ if __name__ == '__main__':
     for module in Module.registry.values():
         imported = import_module(module.module_name)
         foo = 1
-    modules = list(Module.registry)
     for import_qualident in sorted(Import.registry):
         import_item: Import = Import.registry[import_qualident]
         print(f'{import_qualident}: {", ".join(sorted(import_item.imported_in_module_names))}')

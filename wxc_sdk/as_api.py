@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from datetime import datetime, date, timedelta
 from enum import Enum
 from io import BufferedReader
-from typing import Union, Optional, Literal, List
+from typing import Any, Union, Optional, Literal, List
 
 import pytz
 from dateutil import tz
@@ -38877,7 +38877,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         data = await self.put(url, json=j_data)
         return Workspace.model_validate(data)
 
-    async def delete_workspace(self, workspace_id: str):
+    async def delete_workspace(self, workspace_id: str)-> None:
         """
         Delete a Workspace
 
