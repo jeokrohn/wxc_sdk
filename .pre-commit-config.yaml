@@ -3,10 +3,12 @@ repos:
   hooks:
     - id: mypy
       name: mypy
-      entry: uv run mypy --follow-imports=silent
+      entry: uv run mypy --follow-imports=silent --no-namespace-packages
       language: system
       types: [python]
       pass_filenames: true
+      # exclude generated OAS sources from type checking
+      exclude: ^(open_api/generated/|apib/)
 
 - repo: https://github.com/astral-sh/ruff-pre-commit
   # Ruff version.

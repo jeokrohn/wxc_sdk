@@ -5387,6 +5387,7 @@ class AsMeEndpointsApi(AsApiChild, base='telephony/config/people/me'):
 
         :param id: Person’s preferred answer endpoint.
         :type id: str
+        :type org_id: str
         :rtype: None
         """
         body = dict()
@@ -5785,7 +5786,7 @@ class AsMeModeManagementApi(AsApiChild, base='telephony/config/people/me'):
         r = TypeAdapter(list[ModeManagementFeature]).validate_python(data['features'])
         return r
 
-    async def switch_mode_multiple_features(self, feature_ids: list[str], operating_mode_name: str) -> None:
+    async def switch_mode_multiple_features(self, feature_ids: list[str], operating_mode_name: str):
         """
         Switch Mode for Multiple Features
 
@@ -5830,11 +5831,11 @@ class AsMeModeManagementApi(AsApiChild, base='telephony/config/people/me'):
         :type feature_ids: list[str]
         :rtype: list[str]
         """
-        params = dict()
+        params = {}
         params['featureIds'] = ','.join(feature_ids)
         url = self.ep('settings/modeManagement/features/commonModes')
         data = await super().get(url, params=params)
-        r = data['commonModeNames']  # type: ignore[index]
+        r = data['commonModeNames']
         return r
 
     async def feature_get(self, feature_id: str) -> FeatureDetail:
@@ -5860,7 +5861,7 @@ class AsMeModeManagementApi(AsApiChild, base='telephony/config/people/me'):
         r = FeatureDetail.model_validate(data)
         return r
 
-    async def extend_mode(self, feature_id: str, operating_mode_id: str, extension_time: int = None) -> None:
+    async def extend_mode(self, feature_id: str, operating_mode_id: str, extension_time: int = None):
         """
         Extend Current Operating Mode Duration
 
@@ -5893,7 +5894,7 @@ class AsMeModeManagementApi(AsApiChild, base='telephony/config/people/me'):
 
     async def switch_mode_for_feature(
         self, feature_id: str, operating_mode_id: str, is_manual_switchback_enabled: bool = None
-    ) -> None:
+    ):
         """
         Switch Mode for Single Feature
 
@@ -5920,11 +5921,11 @@ class AsMeModeManagementApi(AsApiChild, base='telephony/config/people/me'):
         body = dict()
         body['operatingModeId'] = operating_mode_id
         if is_manual_switchback_enabled is not None:
-            body['isManualSwitchbackEnabled'] = str(is_manual_switchback_enabled).lower()
+            body['isManualSwitchbackEnabled'] = is_manual_switchback_enabled
         url = self.ep(f'settings/modeManagement/features/{feature_id}/actions/switchMode/invoke')
         await super().post(url, json=body)
 
-    async def switch_to_normal_operation(self, feature_id: str) -> None:
+    async def switch_to_normal_operation(self, feature_id: str):
         """
         Switch to Normal Operation
 
@@ -18614,7 +18615,7 @@ class AsSCIM2GroupsApi(AsScimApiChild, base='identity/scim'):
                              attributes: str= None,
                              count: int = None, sort_by: str = None, sort_order: str = None,
                              include_members: bool = None, member_type: str = None) -> AsyncGenerator[ScimGroup,
-                             None]:
+                             None, None]:
         params = {k: v for k, v in locals().items()
                   if k not in {'self', 'count'} and v is not None}
         start_index = None
@@ -18696,7 +18697,7 @@ class AsSCIM2GroupsApi(AsScimApiChild, base='identity/scim'):
         return r
 
     async def members_all_gen(self, org_id: str, group_id: str, start_index: int = None, count: int = None,
-                              member_type: str = None) -> AsyncGenerator[ScimGroupMember, None]:
+                              member_type: str = None) -> AsyncGenerator[ScimGroupMember, None, None]:
         params = {k: v for k, v in locals().items()
                   if k not in {'self', 'count'} and v is not None}
         start_index = None
@@ -19169,7 +19170,7 @@ class AsSCIM2UsersApi(AsScimApiChild, base='identity/scim'):
                              excluded_attributes: str = None,
                              sort_by: str = None, sort_order: str = None, count: int = None, return_groups: str = None,
                              include_group_details: str = None,
-                             group_usage_types: str = None) -> AsyncGenerator[ScimUser, None]:
+                             group_usage_types: str = None) -> AsyncGenerator[ScimUser, None, None]:
         params = {k: v for k, v in locals().items()
                   if k not in {'self', 'count'} and v is not None}
         start_index = None
@@ -21613,7 +21614,7 @@ class AsAnnouncementApi:
         ep = self._session.ep(path=f'telephony/config/locations/{location_id}/queues/{queue_id}/announcements{path}')
         return ep
 
-    def list_gen(self, location_id: str, queue_id: str, org_id: str = None) -> AsyncGenerator[Announcement, None]:
+    def list(self, location_id: str, queue_id: str, org_id: str = None) -> Generator[Announcement]:
         """
         Read the List of Call Queue Announcement Files
 
@@ -21639,33 +21640,6 @@ class AsAnnouncementApi:
         params = org_id and {'orgId': org_id} or dict()
         # noinspection PyTypeChecker
         return self._session.follow_pagination(url=url, model=Announcement, params=params)
-
-    async def list(self, location_id: str, queue_id: str, org_id: str = None) -> builtins.list[Announcement]:
-        """
-        Read the List of Call Queue Announcement Files
-
-        List file info for all Call Queue announcement files associated with this Call Queue.
-
-        Call Queue announcement files contain messages and music that callers hear while waiting in the queue. A call
-        queue can be configured to play whatever subset of these announcement files is desired.
-
-        Retrieving this list of files requires a full or read-only administrator or location administrator auth token
-        with a scope of `spark-admin:telephony_config_read`.
-
-        Note that uploading of announcement files via API is not currently supported, but is available via Webex
-        Control Hub.
-
-        :param location_id: Location in which this call queue exists.
-        :type location_id: str
-        :param queue_id: Retrieve announcement files for the call queue with this identifier.
-        :type queue_id: str
-        :param org_id: Retrieve announcement files for a call queue from this organization.
-        :type org_id: str
-        """
-        url = self._endpoint(location_id=location_id, queue_id=queue_id)
-        params = org_id and {'orgId': org_id} or dict()
-        # noinspection PyTypeChecker
-        return [o async for o in self._session.follow_pagination(url=url, model=Announcement, params=params)]
 
     async def delete_announcement(self, location_id: str, queue_id: str, file_name: str, org_id: str = None) -> None:
         """
@@ -29049,6 +29023,7 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
         url = self._endpoint()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Paging, params=params, item_key='locationPaging')
+        pass
 
     async def list(
         self, location_id: str = None, name: str = None, phone_number: str = None, org_id: str = None, **params
@@ -29081,6 +29056,7 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
         url = self._endpoint()
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=Paging, params=params, item_key='locationPaging')]
+        pass
 
     async def create(self, location_id: str, settings: Paging, org_id: str = None) -> str:
         """
