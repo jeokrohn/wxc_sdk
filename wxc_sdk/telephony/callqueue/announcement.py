@@ -42,7 +42,7 @@ class AnnouncementApi:
         ep = self._session.ep(path=f'telephony/config/locations/{location_id}/queues/{queue_id}/announcements{path}')
         return ep
 
-    def list(self, location_id: str, queue_id: str, org_id: str = None) -> Generator[Announcement]:
+    def list(self, location_id: str, queue_id: str, org_id: str = None) -> Generator[Announcement, None, None]:
         """
         Read the List of Call Queue Announcement Files
 

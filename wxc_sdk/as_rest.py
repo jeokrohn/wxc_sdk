@@ -22,7 +22,7 @@ from aiohttp import ClientResponse, ClientResponseError, ClientSession, RequestI
 from aiohttp.typedefs import LooseHeaders
 from pydantic import ValidationError
 
-from .base import RETRY_429_MAX_WAIT, ApiModel, StrOrDict
+from .base import RETRY_429_MAX_WAIT, ApiModel, ApiModelType, StrOrDict
 from .tokens import Tokens
 
 __all__ = ['AsErrorMessage', 'AsSingleError', 'AsErrorDetail', 'AsRestError', 'as_dump_response', 'AsRestSession']
@@ -54,7 +54,7 @@ class AsSingleError(ApiModel):
         return self.message[0].code
 
     @property
-    def description(self) -> Optional[int]:
+    def description(self) -> Optional[str]:
         """
         Description or None
 
@@ -125,7 +125,7 @@ def as_dump_response(
     file: TextIOBase = None,
     dump_log: logging.Logger = None,
     diff_ns: int = None,
-):
+) -> None:
     """
     Dump response object to log file
 
@@ -192,7 +192,7 @@ def as_dump_response(
             print(f'  {line}', file=output)
     print(' --- end ---', file=output)
     if file is None:
-        dump_log.debug(output.getvalue())
+        dump_log.debug(output.getvalue())  # type: ignore[attr-defined]
 
 
 def retry_request(func):
@@ -277,7 +277,7 @@ class AsRestSession(ClientSession):
     # registry of response callbacks
     _response_callback_registry: dict[str, AsRestResponseCallBack]
     # additional request arguments
-    _request_arguments: dict
+    _request_arguments: dict[str, Any]
 
     def __init__(
         self,
@@ -367,7 +367,7 @@ class AsRestSession(ClientSession):
         request_json: dict,
         response_data: Union[str, dict],
         diff_ns: int,
-    ):
+    ) -> None:
         # request body
         body_str = ''
         body_ct = ''
@@ -392,7 +392,7 @@ class AsRestSession(ClientSession):
             body_str = json_mod.dumps(request_json)
             body_ct = 'application/json;charset=utf-8'
         for callback in self._response_callback_registry.values():
-            callback(response, body_str, body_ct, response_data, diff_ns)
+            callback(response, body_str, body_ct, response_data, diff_ns)  # type: ignore[arg-type]
 
     def unregister_response_callback(self, id: str):
         """
@@ -575,8 +575,13 @@ class AsRestSession(ClientSession):
         return await self._rest_request('PATCH', *args, **kwargs)
 
     async def follow_pagination(
-        self, url: str, model: type[ApiModel] = None, params: dict = None, item_key: str = None, **kwargs
-    ) -> AsyncGenerator[ApiModel, None, None]:
+        self,
+        url: str,
+        model: type[ApiModelType] = None,
+        params: dict[str, Any] = None,
+        item_key: str = None,
+        **kwargs: Any,
+    ) -> AsyncGenerator[ApiModelType, None]:
         """
         Handling RFC5988 pagination of list requests. Generator of parsed objects
 

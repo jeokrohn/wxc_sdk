@@ -1,10 +1,12 @@
+# mypy: disable-error-code=["arg-type"]
 """
 Python class registry for OpenAPI schema; derived from PythonClassRegistry; used for code creation
 """
+
 import json
 import logging
 import re
-from typing import Optional
+from typing import Any, Optional
 
 import dateutil.parser
 
@@ -51,7 +53,7 @@ def is_datetime(value: str) -> bool:
         # probably a string
         return False
     except Exception as e:
-        raise NotImplementedError(f'Unexpected error when trying to parse a string: {e}')
+        raise NotImplementedError(f'Unexpected error when trying to parse a string: {e}') from e
 
     # only assume datetime if sample doesn't parse as number
     try:
@@ -66,8 +68,8 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
     Registry of classes generated from OpenAPI schema
     """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self) -> None:
+        super().__init__()  # type: ignore[no-untyped-call]
 
     @staticmethod
     def _attributes_from_enum(prop: OASchemaProperty) -> list[Attribute]:
@@ -75,23 +77,32 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         Create attributes from enum values
         """
         enum_values = prop.enum
+        if enum_values is None:
+            raise ValueError('enum values cannot be None')
         enum_details = dict(prop.enum_details or [])
-        attrs = [Attribute(name=enum_value, python_type='str', docstring=enum_details.get(enum_value), sample=None,
-                           referenced_class=None)
-                 for enum_value in enum_values]
+        attrs = [
+            Attribute(
+                name=str(enum_value),
+                python_type='str',
+                docstring=enum_details.get(str(enum_value)),
+                sample=None,
+                referenced_class=None,
+            )
+            for enum_value in enum_values
+        ]
         return attrs
 
-    def _add_or_get_type_for_property(self, prop: OASchemaProperty,
-                                      name: str,
-                                      prop_name: str = '',
-                                      parent_example=None) -> tuple[str, Optional[str]]:
+    def _add_or_get_type_for_property(
+        self, prop: OASchemaProperty, name: str, prop_name: str = '', parent_example: Any = None
+    ) -> tuple[str, Optional[str]]:
         """
         Add or get type for property
 
         :return: python_type and referenced_class
         """
         try:
-            if (ref := prop.ref or prop.object_ref):
+            ref = None
+            if ref := prop.ref or prop.object_ref:
                 # reference to a different schema that (hopefully) will be added to the registry as PythonClass later
                 class_name = class_name_from_ref(ref)
                 referenced_class_name = self.qualified_class_name(class_name_from_schema_name(class_name))
@@ -100,7 +111,7 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
                     desc_prop = next((p for p in prop.all_of if p.description), None)
                     if desc_prop:
                         prop.description = desc_prop.description
-                return referenced_class_name, referenced_class_name
+                return referenced_class_name, referenced_class_name  # type: ignore[return-value]
         except AttributeError:
             raise
 
@@ -110,11 +121,12 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             # and use that as the type
             enum_class_name = self.qualified_class_name(sanitize_class_name(f'{name}{sanitize_class_name(prop_name)}'))
             attrs = self._attributes_from_enum(prop)
-            python_class = PythonClass(name=enum_class_name, attributes=attrs, description=prop.enum_description,
-                                       is_enum=True, baseclass=None)
+            python_class = PythonClass(
+                name=enum_class_name, attributes=attrs, description=prop.enum_description, is_enum=True, baseclass=None
+            )
             # add to registry
             self._add_class(python_class)
-            return enum_class_name, enum_class_name
+            return enum_class_name, enum_class_name  # type: ignore[return-value]
         elif prop.type == 'array':
             # array type
             # we need to create a class for the array
@@ -137,13 +149,17 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             example = prop.example or parent_example
             if prop_type == 'number' and isinstance(example, int):
                 # 'number' actually should be 'integer' if the example is an integer
-                msg = (f'Changing type "number" to "integer" for {name.split("%")[-1]}.{prop_name} '
-                       f'based on example "{example}"')
+                msg = (
+                    f'Changing type "number" to "integer" for {name.split("%")[-1]}.{prop_name} '
+                    f'based on example "{example}"'
+                )
                 log.info(msg)
                 prop_type = 'integer'
             elif prop_type == 'string' and isinstance(example, str) and is_datetime(example):
-                msg = (f'Changing type "string" to "datetime" for {name.split("%")[-1]}.{prop_name} '
-                       f'based on example "{example}"')
+                msg = (
+                    f'Changing type "string" to "datetime" for {name.split("%")[-1]}.{prop_name} '
+                    f'based on example "{example}"'
+                )
                 log.info(msg)
                 prop_type = 'datetime'
             return self._schema_type_to_python_type(prop_type), None
@@ -153,7 +169,7 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
                 # empty object
                 return 'dict', None
             object_class_name = sanitize_class_name(f'{name}{sanitize_class_name(prop_name)}')
-            object_class_name = self.qualified_class_name(object_class_name)
+            object_class_name = self.qualified_class_name(object_class_name)  # type: ignore[assignment]
             self._add_object_schema(object_class_name, prop)
             return object_class_name, object_class_name
         elif any_type := prop.any_type:
@@ -188,31 +204,35 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
     def _is_simple_type(schema_type: str) -> bool:
         return schema_type in ['string', 'integer', 'number', 'boolean']
 
-    def _add_object_schema(self, schema_name: str, schema: OASchemaProperty):
+    def _add_object_schema(self, schema_name: str, schema: OASchemaProperty) -> None:
         """
         Add "object" schema to registry as Python class
         """
         name = self.qualified_class_name(class_name_from_schema_name(schema_name))
         schema_description = schema.description
         attrs = []
-        for prop_name, prop in schema.properties.items():
+        for prop_name, prop in schema.properties.items():  # type: ignore[union-attr]
             # prop_name might be something like 't38FaxCompressionEnabled `true`'
             # we only want to consider the part before the space
             actual_prop_name = prop_name
-            if "`" in prop_name:
+            if '`' in prop_name:
                 m = re.match(r"""[^`]+""", prop_name)
-                actual_prop_name = m.group(0).strip()
+                actual_prop_name = m.group(0).strip()  # type: ignore[union-attr]
             if actual_prop_name != prop_name:
                 log.warning(f'Property name {prop_name} in {name} contains value, using {actual_prop_name} instead')
                 prop_name = actual_prop_name
             python_type, referenced_class = self._add_or_get_type_for_property(prop, name, prop_name)
-            attr = Attribute(name=prop_name, python_type=python_type, docstring=prop.docstring, sample=None,
-                             referenced_class=referenced_class)
+            attr = Attribute(
+                name=prop_name,
+                python_type=python_type,
+                docstring=prop.docstring,
+                sample=None,
+                referenced_class=referenced_class,
+            )
             attrs.append(attr)
-        python_class = PythonClass(name=name,
-                                   attributes=attrs,
-                                   description=schema_description, is_enum=False,
-                                   baseclass=None)
+        python_class = PythonClass(
+            name=name, attributes=attrs, description=schema_description, is_enum=False, baseclass=None
+        )
         # add to registry
         self._add_class(python_class)
 
@@ -234,7 +254,7 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             _add_schema returns:
                 * 'list[None%LocationListResponseItem]'
                 * 'None%LocationListResponseItem'
-    
+
             we probably need to create a dummy for LocationListResponse
         """
         if (unqualified_ref := referenced_class.split('%')[-1]) != schema_name and unqualified_ref.endswith('Item'):
@@ -246,30 +266,48 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             self._add_class(dummy_class)
         return
 
-    def _parameter_from_schema_property(self, *, prop_name: str, prop: OASchemaProperty,
-                                        param_required: Optional[set[str]] = None,
-                                        url_parameter: bool = False) -> Parameter:
+    def _parameter_from_schema_property(
+        self,
+        *,
+        prop_name: str,
+        prop: OASchemaProperty,
+        param_required: Optional[set[str]] = None,
+        url_parameter: bool = False,
+    ) -> Parameter:
         """
         Create parameter from schema property
         """
-        param_required = param_required or prop.required and set(prop.required) or {}
-        required = (param_required and prop_name in param_required)
+        param_required = param_required or prop.required and set(prop.required) or {}  # type: ignore[assignment]
+        required = param_required and prop_name in param_required
         python_type, referenced_class = self._add_or_get_type_for_property(prop, prop_name)
-        return Parameter(name=prop_name, python_type=python_type, referenced_class=referenced_class,
-                         docstring=prop.docstring, sample=prop.example, optional=not required,
-                         url_parameter=url_parameter,
-                         registry=self)
+        return Parameter(
+            name=prop_name,
+            python_type=python_type,
+            referenced_class=referenced_class,
+            docstring=prop.docstring,
+            sample=prop.example,
+            optional=not required,
+            url_parameter=url_parameter,
+            registry=self,
+        )
 
     def _parameter_from_oa_parameter(self, param: OAParameter) -> Parameter:
         """
         Create parameter from OAParameter
         """
-        python_type, referenced_class = self._add_or_get_type_for_property(param.schema_, param.name,
-                                                                           parent_example=param.example)
-        return Parameter(name=param.name, python_type=python_type, referenced_class=referenced_class,
-                         docstring=param.description, sample=param.example, optional=not param.required,
-                         url_parameter=param.in_ == 'path',
-                         registry=self)
+        python_type, referenced_class = self._add_or_get_type_for_property(
+            param.schema_, param.name, parent_example=param.example
+        )
+        return Parameter(
+            name=param.name,
+            python_type=python_type,
+            referenced_class=referenced_class,
+            docstring=param.description,
+            sample=param.example,
+            optional=not param.required,
+            url_parameter=param.in_ == 'path',
+            registry=self,
+        )
 
     def _body_parameter_from_operation(self, spec: OASpec, operation: OAOperation) -> list[Parameter]:
         """
@@ -300,13 +338,13 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             param_properties = body_schema.properties
             param_required = body_schema.required and set(body_schema.required) or {}
         # create parameter list
-        parameters = [self._parameter_from_schema_property(prop_name=prop_name, prop=prop,
-                                                           param_required=param_required)
-                      for prop_name, prop in param_properties.items()]
+        parameters = [
+            self._parameter_from_schema_property(prop_name=prop_name, prop=prop, param_required=param_required)
+            for prop_name, prop in param_properties.items()
+        ]
         return parameters
 
-    def _endpoint_from_operation(self, spec: OASpec, operation: OAOperation,
-                                 host: str, path: str, method: str):
+    def _endpoint_from_operation(self, spec: OASpec, operation: OAOperation, host: str, path: str, method: str):
         """
         Add operation to api
         """
@@ -317,16 +355,16 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         title = operation.summary
         docstring = operation.description
 
-        href_parameter = [self._parameter_from_oa_parameter(qp)
-                          for qp in operation.parameters if not qp.is_auth]
+        href_parameter = [self._parameter_from_oa_parameter(qp) for qp in operation.parameters if not qp.is_auth]
 
         body_parameter = self._body_parameter_from_operation(spec, operation)
 
         body_class_name = None
         registry = self
 
-        response_code, response = next(((rc, content) for rc, content in operation.responses.items()
-                                        if rc.startswith('2')), (None, None))
+        response_code, response = next(
+            ((rc, content) for rc, content in operation.responses.items() if rc.startswith('2')), (None, None)
+        )
 
         response_ct, response_content = next(iter(response.content.items()), (None, None))
         if not (response_ct and response_content):
@@ -338,7 +376,7 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             if response_code not in {'204', '201', '202', '200'}:
                 raise ValueError(f'unexpected response code {response_code} for {endpoint_name}')
         else:
-            response_content: OAContent
+            response_content: OAContent  # type: ignore[no-redef]
             # response body is an example
             response_body = response_content.example
             response_schema = response_content.schema_
@@ -348,14 +386,25 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
                 result = None
                 result_referenced_class = None
             else:
-                result, result_referenced_class = self._add_or_get_type_for_property(response_schema, endpoint_name,
-                                                                                     prop_name='Response')
+                result, result_referenced_class = self._add_or_get_type_for_property(
+                    response_schema, endpoint_name, prop_name='Response'
+                )
 
-        endpoint = Endpoint(name=endpoint_name, method=method, host=host, url=url,
-                            title=title, docstring=docstring, href_parameter=href_parameter,
-                            body_parameter=body_parameter, body_class_name=body_class_name,
-                            response_body=response_body, result=result,
-                            result_referenced_class=result_referenced_class, registry=registry)
+        endpoint = Endpoint(
+            name=endpoint_name,
+            method=method,
+            host=host,
+            url=url,
+            title=title,
+            docstring=docstring,
+            href_parameter=href_parameter,
+            body_parameter=body_parameter,
+            body_class_name=body_class_name,
+            response_body=response_body,
+            result=result,
+            result_referenced_class=result_referenced_class,
+            registry=registry,
+        )
         return endpoint
 
     def add_open_api(self, spec_info: OpenApiSpecInfo):

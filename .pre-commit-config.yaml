@@ -8,13 +8,13 @@ repos:
       types: [python]
       pass_filenames: true
       # exclude generated OAS sources from type checking
-      exclude: ^(open_api/generated/|apib/)
+      exclude: ^(open_api/generated/|apib/|open_api/open_api_class_registry/)
 
 - repo: https://github.com/astral-sh/ruff-pre-commit
   # Ruff version.
   rev: v0.15.6
   hooks:
-    # Run the linter.
-    - id: ruff-check
     # Run the formatter.
     - id: ruff-format
+    # Run the linter.
+    - id: ruff-check

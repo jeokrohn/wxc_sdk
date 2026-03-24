@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import TypeAdapter
 
@@ -131,10 +131,10 @@ class MeModeManagementApi(ApiChild, base='telephony/config/people/me'):
         """
         url = self.ep('settings/modeManagement/features')
         data = super().get(url)
-        r = TypeAdapter(list[ModeManagementFeature]).validate_python(data['features'])
+        r = TypeAdapter(list[ModeManagementFeature]).validate_python(data['features'])  # type: ignore[index]
         return r
 
-    def switch_mode_multiple_features(self, feature_ids: list[str], operating_mode_name: str):
+    def switch_mode_multiple_features(self, feature_ids: list[str], operating_mode_name: str) -> None:
         """
         Switch Mode for Multiple Features
 
@@ -155,7 +155,7 @@ class MeModeManagementApi(ApiChild, base='telephony/config/people/me'):
         :type operating_mode_name: str
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['featureIds'] = feature_ids
         body['operatingModeName'] = operating_mode_name
         url = self.ep('settings/modeManagement/features/actions/switchMode/invoke')
@@ -179,11 +179,11 @@ class MeModeManagementApi(ApiChild, base='telephony/config/people/me'):
         :type feature_ids: list[str]
         :rtype: list[str]
         """
-        params = {}
+        params = dict()
         params['featureIds'] = ','.join(feature_ids)
         url = self.ep('settings/modeManagement/features/commonModes')
         data = super().get(url, params=params)
-        r = data['commonModeNames']
+        r: list[str] = data['commonModeNames']  # type: ignore[index,assignment]
         return r
 
     def feature_get(self, feature_id: str) -> FeatureDetail:
@@ -209,7 +209,7 @@ class MeModeManagementApi(ApiChild, base='telephony/config/people/me'):
         r = FeatureDetail.model_validate(data)
         return r
 
-    def extend_mode(self, feature_id: str, operating_mode_id: str, extension_time: int = None):
+    def extend_mode(self, feature_id: str, operating_mode_id: str, extension_time: int = None) -> None:
         """
         Extend Current Operating Mode Duration
 
@@ -233,7 +233,7 @@ class MeModeManagementApi(ApiChild, base='telephony/config/people/me'):
         :type extension_time: int
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['operatingModeId'] = operating_mode_id
         if extension_time is not None:
             body['extensionTime'] = extension_time
@@ -242,7 +242,7 @@ class MeModeManagementApi(ApiChild, base='telephony/config/people/me'):
 
     def switch_mode_for_feature(
         self, feature_id: str, operating_mode_id: str, is_manual_switchback_enabled: bool = None
-    ):
+    ) -> None:
         """
         Switch Mode for Single Feature
 
@@ -269,11 +269,11 @@ class MeModeManagementApi(ApiChild, base='telephony/config/people/me'):
         body = dict()
         body['operatingModeId'] = operating_mode_id
         if is_manual_switchback_enabled is not None:
-            body['isManualSwitchbackEnabled'] = is_manual_switchback_enabled
+            body['isManualSwitchbackEnabled'] = str(is_manual_switchback_enabled).lower()
         url = self.ep(f'settings/modeManagement/features/{feature_id}/actions/switchMode/invoke')
         super().post(url, json=body)
 
-    def switch_to_normal_operation(self, feature_id: str):
+    def switch_to_normal_operation(self, feature_id: str) -> None:
         """
         Switch to Normal Operation
 
@@ -338,5 +338,5 @@ class MeModeManagementApi(ApiChild, base='telephony/config/people/me'):
         """
         url = self.ep(f'settings/modeManagement/features/{feature_id}/normalOperationMode')
         data = super().get(url)
-        r = data['operatingModeId']
+        r = data['operatingModeId']  # type: ignore[index]
         return r

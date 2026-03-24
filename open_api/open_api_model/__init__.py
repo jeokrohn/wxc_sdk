@@ -121,7 +121,7 @@ class OASchemaProperty(OABaseModel):
     # noinspection PyMethodParameters
     @field_validator('enum', mode='before')
     @classmethod
-    def validate_enum(cls, v, validation: ValidationInfo):
+    def validate_enum(cls, v: Any, validation: ValidationInfo) -> Any:
         """
         Validate enum. Only valid for type 'string' and 'integer'
         """
@@ -178,7 +178,7 @@ class OASchemaProperty(OABaseModel):
             desc = self.description[desc_start:desc_end]
             enum_value = match.group(1)
             details[enum_value] = desc.strip()
-        return [(enum_value, d if (d := details.get(enum_value)) else '') for enum_value in self.enum]
+        return [(str(enum_value), d if (d := details.get(enum_value)) else '') for enum_value in self.enum]
 
     @property
     def enum_description(self) -> Optional[str]:
@@ -221,7 +221,7 @@ class OASchemaProperty(OABaseModel):
         if object_item and object_item.properties:
             raise ValueError(f'Object schema {object_item} has properties, cannot return a reference')
         ref_item = next((item for item in plist if item.ref is not None), None)
-        return ref_item and ref_item.ref
+        return ref_item and ref_item.ref  # type: ignore[return-value]
 
     @property
     def object_ref(self) -> Optional[str]:
@@ -242,7 +242,7 @@ class OASchemaProperty(OABaseModel):
         return self._obj_ref(self.all_of)
 
     @property
-    def any_ref(self) -> Optional['OASchemaProperty']:
+    def any_ref(self) -> Optional[str]:
         """
         Any reference
         """
@@ -254,13 +254,13 @@ class OASchemaProperty(OABaseModel):
         Any type
         """
         if self.type:
-            return self.type
+            return self.type  # type: ignore[return-value]
         if not self.any_of:
             return None
         any_types = set(item.type for item in self.any_of)
         if len(any_types) > 1:
             return None
-        return any_types.pop()
+        return any_types.pop()  # type: ignore[return-value]
 
 
 class OAContent(OABaseModel):
@@ -272,7 +272,7 @@ class OAContent(OABaseModel):
 
 class OAResponse(OABaseModel):
     description: Optional[str] = None
-    headers: Optional[dict] = None
+    headers: Optional[dict[str, str]] = None
     content: Optional[dict[str, OAContent]] = Field(default_factory=dict)
     ref: Optional[str] = Field(alias='$ref', default=None)
 
@@ -284,8 +284,8 @@ class ExternalDocs(OABaseModel):
 
 class OAOperation(OABaseModel):
     summary: str
-    operation_id: Optional[str] = None
-    description: Optional[str] = ''
+    operation_id: Optional[str] = Field(None)
+    description: Optional[str] = Field('')
     parameters: Optional[list[OAParameter]] = Field(default_factory=list)
     request_body: Optional[OARequestBody] = None
     security: Optional[Any] = None
@@ -296,11 +296,11 @@ class OAOperation(OABaseModel):
 
     @property
     def path_parameters(self) -> list[OAParameter]:
-        return [param for param in self.parameters if param.in_ == 'path']
+        return [param for param in self.parameters if param.in_ == 'path']  # type: ignore[union-attr]
 
     @property
     def query_parameters(self) -> list[OAParameter]:
-        return [param for param in self.parameters if param.in_ == 'query']
+        return [param for param in self.parameters if param.in_ == 'query']  # type: ignore[union-attr]
 
 
 class OASpecSchema(OABaseModel):
@@ -360,7 +360,7 @@ class OASpec(OABaseModel):
         schema_ref = ref_match and ref_match.group(1) or schema_ref
         return self.components.schemas[schema_ref]
 
-    def deref(self, ref: str):
+    def deref(self, ref: str) -> Union[OAResponse, OASchemaProperty, None]:
         """
         Dereference a ref like '#/components/responses/BadRequestError'
         :param ref:
@@ -369,11 +369,11 @@ class OASpec(OABaseModel):
         ref_match = re.match(r'^#/components/(.+?)/(.+)$', ref)
         if not ref_match:
             return None
-        component_type = ref_match.group(1)
-        component_name = ref_match.group(2)
+        component_type: str = ref_match.group(1)
+        component_name: str = ref_match.group(2)
         if component_type == 'schemas':
             return self.components.schemas[component_name]
         elif component_type == 'responses':
-            return self.components.responses[component_name]
+            return self.components.responses[component_name]  # type: ignore[index]
         else:
             raise ValueError(f'Unknown component type: {component_type}')
