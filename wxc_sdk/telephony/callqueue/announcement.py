@@ -29,7 +29,7 @@ class AnnouncementApi:
     def __init__(self, *, session: RestSession):
         self._session = session
 
-    def _endpoint(self, location_id: str, queue_id: str, path: str = None):
+    def _endpoint(self, location_id: str, queue_id: str, path: str = None) -> str:
         """
 
         :meta private:
@@ -69,7 +69,7 @@ class AnnouncementApi:
         # noinspection PyTypeChecker
         return self._session.follow_pagination(url=url, model=Announcement, params=params)
 
-    def delete_announcement(self, location_id: str, queue_id: str, file_name: str, org_id: str = None):
+    def delete_announcement(self, location_id: str, queue_id: str, file_name: str, org_id: str = None) -> None:
         """
         Delete a Call Queue Announcement File
 

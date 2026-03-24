@@ -3,7 +3,7 @@ import logging
 import os
 import re
 from datetime import datetime
-from typing import Annotated, Optional, Union
+from typing import Annotated, Any, Optional, Self, TypeVar, Union
 
 from aenum import Enum, extend_enum
 from dateutil import tz
@@ -14,6 +14,7 @@ __all__ = [
     'webex_id_to_uuid',
     'to_camel',
     'ApiModel',
+    'ApiModelType',
     'CodeAndReason',
     'ApiModelWithErrors',
     'plus1',
@@ -24,7 +25,7 @@ __all__ = [
     'E164Number',
 ]
 
-StrOrDict = Union[str, dict]
+StrOrDict = Union[str, dict[str, Any]]
 
 log = logging.getLogger(__name__)
 
@@ -39,13 +40,14 @@ class SafeEnum(Enum):
 
     if os.getenv('API_MODEL_ALLOW_EXTRA', 'allow') != 'allow':
         # don't allow dynamic extension of enum
+        # noinspection PyUnusedLocal
         @classmethod
-        def _missing_(cls, value):
+        def _missing_(cls, value: Any) -> None:
             return None
     else:
         # ... while during normal execution simply dynamically enhance the enum
         @classmethod
-        def _missing_(cls, value):
+        def _missing_(cls, value: Any) -> Any:
             log.warning(f'auto enhancing Enum {cls.__name__}, new value: {value}')
             return extend_enum(cls, value, value)
 
@@ -55,11 +57,12 @@ def enum_str(enum_or_str: Union[Enum, str]) -> str:
     return str value of enum or string
 
     :param enum_or_str: value to be converted to string
+    :type enum_or_str: Union[Enum, str]
     :return: str representation
     """
     # try to treat as enum
     try:
-        return enum_or_str.value
+        return enum_or_str.value  # type: ignore[no-any-return,union-attr]
     except AttributeError:
         pass
     # .. and if that fails we assume that we got a string and return just that
@@ -100,21 +103,24 @@ class ApiModel(BaseModel):
         alias_generator=to_camel,  # alias is camelcase version of attribute name
         populate_by_name=True,
         # set to 'allow' by default. Can be overridden by setting environment variable API_MODEL_ALLOW_EXTRA
-        extra=API_MODEL_ALLOW_EXTRA,
+        extra=API_MODEL_ALLOW_EXTRA,  # type: ignore[typeddict-item]
         # store values instead of enum types
         use_enum_values=True,
     )
 
-    def model_dump_json(self, *args, exclude_none=True, by_alias=True, **kwargs) -> str:
-        return super().model_dump_json(*args, exclude_none=exclude_none, by_alias=by_alias, **kwargs)
+    def model_dump_json(self, exclude_none: bool = True, by_alias: bool = True, **kwargs: Any) -> str:  # type: ignore[override]
+        return super().model_dump_json(exclude_none=exclude_none, by_alias=by_alias, **kwargs)
 
     @classmethod
-    def model_validate(cls, obj):
+    def model_validate(cls, obj: Any, **kwargs: Any) -> Self:
         try:
-            r = super().model_validate(obj)
+            r = super().model_validate(obj, **kwargs)
         except ValidationError as e:
             raise e
         return r
+
+
+ApiModelType = TypeVar('ApiModelType', bound='ApiModel')
 
 
 class CodeAndReason(ApiModel):
@@ -126,7 +132,7 @@ class ApiModelWithErrors(ApiModel):
     errors: Optional[dict[str, CodeAndReason]] = None
 
 
-def plus1(v: Optional[str]) -> str:
+def plus1(v: Optional[str]) -> Optional[str]:
     """
     Convert 10D number to +E.164. Can be used as validator
     :param v:

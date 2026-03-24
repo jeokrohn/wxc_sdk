@@ -286,7 +286,7 @@ class CallParkExtension(ApiModel):
 
     @model_validator(mode='before')
     @classmethod
-    def fix_location_name(cls, values):
+    def fix_location_name(cls, values: dict[str, Any]) -> dict[str, Any]:
         """
         The schema changed at some point: endpoint returns "location" instead of "location_name". For backwards
         compatibility we need to rename it to "location_name" if it is present.
@@ -327,7 +327,7 @@ class AuthCode(ApiModel):
     #: Indicates the level of each access code.
     level: Optional[AuthCodeLevel] = None
 
-    def create(self) -> dict:
+    def create(self) -> dict[str, Any]:
         """
         dict for auth code creation
 
@@ -420,7 +420,7 @@ class ValidateExtensionStatus(ApiModel):
     message: Optional[str] = None
 
     @property
-    def ok(self):
+    def ok(self) -> bool:
         return self.state == ValidateExtensionStatusState.valid
 
 
@@ -457,7 +457,7 @@ class ValidatePhoneNumberStatus(ApiModel):
     detail: list[str] = Field(default_factory=list)
 
     @property
-    def ok(self):
+    def ok(self) -> bool:
         return self.state == ValidatePhoneNumberStatusState.available
 
 
@@ -629,7 +629,7 @@ class AtaCustomization(CommonDeviceCustomization):
     ata_dtmf_mode: AtaDtmfMode
     #: Method for transmitting DTMF signals to the far end.
     ata_dtmf_method: AtaDtmfMethod
-    snmp: dict
+    snmp: dict[str, Any]
     #: Enable/disable user level web access to the local device.
     web_access_enabled: bool
 
@@ -1147,7 +1147,7 @@ class DeviceCustomization(ApiModel):
 
     @field_validator('last_update_time', mode='before')
     @classmethod
-    def update_time(cls, v):
+    def update_time(cls, v: Any) -> Any | datetime:
         """
 
         :meta private:

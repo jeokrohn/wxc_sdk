@@ -1,8 +1,8 @@
 from wxc_sdk.admin_audit import AuditEvent, AuditEventData
 from wxc_sdk.attachment_actions import AttachmentAction, AttachmentActionData
 from wxc_sdk.authorizations import Authorization, AuthorizationType
-from wxc_sdk.base import ApiModel, ApiModelWithErrors, CodeAndReason, E164Number, RETRY_429_MAX_WAIT, SafeEnum, \
-    StrOrDict, dt_iso_str, enum_str, plus1, to_camel, webex_id_to_uuid
+from wxc_sdk.base import ApiModel, ApiModelType, ApiModelWithErrors, CodeAndReason, E164Number, \
+    RETRY_429_MAX_WAIT, SafeEnum, StrOrDict, dt_iso_str, enum_str, plus1, to_camel, webex_id_to_uuid
 from wxc_sdk.cdr import CDR, CDRCallType, CDRClientType, CDRDirection, CDROriginalReason, CDRRedirectReason, \
     CDRRelatedReason, CDRUserType
 from wxc_sdk.common import AcdCustomization, AlternateNumber, AnnAudioFile, AnnouncementLevel, \
@@ -288,7 +288,7 @@ __all__ = ['AcdCustomization', 'Action', 'ActionToBePerformed', 'ActionToBePerfo
            'AffectComponent', 'Agent', 'AgentACDState', 'AgentCallQueueSetting', 'AgentCallerId', 'AgentOrSupervisor',
            'AlternateNumber', 'AlternateNumberSettings', 'AnnAudioFile', 'Announcement', 'AnnouncementLanguage',
            'AnnouncementLevel', 'AnnouncementMode', 'AnswerCondition', 'AnswerObject', 'Answers', 'ApiModel',
-           'ApiModelWithErrors', 'ApiSelector', 'AppServicesSettings', 'AppliedService',
+           'ApiModelType', 'ApiModelWithErrors', 'ApiSelector', 'AppServicesSettings', 'AppliedService',
            'AppliedServiceTranslationPattern', 'ApplyLineKeyTemplateAction', 'ApplyLineKeyTemplateJobDetails',
            'ApprovalQuestion', 'ApprovalRule', 'AssignedAssistants', 'AssignedDectNetwork', 'AssistantSettings',
            'AtaCustomization', 'AtaDtmfMethod', 'AtaDtmfMode', 'AttachmentAction', 'AttachmentActionData',

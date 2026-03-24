@@ -2,7 +2,6 @@ from dataclasses import dataclass
 
 from pydantic import TypeAdapter
 
-from wxc_sdk import RestSession
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.me import FeatureAccessCode, ServicesEnum
 from wxc_sdk.me.secondary_line.callerid import MeSecondaryLineCallerIdApi
@@ -11,13 +10,14 @@ from wxc_sdk.me.secondary_line.callpickup import MeSecondaryLineCallPickupApi
 from wxc_sdk.me.secondary_line.endpoints import MeSecondaryLineEndpointsApi
 from wxc_sdk.me.secondary_line.forwarding import MeSecondaryLineForwardingApi
 from wxc_sdk.me.secondary_line.voicemail import MeSecondaryLineVoicemailApi
+from wxc_sdk.rest import RestSession
 
 
 @dataclass(init=False, repr=False)
 class MeSecondaryLineApi(ApiChild, base='telephony/config/people/me'):
     call_park: MeSecondaryLineCallParkApi
     call_pickup: MeSecondaryLineCallPickupApi
-    caller_id: str
+    caller_id: MeSecondaryLineCallerIdApi
     endpoints: MeSecondaryLineEndpointsApi
     forwarding: MeSecondaryLineForwardingApi
     voicemail: MeSecondaryLineVoicemailApi
@@ -53,7 +53,7 @@ class MeSecondaryLineApi(ApiChild, base='telephony/config/people/me'):
         """
         url = self.ep(f'settings/secondaryLines/{lineowner_id}/featureAccessCode')
         data = super().get(url)
-        r = TypeAdapter(list[FeatureAccessCode]).validate_python(data['featureAccessCodeList'])
+        r = TypeAdapter(list[FeatureAccessCode]).validate_python(data['featureAccessCodeList'])  # type: ignore[index]
         return r
 
     def calling_services_list(self, lineowner_id: str) -> list[ServicesEnum]:
@@ -73,5 +73,5 @@ class MeSecondaryLineApi(ApiChild, base='telephony/config/people/me'):
         """
         url = self.ep(f'settings/secondaryLines/{lineowner_id}/services')
         data = super().get(url)
-        r = TypeAdapter(list[ServicesEnum]).validate_python(data['services'])
+        r = TypeAdapter(list[ServicesEnum]).validate_python(data['services'])  # type: ignore[index]
         return r

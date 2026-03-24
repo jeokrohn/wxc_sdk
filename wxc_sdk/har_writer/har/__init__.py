@@ -10,7 +10,7 @@ from collections.abc import Mapping
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from json import JSONDecodeError
-from typing import Annotated, Any, Literal, Optional, TextIO, Union
+from typing import Annotated, Any, Callable, Literal, Optional, TextIO, Union
 
 import requests_toolbelt
 from pydantic import (
@@ -54,14 +54,14 @@ class HARModel(BaseModel):
 
     model_config = ConfigDict(extra='allow')
 
-    def model_dump(
+    def model_dump(  # type: ignore[override]
         self,
         *,
         mode: Literal['json', 'python'] = 'json',
         exclude_unset: bool = False,
         exclude_none: bool = True,
         by_alias: bool = True,
-        **kwargs,
+        **kwargs: Any,
     ) -> dict[str, Any]:
         """
         different defaults than BaseModel.model_dump()
@@ -77,16 +77,16 @@ class NameValue(HARModel):
     value: str
 
     @staticmethod
-    def list_to_dict(v: Union[dict, list[dict[str, str]]]):
+    def list_to_dict(v: Union[dict[str, str], list[dict[str, str]]]) -> CaseInsensitiveDict[str]:
         """
         Convert a list of NameValue entries to a dictionary; used for deserialization
         """
         if isinstance(v, Mapping):
-            v = CaseInsensitiveDict(v.items())
+            r = CaseInsensitiveDict(v.items())
         else:
             l: list[NameValue] = TypeAdapter(list['NameValue']).validate_python(v)
-            v = CaseInsensitiveDict((e.name, e.value) for e in l)
-        return v
+            r = CaseInsensitiveDict((e.name, e.value) for e in l)
+        return r
 
     @staticmethod
     def dict_to_list(v: dict[str, str]) -> list[dict[str, str]]:
@@ -97,13 +97,13 @@ class NameValue(HARModel):
             return v
         l = [NameValue(name=k, value=v) for k, v in v.items()]
         r = TypeAdapter(list['NameValue']).dump_python(l, mode='json')
-        return r
+        return r  # type: ignore[no-any-return]
 
     @staticmethod
-    def plain_to_dict(v: dict[str, str]) -> CaseInsensitiveDict[str, str]:
+    def plain_to_dict(v: dict[str, str]) -> CaseInsensitiveDict[str]:
         if isinstance(v, Mapping):
-            v = CaseInsensitiveDict(v)
-        return v
+            v = CaseInsensitiveDict(v)  # type: ignore[assignment]
+        return v  # type: ignore[return-value]
 
 
 # a dictionary representation in a HAR file; actually a CaseInsensitiveDict
@@ -123,29 +123,29 @@ class PostData(HARModel):
     # excluded from serialization; serialization handled in model_serializer
     text: Union[bytes, str] = Field(exclude=True)
 
-    def is_multipart(self):
+    def is_multipart(self) -> bool:
         return self.mimeType.startswith('multipart/form-data')
 
     @model_serializer(mode='wrap')
-    def mod_serializer(self, handler):
+    def mod_serializer(self, handler: Callable[..., Any]) -> dict[str, str]:
         """
         Serializer handles text attribute, specifically for multipart/form-data
 
         For multipart/form-data the text attribute needs to be base64 encoded when serializing
         """
-        data = handler(self)
+        data: dict[str, str] = handler(self)
         text = self.text
         if self.is_multipart() and isinstance(text, bytes):
             # for multipart messages text should be serialized as base64
             text = base64.b64encode(text).decode()
 
         # explicitly add text to serialization as this field is excluded above
-        data['text'] = text
+        data['text'] = text  # type: ignore[assignment]
         return data
 
     @model_validator(mode='wrap')
     @classmethod
-    def mod_val(cls, data, handler):
+    def mod_val(cls, data: Any, handler: Callable[..., Any]) -> 'PostData':
         """
         model validator to make sure that when deserializing (or instantiating) a multiform PostData instance then the
         text attribute has the base64 decoded text.
@@ -162,8 +162,8 @@ class HARRequest(HARModel):
     Request data in a HAR file entry
     """
 
-    method: str
-    url: str
+    method: str | None
+    url: str | None
     httpVersion: str
     cookies: HARDict = Field(default_factory=dict)
     headers: HARDict
@@ -174,7 +174,7 @@ class HARRequest(HARModel):
     with_authorization: bool = Field(default=False, exclude=True)
 
     @model_validator(mode='after')
-    def val_model(self):
+    def val_model(self) -> 'HARRequest':
         """
 
         :meta private:
@@ -212,7 +212,7 @@ class HARRequest(HARModel):
                     self.bodySize = len(pd)
                 elif content_type.startswith('multipart/form-data'):
                     if isinstance(pd, requests_toolbelt.MultipartEncoder):
-                        pd: requests_toolbelt.MultipartEncoder
+                        pd: requests_toolbelt.MultipartEncoder  # type: ignore[no-redef]
                         body = ''
                         boundary = pd.boundary
                         for part in pd.parts:
@@ -227,8 +227,8 @@ class HARRequest(HARModel):
                         # self.bodySize = self.headers.get('Content-Length', -1)
                         self.bodySize = -1
                     elif isinstance(pd, wxc_sdk.as_mpe.MultipartEncoder):
-                        pd: requests_toolbelt.MultipartEncoder
-                        boundary = re.search(r'boundary=(.*)', pd.content_type).group(1)
+                        pd: requests_toolbelt.MultipartEncoder  # type: ignore[no-redef]
+                        boundary = re.search(r'boundary=(.*)', pd.content_type).group(1)  # type: ignore[union-attr]
                         body = ''
                         for values, headers, _ in pd._fields:
                             body += f'--{boundary}\r\n'
@@ -280,7 +280,7 @@ class HARResponse(HARModel):
     content_str: Optional[str] = Field(default=None, exclude=None)
 
     @property
-    def json_data(self) -> Optional[dict]:
+    def json_data(self) -> Optional[Any]:
         """
         JSON content if available
         """
@@ -288,7 +288,7 @@ class HARResponse(HARModel):
         if ct is None or not ct.startswith('application/json'):
             return None
         try:
-            r = json.loads(self.content_str)
+            r = json.loads(self.content_str)  # type: ignore[arg-type]
         except JSONDecodeError:
             r = None
         return r
@@ -309,11 +309,11 @@ class HARResponse(HARModel):
             if content is None:
                 self.content_str = None
             else:
-                content: HARContent
+                content: HARContent  # type: ignore[no-redef]
                 if content.encoding is None:
                     self.content_str = content.text
                 elif content.encoding == 'base64':
-                    self.content_str = base64.b64decode(content.text)
+                    self.content_str = base64.b64decode(content.text)  # type: ignore[assignment,arg-type]
                 else:
                     raise ValueError(f'Unsupported encoding: {content.encoding}')
         elif self.content is None:
@@ -322,12 +322,12 @@ class HARResponse(HARModel):
                 # content_str can be str or bytes
                 content_str = self.content_str
                 try:
-                    content_str = content_str.encode()
+                    content_str = content_str.encode()  # type: ignore[assignment]
                 except AttributeError:
                     pass
                 self.content = HARContent(
                     size=len(content_str),
-                    text=base64.b64encode(content_str).decode(),
+                    text=base64.b64encode(content_str).decode(),  # type: ignore[arg-type]
                     encoding='base64',
                     mimeType=self.headers['Content-Type'],
                 )
@@ -404,8 +404,13 @@ class HAR(HARModel):
         with open_file() as f:
             return cls.model_validate_json(f.read())
 
-    def model_dump(
-        self, *, mode: Literal['json', 'python'] = 'json', exclude_none: bool = True, by_alias: bool = True, **kwargs
+    def model_dump(  # type: ignore[override]
+        self,
+        *,
+        mode: Literal['json', 'python'] = 'json',
+        exclude_none: bool = True,
+        by_alias: bool = True,
+        **kwargs: Any,
     ) -> dict[str, Any]:
         """
         Dump the HAR to a dictionary

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Any
 
 from .base import StrOrDict
 from .rest import RestSession
@@ -32,7 +33,7 @@ class ApiChild:
         # save endpoint prefix
         cls.base = base
 
-    def ep(self, path: str = None):
+    def ep(self, path: str = None) -> str:
         """
         endpoint URL for given path
 
@@ -46,7 +47,7 @@ class ApiChild:
             path = f'/{path}'
         return self.session.ep(f'{self.base}{path}')
 
-    def get(self, *args, **kwargs) -> StrOrDict:
+    def get(self, *args: Any, **kwargs: Any) -> StrOrDict:
         """
         GET request
 
@@ -56,7 +57,7 @@ class ApiChild:
         """
         return self.session.rest_get(*args, **kwargs)
 
-    def post(self, *args, **kwargs) -> StrOrDict:
+    def post(self, *args: Any, **kwargs: Any) -> StrOrDict:
         """
         POST request
 
@@ -66,7 +67,7 @@ class ApiChild:
         """
         return self.session.rest_post(*args, **kwargs)
 
-    def put(self, *args, **kwargs) -> StrOrDict:
+    def put(self, *args: Any, **kwargs: Any) -> StrOrDict:
         """
         PUT request
 
@@ -76,7 +77,7 @@ class ApiChild:
         """
         return self.session.rest_put(*args, **kwargs)
 
-    def delete(self, *args, **kwargs) -> StrOrDict:
+    def delete(self, *args: Any, **kwargs: Any) -> StrOrDict:
         """
         DELETE request
 
@@ -85,7 +86,7 @@ class ApiChild:
         """
         return self.session.rest_delete(*args, **kwargs)
 
-    def patch(self, *args, **kwargs) -> StrOrDict:
+    def patch(self, *args: Any, **kwargs: Any) -> StrOrDict:
         """
         PATCH request
 

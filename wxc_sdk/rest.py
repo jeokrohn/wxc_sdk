@@ -12,7 +12,7 @@ from functools import wraps
 from io import StringIO, TextIOBase
 from json import JSONDecodeError
 from threading import Semaphore
-from typing import Callable, ClassVar, Optional, Union
+from typing import Any, Callable, ClassVar, Optional, Union
 from urllib.parse import parse_qsl
 
 from pydantic import BaseModel, Field, ValidationError
@@ -20,7 +20,7 @@ from requests import HTTPError, Response, Session
 from requests.adapters import HTTPAdapter
 from requests.models import PreparedRequest
 
-from .base import RETRY_429_MAX_WAIT, ApiModel, StrOrDict
+from .base import RETRY_429_MAX_WAIT, ApiModel, ApiModelType, StrOrDict
 from .tokens import Tokens
 
 __all__ = ['SingleError', 'ErrorDetail', 'RestError', 'RestSession', 'dump_response']
@@ -89,7 +89,7 @@ class RestError(HTTPError):
         except (json.JSONDecodeError, ValidationError):
             self.detail = response.text
 
-    def __str__(self):
+    def __str__(self) -> str:
         desc = self.description
         if desc:
             if self.code:
@@ -108,11 +108,10 @@ class RestError(HTTPError):
         """
         if isinstance(self.detail, str):
             return self.detail
-        self.detail: ErrorDetail
         return self.detail and self.detail.description or ''
 
     @property
-    def code(self) -> str:
+    def code(self) -> int | None:
         """
         error code
 
@@ -120,7 +119,9 @@ class RestError(HTTPError):
         return self.detail and isinstance(self.detail, ErrorDetail) and self.detail.code or 0
 
 
-def dump_response(response: Response, file: TextIOBase = None, dump_log: logging.Logger = None, diff_ns: int = None):
+def dump_response(
+    response: Response, file: TextIOBase = None, dump_log: logging.Logger = None, diff_ns: int = None
+) -> None:
     """
     Dump response object to log file
 
@@ -162,7 +163,7 @@ def dump_response(response: Response, file: TextIOBase = None, dump_log: logging
     request_body = response.request.body
     if request_body:
         print('  --- body ---', file=output)
-        ct = response.request.headers.get('Content-Type').lower()
+        ct = response.request.headers.get('Content-Type').lower()  # type: ignore[union-attr]
         if ct.startswith('application/json'):
             for line in json.dumps(json.loads(request_body), indent=2).splitlines():
                 print(f'  {line}', file=output)
@@ -196,10 +197,10 @@ def dump_response(response: Response, file: TextIOBase = None, dump_log: logging
             print(f'  {line}', file=output)
     print(' ---- end ----', file=output)
     if file is None:
-        dump_log.debug(output.getvalue())
+        dump_log.debug(output.getvalue())  # type: ignore[attr-defined]
 
 
-def retry_request(func):
+def retry_request(func: Callable[..., tuple[Response, StrOrDict]]) -> Callable[..., tuple[Response, StrOrDict]]:
     """
     Decorator for the request method in the RestSession class. Used to implement backoff on 429 responses
 
@@ -216,7 +217,6 @@ def retry_request(func):
         :return: True -> break the backoff loop
         """
         response = e.response
-        response: Response
         if response.status_code != 429 or not retry_429:
             # Don't retry on anything other than 429
             return True
@@ -230,7 +230,7 @@ def retry_request(func):
         return False
 
     @wraps(func)
-    def wrapper(session: 'RestSession', *args, **kwargs):
+    def wrapper(session: 'RestSession', *args: Any, **kwargs: Any) -> Any:
         with session._sem:
             while True:
                 try:
@@ -250,7 +250,7 @@ def retry_request(func):
 RestResponseCallBack = Callable[[Response, int], None]
 
 
-def _dump_response_callback(response: Response, diff_ns: int):
+def _dump_response_callback(response: Response, diff_ns: int) -> None:
     dump_response(response, diff_ns=diff_ns)
 
 
@@ -311,7 +311,7 @@ class RestSession(Session):
         self._response_callback_registry[id] = callback
         return id
 
-    def unregister_response_callback(self, id: str):
+    def unregister_response_callback(self, id: str) -> None:
         """
         Unregister a response callback
 
@@ -319,7 +319,7 @@ class RestSession(Session):
         """
         self._response_callback_registry.pop(id, None)
 
-    def ep(self, path: str = None):
+    def ep(self, path: str = None) -> str:
         """
         get an API endpoint
 
@@ -331,7 +331,7 @@ class RestSession(Session):
         return f'{self.BASE}{path}'
 
     @property
-    def access_token(self) -> str:
+    def access_token(self) -> str | None:
         """
         access token used for all requests
 
@@ -342,7 +342,13 @@ class RestSession(Session):
 
     @retry_request
     def _request_w_response(
-        self, method: str, url: str, headers=None, content_type: str = None, ignore_status: int = None, **kwargs
+        self,
+        method: str,
+        url: str,
+        headers: dict[str, str] = None,
+        content_type: str = None,
+        ignore_status: int = None,
+        **kwargs: Any,
     ) -> tuple[Response, StrOrDict]:
         """
         low level API REST request with support for 429 rate limiting
@@ -400,7 +406,7 @@ class RestSession(Session):
             response.close()
         return response, data
 
-    def _rest_request(self, method: str, url: str, **kwargs) -> StrOrDict:
+    def _rest_request(self, method: str, url: str, **kwargs: Any) -> StrOrDict:
         """
         low level API request only returning the body
 
@@ -418,7 +424,7 @@ class RestSession(Session):
         _, data = self._request_w_response(method, url=url, **kwargs)
         return data
 
-    def rest_get(self, *args, **kwargs) -> StrOrDict:
+    def rest_get(self, *args: Any, **kwargs: Any) -> StrOrDict:
         """
         GET request
 
@@ -428,7 +434,7 @@ class RestSession(Session):
         """
         return self._rest_request('GET', *args, **kwargs)
 
-    def rest_post(self, *args, **kwargs) -> StrOrDict:
+    def rest_post(self, *args: Any, **kwargs: Any) -> StrOrDict:
         """
         POST request
 
@@ -438,7 +444,7 @@ class RestSession(Session):
         """
         return self._rest_request('POST', *args, **kwargs)
 
-    def rest_put(self, *args, **kwargs) -> StrOrDict:
+    def rest_put(self, *args: Any, **kwargs: Any) -> StrOrDict:
         """
         PUT request
 
@@ -448,7 +454,7 @@ class RestSession(Session):
         """
         return self._rest_request('PUT', *args, **kwargs)
 
-    def rest_delete(self, *args, **kwargs) -> StrOrDict:
+    def rest_delete(self, *args: Any, **kwargs: Any) -> StrOrDict:
         """
         DELETE request
 
@@ -457,7 +463,7 @@ class RestSession(Session):
         """
         return self._rest_request('DELETE', *args, **kwargs)
 
-    def rest_patch(self, *args, **kwargs) -> StrOrDict:
+    def rest_patch(self, *args: Any, **kwargs: Any) -> StrOrDict:
         """
         PATCH request
 
@@ -467,8 +473,13 @@ class RestSession(Session):
         return self._rest_request('PATCH', *args, **kwargs)
 
     def follow_pagination(
-        self, url: str, model: type[ApiModel] = None, params: dict = None, item_key: str = None, **kwargs
-    ) -> Generator[ApiModel, None, None]:
+        self,
+        url: str,
+        model: type[ApiModelType] = None,
+        params: dict[str, str] = None,
+        item_key: str = None,
+        **kwargs: Any,
+    ) -> Generator[ApiModelType, None, None]:
         """
         Handling RFC5988 pagination of list requests. Generator of parsed objects
 
@@ -483,13 +494,13 @@ class RestSession(Session):
         :return: yields parsed objects
         """
 
-        def noop(x):
+        def noop(x: dict[str, Any]) -> dict[str, Any]:
             return x
 
         if model is None or not issubclass(model, ApiModel):
-            model = noop
+            validator = noop
         else:
-            model = model.model_validate
+            validator = model.model_validate  # type: ignore[assignment]
 
         while url:
             # not needed any more, WXCAPIBULK-27 has been fixed
@@ -512,11 +523,11 @@ class RestSession(Session):
                     item_key = 'items'
                 else:
                     # we go w/ the first return value that is a list
-                    item_key = next((k for k, v in data.items() if isinstance(v, list)))
-            items = data.get(item_key, [])
+                    item_key = next((k for k, v in data.items() if isinstance(v, list)))  # type: ignore[union-attr]
+            items = data.get(item_key, [])  # type: ignore[union-attr]
             # if the response has no items, we're done
             if not items:
                 log.debug(f'{self.__class__.__name__}.pagination: no items found')
                 break
             for item in items:
-                yield model(item)
+                yield validator(item)  # type: ignore[misc]

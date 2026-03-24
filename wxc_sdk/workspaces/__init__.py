@@ -15,7 +15,7 @@ relevant endpoints.
 
 import datetime
 from collections.abc import Generator
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import Field
 
@@ -281,7 +281,7 @@ class Workspace(ApiModel):
     #: The planned maintenance for the workspace.
     planned_maintenance: Optional[WorkspacePlannedMaintenance] = None
 
-    def update_or_create(self, for_update: bool = False) -> dict:
+    def update_or_create(self, for_update: bool = False) -> dict[str, Any]:
         """
         JSON for update or create
 
@@ -352,7 +352,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         planned_maintenance: MaintenanceMode = None,
         custom_attribute: str = None,
         org_id: str = None,
-        **params,
+        **params: Any,
     ) -> Generator[Workspace, None, None]:
         """
         List Workspaces
@@ -445,7 +445,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=ep, model=Workspace, params=params)
 
-    def create(self, settings: Workspace, org_id: str = None):
+    def create(self, settings: Workspace, org_id: str = None) -> Workspace:
         """
         Create a Workspace
 
@@ -482,10 +482,10 @@ class WorkspacesApi(ApiChild, base='workspaces'):
             settings.org_id = org_id
         data = settings.update_or_create()
         url = self.ep()
-        data = self.post(url, json=data)
-        return Workspace.model_validate(data)
+        result = self.post(url, json=data)
+        return Workspace.model_validate(result)
 
-    def details(self, workspace_id, include_devices: bool = None) -> Workspace:
+    def details(self, workspace_id: str, include_devices: bool = None) -> Workspace:
         """
         Get Workspace Details
 
@@ -506,7 +506,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         url = self.ep(workspace_id)
         return Workspace.model_validate(self.get(url, params=params))
 
-    def update(self, workspace_id, settings: Workspace) -> Workspace:
+    def update(self, workspace_id: str, settings: Workspace) -> Workspace:
         """
         Update a Workspace
 
@@ -555,7 +555,7 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         data = self.put(url, json=j_data)
         return Workspace.model_validate(data)
 
-    def delete_workspace(self, workspace_id):
+    def delete_workspace(self, workspace_id: str) -> None:
         """
         Delete a Workspace
 
@@ -583,4 +583,4 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         """
         url = self.ep(f'{workspace_id}/capabilities')
         data = super().get(url=url)
-        return CapabilityMap.model_validate(data['capabilities'])
+        return CapabilityMap.model_validate(data['capabilities'])  # type: ignore[index]

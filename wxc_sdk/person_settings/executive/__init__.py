@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import Field, TypeAdapter
 
@@ -101,7 +101,7 @@ class ExecAlert(ApiModel):
     #: Custom caller ID phone number to display.
     custom_clidphone_number: Optional[str] = Field(alias='customCLIDPhoneNumber', default=None)
 
-    def update(self) -> dict:
+    def update(self) -> dict[str, Any]:
         """
         data for update()
 
@@ -134,7 +134,7 @@ class AssistantSettings(ApiModel):
     #: List of assigned executives.
     executives: Optional[list[ExecOrAssistant]] = None
 
-    def update(self) -> dict:
+    def update(self) -> dict[str, Any]:
         """
         data for update()
 
@@ -185,7 +185,7 @@ class ExecCallFiltering(ApiModel):
     #: List of call filtering criteria configured for executive call filtering.
     criteria: Optional[list[ExecCallFilteringCriteriaItem]] = None
 
-    def update(self) -> dict:
+    def update(self) -> dict[str, Any]:
         """
         data for update()
 
@@ -246,7 +246,7 @@ class ExecCallFilteringCriteria(ApiModel):
     #: List of phone numbers to route calls to when this criteria matches.
     calls_to_numbers: Optional[list[ExecCallFilteringToNumber]] = None
 
-    def create(self) -> dict:
+    def create(self) -> dict[str, Any]:
         """
         data for create()
 
@@ -254,7 +254,7 @@ class ExecCallFilteringCriteria(ApiModel):
         """
         return self.model_dump(mode='json', by_alias=True, exclude_unset=True, exclude={'id': True})
 
-    def update(self) -> dict:
+    def update(self) -> dict[str, Any]:
         """
         data for update()
 
@@ -314,7 +314,7 @@ class ExecutiveSettingsApi(ApiChild, base=''):
         r = ExecAlert.model_validate(data)
         return r
 
-    def update_alert_settings(self, person_id: str, settings: ExecAlert, org_id: str = None):
+    def update_alert_settings(self, person_id: str, settings: ExecAlert, org_id: str = None) -> None:
         """
         Modify Person Executive Alert Settings
 
@@ -365,10 +365,10 @@ class ExecutiveSettingsApi(ApiChild, base=''):
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/executive/assignedAssistants')
         data = super().get(url, params=params)
-        r = TypeAdapter(list[ExecOrAssistant]).validate_python(data['assistants'])
+        r = TypeAdapter(list[ExecOrAssistant]).validate_python(data['assistants'])  # type: ignore[index]
         return r
 
-    def update_assigned_assistants(self, person_id: str, assistant_ids: list[str] = None, org_id: str = None):
+    def update_assigned_assistants(self, person_id: str, assistant_ids: list[str] = None, org_id: str = None) -> None:
         """
         Modify Person Executive Assigned Assistants
 
@@ -424,7 +424,9 @@ class ExecutiveSettingsApi(ApiChild, base=''):
         r = AssistantSettings.model_validate(data)
         return r
 
-    def update_executive_assistant_settings(self, person_id: str, settings: AssistantSettings, org_id: str = None):
+    def update_executive_assistant_settings(
+        self, person_id: str, settings: AssistantSettings, org_id: str = None
+    ) -> None:
         """
         Modify Person Executive Assistant Settings
 
@@ -452,7 +454,7 @@ class ExecutiveSettingsApi(ApiChild, base=''):
         super().put(url, params=params, json=body)
 
     def executive_available_assistants(
-        self, person_id: str, name: str = None, phone_number: str = None, org_id: str = None, **params
+        self, person_id: str, name: str = None, phone_number: str = None, org_id: str = None, **params: Any
     ) -> list[ExecOrAssistant]:
         """
         Get Person Executive Available Assistants
@@ -483,7 +485,7 @@ class ExecutiveSettingsApi(ApiChild, base=''):
             params['phoneNumber'] = phone_number
         url = self.ep(f'telephony/config/people/{person_id}/executive/availableAssistants')
         data = super().get(url, params=params)
-        r = TypeAdapter(list[ExecOrAssistant]).validate_python(data['assistants'])
+        r = TypeAdapter(list[ExecOrAssistant]).validate_python(data['assistants'])  # type: ignore[index]
         return r
 
     def executive_call_filtering_settings(self, person_id: str, org_id: str = None) -> ExecCallFiltering:
@@ -513,7 +515,9 @@ class ExecutiveSettingsApi(ApiChild, base=''):
         r = ExecCallFiltering.model_validate(data)
         return r
 
-    def update_executive_call_filtering_settings(self, person_id: str, settings: ExecCallFiltering, org_id: str = None):
+    def update_executive_call_filtering_settings(
+        self, person_id: str, settings: ExecCallFiltering, org_id: str = None
+    ) -> None:
         """
         Modify Person Executive Call Filtering Settings
 
@@ -570,10 +574,10 @@ class ExecutiveSettingsApi(ApiChild, base=''):
         body = settings.create()
         url = self.ep(f'telephony/config/people/{person_id}/executive/callFiltering/criteria')
         data = super().post(url, params=params, json=body)
-        r = data['id']
+        r = data['id']  # type: ignore[index]
         return r
 
-    def delete_call_filtering_criteria(self, person_id: str, id: str, org_id: str = None):
+    def delete_call_filtering_criteria(self, person_id: str, id: str, org_id: str = None) -> None:
         """
         Delete Person Executive Call Filtering Criteria
 
@@ -631,7 +635,7 @@ class ExecutiveSettingsApi(ApiChild, base=''):
 
     def update_call_filtering_criteria(
         self, person_id: str, id: str, settings: ExecCallFilteringCriteria, org_id: str = None
-    ):
+    ) -> None:
         """
         Modify Person Executive Call Filtering Criteria Settings
 
@@ -689,7 +693,7 @@ class ExecutiveSettingsApi(ApiChild, base=''):
         r = ExecScreening.model_validate(data)
         return r
 
-    def update_screening_settings(self, person_id: str, settings: ExecScreening, org_id: str = None):
+    def update_screening_settings(self, person_id: str, settings: ExecScreening, org_id: str = None) -> None:
         """
         Modify Person Executive Screening Settings
 

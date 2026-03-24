@@ -106,7 +106,7 @@ class AsApiChild:
         # save endpoint prefix
         cls.base = base
 
-    def ep(self, path: str = None):
+    def ep(self, path: str = None) -> str:
         """
         endpoint URL for given path
 
@@ -120,7 +120,7 @@ class AsApiChild:
             path = f'/{path}'
         return self.session.ep(f'{self.base}{path}')
 
-    async def get(self, *args, **kwargs) -> StrOrDict:
+    async def get(self, *args: Any, **kwargs: Any) -> StrOrDict:
         """
         GET request
 
@@ -130,7 +130,7 @@ class AsApiChild:
         """
         return await self.session.rest_get(*args, **kwargs)
 
-    async def post(self, *args, **kwargs) -> StrOrDict:
+    async def post(self, *args: Any, **kwargs: Any) -> StrOrDict:
         """
         POST request
 
@@ -140,7 +140,7 @@ class AsApiChild:
         """
         return await self.session.rest_post(*args, **kwargs)
 
-    async def put(self, *args, **kwargs) -> StrOrDict:
+    async def put(self, *args: Any, **kwargs: Any) -> StrOrDict:
         """
         PUT request
 
@@ -150,7 +150,7 @@ class AsApiChild:
         """
         return await self.session.rest_put(*args, **kwargs)
 
-    async def delete(self, *args, **kwargs) -> StrOrDict:
+    async def delete(self, *args: Any, **kwargs: Any) -> StrOrDict:
         """
         DELETE request
 
@@ -159,7 +159,7 @@ class AsApiChild:
         """
         return await self.session.rest_delete(*args, **kwargs)
 
-    async def patch(self, *args, **kwargs) -> StrOrDict:
+    async def patch(self, *args: Any, **kwargs: Any) -> StrOrDict:
         """
         PATCH request
 
@@ -14146,7 +14146,7 @@ class AsExecutiveSettingsApi(AsApiChild, base=''):
         r = ExecAlert.model_validate(data)
         return r
 
-    async def update_alert_settings(self, person_id: str, settings: ExecAlert, org_id: str = None):
+    async def update_alert_settings(self, person_id: str, settings: ExecAlert, org_id: str = None) -> None:
         """
         Modify Person Executive Alert Settings
 
@@ -14197,10 +14197,10 @@ class AsExecutiveSettingsApi(AsApiChild, base=''):
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/executive/assignedAssistants')
         data = await super().get(url, params=params)
-        r = TypeAdapter(list[ExecOrAssistant]).validate_python(data['assistants'])
+        r = TypeAdapter(list[ExecOrAssistant]).validate_python(data['assistants'])  # type: ignore[index]
         return r
 
-    async def update_assigned_assistants(self, person_id: str, assistant_ids: list[str] = None, org_id: str = None):
+    async def update_assigned_assistants(self, person_id: str, assistant_ids: list[str] = None, org_id: str = None) -> None:
         """
         Modify Person Executive Assigned Assistants
 
@@ -14256,7 +14256,9 @@ class AsExecutiveSettingsApi(AsApiChild, base=''):
         r = AssistantSettings.model_validate(data)
         return r
 
-    async def update_executive_assistant_settings(self, person_id: str, settings: AssistantSettings, org_id: str = None):
+    async def update_executive_assistant_settings(
+        self, person_id: str, settings: AssistantSettings, org_id: str = None
+    ) -> None:
         """
         Modify Person Executive Assistant Settings
 
@@ -14284,7 +14286,7 @@ class AsExecutiveSettingsApi(AsApiChild, base=''):
         await super().put(url, params=params, json=body)
 
     async def executive_available_assistants(
-        self, person_id: str, name: str = None, phone_number: str = None, org_id: str = None, **params
+        self, person_id: str, name: str = None, phone_number: str = None, org_id: str = None, **params: Any
     ) -> list[ExecOrAssistant]:
         """
         Get Person Executive Available Assistants
@@ -14315,7 +14317,7 @@ class AsExecutiveSettingsApi(AsApiChild, base=''):
             params['phoneNumber'] = phone_number
         url = self.ep(f'telephony/config/people/{person_id}/executive/availableAssistants')
         data = await super().get(url, params=params)
-        r = TypeAdapter(list[ExecOrAssistant]).validate_python(data['assistants'])
+        r = TypeAdapter(list[ExecOrAssistant]).validate_python(data['assistants'])  # type: ignore[index]
         return r
 
     async def executive_call_filtering_settings(self, person_id: str, org_id: str = None) -> ExecCallFiltering:
@@ -14345,7 +14347,9 @@ class AsExecutiveSettingsApi(AsApiChild, base=''):
         r = ExecCallFiltering.model_validate(data)
         return r
 
-    async def update_executive_call_filtering_settings(self, person_id: str, settings: ExecCallFiltering, org_id: str = None):
+    async def update_executive_call_filtering_settings(
+        self, person_id: str, settings: ExecCallFiltering, org_id: str = None
+    ) -> None:
         """
         Modify Person Executive Call Filtering Settings
 
@@ -14402,10 +14406,10 @@ class AsExecutiveSettingsApi(AsApiChild, base=''):
         body = settings.create()
         url = self.ep(f'telephony/config/people/{person_id}/executive/callFiltering/criteria')
         data = await super().post(url, params=params, json=body)
-        r = data['id']
+        r = data['id']  # type: ignore[index]
         return r
 
-    async def delete_call_filtering_criteria(self, person_id: str, id: str, org_id: str = None):
+    async def delete_call_filtering_criteria(self, person_id: str, id: str, org_id: str = None) -> None:
         """
         Delete Person Executive Call Filtering Criteria
 
@@ -14463,7 +14467,7 @@ class AsExecutiveSettingsApi(AsApiChild, base=''):
 
     async def update_call_filtering_criteria(
         self, person_id: str, id: str, settings: ExecCallFilteringCriteria, org_id: str = None
-    ):
+    ) -> None:
         """
         Modify Person Executive Call Filtering Criteria Settings
 
@@ -14521,7 +14525,7 @@ class AsExecutiveSettingsApi(AsApiChild, base=''):
         r = ExecScreening.model_validate(data)
         return r
 
-    async def update_screening_settings(self, person_id: str, settings: ExecScreening, org_id: str = None):
+    async def update_screening_settings(self, person_id: str, settings: ExecScreening, org_id: str = None) -> None:
         """
         Modify Person Executive Screening Settings
 
@@ -21597,7 +21601,7 @@ class AsAnnouncementApi:
     def __init__(self, *, session: AsRestSession):
         self._session = session
 
-    def _endpoint(self, location_id: str, queue_id: str, path: str = None):
+    def _endpoint(self, location_id: str, queue_id: str, path: str = None) -> str:
         """
 
         :meta private:
@@ -21664,7 +21668,7 @@ class AsAnnouncementApi:
         # noinspection PyTypeChecker
         return [o async for o in self._session.follow_pagination(url=url, model=Announcement, params=params)]
 
-    async def delete_announcement(self, location_id: str, queue_id: str, file_name: str, org_id: str = None):
+    async def delete_announcement(self, location_id: str, queue_id: str, file_name: str, org_id: str = None) -> None:
         """
         Delete a Call Queue Announcement File
 
@@ -38558,7 +38562,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         planned_maintenance: MaintenanceMode = None,
         custom_attribute: str = None,
         org_id: str = None,
-        **params,
+        **params: Any,
     ) -> AsyncGenerator[Workspace, None, None]:
         """
         List Workspaces
@@ -38670,7 +38674,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         planned_maintenance: MaintenanceMode = None,
         custom_attribute: str = None,
         org_id: str = None,
-        **params,
+        **params: Any,
     ) -> List[Workspace]:
         """
         List Workspaces
@@ -38763,7 +38767,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=ep, model=Workspace, params=params)]
 
-    async def create(self, settings: Workspace, org_id: str = None):
+    async def create(self, settings: Workspace, org_id: str = None) -> Workspace:
         """
         Create a Workspace
 
@@ -38800,10 +38804,10 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
             settings.org_id = org_id
         data = settings.update_or_create()
         url = self.ep()
-        data = await self.post(url, json=data)
-        return Workspace.model_validate(data)
+        result = await self.post(url, json=data)
+        return Workspace.model_validate(result)
 
-    async def details(self, workspace_id, include_devices: bool = None) -> Workspace:
+    async def details(self, workspace_id: str, include_devices: bool = None) -> Workspace:
         """
         Get Workspace Details
 
@@ -38824,7 +38828,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         url = self.ep(workspace_id)
         return Workspace.model_validate(await self.get(url, params=params))
 
-    async def update(self, workspace_id, settings: Workspace) -> Workspace:
+    async def update(self, workspace_id: str, settings: Workspace) -> Workspace:
         """
         Update a Workspace
 
@@ -38873,7 +38877,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         data = await self.put(url, json=j_data)
         return Workspace.model_validate(data)
 
-    async def delete_workspace(self, workspace_id):
+    async def delete_workspace(self, workspace_id: str) -> None:
         """
         Delete a Workspace
 
@@ -38901,7 +38905,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         """
         url = self.ep(f'{workspace_id}/capabilities')
         data = await super().get(url=url)
-        return CapabilityMap.model_validate(data['capabilities'])
+        return CapabilityMap.model_validate(data['capabilities'])  # type: ignore[index]
 
 
 class AsXApi(AsApiChild, base='xapi'):

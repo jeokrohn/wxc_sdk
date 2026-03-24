@@ -4,7 +4,7 @@ import re
 from collections.abc import Callable
 from dataclasses import dataclass
 from io import TextIOBase
-from typing import Optional, Union
+from typing import Any, Optional, Self, Union
 
 from aiohttp import ClientResponse
 from requests import Response
@@ -30,17 +30,13 @@ class HarWriter:
     #: flag to indicate if the writer should include authorization headers
     with_authorization: bool
     #: HAR log
-    har: HAR
-    #: stream to write HAR data to
-    _iostream: TextIOBase
+    har: HAR | None
     #: flag to indicate if the stream must be closed when done
     _must_close: bool
-    #: callables to unregister callbacks
-    _unregister_callbacks: list[Callable]
     #: path parameter
     _path: Union[None, str, TextIOBase]
     #: dictionary of unregister callbacks indexed by registration id
-    _unregister_callbacks: dict[tuple[str, Callable]]
+    _unregister_callbacks: dict[str, Callable[[str], None]]
     #: iostream to write to, only used for incremental writer
     _iostream: Optional[TextIOBase]
     #: incremental writer
@@ -89,8 +85,8 @@ class HarWriter:
             json_str = har_instance.model_dump_json(exclude_none=True)
             m = re.match(r'^(.+"entries":\s*\[)(].+)$', json_str, flags=re.DOTALL)
             if self._iostream is not None:
-                self._iostream.write(m.group(1))
-            self._incremental_trailer = m.group(2)
+                self._iostream.write(m.group(1))  # type: ignore[union-attr]
+            self._incremental_trailer = m.group(2)  # type: ignore[union-attr]
             self._incremental_first_entry = True
         else:
             # don't open any file, just keep HAR object so that we can keep track of entries
@@ -98,7 +94,7 @@ class HarWriter:
             self._iostream = None
         return
 
-    def unregister_api(self, reg_id: str):
+    def unregister_api(self, reg_id: str) -> None:
         """
         unregister an API using an id returned by register_webex_api(), or register_as_webex_api()
 
@@ -130,13 +126,13 @@ class HarWriter:
         self._unregister_callbacks[reg_id] = api.session.unregister_response_callback
         return reg_id
 
-    def _set_or_open_iostream(self) -> TextIOBase:
+    def _set_or_open_iostream(self) -> None:
         if isinstance(self._path, str):
             self._iostream = open(self._path, 'w')
         else:
             self._iostream = self._path
 
-    def new_entry(self, entry: HAREntry):
+    def new_entry(self, entry: HAREntry) -> None:
         """
         Log new entry either by adding to entries of HAR object or by writing to IOStream directly
         """
@@ -146,25 +142,25 @@ class HarWriter:
             if not self._incremental_first_entry:
                 json_str = f',{json_str}'
             self._incremental_first_entry = False
-            self._iostream.write(json_str)
+            self._iostream.write(json_str)  # type: ignore[union-attr]
         else:
             # append entry
-            self.har.log.entries.append(entry)
+            self.har.log.entries.append(entry)  # type: ignore[union-attr]
 
-    def __enter__(self):
+    def __enter__(self) -> Self:
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, *args: Any, **kwargs: Any) -> None:
         self.close()
 
-    def close(self):
+    def close(self) -> None:
         # unregister callbacks
         for reg_id, unregister in self._unregister_callbacks.items():
             unregister(reg_id)
         self._unregister_callbacks = dict()
         self._write_har()
 
-    def _on_webex_response(self, response: Response, diff_ns: int):
+    def _on_webex_response(self, response: Response, diff_ns: int) -> None:
         """
         Callback for WebexSimpleApi responses
         """
@@ -244,7 +240,7 @@ class HarWriter:
         else:
             self.new_entry(new_entry)
 
-    def _write_har(self):
+    def _write_har(self) -> None:
         """
         Write full HAR file or trailer for incremental HAR writer
         """

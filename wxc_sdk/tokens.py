@@ -3,7 +3,7 @@ Simple implementation of Webex tokens
 """
 
 import datetime
-from typing import Literal, Optional
+from typing import Any, Literal, Optional
 
 import pytz
 from pydantic import BaseModel
@@ -25,7 +25,7 @@ class Tokens(BaseModel):
     token_type: Optional[Literal['Bearer']] = None
     scope: Optional[str] = None
 
-    def json(self, *args, **kwargs):
+    def json(self, *args: Any, **kwargs: Any) -> str:
         """
 
         :meta private:
@@ -35,7 +35,7 @@ class Tokens(BaseModel):
         kwargs['exclude'] = exclude
         return super().model_dump_json(*args, **kwargs)
 
-    def update(self, new_tokes: 'Tokens'):
+    def update(self, new_tokes: 'Tokens') -> None:
         """
         Update with values from new tokens
 
@@ -50,7 +50,7 @@ class Tokens(BaseModel):
         self.refresh_token_expires_at = new_tokes.refresh_token_expires_at
         self.scope = new_tokes.scope
 
-    def set_expiration(self):
+    def set_expiration(self) -> None:
         """
         Set expiration based on current time and expires in values
         """
@@ -70,7 +70,7 @@ class Tokens(BaseModel):
         if not self.access_token:
             return 0
         now = datetime.datetime.now(pytz.UTC)
-        diff = self.expires_at - now
-        diff: datetime.timedelta
-        diff = int(diff.total_seconds())
+        if self.expires_at is None:
+            return 0
+        diff = int((self.expires_at - now).total_seconds())
         return diff
