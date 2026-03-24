@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from datetime import datetime, date, timedelta
 from enum import Enum
 from io import BufferedReader
-from typing import Any, Union, Optional, Literal, List
+from typing import Any, Union, Optional, Literal
 
 import pytz
 from dateutil import tz
@@ -191,7 +191,7 @@ class AsAdminAuditEventsApi(AsApiChild, base='adminAudit'):
         actor_id: str = None,
         event_categories: list[str] = None,
         **params,
-    ) -> AsyncGenerator[AuditEvent, None, None]:
+    ) -> AsyncGenerator[AuditEvent, None]:
         """
         List Admin Audit Events
 
@@ -238,7 +238,7 @@ class AsAdminAuditEventsApi(AsApiChild, base='adminAudit'):
         actor_id: str = None,
         event_categories: list[str] = None,
         **params,
-    ) -> List[AuditEvent]:
+    ) -> builtins.list[AuditEvent]:
         """
         List Admin Audit Events
 
@@ -464,7 +464,7 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         topic: str = None,
         timezone: str = None,
         **params,
-    ) -> AsyncGenerator[ConvergedRecording, None, None]:
+    ) -> AsyncGenerator[ConvergedRecording, None]:
         """
         List Recordings for Admin or Compliance officer
 
@@ -562,7 +562,7 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         topic: str = None,
         timezone: str = None,
         **params,
-    ) -> List[ConvergedRecording]:
+    ) -> builtins.list[ConvergedRecording]:
         """
         List Recordings for Admin or Compliance officer
 
@@ -660,7 +660,7 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         topic: str = None,
         timezone: str = None,
         **params,
-    ) -> AsyncGenerator[ConvergedRecording, None, None]:
+    ) -> AsyncGenerator[ConvergedRecording, None]:
         """
         List Recordings
 
@@ -756,7 +756,7 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         topic: str = None,
         timezone: str = None,
         **params,
-    ) -> List[ConvergedRecording]:
+    ) -> builtins.list[ConvergedRecording]:
         """
         List Recordings
 
@@ -1191,7 +1191,7 @@ class AsDetailedCDRApi(AsApiChild, base=''):
         host: str = 'analytics-calling.webexapis.com',
         stream: bool = False,
         **params,
-    ) -> AsyncGenerator[CDR, None, None]:
+    ) -> AsyncGenerator[CDR, None]:
         """
         Provides Webex Calling Detailed Call History data for your organization.
 
@@ -1249,7 +1249,7 @@ class AsDetailedCDRApi(AsApiChild, base=''):
         host: str = 'analytics-calling.webexapis.com',
         stream: bool = False,
         **params,
-    ) -> List[CDR]:
+    ) -> builtins.list[CDR]:
         """
         Provides Webex Calling Detailed Call History data for your organization.
 
@@ -1404,7 +1404,7 @@ class AsDeviceSettingsJobsApi(AsApiChild, base='telephony/config/jobs/devices/ca
         data = await self.post(url=url, params=params, json=body)
         return StartJobResponse.model_validate(data)
 
-    def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[StartJobResponse, None, None]:
+    def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[StartJobResponse, None]:
         """
         List change device settings jobs.
 
@@ -1425,7 +1425,7 @@ class AsDeviceSettingsJobsApi(AsApiChild, base='telephony/config/jobs/devices/ca
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=StartJobResponse, params=params)
 
-    async def list(self, org_id: str = None, **params) -> List[StartJobResponse]:
+    async def list(self, org_id: str = None, **params) -> builtins.list[StartJobResponse]:
         """
         List change device settings jobs.
 
@@ -1467,7 +1467,7 @@ class AsDeviceSettingsJobsApi(AsApiChild, base='telephony/config/jobs/devices/ca
         data = await self.get(url=url, params=params)
         return StartJobResponse.model_validate(data)
 
-    def errors_gen(self, job_id: str, org_id: str = None) -> AsyncGenerator[JobErrorItem, None, None]:
+    def errors_gen(self, job_id: str, org_id: str = None) -> AsyncGenerator[JobErrorItem, None]:
         """
         List change device settings job errors.
 
@@ -1485,7 +1485,7 @@ class AsDeviceSettingsJobsApi(AsApiChild, base='telephony/config/jobs/devices/ca
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
 
-    async def errors(self, job_id: str, org_id: str = None) -> List[JobErrorItem]:
+    async def errors(self, job_id: str, org_id: str = None) -> builtins.list[JobErrorItem]:
         """
         List change device settings job errors.
 
@@ -1556,7 +1556,7 @@ class AsDevicesApi(AsApiChild, base='devices'):
         planned_maintenance: MaintenanceMode = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[Device, None, None]:
+    ) -> AsyncGenerator[Device, None]:
         """
         List Devices
 
@@ -1669,7 +1669,7 @@ class AsDevicesApi(AsApiChild, base='devices'):
         planned_maintenance: MaintenanceMode = None,
         org_id: str = None,
         **params,
-    ) -> List[Device]:
+    ) -> builtins.list[Device]:
         """
         List Devices
 
@@ -1927,7 +1927,7 @@ class AsEventsApi(AsApiChild, base='events'):
         from_: Union[str, datetime] = None,
         to_: Union[str, datetime] = None,
         **params,
-    ) -> AsyncGenerator[ComplianceEvent, None, None]:
+    ) -> AsyncGenerator[ComplianceEvent, None]:
         """
         List events in your organization. Several query parameters are available to filter the response.
 
@@ -1973,7 +1973,7 @@ class AsEventsApi(AsApiChild, base='events'):
         from_: Union[str, datetime] = None,
         to_: Union[str, datetime] = None,
         **params,
-    ) -> List[ComplianceEvent]:
+    ) -> builtins.list[ComplianceEvent]:
         """
         List events in your organization. Several query parameters are available to filter the response.
 
@@ -2042,7 +2042,7 @@ class AsGroupsApi(AsApiChild, base='groups'):
         list_filter: str = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[Group, None, None]:
+    ) -> AsyncGenerator[Group, None]:
         """
         List groups in your organization.
 
@@ -2083,7 +2083,7 @@ class AsGroupsApi(AsApiChild, base='groups'):
         list_filter: str = None,
         org_id: str = None,
         **params,
-    ) -> List[Group]:
+    ) -> builtins.list[Group]:
         """
         List groups in your organization.
 
@@ -2154,7 +2154,7 @@ class AsGroupsApi(AsApiChild, base='groups'):
         data = await self.get(url, params=params)
         return Group.model_validate(data)
 
-    def members_gen(self, group_id: str, **params) -> AsyncGenerator[GroupMember, None, None]:
+    def members_gen(self, group_id: str, **params) -> AsyncGenerator[GroupMember, None]:
         """
         Query members of a group
 
@@ -2166,7 +2166,7 @@ class AsGroupsApi(AsApiChild, base='groups'):
         url = self.ep(f'{group_id}/Members')
         return self.session.follow_pagination(url=url, model=GroupMember, params=params, item_key='members')
 
-    async def members(self, group_id: str, **params) -> List[GroupMember]:
+    async def members(self, group_id: str, **params) -> builtins.list[GroupMember]:
         """
         Query members of a group
 
@@ -2412,7 +2412,7 @@ class AsApplyLineKeyTemplatesJobsApi(AsApiChild, base='telephony/config/jobs/dev
         r = ApplyLineKeyTemplateJobDetails.model_validate(data)
         return r
 
-    def errors_gen(self, job_id: str, org_id: str = None) -> AsyncGenerator[JobErrorItem, None, None]:
+    def errors_gen(self, job_id: str, org_id: str = None) -> AsyncGenerator[JobErrorItem, None]:
         """
         Get job errors for an Apply Line Key Template job
 
@@ -2439,7 +2439,7 @@ class AsApplyLineKeyTemplatesJobsApi(AsApiChild, base='telephony/config/jobs/dev
         url = self.ep(f'{job_id}/errors')
         return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
 
-    async def errors(self, job_id: str, org_id: str = None) -> List[JobErrorItem]:
+    async def errors(self, job_id: str, org_id: str = None) -> builtins.list[JobErrorItem]:
         """
         Get job errors for an Apply Line Key Template job
 
@@ -2468,7 +2468,7 @@ class AsApplyLineKeyTemplatesJobsApi(AsApiChild, base='telephony/config/jobs/dev
 
 
 class AsCallRecordingJobsApi(AsApiChild, base='telephony/config/jobs/callRecording'):
-    def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[CallRecordingJobStatus, None, None]:
+    def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[CallRecordingJobStatus, None]:
         """
         List Call Recording Jobs
 
@@ -2489,7 +2489,7 @@ class AsCallRecordingJobsApi(AsApiChild, base='telephony/config/jobs/callRecordi
         url = self.ep('jobs/callRecording')
         return self.session.follow_pagination(url=url, model=CallRecordingJobStatus, item_key='items', params=params)
 
-    async def list(self, org_id: str = None, **params) -> List[CallRecordingJobStatus]:
+    async def list(self, org_id: str = None, **params) -> builtins.list[CallRecordingJobStatus]:
         """
         List Call Recording Jobs
 
@@ -2536,7 +2536,7 @@ class AsCallRecordingJobsApi(AsApiChild, base='telephony/config/jobs/callRecordi
         r = CallRecordingJobStatus.model_validate(data)
         return r
 
-    def errors_gen(self, job_id: str, org_id: str = None, **params) -> AsyncGenerator[JobErrorItem, None, None]:
+    def errors_gen(self, job_id: str, org_id: str = None, **params) -> AsyncGenerator[JobErrorItem, None]:
         """
         Get Job Errors for a Call Recording Job
 
@@ -2559,7 +2559,7 @@ class AsCallRecordingJobsApi(AsApiChild, base='telephony/config/jobs/callRecordi
         url = self.ep(f'{job_id}/errors')
         return self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)
 
-    async def errors(self, job_id: str, org_id: str = None, **params) -> List[JobErrorItem]:
+    async def errors(self, job_id: str, org_id: str = None, **params) -> builtins.list[JobErrorItem]:
         """
         Get Job Errors for a Call Recording Job
 
@@ -2584,7 +2584,7 @@ class AsCallRecordingJobsApi(AsApiChild, base='telephony/config/jobs/callRecordi
 
 
 class AsDisableCallingLocationJobsApi(AsApiChild, base='telephony/config'):
-    def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[DisableCallingLocationJobStatus, None, None]:
+    def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[DisableCallingLocationJobStatus, None]:
         """
         Get a List of Disable Calling Location Jobs
 
@@ -2604,7 +2604,7 @@ class AsDisableCallingLocationJobsApi(AsApiChild, base='telephony/config'):
             url=url, model=DisableCallingLocationJobStatus, item_key='items', params=params
         )
 
-    async def list(self, org_id: str = None, **params) -> List[DisableCallingLocationJobStatus]:
+    async def list(self, org_id: str = None, **params) -> builtins.list[DisableCallingLocationJobStatus]:
         """
         Get a List of Disable Calling Location Jobs
 
@@ -2725,7 +2725,7 @@ class AsDisableCallingLocationJobsApi(AsApiChild, base='telephony/config'):
         url = self.ep(f'jobs/locations/deleteCallingLocation/{job_id}/actions/resume/invoke')
         await super().post(url, params=params)
 
-    def errors_gen(self, job_id: str, org_id: str = None, **params) -> AsyncGenerator[JobErrorItem, None, None]:
+    def errors_gen(self, job_id: str, org_id: str = None, **params) -> AsyncGenerator[JobErrorItem, None]:
         """
         Retrieve Errors for a Disable Calling Location Job
 
@@ -2763,7 +2763,7 @@ class AsDisableCallingLocationJobsApi(AsApiChild, base='telephony/config'):
         url = self.ep(f'jobs/locations/deleteCallingLocation/{job_id}/errors')
         return self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)
 
-    async def errors(self, job_id: str, org_id: str = None, **params) -> List[JobErrorItem]:
+    async def errors(self, job_id: str, org_id: str = None, **params) -> builtins.list[JobErrorItem]:
         """
         Retrieve Errors for a Disable Calling Location Job
 
@@ -2807,7 +2807,7 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
     API for jobs to manage numbers
     """
 
-    def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[NumberJob, None, None]:
+    def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[NumberJob, None]:
         """
         List Manage Numbers Jobs
 
@@ -2830,7 +2830,7 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         url = self.ep('manageNumbers')
         return self.session.follow_pagination(url=url, model=NumberJob, params=params)
 
-    async def list(self, org_id: str = None, **params) -> List[NumberJob]:
+    async def list(self, org_id: str = None, **params) -> builtins.list[NumberJob]:
         """
         List Manage Numbers Jobs
 
@@ -2988,7 +2988,7 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         await super().post(url=url, params=params)
         return
 
-    def errors_gen(self, job_id: str = None, org_id: str = None, **params) -> AsyncGenerator[JobErrorItem, None, None]:
+    def errors_gen(self, job_id: str = None, org_id: str = None, **params) -> AsyncGenerator[JobErrorItem, None]:
         """
         List Manage Numbers Job errors
 
@@ -3023,7 +3023,7 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         url = self.ep(f'manageNumbers/{job_id}/errors')
         return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
 
-    async def errors(self, job_id: str = None, org_id: str = None, **params) -> List[JobErrorItem]:
+    async def errors(self, job_id: str = None, org_id: str = None, **params) -> builtins.list[JobErrorItem]:
         """
         List Manage Numbers Job errors
 
@@ -3408,7 +3408,7 @@ class AsMoveUsersJobsApi(AsApiChild, base='telephony/config/jobs/person/moveLoca
         r = StartMoveUsersJobResponse.model_validate(data['response'])
         return r
 
-    def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[MoveUserJobDetails, None, None]:
+    def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[MoveUserJobDetails, None]:
         """
         List Move Users Jobs
 
@@ -3427,7 +3427,7 @@ class AsMoveUsersJobsApi(AsApiChild, base='telephony/config/jobs/person/moveLoca
         url = self.ep('')
         return self.session.follow_pagination(url=url, model=MoveUserJobDetails, item_key='items', params=params)
 
-    async def list(self, org_id: str = None, **params) -> List[MoveUserJobDetails]:
+    async def list(self, org_id: str = None, **params) -> builtins.list[MoveUserJobDetails]:
         """
         List Move Users Jobs
 
@@ -3527,7 +3527,7 @@ class AsMoveUsersJobsApi(AsApiChild, base='telephony/config/jobs/person/moveLoca
         url = self.ep(f'{job_id}/actions/resume/invoke')
         await super().post(url, params=params)
 
-    def errors_gen(self, job_id: str, org_id: str = None, **params) -> AsyncGenerator[JobErrorItem, None, None]:
+    def errors_gen(self, job_id: str, org_id: str = None, **params) -> AsyncGenerator[JobErrorItem, None]:
         """
         List Move Users Job errors
 
@@ -3551,7 +3551,7 @@ class AsMoveUsersJobsApi(AsApiChild, base='telephony/config/jobs/person/moveLoca
 
 # noinspection DuplicatedCode
 
-    async def errors(self, job_id: str, org_id: str = None, **params) -> List[JobErrorItem]:
+    async def errors(self, job_id: str, org_id: str = None, **params) -> builtins.list[JobErrorItem]:
         """
         List Move Users Job errors
 
@@ -3658,7 +3658,7 @@ class AsRebuildPhonesJobsApi(AsApiChild, base='telephony/config/jobs/devices/reb
         r = StartJobResponse.model_validate(data)
         return r
 
-    def errors_gen(self, job_id: str, org_id: str = None) -> AsyncGenerator[JobErrorItem, None, None]:
+    def errors_gen(self, job_id: str, org_id: str = None) -> AsyncGenerator[JobErrorItem, None]:
         """
         Get Job Errors for a Rebuild Phones Job
 
@@ -3683,7 +3683,7 @@ class AsRebuildPhonesJobsApi(AsApiChild, base='telephony/config/jobs/devices/reb
         url = self.ep(f'{job_id}/errors')
         return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
 
-    async def errors(self, job_id: str, org_id: str = None) -> List[JobErrorItem]:
+    async def errors(self, job_id: str, org_id: str = None) -> builtins.list[JobErrorItem]:
         """
         Get Job Errors for a Rebuild Phones Job
 
@@ -3734,7 +3734,7 @@ class AsSendActivationEmailApi(AsApiChild, base='identity/organizations'):
         r = ActivationEmailJobDetail.model_validate(data)
         return r
 
-    def errors_gen(self, org_id: str, job_id: str, **params) -> AsyncGenerator[JobErrorItem, None, None]:
+    def errors_gen(self, org_id: str, job_id: str, **params) -> AsyncGenerator[JobErrorItem, None]:
         """
         Get Bulk Activation Email Resend Job Errors
 
@@ -3752,7 +3752,7 @@ class AsSendActivationEmailApi(AsApiChild, base='identity/organizations'):
         url = self.ep(f'{org_id}/jobs/sendActivationEmails/{job_id}/errors')
         return self.session.follow_pagination(url=url, model=JobErrorItem, item_key='items', params=params)
 
-    async def errors(self, org_id: str, job_id: str, **params) -> List[JobErrorItem]:
+    async def errors(self, org_id: str, job_id: str, **params) -> builtins.list[JobErrorItem]:
         """
         Get Bulk Activation Email Resend Job Errors
 
@@ -3792,7 +3792,7 @@ class AsSendActivationEmailApi(AsApiChild, base='identity/organizations'):
 
 
 class AsUpdateDynamicDeviceSettingsJobsApi(AsApiChild, base='telephony/config'):
-    def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[StartJobResponse, None, None]:
+    def list_gen(self, org_id: str = None, **params) -> AsyncGenerator[StartJobResponse, None]:
         """
         List dynamic device settings jobs.
 
@@ -3811,7 +3811,7 @@ class AsUpdateDynamicDeviceSettingsJobsApi(AsApiChild, base='telephony/config'):
         url = self.ep('jobs/devices/dynamicDeviceSettings')
         return self.session.follow_pagination(url=url, model=StartJobResponse, item_key='items', params=params)
 
-    async def list(self, org_id: str = None, **params) -> List[StartJobResponse]:
+    async def list(self, org_id: str = None, **params) -> builtins.list[StartJobResponse]:
         """
         List dynamic device settings jobs.
 
@@ -3895,7 +3895,7 @@ class AsUpdateDynamicDeviceSettingsJobsApi(AsApiChild, base='telephony/config'):
         r = StartJobResponse.model_validate(data)
         return r
 
-    def errors_gen(self, job_id: str, org_id: str = None, **params) -> AsyncGenerator[JobErrorItem, None, None]:
+    def errors_gen(self, job_id: str, org_id: str = None, **params) -> AsyncGenerator[JobErrorItem, None]:
         """
         List Dynamic Device Settings Job Errors
 
@@ -3920,7 +3920,7 @@ class AsUpdateDynamicDeviceSettingsJobsApi(AsApiChild, base='telephony/config'):
 
 # noinspection DuplicatedCode
 
-    async def errors(self, job_id: str, org_id: str = None, **params) -> List[JobErrorItem]:
+    async def errors(self, job_id: str, org_id: str = None, **params) -> builtins.list[JobErrorItem]:
         """
         List Dynamic Device Settings Job Errors
 
@@ -3947,7 +3947,7 @@ class AsUpdateDynamicDeviceSettingsJobsApi(AsApiChild, base='telephony/config'):
 
 
 class AsUpdateRoutingPrefixJobsApi(AsApiChild, base='telephony/config/jobs/updateRoutingPrefix'):
-    def list_gen(self, org_id: str = None) -> AsyncGenerator[StartJobResponse, None, None]:
+    def list_gen(self, org_id: str = None) -> AsyncGenerator[StartJobResponse, None]:
         """
         Get a List of Update Routing Prefix jobs
 
@@ -3969,7 +3969,7 @@ class AsUpdateRoutingPrefixJobsApi(AsApiChild, base='telephony/config/jobs/updat
         url = self.ep()
         return self.session.follow_pagination(url=url, model=StartJobResponse, params=params, item_key='items')
 
-    async def list(self, org_id: str = None) -> List[StartJobResponse]:
+    async def list(self, org_id: str = None) -> builtins.list[StartJobResponse]:
         """
         Get a List of Update Routing Prefix jobs
 
@@ -4017,7 +4017,7 @@ class AsUpdateRoutingPrefixJobsApi(AsApiChild, base='telephony/config/jobs/updat
         r = StartJobResponse.model_validate(data)
         return r
 
-    def errors_gen(self, job_id: str, org_id: str = None) -> AsyncGenerator[JobErrorItem, None, None]:
+    def errors_gen(self, job_id: str, org_id: str = None) -> AsyncGenerator[JobErrorItem, None]:
         """
         Get job errors for update routing prefix job
 
@@ -4040,7 +4040,7 @@ class AsUpdateRoutingPrefixJobsApi(AsApiChild, base='telephony/config/jobs/updat
         url = self.ep(f'{job_id}/errors')
         return self.session.follow_pagination(url=url, model=JobErrorItem, params=params)
 
-    async def errors(self, job_id: str, org_id: str = None) -> List[JobErrorItem]:
+    async def errors(self, job_id: str, org_id: str = None) -> builtins.list[JobErrorItem]:
         """
         Get job errors for update routing prefix job
 
@@ -4161,7 +4161,7 @@ class AsLicensesApi(AsApiChild, base='licenses'):
         ep = self.ep(license_id)
         return License.model_validate(await self.get(ep))
 
-    def assigned_users_gen(self, license_id: str, **params) -> AsyncGenerator[LicenseUser, None, None]:
+    def assigned_users_gen(self, license_id: str, **params) -> AsyncGenerator[LicenseUser, None]:
         """
         Get users license is assigned to, by license ID.
 
@@ -4177,7 +4177,7 @@ class AsLicensesApi(AsApiChild, base='licenses'):
         params['includeAssignedTo'] = 'user'
         return self.session.follow_pagination(url=ep, model=LicenseUser, item_key='users', params=params)
 
-    async def assigned_users(self, license_id: str, **params) -> List[LicenseUser]:
+    async def assigned_users(self, license_id: str, **params) -> builtins.list[LicenseUser]:
         """
         Get users license is assigned to, by license ID.
 
@@ -4275,7 +4275,7 @@ class AsLocationsApi(AsApiChild, base='locations'):
 
     def list_gen(
         self, name: str = None, location_id: str = None, org_id: str = None, **params
-    ) -> AsyncGenerator[Location, None, None]:
+    ) -> AsyncGenerator[Location, None]:
         """
         List Locations
 
@@ -4308,7 +4308,7 @@ class AsLocationsApi(AsApiChild, base='locations'):
 
     async def list(
         self, name: str = None, location_id: str = None, org_id: str = None, **params
-    ) -> List[Location]:
+    ) -> builtins.list[Location]:
         """
         List Locations
 
@@ -5387,7 +5387,6 @@ class AsMeEndpointsApi(AsApiChild, base='telephony/config/people/me'):
 
         :param id: Person’s preferred answer endpoint.
         :type id: str
-        :type org_id: str
         :rtype: None
         """
         body = dict()
@@ -5786,7 +5785,7 @@ class AsMeModeManagementApi(AsApiChild, base='telephony/config/people/me'):
         r = TypeAdapter(list[ModeManagementFeature]).validate_python(data['features'])
         return r
 
-    async def switch_mode_multiple_features(self, feature_ids: list[str], operating_mode_name: str):
+    async def switch_mode_multiple_features(self, feature_ids: list[str], operating_mode_name: str) -> None:
         """
         Switch Mode for Multiple Features
 
@@ -5831,11 +5830,11 @@ class AsMeModeManagementApi(AsApiChild, base='telephony/config/people/me'):
         :type feature_ids: list[str]
         :rtype: list[str]
         """
-        params = {}
+        params = dict()
         params['featureIds'] = ','.join(feature_ids)
         url = self.ep('settings/modeManagement/features/commonModes')
         data = await super().get(url, params=params)
-        r = data['commonModeNames']
+        r = data['commonModeNames']  # type: ignore[index]
         return r
 
     async def feature_get(self, feature_id: str) -> FeatureDetail:
@@ -5861,7 +5860,7 @@ class AsMeModeManagementApi(AsApiChild, base='telephony/config/people/me'):
         r = FeatureDetail.model_validate(data)
         return r
 
-    async def extend_mode(self, feature_id: str, operating_mode_id: str, extension_time: int = None):
+    async def extend_mode(self, feature_id: str, operating_mode_id: str, extension_time: int = None) -> None:
         """
         Extend Current Operating Mode Duration
 
@@ -5894,7 +5893,7 @@ class AsMeModeManagementApi(AsApiChild, base='telephony/config/people/me'):
 
     async def switch_mode_for_feature(
         self, feature_id: str, operating_mode_id: str, is_manual_switchback_enabled: bool = None
-    ):
+    ) -> None:
         """
         Switch Mode for Single Feature
 
@@ -5921,11 +5920,11 @@ class AsMeModeManagementApi(AsApiChild, base='telephony/config/people/me'):
         body = dict()
         body['operatingModeId'] = operating_mode_id
         if is_manual_switchback_enabled is not None:
-            body['isManualSwitchbackEnabled'] = is_manual_switchback_enabled
+            body['isManualSwitchbackEnabled'] = str(is_manual_switchback_enabled).lower()
         url = self.ep(f'settings/modeManagement/features/{feature_id}/actions/switchMode/invoke')
         await super().post(url, json=body)
 
-    async def switch_to_normal_operation(self, feature_id: str):
+    async def switch_to_normal_operation(self, feature_id: str) -> None:
         """
         Switch to Normal Operation
 
@@ -7486,7 +7485,7 @@ class AsMeSettingsApi(AsApiChild, base='telephony/config/people/me'):
 
     def available_numbers_for_location_gen(
         self, name: str = None, phone_number: str = None, extension: str = None, order: str = None, **params
-    ) -> AsyncGenerator[LocationAssignedNumber, None, None]:
+    ) -> AsyncGenerator[LocationAssignedNumber, None]:
         """
         Get Available Numbers for User's Location.
 
@@ -7519,7 +7518,7 @@ class AsMeSettingsApi(AsApiChild, base='telephony/config/people/me'):
 
     async def available_numbers_for_location(
         self, name: str = None, phone_number: str = None, extension: str = None, order: str = None, **params
-    ) -> List[LocationAssignedNumber]:
+    ) -> builtins.list[LocationAssignedNumber]:
         """
         Get Available Numbers for User's Location.
 
@@ -7608,7 +7607,7 @@ class AsMeetingChatsApi(AsApiChild, base='meetings/postMeetingChats'):
     team at devsupport@webex.com.
     """
 
-    def list_gen(self, meeting_id: str, offset: int = None, **params) -> AsyncGenerator[ChatObject, None, None]:
+    def list_gen(self, meeting_id: str, offset: int = None, **params) -> AsyncGenerator[ChatObject, None]:
         """
         Lists the meeting chats of a finished meeting instance specified by meetingId. You can set a maximum number
         of chats to return.
@@ -7629,7 +7628,7 @@ class AsMeetingChatsApi(AsApiChild, base='meetings/postMeetingChats'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=ChatObject, params=params)
 
-    async def list(self, meeting_id: str, offset: int = None, **params) -> List[ChatObject]:
+    async def list(self, meeting_id: str, offset: int = None, **params) -> builtins.list[ChatObject]:
         """
         Lists the meeting chats of a finished meeting instance specified by meetingId. You can set a maximum number
         of chats to return.
@@ -7687,7 +7686,7 @@ class AsMeetingClosedCaptionsApi(AsApiChild, base='meetingClosedCaptions'):
     Closed captions will be available 15 minutes after the meeting is finished.
     """
 
-    def list_gen(self, meeting_id: str, **params) -> AsyncGenerator[ClosedCaption, None, None]:
+    def list_gen(self, meeting_id: str, **params) -> AsyncGenerator[ClosedCaption, None]:
         """
         Lists closed captions of a finished meeting instance specified by meetingId.
 
@@ -7700,7 +7699,7 @@ class AsMeetingClosedCaptionsApi(AsApiChild, base='meetingClosedCaptions'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=ClosedCaption, params=params)
 
-    async def list(self, meeting_id: str, **params) -> List[ClosedCaption]:
+    async def list(self, meeting_id: str, **params) -> builtins.list[ClosedCaption]:
         """
         Lists closed captions of a finished meeting instance specified by meetingId.
 
@@ -7713,7 +7712,7 @@ class AsMeetingClosedCaptionsApi(AsApiChild, base='meetingClosedCaptions'):
         url = self.ep()
         return [o async for o in self.session.follow_pagination(url=url, model=ClosedCaption, params=params)]
 
-    def list_snippets_gen(self, closed_caption_id: str, meeting_id: str, **params) -> AsyncGenerator[CCSnippet, None, None]:
+    def list_snippets_gen(self, closed_caption_id: str, meeting_id: str, **params) -> AsyncGenerator[CCSnippet, None]:
         """
         Lists snippets of a meeting closed caption specified by closedCaptionId.
 
@@ -7728,7 +7727,7 @@ class AsMeetingClosedCaptionsApi(AsApiChild, base='meetingClosedCaptions'):
         url = self.ep(f'{closed_caption_id}/snippets')
         return self.session.follow_pagination(url=url, model=CCSnippet, params=params)
 
-    async def list_snippets(self, closed_caption_id: str, meeting_id: str, **params) -> List[CCSnippet]:
+    async def list_snippets(self, closed_caption_id: str, meeting_id: str, **params) -> builtins.list[CCSnippet]:
         """
         Lists snippets of a meeting closed caption specified by closedCaptionId.
 
@@ -7776,7 +7775,7 @@ class AsMeetingInviteesApi(AsApiChild, base='meetingInvitees'):
 
     def list_gen(
         self, meeting_id: str, host_email: str = None, panelist: bool = None, **params
-    ) -> AsyncGenerator[Invitee, None, None]:
+    ) -> AsyncGenerator[Invitee, None]:
         """
         Lists meeting invitees for a meeting with a specified meetingId. You can set a maximum number of invitees to
         return. This operation can be used for meeting series, scheduled meetings, and ended or ongoing meeting
@@ -7809,7 +7808,7 @@ class AsMeetingInviteesApi(AsApiChild, base='meetingInvitees'):
 
     async def list(
         self, meeting_id: str, host_email: str = None, panelist: bool = None, **params
-    ) -> List[Invitee]:
+    ) -> builtins.list[Invitee]:
         """
         Lists meeting invitees for a meeting with a specified meetingId. You can set a maximum number of invitees to
         return. This operation can be used for meeting series, scheduled meetings, and ended or ongoing meeting
@@ -8051,7 +8050,7 @@ class AsMeetingParticipantsApi(AsApiChild, base='meetingParticipants'):
 
     def list_participants_gen(
         self, meeting_id: str, host_email: str = None, join_time_from: str = None, join_time_to: str = None, **params
-    ) -> AsyncGenerator[Participant, None, None]:
+    ) -> AsyncGenerator[Participant, None]:
         """
         List all participants in a live or post meeting. The meetingId parameter is required, which is the unique
         identifier for the meeting.
@@ -8085,7 +8084,7 @@ class AsMeetingParticipantsApi(AsApiChild, base='meetingParticipants'):
 
     async def list_participants(
         self, meeting_id: str, host_email: str = None, join_time_from: str = None, join_time_to: str = None, **params
-    ) -> List[Participant]:
+    ) -> builtins.list[Participant]:
         """
         List all participants in a live or post meeting. The meetingId parameter is required, which is the unique
         identifier for the meeting.
@@ -8687,7 +8686,7 @@ class AsMeetingQandAApi(AsApiChild, base='meetings/q_and_a'):
     feature enabled for your organization please contact the Webex Developer Support team at devsupport@webex.com.
     """
 
-    def list_gen(self, meeting_id: str, **params) -> AsyncGenerator[QAObject, None, None]:
+    def list_gen(self, meeting_id: str, **params) -> AsyncGenerator[QAObject, None]:
         """
         Lists questions and answers from a meeting, when ready.
         Notes:
@@ -8701,7 +8700,7 @@ class AsMeetingQandAApi(AsApiChild, base='meetings/q_and_a'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=QAObject, params=params)
 
-    async def list(self, meeting_id: str, **params) -> List[QAObject]:
+    async def list(self, meeting_id: str, **params) -> builtins.list[QAObject]:
         """
         Lists questions and answers from a meeting, when ready.
         Notes:
@@ -8715,7 +8714,7 @@ class AsMeetingQandAApi(AsApiChild, base='meetings/q_and_a'):
         url = self.ep()
         return [o async for o in self.session.follow_pagination(url=url, model=QAObject, params=params)]
 
-    def list_answers_gen(self, question_id: str, meeting_id: str, **params) -> AsyncGenerator[AnswerObject, None, None]:
+    def list_answers_gen(self, question_id: str, meeting_id: str, **params) -> AsyncGenerator[AnswerObject, None]:
         """
         Lists the answers to a specific question asked in a meeting.
 
@@ -8730,7 +8729,7 @@ class AsMeetingQandAApi(AsApiChild, base='meetings/q_and_a'):
         url = self.ep(f'{question_id}/answers')
         return self.session.follow_pagination(url=url, model=AnswerObject, params=params)
 
-    async def list_answers(self, question_id: str, meeting_id: str, **params) -> List[AnswerObject]:
+    async def list_answers(self, question_id: str, meeting_id: str, **params) -> builtins.list[AnswerObject]:
         """
         Lists the answers to a specific question asked in a meeting.
 
@@ -8761,7 +8760,7 @@ class AsMeetingQualitiesApi(AsApiChild, base=''):
 
     def meeting_qualities_gen(
         self, meeting_id: str, offset: int = None, **params
-    ) -> AsyncGenerator[MediaSessionQuality, None, None]:
+    ) -> AsyncGenerator[MediaSessionQuality, None]:
         """
         Get quality data for a meeting, by meetingId. Only organization administrators can retrieve meeting quality
         data.
@@ -8783,7 +8782,7 @@ class AsMeetingQualitiesApi(AsApiChild, base=''):
 
     async def meeting_qualities(
         self, meeting_id: str, offset: int = None, **params
-    ) -> List[MediaSessionQuality]:
+    ) -> builtins.list[MediaSessionQuality]:
         """
         Get quality data for a meeting, by meetingId. Only organization administrators can retrieve meeting quality
         data.
@@ -8826,7 +8825,7 @@ class AsMeetingTranscriptsApi(AsApiChild, base=''):
         from_: str = None,
         to_: str = None,
         **params,
-    ) -> AsyncGenerator[Transcript, None, None]:
+    ) -> AsyncGenerator[Transcript, None]:
         """
         Lists available transcripts of an ended meeting instance.
         Use this operation to list transcripts of an ended meeting instance when they are ready. Please note that only
@@ -8876,7 +8875,7 @@ class AsMeetingTranscriptsApi(AsApiChild, base=''):
         from_: str = None,
         to_: str = None,
         **params,
-    ) -> List[Transcript]:
+    ) -> builtins.list[Transcript]:
         """
         Lists available transcripts of an ended meeting instance.
         Use this operation to list transcripts of an ended meeting instance when they are ready. Please note that only
@@ -8920,7 +8919,7 @@ class AsMeetingTranscriptsApi(AsApiChild, base=''):
 
     def list_compliance_officer_gen(
         self, site_url: str, from_: str = None, to_: str = None, **params
-    ) -> AsyncGenerator[Transcript, None, None]:
+    ) -> AsyncGenerator[Transcript, None]:
         """
         Lists available or deleted transcripts of an ended meeting instance for a specific site.
         The returned list is sorted in descending order by the date and time that the transcript was created.
@@ -8947,7 +8946,7 @@ class AsMeetingTranscriptsApi(AsApiChild, base=''):
 
     async def list_compliance_officer(
         self, site_url: str, from_: str = None, to_: str = None, **params
-    ) -> List[Transcript]:
+    ) -> builtins.list[Transcript]:
         """
         Lists available or deleted transcripts of an ended meeting instance for a specific site.
         The returned list is sorted in descending order by the date and time that the transcript was created.
@@ -8996,7 +8995,7 @@ class AsMeetingTranscriptsApi(AsApiChild, base=''):
         await super().get(url=url, params=params)
         # TODO: fix. Find out what the actual return type is
 
-    def list_snippets_gen(self, transcript_id: str, **params) -> AsyncGenerator[TranscriptSnippet, None, None]:
+    def list_snippets_gen(self, transcript_id: str, **params) -> AsyncGenerator[TranscriptSnippet, None]:
         """
         Lists snippets of a meeting transcript specified by transcriptId.
         Use this operation to list snippets of a meeting transcript when they are ready.
@@ -9009,7 +9008,7 @@ class AsMeetingTranscriptsApi(AsApiChild, base=''):
         url = self.ep(f'meetingTranscripts/{transcript_id}/snippets')
         return self.session.follow_pagination(url=url, model=TranscriptSnippet, params=params)
 
-    async def list_snippets(self, transcript_id: str, **params) -> List[TranscriptSnippet]:
+    async def list_snippets(self, transcript_id: str, **params) -> builtins.list[TranscriptSnippet]:
         """
         Lists snippets of a meeting transcript specified by transcriptId.
         Use this operation to list snippets of a meeting transcript when they are ready.
@@ -9120,7 +9119,7 @@ class AsRecordingsApi(AsApiChild, base=''):
         service_type: RecordingServiceType = None,
         status: RecordingStatus = None,
         **params,
-    ) -> AsyncGenerator[Recording, None, None]:
+    ) -> AsyncGenerator[Recording, None]:
         """
         List Recordings
 
@@ -9227,7 +9226,7 @@ class AsRecordingsApi(AsApiChild, base=''):
         service_type: RecordingServiceType = None,
         status: RecordingStatus = None,
         **params,
-    ) -> List[Recording]:
+    ) -> builtins.list[Recording]:
         """
         List Recordings
 
@@ -9333,7 +9332,7 @@ class AsRecordingsApi(AsApiChild, base=''):
         service_type: RecordingServiceType = None,
         status: RecordingStatus = None,
         **params,
-    ) -> AsyncGenerator[Recording, None, None]:
+    ) -> AsyncGenerator[Recording, None]:
         """
         List Recordings For an Admin or Compliance Officer
 
@@ -9428,7 +9427,7 @@ class AsRecordingsApi(AsApiChild, base=''):
         service_type: RecordingServiceType = None,
         status: RecordingStatus = None,
         **params,
-    ) -> List[Recording]:
+    ) -> builtins.list[Recording]:
         """
         List Recordings For an Admin or Compliance Officer
 
@@ -10088,7 +10087,7 @@ class AsMeetingsApi(AsApiChild, base='meetings'):
         site_url: str = None,
         integration_tag: str = None,
         **params,
-    ) -> AsyncGenerator[Meeting, None, None]:
+    ) -> AsyncGenerator[Meeting, None]:
         """
         Retrieves details for meetings with a specified meeting number, web link, meeting type, etc. Please note that
         there are various products in the Webex Suite such as Meetings and Events. Currently, only meetings of the
@@ -10191,7 +10190,7 @@ class AsMeetingsApi(AsApiChild, base='meetings'):
         site_url: str = None,
         integration_tag: str = None,
         **params,
-    ) -> List[Meeting]:
+    ) -> builtins.list[Meeting]:
         """
         Retrieves details for meetings with a specified meeting number, web link, meeting type, etc. Please note that
         there are various products in the Webex Suite such as Meetings and Events. Currently, only meetings of the
@@ -10289,7 +10288,7 @@ class AsMeetingsApi(AsApiChild, base='meetings'):
         is_modified: bool = None,
         host_email: str = None,
         **params,
-    ) -> AsyncGenerator[ScheduledMeeting, None, None]:
+    ) -> AsyncGenerator[ScheduledMeeting, None]:
         """
         Lists scheduled meeting and meeting instances of a meeting series identified by meetingSeriesId. Scheduled
         meetings of an ad-hoc meeting created by Create a Meeting with adhoc of true and a roomId will not be listed,
@@ -10360,7 +10359,7 @@ class AsMeetingsApi(AsApiChild, base='meetings'):
         is_modified: bool = None,
         host_email: str = None,
         **params,
-    ) -> List[ScheduledMeeting]:
+    ) -> builtins.list[ScheduledMeeting]:
         """
         Lists scheduled meeting and meeting instances of a meeting series identified by meetingSeriesId. Scheduled
         meetings of an ad-hoc meeting created by Create a Meeting with adhoc of true and a roomId will not be listed,
@@ -11025,7 +11024,7 @@ class AsMeetingsApi(AsApiChild, base='meetings'):
 
     def list_survey_results_gen(
         self, meeting_id: str, meeting_start_time_from: str = None, meeting_start_time_to: str = None, **params
-    ) -> AsyncGenerator[SurveyResult, None, None]:
+    ) -> AsyncGenerator[SurveyResult, None]:
         """
         Retrieves results for a meeting survey identified by meetingId.
 
@@ -11059,7 +11058,7 @@ class AsMeetingsApi(AsApiChild, base='meetings'):
 
     async def list_survey_results(
         self, meeting_id: str, meeting_start_time_from: str = None, meeting_start_time_to: str = None, **params
-    ) -> List[SurveyResult]:
+    ) -> builtins.list[SurveyResult]:
         """
         Retrieves results for a meeting survey identified by meetingId.
 
@@ -11093,7 +11092,7 @@ class AsMeetingsApi(AsApiChild, base='meetings'):
 
     def list_tracking_codes_gen(
         self, service: str, site_url: str = None, host_email: str = None
-    ) -> AsyncGenerator[TrackingCode, None, None]:
+    ) -> AsyncGenerator[TrackingCode, None]:
         """
         Lists tracking codes on a site by a meeting host. The result indicates which tracking codes and what options
         can be used to create or update a meeting on the specified site.
@@ -11122,7 +11121,7 @@ class AsMeetingsApi(AsApiChild, base='meetings'):
 
     async def list_tracking_codes(
         self, service: str, site_url: str = None, host_email: str = None
-    ) -> List[TrackingCode]:
+    ) -> builtins.list[TrackingCode]:
         """
         Lists tracking codes on a site by a meeting host. The result indicates which tracking codes and what options
         can be used to create or update a meeting on the specified site.
@@ -11172,7 +11171,7 @@ class AsMembershipApi(AsApiChild, base='memberships'):
 
     def list_gen(
         self, room_id: str = None, person_id: str = None, person_email: str = None, **params
-    ) -> AsyncGenerator[Membership, None, None]:
+    ) -> AsyncGenerator[Membership, None]:
         """
         Lists all room memberships. By default, lists memberships for rooms to which the authenticated user belongs.
         Use query parameters to filter the response.
@@ -11204,7 +11203,7 @@ class AsMembershipApi(AsApiChild, base='memberships'):
 
     async def list(
         self, room_id: str = None, person_id: str = None, person_email: str = None, **params
-    ) -> List[Membership]:
+    ) -> builtins.list[Membership]:
         """
         Lists all room memberships. By default, lists memberships for rooms to which the authenticated user belongs.
         Use query parameters to filter the response.
@@ -11321,7 +11320,7 @@ class AsMessagesApi(AsApiChild, base='messages'):
         before: datetime = None,
         before_message: str = None,
         **params,
-    ) -> AsyncGenerator[Message, None, None]:
+    ) -> AsyncGenerator[Message, None]:
         """
         Lists all messages in a room.  Each message will include content attachments if present.
 
@@ -11364,7 +11363,7 @@ class AsMessagesApi(AsApiChild, base='messages'):
         before: datetime = None,
         before_message: str = None,
         **params,
-    ) -> List[Message]:
+    ) -> builtins.list[Message]:
         """
         Lists all messages in a room.  Each message will include content attachments if present.
 
@@ -11401,7 +11400,7 @@ class AsMessagesApi(AsApiChild, base='messages'):
 
     def list_direct_gen(
         self, parent_id: str = None, person_id: str = None, person_email: str = None, **params
-    ) -> AsyncGenerator[Message, None, None]:
+    ) -> AsyncGenerator[Message, None]:
         """
         List all messages in a 1:1 (direct) room. Use the personId or personEmail query parameter to specify the
         room. Each message will include content attachments if present.
@@ -11426,7 +11425,7 @@ class AsMessagesApi(AsApiChild, base='messages'):
 
     async def list_direct(
         self, parent_id: str = None, person_id: str = None, person_email: str = None, **params
-    ) -> List[Message]:
+    ) -> builtins.list[Message]:
         """
         List all messages in a 1:1 (direct) room. Use the personId or personEmail query parameter to specify the
         room. Each message will include content attachments if present.
@@ -11757,7 +11756,7 @@ class AsOrganizationContactsApi(AsApiChild, base='contacts/organizations'):
 
     def list_gen(
         self, org_id: str, keyword: str = None, source: str = None, limit: int = None, group_ids: list[str] = None
-    ) -> AsyncGenerator[Contact, None, None]:
+    ) -> AsyncGenerator[Contact, None]:
         """
         List Contacts
 
@@ -11796,7 +11795,7 @@ class AsOrganizationContactsApi(AsApiChild, base='contacts/organizations'):
 
     async def list(
         self, org_id: str, keyword: str = None, source: str = None, limit: int = None, group_ids: list[str] = None
-    ) -> List[Contact]:
+    ) -> builtins.list[Contact]:
         """
         List Contacts
 
@@ -11914,7 +11913,7 @@ class AsPeopleApi(AsApiChild, base='people'):
         location_id: str = None,
         exclude_status: bool = None,
         **params,
-    ) -> AsyncGenerator[Person, None, None]:
+    ) -> AsyncGenerator[Person, None]:
         """
         List people in your organization. For most users, either the email or displayName parameter is required. Admin
         users can omit these fields and list all users in their organization.
@@ -11981,7 +11980,7 @@ class AsPeopleApi(AsApiChild, base='people'):
         location_id: str = None,
         exclude_status: bool = None,
         **params,
-    ) -> List[Person]:
+    ) -> builtins.list[Person]:
         """
         List people in your organization. For most users, either the email or displayName parameter is required. Admin
         users can omit these fields and list all users in their organization.
@@ -12434,7 +12433,7 @@ class AsAppSharedLineApi(AsApiChild, base='telephony/config/people'):
         phone_number: str = None,
         extension: str = None,
         **params,
-    ) -> AsyncGenerator[AvailableMember, None, None]:
+    ) -> AsyncGenerator[AvailableMember, None]:
         """
         Search Shared-Line Appearance Members
 
@@ -12482,7 +12481,7 @@ class AsAppSharedLineApi(AsApiChild, base='telephony/config/people'):
         phone_number: str = None,
         extension: str = None,
         **params,
-    ) -> List[AvailableMember]:
+    ) -> builtins.list[AvailableMember]:
         """
         Search Shared-Line Appearance Members
 
@@ -12792,7 +12791,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
         license_type: AvailablePhoneNumberLicenseType = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Person Primary Available Phone Numbers
 
@@ -12841,7 +12840,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
         license_type: AvailablePhoneNumberLicenseType = None,
         org_id: str = None,
         **params,
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get Person Primary Available Phone Numbers
 
@@ -12885,7 +12884,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
 
     def secondary_gen(
         self, entity_id: str, phone_number: list[str] = None, org_id: str = None, **params
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Person Secondary Available Phone Numbers
 
@@ -12919,7 +12918,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
 
     async def secondary(
         self, entity_id: str, phone_number: list[str] = None, org_id: str = None, **params
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get Person Secondary Available Phone Numbers
 
@@ -12953,7 +12952,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
 
     def fax_message_gen(
         self, entity_id: str, phone_number: list[str] = None, org_id: str = None, **params
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Fax Message Available Phone Numbers
 
@@ -12987,7 +12986,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
 
     async def fax_message(
         self, entity_id: str, phone_number: list[str] = None, org_id: str = None, **params
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get Fax Message Available Phone Numbers
 
@@ -13027,7 +13026,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
         extension: str = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Call Forward Available Phone Numbers
 
@@ -13076,7 +13075,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
         extension: str = None,
         org_id: str = None,
         **params,
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get Call Forward Available Phone Numbers
 
@@ -13119,7 +13118,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
 
     def ecbn_gen(
         self, entity_id: str, phone_number: list[str] = None, owner_name: str = None, org_id: str = None, **params
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get ECBN Available Phone Numbers
 
@@ -13158,7 +13157,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
 
     async def ecbn(
         self, entity_id: str, phone_number: list[str] = None, owner_name: str = None, org_id: str = None, **params
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get ECBN Available Phone Numbers
 
@@ -13197,7 +13196,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
 
     def available_gen(
         self, location_id: str = None, phone_number: list[str] = None, org_id: str = None, **params
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Available Phone Numbers
 
@@ -13234,7 +13233,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
 
     async def available(
         self, location_id: str = None, phone_number: list[str] = None, org_id: str = None, **params
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get Available Phone Numbers
 
@@ -13277,7 +13276,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
         extension: str = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Call Intercept Available Phone Numbers
 
@@ -13327,7 +13326,7 @@ class AsAvailableNumbersApi(AsApiChild, base='telephony/config'):
         extension: str = None,
         org_id: str = None,
         **params,
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get Call Intercept Available Phone Numbers
 
@@ -14895,7 +14894,7 @@ class AsModeManagementApi(AsApiChild, base='telephony/config/people'):
         order: str = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[AvailableFeature, None, None]:
+    ) -> AsyncGenerator[AvailableFeature, None]:
         """
         Retrieve the List of Available Features.
 
@@ -14944,7 +14943,7 @@ class AsModeManagementApi(AsApiChild, base='telephony/config/people'):
         order: str = None,
         org_id: str = None,
         **params,
-    ) -> List[AvailableFeature]:
+    ) -> builtins.list[AvailableFeature]:
         """
         Retrieve the List of Available Features.
 
@@ -16106,7 +16105,7 @@ class AsScheduleApi(AsApiChild, base='telephony/config/locations'):
 
     def list_gen(
         self, obj_id: str, org_id: str = None, schedule_type: ScheduleType = None, name: str = None, **params
-    ) -> AsyncGenerator[Schedule, None, None]:
+    ) -> AsyncGenerator[Schedule, None]:
         """
         List of schedules for a person or location
 
@@ -16142,7 +16141,7 @@ class AsScheduleApi(AsApiChild, base='telephony/config/locations'):
 
     async def list(
         self, obj_id: str, org_id: str = None, schedule_type: ScheduleType = None, name: str = None, **params
-    ) -> List[Schedule]:
+    ) -> builtins.list[Schedule]:
         """
         List of schedules for a person or location
 
@@ -17020,7 +17019,7 @@ class AsSingleNumberReachApi(AsApiChild, base='telephony/config'):
 
     def available_phone_numbers_gen(
         self, location_id: str, phone_number: list[str] = None, org_id: str = None, **params
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Single Number Reach Primary Available Phone Numbers
 
@@ -17054,7 +17053,7 @@ class AsSingleNumberReachApi(AsApiChild, base='telephony/config'):
 
     async def available_phone_numbers(
         self, location_id: str, phone_number: list[str] = None, org_id: str = None, **params
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get Single Number Reach Primary Available Phone Numbers
 
@@ -17715,7 +17714,7 @@ class AsReportsApi(AsApiChild, base='devices'):
         template_id: str = None,
         from_date: date = None,
         to_date: date = None,
-    ) -> AsyncGenerator[Report, None, None]:
+    ) -> AsyncGenerator[Report, None]:
         """
         Lists all reports. Use query parameters to filter the response. The parameters are optional. However, `from`
         and `to` parameters should be provided together.
@@ -17762,7 +17761,7 @@ class AsReportsApi(AsApiChild, base='devices'):
         template_id: str = None,
         from_date: date = None,
         to_date: date = None,
-    ) -> List[Report]:
+    ) -> builtins.list[Report]:
         """
         Lists all reports. Use query parameters to filter the response. The parameters are optional. However, `from`
         and `to` parameters should be provided together.
@@ -17936,7 +17935,7 @@ class AsRoomTabsApi(AsApiChild, base='room/tabs'):
     Just like in the Webex app, you must be a member of the room in order to list its Room Tabs.
     """
 
-    def list_tabs_gen(self, room_id: str, **params) -> AsyncGenerator[RoomTab, None, None]:
+    def list_tabs_gen(self, room_id: str, **params) -> AsyncGenerator[RoomTab, None]:
         """
         Lists all Room Tabs of a room specified by the roomId query parameter.
 
@@ -17948,7 +17947,7 @@ class AsRoomTabsApi(AsApiChild, base='room/tabs'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=RoomTab, params=params)
 
-    async def list_tabs(self, room_id: str, **params) -> List[RoomTab]:
+    async def list_tabs(self, room_id: str, **params) -> builtins.list[RoomTab]:
         """
         Lists all Room Tabs of a room specified by the roomId query parameter.
 
@@ -18049,7 +18048,7 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         to_: datetime = None,
         sort_by: str = None,
         **params,
-    ) -> AsyncGenerator[Room, None, None]:
+    ) -> AsyncGenerator[Room, None]:
         """
         List rooms.
 
@@ -18106,7 +18105,7 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         to_: datetime = None,
         sort_by: str = None,
         **params,
-    ) -> List[Room]:
+    ) -> builtins.list[Room]:
         """
         List rooms.
 
@@ -18615,7 +18614,7 @@ class AsSCIM2GroupsApi(AsScimApiChild, base='identity/scim'):
                              attributes: str= None,
                              count: int = None, sort_by: str = None, sort_order: str = None,
                              include_members: bool = None, member_type: str = None) -> AsyncGenerator[ScimGroup,
-                             None, None]:
+                             None]:
         params = {k: v for k, v in locals().items()
                   if k not in {'self', 'count'} and v is not None}
         start_index = None
@@ -18697,7 +18696,7 @@ class AsSCIM2GroupsApi(AsScimApiChild, base='identity/scim'):
         return r
 
     async def members_all_gen(self, org_id: str, group_id: str, start_index: int = None, count: int = None,
-                              member_type: str = None) -> AsyncGenerator[ScimGroupMember, None, None]:
+                              member_type: str = None) -> AsyncGenerator[ScimGroupMember, None]:
         params = {k: v for k, v in locals().items()
                   if k not in {'self', 'count'} and v is not None}
         start_index = None
@@ -19170,7 +19169,7 @@ class AsSCIM2UsersApi(AsScimApiChild, base='identity/scim'):
                              excluded_attributes: str = None,
                              sort_by: str = None, sort_order: str = None, count: int = None, return_groups: str = None,
                              include_group_details: str = None,
-                             group_usage_types: str = None) -> AsyncGenerator[ScimUser, None, None]:
+                             group_usage_types: str = None) -> AsyncGenerator[ScimUser, None]:
         params = {k: v for k, v in locals().items()
                   if k not in {'self', 'count'} and v is not None}
         start_index = None
@@ -19526,7 +19525,7 @@ class AsTeamMembershipsApi(AsApiChild, base='team/memberships'):
     Just like in the Webex app, you must be a member of the team in order to list its memberships or invite people.
     """
 
-    def list_gen(self, team_id: str, **params) -> AsyncGenerator[TeamMembership, None, None]:
+    def list_gen(self, team_id: str, **params) -> AsyncGenerator[TeamMembership, None]:
         """
         Lists all team memberships for a given team, specified by the teamId query parameter.
         Use query parameters to filter the response.
@@ -19539,7 +19538,7 @@ class AsTeamMembershipsApi(AsApiChild, base='team/memberships'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=TeamMembership, params=params)
 
-    async def list(self, team_id: str, **params) -> List[TeamMembership]:
+    async def list(self, team_id: str, **params) -> builtins.list[TeamMembership]:
         """
         Lists all team memberships for a given team, specified by the teamId query parameter.
         Use query parameters to filter the response.
@@ -19631,14 +19630,14 @@ class AsTeamsApi(AsApiChild, base='teams'):
     To manage team rooms see the Rooms API.
     """
 
-    def list_gen(self) -> AsyncGenerator[Team, None, None]:
+    def list_gen(self) -> AsyncGenerator[Team, None]:
         """
         Lists teams to which the authenticated user belongs.
         """
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Team)
 
-    async def list(self) -> List[Team]:
+    async def list(self) -> builtins.list[Team]:
         """
         Lists teams to which the authenticated user belongs.
         """
@@ -19727,7 +19726,7 @@ class AsAnnouncementsRepositoryApi(AsApiChild, base='telephony/config'):
         name: str = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[RepoAnnouncement, None, None]:
+    ) -> AsyncGenerator[RepoAnnouncement, None]:
         """
         Fetch list of announcement greetings on location and organization level
 
@@ -19784,7 +19783,7 @@ class AsAnnouncementsRepositoryApi(AsApiChild, base='telephony/config'):
         name: str = None,
         org_id: str = None,
         **params,
-    ) -> List[RepoAnnouncement]:
+    ) -> builtins.list[RepoAnnouncement]:
         """
         Fetch list of announcement greetings on location and organization level
 
@@ -20227,7 +20226,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
 
     def list_gen(
         self, org_id: str = None, location_id: str = None, name: str = None, phone_number: str = None, **params
-    ) -> AsyncGenerator[AutoAttendant, None, None]:
+    ) -> AsyncGenerator[AutoAttendant, None]:
         """
         Read the List of Auto Attendants
 
@@ -20258,7 +20257,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
 
     async def list(
         self, org_id: str = None, location_id: str = None, name: str = None, phone_number: str = None, **params
-    ) -> List[AutoAttendant]:
+    ) -> builtins.list[AutoAttendant]:
         """
         Read the List of Auto Attendants
 
@@ -20407,7 +20406,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
 
     def primary_available_phone_numbers_gen(
         self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Auto Attendant Primary Available Phone Numbers
 
@@ -20441,7 +20440,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
 
     async def primary_available_phone_numbers(
         self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get Auto Attendant Primary Available Phone Numbers
 
@@ -20475,7 +20474,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
 
     def alternate_available_phone_numbers_gen(
         self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Auto Attendant Alternate Available Phone Numbers
 
@@ -20508,7 +20507,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
 
     async def alternate_available_phone_numbers(
         self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get Auto Attendant Alternate Available Phone Numbers
 
@@ -20547,7 +20546,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
         extension: str = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Auto Attendant Call Forward Available Phone Numbers
 
@@ -20596,7 +20595,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
         extension: str = None,
         org_id: str = None,
         **params,
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get Auto Attendant Call Forward Available Phone Numbers
 
@@ -20900,7 +20899,7 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
 
     def list_gen(
         self, location_id: str, order: str = None, name: str = None, org_id: str = None, **params
-    ) -> AsyncGenerator[CallPark, None, None]:
+    ) -> AsyncGenerator[CallPark, None]:
         """
         Read the List of Call Parks
 
@@ -20935,7 +20934,7 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
 
     async def list(
         self, location_id: str, order: str = None, name: str = None, org_id: str = None, **params
-    ) -> List[CallPark]:
+    ) -> builtins.list[CallPark]:
         """
         Read the List of Call Parks
 
@@ -21083,7 +21082,7 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
         order: str = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[PersonPlaceAgent, None, None]:
+    ) -> AsyncGenerator[PersonPlaceAgent, None]:
         """
         Get available agents from Call Parks
 
@@ -21133,7 +21132,7 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
         order: str = None,
         org_id: str = None,
         **params,
-    ) -> List[PersonPlaceAgent]:
+    ) -> builtins.list[PersonPlaceAgent]:
         """
         Get available agents from Call Parks
 
@@ -21176,7 +21175,7 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
 
     def available_recalls_gen(
         self, location_id: str, name: str = None, order: str = None, org_id: str = None, **params
-    ) -> AsyncGenerator[AvailableRecallHuntGroup, None, None]:
+    ) -> AsyncGenerator[AvailableRecallHuntGroup, None]:
         """
         Get available recall hunt groups from Call Parks
 
@@ -21212,7 +21211,7 @@ class AsCallParkApi(AsApiChild, base='telephony/config/callParks'):
 
     async def available_recalls(
         self, location_id: str, name: str = None, order: str = None, org_id: str = None, **params
-    ) -> List[AvailableRecallHuntGroup]:
+    ) -> builtins.list[AvailableRecallHuntGroup]:
         """
         Get available recall hunt groups from Call Parks
 
@@ -21317,7 +21316,7 @@ class AsCallPickupApi(AsApiChild, base='telephony/config/callPickups'):
 
     def list_gen(
         self, location_id: str, order: Literal['ASC', 'DSC'] = None, name: str = None, org_id: str = None, **params
-    ) -> AsyncGenerator[CallPickup, None, None]:
+    ) -> AsyncGenerator[CallPickup, None]:
         """
         Read the List of Call Pickups
 
@@ -21352,7 +21351,7 @@ class AsCallPickupApi(AsApiChild, base='telephony/config/callPickups'):
 
     async def list(
         self, location_id: str, order: Literal['ASC', 'DSC'] = None, name: str = None, org_id: str = None, **params
-    ) -> List[CallPickup]:
+    ) -> builtins.list[CallPickup]:
         """
         Read the List of Call Pickups
 
@@ -21501,7 +21500,7 @@ class AsCallPickupApi(AsApiChild, base='telephony/config/callPickups'):
         order: str = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[PersonPlaceAgent, None, None]:
+    ) -> AsyncGenerator[PersonPlaceAgent, None]:
         """
         Get available agents from Call Pickups
 
@@ -21551,7 +21550,7 @@ class AsCallPickupApi(AsApiChild, base='telephony/config/callPickups'):
         order: str = None,
         org_id: str = None,
         **params,
-    ) -> List[PersonPlaceAgent]:
+    ) -> builtins.list[PersonPlaceAgent]:
         """
         Get available agents from Call Pickups
 
@@ -21614,7 +21613,7 @@ class AsAnnouncementApi:
         ep = self._session.ep(path=f'telephony/config/locations/{location_id}/queues/{queue_id}/announcements{path}')
         return ep
 
-    def list_gen(self, location_id: str, queue_id: str, org_id: str = None) -> AsyncGenerator[Announcement]:
+    def list_gen(self, location_id: str, queue_id: str, org_id: str = None) -> AsyncGenerator[Announcement, None]:
         """
         Read the List of Call Queue Announcement Files
 
@@ -21641,7 +21640,7 @@ class AsAnnouncementApi:
         # noinspection PyTypeChecker
         return self._session.follow_pagination(url=url, model=Announcement, params=params)
 
-    async def list(self, location_id: str, queue_id: str, org_id: str = None) -> List[Announcement]:
+    async def list(self, location_id: str, queue_id: str, org_id: str = None) -> builtins.list[Announcement]:
         """
         Read the List of Call Queue Announcement Files
 
@@ -21921,7 +21920,7 @@ class AsCallQueueAgentsApi(AsApiChild, base='telephony/config/queues/agents'):
         order: str = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[CallQueueAgent, None, None]:
+    ) -> AsyncGenerator[CallQueueAgent, None]:
         """
         Read the List of Call Queue Agents
 
@@ -21986,7 +21985,7 @@ class AsCallQueueAgentsApi(AsApiChild, base='telephony/config/queues/agents'):
         order: str = None,
         org_id: str = None,
         **params,
-    ) -> List[CallQueueAgent]:
+    ) -> builtins.list[CallQueueAgent]:
         """
         Read the List of Call Queue Agents
 
@@ -22183,7 +22182,7 @@ class AsCallQueueApi(AsApiChild, base=''):
         has_cx_essentials: bool = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[CallQueue, None, None]:
+    ) -> AsyncGenerator[CallQueue, None]:
         """
         Read the List of Call Queues
 
@@ -22244,7 +22243,7 @@ class AsCallQueueApi(AsApiChild, base=''):
         has_cx_essentials: bool = None,
         org_id: str = None,
         **params,
-    ) -> List[CallQueue]:
+    ) -> builtins.list[CallQueue]:
         """
         Read the List of Call Queues
 
@@ -22561,7 +22560,7 @@ class AsCallQueueApi(AsApiChild, base=''):
 
     def primary_available_phone_numbers_gen(
         self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Call Queue Primary Available Phone Numbers
 
@@ -22596,7 +22595,7 @@ class AsCallQueueApi(AsApiChild, base=''):
 
     async def primary_available_phone_numbers(
         self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get Call Queue Primary Available Phone Numbers
 
@@ -22631,7 +22630,7 @@ class AsCallQueueApi(AsApiChild, base=''):
 
     def alternate_available_phone_numbers_gen(
         self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Call Queue Alternate Available Phone Numbers
 
@@ -22666,7 +22665,7 @@ class AsCallQueueApi(AsApiChild, base=''):
 
     async def alternate_available_phone_numbers(
         self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get Call Queue Alternate Available Phone Numbers
 
@@ -22707,7 +22706,7 @@ class AsCallQueueApi(AsApiChild, base=''):
         extension: str = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Call Queue Call Forward Available Phone Numbers
 
@@ -22757,7 +22756,7 @@ class AsCallQueueApi(AsApiChild, base=''):
         extension: str = None,
         org_id: str = None,
         **params,
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get Call Queue Call Forward Available Phone Numbers
 
@@ -22807,7 +22806,7 @@ class AsCallQueueApi(AsApiChild, base=''):
         order: str = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[AvailableAgent, None, None]:
+    ) -> AsyncGenerator[AvailableAgent, None]:
         """
         Get Call Queue Available Agents
 
@@ -22857,7 +22856,7 @@ class AsCallQueueApi(AsApiChild, base=''):
         order: str = None,
         org_id: str = None,
         **params,
-    ) -> List[AvailableAgent]:
+    ) -> builtins.list[AvailableAgent]:
         """
         Get Call Queue Available Agents
 
@@ -23158,7 +23157,7 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
 
     def list_org_users_gen(
         self, standard_user_only: bool = None, org_id: str = None, **params
-    ) -> AsyncGenerator[RecordingUser, None, None]:
+    ) -> AsyncGenerator[RecordingUser, None]:
         """
         Get Call Recording Vendor Users
 
@@ -23185,7 +23184,7 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
 
     async def list_org_users(
         self, standard_user_only: bool = None, org_id: str = None, **params
-    ) -> List[RecordingUser]:
+    ) -> builtins.list[RecordingUser]:
         """
         Get Call Recording Vendor Users
 
@@ -23300,7 +23299,7 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
 
     def list_location_users_gen(
         self, location_id: str, standard_user_only: bool = None, org_id: str = None, **params
-    ) -> AsyncGenerator[RecordingUser, None, None]:
+    ) -> AsyncGenerator[RecordingUser, None]:
         """
         Get Call Recording Vendor Users for a Location
 
@@ -23329,7 +23328,7 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
 
     async def list_location_users(
         self, location_id: str, standard_user_only: bool = None, org_id: str = None, **params
-    ) -> List[RecordingUser]:
+    ) -> builtins.list[RecordingUser]:
         """
         Get Call Recording Vendor Users for a Location
 
@@ -23461,7 +23460,7 @@ class AsTranslationPatternsApi(AsApiChild, base='telephony/config/callRouting/tr
         matching_pattern: str = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[TranslationPattern, None, None]:
+    ) -> AsyncGenerator[TranslationPattern, None]:
         """
         Retrieve a list of Translation Patterns
 
@@ -23515,7 +23514,7 @@ class AsTranslationPatternsApi(AsApiChild, base='telephony/config/callRouting/tr
         matching_pattern: str = None,
         org_id: str = None,
         **params,
-    ) -> List[TranslationPattern]:
+    ) -> builtins.list[TranslationPattern]:
         """
         Retrieve a list of Translation Patterns
 
@@ -23816,7 +23815,7 @@ class AsCallparkExtensionApi(AsApiChild, base='telephony'):
         order: str = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[CallParkExtension, None, None]:
+    ) -> AsyncGenerator[CallParkExtension, None]:
         """
         Read the List of Call Park Extensions
 
@@ -23870,7 +23869,7 @@ class AsCallparkExtensionApi(AsApiChild, base='telephony'):
         order: str = None,
         org_id: str = None,
         **params,
-    ) -> List[CallParkExtension]:
+    ) -> builtins.list[CallParkExtension]:
         """
         Read the List of Call Park Extensions
 
@@ -25421,7 +25420,7 @@ class AsCustomerExperienceEssentialsApi(AsApiChild, base='telephony/config'):
 
     def available_agents_gen(
         self, location_id: str, has_cx_essentials: bool = None, org_id: str = None
-    ) -> AsyncGenerator[AvailableAgent, None, None]:
+    ) -> AsyncGenerator[AvailableAgent, None]:
         """
         Get List of available agents for Customer Experience Essentials
 
@@ -25449,7 +25448,7 @@ class AsCustomerExperienceEssentialsApi(AsApiChild, base='telephony/config'):
 
     async def available_agents(
         self, location_id: str, has_cx_essentials: bool = None, org_id: str = None
-    ) -> List[AvailableAgent]:
+    ) -> builtins.list[AvailableAgent]:
         """
         Get List of available agents for Customer Experience Essentials
 
@@ -26272,7 +26271,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         usage_type: UsageType = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[AvailableMember, None, None]:
+    ) -> AsyncGenerator[AvailableMember, None]:
         """
         Search Available Members
 
@@ -26330,7 +26329,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         usage_type: UsageType = None,
         org_id: str = None,
         **params,
-    ) -> List[AvailableMember]:
+    ) -> builtins.list[AvailableMember]:
         """
         Search Available Members
 
@@ -26703,7 +26702,7 @@ class AsGuestCallingApi(AsApiChild, base='telephony/config/guestCalling'):
 
     def members_gen(
         self, member_name: str = None, phone_number: str = None, extension: str = None, org_id: str = None, **params
-    ) -> AsyncGenerator[DestinationMember, None, None]:
+    ) -> AsyncGenerator[DestinationMember, None]:
         """
         Read the Click-to-call Members
 
@@ -26740,7 +26739,7 @@ class AsGuestCallingApi(AsApiChild, base='telephony/config/guestCalling'):
 
     async def members(
         self, member_name: str = None, phone_number: str = None, extension: str = None, org_id: str = None, **params
-    ) -> List[DestinationMember]:
+    ) -> builtins.list[DestinationMember]:
         """
         Read the Click-to-call Members
 
@@ -26777,7 +26776,7 @@ class AsGuestCallingApi(AsApiChild, base='telephony/config/guestCalling'):
 
     def available_members_gen(
         self, member_name: str = None, phone_number: str = None, extension: str = None, org_id: str = None, **params
-    ) -> AsyncGenerator[DestinationMember, None, None]:
+    ) -> AsyncGenerator[DestinationMember, None]:
         """
         Read the Click-to-call Available Members
 
@@ -26815,7 +26814,7 @@ class AsGuestCallingApi(AsApiChild, base='telephony/config/guestCalling'):
 
     async def available_members(
         self, member_name: str = None, phone_number: str = None, extension: str = None, org_id: str = None, **params
-    ) -> List[DestinationMember]:
+    ) -> builtins.list[DestinationMember]:
         """
         Read the Click-to-call Available Members
 
@@ -27050,7 +27049,7 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
 
     def list_gen(
         self, org_id: str = None, location_id: str = None, name: str = None, phone_number: str = None, **params
-    ) -> AsyncGenerator[HuntGroup, None, None]:
+    ) -> AsyncGenerator[HuntGroup, None]:
         """
         Read the List of Hunt Groups
 
@@ -27077,7 +27076,7 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
 
     async def list(
         self, org_id: str = None, location_id: str = None, name: str = None, phone_number: str = None, **params
-    ) -> List[HuntGroup]:
+    ) -> builtins.list[HuntGroup]:
         """
         Read the List of Hunt Groups
 
@@ -27218,7 +27217,7 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
 
     def primary_available_phone_numbers_gen(
         self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Hunt Group Primary Available Phone Numbers
 
@@ -27251,7 +27250,7 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
 
     async def primary_available_phone_numbers(
         self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get Hunt Group Primary Available Phone Numbers
 
@@ -27284,7 +27283,7 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
 
     def alternate_available_phone_numbers_gen(
         self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Hunt Group Alternate Available Phone Numbers
 
@@ -27317,7 +27316,7 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
 
     async def alternate_available_phone_numbers(
         self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get Hunt Group Alternate Available Phone Numbers
 
@@ -27356,7 +27355,7 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
         extension: str = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Hunt Group Call Forward Available Phone Numbers
 
@@ -27404,7 +27403,7 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
         extension: str = None,
         org_id: str = None,
         **params,
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get Hunt Group Call Forward Available Phone Numbers
 
@@ -27659,7 +27658,7 @@ class AsOperatingModesApi(AsApiChild, base='telephony/config'):
         order: str = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[OperatingMode, None, None]:
+    ) -> AsyncGenerator[OperatingMode, None]:
         """
         Read the List of Operating Modes.
 
@@ -27706,7 +27705,7 @@ class AsOperatingModesApi(AsApiChild, base='telephony/config'):
         order: str = None,
         org_id: str = None,
         **params,
-    ) -> List[OperatingMode]:
+    ) -> builtins.list[OperatingMode]:
         """
         Read the List of Operating Modes.
 
@@ -27979,7 +27978,7 @@ class AsOperatingModesApi(AsApiChild, base='telephony/config'):
         extension: str = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Operating Mode Call Forward Available Phone Numbers
 
@@ -28029,7 +28028,7 @@ class AsOperatingModesApi(AsApiChild, base='telephony/config'):
         extension: str = None,
         org_id: str = None,
         **params,
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get Operating Mode Call Forward Available Phone Numbers
 
@@ -28726,7 +28725,7 @@ class AsOrganisationAccessCodesApi(AsApiChild, base='telephony/config/outgoingPe
 
     def list_gen(
         self, code: list[str] = None, description: list[str] = None, org_id: str = None, **params
-    ) -> AsyncGenerator[AuthCode, None, None]:
+    ) -> AsyncGenerator[AuthCode, None]:
         """
         Retrieve the organisation's access codes.
 
@@ -28756,7 +28755,7 @@ class AsOrganisationAccessCodesApi(AsApiChild, base='telephony/config/outgoingPe
 
     async def list(
         self, code: list[str] = None, description: list[str] = None, org_id: str = None, **params
-    ) -> List[AuthCode]:
+    ) -> builtins.list[AuthCode]:
         """
         Retrieve the organisation's access codes.
 
@@ -29021,7 +29020,7 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
 
     def list_gen(
         self, location_id: str = None, name: str = None, phone_number: str = None, org_id: str = None, **params
-    ) -> AsyncGenerator[Paging, None, None]:
+    ) -> AsyncGenerator[Paging, None]:
         """
         Read the List of Paging Groups
 
@@ -29050,11 +29049,10 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
         url = self._endpoint()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Paging, params=params, item_key='locationPaging')
-        pass
 
     async def list(
         self, location_id: str = None, name: str = None, phone_number: str = None, org_id: str = None, **params
-    ) -> List[Paging]:
+    ) -> builtins.list[Paging]:
         """
         Read the List of Paging Groups
 
@@ -29083,7 +29081,6 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
         url = self._endpoint()
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=Paging, params=params, item_key='locationPaging')]
-        pass
 
     async def create(self, location_id: str, settings: Paging, org_id: str = None) -> str:
         """
@@ -29187,7 +29184,7 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
 
     def primary_available_phone_numbers_gen(
         self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Paging Group Primary Available Phone Numbers
 
@@ -29220,7 +29217,7 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
 
     async def primary_available_phone_numbers(
         self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get Paging Group Primary Available Phone Numbers
 
@@ -29469,7 +29466,7 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
         order: str = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[DialPlan, None, None]:
+    ) -> AsyncGenerator[DialPlan, None]:
         """
         List all Dial Plans for the organization.
 
@@ -29508,7 +29505,7 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
         order: str = None,
         org_id: str = None,
         **params,
-    ) -> List[DialPlan]:
+    ) -> builtins.list[DialPlan]:
         """
         List all Dial Plans for the organization.
 
@@ -29653,7 +29650,7 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
 
     def patterns_gen(
         self, dial_plan_id: str, org_id: str = None, dial_pattern: str = None, **params
-    ) -> AsyncGenerator[str, None, None]:
+    ) -> AsyncGenerator[str, None]:
         """
         Read the List of Dial Patterns
 
@@ -29687,7 +29684,7 @@ class AsDialPlanApi(AsApiChild, base='telephony/config/premisePstn/dialPlans'):
 
     async def patterns(
         self, dial_plan_id: str, org_id: str = None, dial_pattern: str = None, **params
-    ) -> List[str]:
+    ) -> builtins.list[str]:
         """
         Read the List of Dial Patterns
 
@@ -29777,7 +29774,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
 
     def list_gen(
         self, name: str = None, order: str = None, org_id: str = None, **params
-    ) -> AsyncGenerator[RouteGroup, None, None]:
+    ) -> AsyncGenerator[RouteGroup, None]:
         """
         List all Route Groups for an organization. A Route Group is a group of trunks that allows further scale and
         redundancy with the connection to the premises.
@@ -29800,7 +29797,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
 
     async def list(
         self, name: str = None, order: str = None, org_id: str = None, **params
-    ) -> List[RouteGroup]:
+    ) -> builtins.list[RouteGroup]:
         """
         List all Route Groups for an organization. A Route Group is a group of trunks that allows further scale and
         redundancy with the connection to the premises.
@@ -29949,7 +29946,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
 
     def usage_call_to_extension_gen(
         self, rg_id: str, location_name: str = None, order: str = None, org_id: str = None, **params
-    ) -> AsyncGenerator[IdAndName, None, None]:
+    ) -> AsyncGenerator[IdAndName, None]:
         """
         List "Call to" on-premises Extension Locations for a specific route group. Users within these locations are
         registered to a PBX which allows you to route unknown extensions (calling number length of 2-6 digits) to
@@ -29979,7 +29976,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
 
     async def usage_call_to_extension(
         self, rg_id: str, location_name: str = None, order: str = None, org_id: str = None, **params
-    ) -> List[IdAndName]:
+    ) -> builtins.list[IdAndName]:
         """
         List "Call to" on-premises Extension Locations for a specific route group. Users within these locations are
         registered to a PBX which allows you to route unknown extensions (calling number length of 2-6 digits) to
@@ -30009,7 +30006,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
 
     def usage_dial_plan_gen(
         self, rg_id: str, location_name: str = None, order: str = None, org_id: str = None, **params
-    ) -> AsyncGenerator[IdAndName, None, None]:
+    ) -> AsyncGenerator[IdAndName, None]:
         """
         List Dial Plan Locations for a specific route group.
 
@@ -30042,7 +30039,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
 
     async def usage_dial_plan(
         self, rg_id: str, location_name: str = None, order: str = None, org_id: str = None, **params
-    ) -> List[IdAndName]:
+    ) -> builtins.list[IdAndName]:
         """
         List Dial Plan Locations for a specific route group.
 
@@ -30075,7 +30072,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
 
     def usage_location_pstn_gen(
         self, rg_id: str, location_name: str = None, order: str = None, org_id: str = None, **params
-    ) -> AsyncGenerator[IdAndName, None, None]:
+    ) -> AsyncGenerator[IdAndName, None]:
         """
         List PSTN Connection Locations for a specific route group. This solution lets you configure users to use Cloud
         PSTN (CCP or Cisco PSTN) or Premises-based PSTN.
@@ -30104,7 +30101,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
 
     async def usage_location_pstn(
         self, rg_id: str, location_name: str = None, order: str = None, org_id: str = None, **params
-    ) -> List[IdAndName]:
+    ) -> builtins.list[IdAndName]:
         """
         List PSTN Connection Locations for a specific route group. This solution lets you configure users to use Cloud
         PSTN (CCP or Cisco PSTN) or Premises-based PSTN.
@@ -30133,7 +30130,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
 
     def usage_route_lists_gen(
         self, rg_id: str, name: str = None, order: str = None, org_id: str = None, **params
-    ) -> AsyncGenerator[UsageRouteLists, None, None]:
+    ) -> AsyncGenerator[UsageRouteLists, None]:
         """
         Read the Route Lists of a Routing Group
 
@@ -30164,7 +30161,7 @@ class AsRouteGroupApi(AsApiChild, base='telephony/config/premisePstn/routeGroups
 
     async def usage_route_lists(
         self, rg_id: str, name: str = None, order: str = None, org_id: str = None, **params
-    ) -> List[UsageRouteLists]:
+    ) -> builtins.list[UsageRouteLists]:
         """
         Read the Route Lists of a Routing Group
 
@@ -30201,7 +30198,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
 
     def list_gen(
         self, name: list[str] = None, location_id: list[str] = None, order: str = None, org_id: str = None, **params
-    ) -> AsyncGenerator[RouteList, None, None]:
+    ) -> AsyncGenerator[RouteList, None]:
         """
         List all Route Lists for the organization.
 
@@ -30229,7 +30226,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
 
     async def list(
         self, name: list[str] = None, location_id: list[str] = None, order: str = None, org_id: str = None, **params
-    ) -> List[RouteList]:
+    ) -> builtins.list[RouteList]:
         """
         List all Route Lists for the organization.
 
@@ -30353,7 +30350,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
 
     def numbers_gen(
         self, rl_id: str, order: str = None, number: str = None, org_id: str = None, **params
-    ) -> AsyncGenerator[str, None, None]:
+    ) -> AsyncGenerator[str, None]:
         """
         Get numbers assigned to a Route List
 
@@ -30382,7 +30379,7 @@ class AsRouteListApi(AsApiChild, base='telephony/config/premisePstn/routeLists')
 
     async def numbers(
         self, rl_id: str, order: str = None, number: str = None, org_id: str = None, **params
-    ) -> List[str]:
+    ) -> builtins.list[str]:
         """
         Get numbers assigned to a Route List
 
@@ -30475,7 +30472,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         order: str = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[Trunk, None, None]:
+    ) -> AsyncGenerator[Trunk, None]:
         """
         List all Trunks for the organization.
 
@@ -30513,7 +30510,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         order: str = None,
         org_id: str = None,
         **params,
-    ) -> List[Trunk]:
+    ) -> builtins.list[Trunk]:
         """
         List all Trunks for the organization.
 
@@ -30755,7 +30752,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
 
     def usage_call_to_extension_gen(
         self, trunk_id: str, order: str = None, name: builtins.list[str] = None, org_id: str = None, **params
-    ) -> AsyncGenerator[IdAndName, None, None]:
+    ) -> AsyncGenerator[IdAndName, None]:
         """
         Get local gateway call to on-premises extension usage for a trunk.
 
@@ -30789,7 +30786,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
 
     async def usage_call_to_extension(
         self, trunk_id: str, order: str = None, name: builtins.list[str] = None, org_id: str = None, **params
-    ) -> List[IdAndName]:
+    ) -> builtins.list[IdAndName]:
         """
         Get local gateway call to on-premises extension usage for a trunk.
 
@@ -30823,7 +30820,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
 
     def usage_dial_plan_gen(
         self, trunk_id: str, order: str = None, name: builtins.list[str] = None, org_id: str = None, **params
-    ) -> AsyncGenerator[IdAndName, None, None]:
+    ) -> AsyncGenerator[IdAndName, None]:
         """
         Get Local Gateway Dial Plan Usage for a Trunk.
 
@@ -30857,7 +30854,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
 
     async def usage_dial_plan(
         self, trunk_id: str, order: str = None, name: builtins.list[str] = None, org_id: str = None, **params
-    ) -> List[IdAndName]:
+    ) -> builtins.list[IdAndName]:
         """
         Get Local Gateway Dial Plan Usage for a Trunk.
 
@@ -30889,7 +30886,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params)]
 
-    def usage_location_pstn_gen(self, trunk_id: str, org_id: str = None) -> AsyncGenerator[IdAndName, None, None]:
+    def usage_location_pstn_gen(self, trunk_id: str, org_id: str = None) -> AsyncGenerator[IdAndName, None]:
         """
         Get Local Gateway Dial Plan Usage for a Trunk.
 
@@ -30915,7 +30912,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
 
-    async def usage_location_pstn(self, trunk_id: str, org_id: str = None) -> List[IdAndName]:
+    async def usage_location_pstn(self, trunk_id: str, org_id: str = None) -> builtins.list[IdAndName]:
         """
         Get Local Gateway Dial Plan Usage for a Trunk.
 
@@ -30941,7 +30938,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=IdAndName, params=params)]
 
-    def usage_route_group_gen(self, trunk_id: str, org_id: str = None) -> AsyncGenerator[IdAndName, None, None]:
+    def usage_route_group_gen(self, trunk_id: str, org_id: str = None) -> AsyncGenerator[IdAndName, None]:
         """
         Get Local Gateway Dial Plan Usage for a Trunk.
 
@@ -30965,7 +30962,7 @@ class AsTrunkApi(AsApiChild, base='telephony/config/premisePstn/trunks'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=IdAndName, params=params)
 
-    async def usage_route_group(self, trunk_id: str, org_id: str = None) -> List[IdAndName]:
+    async def usage_route_group(self, trunk_id: str, org_id: str = None) -> builtins.list[IdAndName]:
         """
         Get Local Gateway Dial Plan Usage for a Trunk.
 
@@ -31137,7 +31134,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         has_cx_essentials: bool = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[AgentOrSupervisor, None, None]:
+    ) -> AsyncGenerator[AgentOrSupervisor, None]:
         """
         Get List of Supervisors
 
@@ -31183,7 +31180,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         has_cx_essentials: bool = None,
         org_id: str = None,
         **params,
-    ) -> List[AgentOrSupervisor]:
+    ) -> builtins.list[AgentOrSupervisor]:
         """
         Get List of Supervisors
 
@@ -31314,7 +31311,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         has_cx_essentials: bool = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[AgentOrSupervisor, None, None]:
+    ) -> AsyncGenerator[AgentOrSupervisor, None]:
         """
         List Available Supervisors
 
@@ -31361,7 +31358,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         has_cx_essentials: bool = None,
         org_id: str = None,
         **params,
-    ) -> List[AgentOrSupervisor]:
+    ) -> builtins.list[AgentOrSupervisor]:
         """
         List Available Supervisors
 
@@ -31409,7 +31406,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         has_cx_essentials: bool = None,
         org_id: str = None,
         **additional_params,
-    ) -> AsyncGenerator[AgentOrSupervisor, None, None]:
+    ) -> AsyncGenerator[AgentOrSupervisor, None]:
         """
         GET Supervisor Details
 
@@ -31461,7 +31458,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         has_cx_essentials: bool = None,
         org_id: str = None,
         **additional_params,
-    ) -> List[AgentOrSupervisor]:
+    ) -> builtins.list[AgentOrSupervisor]:
         """
         GET Supervisor Details
 
@@ -31550,7 +31547,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         has_cx_essentials: bool = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[AgentOrSupervisor, None, None]:
+    ) -> AsyncGenerator[AgentOrSupervisor, None]:
         """
         List Available Agents
 
@@ -31597,7 +31594,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         has_cx_essentials: bool = None,
         org_id: str = None,
         **params,
-    ) -> List[AgentOrSupervisor]:
+    ) -> builtins.list[AgentOrSupervisor]:
         """
         List Available Agents
 
@@ -32039,7 +32036,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         usage_type: UsageType = None,
         order: str = None,
         **params,
-    ) -> AsyncGenerator[AvailableMember, None, None]:
+    ) -> AsyncGenerator[AvailableMember, None]:
         """
         Search members that can be assigned to the device.
 
@@ -32085,7 +32082,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         usage_type: UsageType = None,
         order: str = None,
         **params,
-    ) -> List[AvailableMember]:
+    ) -> builtins.list[AvailableMember]:
         """
         Search members that can be assigned to the device.
 
@@ -33373,7 +33370,7 @@ class AsReceptionistContactsDirectoryApi(AsApiChild, base='telephony/config/loca
         data = await self.post(url=url, params=params, json=body)
         return data['id']
 
-    def list_gen(self, location_id: str, org_id: str = None) -> AsyncGenerator[IdAndName, None, None]:
+    def list_gen(self, location_id: str, org_id: str = None) -> AsyncGenerator[IdAndName, None]:
         """
         List all Receptionist Contact Directories for a location.
 
@@ -33392,7 +33389,7 @@ class AsReceptionistContactsDirectoryApi(AsApiChild, base='telephony/config/loca
         params = org_id and {'orgId': org_id} or None
         return self.session.follow_pagination(url=url, model=IdAndName, params=params, item_key='directories')
 
-    async def list(self, location_id: str, org_id: str = None) -> List[IdAndName]:
+    async def list(self, location_id: str, org_id: str = None) -> builtins.list[IdAndName]:
         """
         List all Receptionist Contact Directories for a location.
 
@@ -33554,7 +33551,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         data = await self.post(url=url, data=body, params=params)
         return data['id']
 
-    def list_gen(self, name: str = None, order: str = None, org_id: str = None) -> AsyncGenerator[TelephonyLocation, None, None]:
+    def list_gen(self, name: str = None, order: str = None, org_id: str = None) -> AsyncGenerator[TelephonyLocation, None]:
         """
         List Locations Webex Calling Details
 
@@ -33576,7 +33573,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=TelephonyLocation, params=params, item_key='locations')
 
-    async def list(self, name: str = None, order: str = None, org_id: str = None) -> List[TelephonyLocation]:
+    async def list(self, name: str = None, order: str = None, org_id: str = None) -> builtins.list[TelephonyLocation]:
         """
         List Locations Webex Calling Details
 
@@ -33760,7 +33757,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         person_id: str = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get the List of Phone Numbers Available for External Caller ID
 
@@ -33813,7 +33810,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         person_id: str = None,
         org_id: str = None,
         **params,
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get the List of Phone Numbers Available for External Caller ID
 
@@ -33865,7 +33862,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         owner_name: str = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Available Phone Numbers for a Location with Given Criteria
 
@@ -33908,7 +33905,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         owner_name: str = None,
         org_id: str = None,
         **params,
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get Available Phone Numbers for a Location with Given Criteria
 
@@ -33946,7 +33943,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
 
     def webex_go_available_phone_numbers_gen(
         self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Webex Go Available Phone Numbers
 
@@ -33979,7 +33976,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
 
     async def webex_go_available_phone_numbers(
         self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get Webex Go Available Phone Numbers
 
@@ -34017,7 +34014,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         owner_name: str = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Location ECBN Available Phone Numbers
 
@@ -34060,7 +34057,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         owner_name: str = None,
         org_id: str = None,
         **params,
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get Location ECBN Available Phone Numbers
 
@@ -34103,7 +34100,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         owner_name: str = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Available Charge Numbers for a Location with Given Criteria
 
@@ -34143,7 +34140,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         owner_name: str = None,
         org_id: str = None,
         **params,
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get Available Charge Numbers for a Location with Given Criteria
 
@@ -34183,7 +34180,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         owner_name: str = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Location Call Intercept Available Phone Numbers
 
@@ -34226,7 +34223,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         owner_name: str = None,
         org_id: str = None,
         **params,
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get Location Call Intercept Available Phone Numbers
 
@@ -34568,7 +34565,7 @@ class AsVirtualExtensionsApi(AsApiChild, base='telephony/config'):
         org_level_only: bool = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[VirtualExtensionRange, None, None]:
+    ) -> AsyncGenerator[VirtualExtensionRange, None]:
         """
         Get a list of a Virtual Extension Range
 
@@ -34626,7 +34623,7 @@ class AsVirtualExtensionsApi(AsApiChild, base='telephony/config'):
         org_level_only: bool = None,
         org_id: str = None,
         **params,
-    ) -> List[VirtualExtensionRange]:
+    ) -> builtins.list[VirtualExtensionRange]:
         """
         Get a list of a Virtual Extension Range
 
@@ -34902,7 +34899,7 @@ class AsVirtualExtensionsApi(AsApiChild, base='telephony/config'):
         org_level_only: bool = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[VirtualExtension, None, None]:
+    ) -> AsyncGenerator[VirtualExtension, None]:
         """
         Read the List of Virtual Extensions
 
@@ -34972,7 +34969,7 @@ class AsVirtualExtensionsApi(AsApiChild, base='telephony/config'):
         org_level_only: bool = None,
         org_id: str = None,
         **params,
-    ) -> List[VirtualExtension]:
+    ) -> builtins.list[VirtualExtension]:
         """
         Read the List of Virtual Extensions
 
@@ -35674,7 +35671,7 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
         has_extension_assigned: bool = None,
         has_dn_assigned: bool = None,
         **params,
-    ) -> AsyncGenerator[VirtualLine, None, None]:
+    ) -> AsyncGenerator[VirtualLine, None]:
         """
         List all Virtual Lines for the organization.
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
@@ -35745,7 +35742,7 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
         has_extension_assigned: bool = None,
         has_dn_assigned: bool = None,
         **params,
-    ) -> List[VirtualLine]:
+    ) -> builtins.list[VirtualLine]:
         """
         List all Virtual Lines for the organization.
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
@@ -35819,7 +35816,7 @@ class AsVoiceMessagingApi(AsApiChild, base='telephony/voiceMessages'):
         data = await super().get(url=url)
         return MessageSummary.model_validate(data)
 
-    def list_gen(self, line_owner_id: str = None, **params) -> AsyncGenerator[VoiceMessageDetails, None, None]:
+    def list_gen(self, line_owner_id: str = None, **params) -> AsyncGenerator[VoiceMessageDetails, None]:
         """
         Get the list of all voicemail messages for the user.
 
@@ -35832,7 +35829,7 @@ class AsVoiceMessagingApi(AsApiChild, base='telephony/voiceMessages'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=VoiceMessageDetails, params=params)
 
-    async def list(self, line_owner_id: str = None, **params) -> List[VoiceMessageDetails]:
+    async def list(self, line_owner_id: str = None, **params) -> builtins.list[VoiceMessageDetails]:
         """
         Get the list of all voicemail messages for the user.
 
@@ -35972,7 +35969,7 @@ class AsVoicePortalApi(AsApiChild, base='telephony/config/locations'):
 
     def available_phone_numbers_gen(
         self, location_id: str, phone_number: list[str] = None, org_id: str = None, **params
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get VoicePortal Available Phone Numbers
 
@@ -36006,7 +36003,7 @@ class AsVoicePortalApi(AsApiChild, base='telephony/config/locations'):
 
     async def available_phone_numbers(
         self, location_id: str, phone_number: list[str] = None, org_id: str = None, **params
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get VoicePortal Available Phone Numbers
 
@@ -36080,7 +36077,7 @@ class AsVoicemailGroupsApi(AsApiChild, base='telephony/config/voicemailGroups'):
 
     def list_gen(
         self, location_id: str = None, name: str = None, phone_number: str = None, org_id: str = None, **params
-    ) -> AsyncGenerator[VoicemailGroup, None, None]:
+    ) -> AsyncGenerator[VoicemailGroup, None]:
         """
         List the voicemail group information for the organization.
 
@@ -36106,7 +36103,7 @@ class AsVoicemailGroupsApi(AsApiChild, base='telephony/config/voicemailGroups'):
 
     async def list(
         self, location_id: str = None, name: str = None, phone_number: str = None, org_id: str = None, **params
-    ) -> List[VoicemailGroup]:
+    ) -> builtins.list[VoicemailGroup]:
         """
         List the voicemail group information for the organization.
 
@@ -36232,7 +36229,7 @@ class AsVoicemailGroupsApi(AsApiChild, base='telephony/config/voicemailGroups'):
 
     def fax_message_available_phone_numbers_gen(
         self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Voicemail Group Fax Message Available Phone Numbers
 
@@ -36266,7 +36263,7 @@ class AsVoicemailGroupsApi(AsApiChild, base='telephony/config/voicemailGroups'):
 
     async def fax_message_available_phone_numbers(
         self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get Voicemail Group Fax Message Available Phone Numbers
 
@@ -36300,7 +36297,7 @@ class AsVoicemailGroupsApi(AsApiChild, base='telephony/config/voicemailGroups'):
 
     def available_phone_numbers_gen(
         self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
-    ) -> AsyncGenerator[AvailableNumber, None, None]:
+    ) -> AsyncGenerator[AvailableNumber, None]:
         """
         Get Voicemail Group Available Phone Numbers
 
@@ -36333,7 +36330,7 @@ class AsVoicemailGroupsApi(AsApiChild, base='telephony/config/voicemailGroups'):
 
     async def available_phone_numbers(
         self, location_id: str, phone_number: builtins.list[str] = None, org_id: str = None, **params
-    ) -> List[AvailableNumber]:
+    ) -> builtins.list[AvailableNumber]:
         """
         Get Voicemail Group Available Phone Numbers
 
@@ -36542,7 +36539,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         service_number: bool = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[NumberListPhoneNumber, None, None]:
+    ) -> AsyncGenerator[NumberListPhoneNumber, None]:
         """
         Get Phone Numbers for an Organization with Given Criterias
 
@@ -36640,7 +36637,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         service_number: bool = None,
         org_id: str = None,
         **params,
-    ) -> List[NumberListPhoneNumber]:
+    ) -> builtins.list[NumberListPhoneNumber]:
         """
         Get Phone Numbers for an Organization with Given Criterias
 
@@ -36811,7 +36808,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
 
     def route_choices_gen(
         self, route_group_name: str = None, trunk_name: str = None, order: str = None, org_id: str = None
-    ) -> AsyncGenerator[RouteIdentity, None, None]:
+    ) -> AsyncGenerator[RouteIdentity, None]:
         """
         Read the List of Routing Choices
 
@@ -36838,7 +36835,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
 
     async def route_choices(
         self, route_group_name: str = None, trunk_name: str = None, order: str = None, org_id: str = None
-    ) -> List[RouteIdentity]:
+    ) -> builtins.list[RouteIdentity]:
         """
         Read the List of Routing Choices
 
@@ -37120,7 +37117,7 @@ class AsWebhookApi(AsApiChild, base='webhooks'):
     API for webhook management
     """
 
-    def list_gen(self, owned_by: str = None, **params) -> AsyncGenerator[Webhook, None, None]:
+    def list_gen(self, owned_by: str = None, **params) -> AsyncGenerator[Webhook, None]:
         """
         List Webhooks
 
@@ -37136,7 +37133,7 @@ class AsWebhookApi(AsApiChild, base='webhooks'):
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=Webhook, item_key='items', params=params)
 
-    async def list(self, owned_by: str = None, **params) -> List[Webhook]:
+    async def list(self, owned_by: str = None, **params) -> builtins.list[Webhook]:
         """
         List Webhooks
 
@@ -37259,7 +37256,7 @@ class AsWorkspaceLocationFloorApi(AsApiChild, base='workspaceLocations'):
             path = f'{path}/{floor_id}'
         return super().ep(path=path)
 
-    def list_gen(self, location_id: str, org_id: str = None) -> AsyncGenerator[WorkspaceLocationFloor, None, None]:
+    def list_gen(self, location_id: str, org_id: str = None) -> AsyncGenerator[WorkspaceLocationFloor, None]:
         """
 
         :param location_id:
@@ -37270,7 +37267,7 @@ class AsWorkspaceLocationFloorApi(AsApiChild, base='workspaceLocations'):
         params = org_id and {'orgId': org_id} or None
         return self.session.follow_pagination(url=url, model=WorkspaceLocationFloor, params=params, item_key='items')
 
-    async def list(self, location_id: str, org_id: str = None) -> List[WorkspaceLocationFloor]:
+    async def list(self, location_id: str, org_id: str = None) -> builtins.list[WorkspaceLocationFloor]:
         """
 
         :param location_id:
@@ -37391,7 +37388,7 @@ class AsWorkspaceLocationApi(AsApiChild, base='workspaceLocations'):
         city_name: str = None,
         org_id: str = None,
         **params,
-    ) -> AsyncGenerator[WorkspaceLocation, None, None]:
+    ) -> AsyncGenerator[WorkspaceLocation, None]:
         """
         List workspace locations
 
@@ -37420,7 +37417,7 @@ class AsWorkspaceLocationApi(AsApiChild, base='workspaceLocations'):
         city_name: str = None,
         org_id: str = None,
         **params,
-    ) -> List[WorkspaceLocation]:
+    ) -> builtins.list[WorkspaceLocation]:
         """
         List workspace locations
 
@@ -38309,7 +38306,7 @@ class AsSimRingApi(AsPersonSettingsApiChild):
 
 
 class AsWorkspaceDevicesApi(AsApiChild, base='telephony/config/workspaces'):
-    def list_gen(self, workspace_id: str, org_id: str = None) -> AsyncGenerator[TelephonyDevice, None, None]:
+    def list_gen(self, workspace_id: str, org_id: str = None) -> AsyncGenerator[TelephonyDevice, None]:
         """
         Get all devices for a workspace.
         This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
@@ -38327,7 +38324,7 @@ class AsWorkspaceDevicesApi(AsApiChild, base='telephony/config/workspaces'):
         url = self.ep(f'{workspace_id}/devices')
         return self.session.follow_pagination(url=url, model=TelephonyDevice, params=params, item_key='devices')
 
-    async def list(self, workspace_id: str, org_id: str = None) -> List[TelephonyDevice]:
+    async def list(self, workspace_id: str, org_id: str = None) -> builtins.list[TelephonyDevice]:
         """
         Get all devices for a workspace.
         This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
@@ -38563,7 +38560,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         custom_attribute: str = None,
         org_id: str = None,
         **params: Any,
-    ) -> AsyncGenerator[Workspace, None, None]:
+    ) -> AsyncGenerator[Workspace, None]:
         """
         List Workspaces
 
@@ -38675,7 +38672,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         custom_attribute: str = None,
         org_id: str = None,
         **params: Any,
-    ) -> List[Workspace]:
+    ) -> builtins.list[Workspace]:
         """
         List Workspaces
 
@@ -38877,7 +38874,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         data = await self.put(url, json=j_data)
         return Workspace.model_validate(data)
 
-    async def delete_workspace(self, workspace_id: str)-> None:
+    async def delete_workspace(self, workspace_id: str) -> None:
         """
         Delete a Workspace
 

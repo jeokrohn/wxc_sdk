@@ -52,7 +52,7 @@ from dataclasses import dataclass
 from datetime import datetime, date, timedelta
 from enum import Enum
 from io import BufferedReader
-from typing import Any, Union, Optional, Literal, List
+from typing import Any, Union, Optional, Literal
 
 import pytz
 from dateutil import tz
@@ -129,7 +129,7 @@ RE_METHOD_DEF = re.compile(
 )
 
 # Generator return annotation
-RE_GENERATOR = re.compile(r'->\s*Generator\[(?P<gen_type>\w+)(?P<post>.+)')
+RE_GENERATOR = re.compile(r'->\s*Generator\[(?P<gen_type>\w+)(?P<gen_params>.+),\s*None\](?P<post>.+)')
 
 RE_FOLLOW_PAGINATION = re.compile(
     r"""
@@ -613,7 +613,7 @@ def transform_classes_to_async(sources: Iterable[str]) -> Generator[str, None, N
             #       * to: return [o async for o in self.session.follow_pagination(url=ep, model=Person, params=params)]
 
             # switch Generator[ to AsyncGenerator for async generator
-            gen_source, subs = RE_GENERATOR.subn(r'-> AsyncGenerator[\g<gen_type>\g<post>', source)
+            gen_source, subs = RE_GENERATOR.subn(r'-> AsyncGenerator[\g<gen_type>\g<gen_params>]\g<post>', source)
             if not subs:
                 raise ValueError(f'Changing "Generator" to "AsyncGenerator" failed for {class_name}.{method_name}')
 
@@ -628,7 +628,7 @@ def transform_classes_to_async(sources: Iterable[str]) -> Generator[str, None, N
             if not subs:
                 raise ValueError(f'creating "async def {method_name}" failed for {class_name}.{method_name}')
             # update return signature
-            source, subs = RE_GENERATOR.subn(r'-> List[\g<gen_type>]:', source)
+            source, subs = RE_GENERATOR.subn(r'-> builtins.list[\g<gen_type>]:', source)
             if not subs:
                 raise ValueError(f'updating return signature to "-> list[..]"failed for {class_name}.{method_name}')
             source, subs = RE_FOLLOW_PAGINATION.subn(r'return [o async for o in \g<follow>]', source)
