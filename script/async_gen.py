@@ -30,7 +30,7 @@ from dataclasses import dataclass, field, fields, is_dataclass
 from importlib import import_module
 from itertools import chain
 from pathlib import Path
-from typing import Any, ClassVar, Dict, Optional, Union
+from typing import Any, ClassVar, Optional, Union
 
 from wxc_sdk import WebexSimpleApi
 
@@ -169,7 +169,7 @@ class Module:
     imported_module: Any = field(init=False)
 
     #: module registry
-    registry: ClassVar[Dict[str, 'Module']] = {}
+    registry: ClassVar[dict[str, 'Module']] = {}
 
     def __post_init__(self):
         """
@@ -713,6 +713,15 @@ def gen():
     return
 
 
+def import_as_api():
+    # try to import the generated source
+    try:
+        from wxc_sdk.as_api import AsWebexSimpleApi  # noqa: F401
+    except Exception as e:
+        print(f'Failed to import wxc_sdk.as_api: {e}', file=sys.stderr)
+        exit(1)
+
+
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     paths = source_paths()
@@ -738,3 +747,4 @@ if __name__ == '__main__':
         import_item: Import = Import.registry[import_qualident]
         print(f'{import_qualident}: {", ".join(sorted(import_item.imported_in_module_names))}')
     gen()
+    import_as_api()
