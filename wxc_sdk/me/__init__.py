@@ -6,7 +6,7 @@ Call settings for me APIs allow a person to read or modify their settings.
 
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import TypeAdapter
 
@@ -608,7 +608,7 @@ class MeSettingsApi(ApiChild, base='telephony/config/people/me'):
         return r
 
     def available_numbers_for_location(
-        self, name: str = None, phone_number: str = None, extension: str = None, order: str = None, **params
+        self, name: str = None, phone_number: str = None, extension: str = None, order: str = None, **params: Any
     ) -> Generator[LocationAssignedNumber, None, None]:
         """
         Get Available Numbers for User's Location.

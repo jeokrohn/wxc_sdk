@@ -233,7 +233,7 @@ class PagingApi(ApiChild, base='telephony/config'):
         url = self._endpoint(location_id=location_id)
         data = settings.create_or_update()
         data: dict[str, str] = self.post(url, json=data, params=params)  # type: ignore[no-redef]
-        return data['id']  # type: ignore[index]
+        return data['id']
 
     def delete_paging(self, location_id: str, paging_id: str, org_id: str = None) -> None:
         """

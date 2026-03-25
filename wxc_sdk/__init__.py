@@ -5,7 +5,7 @@ Simple SDK for Webex APIs with focus on Webex Calling specific endpoints
 import logging
 import os
 from dataclasses import dataclass
-from typing import Union
+from typing import Any, Optional, Self, Union
 
 from .admin_audit import AdminAuditEventsApi
 from .attachment_actions import AttachmentActionsApi
@@ -144,8 +144,8 @@ class WebexSimpleApi:
         concurrent_requests: int = 10,
         retry_429: bool = True,
         session: RestSession = None,
-        **kwargs,
-    ):
+        **kwargs: Any,
+    ) -> None:
         """
 
         :param tokens: token to be used by the API. Can be a :class:`tokens.Tokens` instance, a string or None. If
@@ -216,7 +216,7 @@ class WebexSimpleApi:
         self.xapi = XApi(session=session)
 
     @property
-    def access_token(self) -> str:
+    def access_token(self) -> Optional[str]:
         """
         access token used for all requests
 
@@ -225,12 +225,12 @@ class WebexSimpleApi:
         """
         return self.session.access_token
 
-    def close(self):
+    def close(self) -> None:
         if self._must_close_session:
             self.session.close()
 
-    def __enter__(self):
+    def __enter__(self) -> Self:
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, *args: Any) -> None:
         self.close()

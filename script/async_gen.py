@@ -52,7 +52,7 @@ from dataclasses import dataclass
 from datetime import datetime, date, timedelta
 from enum import Enum
 from io import BufferedReader
-from typing import Any, Union, Optional, Literal
+from typing import Any, Union, Optional, Literal, Self
 
 import pytz
 from dateutil import tz

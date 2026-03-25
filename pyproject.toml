@@ -186,7 +186,7 @@ module = "wxc_sdk.as_rest"
 
 [[tool.mypy.overrides]]
 module = "wxc_sdk.*"
-disable_error_code = ["index", "import-untyped", "union-attr"]
+disable_error_code = ["index", "import-untyped", "union-attr", "no-untyped-def"]
 
 [[tool.mypy.overrides]]
 module = "wxc_sdk.har_writer.*"

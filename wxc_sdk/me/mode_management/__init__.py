@@ -131,7 +131,7 @@ class MeModeManagementApi(ApiChild, base='telephony/config/people/me'):
         """
         url = self.ep('settings/modeManagement/features')
         data = super().get(url)
-        r = TypeAdapter(list[ModeManagementFeature]).validate_python(data['features'])  # type: ignore[index]
+        r = TypeAdapter(list[ModeManagementFeature]).validate_python(data['features'])
         return r
 
     def switch_mode_multiple_features(self, feature_ids: list[str], operating_mode_name: str) -> None:
@@ -183,7 +183,7 @@ class MeModeManagementApi(ApiChild, base='telephony/config/people/me'):
         params['featureIds'] = ','.join(feature_ids)
         url = self.ep('settings/modeManagement/features/commonModes')
         data = super().get(url, params=params)
-        r: list[str] = data['commonModeNames']  # type: ignore[index,assignment]
+        r: list[str] = data['commonModeNames']  # type: ignore[assignment]
         return r
 
     def feature_get(self, feature_id: str) -> FeatureDetail:
@@ -338,5 +338,5 @@ class MeModeManagementApi(ApiChild, base='telephony/config/people/me'):
         """
         url = self.ep(f'settings/modeManagement/features/{feature_id}/normalOperationMode')
         data = super().get(url)
-        r = data['operatingModeId']  # type: ignore[index]
+        r = data['operatingModeId']
         return r

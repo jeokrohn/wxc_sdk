@@ -583,4 +583,4 @@ class WorkspacesApi(ApiChild, base='workspaces'):
         """
         url = self.ep(f'{workspace_id}/capabilities')
         data = super().get(url=url)
-        return CapabilityMap.model_validate(data['capabilities'])  # type: ignore[index]
+        return CapabilityMap.model_validate(data['capabilities'])

@@ -365,7 +365,7 @@ class ExecutiveSettingsApi(ApiChild, base=''):
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/executive/assignedAssistants')
         data = super().get(url, params=params)
-        r = TypeAdapter(list[ExecOrAssistant]).validate_python(data['assistants'])  # type: ignore[index]
+        r = TypeAdapter(list[ExecOrAssistant]).validate_python(data['assistants'])
         return r
 
     def update_assigned_assistants(self, person_id: str, assistant_ids: list[str] = None, org_id: str = None) -> None:
@@ -485,7 +485,7 @@ class ExecutiveSettingsApi(ApiChild, base=''):
             params['phoneNumber'] = phone_number
         url = self.ep(f'telephony/config/people/{person_id}/executive/availableAssistants')
         data = super().get(url, params=params)
-        r = TypeAdapter(list[ExecOrAssistant]).validate_python(data['assistants'])  # type: ignore[index]
+        r = TypeAdapter(list[ExecOrAssistant]).validate_python(data['assistants'])
         return r
 
     def executive_call_filtering_settings(self, person_id: str, org_id: str = None) -> ExecCallFiltering:
@@ -574,7 +574,7 @@ class ExecutiveSettingsApi(ApiChild, base=''):
         body = settings.create()
         url = self.ep(f'telephony/config/people/{person_id}/executive/callFiltering/criteria')
         data = super().post(url, params=params, json=body)
-        r = data['id']  # type: ignore[index]
+        r = data['id']
         return r
 
     def delete_call_filtering_criteria(self, person_id: str, id: str, org_id: str = None) -> None:

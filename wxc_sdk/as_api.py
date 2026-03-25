@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from datetime import datetime, date, timedelta
 from enum import Enum
 from io import BufferedReader
-from typing import Any, Union, Optional, Literal
+from typing import Any, Union, Optional, Literal, Self
 
 import pytz
 from dateutil import tz
@@ -5782,7 +5782,7 @@ class AsMeModeManagementApi(AsApiChild, base='telephony/config/people/me'):
         """
         url = self.ep('settings/modeManagement/features')
         data = await super().get(url)
-        r = TypeAdapter(list[ModeManagementFeature]).validate_python(data['features'])  # type: ignore[index]
+        r = TypeAdapter(list[ModeManagementFeature]).validate_python(data['features'])
         return r
 
     async def switch_mode_multiple_features(self, feature_ids: list[str], operating_mode_name: str) -> None:
@@ -5834,7 +5834,7 @@ class AsMeModeManagementApi(AsApiChild, base='telephony/config/people/me'):
         params['featureIds'] = ','.join(feature_ids)
         url = self.ep('settings/modeManagement/features/commonModes')
         data = await super().get(url, params=params)
-        r: list[str] = data['commonModeNames']  # type: ignore[index,assignment]
+        r: list[str] = data['commonModeNames']  # type: ignore[assignment]
         return r
 
     async def feature_get(self, feature_id: str) -> FeatureDetail:
@@ -5989,7 +5989,7 @@ class AsMeModeManagementApi(AsApiChild, base='telephony/config/people/me'):
         """
         url = self.ep(f'settings/modeManagement/features/{feature_id}/normalOperationMode')
         data = await super().get(url)
-        r = data['operatingModeId']  # type: ignore[index]
+        r = data['operatingModeId']
         return r
 
 
@@ -7484,7 +7484,7 @@ class AsMeSettingsApi(AsApiChild, base='telephony/config/people/me'):
         return r
 
     def available_numbers_for_location_gen(
-        self, name: str = None, phone_number: str = None, extension: str = None, order: str = None, **params
+        self, name: str = None, phone_number: str = None, extension: str = None, order: str = None, **params: Any
     ) -> AsyncGenerator[LocationAssignedNumber, None]:
         """
         Get Available Numbers for User's Location.
@@ -7517,7 +7517,7 @@ class AsMeSettingsApi(AsApiChild, base='telephony/config/people/me'):
         )
 
     async def available_numbers_for_location(
-        self, name: str = None, phone_number: str = None, extension: str = None, order: str = None, **params
+        self, name: str = None, phone_number: str = None, extension: str = None, order: str = None, **params: Any
     ) -> builtins.list[LocationAssignedNumber]:
         """
         Get Available Numbers for User's Location.
@@ -14196,7 +14196,7 @@ class AsExecutiveSettingsApi(AsApiChild, base=''):
             params['orgId'] = org_id
         url = self.ep(f'telephony/config/people/{person_id}/executive/assignedAssistants')
         data = await super().get(url, params=params)
-        r = TypeAdapter(list[ExecOrAssistant]).validate_python(data['assistants'])  # type: ignore[index]
+        r = TypeAdapter(list[ExecOrAssistant]).validate_python(data['assistants'])
         return r
 
     async def update_assigned_assistants(self, person_id: str, assistant_ids: list[str] = None, org_id: str = None) -> None:
@@ -14316,7 +14316,7 @@ class AsExecutiveSettingsApi(AsApiChild, base=''):
             params['phoneNumber'] = phone_number
         url = self.ep(f'telephony/config/people/{person_id}/executive/availableAssistants')
         data = await super().get(url, params=params)
-        r = TypeAdapter(list[ExecOrAssistant]).validate_python(data['assistants'])  # type: ignore[index]
+        r = TypeAdapter(list[ExecOrAssistant]).validate_python(data['assistants'])
         return r
 
     async def executive_call_filtering_settings(self, person_id: str, org_id: str = None) -> ExecCallFiltering:
@@ -14405,7 +14405,7 @@ class AsExecutiveSettingsApi(AsApiChild, base=''):
         body = settings.create()
         url = self.ep(f'telephony/config/people/{person_id}/executive/callFiltering/criteria')
         data = await super().post(url, params=params, json=body)
-        r = data['id']  # type: ignore[index]
+        r = data['id']
         return r
 
     async def delete_call_filtering_criteria(self, person_id: str, id: str, org_id: str = None) -> None:
@@ -29121,7 +29121,7 @@ class AsPagingApi(AsApiChild, base='telephony/config'):
         url = self._endpoint(location_id=location_id)
         data = settings.create_or_update()
         data: dict[str, str] = await self.post(url, json=data, params=params)  # type: ignore[no-redef]
-        return data['id']  # type: ignore[index]
+        return data['id']
 
     async def delete_paging(self, location_id: str, paging_id: str, org_id: str = None) -> None:
         """
@@ -38913,7 +38913,7 @@ class AsWorkspacesApi(AsApiChild, base='workspaces'):
         """
         url = self.ep(f'{workspace_id}/capabilities')
         data = await super().get(url=url)
-        return CapabilityMap.model_validate(data['capabilities'])  # type: ignore[index]
+        return CapabilityMap.model_validate(data['capabilities'])
 
 
 class AsXApi(AsApiChild, base='xapi'):
@@ -39099,8 +39099,8 @@ class AsWebexSimpleApi:
         concurrent_requests: int = 10,
         retry_429: bool = True,
         session: AsRestSession = None,
-        **kwargs,
-    ):
+        **kwargs: Any,
+    ) -> None:
         """
 
         :param tokens: token to be used by the API. Can be a :class:`tokens.Tokens` instance, a string or None. If
@@ -39171,7 +39171,7 @@ class AsWebexSimpleApi:
         self.xapi = AsXApi(session=session)
 
     @property
-    def access_token(self) -> str:
+    def access_token(self) -> Optional[str]:
         """
         access token used for all requests
 
@@ -39180,12 +39180,12 @@ class AsWebexSimpleApi:
         """
         return self.session.access_token
 
-    async def close(self):
+    async def close(self) -> None:
         if self._must_close_session:
             await self.session.close()
 
-    async def __aenter__(self):
+    async def __aenter__(self) -> Self:
         return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
+    async def __aexit__(self, *args: Any) -> None:
         await self.close()
