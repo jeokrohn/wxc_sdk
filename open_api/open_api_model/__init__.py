@@ -7,7 +7,7 @@ import re
 from collections.abc import Generator
 from typing import Any, Optional, Union
 
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 from pydantic_core.core_schema import ValidationInfo
 
 from wxc_sdk.base import to_camel
@@ -20,9 +20,7 @@ class OABaseModel(BaseModel):
     Base class for OpenAPI models
     """
 
-    class Config:
-        alias_generator = to_camel
-        extra = 'forbid'
+    model_config = ConfigDict(alias_generator=to_camel, extra='forbid')
 
 
 class OANameAndUrl(OABaseModel):
@@ -272,7 +270,7 @@ class OAContent(OABaseModel):
 
 class OAResponse(OABaseModel):
     description: Optional[str] = None
-    headers: Optional[dict[str, str]] = None
+    headers: Optional[dict[Any, Any]] = None
     content: Optional[dict[str, OAContent]] = Field(default_factory=dict)
     ref: Optional[str] = Field(alias='$ref', default=None)
 
@@ -284,8 +282,8 @@ class ExternalDocs(OABaseModel):
 
 class OAOperation(OABaseModel):
     summary: str
-    operation_id: Optional[str] = Field(None)
-    description: Optional[str] = Field('')
+    operation_id: Optional[str] = None
+    description: Optional[str] = ''
     parameters: Optional[list[OAParameter]] = Field(default_factory=list)
     request_body: Optional[OARequestBody] = None
     security: Optional[Any] = None
