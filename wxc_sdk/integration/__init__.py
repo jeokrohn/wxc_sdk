@@ -83,12 +83,11 @@ class Integration:
         if isinstance(scopes, list):
             self.scopes = scopes
         else:
-            scopes: str
             self.scopes = scopes.split()
         self.redirect_url = redirect_url
         self.auth_service = auth_service or 'https://webexapis.com/v1/authorize'
         self.token_service = token_service or 'https://webexapis.com/v1/access_token'
-        self.initiate_flow_callback = initiate_flow_callback or webbrowser.open
+        self.initiate_flow_callback = initiate_flow_callback or webbrowser.open  # type: ignore[assignment]
 
     def auth_url(self, state: str) -> str:
         """
@@ -99,7 +98,7 @@ class Integration:
         :return: URL to start the OAuth flow
         :rtype: str
         """
-        scopes = self.scopes
+        scopes: Union[str, list[str]] = self.scopes
         if isinstance(scopes, list):
             scopes = ' '.join(scopes)
         params = {
@@ -139,7 +138,7 @@ class Integration:
         tokens.set_expiration()
         return tokens
 
-    def refresh(self, tokens: Tokens):
+    def refresh(self, tokens: Tokens) -> None:
         """
         Try to get a new access token using the refresh token.
 
@@ -165,7 +164,6 @@ class Integration:
             raise
         else:
             new_tokens = Tokens.model_validate(json_data)
-            new_tokens: Tokens
             new_tokens.set_expiration()
             tokens.update(new_tokens)
 
@@ -207,7 +205,7 @@ class Integration:
         :rtype: :class:`wxc_sdk.tokens.Tokens``
         """
 
-        def serve_redirect():
+        def serve_redirect() -> Optional[str]:
             """
             Temporarily start a web server to serve the redirect URI at http://localhost:6001/redirect'
             :return: parses query of the GET on the redirect URI
@@ -220,7 +218,7 @@ class Integration:
                 # handle the GET request on the redirect URI
 
                 # noinspection PyPep8Naming
-                def do_GET(self):
+                def do_GET(self) -> None:
                     # serve exactly one GET on the redirect URI and then we are done
 
                     parsed = urllib.parse.urlparse(self.path)
@@ -234,7 +232,7 @@ class Integration:
                     self.flush_headers()
 
                 @staticmethod
-                def shutdown(server: socketserver.BaseServer):
+                def shutdown(server: socketserver.BaseServer) -> None:
                     log.debug('serve_redirect: shutdown of local web server requested')
                     threading.Thread(target=server.shutdown, daemon=True).start()
 
@@ -243,7 +241,7 @@ class Integration:
             httpd.serve_forever()
             httpd.server_close()
             log.debug(f'serve_redirect: server terminated, result {oauth_response["query"]}')
-            return oauth_response['query']
+            return oauth_response['query']  # type: ignore[return-value]
 
         state = str(uuid.uuid4())
         auth_url = self.auth_url(state=state)
@@ -265,7 +263,7 @@ class Integration:
                 except Exception:
                     pass
                 log.warning('Authorization did not finish in time (60 seconds)')
-                return
+                return None
 
         code = result['code'][0]
         response_state = result['state'][0]
@@ -331,7 +329,7 @@ class Integration:
         :rtype: :class:`wxc_sdk.tokens.Tokens`
         """
 
-        def write_tokens(tokens_to_cache: Tokens):
+        def write_tokens(tokens_to_cache: Tokens) -> None:
             with open(yml_path, mode='w') as f:
                 yaml.safe_dump(json.loads(tokens_to_cache.model_dump_json()), f)
             return

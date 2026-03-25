@@ -85,8 +85,8 @@ class HarWriter:
             json_str = har_instance.model_dump_json(exclude_none=True)
             m = re.match(r'^(.+"entries":\s*\[)(].+)$', json_str, flags=re.DOTALL)
             if self._iostream is not None:
-                self._iostream.write(m.group(1))  # type: ignore[union-attr]
-            self._incremental_trailer = m.group(2)  # type: ignore[union-attr]
+                self._iostream.write(m.group(1))
+            self._incremental_trailer = m.group(2)
             self._incremental_first_entry = True
         else:
             # don't open any file, just keep HAR object so that we can keep track of entries
@@ -142,10 +142,10 @@ class HarWriter:
             if not self._incremental_first_entry:
                 json_str = f',{json_str}'
             self._incremental_first_entry = False
-            self._iostream.write(json_str)  # type: ignore[union-attr]
+            self._iostream.write(json_str)
         else:
             # append entry
-            self.har.log.entries.append(entry)  # type: ignore[union-attr]
+            self.har.log.entries.append(entry)
 
     def __enter__(self) -> Self:
         return self
@@ -198,9 +198,9 @@ class HarWriter:
         response: ClientResponse,
         request_body: Union[str, bytes],
         request_ct: str,
-        response_data: Union[str, dict],
+        response_data: Union[str, dict[str, Any]],
         diff_ns: int,
-    ):
+    ) -> None:
         """
         Callback for AsWebexSimpleApi responses
         """

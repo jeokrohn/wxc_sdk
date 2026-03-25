@@ -87,7 +87,7 @@ class RestError(HTTPError):
         try:
             self.detail = ErrorDetail.model_validate(json.loads(response.text))
         except (json.JSONDecodeError, ValidationError):
-            self.detail = response.text
+            self.detail = response.text  # type: ignore[assignment]
 
     def __str__(self) -> str:
         desc = self.description
@@ -111,7 +111,7 @@ class RestError(HTTPError):
         return self.detail and self.detail.description or ''
 
     @property
-    def code(self) -> int | None:
+    def code(self) -> Optional[int]:
         """
         error code
 
@@ -161,9 +161,11 @@ def dump_response(
 
     # request body
     request_body = response.request.body
+    if isinstance(request_body, bytes):
+        request_body = request_body.decode('utf-8')
     if request_body:
         print('  --- body ---', file=output)
-        ct = response.request.headers.get('Content-Type').lower()  # type: ignore[union-attr]
+        ct = response.request.headers.get('Content-Type').lower()
         if ct.startswith('application/json'):
             for line in json.dumps(json.loads(request_body), indent=2).splitlines():
                 print(f'  {line}', file=output)
@@ -331,7 +333,7 @@ class RestSession(Session):
         return f'{self.BASE}{path}'
 
     @property
-    def access_token(self) -> str | None:
+    def access_token(self) -> Optional[str]:
         """
         access token used for all requests
 
@@ -502,19 +504,17 @@ class RestSession(Session):
         else:
             validator = model.model_validate  # type: ignore[assignment]
 
-        while url:
-            # not needed any more, WXCAPIBULK-27 has been fixed
-            # if url.startswith('https,'):
-            #     url = url[6:]
-            log.debug(f'{self.__class__.__name__}.pagination: getting {url}')
-            response, data = self._request_w_response('GET', url=url, params=params, **kwargs)
+        cur_url: Optional[str] = url
+        while cur_url:
+            log.debug(f'{self.__class__.__name__}.pagination: getting {cur_url}')
+            response, data = self._request_w_response('GET', url=cur_url, params=params, **kwargs)
             # params only in first request. In subsequent requests we rely on the completeness of the 'next' URL
             params = None
             # try to get the next page (if present)
             try:
-                url = str(response.links['next']['url'])
+                cur_url = str(response.links['next']['url'])
             except KeyError:
-                url = None
+                cur_url = None
             if not data:
                 continue
             # return all items
@@ -523,8 +523,8 @@ class RestSession(Session):
                     item_key = 'items'
                 else:
                     # we go w/ the first return value that is a list
-                    item_key = next((k for k, v in data.items() if isinstance(v, list)))  # type: ignore[union-attr]
-            items = data.get(item_key, [])  # type: ignore[union-attr]
+                    item_key = next((k for k, v in data.items() if isinstance(v, list)))
+            items = data.get(item_key, [])
             # if the response has no items, we're done
             if not items:
                 log.debug(f'{self.__class__.__name__}.pagination: no items found')

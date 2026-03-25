@@ -33,7 +33,7 @@ log = logging.getLogger(__name__)
 RETRY_429_MAX_WAIT = 60
 
 
-class SafeEnum(Enum):
+class SafeEnum(Enum):  # type: ignore[misc]
     """
     A replacement for the standard Enum class which allows dynamic enhancements of enums
     """
@@ -62,7 +62,7 @@ def enum_str(enum_or_str: Union[Enum, str]) -> str:
     """
     # try to treat as enum
     try:
-        return enum_or_str.value  # type: ignore[no-any-return,union-attr]
+        return enum_or_str.value  # type: ignore[no-any-return]
     except AttributeError:
         pass
     # .. and if that fails we assume that we got a string and return just that

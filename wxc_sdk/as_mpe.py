@@ -1,3 +1,5 @@
+from typing import Any
+
 from aiohttp import FormData
 
 __all__ = ['MultipartEncoder']
@@ -8,7 +10,7 @@ class MultipartEncoder(FormData):
     Compatibility class for requests toolbelt MultipartEncoder
     """
 
-    def __init__(self, body):
+    def __init__(self, body: dict[str, Any]) -> None:
         super().__init__()
         for name, value in body.items():
             if isinstance(value, str):

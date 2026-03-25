@@ -14,15 +14,14 @@ from wxc_sdk.common import AcdCustomization, AlternateNumber, AnnAudioFile, Anno
     DirectLineCallerIdName, DirectLineCallerIdNameSelection, DirectoryMethod, DisplayCallqueueAgentSoftkey, \
     DisplayNameSelection, EnabledAndValue, EnhancedMulticast, Greeting, HttpProxy, HttpProxyMode, IdAndName, \
     IdOnly, LineKeyLabelSelection, LineKeyLedPattern, LinkRelation, LoggingLevel, MaintenanceMode, MeGroupMember, \
-    MeGroupSettings, MediaFile, MediaFileType, MonitoredMember, MppCustomization, MppVlanDevice, Multicast, \
-    NoiseCancellation, NumberOwner, NumberState, OwnerType, PatternAction, PersonPlaceAgent, PhoneLanguage, \
-    PrimaryOrSecondary, PrimaryOrShared, PskObject, RingPattern, RoomType, RouteIdentity, RouteType, SetOrClear, \
-    SoftKeyLayout, SoftKeyMenu, StorageType, UsageType, UsbPortsObject, UserBase, UserLicenseType, UserNumber, \
-    UserType, ValidateExtensionStatus, ValidateExtensionStatusState, ValidateExtensionsResponse, \
-    ValidatePhoneNumberStatus, ValidatePhoneNumberStatusState, ValidatePhoneNumbersResponse, ValidationStatus, \
-    VlanSetting, VoicemailCopyOfMessage, VoicemailEnabled, VoicemailFax, VoicemailMessageStorage, \
-    VoicemailNotifications, VoicemailTransferToNumber, VolumeSettings, WifiAuthenticationMethod, \
-    WifiCustomization, WifiNetwork
+    MeGroupSettings, MediaFile, MediaFileType, MonitoredMember, MppCustomization, Multicast, NoiseCancellation, \
+    NumberOwner, NumberState, OwnerType, PatternAction, PersonPlaceAgent, PhoneLanguage, PrimaryOrSecondary, \
+    PrimaryOrShared, PskObject, RingPattern, RoomType, RouteIdentity, RouteType, SetOrClear, SoftKeyLayout, \
+    SoftKeyMenu, StorageType, UsageType, UsbPortsObject, UserBase, UserLicenseType, UserNumber, UserType, \
+    ValidateExtensionStatus, ValidateExtensionStatusState, ValidateExtensionsResponse, ValidatePhoneNumberStatus, \
+    ValidatePhoneNumberStatusState, ValidatePhoneNumbersResponse, ValidationStatus, VlanSetting, \
+    VoicemailCopyOfMessage, VoicemailEnabled, VoicemailFax, VoicemailMessageStorage, VoicemailNotifications, \
+    VoicemailTransferToNumber, VolumeSettings, WifiAuthenticationMethod, WifiCustomization, WifiNetwork
 from wxc_sdk.common.schedules import Event, RecurWeekly, RecurYearlyByDate, RecurYearlyByDay, Recurrence, \
     Schedule, ScheduleApiBase, ScheduleDay, ScheduleLevel, ScheduleMonth, ScheduleType, ScheduleTypeOrStr, \
     ScheduleWeek
@@ -387,9 +386,9 @@ __all__ = ['AcdCustomization', 'Action', 'ActionToBePerformed', 'ActionToBePerfo
            'MetaObjectResourceType', 'MoHConfig', 'MoHTheme', 'ModeDefaultForwardToSelection', 'ModeForward',
            'ModeForwardTo', 'ModeManagementFeature', 'MohMessageSetting', 'MonitoredElement',
            'MonitoredElementMember', 'MonitoredElementType', 'MonitoredMember', 'Monitoring', 'Month', 'MoveCounts',
-           'MoveNumberCounts', 'MoveUser', 'MoveUserJobDetails', 'MoveUsersList', 'MppCustomization', 'MppVlanDevice',
-           'Multicast', 'MusicOnHold', 'NameAndCode', 'NameObject', 'NetworkConnectionType', 'NetworkType',
-           'NightService', 'NoAnswer', 'NoiseCancellation', 'NonBlockingDisableCalling', 'NoteType', 'Notification',
+           'MoveNumberCounts', 'MoveUser', 'MoveUserJobDetails', 'MoveUsersList', 'MppCustomization', 'Multicast',
+           'MusicOnHold', 'NameAndCode', 'NameObject', 'NetworkConnectionType', 'NetworkType', 'NightService',
+           'NoAnswer', 'NoiseCancellation', 'NonBlockingDisableCalling', 'NoteType', 'Notification',
            'NotificationRepeat', 'NotificationType', 'NumberAddError', 'NumberAddResponse', 'NumberAndAction',
            'NumberDetails', 'NumberItem', 'NumberJob', 'NumberListPhoneNumber', 'NumberListPhoneNumberType',
            'NumberOwner', 'NumberState', 'NumberType', 'NumberUsageType', 'NumbersRequestAction', 'OfficeNumber',

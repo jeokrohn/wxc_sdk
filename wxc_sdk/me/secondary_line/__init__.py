@@ -53,7 +53,7 @@ class MeSecondaryLineApi(ApiChild, base='telephony/config/people/me'):
         """
         url = self.ep(f'settings/secondaryLines/{lineowner_id}/featureAccessCode')
         data = super().get(url)
-        r = TypeAdapter(list[FeatureAccessCode]).validate_python(data['featureAccessCodeList'])  # type: ignore[index]
+        r = TypeAdapter(list[FeatureAccessCode]).validate_python(data['featureAccessCodeList'])
         return r
 
     def calling_services_list(self, lineowner_id: str) -> list[ServicesEnum]:
@@ -73,5 +73,5 @@ class MeSecondaryLineApi(ApiChild, base='telephony/config/people/me'):
         """
         url = self.ep(f'settings/secondaryLines/{lineowner_id}/services')
         data = super().get(url)
-        r = TypeAdapter(list[ServicesEnum]).validate_python(data['services'])  # type: ignore[index]
+        r = TypeAdapter(list[ServicesEnum]).validate_python(data['services'])
         return r

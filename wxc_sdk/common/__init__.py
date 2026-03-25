@@ -77,7 +77,6 @@ __all__ = [
     'WifiAuthenticationMethod',
     'DirectoryMethod',
     'CallHistoryMethod',
-    'MppVlanDevice',
     'VolumeSettings',
     'CallForwardExpandedSoftKey',
     'HttpProxy',
@@ -265,7 +264,7 @@ class MonitoredMember(ApiModel):
         """
         Apparently location attribute is either the location name or an IdAndName instance
         """
-        return isinstance(self.location, IdAndName) and self.location.name or self.location
+        return isinstance(self.location, IdAndName) and self.location.name or str(self.location)
 
 
 class CallParkExtension(ApiModel):
@@ -799,11 +798,6 @@ class UsbPortsObject(ApiModel):
     rear_usb_enabled: Optional[bool] = None
 
 
-class MppVlanDevice(EnabledAndValue):
-    #: Indicates the PC port value of a VLAN object for an MPP object.
-    pc_port: Optional[int] = None
-
-
 class WifiAuthenticationMethod(str, Enum):
     #: No authentication.
     none = 'NONE'
@@ -1062,8 +1056,6 @@ class MppCustomization(CommonDeviceCustomization):
     #: By default the Side USB port is enabled to support KEMs and other peripheral devices. Use the option to disable
     #: use of this port.
     usb_ports: Optional[UsbPortsObject] = None
-    #: Specify a numeric Virtual LAN ID for devices.
-    vlan: Optional[MppVlanDevice] = None
     #: Specify the Wi-Fi SSID and password for wireless-enabled MPP phones.
     wifi_network: Optional[WifiNetwork] = None
     migration_url: Optional[str] = None  # TODO: undocumented
@@ -1147,7 +1139,7 @@ class DeviceCustomization(ApiModel):
 
     @field_validator('last_update_time', mode='before')
     @classmethod
-    def update_time(cls, v: Any) -> Any | datetime:
+    def update_time(cls, v: Any) -> Union[Any, datetime]:
         """
 
         :meta private:

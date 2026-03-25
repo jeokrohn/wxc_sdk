@@ -82,7 +82,7 @@ class AsErrorDetail(ApiModel):
         error description
 
         """
-        return self.error and self.error[0].description or (self.errors and self.errors[0].description)
+        return self.error and self.error[0].description or (self.errors and self.errors[0].description)  # type: ignore[return-value]
 
     @property
     def code(self) -> Optional[int]:
@@ -109,18 +109,25 @@ class AsRestError(ClientResponseError):
         headers: Optional[LooseHeaders] = None,
         detail: Any = None,
     ) -> None:
-        super().__init__(request_info, history, code=code, status=status, message=message, headers=headers)
+        super().__init__(
+            request_info,
+            history,
+            code=code,
+            status=status,
+            message=message,
+            headers=headers,  # type: ignore[arg-type]
+        )
         try:
             self.detail = AsErrorDetail.model_validate(detail)
         except ValidationError:
-            self.detail = detail
+            self.detail = detail  # type: ignore[assignment]
         # TODO: implement equivalent to __init__ in sync implementation
 
 
 def as_dump_response(
     *,
     response: ClientResponse,
-    response_data=None,
+    response_data: Any = None,
     request_body: str = None,
     file: TextIOBase = None,
     dump_log: logging.Logger = None,
@@ -195,7 +202,9 @@ def as_dump_response(
         dump_log.debug(output.getvalue())  # type: ignore[attr-defined]
 
 
-def retry_request(func):
+def retry_request(
+    func: Callable[..., tuple[ClientResponse, StrOrDict]],
+) -> Callable[..., tuple[ClientResponse, StrOrDict]]:
     """
     Decorator for the request method in the AsRestSession class. Used to implement backoff on 429 responses
 
@@ -225,25 +234,25 @@ def retry_request(func):
         return False
 
     @wraps(func)
-    async def wrapper(session: 'AsRestSession', *args, **kwargs):
+    async def wrapper(session: 'AsRestSession', *args: Any, **kwargs: Any) -> tuple[ClientResponse, StrOrDict]:
         async with session._sem:
             while True:
                 try:
-                    result = await func(session, *args, **kwargs)
+                    result = await func(session, *args, **kwargs)  # type: ignore[misc]
                 except ClientResponseError as e:
                     if await giveup_429(e, session.retry_429):
                         raise
                 else:
                     break
-        return result
+        return result  # type: ignore[no-any-return]
 
-    return wrapper
+    return wrapper  # type: ignore[return-value]
 
 
 # Callback for response logging
 # callbacks get called with the response object, request body(str), request content type (str), response body, and the
 # time the request took
-AsRestResponseCallBack = Callable[[ClientResponse, str, str, dict, int], None]
+AsRestResponseCallBack = Callable[[ClientResponse, str, str, dict[Any, Any], int], None]
 
 
 # as_dump_response(response=response, data=data, json=json, response_data=response_data, diff_ns=diff_ns)
@@ -252,7 +261,7 @@ AsRestResponseCallBack = Callable[[ClientResponse, str, str, dict, int], None]
 
 def _dump_response_callback(
     response: ClientResponse, request_body: str, request_ct: str, response_data: str, diff_ns: int
-):
+) -> None:
     as_dump_response(response=response, request_body=request_body, response_data=response_data, diff_ns=diff_ns)
 
 
@@ -288,7 +297,7 @@ class AsRestSession(ClientSession):
         trace_configs: list[TraceConfig] = None,
         proxy_url: str = None,
         ssl: Union[bool, aiohttp.Fingerprint, ssl.SSLContext] = None,
-        **kwargs,
+        **kwargs: Any,
     ):
         """
         Initialize the REST session
@@ -307,7 +316,7 @@ class AsRestSession(ClientSession):
         self._sem = Semaphore(concurrent_requests)
         self.retry_429 = retry_429
         self._response_callback_registry = dict()
-        self.register_response_callback(_dump_response_callback)
+        self.register_response_callback(_dump_response_callback)  # type: ignore[arg-type]
         # keyword arguments for requests start with 'req_'. Any other keyword arguments are passed to the session.
         request_arguments = dict()
         session_arguments = dict()
@@ -363,18 +372,18 @@ class AsRestSession(ClientSession):
     def _dispatch_to_response_callbacks(
         self,
         response: ClientResponse,
-        request_data: Union[str, dict],
-        request_json: dict,
-        response_data: Union[str, dict],
+        request_data: Union[str, dict[str, Any]],
+        request_json: dict[str, Any],
+        response_data: Union[str, dict[str, Any]],
         diff_ns: int,
     ) -> None:
         # request body
         body_str = ''
         body_ct = ''
 
-        def is_multipart(data):
+        def is_multipart(data: Any) -> bool:
             try:
-                return data.is_multipart
+                return data.is_multipart  # type: ignore[no-any-return]
             except AttributeError:
                 return False
 
@@ -394,7 +403,7 @@ class AsRestSession(ClientSession):
         for callback in self._response_callback_registry.values():
             callback(response, body_str, body_ct, response_data, diff_ns)  # type: ignore[arg-type]
 
-    def unregister_response_callback(self, id: str):
+    def unregister_response_callback(self, id: str) -> None:
         """
         Unregister a response callback
 
@@ -402,7 +411,7 @@ class AsRestSession(ClientSession):
         """
         self._response_callback_registry.pop(id, None)
 
-    def ep(self, path: str = None):
+    def ep(self, path: str = None) -> str:
         """
         get an API endpoint
 
@@ -414,7 +423,7 @@ class AsRestSession(ClientSession):
         return f'{self.BASE}{path}'
 
     @property
-    def access_token(self) -> str:
+    def access_token(self) -> Optional[str]:
         """
         access token used for all requests
 
@@ -423,17 +432,17 @@ class AsRestSession(ClientSession):
         """
         return self._tokens.access_token
 
-    @retry_request
+    @retry_request  # type: ignore[arg-type]
     async def _request_w_response(
         self,
         method: str,
         url: str,
-        headers=None,
+        headers: dict[str, Any] = None,
         content_type: str = None,
-        data=None,
-        json=None,
+        data: dict[str, Any] = None,
+        json: dict[str, Any] = None,
         ignore_status: int = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> tuple[ClientResponse, StrOrDict]:
         """
         low level API REST request with support for 429 rate limiting
@@ -489,7 +498,11 @@ class AsRestSession(ClientSession):
 
             # relay response to all registered callbacks
             self._dispatch_to_response_callbacks(
-                response=response, request_data=data, request_json=json, response_data=response_data, diff_ns=diff_ns
+                response=response,
+                request_data=data,  # type: ignore[arg-type]
+                request_json=json,  # type: ignore[arg-type]
+                response_data=response_data,
+                diff_ns=diff_ns,
             )
             try:
                 response.raise_for_status()
@@ -508,7 +521,7 @@ class AsRestSession(ClientSession):
 
         return response, response_data
 
-    async def _rest_request(self, method: str, url: str, **kwargs) -> StrOrDict:
+    async def _rest_request(self, method: str, url: str, **kwargs: Any) -> StrOrDict:
         """
         low level API request only returning the body
 
@@ -523,10 +536,10 @@ class AsRestSession(ClientSession):
         :return: body. Body can be text or dict (parsed from JSON body)
         :rtype: Unon
         """
-        _, data = await self._request_w_response(method, url=url, **kwargs)
-        return data
+        _, data = await self._request_w_response(method, url=url, **kwargs)  # type: ignore[misc]
+        return data  # type: ignore[no-any-return]
 
-    async def rest_get(self, *args, **kwargs) -> StrOrDict:
+    async def rest_get(self, *args: Any, **kwargs: Any) -> StrOrDict:
         """
         GET request
 
@@ -536,7 +549,7 @@ class AsRestSession(ClientSession):
         """
         return await self._rest_request('GET', *args, **kwargs)
 
-    async def rest_post(self, *args, **kwargs) -> StrOrDict:
+    async def rest_post(self, *args: Any, **kwargs: Any) -> StrOrDict:
         """
         POST request
 
@@ -546,7 +559,7 @@ class AsRestSession(ClientSession):
         """
         return await self._rest_request('POST', *args, **kwargs)
 
-    async def rest_put(self, *args, **kwargs) -> StrOrDict:
+    async def rest_put(self, *args: Any, **kwargs: Any) -> StrOrDict:
         """
         PUT request
 
@@ -556,7 +569,7 @@ class AsRestSession(ClientSession):
         """
         return await self._rest_request('PUT', *args, **kwargs)
 
-    async def rest_delete(self, *args, **kwargs) -> StrOrDict:
+    async def rest_delete(self, *args: Any, **kwargs: Any) -> StrOrDict:
         """
         DELETE request
 
@@ -565,7 +578,7 @@ class AsRestSession(ClientSession):
         """
         return await self._rest_request('DELETE', *args, **kwargs)
 
-    async def rest_patch(self, *args, **kwargs) -> StrOrDict:
+    async def rest_patch(self, *args: Any, **kwargs: Any) -> StrOrDict:
         """
         PATCH request
 
@@ -596,28 +609,26 @@ class AsRestSession(ClientSession):
         :return: yields parsed objects
         """
 
-        def noop(x):
+        def noop(x: Any) -> Any:
             return x
 
         if model is None or not issubclass(model, ApiModel):
-            model = noop
+            model = noop  # type: ignore[assignment]
         else:
-            model = model.model_validate
+            model = model.model_validate  # type: ignore[assignment]
 
-        while url:
-            log.debug(f'{self.__class__.__name__}.pagination: getting {url}')
-            response, data = await self._request_w_response('GET', url=url, params=params, **kwargs)
+        cur_url: Optional[str] = url
+        while cur_url:
+            log.debug(f'{self.__class__.__name__}.pagination: getting {cur_url}')
+            response, data = await self._request_w_response('GET', url=cur_url, params=params, **kwargs)  # type: ignore[misc]
             # params only in first request. In subsequent requests we rely on the completeness of the 'next' URL
             params = None
             # try to get the next page (if present)
             try:
-                url = str(response.links['next']['url'])
+                cur_url = str(response.links['next']['url'])
             except KeyError:
-                url = None
+                cur_url = None
             else:
-                # not needed any more, WXCAPIBULK-27 has been fixed
-                # if len((pagination_fix := url.split('https,https:/'))) > 1:
-                #     url = f'https://{pagination_fix[1]}'
                 pass
             if not data:
                 continue
@@ -634,4 +645,4 @@ class AsRestSession(ClientSession):
                 log.debug(f'{self.__class__.__name__}.pagination: no items found')
                 break
             for item in items:
-                yield model(item)
+                yield model(item)  # type: ignore[call-arg,misc]

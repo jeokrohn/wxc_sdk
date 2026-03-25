@@ -6,11 +6,11 @@ import base64
 import json
 import re
 import urllib.parse
-from collections.abc import Mapping
+from collections.abc import Generator, Mapping
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from json import JSONDecodeError
-from typing import Annotated, Any, Callable, Literal, Optional, TextIO, Union
+from typing import Annotated, Any, Callable, Literal, Optional, Self, TextIO, Union
 
 import requests_toolbelt
 from pydantic import (
@@ -162,8 +162,8 @@ class HARRequest(HARModel):
     Request data in a HAR file entry
     """
 
-    method: str | None
-    url: str | None
+    method: Optional[str]
+    url: Optional[str]
     httpVersion: str
     cookies: HARDict = Field(default_factory=dict)
     headers: HARDict
@@ -228,7 +228,7 @@ class HARRequest(HARModel):
                         self.bodySize = -1
                     elif isinstance(pd, wxc_sdk.as_mpe.MultipartEncoder):
                         pd: requests_toolbelt.MultipartEncoder  # type: ignore[no-redef]
-                        boundary = re.search(r'boundary=(.*)', pd.content_type).group(1)  # type: ignore[union-attr]
+                        boundary = re.search(r'boundary=(.*)', pd.content_type).group(1)
                         body = ''
                         for values, headers, _ in pd._fields:
                             body += f'--{boundary}\r\n'
@@ -288,13 +288,13 @@ class HARResponse(HARModel):
         if ct is None or not ct.startswith('application/json'):
             return None
         try:
-            r = json.loads(self.content_str)  # type: ignore[arg-type]
+            r = json.loads(self.content_str)
         except JSONDecodeError:
             r = None
         return r
 
     @model_validator(mode='after')
-    def val_model(self):
+    def val_model(self) -> Self:
         """
         Validate the model and derive content from content_str or vice versa. Also set headersSize and bodySize if not
         set
@@ -313,7 +313,7 @@ class HARResponse(HARModel):
                 if content.encoding is None:
                     self.content_str = content.text
                 elif content.encoding == 'base64':
-                    self.content_str = base64.b64decode(content.text)  # type: ignore[assignment,arg-type]
+                    self.content_str = base64.b64decode(content.text)  # type: ignore[assignment]
                 else:
                     raise ValueError(f'Unsupported encoding: {content.encoding}')
         elif self.content is None:
@@ -327,7 +327,7 @@ class HARResponse(HARModel):
                     pass
                 self.content = HARContent(
                     size=len(content_str),
-                    text=base64.b64encode(content_str).decode(),  # type: ignore[arg-type]
+                    text=base64.b64encode(content_str).decode(),
                     encoding='base64',
                     mimeType=self.headers['Content-Type'],
                 )
@@ -394,7 +394,7 @@ class HAR(HARModel):
         """
 
         @contextmanager
-        def open_file():
+        def open_file() -> Generator[TextIO, None, None]:
             if isinstance(file, str):
                 with open(file) as tio:
                     yield tio
