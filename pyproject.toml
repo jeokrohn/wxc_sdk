@@ -190,7 +190,7 @@ disable_error_code = ["index"]
 
 [[tool.mypy.overrides]]
 module = "tests.*"
-disable_error_code = ["no-untyped-def"]
+disable_error_code = ["no-untyped-def", "union-attr"]
 
 
 

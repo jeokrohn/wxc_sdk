@@ -3,10 +3,10 @@ import random
 from collections.abc import Set
 from dataclasses import dataclass
 
-import random_address
+import random_address  # type: ignore[import-untyped]
 import requests
 from lxml import etree
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from tests.base import TestWithLocations
 from tests.testutil import available_tns
@@ -17,8 +17,7 @@ log = logging.getLogger(__name__)
 
 
 class RandomAddress(BaseModel):
-    class Config:
-        extra = 'ignore'
+    model_config = ConfigDict(extra='ignore')
 
     address1: str
     address2: str
@@ -40,7 +39,7 @@ def get_npas_for_zip(zip_code: str) -> Set[str]:
         Set[str]: A set of unique NPA codes (area codes) for the given ZIP code
     """
 
-    url = f"https://www.nalennd.com/api/npanxx2zip?qsc={zip_code}"
+    url = f'https://www.nalennd.com/api/npanxx2zip?qsc={zip_code}'
 
     try:
         response = requests.get(url, timeout=10)
@@ -55,16 +54,16 @@ def get_npas_for_zip(zip_code: str) -> Set[str]:
             if npa_text:
                 npas.add(npa_text.strip())
 
-        return npas
+        return npas  # type: ignore[return-value]
 
     except requests.exceptions.RequestException as e:
-        log.error(f"Error making request for ZIP {zip_code}: {e}")
+        log.error(f'Error making request for ZIP {zip_code}: {e}')
         raise
     except etree.XMLSyntaxError as e:
-        log.error(f"Error parsing XML response for ZIP {zip_code}: {e}")
+        log.error(f'Error parsing XML response for ZIP {zip_code}: {e}')
         raise
     except Exception as e:
-        log.error(f"Unexpected error for ZIP {zip_code}: {e}")
+        log.error(f'Unexpected error for ZIP {zip_code}: {e}')
         raise
 
 
@@ -73,7 +72,8 @@ class TestEmergencyAddress(TestWithLocations):
     """
     Test Emergency address settings for location
     """
-    target: Location = None
+
+    target: Location = None  # type: ignore[assignment]
 
     # proxy = True
 
@@ -86,19 +86,23 @@ class TestEmergencyAddress(TestWithLocations):
         # create random address
         address = RandomAddress.model_validate(random_address.real_random_address())
         api = self.api.telephony.emergency_address
-        em_address = EmergencyAddress(address1=address.address1,
-                                      address2=address.address2,
-                                      city=address.city,
-                                      state=address.state,
-                                      postal_code=address.postal_code,
-                                      country='US')
-        r = api.lookup_for_location(location_id=self.target.location_id,
-                                    address=em_address)
+        em_address = EmergencyAddress(
+            address1=address.address1,
+            address2=address.address2,
+            city=address.city,
+            state=address.state,
+            postal_code=address.postal_code,
+            country='US',
+        )
+        r = api.lookup_for_location(
+            location_id=self.target.location_id,  # type: ignore[arg-type]
+            address=em_address,
+        )
         print(address)
         print(r)
 
         # get NPAs for address
-        npas = get_npas_for_zip(r[0].postal_code)
+        npas = get_npas_for_zip(r[0].postal_code)  # type: ignore[arg-type]
 
         print(f'NPAs for address: {", ".join(sorted(npas))}')
 
