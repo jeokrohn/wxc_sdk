@@ -3,8 +3,8 @@ wxc\_sdk.telephony.cx\_essentials package
 
 .. automodule:: wxc_sdk.telephony.cx_essentials
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Subpackages
 -----------

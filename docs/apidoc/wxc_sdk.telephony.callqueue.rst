@@ -3,8 +3,8 @@ wxc\_sdk.telephony.callqueue package
 
 .. automodule:: wxc_sdk.telephony.callqueue
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Subpackages
 -----------

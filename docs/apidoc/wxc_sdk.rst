@@ -3,8 +3,8 @@ wxc\_sdk package
 
 .. automodule:: wxc_sdk
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Subpackages
 -----------

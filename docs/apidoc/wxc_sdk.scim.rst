@@ -3,8 +3,8 @@ wxc\_sdk.scim package
 
 .. automodule:: wxc_sdk.scim
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Subpackages
 -----------

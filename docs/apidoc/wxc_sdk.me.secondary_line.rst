@@ -3,8 +3,8 @@ wxc\_sdk.me.secondary\_line package
 
 .. automodule:: wxc_sdk.me.secondary_line
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Subpackages
 -----------

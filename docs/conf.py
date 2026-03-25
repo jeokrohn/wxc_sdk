@@ -23,6 +23,7 @@ author = 'Johannes Krohn'
 
 # The full version, including alpha/beta/rc tags
 from importlib.metadata import version as meta_version
+from typing import Optional
 
 release = meta_version('wxc_sdk')
 
@@ -47,7 +48,7 @@ extensions = [
 intersphinx_mapping = {
     'dateutil': ('https://dateutil.readthedocs.io/en/stable/', None),
     'requests': ('https://requests.readthedocs.io/en/stable/', None),
-    'aiohttp': ('https://docs.aiohttp.org/en/stable/', None)
+    'aiohttp': ('https://docs.aiohttp.org/en/stable/', None),
 }
 
 # We recommend adding the following config value.
@@ -103,18 +104,18 @@ html_theme = 'sphinx_rtd_theme'
 # documentation.
 #
 # https://sphinx-rtd-theme.readthedocs.io/en/stable/configuring.html
-html_theme_options = {
-    "collapse_navigation": True,
-    "titles_only": False,
-    "navigation_depth": 2}
+html_theme_options = {'collapse_navigation': True, 'titles_only': False, 'navigation_depth': 2}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+# Avoid: "NameError: name 'Dict' is not defined. Did you mean: 'dict'?"
+autodoc_use_legacy_class_based = True
 
-def skip_member(app, what, name, obj, skip, options):
+
+def skip_member(app, what, name, obj, skip, options) -> Optional[bool]:  # type: ignore[no-untyped-def]
     # skip doc creation for model_config and model_fields members; part of pydantic.BaseModel
     if name in {'model_config', 'model_fields', 'model_computed_fields'}:
         return True
@@ -135,6 +136,6 @@ def skip_member(app, what, name, obj, skip, options):
 #     print(f'{name=}, {obj.__class__.__name__ =} bases: {", ".join(f"{b}" for b in bases)}')
 
 
-def setup(app):
+def setup(app) -> None:  # type: ignore[no-untyped-def]
     app.connect('autodoc-skip-member', skip_member)
     # app.connect('autodoc-process-bases', process_bases)

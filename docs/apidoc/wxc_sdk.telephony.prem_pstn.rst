@@ -3,8 +3,8 @@ wxc\_sdk.telephony.prem\_pstn package
 
 .. automodule:: wxc_sdk.telephony.prem_pstn
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Submodules
 ----------

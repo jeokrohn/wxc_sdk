@@ -3,8 +3,8 @@ wxc\_sdk.meetings package
 
 .. automodule:: wxc_sdk.meetings
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Subpackages
 -----------

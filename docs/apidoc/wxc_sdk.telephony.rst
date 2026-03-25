@@ -3,8 +3,8 @@ wxc\_sdk.telephony package
 
 .. automodule:: wxc_sdk.telephony
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Subpackages
 -----------
