@@ -1,3 +1,9 @@
+## 1.32.0 (2026-03-25)
+
+### Feat
+
+- added "py.typed" to support type checking
+
 ## 1.31.1 (2026-03-21)
 
 ### Fix
