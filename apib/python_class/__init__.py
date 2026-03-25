@@ -550,7 +550,12 @@ class Endpoint:
                         else:
                             # single result attribute is not a simple Python type -> we need deserialization
                             if sra.referenced_class == sra.python_type:
-                                source.print(f"r = {sra.python_type}.model_validate(data['{sra.name}'])")
+                                result_class = self.registry.get(sra.referenced_class)
+                                result_class: PythonClass
+                                if result_class.is_enum:
+                                    source.print(f"r = {sra.python_type}(data['{sra.name}'])")
+                                else:
+                                    source.print(f"r = {sra.python_type}.model_validate(data['{sra.name}'])")
                             else:
                                 source.print(f"r = TypeAdapter({sra.python_type}).validate_python(data['{sra.name}'])")
                 source.print('return r')
