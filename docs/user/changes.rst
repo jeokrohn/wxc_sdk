@@ -1,6 +1,10 @@
 Release history
 ===============
 
+1.32.0
+------
+- feat: added "py.typed" to support type checking
+
 1.31.1
 ------
 - fix: NameError: name 'RedSkyAddress' is not defined
