@@ -234,6 +234,8 @@ class GetRecordingMetadataResponseServiceData(ApiModel):
     answerer_info: Optional[GetRecordingMetadataResponseServiceDataCallingParty] = None
     recording_actions: Optional[list[GetRecordingMetadataResponseServiceDataRecordingActionsItem]] = None
     call_activity: Optional[list[GetRecordingMetadataResponseServiceDataCallActivityItem]] = None
+    managed_by: Optional[GetRecordingMetadataResponseServiceDataCallingParty] = None
+    connected_party: Optional[GetRecordingMetadataResponseServiceDataCallingParty] = None
 
 
 class GetRecordingMetadataResponse(ApiModel):

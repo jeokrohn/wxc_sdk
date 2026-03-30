@@ -1,7 +1,7 @@
 import builtins
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from dateutil.parser import isoparse
 from pydantic import Field
@@ -22,6 +22,11 @@ __all__ = [
     'RecordingSession',
     'RecordingParty',
     'RecordingPartyActor',
+    'RecordingAction',
+    'CallActivityStream',
+    'CallActivityParticipant',
+    'CallActivityAnnouncement',
+    'CallActivity',
 ]
 
 from wxc_sdk.meetings.recordings import RecordingFormat, RecordingServiceType, RecordingStatus
@@ -53,6 +58,37 @@ class RecordingParty(ApiModel):
     number: Optional[str] = None
 
 
+class RecordingAction(ApiModel):
+    action: Optional[str] = None
+    time: Optional[str] = None
+
+
+class CallActivityStream(ApiModel):
+    stream_id: Optional[str] = None
+    mode: Optional[str] = None
+    m_line_index: Optional[str] = None
+
+
+class CallActivityParticipant(ApiModel):
+    actor: Optional[RecordingPartyActor] = None
+    aor: Optional[str] = None
+    send: Optional[str] = None
+
+
+class CallActivityAnnouncement(ApiModel):
+    announcement_filename: Optional[str] = None
+    announcement_timestamp: Optional[str] = None
+    announcement_participants: Optional[list[str]] = None
+    announcement_type: Optional[str] = None
+
+
+class CallActivity(ApiModel):
+    time_stamp: Optional[str] = None
+    media_streams: Optional[list[CallActivityStream]] = None
+    participants: Optional[list[CallActivityParticipant]] = None
+    announcement_data: Optional[CallActivityAnnouncement] = None
+
+
 class RecordingServiceData(ApiModel):
     #: Webex calling location for recording user.
     location_id: Optional[str] = None
@@ -66,8 +102,10 @@ class RecordingServiceData(ApiModel):
     sip_call_id: Optional[str] = None
     session: Optional[RecordingSession] = None
     recording_type: Optional[str] = None
-    recording_actions: Optional[list[dict]] = None
-    call_activity: Optional[list[dict]] = None
+    recording_actions: Optional[list[RecordingAction]] = None
+    call_activity: Optional[list[CallActivity]] = None
+    managed_by: Optional[RecordingParty] = None
+    connected_party: Optional[RecordingParty] = None
 
 
 class ConvergedRecording(ApiModel):
@@ -448,7 +486,7 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         :type recording_ids: list[str]
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if purge_all is not None:
             body['purgeAll'] = purge_all
         if owner_email is not None:
@@ -486,7 +524,7 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         :type recording_ids: list[str]
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if owner_email is not None:
             body['ownerEmail'] = owner_email
         if recording_ids is not None:
@@ -545,7 +583,7 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         :type recording_ids: list[str]
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if restore_all is not None:
             body['restoreAll'] = restore_all
         if owner_email is not None:
@@ -612,7 +650,7 @@ class ConvergedRecordingsApi(ApiChild, base=''):
         :type recording_ids: list[str]
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if trash_all is not None:
             body['trashAll'] = trash_all
         if owner_email is not None:

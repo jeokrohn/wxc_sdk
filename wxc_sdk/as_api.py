@@ -887,7 +887,7 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         :type recording_ids: list[str]
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if purge_all is not None:
             body['purgeAll'] = purge_all
         if owner_email is not None:
@@ -925,7 +925,7 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         :type recording_ids: list[str]
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if owner_email is not None:
             body['ownerEmail'] = owner_email
         if recording_ids is not None:
@@ -984,7 +984,7 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         :type recording_ids: list[str]
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if restore_all is not None:
             body['restoreAll'] = restore_all
         if owner_email is not None:
@@ -1051,7 +1051,7 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
         :type recording_ids: list[str]
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         if trash_all is not None:
             body['trashAll'] = trash_all
         if owner_email is not None:
