@@ -5045,7 +5045,7 @@ class AsMeCallPoliciesApi(AsApiChild, base='telephony/config/people/me'):
         """
         url = self.ep('settings/callPolicies')
         data = await super().get(url)
-        r = TypeAdapter(PrivacyOnRedirectedCalls).validate_python(data['connectedLineIdPrivacyOnRedirectedCalls'])
+        r = PrivacyOnRedirectedCalls(data['connectedLineIdPrivacyOnRedirectedCalls'])
         return r
 
     async def update(self, connected_line_id_privacy_on_redirected_calls: PrivacyOnRedirectedCalls = None):
@@ -12248,7 +12248,7 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
     Base class for all classes implementing person settings APIs
     """
 
-    feature = None
+    feature: Optional[str] = None
 
     def __init__(self, *, session: AsRestSession, selector: ApiSelector = ApiSelector.person):
         # set parameters to get the correct URL templates
@@ -12257,7 +12257,8 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
         # workspaces    workspaces                      /features/      workspaces/{person_id}/features/{feature}{path}
         # locations     telephony/config/locations      /               telephony/config/locations/{person_id}{path}
         # person        people                          /features       people/{person_id}/features/{feature}{path}
-        # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{feature}
+        # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{
+        # feature}
         self.feature_prefix = '/features/'
         if selector == ApiSelector.workspace:
             self.selector = 'workspaces'
@@ -12273,7 +12274,7 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
             raise ValueError(f'Invalid selector: {selector}')
         super().__init__(session=session, base=self.selector)
 
-    def __init_subclass__(cls, **kwargs):
+    def __init_subclass__(cls, **kwargs: Any) -> None:
         super().__init_subclass__(base='')
         if cls.feature is None:
             raise TypeError('feature has to be defined')
@@ -12297,7 +12298,8 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
         # workspaces    workspaces                      /features/      workspaces/{person_id}/features/{feature}{path}
         # locations     telephony/config/locations      /               telephony/config/locations/{person_id}{path}
         # person        people                          /features       people/{person_id}/features/{feature}{path}
-        # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{feature}
+        # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{
+        # feature}
         selector = self.selector
         feature_prefix = self.feature_prefix
         # some paths need to be remapped
@@ -12333,7 +12335,10 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
         if selector == 'people' and self.feature == 'voicemail' and path == '/passcode':
             # this is a new endpoint for users and is the only VM endpoint with a different URL structure
             return self.session.ep(f'telephony/config/people/{person_id}/voicemail/passcode')
-        selector, feature_prefix = alternates.get((selector, self.feature), (selector, feature_prefix))
+        selector, feature_prefix = alternates.get(
+            (selector, self.feature),  # type: ignore[arg-type]
+            (selector, feature_prefix),
+        )
         return self.session.ep(f'{selector}/{person_id}{feature_prefix}{self.feature}{path}')
 
 
@@ -31098,7 +31103,7 @@ class AsPrivateNetworkConnectApi(AsApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         url = self.session.ep(f'telephony/config/locations/{location_id}/privateNetworkConnect')
         data = await self.get(url, params=params)
-        return TypeAdapter(NetworkConnectionType).validate_python(data['networkConnectionType'])
+        return NetworkConnectionType(data['networkConnectionType'])
 
     async def update(self, location_id: str, connection_type: NetworkConnectionType, org_id: str = None):
         """
@@ -34721,7 +34726,7 @@ class AsVirtualExtensionsApi(AsApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['prefix'] = prefix
         if patterns is not None:
@@ -34773,7 +34778,7 @@ class AsVirtualExtensionsApi(AsApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if location_id is not None:
             body['locationId'] = location_id
         if name is not None:
@@ -34887,7 +34892,7 @@ class AsVirtualExtensionsApi(AsApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if name is not None:
             body['name'] = name
         if prefix is not None:
@@ -35155,7 +35160,7 @@ class AsVirtualExtensionsApi(AsApiChild, base='telephony/config'):
             params['orgId'] = org_id
         url = self.ep('virtualExtensions/settings')
         data = await super().get(url, params=params)
-        r = VirtualExtensionMode.model_validate(data['mode'])
+        r = VirtualExtensionMode(data['mode'])
         return r
 
     async def modify_extension_settings(self, mode: VirtualExtensionMode, org_id: str = None):
@@ -37699,7 +37704,7 @@ class AsCallPolicyApi(AsPersonSettingsApiChild):
             params['orgId'] = org_id
         url = self.f_ep(entity_id)
         data = await super().get(url, params=params)
-        r = TypeAdapter(PrivacyOnRedirectedCalls).validate_python(data['connectedLineIdPrivacyOnRedirectedCalls'])
+        r = PrivacyOnRedirectedCalls(data['connectedLineIdPrivacyOnRedirectedCalls'])
         return r
 
     async def configure(

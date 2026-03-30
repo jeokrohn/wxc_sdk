@@ -583,7 +583,7 @@ class FeaturesVirtualExtensionsApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         url = self.ep('virtualExtensions/settings')
         data = super().get(url, params=params)
-        r = GetVirtualExtensionSettingsObjectMode.model_validate(data['mode'])
+        r = GetVirtualExtensionSettingsObjectMode(data['mode'])
         return r
 
     def modify_virtual_extension_settings(self, mode: GetVirtualExtensionSettingsObjectMode,

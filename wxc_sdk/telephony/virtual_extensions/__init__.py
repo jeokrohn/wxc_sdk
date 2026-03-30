@@ -1,5 +1,5 @@
 from collections.abc import Generator
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import Field
 
@@ -86,7 +86,7 @@ class VirtualExtensionRangeAction(str, Enum):
     #: Remove existing patterns from the virtual extension range.
     remove = 'REMOVE'
     #: Replace existing patterns with new patterns in the virtual extension range.
-    replace = 'REPLACE'
+    replace = 'REPLACE'  # type: ignore[assignment]
 
 
 class ValidateVirtualExtensionStatus(str, Enum):
@@ -258,7 +258,7 @@ class VirtualExtensionsApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['prefix'] = prefix
         if patterns is not None:
@@ -310,7 +310,7 @@ class VirtualExtensionsApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if location_id is not None:
             body['locationId'] = location_id
         if name is not None:
@@ -424,7 +424,7 @@ class VirtualExtensionsApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if name is not None:
             body['name'] = name
         if prefix is not None:
@@ -622,7 +622,7 @@ class VirtualExtensionsApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         url = self.ep('virtualExtensions/settings')
         data = super().get(url, params=params)
-        r = VirtualExtensionMode.model_validate(data['mode'])
+        r = VirtualExtensionMode(data['mode'])
         return r
 
     def modify_extension_settings(self, mode: VirtualExtensionMode, org_id: str = None):

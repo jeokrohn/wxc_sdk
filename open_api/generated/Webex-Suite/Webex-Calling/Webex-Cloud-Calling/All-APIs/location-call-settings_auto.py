@@ -1728,7 +1728,7 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         url = self.ep(f'locations/{location_id}/privateNetworkConnect')
         data = super().get(url, params=params)
-        r = GetPrivateNetworkConnectObjectNetworkConnectionType.model_validate(data['networkConnectionType'])
+        r = GetPrivateNetworkConnectObjectNetworkConnectionType(data['networkConnectionType'])
         return r
 
     def update_private_network_connect(self, location_id: str,

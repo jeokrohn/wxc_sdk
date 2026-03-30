@@ -1,11 +1,8 @@
-from pydantic import TypeAdapter
-
 from wxc_sdk.api_child import ApiChild
-
-__all__ = ['MeCallPoliciesApi']
-
 from wxc_sdk.base import enum_str
 from wxc_sdk.person_settings.call_policy import PrivacyOnRedirectedCalls
+
+__all__ = ['MeCallPoliciesApi']
 
 
 class MeCallPoliciesApi(ApiChild, base='telephony/config/people/me'):
@@ -24,7 +21,7 @@ class MeCallPoliciesApi(ApiChild, base='telephony/config/people/me'):
         """
         url = self.ep('settings/callPolicies')
         data = super().get(url)
-        r = TypeAdapter(PrivacyOnRedirectedCalls).validate_python(data['connectedLineIdPrivacyOnRedirectedCalls'])
+        r = PrivacyOnRedirectedCalls(data['connectedLineIdPrivacyOnRedirectedCalls'])
         return r
 
     def update(self, connected_line_id_privacy_on_redirected_calls: PrivacyOnRedirectedCalls = None):

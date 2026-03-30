@@ -1,5 +1,3 @@
-from pydantic import TypeAdapter
-
 from wxc_sdk.base import SafeEnum as Enum
 from wxc_sdk.base import enum_str
 from wxc_sdk.person_settings.common import PersonSettingsApiChild
@@ -52,7 +50,7 @@ class CallPolicyApi(PersonSettingsApiChild):
             params['orgId'] = org_id
         url = self.f_ep(entity_id)
         data = super().get(url, params=params)
-        r = TypeAdapter(PrivacyOnRedirectedCalls).validate_python(data['connectedLineIdPrivacyOnRedirectedCalls'])
+        r = PrivacyOnRedirectedCalls(data['connectedLineIdPrivacyOnRedirectedCalls'])
         return r
 
     def configure(

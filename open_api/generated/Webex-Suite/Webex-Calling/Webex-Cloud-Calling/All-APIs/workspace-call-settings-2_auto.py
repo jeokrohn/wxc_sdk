@@ -1289,7 +1289,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
             params['orgId'] = org_id
         url = self.ep(f'{workspace_id}/callPolicies')
         data = super().get(url, params=params)
-        r = UserCallPoliciesGetConnectedLineIdPrivacyOnRedirectedCalls.model_validate(data['connectedLineIdPrivacyOnRedirectedCalls'])
+        r = UserCallPoliciesGetConnectedLineIdPrivacyOnRedirectedCalls(data['connectedLineIdPrivacyOnRedirectedCalls'])
         return r
 
     def configure_call_policy_settings_for_a_workspace(self, workspace_id: str,

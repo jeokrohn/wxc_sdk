@@ -1702,7 +1702,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
             params['orgId'] = org_id
         url = self.ep(f'{person_id}/features/executiveAssistant')
         data = super().get(url, params=params)
-        r = RetrieveExecutiveAssistantSettingsForAPersonResponseType.model_validate(data['type'])
+        r = RetrieveExecutiveAssistantSettingsForAPersonResponseType(data['type'])
         return r
 
     def modify_executive_assistant_settings_for_a_person(self, person_id: str,

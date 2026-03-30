@@ -3648,7 +3648,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         url = self.ep(f'people/{person_id}/devices/settings')
         data = super().get(url, params=params)
-        r = Compression.model_validate(data['compression'])
+        r = Compression(data['compression'])
         return r
 
     def update_device_settings_for_aperson(self, person_id: str, compression: Compression, org_id: str = None) -> None:
@@ -3824,7 +3824,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         url = self.ep(f'workspaces/{workspace_id}/devices/settings')
         data = super().get(url, params=params)
-        r = Compression.model_validate(data['compression'])
+        r = Compression(data['compression'])
         return r
 
     def update_device_settings_for_aworkspace(self, workspace_id: str, compression: Compression,

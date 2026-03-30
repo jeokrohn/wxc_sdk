@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Any, Optional
 
 from ..api_child import ApiChild
 from ..rest import RestSession
@@ -18,7 +19,7 @@ class PersonSettingsApiChild(ApiChild, base=''):
     Base class for all classes implementing person settings APIs
     """
 
-    feature = None
+    feature: Optional[str] = None
 
     def __init__(self, *, session: RestSession, selector: ApiSelector = ApiSelector.person):
         # set parameters to get the correct URL templates
@@ -27,7 +28,8 @@ class PersonSettingsApiChild(ApiChild, base=''):
         # workspaces    workspaces                      /features/      workspaces/{person_id}/features/{feature}{path}
         # locations     telephony/config/locations      /               telephony/config/locations/{person_id}{path}
         # person        people                          /features       people/{person_id}/features/{feature}{path}
-        # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{feature}
+        # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{
+        # feature}
         self.feature_prefix = '/features/'
         if selector == ApiSelector.workspace:
             self.selector = 'workspaces'
@@ -43,7 +45,7 @@ class PersonSettingsApiChild(ApiChild, base=''):
             raise ValueError(f'Invalid selector: {selector}')
         super().__init__(session=session, base=self.selector)
 
-    def __init_subclass__(cls, **kwargs):
+    def __init_subclass__(cls, **kwargs: Any) -> None:
         super().__init_subclass__(base='')
         if cls.feature is None:
             raise TypeError('feature has to be defined')
@@ -67,7 +69,8 @@ class PersonSettingsApiChild(ApiChild, base=''):
         # workspaces    workspaces                      /features/      workspaces/{person_id}/features/{feature}{path}
         # locations     telephony/config/locations      /               telephony/config/locations/{person_id}{path}
         # person        people                          /features       people/{person_id}/features/{feature}{path}
-        # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{feature}
+        # virtual line  telephony/config/virtualLines   /               telephony/config/virtualLines/{person_id}/{
+        # feature}
         selector = self.selector
         feature_prefix = self.feature_prefix
         # some paths need to be remapped
@@ -103,5 +106,8 @@ class PersonSettingsApiChild(ApiChild, base=''):
         if selector == 'people' and self.feature == 'voicemail' and path == '/passcode':
             # this is a new endpoint for users and is the only VM endpoint with a different URL structure
             return self.session.ep(f'telephony/config/people/{person_id}/voicemail/passcode')
-        selector, feature_prefix = alternates.get((selector, self.feature), (selector, feature_prefix))
+        selector, feature_prefix = alternates.get(
+            (selector, self.feature),  # type: ignore[arg-type]
+            (selector, feature_prefix),
+        )
         return self.session.ep(f'{selector}/{person_id}{feature_prefix}{self.feature}{path}')

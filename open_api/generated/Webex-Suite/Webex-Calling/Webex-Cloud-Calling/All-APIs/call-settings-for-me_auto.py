@@ -1618,7 +1618,7 @@ class CallSettingsForMe12Api(ApiChild, base='telephony/config/people/me'):
         """
         url = self.ep('settings/callPolicies')
         data = super().get(url)
-        r = UserCallPoliciesGetConnectedLineIdPrivacyOnRedirectedCalls.model_validate(data['connectedLineIdPrivacyOnRedirectedCalls'])
+        r = UserCallPoliciesGetConnectedLineIdPrivacyOnRedirectedCalls(data['connectedLineIdPrivacyOnRedirectedCalls'])
         return r
 
     def update_my_call_policies_settings(self,
