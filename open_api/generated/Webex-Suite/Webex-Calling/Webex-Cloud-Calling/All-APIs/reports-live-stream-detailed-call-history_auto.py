@@ -613,6 +613,28 @@ class CDR(ApiModel):
     #: 
     #: If the value is set to "NA", the call leg is not associated with an agent consultative call.
     wx_cc_consult_merge_status: Optional[str] = Field(alias='WxCC consult merge status', default=None)
+    #: When set, this is the Emergency Location Identification Number (ELIN) used for the emergency call or callback.
+    #: The ELIN may be an ELIN from the location's pool (numbers the customer has configured as ELINs), or it may be
+    #: the workspace's own number which was used as ECBN for the emergency call and treated as an ELIN.
+    elin: Optional[str] = Field(alias='ELIN', default=None)
+    #: Indicates the source of the number used for an emergency call or emergency callback. The field can contain the
+    #: following values:
+    #: 
+    #: ELIN Pool—ELIN obtained from the location's pool.
+    #: 
+    #: Workspace ELIN—Workspace's number obtained through ECBN used as ELIN.
+    #: 
+    #: Workspace ELIN Fallback—Workspace's number obtained through ECBN used as ELIN due to ELIN fallback. This value
+    #: is present only in originating CDRs.
+    #: 
+    #: ELIN fallback occurs when ELIN use is allowed and the location has ELINs provisioned, but no ELIN is currently
+    #: available in the location's pool.
+    #: 
+    #: ECBN Fallback—ECBN is used due to ELIN fallback. This value is present only in originating CDRs.
+    #: 
+    #: ECBN—ECBN is used when the location has no ELINs provisioned, ELIN usage is not allowed for the call, or
+    #: callback is not to an ELIN.
+    emergency_number_source: Optional[str] = Field(alias='Emergency number source', default=None)
 
 
 class ReportsLiveStreamDetailedCallHistoryApi(ApiChild, base='cdr_stream'):
