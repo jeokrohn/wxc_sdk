@@ -541,7 +541,7 @@ class TestScimUpdate(TestWithScimToken):
 
     def test_update(self):
         """
-        Pick a random SCIM generated user, update something anc check
+        Pick a random SCIM generated user, update something and check
         """
         api = self.api.scim.users
         org_id = self.org_id
@@ -614,6 +614,40 @@ class TestScimUpdate(TestWithScimToken):
             details_after_update = api.details(org_id=org_id, user_id=target_details.id)
             work_phone = next(pn for pn in details_after_update.phone_numbers if pn.type == 'work')
             self.assertEqual(new_phone_number, work_phone.value)
+            # last_modified has to be changed
+            self.assertTrue(details_after_update.meta.last_modified != target_details.meta.last_modified)
+
+        finally:
+            api.update(org_id=org_id, user=target_details)
+            restored_details = api.details(org_id=org_id, user_id=self.target_user.id)
+            restored_details.meta = target_details.meta
+            self.assertEqual(target_details, restored_details)
+
+    def test_patch_work_extension(self):
+        """
+        Try to update the work extension of a user
+        """
+        me = self.api.people.me()
+        print(f'org: id {me.org_id}, base64 decoded {base64.b64decode(me.org_id + "==")}')
+        org_id = webex_id_to_uuid(me.org_id)
+        api = self.api.scim.users
+        target_details = api.details(org_id=org_id, user_id=self.target_user.id)
+        new_work_extension = '88011234'
+        patched = api.patch(
+            org_id=org_id,
+            user_id=self.target_user.id,
+            operations=[
+                PatchUserOperation(
+                    op=PatchUserOperationOp.replace,
+                    path='phoneNumbers[type eq "work_extension"].value',
+                    value=new_work_extension,
+                )
+            ],
+        )
+        try:
+            details_after_update = api.details(org_id=org_id, user_id=target_details.id)
+            work_extension = next(pn for pn in details_after_update.phone_numbers if pn.type == 'work_extension')
+            self.assertEqual(new_work_extension, work_extension.value)
             # last_modified has to be changed
             self.assertTrue(details_after_update.meta.last_modified != target_details.meta.last_modified)
 

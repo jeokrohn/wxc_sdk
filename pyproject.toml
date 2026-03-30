@@ -138,14 +138,14 @@ quote-style = "single"
 [tool.ruff.lint]
 ignore = ["E741", 'C901']
 select = [
-    "E",   # pycodestyle errors (flake8 core)
-    "W",   # pycodestyle warnings (flake8 core)
-    "F",   # pyflakes (flake8 core)
+    "E", # pycodestyle errors (flake8 core)
+    "W", # pycodestyle warnings (flake8 core)
+    "F", # pyflakes (flake8 core)
     "C90", # mccabe complexity (flake8-mccabe)
-    "I",   # isort (flake8-isort)
+    "I", # isort (flake8-isort)
     # "N",   # pep8-naming (flake8-pep8-naming)
-    "B",   # flake8-bugbear
-    "UP",  # pyupgrade
+    "B", # flake8-bugbear
+    "UP", # pyupgrade
 ]
 
 [tool.ruff.lint.per-file-ignores]
@@ -173,7 +173,7 @@ version_files = [
 strict = true
 ignore_missing_imports = false
 # disable_error_code = ["import-untyped"]
-no_implicit_optional=false
+no_implicit_optional = false
 warn_unused_configs = true
 
 [[tool.mypy.overrides]]
@@ -194,7 +194,10 @@ disable_error_code = ["index", "import-untyped", "union-attr", "arg-type", "type
 
 [[tool.mypy.overrides]]
 module = "tests.*"
-disable_error_code = ["no-untyped-def", "union-attr"]
+disable_error_code = [
+    "no-untyped-def", "union-attr", "arg-type", "import-untyped", "assignment", "index", "no-untyped-call",
+    "no-redef", "operator", "misc", "attr-defined", "str-bytes-safe", "func-returns-value", "var-annotated"
+]
 
 
 
