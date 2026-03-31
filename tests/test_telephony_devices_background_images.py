@@ -1,12 +1,18 @@
 import json
-import os.path
+import pathlib
 
 from tests.base import TestCaseWithLog, async_test
 from wxc_sdk.telephony.devices import DeleteImageRequestObject
 
 
-class TestBackgroundImages(TestCaseWithLog):
+def sample_image() -> str:
+    """
+    Sample image
+    """
+    return str(pathlib.Path(__file__).parent / 'sonda.png')
 
+
+class TestBackgroundImages(TestCaseWithLog):
     def test_list(self):
         """
         list all background images
@@ -18,19 +24,19 @@ class TestBackgroundImages(TestCaseWithLog):
         """
         upload a background image
         """
-        bg_image = os.path.abspath('./sonda.png')
+        # sample bg image in the same path as the unit test source
+        bg_image = sample_image()
         devices = list(self.api.devices.list(product_type='phone', product='Cisco 8851'))
-        target_device = next((d for d in devices if 'Henry Green' in d.display_name), None)
+        target_device = next((d for d in devices if 'Heidi Harper' in d.display_name), None)
         if target_device is None:
             self.skipTest('No target device')
         dapi = self.api.telephony.devices
         images = dapi.list_background_images()
         names = set(im.file_name for im in images.background_images)
-        new_name = next(name
-                        for i in range(1, 100)
-                        if (name := f'test_{i:02}.png') not in names)
-        result = self.api.telephony.devices.upload_background_image(device_id=target_device.device_id, file=bg_image,
-                                                                    file_name=new_name)
+        new_name = next(name for i in range(1, 100) if (name := f'test_{i:02}.png') not in names)
+        result = self.api.telephony.devices.upload_background_image(
+            device_id=target_device.device_id, file=bg_image, file_name=new_name
+        )
         print(json.dumps(result.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
         images = dapi.list_background_images()
         print(json.dumps(images.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
@@ -40,7 +46,7 @@ class TestBackgroundImages(TestCaseWithLog):
         """
         upload a background image (async)
         """
-        bg_image = os.path.abspath('./sonda.png')
+        bg_image = sample_image()
         devices = list(self.api.devices.list(product_type='phone', product='Cisco 8851'))
         target_device = next((d for d in devices if 'Henry Green' in d.display_name), None)
         if target_device is None:
@@ -48,12 +54,10 @@ class TestBackgroundImages(TestCaseWithLog):
         dapi = self.api.telephony.devices
         images = dapi.list_background_images()
         names = set(im.file_name for im in images.background_images)
-        new_name = next(name
-                        for i in range(1, 100)
-                        if (name := f'test_{i:02}.png') not in names)
-        result = await self.async_api.telephony.devices.upload_background_image(device_id=target_device.device_id,
-                                                                                file=bg_image,
-                                                                                file_name=new_name)
+        new_name = next(name for i in range(1, 100) if (name := f'test_{i:02}.png') not in names)
+        result = await self.async_api.telephony.devices.upload_background_image(
+            device_id=target_device.device_id, file=bg_image, file_name=new_name
+        )
         print(json.dumps(result.model_dump(mode='json', by_alias=True), indent=2))
 
     def test_delete_all(self):
@@ -62,8 +66,9 @@ class TestBackgroundImages(TestCaseWithLog):
         """
         dapi = self.api.telephony.devices
         images = dapi.list_background_images()
-        requests = [DeleteImageRequestObject(file_name=im.file_name, force_delete=True)
-                    for im in images.background_images]
+        requests = [
+            DeleteImageRequestObject(file_name=im.file_name, force_delete=True) for im in images.background_images
+        ]
         if not requests:
             self.skipTest('No background images to delete')
         r = dapi.delete_background_images(requests)
