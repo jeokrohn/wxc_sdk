@@ -31,18 +31,17 @@ __all__ = ['AgentCallerIdType', 'AudioAnnouncementFileGetObject', 'AudioAnnounce
            'GetVirtualLineObjectLocationAddress', 'GetVirtualLineObjectNumber', 'IncomingPermissionSetting',
            'IncomingPermissionSettingExternalTransfer', 'LineType', 'ListVirtualLineObject',
            'ListVirtualLineObjectExternalCallerIdNamePolicy', 'ListVirtualLineObjectLocation',
-           'ListVirtualLineObjectNumber', 'MemberType', 'ModifyVirtualLineObject', 'MonitoredPersonObject',
-           'NumberOwnerType', 'OutgoingCallingPermissionsSettingGet',
-           'OutgoingCallingPermissionsSettingGetCallingPermissionsItem',
+           'ListVirtualLineObjectNumber', 'MemberType', 'MonitoredPersonObject', 'NumberOwnerType',
+           'OutgoingCallingPermissionsSettingGet', 'OutgoingCallingPermissionsSettingGetCallingPermissionsItem',
            'OutgoingCallingPermissionsSettingGetCallingPermissionsItemAction',
            'OutgoingCallingPermissionsSettingGetCallingPermissionsItemCallType',
            'OutgoingCallingPermissionsSettingPutCallingPermissionsItem', 'PeopleOrPlaceOrVirtualLineType',
-           'PostVirtualLineObject', 'PrivacyGet', 'PushToTalkAccessType', 'PushToTalkConnectionType',
-           'PushToTalkInfo', 'STATE', 'TelephonyType', 'TransferNumberGet', 'UserDigitPatternObject',
+           'PrivacyGet', 'PushToTalkAccessType', 'PushToTalkConnectionType', 'PushToTalkInfo', 'STATE',
+           'TelephonyType', 'TransferNumberGet', 'UserDigitPatternObject',
            'UserOutgoingPermissionDigitPatternGetListObject', 'UserPlaceAuthorizationCodeListGet',
-           'UserPlaceAuthorizationCodeListPatch', 'UserSelectionObject',
-           'VirtualLineCallForwardAvailableNumberObject', 'VirtualLineCallForwardAvailableNumberObjectOwner',
-           'VirtualLineCallSettingsApi', 'VirtualLineDoNotDisturbGet', 'VirtualLineECBNAvailableNumberObject',
+           'UserSelectionObject', 'VirtualLineCallForwardAvailableNumberObject',
+           'VirtualLineCallForwardAvailableNumberObjectOwner', 'VirtualLineCallSettingsApi',
+           'VirtualLineDoNotDisturbGet', 'VirtualLineECBNAvailableNumberObject',
            'VirtualLineECBNAvailableNumberObjectOwner', 'VirtualLineECBNAvailableNumberObjectOwnerType',
            'VirtualLineFaxMessageAvailableNumberObject', 'VoicemailInfo', 'VoicemailInfoEmailCopyOfMessage',
            'VoicemailInfoFaxMessage', 'VoicemailInfoMessageStorage', 'VoicemailInfoMessageStorageStorageType',
@@ -64,16 +63,6 @@ class AuthorizationCode(ApiModel):
     description: Optional[str] = None
     #: Indicates the level of each access code.
     level: Optional[AuthorizationCodeLevel] = None
-
-    def post(self) -> dict[str, Any]:
-        """
-        Return a dict for use as the JSON body of a POST request.
-        Only the fields relevant for POST are included.
-
-        :meta private:
-        """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               include={'code', 'description'})
 
 
 class ListVirtualLineObjectExternalCallerIdNamePolicy(str, Enum):
@@ -197,16 +186,6 @@ class CallRecordingInfo(ApiModel):
     #: Call Recording starts and stops announcement settings.
     start_stop_announcement: Optional[CallRecordingInfoStartStopAnnouncement] = None
 
-    def put(self) -> dict[str, Any]:
-        """
-        Return a dict for use as the JSON body of a PUT request.
-        Only the fields relevant for PUT are included.
-
-        :meta private:
-        """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               include={'enabled', 'notification', 'record', 'record_voicemail_enabled', 'repeat', 'start_stop_announcement'})
-
 
 class CallRecordingPutNotificationType(str, Enum):
     #: A beep sound is played when call recording is paused or resumed.
@@ -221,40 +200,6 @@ class CallRecordingPutNotification(ApiModel):
     type: Optional[CallRecordingPutNotificationType] = None
     #: `true` when notification feature is in effect. `false` indicates notification is disabled.
     enabled: Optional[bool] = None
-
-
-class PostVirtualLineObject(ApiModel):
-    #: First name defined for a virtual line. Minimum length is 1. Maximum length is 30.
-    first_name: Optional[str] = None
-    #: Last name defined for a virtual line. Minimum length is 1. Maximum length is 30.
-    last_name: Optional[str] = None
-    #: Display name defined for a virtual line.
-    display_name: Optional[str] = None
-    #: Phone number of a virtual line. Minimum length is 1. Maximum length is 23. Either `phoneNumber` or `extension`
-    #: is mandatory.
-    phone_number: Optional[str] = None
-    #: Extension of a virtual line. Minimum length is 2. Maximum length is 10. Either `phoneNumber` or `extension` is
-    #: mandatory.
-    extension: Optional[str] = None
-    #: ID of location for virtual line.
-    location_id: Optional[str] = None
-    #: Last name used in the Calling Line ID and for dial-by-name functions. Minimum length is 1. Maximum length is 30.
-    caller_id_last_name: Optional[str] = None
-    #: First name used in the Calling Line ID and for dial-by-name functions. Minimum length is 1. Maximum length is
-    #: 30.
-    caller_id_first_name: Optional[str] = None
-    #: Phone number to appear as the CLID for all calls. Minimum length is 1. Maximum length is 23.
-    caller_id_number: Optional[str] = None
-
-    def post(self) -> dict[str, Any]:
-        """
-        Return a dict for use as the JSON body of a POST request.
-        Only the fields relevant for POST are included.
-
-        :meta private:
-        """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               include={'caller_id_first_name', 'caller_id_last_name', 'caller_id_number', 'display_name', 'extension', 'first_name', 'last_name', 'location_id', 'phone_number'})
 
 
 class GetVirtualLineObjectNumber(ApiModel):
@@ -366,42 +311,6 @@ class GetVirtualLineObject(ApiModel):
     devices: Optional[list[DevicesObject]] = None
     #: Location details of virtual line.
     location: Optional[GetVirtualLineObjectLocation] = None
-
-
-class ModifyVirtualLineObject(ApiModel):
-    #: First name defined for a virtual line. Minimum length is 1. Maximum length is 64.
-    first_name: Optional[str] = None
-    #: Last name defined for a virtual line. Minimum length is 1. Maximum length is 64.
-    last_name: Optional[str] = None
-    #: Display name defined for a virtual line.
-    display_name: Optional[str] = None
-    #: Phone number of a virtual line. Minimum length is 1. Maximum length is 23. Either `phoneNumber` or `extension`
-    #: is mandatory.
-    phone_number: Optional[str] = None
-    #: Extension of a virtual line. Minimum length is 2. Maximum length is 10. Either `phoneNumber` or `extension` is
-    #: mandatory.
-    extension: Optional[str] = None
-    #: Virtual Line's announcement language.
-    announcement_language: Optional[str] = None
-    #: Last name used in the Calling Line ID and for dial-by-name functions. Minimum length is 1. Maximum length is 64.
-    caller_id_last_name: Optional[str] = None
-    #: First name used in the Calling Line ID and for dial-by-name functions. Minimum length is 1. Maximum length is
-    #: 128.
-    caller_id_first_name: Optional[str] = None
-    #: Phone number to appear as the CLID for all calls. Minimum length is 1. Maximum length is 23.
-    caller_id_number: Optional[str] = None
-    #: Time zone defined for the virtual line.
-    time_zone: Optional[str] = None
-
-    def put(self) -> dict[str, Any]:
-        """
-        Return a dict for use as the JSON body of a PUT request.
-        Only the fields relevant for PUT are included.
-
-        :meta private:
-        """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               include={'announcement_language', 'caller_id_first_name', 'caller_id_last_name', 'caller_id_number', 'display_name', 'extension', 'first_name', 'last_name', 'phone_number', 'time_zone'})
 
 
 class GetVirtualLineNumberObjectPhoneNumber(ApiModel):
@@ -536,16 +445,6 @@ class CallerIdInfo(ApiModel):
     #: The last name to be used for dial-by-name functions.
     dial_by_last_name: Optional[str] = None
 
-    def put(self) -> dict[str, Any]:
-        """
-        Return a dict for use as the JSON body of a PUT request.
-        Only the fields relevant for PUT are included.
-
-        :meta private:
-        """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               include={'additional_external_caller_id_custom_number', 'additional_external_caller_id_direct_line_enabled', 'additional_external_caller_id_location_number_enabled', 'block_in_forward_calls_enabled', 'custom_external_caller_id_name', 'custom_number', 'dial_by_first_name', 'dial_by_last_name', 'direct_line_caller_id_name', 'external_caller_id_name_policy', 'first_name', 'last_name', 'selected'})
-
 
 class CallForwardingInfoCallForwardingAlways(ApiModel):
     #: "Always" call forwarding is enabled or disabled.
@@ -600,16 +499,6 @@ class CallForwardingInfo(ApiModel):
     #: reason, such as power outage, failed Internet connection, or wiring problem.
     business_continuity: Optional[CallForwardingInfoCallForwardingBusy] = None
 
-    def put(self) -> dict[str, Any]:
-        """
-        Return a dict for use as the JSON body of a PUT request.
-        Only the fields relevant for PUT are included.
-
-        :meta private:
-        """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               include={'business_continuity', 'call_forwarding'})
-
 
 class CallForwardingPutCallForwardingNoAnswer(ApiModel):
     #: "No Answer" call forwarding is enabled or disabled.
@@ -653,16 +542,6 @@ class IncomingPermissionSetting(ApiModel):
     internal_calls_enabled: Optional[bool] = None
     #: Collect calls are allowed to be received.
     collect_calls_enabled: Optional[bool] = None
-
-    def put(self) -> dict[str, Any]:
-        """
-        Return a dict for use as the JSON body of a PUT request.
-        Only the fields relevant for PUT are included.
-
-        :meta private:
-        """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               include={'collect_calls_enabled', 'external_transfer', 'internal_calls_enabled', 'use_custom_enabled'})
 
 
 class OutgoingCallingPermissionsSettingGetCallingPermissionsItemCallType(str, Enum):
@@ -729,20 +608,6 @@ class OutgoingCallingPermissionsSettingGet(ApiModel):
     use_custom_permissions: Optional[bool] = None
     #: Specifies the outbound calling permissions settings.
     calling_permissions: Optional[list[OutgoingCallingPermissionsSettingGetCallingPermissionsItem]] = None
-
-    def put(self) -> dict[str, Any]:
-        """
-        Return a dict for use as the JSON body of a PUT request.
-        Only the fields relevant for PUT are included.
-
-        :meta private:
-        """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               include={
-            'calling_permissions': {'__all__': {'action', 'call_type', 'transfer_enabled'}},
-            'use_custom_enabled': True,
-            'use_custom_permissions': True,
-                               })
 
 
 class OutgoingCallingPermissionsSettingPutCallingPermissionsItem(ApiModel):
@@ -818,16 +683,6 @@ class CallInterceptInfo(ApiModel):
     incoming: Optional[CallInterceptInfoIncoming] = None
     #: Settings related to how outgoing calls are handled when the intercept feature is enabled.
     outgoing: Optional[CallInterceptInfoOutgoing] = None
-
-    def put(self) -> dict[str, Any]:
-        """
-        Return a dict for use as the JSON body of a PUT request.
-        Only the fields relevant for PUT are included.
-
-        :meta private:
-        """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               include={'enabled', 'incoming', 'outgoing'})
 
 
 class CallInterceptPutIncomingAnnouncements(ApiModel):
@@ -945,27 +800,6 @@ class VoicemailInfo(ApiModel):
     #: Language code.
     announcement_language_code: Optional[str] = None
 
-    def put(self) -> dict[str, Any]:
-        """
-        Return a dict for use as the JSON body of a PUT request.
-        Only the fields relevant for PUT are included.
-
-        :meta private:
-        """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               include={
-            'announcement_language_code': True,
-            'email_copy_of_message': True,
-            'enabled': True,
-            'fax_message': True,
-            'message_storage': True,
-            'notifications': True,
-            'send_all_calls': True,
-            'send_busy_calls': {'__all__': {'enabled', 'greeting'}},
-            'send_unanswered_calls': {'__all__': {'enabled', 'greeting', 'number_of_rings'}},
-            'transfer_to_number': True,
-                               })
-
 
 class VoicemailPutSendBusyCalls(ApiModel):
     #: Calls will be sent to voicemail when busy.
@@ -1021,16 +855,6 @@ class GetMusicOnHoldObject(ApiModel):
     greeting: Optional[CallInterceptInfoIncomingAnnouncementsGreeting] = None
     #: Announcement Audio File details when greeting is set to CUSTOM.
     audio_announcement_file: Optional[AudioAnnouncementFileGetObject] = None
-
-    def put(self) -> dict[str, Any]:
-        """
-        Return a dict for use as the JSON body of a PUT request.
-        Only the fields relevant for PUT are included.
-
-        :meta private:
-        """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               include={'audio_announcement_file', 'greeting', 'moh_enabled'})
 
 
 class PushToTalkAccessType(str, Enum):
@@ -1089,32 +913,12 @@ class PushToTalkInfo(ApiModel):
     #: List of people that are allowed or disallowed to interact using the Push-to-Talk feature.
     members: Optional[list[MonitoredPersonObject]] = None
 
-    def put(self) -> dict[str, Any]:
-        """
-        Return a dict for use as the JSON body of a PUT request.
-        Only the fields relevant for PUT are included.
-
-        :meta private:
-        """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               include={'access_type', 'allow_auto_answer', 'connection_type', 'members'})
-
 
 class BargeInInfo(ApiModel):
     #: Indicates if the Barge In feature is enabled.
     enabled: Optional[bool] = None
     #: Indicates that a stutter dial tone will be played when a virtual line is barging in on the active call.
     tone_enabled: Optional[bool] = None
-
-    def put(self) -> dict[str, Any]:
-        """
-        Return a dict for use as the JSON body of a PUT request.
-        Only the fields relevant for PUT are included.
-
-        :meta private:
-        """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               include={'enabled', 'tone_enabled'})
 
 
 class PrivacyGet(ApiModel):
@@ -1129,16 +933,6 @@ class PrivacyGet(ApiModel):
     enable_phone_status_pickup_barge_in_privacy: Optional[bool] = None
     #: List of people that are being monitored.
     monitoring_agents: Optional[list[MonitoredPersonObject]] = None
-
-    def put(self) -> dict[str, Any]:
-        """
-        Return a dict for use as the JSON body of a PUT request.
-        Only the fields relevant for PUT are included.
-
-        :meta private:
-        """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               include={'aa_extension_dialing_enabled', 'aa_naming_dialing_enabled', 'enable_phone_status_directory_privacy', 'enable_phone_status_pickup_barge_in_privacy', 'monitoring_agents'})
 
 
 class STATE(str, Enum):
@@ -1284,23 +1078,6 @@ class UserPlaceAuthorizationCodeListGet(ApiModel):
     access_codes: Optional[list[AuthorizationCode]] = None
 
 
-class UserPlaceAuthorizationCodeListPatch(ApiModel):
-    #: When `true`, use custom settings for the access codes category of outbound permissions.
-    use_custom_access_codes: Optional[bool] = None
-    #: Indicates access codes to delete.
-    delete_codes: Optional[list[str]] = None
-
-    def put(self) -> dict[str, Any]:
-        """
-        Return a dict for use as the JSON body of a PUT request.
-        Only the fields relevant for PUT are included.
-
-        :meta private:
-        """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               include={'delete_codes', 'use_custom_access_codes'})
-
-
 class UserDigitPatternObject(ApiModel):
     #: A unique identifier for the digit pattern.
     id: Optional[str] = None
@@ -1312,26 +1089,6 @@ class UserDigitPatternObject(ApiModel):
     action: Optional[OutgoingCallingPermissionsSettingGetCallingPermissionsItemAction] = None
     #: If `true`, allows transfer and forwarding for the call type.
     transfer_enabled: Optional[bool] = None
-
-    def post(self) -> dict[str, Any]:
-        """
-        Return a dict for use as the JSON body of a POST request.
-        Only the fields relevant for POST are included.
-
-        :meta private:
-        """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               include={'action', 'name', 'pattern', 'transfer_enabled'})
-
-    def put(self) -> dict[str, Any]:
-        """
-        Return a dict for use as the JSON body of a PUT request.
-        Only the fields relevant for PUT are included.
-
-        :meta private:
-        """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               include={'action', 'name', 'pattern', 'transfer_enabled'})
 
 
 class UserOutgoingPermissionDigitPatternGetListObject(ApiModel):
@@ -1354,32 +1111,12 @@ class TransferNumberGet(ApiModel):
     #: `autoTransferNumber3` will be used when the associated calling permission action is set to `TRANSFER_NUMBER_3`.
     auto_transfer_number3: Optional[str] = None
 
-    def put(self) -> dict[str, Any]:
-        """
-        Return a dict for use as the JSON body of a PUT request.
-        Only the fields relevant for PUT are included.
-
-        :meta private:
-        """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               include={'auto_transfer_number1', 'auto_transfer_number2', 'auto_transfer_number3', 'use_custom_transfer_numbers'})
-
 
 class VirtualLineDoNotDisturbGet(ApiModel):
     #: `true` if the DoNotDisturb feature is enabled.
     enabled: Optional[bool] = None
     #: When `true`, enables ring reminder when you receive an incoming call while on Do Not Disturb.
     ring_splash_enabled: Optional[bool] = None
-
-    def put(self) -> dict[str, Any]:
-        """
-        Return a dict for use as the JSON body of a PUT request.
-        Only the fields relevant for PUT are included.
-
-        :meta private:
-        """
-        return self.model_dump(mode='json', by_alias=True, exclude_none=True,
-                               include={'enabled', 'ring_splash_enabled'})
 
 
 class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines'):
@@ -1471,9 +1208,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         url = self.ep()
         return self.session.follow_pagination(url=url, model=ListVirtualLineObject, item_key='virtualLines', params=params)
 
-    def create_a_virtual_line(self, settings: PostVirtualLineObject = None, first_name: str = None,
-                              last_name: str = None, display_name: str = None, phone_number: str = None,
-                              extension: str = None, location_id: str = None, caller_id_last_name: str = None,
+    def create_a_virtual_line(self, first_name: str, last_name: str, location_id: str, display_name: str = None,
+                              phone_number: str = None, extension: str = None, caller_id_last_name: str = None,
                               caller_id_first_name: str = None, caller_id_number: str = None,
                               org_id: str = None) -> str:
         """
@@ -1487,12 +1223,12 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         Creating a virtual line requires a full or user administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
-        :param settings: Settings to be used for the request body.
-        :type settings: PostVirtualLineObject
         :param first_name: First name defined for a virtual line. Minimum length is 1. Maximum length is 30.
         :type first_name: str
         :param last_name: Last name defined for a virtual line. Minimum length is 1. Maximum length is 30.
         :type last_name: str
+        :param location_id: ID of location for virtual line.
+        :type location_id: str
         :param display_name: Display name defined for a virtual line.
         :type display_name: str
         :param phone_number: Phone number of a virtual line. Minimum length is 1. Maximum length is 23. Either
@@ -1501,8 +1237,6 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         :param extension: Extension of a virtual line. Minimum length is 2. Maximum length is 10. Either `phoneNumber`
             or `extension` is mandatory.
         :type extension: str
-        :param location_id: ID of location for virtual line.
-        :type location_id: str
         :param caller_id_last_name: Last name used in the Calling Line ID and for dial-by-name functions. Minimum
             length is 1. Maximum length is 30.
         :type caller_id_last_name: str
@@ -1519,28 +1253,22 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        if settings is not None:
-            body = settings.post()
-        else:
-            body: dict[str, Any] = dict()
-            if first_name is not None:
-                body['firstName'] = first_name
-            if last_name is not None:
-                body['lastName'] = last_name
-            if display_name is not None:
-                body['displayName'] = display_name
-            if phone_number is not None:
-                body['phoneNumber'] = phone_number
-            if extension is not None:
-                body['extension'] = extension
-            if location_id is not None:
-                body['locationId'] = location_id
-            if caller_id_last_name is not None:
-                body['callerIdLastName'] = caller_id_last_name
-            if caller_id_first_name is not None:
-                body['callerIdFirstName'] = caller_id_first_name
-            if caller_id_number is not None:
-                body['callerIdNumber'] = caller_id_number
+        body: dict[str, Any] = dict()
+        body['firstName'] = first_name
+        body['lastName'] = last_name
+        if display_name is not None:
+            body['displayName'] = display_name
+        if phone_number is not None:
+            body['phoneNumber'] = phone_number
+        if extension is not None:
+            body['extension'] = extension
+        body['locationId'] = location_id
+        if caller_id_last_name is not None:
+            body['callerIdLastName'] = caller_id_last_name
+        if caller_id_first_name is not None:
+            body['callerIdFirstName'] = caller_id_first_name
+        if caller_id_number is not None:
+            body['callerIdNumber'] = caller_id_number
         url = self.ep()
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -1631,11 +1359,11 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         r = GetVirtualLineObject.model_validate(data)
         return r
 
-    def update_a_virtual_line(self, virtual_line_id: str, settings: ModifyVirtualLineObject = None,
-                              first_name: str = None, last_name: str = None, display_name: str = None,
-                              phone_number: str = None, extension: str = None, announcement_language: str = None,
-                              caller_id_last_name: str = None, caller_id_first_name: str = None,
-                              caller_id_number: str = None, time_zone: str = None, org_id: str = None) -> None:
+    def update_a_virtual_line(self, virtual_line_id: str, first_name: str = None, last_name: str = None,
+                              display_name: str = None, phone_number: str = None, extension: str = None,
+                              announcement_language: str = None, caller_id_last_name: str = None,
+                              caller_id_first_name: str = None, caller_id_number: str = None, time_zone: str = None,
+                              org_id: str = None) -> None:
         """
         Update a Virtual Line
 
@@ -1649,8 +1377,6 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         :param virtual_line_id: Update settings for a virtual line with the matching ID.
         :type virtual_line_id: str
-        :param settings: Settings to be used for the request body.
-        :type settings: ModifyVirtualLineObject
         :param first_name: First name defined for a virtual line. Minimum length is 1. Maximum length is 64.
         :type first_name: str
         :param last_name: Last name defined for a virtual line. Minimum length is 1. Maximum length is 64.
@@ -1683,30 +1409,27 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        if settings is not None:
-            body = settings.put()
-        else:
-            body: dict[str, Any] = dict()
-            if first_name is not None:
-                body['firstName'] = first_name
-            if last_name is not None:
-                body['lastName'] = last_name
-            if display_name is not None:
-                body['displayName'] = display_name
-            if phone_number is not None:
-                body['phoneNumber'] = phone_number
-            if extension is not None:
-                body['extension'] = extension
-            if announcement_language is not None:
-                body['announcementLanguage'] = announcement_language
-            if caller_id_last_name is not None:
-                body['callerIdLastName'] = caller_id_last_name
-            if caller_id_first_name is not None:
-                body['callerIdFirstName'] = caller_id_first_name
-            if caller_id_number is not None:
-                body['callerIdNumber'] = caller_id_number
-            if time_zone is not None:
-                body['timeZone'] = time_zone
+        body: dict[str, Any] = dict()
+        if first_name is not None:
+            body['firstName'] = first_name
+        if last_name is not None:
+            body['lastName'] = last_name
+        if display_name is not None:
+            body['displayName'] = display_name
+        if phone_number is not None:
+            body['phoneNumber'] = phone_number
+        if extension is not None:
+            body['extension'] = extension
+        if announcement_language is not None:
+            body['announcementLanguage'] = announcement_language
+        if caller_id_last_name is not None:
+            body['callerIdLastName'] = caller_id_last_name
+        if caller_id_first_name is not None:
+            body['callerIdFirstName'] = caller_id_first_name
+        if caller_id_number is not None:
+            body['callerIdNumber'] = caller_id_number
+        if time_zone is not None:
+            body['timeZone'] = time_zone
         url = self.ep(f'{virtual_line_id}')
         super().put(url, params=params, json=body)
 
@@ -1805,9 +1528,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         r = BargeInInfo.model_validate(data)
         return r
 
-    def configure_barge_in_settings_for_a_virtual_line(self, virtual_line_id: str, settings: BargeInInfo = None,
-                                                       enabled: bool = None, tone_enabled: bool = None,
-                                                       org_id: str = None) -> None:
+    def configure_barge_in_settings_for_a_virtual_line(self, virtual_line_id: str, enabled: bool = None,
+                                                       tone_enabled: bool = None, org_id: str = None) -> None:
         """
         Configure Barge In Settings for a Virtual Line
 
@@ -1821,8 +1543,6 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
-        :param settings: Settings to be used for the request body.
-        :type settings: BargeInInfo
         :param enabled: Set to enable or disable the Barge In feature.
         :type enabled: bool
         :param tone_enabled: Set to enable or disable a stutter dial tone being played when a virtual line is barging
@@ -1837,14 +1557,11 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        if settings is not None:
-            body = settings.put()
-        else:
-            body: dict[str, Any] = dict()
-            if enabled is not None:
-                body['enabled'] = enabled
-            if tone_enabled is not None:
-                body['toneEnabled'] = tone_enabled
+        body: dict[str, Any] = dict()
+        if enabled is not None:
+            body['enabled'] = enabled
+        if tone_enabled is not None:
+            body['toneEnabled'] = tone_enabled
         url = self.ep(f'{virtual_line_id}/bargeIn')
         super().put(url, params=params, json=body)
 
@@ -1944,7 +1661,6 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         return r
 
     def configure_call_forwarding_settings_for_a_virtual_line(self, virtual_line_id: str,
-                                                              settings: CallForwardingInfo = None,
                                                               call_forwarding: CallForwardingPutCallForwarding = None,
                                                               business_continuity: CallForwardingInfoCallForwardingBusy = None,
                                                               org_id: str = None) -> None:
@@ -1971,8 +1687,6 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         :param virtual_line_id: Update settings for a virtual line with the matching ID.
         :type virtual_line_id: str
-        :param settings: Settings to be used for the request body.
-        :type settings: CallForwardingInfo
         :param call_forwarding: Settings related to "Always", "Busy", and "No Answer" call forwarding.
         :type call_forwarding: CallForwardingPutCallForwarding
         :param business_continuity: Settings for sending calls to a destination of your choice if your phone is not
@@ -1988,14 +1702,11 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        if settings is not None:
-            body = settings.put()
-        else:
-            body: dict[str, Any] = dict()
-            if call_forwarding is not None:
-                body['callForwarding'] = call_forwarding.model_dump(mode='json', by_alias=True, exclude_none=True)
-            if business_continuity is not None:
-                body['businessContinuity'] = business_continuity.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body: dict[str, Any] = dict()
+        if call_forwarding is not None:
+            body['callForwarding'] = call_forwarding.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if business_continuity is not None:
+            body['businessContinuity'] = business_continuity.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{virtual_line_id}/callForwarding')
         super().put(url, params=params, json=body)
 
@@ -2114,8 +1825,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         r = CallRecordingInfo.model_validate(data)
         return r
 
-    def configure_call_recording_settings_for_a_virtual_line(self, virtual_line_id: str,
-                                                             settings: CallRecordingInfo = None, enabled: bool = None,
+    def configure_call_recording_settings_for_a_virtual_line(self, virtual_line_id: str, enabled: bool = None,
                                                              record: CallRecordingInfoRecord = None,
                                                              record_voicemail_enabled: bool = None,
                                                              notification: CallRecordingPutNotification = None,
@@ -2134,8 +1844,6 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         :param virtual_line_id: Unique identifier for the virtual line.
         :type virtual_line_id: str
-        :param settings: Settings to be used for the request body.
-        :type settings: CallRecordingInfo
         :param enabled: `true` if call recording is enabled.
         :type enabled: bool
         :param record: Call recording scenario.
@@ -2157,22 +1865,19 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        if settings is not None:
-            body = settings.put()
-        else:
-            body: dict[str, Any] = dict()
-            if enabled is not None:
-                body['enabled'] = enabled
-            if record is not None:
-                body['record'] = enum_str(record)
-            if record_voicemail_enabled is not None:
-                body['recordVoicemailEnabled'] = record_voicemail_enabled
-            if notification is not None:
-                body['notification'] = notification.model_dump(mode='json', by_alias=True, exclude_none=True)
-            if repeat is not None:
-                body['repeat'] = repeat.model_dump(mode='json', by_alias=True, exclude_none=True)
-            if start_stop_announcement is not None:
-                body['startStopAnnouncement'] = start_stop_announcement.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body: dict[str, Any] = dict()
+        if enabled is not None:
+            body['enabled'] = enabled
+        if record is not None:
+            body['record'] = enum_str(record)
+        if record_voicemail_enabled is not None:
+            body['recordVoicemailEnabled'] = record_voicemail_enabled
+        if notification is not None:
+            body['notification'] = notification.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if repeat is not None:
+            body['repeat'] = repeat.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if start_stop_announcement is not None:
+            body['startStopAnnouncement'] = start_stop_announcement.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{virtual_line_id}/callRecording')
         super().put(url, params=params, json=body)
 
@@ -2268,8 +1973,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         r = CallerIdInfo.model_validate(data)
         return r
 
-    def configure_caller_id_settings_for_a_virtual_line(self, virtual_line_id: str, settings: CallerIdInfo = None,
-                                                        selected: CallerIdInfoSelected = None,
+    def configure_caller_id_settings_for_a_virtual_line(self, virtual_line_id: str, selected: CallerIdInfoSelected,
                                                         custom_number: str = None, first_name: str = None,
                                                         last_name: str = None,
                                                         block_in_forward_calls_enabled: bool = None,
@@ -2297,8 +2001,6 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         :param virtual_line_id: Update settings for a virtual line with the matching ID.
         :type virtual_line_id: str
-        :param settings: Settings to be used for the request body.
-        :type settings: CallerIdInfo
         :param selected: Which type of outgoing Caller ID will be used. This setting is for the number portion.
         :type selected: CallerIdInfoSelected
         :param custom_number: Custom number which will be shown if CUSTOM is selected. This value must be a number from
@@ -2352,36 +2054,32 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        if settings is not None:
-            body = settings.put()
-        else:
-            body: dict[str, Any] = dict()
-            if selected is not None:
-                body['selected'] = enum_str(selected)
-            if custom_number is not None:
-                body['customNumber'] = custom_number
-            if first_name is not None:
-                body['firstName'] = first_name
-            if last_name is not None:
-                body['lastName'] = last_name
-            if block_in_forward_calls_enabled is not None:
-                body['blockInForwardCallsEnabled'] = block_in_forward_calls_enabled
-            if external_caller_id_name_policy is not None:
-                body['externalCallerIdNamePolicy'] = enum_str(external_caller_id_name_policy)
-            if custom_external_caller_id_name is not None:
-                body['customExternalCallerIdName'] = custom_external_caller_id_name
-            if additional_external_caller_id_direct_line_enabled is not None:
-                body['additionalExternalCallerIdDirectLineEnabled'] = additional_external_caller_id_direct_line_enabled
-            if additional_external_caller_id_location_number_enabled is not None:
-                body['additionalExternalCallerIdLocationNumberEnabled'] = additional_external_caller_id_location_number_enabled
-            if additional_external_caller_id_custom_number is not None:
-                body['additionalExternalCallerIdCustomNumber'] = additional_external_caller_id_custom_number
-            if direct_line_caller_id_name is not None:
-                body['directLineCallerIdName'] = direct_line_caller_id_name.model_dump(mode='json', by_alias=True, exclude_none=True)
-            if dial_by_first_name is not None:
-                body['dialByFirstName'] = dial_by_first_name
-            if dial_by_last_name is not None:
-                body['dialByLastName'] = dial_by_last_name
+        body: dict[str, Any] = dict()
+        body['selected'] = enum_str(selected)
+        if custom_number is not None:
+            body['customNumber'] = custom_number
+        if first_name is not None:
+            body['firstName'] = first_name
+        if last_name is not None:
+            body['lastName'] = last_name
+        if block_in_forward_calls_enabled is not None:
+            body['blockInForwardCallsEnabled'] = block_in_forward_calls_enabled
+        if external_caller_id_name_policy is not None:
+            body['externalCallerIdNamePolicy'] = enum_str(external_caller_id_name_policy)
+        if custom_external_caller_id_name is not None:
+            body['customExternalCallerIdName'] = custom_external_caller_id_name
+        if additional_external_caller_id_direct_line_enabled is not None:
+            body['additionalExternalCallerIdDirectLineEnabled'] = additional_external_caller_id_direct_line_enabled
+        if additional_external_caller_id_location_number_enabled is not None:
+            body['additionalExternalCallerIdLocationNumberEnabled'] = additional_external_caller_id_location_number_enabled
+        if additional_external_caller_id_custom_number is not None:
+            body['additionalExternalCallerIdCustomNumber'] = additional_external_caller_id_custom_number
+        if direct_line_caller_id_name is not None:
+            body['directLineCallerIdName'] = direct_line_caller_id_name.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if dial_by_first_name is not None:
+            body['dialByFirstName'] = dial_by_first_name
+        if dial_by_last_name is not None:
+            body['dialByLastName'] = dial_by_last_name
         url = self.ep(f'{virtual_line_id}/callerId')
         super().put(url, params=params, json=body)
 
@@ -2494,9 +2192,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         r = VirtualLineDoNotDisturbGet.model_validate(data)
         return r
 
-    def put_virtual_line_do_not_disturb(self, virtual_line_id: str, settings: VirtualLineDoNotDisturbGet = None,
-                                        enabled: bool = None, ring_splash_enabled: bool = None,
-                                        org_id: str = None) -> None:
+    def put_virtual_line_do_not_disturb(self, virtual_line_id: str, enabled: bool = None,
+                                        ring_splash_enabled: bool = None, org_id: str = None) -> None:
         """
         Modify DoNotDisturb Settings for a Virtual Line.
 
@@ -2508,8 +2205,6 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         :param virtual_line_id: Unique identifier for the virtual line.
         :type virtual_line_id: str
-        :param settings: Settings to be used for the request body.
-        :type settings: VirtualLineDoNotDisturbGet
         :param enabled: `true` if the DoNotDisturb feature is enabled.
         :type enabled: bool
         :param ring_splash_enabled: When `true`, enables ring reminder when you receive an incoming call while on Do
@@ -2522,14 +2217,11 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        if settings is not None:
-            body = settings.put()
-        else:
-            body: dict[str, Any] = dict()
-            if enabled is not None:
-                body['enabled'] = enabled
-            if ring_splash_enabled is not None:
-                body['ringSplashEnabled'] = ring_splash_enabled
+        body: dict[str, Any] = dict()
+        if enabled is not None:
+            body['enabled'] = enabled
+        if ring_splash_enabled is not None:
+            body['ringSplashEnabled'] = ring_splash_enabled
         url = self.ep(f'{virtual_line_id}/doNotDisturb')
         super().put(url, params=params, json=body)
 
@@ -2631,12 +2323,10 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         r = IncomingPermissionSetting.model_validate(data)
         return r
 
-    def configure_incoming_permission_settings_for_a_virtual_line(self, virtual_line_id: str,
-                                                                  settings: IncomingPermissionSetting = None,
-                                                                  use_custom_enabled: bool = None,
-                                                                  external_transfer: IncomingPermissionSettingExternalTransfer = None,
-                                                                  internal_calls_enabled: bool = None,
-                                                                  collect_calls_enabled: bool = None,
+    def configure_incoming_permission_settings_for_a_virtual_line(self, virtual_line_id: str, use_custom_enabled: bool,
+                                                                  external_transfer: IncomingPermissionSettingExternalTransfer,
+                                                                  internal_calls_enabled: bool,
+                                                                  collect_calls_enabled: bool,
                                                                   org_id: str = None) -> None:
         """
         Configure Incoming Permission Settings for a Virtual Line
@@ -2651,8 +2341,6 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         :param virtual_line_id: Update settings for a virtual line with the matching ID.
         :type virtual_line_id: str
-        :param settings: Settings to be used for the request body.
-        :type settings: IncomingPermissionSetting
         :param use_custom_enabled: When true, indicates that this virtual line uses the specified calling permissions
             for receiving inbound calls rather than the organizational defaults.
         :type use_custom_enabled: bool
@@ -2671,18 +2359,11 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        if settings is not None:
-            body = settings.put()
-        else:
-            body: dict[str, Any] = dict()
-            if use_custom_enabled is not None:
-                body['useCustomEnabled'] = use_custom_enabled
-            if external_transfer is not None:
-                body['externalTransfer'] = enum_str(external_transfer)
-            if internal_calls_enabled is not None:
-                body['internalCallsEnabled'] = internal_calls_enabled
-            if collect_calls_enabled is not None:
-                body['collectCallsEnabled'] = collect_calls_enabled
+        body: dict[str, Any] = dict()
+        body['useCustomEnabled'] = use_custom_enabled
+        body['externalTransfer'] = enum_str(external_transfer)
+        body['internalCallsEnabled'] = internal_calls_enabled
+        body['collectCallsEnabled'] = collect_calls_enabled
         url = self.ep(f'{virtual_line_id}/incomingPermission')
         super().put(url, params=params, json=body)
 
@@ -2717,8 +2398,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         r = CallInterceptInfo.model_validate(data)
         return r
 
-    def configure_call_intercept_settings_for_a_virtual_line(self, virtual_line_id: str,
-                                                             settings: CallInterceptInfo = None, enabled: bool = None,
+    def configure_call_intercept_settings_for_a_virtual_line(self, virtual_line_id: str, enabled: bool = None,
                                                              incoming: CallInterceptPutIncoming = None,
                                                              outgoing: CallInterceptInfoOutgoing = None,
                                                              org_id: str = None) -> None:
@@ -2737,8 +2417,6 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         :param virtual_line_id: Update settings for a virtual line with the matching ID.
         :type virtual_line_id: str
-        :param settings: Settings to be used for the request body.
-        :type settings: CallInterceptInfo
         :param enabled: `true` if the intercept feature is enabled.
         :type enabled: bool
         :param incoming: Settings related to how incoming calls are handled when the intercept feature is enabled.
@@ -2754,16 +2432,13 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        if settings is not None:
-            body = settings.put()
-        else:
-            body: dict[str, Any] = dict()
-            if enabled is not None:
-                body['enabled'] = enabled
-            if incoming is not None:
-                body['incoming'] = incoming.model_dump(mode='json', by_alias=True, exclude_none=True)
-            if outgoing is not None:
-                body['outgoing'] = outgoing.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body: dict[str, Any] = dict()
+        if enabled is not None:
+            body['enabled'] = enabled
+        if incoming is not None:
+            body['incoming'] = incoming.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if outgoing is not None:
+            body['outgoing'] = outgoing.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{virtual_line_id}/intercept')
         super().put(url, params=params, json=body)
 
@@ -2825,9 +2500,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         r = GetMusicOnHoldObject.model_validate(data)
         return r
 
-    def configure_music_on_hold_settings_for_a_virtual_line(self, virtual_line_id: str,
-                                                            settings: GetMusicOnHoldObject = None,
-                                                            moh_enabled: bool = None,
+    def configure_music_on_hold_settings_for_a_virtual_line(self, virtual_line_id: str, moh_enabled: bool = None,
                                                             greeting: CallInterceptInfoIncomingAnnouncementsGreeting = None,
                                                             audio_announcement_file: AudioAnnouncementFileGetObject = None,
                                                             org_id: str = None) -> None:
@@ -2846,8 +2519,6 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
-        :param settings: Settings to be used for the request body.
-        :type settings: GetMusicOnHoldObject
         :param moh_enabled: Music on hold is enabled or disabled for the virtual line.
         :type moh_enabled: bool
         :param greeting: Greeting type for the virtual line.
@@ -2863,16 +2534,13 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        if settings is not None:
-            body = settings.put()
-        else:
-            body: dict[str, Any] = dict()
-            if moh_enabled is not None:
-                body['mohEnabled'] = moh_enabled
-            if greeting is not None:
-                body['greeting'] = enum_str(greeting)
-            if audio_announcement_file is not None:
-                body['audioAnnouncementFile'] = audio_announcement_file.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body: dict[str, Any] = dict()
+        if moh_enabled is not None:
+            body['mohEnabled'] = moh_enabled
+        if greeting is not None:
+            body['greeting'] = enum_str(greeting)
+        if audio_announcement_file is not None:
+            body['audioAnnouncementFile'] = audio_announcement_file.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{virtual_line_id}/musicOnHold')
         super().put(url, params=params, json=body)
 
@@ -2929,10 +2597,9 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         return r
 
     def modify_a_virtual_line_s_outgoing_calling_permissions_settings(self, virtual_line_id: str,
-                                                                      settings: OutgoingCallingPermissionsSettingGet = None,
+                                                                      calling_permissions: list[OutgoingCallingPermissionsSettingPutCallingPermissionsItem],
                                                                       use_custom_enabled: bool = None,
                                                                       use_custom_permissions: bool = None,
-                                                                      calling_permissions: list[OutgoingCallingPermissionsSettingPutCallingPermissionsItem] = None,
                                                                       org_id: str = None) -> None:
         """
         Modify a virtual line's Outgoing Calling Permissions settings.
@@ -2946,16 +2613,14 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         :param virtual_line_id: Update settings for a virtual line with the matching ID.
         :type virtual_line_id: str
-        :param settings: Settings to be used for the request body.
-        :type settings: OutgoingCallingPermissionsSettingGet
+        :param calling_permissions: Specifies the outbound calling permissions settings.
+        :type calling_permissions: list[OutgoingCallingPermissionsSettingPutCallingPermissionsItem]
         :param use_custom_enabled: When true, indicates that this user uses the shared control that applies to all
             outgoing call settings categories when placing outbound calls.
         :type use_custom_enabled: bool
         :param use_custom_permissions: When true, indicates that this user uses the specified outgoing calling
             permissions when placing outbound calls.
         :type use_custom_permissions: bool
-        :param calling_permissions: Specifies the outbound calling permissions settings.
-        :type calling_permissions: list[OutgoingCallingPermissionsSettingPutCallingPermissionsItem]
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
@@ -2965,16 +2630,12 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        if settings is not None:
-            body = settings.put()
-        else:
-            body: dict[str, Any] = dict()
-            if use_custom_enabled is not None:
-                body['useCustomEnabled'] = use_custom_enabled
-            if use_custom_permissions is not None:
-                body['useCustomPermissions'] = use_custom_permissions
-            if calling_permissions is not None:
-                body['callingPermissions'] = TypeAdapter(list[OutgoingCallingPermissionsSettingPutCallingPermissionsItem]).dump_python(calling_permissions, mode='json', by_alias=True, exclude_none=True)
+        body: dict[str, Any] = dict()
+        if use_custom_enabled is not None:
+            body['useCustomEnabled'] = use_custom_enabled
+        if use_custom_permissions is not None:
+            body['useCustomPermissions'] = use_custom_permissions
+        body['callingPermissions'] = TypeAdapter(list[OutgoingCallingPermissionsSettingPutCallingPermissionsItem]).dump_python(calling_permissions, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{virtual_line_id}/outgoingPermission')
         super().put(url, params=params, json=body)
 
@@ -3030,8 +2691,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         r = UserPlaceAuthorizationCodeListGet.model_validate(data)
         return r
 
-    def create_access_codes_for_a_virtual_line(self, virtual_line_id: str, settings: AuthorizationCode = None,
-                                               code: str = None, description: str = None, org_id: str = None) -> None:
+    def create_access_codes_for_a_virtual_line(self, virtual_line_id: str, code: str, description: str,
+                                               org_id: str = None) -> None:
         """
         Create Access Codes for a Virtual Line
 
@@ -3043,8 +2704,6 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         :param virtual_line_id: Unique identifier for the virtual line.
         :type virtual_line_id: str
-        :param settings: Settings to be used for the request body.
-        :type settings: AuthorizationCode
         :param code: Indicates an access code.
         :type code: str
         :param description: Indicates the description of the access code.
@@ -3058,21 +2717,14 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        if settings is not None:
-            body = settings.post()
-        else:
-            body: dict[str, Any] = dict()
-            if code is not None:
-                body['code'] = code
-            if description is not None:
-                body['description'] = description
+        body: dict[str, Any] = dict()
+        body['code'] = code
+        body['description'] = description
         url = self.ep(f'{virtual_line_id}/outgoingPermission/accessCodes')
         super().post(url, params=params, json=body)
 
-    def modify_access_codes_for_a_virtual_line(self, virtual_line_id: str,
-                                               settings: UserPlaceAuthorizationCodeListPatch = None,
-                                               use_custom_access_codes: bool = None, delete_codes: list[str] = None,
-                                               org_id: str = None) -> None:
+    def modify_access_codes_for_a_virtual_line(self, virtual_line_id: str, use_custom_access_codes: bool = None,
+                                               delete_codes: list[str] = None, org_id: str = None) -> None:
         """
         Modify Access Codes for a Virtual Line
 
@@ -3084,8 +2736,6 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         :param virtual_line_id: Unique identifier for the virtual line.
         :type virtual_line_id: str
-        :param settings: Settings to be used for the request body.
-        :type settings: UserPlaceAuthorizationCodeListPatch
         :param use_custom_access_codes: When `true`, use custom settings for the access codes category of outbound
             permissions.
         :type use_custom_access_codes: bool
@@ -3100,14 +2750,11 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        if settings is not None:
-            body = settings.put()
-        else:
-            body: dict[str, Any] = dict()
-            if use_custom_access_codes is not None:
-                body['useCustomAccessCodes'] = use_custom_access_codes
-            if delete_codes is not None:
-                body['deleteCodes'] = delete_codes
+        body: dict[str, Any] = dict()
+        if use_custom_access_codes is not None:
+            body['useCustomAccessCodes'] = use_custom_access_codes
+        if delete_codes is not None:
+            body['deleteCodes'] = delete_codes
         url = self.ep(f'{virtual_line_id}/outgoingPermission/accessCodes')
         super().put(url, params=params, json=body)
 
@@ -3141,8 +2788,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         r = TransferNumberGet.model_validate(data)
         return r
 
-    def modify_transfer_numbers_for_a_virtual_line(self, virtual_line_id: str, settings: TransferNumberGet = None,
-                                                   use_custom_transfer_numbers: bool = None,
+    def modify_transfer_numbers_for_a_virtual_line(self, virtual_line_id: str, use_custom_transfer_numbers: bool,
                                                    auto_transfer_number1: str = None,
                                                    auto_transfer_number2: str = None,
                                                    auto_transfer_number3: str = None, org_id: str = None) -> None:
@@ -3159,8 +2805,6 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         :param virtual_line_id: Unique identifier for the virtual line.
         :type virtual_line_id: str
-        :param settings: Settings to be used for the request body.
-        :type settings: TransferNumberGet
         :param use_custom_transfer_numbers: When `true`, use custom settings for the transfer numbers category of
             outbound permissions.
         :type use_custom_transfer_numbers: bool
@@ -3185,18 +2829,14 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        if settings is not None:
-            body = settings.put()
-        else:
-            body: dict[str, Any] = dict()
-            if use_custom_transfer_numbers is not None:
-                body['useCustomTransferNumbers'] = use_custom_transfer_numbers
-            if auto_transfer_number1 is not None:
-                body['autoTransferNumber1'] = auto_transfer_number1
-            if auto_transfer_number2 is not None:
-                body['autoTransferNumber2'] = auto_transfer_number2
-            if auto_transfer_number3 is not None:
-                body['autoTransferNumber3'] = auto_transfer_number3
+        body: dict[str, Any] = dict()
+        body['useCustomTransferNumbers'] = use_custom_transfer_numbers
+        if auto_transfer_number1 is not None:
+            body['autoTransferNumber1'] = auto_transfer_number1
+        if auto_transfer_number2 is not None:
+            body['autoTransferNumber2'] = auto_transfer_number2
+        if auto_transfer_number3 is not None:
+            body['autoTransferNumber3'] = auto_transfer_number3
         url = self.ep(f'{virtual_line_id}/outgoingPermission/autoTransferNumbers')
         super().put(url, params=params, json=body)
 
@@ -3251,10 +2891,9 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         r = UserOutgoingPermissionDigitPatternGetListObject.model_validate(data)
         return r
 
-    def create_digit_pattern_for_a_virtual_profile(self, virtual_line_id: str, settings: UserDigitPatternObject = None,
-                                                   name: str = None, pattern: str = None,
-                                                   action: OutgoingCallingPermissionsSettingGetCallingPermissionsItemAction = None,
-                                                   transfer_enabled: bool = None, org_id: str = None) -> str:
+    def create_digit_pattern_for_a_virtual_profile(self, virtual_line_id: str, name: str, pattern: str,
+                                                   action: OutgoingCallingPermissionsSettingGetCallingPermissionsItemAction,
+                                                   transfer_enabled: bool, org_id: str = None) -> str:
         """
         Create Digit Pattern for a Virtual Profile
 
@@ -3267,8 +2906,6 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         :param virtual_line_id: Unique identifier for the virtual line.
         :type virtual_line_id: str
-        :param settings: Settings to be used for the request body.
-        :type settings: UserDigitPatternObject
         :param name: A unique name for the digit pattern.
         :type name: str
         :param pattern: The digit pattern to be matched with the input number.
@@ -3286,18 +2923,11 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        if settings is not None:
-            body = settings.post()
-        else:
-            body: dict[str, Any] = dict()
-            if name is not None:
-                body['name'] = name
-            if pattern is not None:
-                body['pattern'] = pattern
-            if action is not None:
-                body['action'] = enum_str(action)
-            if transfer_enabled is not None:
-                body['transferEnabled'] = transfer_enabled
+        body: dict[str, Any] = dict()
+        body['name'] = name
+        body['pattern'] = pattern
+        body['action'] = enum_str(action)
+        body['transferEnabled'] = transfer_enabled
         url = self.ep(f'{virtual_line_id}/outgoingPermission/digitPatterns')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -3392,8 +3022,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         return r
 
     def modify_a_digit_pattern_for_a_virtual_profile(self, virtual_line_id: str, digit_pattern_id: str,
-                                                     settings: UserDigitPatternObject = None, name: str = None,
-                                                     pattern: str = None,
+                                                     name: str = None, pattern: str = None,
                                                      action: OutgoingCallingPermissionsSettingGetCallingPermissionsItemAction = None,
                                                      transfer_enabled: bool = None, org_id: str = None) -> None:
         """
@@ -3410,8 +3039,6 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         :type virtual_line_id: str
         :param digit_pattern_id: Unique identifier for the digit pattern.
         :type digit_pattern_id: str
-        :param settings: Settings to be used for the request body.
-        :type settings: UserDigitPatternObject
         :param name: A unique name for the digit pattern.
         :type name: str
         :param pattern: The digit pattern to be matched with the input number.
@@ -3429,18 +3056,15 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        if settings is not None:
-            body = settings.put()
-        else:
-            body: dict[str, Any] = dict()
-            if name is not None:
-                body['name'] = name
-            if pattern is not None:
-                body['pattern'] = pattern
-            if action is not None:
-                body['action'] = enum_str(action)
-            if transfer_enabled is not None:
-                body['transferEnabled'] = transfer_enabled
+        body: dict[str, Any] = dict()
+        if name is not None:
+            body['name'] = name
+        if pattern is not None:
+            body['pattern'] = pattern
+        if action is not None:
+            body['action'] = enum_str(action)
+        if transfer_enabled is not None:
+            body['transferEnabled'] = transfer_enabled
         url = self.ep(f'{virtual_line_id}/outgoingPermission/digitPatterns/{digit_pattern_id}')
         super().put(url, params=params, json=body)
 
@@ -3472,7 +3096,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         r = PrivacyGet.model_validate(data)
         return r
 
-    def configure_a_virtual_line_s_privacy_settings(self, virtual_line_id: str, settings: PrivacyGet = None,
+    def configure_a_virtual_line_s_privacy_settings(self, virtual_line_id: str,
                                                     aa_extension_dialing_enabled: bool = None,
                                                     aa_naming_dialing_enabled: bool = None,
                                                     enable_phone_status_directory_privacy: bool = None,
@@ -3491,8 +3115,6 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
-        :param settings: Settings to be used for the request body.
-        :type settings: PrivacyGet
         :param aa_extension_dialing_enabled: When `true` auto attendant extension dialing is enabled.
         :type aa_extension_dialing_enabled: bool
         :param aa_naming_dialing_enabled: When `true` auto attendant dialing by first or last name is enabled.
@@ -3513,20 +3135,17 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        if settings is not None:
-            body = settings.put()
-        else:
-            body: dict[str, Any] = dict()
-            if aa_extension_dialing_enabled is not None:
-                body['aaExtensionDialingEnabled'] = aa_extension_dialing_enabled
-            if aa_naming_dialing_enabled is not None:
-                body['aaNamingDialingEnabled'] = aa_naming_dialing_enabled
-            if enable_phone_status_directory_privacy is not None:
-                body['enablePhoneStatusDirectoryPrivacy'] = enable_phone_status_directory_privacy
-            if enable_phone_status_pickup_barge_in_privacy is not None:
-                body['enablePhoneStatusPickupBargeInPrivacy'] = enable_phone_status_pickup_barge_in_privacy
-            if monitoring_agents is not None:
-                body['monitoringAgents'] = monitoring_agents
+        body: dict[str, Any] = dict()
+        if aa_extension_dialing_enabled is not None:
+            body['aaExtensionDialingEnabled'] = aa_extension_dialing_enabled
+        if aa_naming_dialing_enabled is not None:
+            body['aaNamingDialingEnabled'] = aa_naming_dialing_enabled
+        if enable_phone_status_directory_privacy is not None:
+            body['enablePhoneStatusDirectoryPrivacy'] = enable_phone_status_directory_privacy
+        if enable_phone_status_pickup_barge_in_privacy is not None:
+            body['enablePhoneStatusPickupBargeInPrivacy'] = enable_phone_status_pickup_barge_in_privacy
+        if monitoring_agents is not None:
+            body['monitoringAgents'] = monitoring_agents
         url = self.ep(f'{virtual_line_id}/privacy')
         super().put(url, params=params, json=body)
 
@@ -3559,8 +3178,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         r = PushToTalkInfo.model_validate(data)
         return r
 
-    def configure_push_to_talk_settings_for_a_virtual_line(self, virtual_line_id: str, settings: PushToTalkInfo = None,
-                                                           allow_auto_answer: bool = None,
+    def configure_push_to_talk_settings_for_a_virtual_line(self, virtual_line_id: str, allow_auto_answer: bool = None,
                                                            connection_type: PushToTalkConnectionType = None,
                                                            access_type: PushToTalkAccessType = None,
                                                            members: list[str] = None, org_id: str = None) -> None:
@@ -3577,8 +3195,6 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
-        :param settings: Settings to be used for the request body.
-        :type settings: PushToTalkInfo
         :param allow_auto_answer: `true` if Push-to-Talk feature is enabled.
         :type allow_auto_answer: bool
         :param connection_type: Specifies the connection type to be used.
@@ -3596,18 +3212,15 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        if settings is not None:
-            body = settings.put()
-        else:
-            body: dict[str, Any] = dict()
-            if allow_auto_answer is not None:
-                body['allowAutoAnswer'] = allow_auto_answer
-            if connection_type is not None:
-                body['connectionType'] = enum_str(connection_type)
-            if access_type is not None:
-                body['accessType'] = enum_str(access_type)
-            if members is not None:
-                body['members'] = members
+        body: dict[str, Any] = dict()
+        if allow_auto_answer is not None:
+            body['allowAutoAnswer'] = allow_auto_answer
+        if connection_type is not None:
+            body['connectionType'] = enum_str(connection_type)
+        if access_type is not None:
+            body['accessType'] = enum_str(access_type)
+        if members is not None:
+            body['members'] = members
         url = self.ep(f'{virtual_line_id}/pushToTalk')
         super().put(url, params=params, json=body)
 
@@ -3642,17 +3255,16 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         r = VoicemailInfo.model_validate(data)
         return r
 
-    def configure_voicemail_settings_for_a_virtual_line(self, virtual_line_id: str, settings: VoicemailInfo = None,
-                                                        enabled: bool = None,
+    def configure_voicemail_settings_for_a_virtual_line(self, virtual_line_id: str,
+                                                        notifications: CallInterceptInfoIncomingAnnouncementsNewNumber,
+                                                        transfer_to_number: CallInterceptInfoIncomingAnnouncementsNewNumber,
+                                                        announcement_language_code: str, enabled: bool = None,
                                                         send_all_calls: DirectorySearchObject = None,
                                                         send_busy_calls: VoicemailPutSendBusyCalls = None,
                                                         send_unanswered_calls: VoicemailPutSendUnansweredCalls = None,
-                                                        notifications: CallInterceptInfoIncomingAnnouncementsNewNumber = None,
-                                                        transfer_to_number: CallInterceptInfoIncomingAnnouncementsNewNumber = None,
                                                         email_copy_of_message: VoicemailInfoEmailCopyOfMessage = None,
                                                         message_storage: VoicemailInfoMessageStorage = None,
                                                         fax_message: VoicemailInfoFaxMessage = None,
-                                                        announcement_language_code: str = None,
                                                         org_id: str = None) -> None:
         """
         Configure Voicemail Settings for a Virtual Line
@@ -3670,8 +3282,13 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
-        :param settings: Settings to be used for the request body.
-        :type settings: VoicemailInfo
+        :param notifications: Settings for notifications when there are any new voicemails.
+        :type notifications: CallInterceptInfoIncomingAnnouncementsNewNumber
+        :param transfer_to_number: Settings for voicemail caller to transfer to a different number by pressing zero
+            (0).
+        :type transfer_to_number: CallInterceptInfoIncomingAnnouncementsNewNumber
+        :param announcement_language_code: Language code.
+        :type announcement_language_code: str
         :param enabled: Voicemail is enabled or disabled.
         :type enabled: bool
         :param send_all_calls: Settings for sending all calls to voicemail.
@@ -3680,19 +3297,12 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         :type send_busy_calls: VoicemailPutSendBusyCalls
         :param send_unanswered_calls: -
         :type send_unanswered_calls: VoicemailPutSendUnansweredCalls
-        :param notifications: Settings for notifications when there are any new voicemails.
-        :type notifications: CallInterceptInfoIncomingAnnouncementsNewNumber
-        :param transfer_to_number: Settings for voicemail caller to transfer to a different number by pressing zero
-            (0).
-        :type transfer_to_number: CallInterceptInfoIncomingAnnouncementsNewNumber
         :param email_copy_of_message: Settings for sending a copy of the new voicemail message audio via email.
         :type email_copy_of_message: VoicemailInfoEmailCopyOfMessage
         :param message_storage: -
         :type message_storage: VoicemailInfoMessageStorage
         :param fax_message: -
         :type fax_message: VoicemailInfoFaxMessage
-        :param announcement_language_code: Language code.
-        :type announcement_language_code: str
         :param org_id: ID of the organization in which the virtual line resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
             token used to access API.
@@ -3702,30 +3312,24 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        if settings is not None:
-            body = settings.put()
-        else:
-            body: dict[str, Any] = dict()
-            if enabled is not None:
-                body['enabled'] = enabled
-            if send_all_calls is not None:
-                body['sendAllCalls'] = send_all_calls.model_dump(mode='json', by_alias=True, exclude_none=True)
-            if send_busy_calls is not None:
-                body['sendBusyCalls'] = send_busy_calls.model_dump(mode='json', by_alias=True, exclude_none=True)
-            if send_unanswered_calls is not None:
-                body['sendUnansweredCalls'] = send_unanswered_calls.model_dump(mode='json', by_alias=True, exclude_none=True)
-            if notifications is not None:
-                body['notifications'] = notifications.model_dump(mode='json', by_alias=True, exclude_none=True)
-            if transfer_to_number is not None:
-                body['transferToNumber'] = transfer_to_number.model_dump(mode='json', by_alias=True, exclude_none=True)
-            if email_copy_of_message is not None:
-                body['emailCopyOfMessage'] = email_copy_of_message.model_dump(mode='json', by_alias=True, exclude_none=True)
-            if message_storage is not None:
-                body['messageStorage'] = message_storage.model_dump(mode='json', by_alias=True, exclude_none=True)
-            if fax_message is not None:
-                body['faxMessage'] = fax_message.model_dump(mode='json', by_alias=True, exclude_none=True)
-            if announcement_language_code is not None:
-                body['announcementLanguageCode'] = announcement_language_code
+        body: dict[str, Any] = dict()
+        if enabled is not None:
+            body['enabled'] = enabled
+        if send_all_calls is not None:
+            body['sendAllCalls'] = send_all_calls.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if send_busy_calls is not None:
+            body['sendBusyCalls'] = send_busy_calls.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if send_unanswered_calls is not None:
+            body['sendUnansweredCalls'] = send_unanswered_calls.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['notifications'] = notifications.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['transferToNumber'] = transfer_to_number.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if email_copy_of_message is not None:
+            body['emailCopyOfMessage'] = email_copy_of_message.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if message_storage is not None:
+            body['messageStorage'] = message_storage.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if fax_message is not None:
+            body['faxMessage'] = fax_message.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body['announcementLanguageCode'] = announcement_language_code
         url = self.ep(f'{virtual_line_id}/voicemail')
         super().put(url, params=params, json=body)
 
