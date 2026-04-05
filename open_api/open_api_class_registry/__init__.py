@@ -6,6 +6,7 @@ Python class registry for OpenAPI schema; derived from PythonClassRegistry; used
 import json
 import logging
 import re
+from collections import defaultdict
 from typing import Any, Optional
 
 import dateutil.parser
@@ -73,6 +74,136 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
     def __init__(self, body_style: str = 'args') -> None:
         super().__init__()  # type: ignore[no-untyped-call]
         self.body_style = body_style
+
+    def normalize(self) -> None:
+        """Consolidate operation-specific models then run standard normalization."""
+        self.consolidate_resource_models()
+        super().normalize()  # type: ignore[no-untyped-call]
+
+    def consolidate_resource_models(self) -> None:
+        """
+        URL-based resource model consolidation.
+
+        Groups endpoints by their resource base URL (stripping the trailing /{param} segment),
+        then within each group merges operation-specific body models (e.g. PostFooObject,
+        ModifyFooObject) into the canonical model for the group (preferring the single-item GET
+        response model, falling back to the model with the most attributes).
+
+        Body models do NOT need to be strict subsets of the canonical — any fields missing from
+        the canonical are added to it (union expansion). A 20 % field-overlap threshold is used
+        as a safety check to avoid merging unrelated models.
+
+        The merged models' field sets are registered as post_include_sets / put_include_sets on
+        the canonical so that post() / put() methods are emitted with correct include filters.
+        Endpoints are remapped to the canonical and the now-redundant models are removed.
+
+        Safety constraint: a model is only consolidated if it is never used as a *result* type
+        (response) in the group — remapping result types would break response deserialisation.
+
+        Must run before normalize() while class names are still qualified.
+        """
+
+        def resource_base(url: str) -> str:
+            """Strip trailing /{param} to get the collection/resource URL."""
+            normalised = re.sub(r'\{[^}]+\}', '{}', url)
+            return re.sub(r'/\{\}$', '', normalised)
+
+        # --- group endpoints by resource base URL ---
+        resource_groups: dict[str, list[Endpoint]] = defaultdict(list)
+        for _, endpoint in self.endpoints():
+            resource_groups[resource_base(endpoint.url)].append(endpoint)
+
+        classes_to_remove: set[str] = set()
+
+        for group_eps in resource_groups.values():
+            # collect model names referenced in this group, split by role
+            body_class_endpoints: dict[str, list[Endpoint]] = defaultdict(list)
+            result_classes: set[str] = set()
+            single_item_get_result: Optional[str] = None  # preferred canonical
+
+            for ep in group_eps:
+                if ep.body_class_name and ep.body_class_name in self._classes:
+                    body_class_endpoints[ep.body_class_name].append(ep)
+                if ep.result_referenced_class and ep.result_referenced_class in self._classes:
+                    result_classes.add(ep.result_referenced_class)
+                    # Single-item GET: method GET and URL ends with /{param}
+                    if ep.method.upper() == 'GET' and re.search(r'/\{[^}]+\}$', ep.url):
+                        rc = self._classes.get(ep.result_referenced_class)
+                        if rc and not rc.is_enum and not rc.alias and rc.attributes:
+                            single_item_get_result = ep.result_referenced_class
+
+            all_model_names = set(body_class_endpoints) | result_classes
+            if len(all_model_names) < 2:
+                continue
+
+            # filter to concrete (non-enum, non-alias) models with attributes
+            candidates = {
+                name: self._classes[name]
+                for name in all_model_names
+                if name in self._classes
+                and not self._classes[name].is_enum
+                and not self._classes[name].alias
+                and self._classes[name].attributes
+            }
+            if len(candidates) < 2:
+                continue
+
+            # Prefer single-item GET result as canonical; fall back to largest by field count
+            if single_item_get_result and single_item_get_result in candidates:
+                canonical_name = single_item_get_result
+            else:
+                canonical_name = max(candidates, key=lambda n: len(candidates[n].attributes))
+            canonical = candidates[canonical_name]
+            canonical_fields = frozenset(a.name for a in canonical.attributes)
+
+            for small_name, small_model in candidates.items():
+                if small_name == canonical_name:
+                    continue
+                # never consolidate a model that is also used as a result type
+                if small_name in result_classes:
+                    continue
+                small_fields = frozenset(a.name for a in small_model.attributes)
+
+                # Safety: require at least 20% field overlap between the body model and canonical
+                overlap = len(small_fields & canonical_fields)
+                if overlap == 0:
+                    continue
+                overlap_ratio = overlap / max(len(small_fields), len(canonical_fields))
+                if overlap_ratio < 0.2:
+                    continue
+
+                # Union expansion: copy fields from body model that are missing from canonical
+                missing_fields = small_fields - canonical_fields
+                if missing_fields:
+                    missing_attrs = [a for a in small_model.attributes if a.name in missing_fields]
+                    canonical.attributes = list(canonical.attributes) + missing_attrs
+                    canonical_fields = frozenset(a.name for a in canonical.attributes)
+
+                # register include sets and carry over any nested include constraints
+                for ep in body_class_endpoints.get(small_name, []):
+                    verb = ep.method.upper()
+                    if verb == 'POST':
+                        if small_fields not in canonical.post_include_sets:
+                            canonical.post_include_sets.append(small_fields)
+                        for fn, nested in small_model.post_nested_include.items():
+                            canonical.post_nested_include.setdefault(fn, nested)
+                    elif verb == 'PUT':
+                        if small_fields not in canonical.put_include_sets:
+                            canonical.put_include_sets.append(small_fields)
+                        for fn, nested in small_model.put_nested_include.items():
+                            canonical.put_nested_include.setdefault(fn, nested)
+                    ep.body_class_name = canonical_name
+                    ep.body_method_name = 'post' if verb == 'POST' else 'put'
+
+                classes_to_remove.add(small_name)
+
+        for name in classes_to_remove:
+            self._classes.pop(name, None)
+        if classes_to_remove:
+            log.info(
+                f'consolidate_resource_models: removed {len(classes_to_remove)} redundant models: '
+                f'{", ".join(sorted(n.split("%")[-1] for n in classes_to_remove))}'
+            )
 
     @staticmethod
     def _attributes_from_enum(prop: OASchemaProperty) -> list[Attribute]:
