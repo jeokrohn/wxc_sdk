@@ -1,4 +1,4 @@
-# mypy: disable-error-code=arg-type, no-untyped-def
+# mypy: disable-error-code="arg-type,no-untyped-def"
 """
 Python class registry for OpenAPI schema; derived from PythonClassRegistry; used for code creation
 """
@@ -7,6 +7,7 @@ import json
 import logging
 import re
 from collections import defaultdict
+from itertools import chain
 from typing import Any, Optional
 
 import dateutil.parser
@@ -18,6 +19,30 @@ from open_api.open_api_model import OAContent, OAOperation, OAParameter, OASchem
 from open_api.open_api_sources import OpenApiSpecInfo
 
 log = logging.getLogger(__name__)
+
+# Verb prefixes that appear at the start of operation-specific model names
+_MODEL_VERB_PREFIXES = ('Post', 'Put', 'Patch', 'Get', 'List', 'Modify', 'Create', 'Update', 'Delete', 'Add', 'Set')
+
+
+def _strip_model_name(qualified: str) -> str:
+    """
+    Return a cleaner class name for a consolidated canonical model by stripping a leading
+    verb prefix (e.g. Get, Post, Modify) and/or a trailing 'Object' suffix.
+
+    Only the *unqualified* part (after the last '%') is modified; the context prefix is kept.
+    Returns the original string unchanged if neither transformation applies.
+    """
+    context, sep, name = qualified.rpartition('%')
+    # Strip leading verb prefix followed immediately by an upper-case letter
+    for verb in _MODEL_VERB_PREFIXES:
+        rest = name[len(verb) :]
+        if name.startswith(verb) and rest and rest[0].isupper():
+            name = rest
+            break
+    # Strip trailing 'Object'
+    if name.endswith('Object') and len(name) > 6:
+        name = name[:-6]
+    return f'{context}{sep}{name}'
 
 
 def class_name_from_schema_name(schema_name: str) -> str:
@@ -80,6 +105,38 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         self.consolidate_resource_models()
         super().normalize()  # type: ignore[no-untyped-call]
 
+    def _apply_class_rename(self, old_name: str, new_name: str) -> None:
+        """
+        Rename *old_name* to *new_name* throughout the registry: the class dict key, the
+        PythonClass.name field, every Attribute.referenced_class / python_type that points to
+        the old name, and every Endpoint field (body_class_name, result_referenced_class,
+        result, and parameter referenced_class / python_type).
+        """
+        pc = self._classes.pop(old_name)
+        pc.name = new_name
+        self._classes[new_name] = pc
+
+        for other_pc in self._classes.values():
+            for attr in other_pc.attributes or []:
+                if attr.referenced_class == old_name:
+                    attr.python_type = attr.python_type.replace(old_name, new_name)
+                    attr.referenced_class = new_name
+            if other_pc.alias and other_pc.alias.referenced_class == old_name:
+                other_pc.alias.python_type = other_pc.alias.python_type.replace(old_name, new_name)
+                other_pc.alias.referenced_class = new_name
+
+        for _, endpoint in self.endpoints():
+            if endpoint.body_class_name == old_name:
+                endpoint.body_class_name = new_name
+            if endpoint.result_referenced_class == old_name:
+                if endpoint.result:
+                    endpoint.result = endpoint.result.replace(old_name, new_name)
+                endpoint.result_referenced_class = new_name
+            for param in chain(endpoint.body_parameter, endpoint.href_parameter):
+                if param.referenced_class == old_name:
+                    param.python_type = param.python_type.replace(old_name, new_name)
+                    param.referenced_class = new_name
+
     def consolidate_resource_models(self) -> None:
         """
         URL-based resource model consolidation.
@@ -114,6 +171,7 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             resource_groups[resource_base(endpoint.url)].append(endpoint)
 
         classes_to_remove: set[str] = set()
+        consolidated_canonicals: set[str] = set()  # canonicals that absorbed at least one model
 
         for group_eps in resource_groups.values():
             # collect model names referenced in this group, split by role
@@ -196,6 +254,7 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
                     ep.body_method_name = 'post' if verb == 'POST' else 'put'
 
                 classes_to_remove.add(small_name)
+                consolidated_canonicals.add(canonical_name)
 
         for name in classes_to_remove:
             self._classes.pop(name, None)
@@ -204,6 +263,32 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
                 f'consolidate_resource_models: removed {len(classes_to_remove)} redundant models: '
                 f'{", ".join(sorted(n.split("%")[-1] for n in classes_to_remove))}'
             )
+
+        # Rename consolidated canonicals: strip leading verb prefix and trailing 'Object'.
+        # Also cascade the rename to sub-models whose unqualified name starts with the old
+        # canonical name (e.g. GetVirtualLineObjectNumber → VirtualLineNumber).
+        for old_name in sorted(consolidated_canonicals):
+            new_name = _strip_model_name(old_name)
+            if new_name == old_name or new_name in self._classes:
+                continue
+            old_class = old_name.split('%')[-1]
+            new_class = new_name.split('%')[-1]
+            log.info(f'consolidate_resource_models: renaming {old_class} → {new_class}')
+            self._apply_class_rename(old_name, new_name)
+
+            # Cascade: rename any class whose unqualified name starts with old_class
+            for sub_old in sorted(self._classes):
+                sub_class = sub_old.split('%')[-1]
+                if not sub_class.startswith(old_class):
+                    continue
+                sub_suffix = sub_class[len(old_class) :]  # e.g. 'Number', 'LocationAddress'
+                sub_new_class = f'{new_class}{sub_suffix}'
+                context, sep, _ = sub_old.rpartition('%')
+                sub_new = f'{context}{sep}{sub_new_class}'
+                if sub_new in self._classes:
+                    continue
+                log.info(f'consolidate_resource_models: renaming {sub_class} → {sub_new_class}')
+                self._apply_class_rename(sub_old, sub_new)
 
     @staticmethod
     def _attributes_from_enum(prop: OASchemaProperty) -> list[Attribute]:
