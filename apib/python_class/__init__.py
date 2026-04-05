@@ -217,6 +217,12 @@ class Endpoint:
     body_class_name: str = field(default=None, repr=False)
     # ... or list of parameters to be sent in the body
     body_parameter: list[Parameter] = field(default_factory=list, repr=False)
+    # when body_class_name is set: the set of field names (OAS/camelCase names) to include in model_dump
+    # None means include all fields
+    body_class_include: Optional[set[str]] = field(default=None, repr=False)
+    # name of the instance method to call on the body model to get the request body dict
+    # 'post' for POST endpoints, 'put' for PUT endpoints
+    body_method_name: str = field(default='post', repr=False)
     # python type for result
     result: str = field(default=None, repr=False)
     # references class if python result type is a class or references a class, e.g. list[SomeObject]
@@ -301,6 +307,32 @@ class Endpoint:
         #   * mandatory parameters; href before body
         #   * optional parameters; href before body w/o orgId
         #   * orgId if present
+        if self.body_class_name:
+            # body is represented as a single model-instance parameter; yield href params then the model param
+            yield from (p for p in self.href_parameters_filtered() if not p.optional)
+            # the model-instance parameter is always required (mandatory)
+            short_name = self.body_class_name.split('%')[-1]
+            yield Parameter(
+                name='settings',
+                python_type=short_name,
+                referenced_class=self.body_class_name,
+                docstring='Settings to be used for the request body.',
+                sample=None,
+                optional=False,
+                url_parameter=False,
+                registry=self.registry,
+            )
+            org_id = None
+            for p in self.href_parameters_filtered():
+                if not p.optional:
+                    continue
+                if p.name == 'orgId':
+                    org_id = p
+                    continue
+                yield p
+            if org_id:
+                yield org_id
+            return
         yield from (p for p in chain(self.href_parameters_filtered(), self.body_parameter) if not p.optional)
         org_id = None
         for p in chain(self.href_parameters_filtered(), self.body_parameter):
@@ -513,7 +545,7 @@ class Endpoint:
             )
             if self.params_required:
                 call_line = f'{call_line}, params=params'
-            if self.body_parameter:
+            if self.body_parameter or self.body_class_name:
                 call_line = f'{call_line}, json=body'
             call_line = f'{call_line})'
             source.print(call_line)
@@ -526,7 +558,7 @@ class Endpoint:
             call_line = f'{call_line}super().{self.method.lower()}(url'
             if self.params_required:
                 call_line = f'{call_line}, params=params'
-            if self.body_parameter:
+            if self.body_parameter or self.body_class_name:
                 call_line = f'{call_line}, json=body'
             call_line = f'{call_line})'
             source.print(call_line)
@@ -584,7 +616,10 @@ class Endpoint:
                 list(map(source.print, p.source_for_param_init()))
 
         # prepare body
-        if self.body_parameter:
+        if self.body_class_name:
+            # body comes from a model-instance parameter via its named method (post() or put())
+            source.print(f'body = settings.{self.body_method_name}()')
+        elif self.body_parameter:
             source.print('body: dict[str, Any] = dict()')
             for p in self.body_parameter:
                 list(map(source.print, p.source_for_body_init()))
@@ -744,8 +779,26 @@ class PythonClass:
     baseclass: Optional[str] = None
     # used for the case where a class is basically something like list[SomeOtherClass]
     alias: Optional[Attribute] = None
+    # when set: a create() method will be emitted that dumps only these OAS field names
+    # multiple include-sets can be registered (one per create endpoint that uses this model)
+    post_include_sets: list[frozenset[str]] = field(default_factory=list, repr=False)
+    # when set: an update() method will be emitted that dumps only these OAS field names
+    # multiple include-sets can be registered (one per update endpoint that uses this model)
+    put_include_sets: list[frozenset[str]] = field(default_factory=list, repr=False)
+    # nested include overrides for create/update: maps OAS field name → frozenset of nested OAS field names
+    # only set when the body schema defines a nested type with fewer fields than the registered model
+    post_nested_include: dict[str, frozenset[str]] = field(default_factory=dict, repr=False)
+    put_nested_include: dict[str, frozenset[str]] = field(default_factory=dict, repr=False)
 
     def __post_init__(self):
+        if self.post_include_sets is None:
+            self.post_include_sets = []
+        if self.put_include_sets is None:
+            self.put_include_sets = []
+        if self.post_nested_include is None:
+            self.post_nested_include = {}
+        if self.put_nested_include is None:
+            self.put_nested_include = {}
         if not self.attributes and not self.alias:
             raise ValueError(f'class {self.name} has no attributes nor alias')
         if not self.attributes:
@@ -790,7 +843,71 @@ class PythonClass:
             desc=desc_source,
             attributes='\n'.join(f'    {line}' for line in attribute_sources),
         ).strip()
+
+        # Emit post() method (merged union of all POST include-sets for this model)
+        if self.post_include_sets and not self.is_enum:
+            merged_include = frozenset().union(*self.post_include_sets)
+            result = result + '\n' + self._source_body_method('post', merged_include, self.post_nested_include)
+
+        # Emit put() method (merged union of all PUT include-sets for this model)
+        if self.put_include_sets and not self.is_enum:
+            merged_include = frozenset().union(*self.put_include_sets)
+            result = result + '\n' + self._source_body_method('put', merged_include, self.put_nested_include)
+
         return result
+
+    def _source_body_method(
+        self, method_name: str, include_set: frozenset[str], nested_include: dict[str, frozenset[str]]
+    ) -> str:
+        """
+        Generate a body-serialisation instance method (post() or put()) that returns a dict
+        suitable for use as a JSON request body, including only the fields relevant for that operation.
+
+        :param method_name: Python method name to emit, e.g. 'post' or 'put'.
+        :param include_set: OAS/camelCase field names to include (converted to Python names internally).
+        :param nested_include: OAS field name → frozenset of nested OAS field names for list/object
+            attributes whose body schema defines fewer fields than the registered model.
+        """
+        verb = 'POST' if method_name == 'post' else 'PUT'
+        lines = [
+            '',
+            f'    def {method_name}(self) -> dict[str, Any]:',
+            '        """',
+            f'        Return a dict for use as the JSON body of a {verb} request.',
+            f'        Only the fields relevant for {verb} are included.',
+            '',
+            '        :meta private:',
+            '        """',
+        ]
+        if not include_set:
+            lines.append("        return self.model_dump(mode='json', by_alias=True, exclude_none=True)")
+            return '\n'.join(lines)
+
+        # Build OAS-name → Python-name mapping from the class attributes
+        oas_to_python: dict[str, str] = {a.name: a.name_for_source for a in (self.attributes or [])}
+
+        if not nested_include:
+            # Simple set-based include using Python field names
+            python_names = sorted(oas_to_python.get(n, snake_case(n)) for n in include_set)
+            names_literal = '{' + ', '.join(f"'{n}'" for n in python_names) + '}'
+            lines.append("        return self.model_dump(mode='json', by_alias=True, exclude_none=True,")
+            lines.append(f'                               include={names_literal})')
+        else:
+            # Dict-based include; nested fields use {'__all__': {python_names}}
+            include_parts = []
+            for oas_name in sorted(include_set):
+                py_name = oas_to_python.get(oas_name, snake_case(oas_name))
+                if oas_name in nested_include:
+                    nested_py = sorted(snake_case(f) for f in nested_include[oas_name])
+                    nested_lit = '{' + ', '.join(f"'{f}'" for f in nested_py) + '}'
+                    include_parts.append(f"            '{py_name}': {{'__all__': {nested_lit}}},")
+                else:
+                    include_parts.append(f"            '{py_name}': True,")
+            lines.append("        return self.model_dump(mode='json', by_alias=True, exclude_none=True,")
+            lines.append('                               include={')
+            lines.extend(include_parts)
+            lines.append('                               })')
+        return '\n'.join(lines)
 
 
 @dataclass

@@ -309,6 +309,24 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             registry=self,
         )
 
+    def _raw_body_properties(self, spec: OASpec, operation: OAOperation) -> Optional[dict[str, 'OASchemaProperty']]:
+        """
+        Return the raw OAS property dict for the request body schema, or None if there is no body.
+        Used to inspect nested schema structures without going through Parameter conversion.
+        """
+        if not (req_body := operation.request_body):
+            return None
+        if not (content := req_body.content):
+            return None
+        content_type = next(iter(content))
+        body_content = content[content_type]
+        if not (body_schema := body_content.schema_):
+            return None
+        if ref := body_schema.ref or body_schema.object_ref:
+            class_spec = spec.get_schema(ref)
+            return class_spec.properties if class_spec else None
+        return body_schema.properties
+
     def _body_parameter_from_operation(self, spec: OASpec, operation: OAOperation) -> list[Parameter]:
         """
         Create parameter list from operation
@@ -360,7 +378,83 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         body_parameter = self._body_parameter_from_operation(spec, operation)
 
         body_class_name = None
+        body_class_include = None
+        body_method_name = 'post'
         registry = self
+
+        # For POST and PUT endpoints: check whether the body parameters are a subset of a registered model.
+        # If so, use the model as the single body argument (instead of individual parameters).
+        # POST → model.post()   PUT → model.put()
+        if method.upper() in ('POST', 'PUT') and len(body_parameter) > 1:
+            body_field_names = frozenset(p.name for p in body_parameter)
+            matched_model: Optional[str] = None
+            for class_name, python_class in self._classes.items():
+                if python_class.is_enum or python_class.alias or not python_class.attributes:
+                    continue
+                model_field_names = frozenset(a.name for a in python_class.attributes)
+                if body_field_names <= model_field_names:
+                    matched_model = class_name
+                    break
+
+            if matched_model:
+                model_class = self._classes[matched_model]
+                include_set = body_field_names
+                if method.upper() == 'POST':
+                    body_method_name = 'post'
+                    if include_set not in model_class.post_include_sets:
+                        model_class.post_include_sets.append(include_set)
+                else:  # PUT
+                    body_method_name = 'put'
+                    if include_set not in model_class.put_include_sets:
+                        model_class.put_include_sets.append(include_set)
+                body_class_name = matched_model
+                body_class_include = include_set
+                body_parameter = []  # clear individual params; body comes from the model instance
+
+                # Check nested models: if the body schema defines fewer fields for a list/object
+                # attribute than the registered model, register a nested include constraint.
+                raw_props = self._raw_body_properties(spec, operation)
+                if raw_props:
+                    nested_include: dict[str, frozenset[str]] = {}
+                    attr_by_oas_name = {a.name: a for a in model_class.attributes}
+                    for field_name in include_set:
+                        body_prop = raw_props.get(field_name)
+                        if body_prop is None:
+                            continue
+                        attr = attr_by_oas_name.get(field_name)
+                        if attr is None or not attr.referenced_class:
+                            continue
+                        # Resolve the referenced class name (strip qualification prefix)
+                        ref_class_name = attr.referenced_class
+                        nested_model = self._classes.get(ref_class_name)
+                        if nested_model is None or nested_model.is_enum or not nested_model.attributes:
+                            continue
+                        nested_model_fields = frozenset(a.name for a in nested_model.attributes)
+                        # Determine which fields the body schema provides for this nested type
+                        if body_prop.type == 'array' and body_prop.items:
+                            items = body_prop.items
+                            if items.ref or items.object_ref:
+                                # $ref to the same model — all fields; no restriction needed
+                                body_nested_fields = nested_model_fields
+                            elif items.properties:
+                                body_nested_fields = frozenset(items.properties.keys())
+                            else:
+                                body_nested_fields = nested_model_fields
+                        elif body_prop.type == 'object' and body_prop.properties:
+                            body_nested_fields = frozenset(body_prop.properties.keys())
+                        else:
+                            body_nested_fields = nested_model_fields
+                        # Only register if the body defines a strict subset of the model's fields
+                        if body_nested_fields < nested_model_fields:
+                            nested_include[field_name] = body_nested_fields
+
+                    if nested_include:
+                        target = (
+                            model_class.post_nested_include
+                            if method.upper() == 'POST'
+                            else model_class.put_nested_include
+                        )
+                        target.update(nested_include)
 
         response_code, response = next(
             ((rc, content) for rc, content in operation.responses.items() if rc.startswith('2')), (None, None)
@@ -400,6 +494,8 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             href_parameter=href_parameter,
             body_parameter=body_parameter,
             body_class_name=body_class_name,
+            body_class_include=body_class_include,
+            body_method_name=body_method_name,
             response_body=response_body,
             result=result,
             result_referenced_class=result_referenced_class,
@@ -428,7 +524,6 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         # data structures are in components.schemas
         for schema_name, schema in open_api_spec.components.schemas.items():
             self._add_schema(schema_name, schema)
-
         # add endpoints
         for path, method, operation in open_api_spec.operations():
             endpoint = self._endpoint_from_operation(open_api_spec, operation, host, path, method)
