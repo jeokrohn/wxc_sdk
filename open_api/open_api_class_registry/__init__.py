@@ -1,4 +1,4 @@
-# mypy: disable-error-code="arg-type,no-untyped-def"
+# mypy: disable-error-code="arg-type,no-untyped-def,union-attr"
 """
 Python class registry for OpenAPI schema; derived from PythonClassRegistry; used for code creation
 """
@@ -102,16 +102,20 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
     """
 
     body_style: str
+    consolidate_models: bool
 
-    def __init__(self, body_style: str = 'args') -> None:
+    def __init__(self, body_style: str = 'args', consolidate_models: bool = False) -> None:
         super().__init__()  # type: ignore[no-untyped-call]
         self.body_style = body_style
+        self.consolidate_models = consolidate_models
 
     def normalize(self) -> None:
         """Consolidate operation-specific models then run standard normalization."""
-        self.consolidate_resource_models()
-        self._strip_verb_affixes_from_all_models()
-        self._merge_include_sets_before_redundancy_elimination()
+        if self.body_style != 'args' or self.consolidate_models:
+            # for body_style args we don't consolidate (backward compatibility) unless enforced
+            self.consolidate_resource_models()
+            self._strip_verb_affixes_from_all_models()
+            self._merge_include_sets_before_redundancy_elimination()
         super().normalize()  # type: ignore[no-untyped-call]
 
     def _merge_include_sets_before_redundancy_elimination(self) -> None:
@@ -131,7 +135,7 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             if not (pc.baseclass and not pc.attributes):
                 continue
             # follow the baseclass chain to the ultimate canonical
-            canonical_name, canonical = self._dereferenced_class(pc.baseclass)  # type: ignore[no-untyped-call]
+            canonical_name, canonical = self._dereferenced_class(pc.baseclass)
             if canonical is None:
                 continue
             for include_set in pc.post_include_sets:
@@ -534,13 +538,13 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         name = self.qualified_class_name(class_name_from_schema_name(schema_name))
         schema_description = schema.description
         attrs = []
-        for prop_name, prop in schema.properties.items():  # type: ignore[union-attr]
+        for prop_name, prop in schema.properties.items():
             # prop_name might be something like 't38FaxCompressionEnabled `true`'
             # we only want to consider the part before the space
             actual_prop_name = prop_name
             if '`' in prop_name:
                 m = re.match(r"""[^`]+""", prop_name)
-                actual_prop_name = m.group(0).strip()  # type: ignore[union-attr]
+                actual_prop_name = m.group(0).strip()
             if actual_prop_name != prop_name:
                 log.warning(f'Property name {prop_name} in {name} contains value, using {actual_prop_name} instead')
                 prop_name = actual_prop_name
@@ -673,11 +677,11 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
                 raise ValueError(f'Referenced schema {class_name}/{ref} not found')
             # now we can create the parameter list from the referenced schema
             param_properties = class_spec.properties
-            param_required = class_spec.required and set(class_spec.required) or {}
+            param_required: set[str] = class_spec.required and set(class_spec.required) or {}  # type: ignore[assignment]
         else:
             # create parameter list from schema properties
             param_properties = body_schema.properties
-            param_required = body_schema.required and set(body_schema.required) or {}
+            param_required = body_schema.required and set(body_schema.required) or {}  # type: ignore[assignment]
         # create parameter list
         parameters = [
             self._parameter_from_schema_property(prop_name=prop_name, prop=prop, param_required=param_required)

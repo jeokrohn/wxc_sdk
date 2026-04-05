@@ -14,7 +14,7 @@
 #     "requests-toolbelt"
 # ]
 # ///
-# mypy: disable-error-code="assignment,import-untyped,no-untyped-def,arg-type,assignment,override"
+# mypy: disable-error-code="assignment,import-untyped,no-untyped-def,arg-type,assignment,override,no-untyped-call"
 """
 CLI tool to generate Python source from OpenApi specs
     usage: apib2py.py [-h] [--pypath PYPATH] [--pysrc PYSRC] [--nobeta] [--exclude EXCLUDE] [--with-unref] apib
@@ -102,6 +102,11 @@ def main() -> None:
         '"hybrid" – optional model instance with individual kwargs as fallback',
     )
     parser.add_argument(
+        '--consolidate-models',
+        action='store_true',
+        help='consolidate models with body style "args". Always active for body styles "model" and "hybrid".',
+    )
+    parser.add_argument(
         '--raise',
         action='store_true',
         help='raise exception on error instead of printing to stderr',
@@ -185,7 +190,11 @@ def main() -> None:
         """
         Convert one OAS file
         """
-        code_gen = OACodeGenerator(with_unreferenced_classes=args.with_unref, body_style=args.body_style)
+        code_gen = OACodeGenerator(
+            with_unreferenced_classes=args.with_unref,
+            body_style=args.body_style,
+            consolidate_models=args.consolidate_models,
+        )
         code_gen.add_open_api_spec_from_path(oas_path)
         code_gen.cleanup()
 
