@@ -26,11 +26,13 @@ _MODEL_VERB_PREFIXES = ('Post', 'Put', 'Patch', 'Get', 'List', 'Modify', 'Create
 
 def _strip_model_name(qualified: str) -> str:
     """
-    Return a cleaner class name for a consolidated canonical model by stripping a leading
-    verb prefix (e.g. Get, Post, Modify) and/or a trailing 'Object' suffix.
+    Return a cleaner class name for a consolidated canonical model by:
+      1. Stripping a leading verb prefix (e.g. Get, Post, Modify)
+      2. Stripping a trailing 'Object' suffix
+      3. Stripping a trailing verb suffix (e.g. SomethingGet → Something)
 
     Only the *unqualified* part (after the last '%') is modified; the context prefix is kept.
-    Returns the original string unchanged if neither transformation applies.
+    Returns the original string unchanged if no transformation applies.
     """
     context, sep, name = qualified.rpartition('%')
     # Strip leading verb prefix followed immediately by an upper-case letter
@@ -42,6 +44,11 @@ def _strip_model_name(qualified: str) -> str:
     # Strip trailing 'Object'
     if name.endswith('Object') and len(name) > 6:
         name = name[:-6]
+    # Strip trailing verb suffix (e.g. SomethingGet → Something)
+    for verb in _MODEL_VERB_PREFIXES:
+        if name.endswith(verb) and len(name) > len(verb):
+            name = name[: -len(verb)]
+            break
     return f'{context}{sep}{name}'
 
 
@@ -103,7 +110,38 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
     def normalize(self) -> None:
         """Consolidate operation-specific models then run standard normalization."""
         self.consolidate_resource_models()
+        self._strip_verb_affixes_from_all_models()
+        self._merge_include_sets_before_redundancy_elimination()
         super().normalize()  # type: ignore[no-untyped-call]
+
+    def _merge_include_sets_before_redundancy_elimination(self) -> None:
+        """
+        Run eliminate_redundancies() early so we can detect which classes will be made redundant,
+        then transfer their post/put include-sets to the canonical class they point to.
+
+        Without this, a body model that shares all fields with a GET-result model gets made
+        redundant by eliminate_redundancies(), and the endpoint ends up pointing to the canonical
+        (the GET-result model) which never had include-sets registered on it.
+
+        super().normalize() will call eliminate_redundancies() again, which is a no-op since all
+        redundancies are already resolved.
+        """
+        self.eliminate_redundancies()  # type: ignore[no-untyped-call]
+        for pc in self._classes.values():
+            if not (pc.baseclass and not pc.attributes):
+                continue
+            # follow the baseclass chain to the ultimate canonical
+            canonical_name, canonical = self._dereferenced_class(pc.baseclass)  # type: ignore[no-untyped-call]
+            if canonical is None:
+                continue
+            for include_set in pc.post_include_sets:
+                if include_set not in canonical.post_include_sets:
+                    canonical.post_include_sets.append(include_set)
+            for include_set in pc.put_include_sets:
+                if include_set not in canonical.put_include_sets:
+                    canonical.put_include_sets.append(include_set)
+            canonical.post_nested_include.update(pc.post_nested_include)
+            canonical.put_nested_include.update(pc.put_nested_include)
 
     def _apply_class_rename(self, old_name: str, new_name: str) -> None:
         """
@@ -136,6 +174,50 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
                 if param.referenced_class == old_name:
                     param.python_type = param.python_type.replace(old_name, new_name)
                     param.referenced_class = new_name
+
+    def _rename_with_cascade(self, old_name: str, new_name: str) -> None:
+        """
+        Rename *old_name* to *new_name* and cascade the rename to all classes whose
+        unqualified name starts with the old unqualified name (e.g. renaming FooGet → Foo
+        also renames FooGetBar → FooBar).
+        """
+        old_class = old_name.split('%')[-1]
+        new_class = new_name.split('%')[-1]
+        self._apply_class_rename(old_name, new_name)
+        for sub_old in sorted(self._classes):
+            sub_class = sub_old.split('%')[-1]
+            if not sub_class.startswith(old_class):
+                continue
+            sub_suffix = sub_class[len(old_class) :]
+            sub_new_class = f'{new_class}{sub_suffix}'
+            context, sep, _ = sub_old.rpartition('%')
+            sub_new = f'{context}{sep}{sub_new_class}'
+            if sub_new in self._classes:
+                continue
+            self._apply_class_rename(sub_old, sub_new)
+
+    def _strip_verb_affixes_from_all_models(self) -> None:
+        """
+        Apply _strip_model_name to every class in the registry, repeating until stable.
+
+        Multiple passes are needed because a cascade rename can produce new names that
+        themselves benefit from stripping (e.g. FooGetCriteriaObject → FooGetCriteria after
+        cascade, then → FooCriteria on the next pass once FooGet → Foo is processed).
+        """
+        changed = True
+        while changed:
+            changed = False
+            for old_name in sorted(self._classes):
+                if old_name not in self._classes:
+                    continue  # was renamed by a cascade in this pass
+                new_name = _strip_model_name(old_name)
+                if new_name == old_name or new_name in self._classes:
+                    continue
+                old_class = old_name.split('%')[-1]
+                new_class = new_name.split('%')[-1]
+                log.info(f'strip_verb_affixes: {old_class} → {new_class}')
+                self._rename_with_cascade(old_name, new_name)
+                changed = True
 
     def consolidate_resource_models(self) -> None:
         """
@@ -301,9 +383,8 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
                     pc.alias.python_type = pc.alias.python_type.replace(pc.alias.referenced_class, new_ref)
                     pc.alias.referenced_class = new_ref
 
-        # Rename consolidated canonicals: strip leading verb prefix and trailing 'Object'.
-        # Also cascade the rename to sub-models whose unqualified name starts with the old
-        # canonical name (e.g. GetVirtualLineObjectNumber → VirtualLineNumber).
+        # Rename consolidated canonicals: strip leading verb prefix, trailing 'Object', and
+        # trailing verb suffix.  Cascade to sub-models whose unqualified name shares the prefix.
         for old_name in sorted(consolidated_canonicals):
             new_name = _strip_model_name(old_name)
             if new_name == old_name or new_name in self._classes:
@@ -311,21 +392,7 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             old_class = old_name.split('%')[-1]
             new_class = new_name.split('%')[-1]
             log.info(f'consolidate_resource_models: renaming {old_class} → {new_class}')
-            self._apply_class_rename(old_name, new_name)
-
-            # Cascade: rename any class whose unqualified name starts with old_class
-            for sub_old in sorted(self._classes):
-                sub_class = sub_old.split('%')[-1]
-                if not sub_class.startswith(old_class):
-                    continue
-                sub_suffix = sub_class[len(old_class) :]  # e.g. 'Number', 'LocationAddress'
-                sub_new_class = f'{new_class}{sub_suffix}'
-                context, sep, _ = sub_old.rpartition('%')
-                sub_new = f'{context}{sep}{sub_new_class}'
-                if sub_new in self._classes:
-                    continue
-                log.info(f'consolidate_resource_models: renaming {sub_class} → {sub_new_class}')
-                self._apply_class_rename(sub_old, sub_new)
+            self._rename_with_cascade(old_name, new_name)
 
     @staticmethod
     def _attributes_from_enum(prop: OASchemaProperty) -> list[Attribute]:
