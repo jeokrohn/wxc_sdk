@@ -223,6 +223,11 @@ class Endpoint:
     # name of the instance method to call on the body model to get the request body dict
     # 'post' for POST endpoints, 'put' for PUT endpoints
     body_method_name: str = field(default='post', repr=False)
+    # how the body is presented to callers:
+    #   'args'   – individual keyword arguments only (body_class_name is ignored)
+    #   'model'  – single model-instance parameter (body_parameter is ignored)
+    #   'hybrid' – optional model instance + individual kwargs; model takes priority if supplied
+    body_style: str = field(default='args', repr=False)
     # python type for result
     result: str = field(default=None, repr=False)
     # references class if python result type is a class or references a class, e.g. list[SomeObject]
@@ -307,18 +312,19 @@ class Endpoint:
         #   * mandatory parameters; href before body
         #   * optional parameters; href before body w/o orgId
         #   * orgId if present
-        if self.body_class_name:
-            # body is represented as a single model-instance parameter; yield href params then the model param
+        if self.body_class_name and self.body_style in ('model', 'hybrid'):
+            # body is represented as a model-instance parameter; yield href params then the model param
             yield from (p for p in self.href_parameters_filtered() if not p.optional)
-            # the model-instance parameter is always required (mandatory)
             short_name = self.body_class_name.split('%')[-1]
+            # in hybrid mode the model instance is optional — individual kwargs act as fallback
+            model_optional = self.body_style == 'hybrid'
             yield Parameter(
                 name='settings',
                 python_type=short_name,
                 referenced_class=self.body_class_name,
                 docstring='Settings to be used for the request body.',
                 sample=None,
-                optional=False,
+                optional=model_optional,
                 url_parameter=False,
                 registry=self.registry,
             )
@@ -330,6 +336,9 @@ class Endpoint:
                     org_id = p
                     continue
                 yield p
+            if self.body_style == 'hybrid':
+                # also emit individual body params (all optional) after the model param
+                yield from self.body_parameter
             if org_id:
                 yield org_id
             return
@@ -616,9 +625,17 @@ class Endpoint:
                 list(map(source.print, p.source_for_param_init()))
 
         # prepare body
-        if self.body_class_name:
+        if self.body_class_name and self.body_style == 'model':
             # body comes from a model-instance parameter via its named method (post() or put())
             source.print(f'body = settings.{self.body_method_name}()')
+        elif self.body_class_name and self.body_style == 'hybrid':
+            # model instance takes priority; fall back to individual kwargs
+            source.print('if settings is not None:')
+            source.print(f'    body = settings.{self.body_method_name}()')
+            source.print('else:')
+            source.print('    body: dict[str, Any] = dict()')
+            for p in self.body_parameter:
+                list(map(lambda line: source.print(f'    {line}'), p.source_for_body_init()))
         elif self.body_parameter:
             source.print('body: dict[str, Any] = dict()')
             for p in self.body_parameter:

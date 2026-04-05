@@ -14,6 +14,7 @@
 #     "requests-toolbelt"
 # ]
 # ///
+# mypy: disable-error-code="assignment,import-untyped,no-untyped-def,arg-type,assignment,override"
 """
 CLI tool to generate Python source from OpenApi specs
     usage: apib2py.py [-h] [--pypath PYPATH] [--pysrc PYSRC] [--nobeta] [--exclude EXCLUDE] [--with-unref] apib
@@ -33,6 +34,7 @@ CLI tool to generate Python source from OpenApi specs
       --exclude EXCLUDE  Python.re to exclude some APIB files; matches on basenames of APIB files
       --with-unref       include unreferenced classes
 """
+
 import argparse
 import glob
 import logging
@@ -56,34 +58,55 @@ print()
 from open_api.open_api_code_generator import OACodeGenerator
 
 
-def main():
+def main() -> None:
     logging.basicConfig(level=logging.INFO)
     env_path = f'{os.path.splitext(__file__)[0]}.env'
     load_dotenv(env_path)
 
-    parser = argparse.ArgumentParser(description='Convert OpenApi specs to Python source',
-                                     epilog=f'Environment is read from {env_path} if present.')
-    parser.add_argument('--oas', type=str,
-                        help='name of OpenApi spec file. If name is given w/o path then default path from environment '
-                             'OAS_SPEC_PATH (if present) is used to determine the absolute path of the APIB source. '
-                             'Parameter value is interpreted as glob wildcard.')
-    parser.add_argument('--pypath', type=str,
-                        help='dir path to store result in .. if not target with path is given. if parameter is '
-                             'missing then path is read from environment OAS_PY_PATH (if present). If the path ends '
-                             'with "/" then the folder hierarchy of the OAS specs is recreated for the created Python '
-                             'sources.')
-    parser.add_argument('--pysrc', type=str,
-                        help='filename (w/ or w/o path) of python source to generate, "-" to print source to stdout. '
-                             'If parameter is missing then the output name is based on the basename of given APIB name')
-    parser.add_argument('--exclude', type=str,
-                        help='Python.re to exclude some OAS files; matches on basenames of OAS files')
-    parser.add_argument('--with-unref', action='store_true',
-                        help='include unreferenced classes')
-    parser.add_argument('--with-examples', action='store_true',
-                        help='include example values for attributes')
-    parser.add_argument('--raise', action='store_true',
-                        help='raise exception on error instead of printing to stderr',
-                        dest='raise_exception')
+    parser = argparse.ArgumentParser(
+        description='Convert OpenApi specs to Python source', epilog=f'Environment is read from {env_path} if present.'
+    )
+    parser.add_argument(
+        '--oas',
+        type=str,
+        help='name of OpenApi spec file. If name is given w/o path then default path from environment '
+        'OAS_SPEC_PATH (if present) is used to determine the absolute path of the APIB source. '
+        'Parameter value is interpreted as glob wildcard.',
+    )
+    parser.add_argument(
+        '--pypath',
+        type=str,
+        help='dir path to store result in .. if not target with path is given. if parameter is '
+        'missing then path is read from environment OAS_PY_PATH (if present). If the path ends '
+        'with "/" then the folder hierarchy of the OAS specs is recreated for the created Python '
+        'sources.',
+    )
+    parser.add_argument(
+        '--pysrc',
+        type=str,
+        help='filename (w/ or w/o path) of python source to generate, "-" to print source to stdout. '
+        'If parameter is missing then the output name is based on the basename of given APIB name',
+    )
+    parser.add_argument(
+        '--exclude', type=str, help='Python.re to exclude some OAS files; matches on basenames of OAS files'
+    )
+    parser.add_argument('--with-unref', action='store_true', help='include unreferenced classes')
+    parser.add_argument('--with-examples', action='store_true', help='include example values for attributes')
+    parser.add_argument(
+        '--body-style',
+        choices=['args', 'model', 'hybrid'],
+        default='args',
+        help='how POST/PUT body parameters are presented: '
+        '"args" – individual keyword arguments only; '
+        '"model" – single typed model-instance parameter (default); '
+        '"hybrid" – optional model instance with individual kwargs as fallback',
+    )
+    parser.add_argument(
+        '--raise',
+        action='store_true',
+        help='raise exception on error instead of printing to stderr',
+        dest='raise_exception',
+    )
     parser.add_argument('--cleanup', action='store_true', help='delete all .py files in the output directory.')
     args = parser.parse_args()
 
@@ -93,7 +116,7 @@ def main():
         if oas_basename == '**':
             # a given basename of "**" means all files
             oas_basename = '**/spec.json'
-        if "*" not in oas_basename:
+        if '*' not in oas_basename:
             # a given basename is interpreted as the name of an API
             # and API specs are stored in dir structure like:
             # /<some hierarchy>/<name>/v1/spec.json
@@ -118,15 +141,12 @@ def main():
         try:
             re_exclude = re.compile(args.exclude)
         except re.error as e:
-            print(f'Invalid reqex for --exclude: {e}',
-                  file=sys.stderr)
+            print(f'Invalid reqex for --exclude: {e}', file=sys.stderr)
             exit(1)
-        oas_files = [p for p in oas_files
-                     if not re_exclude.match(basename(p))]
+        oas_files = [p for p in oas_files if not re_exclude.match(basename(p))]
 
     if not oas_files:
-        print('No input OAS file(s)',
-              file=sys.stderr)
+        print('No input OAS file(s)', file=sys.stderr)
         exit(1)
 
     with_examples = args.with_examples or False
@@ -139,20 +159,17 @@ def main():
         if py_path_has_slash:
             py_path = f'{py_path}/'
         if not os.path.isdir(py_path):
-            print(f'Path "{py_path}" does not exist',
-                  file=sys.stderr)
+            print(f'Path "{py_path}" does not exist', file=sys.stderr)
             exit(1)
 
     if args.cleanup:
         cleanup_py_path = py_path or os.getenv('OAS_PY_PATH') or ''
         if not cleanup_py_path:
-            print('No path given for cleanup, use --pypath to specify the path',
-                  file=sys.stderr)
+            print('No path given for cleanup, use --pypath to specify the path', file=sys.stderr)
             exit(1)
         cleanup_py_path = Path(cleanup_py_path)
         if not cleanup_py_path.exists():
-            print(f'Path "{cleanup_py_path}" does not exist',
-                  file=sys.stderr)
+            print(f'Path "{cleanup_py_path}" does not exist', file=sys.stderr)
             exit(1)
         for item in cleanup_py_path.iterdir():
             if item.is_file() or item.is_symlink():
@@ -168,7 +185,7 @@ def main():
         """
         Convert one OAS file
         """
-        code_gen = OACodeGenerator(with_unreferenced_classes=args.with_unref)
+        code_gen = OACodeGenerator(with_unreferenced_classes=args.with_unref, body_style=args.body_style)
         code_gen.add_open_api_spec_from_path(oas_path)
         code_gen.cleanup()
 
@@ -194,7 +211,7 @@ def main():
                         # directory
                         # ignore the start of the path and the last 3 components
                         # we only want the hierarchy, not the spec name: /<some hierarchy>/<name>/v1/spec.json
-                        rel_dir = spec_path[len(oas_spec_path):].strip(os.sep)
+                        rel_dir = spec_path[len(oas_spec_path) :].strip(os.sep)
                         rel_dirs = rel_dir.split(os.sep)[:-3]
                         dirname = os.path.join(oas_py_path, *rel_dirs)
                         # make sure that the directories exist
@@ -212,9 +229,7 @@ def main():
             return
 
         with output_ctx(oas_path) as f:
-            print(code_gen.source(with_example=with_examples),
-                  end='',
-                  file=f)
+            print(code_gen.source(with_example=with_examples), end='', file=f)
         return
 
     failed_oas_files = []
@@ -226,8 +241,7 @@ def main():
             if args.raise_exception:
                 raise
             failed_oas_files.append(oas_file)
-            print(f'Conversion of "{oas_file}" failed:',
-                  file=sys.stderr)
+            print(f'Conversion of "{oas_file}" failed:', file=sys.stderr)
             traceback.print_exc(file=sys.stderr)
     if failed_oas_files:
         print('\n' * 2, file=sys.stderr)

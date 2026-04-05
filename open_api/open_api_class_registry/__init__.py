@@ -1,4 +1,4 @@
-# mypy: disable-error-code=["arg-type"]
+# mypy: disable-error-code=arg-type, no-untyped-def
 """
 Python class registry for OpenAPI schema; derived from PythonClassRegistry; used for code creation
 """
@@ -68,8 +68,11 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
     Registry of classes generated from OpenAPI schema
     """
 
-    def __init__(self) -> None:
+    body_style: str
+
+    def __init__(self, body_style: str = 'args') -> None:
         super().__init__()  # type: ignore[no-untyped-call]
+        self.body_style = body_style
 
     @staticmethod
     def _attributes_from_enum(prop: OASchemaProperty) -> list[Attribute]:
@@ -385,7 +388,8 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         # For POST and PUT endpoints: check whether the body parameters are a subset of a registered model.
         # If so, use the model as the single body argument (instead of individual parameters).
         # POST → model.post()   PUT → model.put()
-        if method.upper() in ('POST', 'PUT') and len(body_parameter) > 1:
+        # Skipped entirely when body_style is 'args'.
+        if self.body_style != 'args' and method.upper() in ('POST', 'PUT') and len(body_parameter) > 1:
             body_field_names = frozenset(p.name for p in body_parameter)
             matched_model: Optional[str] = None
             for class_name, python_class in self._classes.items():
@@ -409,7 +413,13 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
                         model_class.put_include_sets.append(include_set)
                 body_class_name = matched_model
                 body_class_include = include_set
-                body_parameter = []  # clear individual params; body comes from the model instance
+                if self.body_style != 'hybrid':
+                    # in hybrid mode body_parameter is kept so it can serve as fallback kwargs
+                    body_parameter = []
+                else:
+                    # in hybrid mode all body params are optional (settings takes priority when provided)
+                    for p in body_parameter:
+                        p.optional = True
 
                 # Check nested models: if the body schema defines fewer fields for a list/object
                 # attribute than the registered model, register a nested include constraint.
@@ -496,6 +506,7 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             body_class_name=body_class_name,
             body_class_include=body_class_include,
             body_method_name=body_method_name,
+            body_style=self.body_style if body_class_name else 'args',
             response_body=response_body,
             result=result,
             result_referenced_class=result_referenced_class,

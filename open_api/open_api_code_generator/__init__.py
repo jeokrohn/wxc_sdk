@@ -1,3 +1,4 @@
+# mypy: disable-error-code="import-untyped,no-untyped-def"
 from dataclasses import dataclass
 
 from apib.generator import CodeGenerator
@@ -10,10 +11,11 @@ class OACodeGenerator(CodeGenerator):
     """
     Code generator for OpenAPI models
     """
+
     class_registry = OpenApiPythonClassRegistry
 
-    def __init__(self, with_unreferenced_classes: bool = False, class_registry=None):
-        class_registry = class_registry or OpenApiPythonClassRegistry()
+    def __init__(self, with_unreferenced_classes: bool = False, class_registry=None, body_style: str = 'args'):
+        class_registry = class_registry or OpenApiPythonClassRegistry(body_style=body_style)
         super().__init__(with_unreferenced_classes=with_unreferenced_classes, class_registry=class_registry)
 
     def add_open_api_spec(self, spec_info: OpenApiSpecInfo):
