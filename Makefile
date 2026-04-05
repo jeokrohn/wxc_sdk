@@ -48,4 +48,4 @@ package:
 oas:
 	@echo "==> Creating Python sources from OAS files"
 	script/oas2py.py --cleanup
-	script/oas2py.py --with-examples
+	script/oas2py.py --with-examples --body-style args

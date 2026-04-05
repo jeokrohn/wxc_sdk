@@ -170,8 +170,19 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         for _, endpoint in self.endpoints():
             resource_groups[resource_base(endpoint.url)].append(endpoint)
 
+        # Build a global set of result classes across ALL groups before any consolidation.
+        # A model used as a response type anywhere must never be removed — the per-group
+        # result_classes check is not enough because the same model may be a body type in
+        # a different group that is processed first.
+        global_result_classes: set[str] = set()
+        for ep_list in resource_groups.values():
+            for ep in ep_list:
+                if ep.result_referenced_class and ep.result_referenced_class in self._classes:
+                    global_result_classes.add(ep.result_referenced_class)
+
         classes_to_remove: set[str] = set()
         consolidated_canonicals: set[str] = set()  # canonicals that absorbed at least one model
+        body_to_canonical: dict[str, str] = {}  # removed body class → its canonical (for cross-group fixup)
 
         for group_eps in resource_groups.values():
             # collect model names referenced in this group, split by role
@@ -217,8 +228,8 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             for small_name, small_model in candidates.items():
                 if small_name == canonical_name:
                     continue
-                # never consolidate a model that is also used as a result type
-                if small_name in result_classes:
+                # never consolidate a model that is used as a result type anywhere in the spec
+                if small_name in global_result_classes:
                     continue
                 small_fields = frozenset(a.name for a in small_model.attributes)
 
@@ -255,6 +266,7 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
 
                 classes_to_remove.add(small_name)
                 consolidated_canonicals.add(canonical_name)
+                body_to_canonical[small_name] = canonical_name
 
         for name in classes_to_remove:
             self._classes.pop(name, None)
@@ -263,6 +275,31 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
                 f'consolidate_resource_models: removed {len(classes_to_remove)} redundant models: '
                 f'{", ".join(sorted(n.split("%")[-1] for n in classes_to_remove))}'
             )
+
+        # Fix up ALL stale references to removed classes. These go stale when the same body
+        # model is used across multiple resource groups — only the first group's endpoints get
+        # updated inline; all other references need this second pass.
+        # Covers: body_class_name and parameter referenced_class on endpoints, and
+        # referenced_class on model attributes.
+        if body_to_canonical:
+            for _, endpoint in self.endpoints():
+                if endpoint.body_class_name and endpoint.body_class_name in body_to_canonical:
+                    endpoint.body_class_name = body_to_canonical[endpoint.body_class_name]
+                for param in chain(endpoint.body_parameter, endpoint.href_parameter):
+                    if param.referenced_class and param.referenced_class in body_to_canonical:
+                        new_ref = body_to_canonical[param.referenced_class]
+                        param.python_type = param.python_type.replace(param.referenced_class, new_ref)
+                        param.referenced_class = new_ref
+            for pc in self._classes.values():
+                for attr in pc.attributes or []:
+                    if attr.referenced_class and attr.referenced_class in body_to_canonical:
+                        new_ref = body_to_canonical[attr.referenced_class]
+                        attr.python_type = attr.python_type.replace(attr.referenced_class, new_ref)
+                        attr.referenced_class = new_ref
+                if pc.alias and pc.alias.referenced_class in body_to_canonical:
+                    new_ref = body_to_canonical[pc.alias.referenced_class]
+                    pc.alias.python_type = pc.alias.python_type.replace(pc.alias.referenced_class, new_ref)
+                    pc.alias.referenced_class = new_ref
 
         # Rename consolidated canonicals: strip leading verb prefix and trailing 'Object'.
         # Also cascade the rename to sub-models whose unqualified name starts with the old
