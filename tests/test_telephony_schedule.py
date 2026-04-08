@@ -8,12 +8,14 @@ import asyncio
 # TODO test case for event delete
 # TODO test case for schedule delete
 import datetime
+import json
 import random
 import re
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from itertools import chain
 from typing import ClassVar
+from unittest import TestCase
 
 from tests.base import TestWithLocations, async_test
 from wxc_sdk.all_types import *
@@ -65,6 +67,7 @@ class TestScheduleList(TestWithLocations):
         """
         List all business hours schedules in all locations
         """
+        schedules = []
         with ThreadPoolExecutor() as pool:
             lists = pool.map(
                 lambda loc: list(
@@ -158,7 +161,6 @@ class TestWithTestSchedules(TestWithLocations):
                 lambda loc: list(cls.api.telephony.schedules.list(obj_id=loc.location_id, name='test_')), cls.locations
             )
             cls.test_schedules = list(chain.from_iterable(tasks))
-        cls.test_schedules: list[Schedule]
         cls.test_schedules = [schedule for schedule in cls.test_schedules if re.match(r'test_\d{3}', schedule.name)]
 
 
@@ -362,3 +364,26 @@ class TestAllDetails(TestWithLocations):
                 for event in schedule.events:
                     data = event.model_dump(exclude={'event_id', 'new_name'}, mode='json', by_alias=True)
                     print(f'    {data}')
+
+
+class TestScheduleTimeSerializer(TestCase):
+    """
+    Test customer serialization for times
+    """
+
+    def test_event(self):
+        event = Event(
+            name='test', start_time=datetime.time(hour=8, minute=30), end_time=datetime.time(hour=9, minute=30)
+        )
+        event_data = event.model_dump(mode='json', by_alias=True)
+        print(json.dumps(event_data, indent=2))
+        self.assertEqual('08:30', event_data['startTime'])
+        self.assertEqual('09:30', event_data['endTime'])
+
+    def test_schedule(self):
+        schedule = Schedule.business(name='test')
+        schedule_data = schedule.model_dump(mode='json', by_alias=True)
+        print(json.dumps(schedule_data, indent=2))
+        for event in schedule_data['events']:
+            self.assertIsNotNone(re.match(r'^\d{2}:\d{2}$', event['startTime']))
+            self.assertIsNotNone(re.match(r'^\d{2}:\d{2}$', event['endTime']))

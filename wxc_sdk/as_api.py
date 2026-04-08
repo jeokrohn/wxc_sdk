@@ -55,9 +55,9 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsMeRecordingApi', 'AsMeSNRApi', 'AsMeSchedulesApi', 'AsMeSelectiveAcceptApi', 'AsMeSelectiveForwardApi',
            'AsMeSelectiveRejectApi', 'AsMeSequentialRingApi', 'AsMeSettingsApi', 'AsMeSimRingApi', 'AsMeVoicemailApi',
            'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
-           'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTemplatesApi',
-           'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsModeManagementApi',
-           'AsMonitoringApi', 'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOperatingModesApi',
+           'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi',
+           'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsModeManagementApi', 'AsMonitoringApi',
+           'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOperatingModesApi',
            'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi', 'AsOrganisationAccessCodesApi',
            'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOrganizationContactsApi',
            'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi',
@@ -8803,109 +8803,6 @@ class AsMeetingQualitiesApi(AsApiChild, base=''):
         return [o async for o in self.session.follow_pagination(url=url, model=MediaSessionQuality, params=params)]
 
 
-class AsMeetingTemplatesApi(AsApiChild, base=''):
-    async def list(self, template_type: TemplateObjectTemplateType = None, locale: str = None,
-                       is_default: bool = None, is_standard: bool = None, host_email: str = None,
-                       site_url: str = None) -> builtins.list[TemplateObject]:
-        """
-        List Meeting Templates
-
-        Retrieves the list of meeting templates that is available for the authenticated user.
-
-        There are separate lists of meeting templates for different `templateType`, `locale` and `siteUrl`.
-
-        * If `templateType` is specified, the operation returns an array of meeting template objects specified by the
-        `templateType`; otherwise, returns an array of meeting template objects of all template types.
-
-        * If `locale` is specified, the operation returns an array of meeting template objects specified by the
-        `locale`; otherwise, returns an array of meeting template objects of the default `en_US` locale. Refer to
-        `Meeting Template Locales
-        <https://developer.webex.com/docs/meetings#meeting-template-locales>`_ for all the locales supported by Webex.
-
-        * If the parameter `siteUrl` has a value, the operation lists meeting templates on the specified site;
-        otherwise, lists meeting templates on the user's preferred site. All available Webex sites and preferred site
-        of the user can be retrieved by `Get Site List` API.
-
-        :param template_type: Meeting template type for the meeting template objects being requested. If not specified,
-            return meeting templates of all types.
-        :type template_type: TemplateObjectTemplateType
-        :param locale: Locale for the meeting template objects being requested. If not specified, return meeting
-            templates of the default `en_US` locale. Refer to `Meeting Template Locales
-            <https://developer.webex.com/docs/meetings#meeting-template-locales>`_ for all the locales supported
-            by Webex.
-        :type locale: str
-        :param is_default: The value is `true` or `false`. If it's `true`, return the default meeting templates; if
-            it's `false`, return the non-default meeting templates. If it's not specified, return both default and
-            non-default meeting templates.
-        :type is_default: bool
-        :param is_standard: The value is `true` or `false`. If it's `true`, return the standard meeting templates; if
-            it's `false`, return the non-standard meeting templates. If it's not specified, return both standard and
-            non-standard meeting templates.
-        :type is_standard: bool
-        :param host_email: Email address for the meeting host. This parameter is only used if the user or application
-            calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site
-            they manage and the API will return meeting templates that are available for that user.
-        :type host_email: str
-        :param site_url: URL of the Webex site which the API lists meeting templates from. If not specified, the API
-            lists meeting templates from user's preferred site. All available Webex sites and preferred site of the
-            user can be retrieved by `Get Site List` API.
-        :type site_url: str
-        :rtype: list[TemplateObject]
-        """
-        params: dict[str, Any] = dict()
-        if template_type is not None:
-            params['templateType'] = enum_str(template_type)
-        if locale is not None:
-            params['locale'] = locale
-        if is_default is not None:
-            params['isDefault'] = str(is_default).lower()
-        if is_standard is not None:
-            params['isStandard'] = str(is_standard).lower()
-        if host_email is not None:
-            params['hostEmail'] = host_email
-        if site_url is not None:
-            params['siteUrl'] = site_url
-        url = self.ep('meetings/templates')
-        data = await super().get(url, params=params)
-        r = TypeAdapter(list[TemplateObject]).validate_python(data['items'])
-        return r
-
-    async def get(self, template_id: str, host_email: str = None,  # type: ignore[override]
-                           timezone: str = None) -> DetailedTemplateObject:
-        """
-        Get a Meeting Template
-
-        Retrieves details for a meeting template with a specified meeting template ID.
-
-        #### Request Header
-
-        * `timezone`: `Time zone
-        <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List>`_ for time stamps in response body,
-        defined in conformance with the
-        `IANA time zone database
-        <https://www.iana.org/time-zones>`_. The default value is `UTC` if not specified.
-
-        :param template_id: Unique identifier for the meeting template being requested.
-        :type template_id: str
-        :param host_email: Email address for the meeting host. This parameter is only used if the user or application
-            calling the API has the admin-level scopes. If set, the admin may specify the email of a user in a site
-            they manage and the API will return the meeting template that is available for that user.
-        :type host_email: str
-        :param timezone: e.g. UTC
-        :type timezone: str
-        :rtype: :class:`DetailedTemplateObject`
-        """
-        params: dict[str, Any] = dict()
-        if host_email is not None:
-            params['hostEmail'] = host_email
-        if timezone is not None:
-            params['timezone'] = timezone
-        url = self.ep(f'meetings/templates/{template_id}')
-        data = await super().get(url, params=params)
-        r = DetailedTemplateObject.model_validate(data)
-        return r
-
-
 class AsMeetingTranscriptsApi(AsApiChild, base=''):
     """
     Not supported for Webex for Government (FedRAMP)
@@ -9836,10 +9733,8 @@ class AsMeetingsApi(AsApiChild, base='meetings'):
     qanda: AsMeetingQandAApi
     #: qualities API
     qualities: AsMeetingQualitiesApi
-    #: recordings
+    # recordings
     recordings: AsRecordingsApi
-    #: templates
-    templates: AsMeetingTemplatesApi
     #: transcripts
     transcripts: AsMeetingTranscriptsApi
 
@@ -9853,7 +9748,6 @@ class AsMeetingsApi(AsApiChild, base='meetings'):
         self.qanda = AsMeetingQandAApi(session=session)
         self.qualities = AsMeetingQualitiesApi(session=session)
         self.recordings = AsRecordingsApi(session=session)
-        self.templates = AsMeetingTemplatesApi(session=session)
         self.transcripts = AsMeetingTranscriptsApi(session=session)
 
     async def create(
@@ -11017,7 +10911,7 @@ class AsMeetingsApi(AsApiChild, base='meetings'):
 
         documentation: https://developer.webex.com/docs/api/v1/meetings/delete-a-meeting
         """
-        params:dict[str, Any] = {}
+        params = {}
         if host_email is not None:
             params['hostEmail'] = host_email
         if send_email is not None:
@@ -16478,8 +16372,8 @@ class AsScheduleApi(AsApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(obj_id=obj_id, schedule_type=schedule_type, schedule_id=schedule_id, event_id='')
         data = event.create_update()
-        data = await self.post(url, json=data, params=params)
-        return data['id']
+        data = await self.post(url, json=data, params=params)  # type: ignore[assignment]
+        return data['id']  # type: ignore[no-any-return]
 
     async def event_update(
         self,

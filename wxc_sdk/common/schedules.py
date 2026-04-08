@@ -1,12 +1,13 @@
 """
 Schedules for locations or users
 """
+# mypy: disable-error-code="list-item,arg-type"
 
 import datetime
 from collections.abc import Generator
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
-from pydantic import ConfigDict, Field
+from pydantic import Field, field_serializer
 
 from ..api_child import ApiChild
 from ..base import ApiModel
@@ -234,7 +235,13 @@ class Event(ApiModel):
     #: Recurrence scheme for an event.
     recurrence: Optional[Recurrence] = None
 
-    model_config = ConfigDict(json_encoders={datetime.time: lambda v: v.strftime('%H:%M')})
+    @field_serializer('start_time', 'end_time')
+    def serialize_time(self, value: datetime.time) -> str:
+        """
+
+        :meta private:
+        """
+        return value.strftime('%H:%M')
 
     @staticmethod
     def day_start_end(
@@ -265,7 +272,7 @@ class Event(ApiModel):
             recurrence=Recurrence.every_week(day=day),
         )
 
-    def create_update(self, update: bool = False) -> dict:
+    def create_update(self, update: bool = False) -> dict[str, Any]:
         """
         JSON for create or update
 
@@ -296,13 +303,6 @@ class Schedule(ApiModel):
     #: Indicates a list of events.
     events: Optional[list[Event]] = None
 
-    model_config = ConfigDict(
-        json_encoders={
-            # datetime objects are encoded as HH:MM
-            datetime.time: lambda v: v.strftime('%H:%M')
-        }
-    )
-
     @staticmethod
     def business(
         name: str,
@@ -329,7 +329,7 @@ class Schedule(ApiModel):
         dt_today = datetime.date.today()
         weekday_today = dt_today.weekday()
 
-        schedule = Schedule(name=name, schedule_type=ScheduleType.business_hours)
+        schedule = Schedule(name=name, schedule_type=ScheduleType.business_hours)  # type: ignore[call-arg]
         schedule.events = []
         for weekday, day in enumerate(ScheduleDay.mon_to_fri()):
             # Two events
@@ -351,7 +351,7 @@ class Schedule(ApiModel):
             )
         return schedule
 
-    def create_update(self, update: bool = False) -> dict:
+    def create_update(self, update: bool = False) -> dict[str, Any]:
         """
         JSON for create or update
 
@@ -651,8 +651,8 @@ class ScheduleApi(ApiChild, base='telephony/config/locations'):
         params = org_id and {'orgId': org_id} or None
         url = self._endpoint(obj_id=obj_id, schedule_type=schedule_type, schedule_id=schedule_id, event_id='')
         data = event.create_update()
-        data = self.post(url, json=data, params=params)
-        return data['id']
+        data = self.post(url, json=data, params=params)  # type: ignore[assignment]
+        return data['id']  # type: ignore[no-any-return]
 
     def event_update(
         self,
