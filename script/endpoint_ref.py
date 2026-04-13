@@ -44,6 +44,13 @@ REST_HTTP_METHOD_NAMES = {'rest_get', 'rest_post', 'rest_put', 'rest_delete', 'r
 class Placeholder(str):
     """
     Placeholder value for endpoint parameters.
+
+    The generator never executes real API calls. Instead it substitutes values such as
+    ``person_id`` with placeholders like ``{person_id}`` so helper methods can still
+    build human-readable endpoint paths.
+
+    Example:
+        ``Placeholder("person_id")`` renders as ``"{person_id}"``.
     """
 
     name: str
@@ -56,6 +63,16 @@ class Placeholder(str):
 
 @dataclass
 class EndpointReference:
+    """
+    One row in the generated endpoint reference.
+
+    :param method: Fully-qualified SDK method name, for example ``api.people.list``.
+    :param http_method: HTTP verb used by the SDK method, for example ``GET``.
+    :param endpoint: Relative or absolute endpoint URL, for example ``/people`` or
+        ``https://analytics.webexapis.com/v1/meeting/qualities``.
+    :param description: First non-empty line of the method docstring.
+    """
+
     method: str
     http_method: str
     endpoint: str
@@ -63,6 +80,17 @@ class EndpointReference:
 
 
 def is_base_attr(*, base: type[Any], name: str, attr: Any) -> bool:
+    """
+    Check whether ``name`` resolves to the same attribute on a base class.
+
+    This is used to filter inherited methods from the exported reference so only
+    methods introduced by the concrete API class are listed.
+
+    :param base: Base class to inspect.
+    :param name: Attribute name to look up.
+    :param attr: Attribute object taken from the concrete child class.
+    :return: ``True`` if the base class exposes the same attribute object.
+    """
     try:
         base_attr = getattr(base, name)
     except AttributeError:
@@ -73,6 +101,13 @@ def is_base_attr(*, base: type[Any], name: str, attr: Any) -> bool:
 def obj_methods(obj: Any) -> Iterator[str]:
     """
     Get names of all methods defined in the object class and not inherited from a base class.
+
+    The SDK API tree contains many helper methods inherited from :class:`ApiChild`.
+    Those helpers are intentionally excluded so the output focuses on user-facing SDK
+    calls.
+
+    :param obj: API object to inspect.
+    :return: Iterator of method names such as ``list`` or ``details``.
     """
     bases = obj.__class__.__bases__
     obj_class = obj.__class__
@@ -90,6 +125,16 @@ def obj_methods(obj: Any) -> Iterator[str]:
 
 
 def child_apis(obj: Any) -> Iterator[tuple[str, ApiChild]]:
+    """
+    Yield child API objects attached to ``obj``.
+
+    The generator walks the SDK tree recursively starting at ``WebexSimpleApi``.
+    Child APIs are stored as instance attributes whose values are ``ApiChild``
+    instances.
+
+    :param obj: API object whose attributes should be inspected.
+    :return: Iterator of ``(attribute_name, child_api)`` tuples sorted by name.
+    """
     names = [name for name, value in obj.__dict__.items() if isinstance(value, ApiChild)]
     names.sort()
     for name in names:
@@ -99,11 +144,24 @@ def child_apis(obj: Any) -> Iterator[tuple[str, ApiChild]]:
 def default_value(name: str) -> Any:
     """
     Create a placeholder for a function argument.
+
+    :param name: Parameter name from a method signature.
+    :return: A :class:`Placeholder` instance such as ``{location_id}``.
     """
     return Placeholder(name)
 
 
 def env_value(parameter: inspect.Parameter) -> Any:
+    """
+    Choose the synthetic runtime value used while evaluating AST expressions.
+
+    Literal defaults such as ``False`` or ``"analytics-calling.webexapis.com"`` are
+    preserved because they often materially affect the resolved URL. All other values
+    are replaced with named placeholders.
+
+    :param parameter: Function parameter from :func:`inspect.signature`.
+    :return: Either the literal default value or a placeholder string.
+    """
     if parameter.default is not inspect.Parameter.empty and isinstance(parameter.default, (str, int, float, bool)):
         return parameter.default
     return default_value(parameter.name)
@@ -111,7 +169,29 @@ def env_value(parameter: inspect.Parameter) -> Any:
 
 def eval_expr(node: ast.AST, env: dict[str, Any]) -> Any:
     """
-    Evaluate a limited set of AST nodes to placeholder-friendly Python values.
+    Evaluate a limited subset of Python AST nodes into placeholder-friendly values.
+
+    This is the core of the generator. Rather than executing SDK methods, we inspect
+    their source and reduce only the expression types that are commonly used to build
+    URLs. That keeps the evaluation deterministic and safe while still understanding
+    patterns such as:
+
+    - ``self.ep(f"{person_id}/features/voicemail")``
+    - ``self.session.ep("reports")``
+    - ``urllib.parse.quote(phone_number_id)``
+    - ``enum_str(schedule_type)``
+
+    Unsupported node types intentionally raise ``ValueError`` so callers can fall back
+    to other heuristics instead of silently inventing endpoints.
+
+    :param node: AST node to evaluate.
+    :param env: Synthetic evaluation environment mapping parameter names to literal
+        defaults or placeholders.
+    :return: A Python value, usually a string suitable for endpoint construction.
+
+    Example:
+        Evaluating the f-string AST for ``f"people/{person_id}"`` returns
+        ``"people/{person_id}"``.
     """
     if isinstance(node, ast.Constant):
         return node.value
@@ -156,6 +236,13 @@ def eval_expr(node: ast.AST, env: dict[str, Any]) -> Any:
 
 
 def function_ast(func: Any) -> ast.FunctionDef | ast.AsyncFunctionDef | None:
+    """
+    Parse a function object into its top-level AST node.
+
+    :param func: Function or bound method implementation.
+    :return: Parsed ``FunctionDef``/``AsyncFunctionDef`` node, or ``None`` when the
+        source does not parse into a function body.
+    """
     source = textwrap.dedent(inspect.getsource(func))
     tree = ast.parse(source)
     function = tree.body[0]
@@ -167,6 +254,23 @@ def function_ast(func: Any) -> ast.FunctionDef | ast.AsyncFunctionDef | None:
 def endpoint_calls(func: Any) -> list[ast.Call]:
     """
     Return endpoint-building calls in source order.
+
+    We deliberately collect more than just direct ``self.ep(...)`` calls because the
+    SDK uses several recurring helper styles:
+
+    - ``self.ep(...)`` and ``self.f_ep(...)``
+    - helper wrappers such as ``self._endpoint(...)`` or ``self._url(...)``
+    - ``self.session.ep(...)`` / ``self._session.ep(...)``
+    - ``super().ep(...)`` in helper implementations
+
+    These calls are later replayed with placeholder arguments to recover the endpoint.
+
+    :param func: Function or bound method implementation.
+    :return: Ordered list of candidate AST call nodes.
+
+    Example:
+        For a method containing ``url = self._endpoint(location_id=location_id)``, the
+        returned list contains the ``self._endpoint(...)`` call node.
     """
     function = function_ast(func)
     if function is None:
@@ -175,6 +279,10 @@ def endpoint_calls(func: Any) -> list[ast.Call]:
     calls = []
 
     class Visitor(ast.NodeVisitor):
+        """
+        Collect only URL-construction calls that are useful for endpoint recovery.
+        """
+
         def visit_Call(self, node: ast.Call) -> None:
             func_node = node.func
             if isinstance(func_node, ast.Attribute):
@@ -208,6 +316,17 @@ def endpoint_calls(func: Any) -> list[ast.Call]:
 def request_calls(func: Any) -> list[ast.Call]:
     """
     Return request-executing calls in source order.
+
+    Endpoint resolution and HTTP verb resolution are intentionally separate. This
+    function only identifies the call that actually performs the request, such as
+    ``self.get(...)`` or ``self.session.follow_pagination(...)``.
+
+    :param func: Function or bound method implementation.
+    :return: Ordered list of request-like AST call nodes.
+
+    Example:
+        ``return self.session.follow_pagination(url=url, ...)`` produces a single call
+        that later maps to ``GET``.
     """
     source = textwrap.dedent(inspect.getsource(func))
     tree = ast.parse(source)
@@ -218,6 +337,10 @@ def request_calls(func: Any) -> list[ast.Call]:
     calls = []
 
     class Visitor(ast.NodeVisitor):
+        """
+        Collect request execution calls while ignoring ordinary helper invocations.
+        """
+
         def visit_Call(self, node: ast.Call) -> None:
             func_node = node.func
             if isinstance(func_node, ast.Attribute):
@@ -240,6 +363,27 @@ def request_calls(func: Any) -> list[ast.Call]:
 
 
 def normalize_endpoint(url: str, base: str | None = None) -> str:
+    """
+    Normalize an endpoint into the user-facing form written to the Markdown table.
+
+    The SDK mixes several styles:
+
+    - full ``https://webexapis.com/v1/...`` URLs
+    - relative API paths such as ``people`` or ``telephony/config/...``
+    - absolute non-Webex URLs such as the status and analytics endpoints
+    - placeholder-only values such as ``{url}`` for downloader helpers
+
+    This function strips the normal Webex base URL, preserves non-Webex absolute URLs,
+    ensures relative paths start with ``/``, and removes duplicated base prefixes that
+    can appear when a helper passes a suffix already covered by ``ApiChild.base``.
+
+    :param url: Raw URL/path recovered from the SDK source.
+    :param base: ``ApiChild.base`` value of the current API object, if any.
+    :return: Normalized endpoint string ready for the Markdown table.
+
+    Example:
+        ``https://webexapis.com/v1/people`` becomes ``/people``.
+    """
     if url.startswith(RestSession.BASE):
         url = url[len(RestSession.BASE) :]
     elif '://' in url:
@@ -256,6 +400,23 @@ def normalize_endpoint(url: str, base: str | None = None) -> str:
 
 
 def resolve_call(obj: Any, call: ast.Call, env: dict[str, Any]) -> str | None:
+    """
+    Resolve one endpoint-building AST call against a live API object.
+
+    The AST traversal only identifies *which* helper call looks relevant. This function
+    evaluates its arguments, replays the helper against the instantiated SDK object, and
+    normalizes the resulting endpoint.
+
+    :param obj: Live API object the method belongs to.
+    :param call: AST call node returned by :func:`endpoint_calls`.
+    :param env: Synthetic evaluation environment used for placeholders.
+    :return: Resolved endpoint string, or ``None`` if this call shape is unsupported.
+
+    Example:
+        Replaying ``self.f_ep(person_id=person_id)`` with
+        ``person_id -> {person_id}`` may return
+        ``/telephony/config/people/{person_id}/voicemail``.
+    """
     func_node = call.func
     args = [eval_expr(arg, env) for arg in call.args]
     kwargs = {kw.arg: eval_expr(kw.value, env) for kw in call.keywords if kw.arg}
@@ -263,11 +424,16 @@ def resolve_call(obj: Any, call: ast.Call, env: dict[str, Any]) -> str | None:
 
     if isinstance(func_node, ast.Attribute):
         if isinstance(func_node.value, ast.Name) and func_node.value.id == 'self':
+            # Some SDK methods pass a full absolute URL into self.ep(...). In that
+            # case we must keep the value as-is rather than letting ApiChild.ep()
+            # prefix it with the regular Webex API base.
             if func_node.attr == 'ep' and args and isinstance(args[0], str) and '://' in args[0]:
                 return normalize_endpoint(args[0], base)
             if func_node.attr == 'ep' and base and args:
                 ep_arg = args[0]
                 if isinstance(ep_arg, str):
+                    # Guard against helpers calling self.ep("jobs/callRecording")
+                    # when the class base already is "telephony/config/jobs/callRecording".
                     stripped = ep_arg.strip('/')
                     if stripped and (base == stripped or base.endswith(f'/{stripped}')):
                         return normalize_endpoint(f'/{base}', base)
@@ -296,7 +462,26 @@ def resolve_call(obj: Any, call: ast.Call, env: dict[str, Any]) -> str | None:
 
 def resolve_endpoint(obj: Any, method_name: str) -> str | None:
     """
-    Resolve the endpoint used by a bound method.
+    Resolve the endpoint used by a bound SDK method.
+
+    Resolution happens in two passes:
+
+    1. Find and replay explicit endpoint helper calls such as ``self.ep(...)`` or
+       ``self._endpoint(...)``.
+    2. Fall back to simple literal assignments like ``url = f"https://.../cdr_feed"``
+       when the method builds the URL inline instead of via a helper.
+
+    The fallback deliberately skips assigned call expressions because those are already
+    handled by the structured helper replay above and are too easy to misinterpret if
+    reduced only to a string.
+
+    :param obj: Live API object the method belongs to.
+    :param method_name: Name of the method on ``obj``.
+    :return: Normalized endpoint string, or ``None`` if no safe resolution strategy
+        succeeded.
+
+    Example:
+        ``api.people.list`` resolves to ``/people``.
     """
     bound_method = getattr(obj, method_name)
     func = getattr(bound_method, '__func__', bound_method)
@@ -337,6 +522,21 @@ def resolve_endpoint(obj: Any, method_name: str) -> str | None:
 def resolve_http_method(obj: Any, method_name: str) -> str | None:
     """
     Resolve the HTTP method used by a bound method.
+
+    The first request-like call in the method body is treated as authoritative. This
+    matches the SDK style where one public SDK method typically wraps exactly one REST
+    endpoint. The resolver understands:
+
+    - ``self.get/post/put/delete/patch(...)``
+    - ``self.session.rest_get/...(...)``
+    - ``self.session.follow_pagination(...)`` -> ``GET``
+    - announcement upload wrappers that route through ``_upload_or_modify`` or a local
+      ``meth`` variable chosen from ``super().post`` / ``super().put``
+
+    :param obj: Live API object the method belongs to.
+    :param method_name: Name of the method on ``obj``.
+    :return: HTTP verb such as ``GET`` or ``POST``, or ``None`` if no request call
+        could be identified.
     """
     bound_method = getattr(obj, method_name)
     func = getattr(bound_method, '__func__', bound_method)
@@ -381,6 +581,13 @@ def resolve_http_method(obj: Any, method_name: str) -> str | None:
 def method_description(obj: Any, method_name: str) -> str:
     """
     Return the first non-empty line of a method's docstring.
+
+    The generated table is intentionally compact, so we only keep the first meaningful
+    docstring line rather than the full block.
+
+    :param obj: Live API object the method belongs to.
+    :param method_name: Name of the method on ``obj``.
+    :return: First non-empty docstring line, or an empty string if no docstring exists.
     """
     bound_method = getattr(obj, method_name)
     doc = inspect.getdoc(bound_method) or ''
@@ -392,10 +599,29 @@ def method_description(obj: Any, method_name: str) -> str:
 
 
 def md_cell(text: str) -> str:
+    """
+    Escape Markdown table cell content.
+
+    :param text: Raw cell text.
+    :return: Escaped text safe to embed between ``|`` separators.
+    """
     return text.replace('|', '\\|')
 
 
 def endpoint_reference(name: str, obj: Any) -> Iterator[EndpointReference]:
+    """
+    Walk the API tree recursively and yield reference rows.
+
+    :param name: Dotted prefix representing the current API object in the exported
+        hierarchy, for example ``api.people``.
+    :param obj: Current API object to inspect.
+    :return: Iterator of :class:`EndpointReference` rows.
+
+    Example:
+        Starting with ``("api", WebexSimpleApi(...))`` yields rows such as
+        ``EndpointReference(method="api.people.list", http_method="GET",
+        endpoint="/people", description="List people in your organization...")``.
+    """
     methods = sorted(obj_methods(obj))
     for method in methods:
         endpoint = resolve_endpoint(obj, method)
@@ -413,6 +639,12 @@ def endpoint_reference(name: str, obj: Any) -> Iterator[EndpointReference]:
 
 
 def markdown_table(rows: list[EndpointReference]) -> str:
+    """
+    Render endpoint reference rows as a Markdown table.
+
+    :param rows: Resolved endpoint reference rows.
+    :return: Markdown document content.
+    """
     lines = [
         '# Endpoint Reference',
         '',
@@ -426,6 +658,12 @@ def markdown_table(rows: list[EndpointReference]) -> str:
 
 
 def main() -> None:
+    """
+    Generate ``endpoint_ref.md`` from the current SDK source tree.
+
+    The script instantiates :class:`WebexSimpleApi` with a dummy token because endpoint
+    discovery only needs the in-memory API object graph, not real network access.
+    """
     api = WebexSimpleApi(tokens='dummy')
     rows = sorted(endpoint_reference('api', api), key=lambda row: row.method)
 
