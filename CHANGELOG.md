@@ -1,3 +1,14 @@
+## 1.33.0 (2026-04-13)
+
+### Feat
+
+- new RecordingServiceData attributes: managed_by, connected_party
+- new CDR attributes: elin, emergency_number_source
+
+### Fix
+
+- deserialization of enum values
+
 ## 1.32.0 (2026-03-25)
 
 ### Feat

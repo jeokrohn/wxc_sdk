@@ -4383,7 +4383,7 @@ wheels = [
 
 [[package]]
 name = "wxc-sdk"
-version = "1.32.0"
+version = "1.33.0"
 source = { editable = "." }
 dependencies = [
     { name = "aenum" },
