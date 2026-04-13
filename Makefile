@@ -2,7 +2,7 @@
 # Copyright (c) 2026 Johannes Krohn <jkrohn@cisco.com>
 # License: MIT
 
-.PHONY: all package docs types async methref apib oas clean rst
+.PHONY: all package docs types async methref endpointref apib oas clean rst
 
 # Default target builds everything
 all: clean types methref async docs package
@@ -24,6 +24,11 @@ docs/user/method_ref.rst: $(WXC_SDK_PY_FILES)
 	@echo "==> Creating method_ref.rst"
 	script/method_ref.py
 methref: docs/user/method_ref.rst
+
+endpoint_ref.md: $(WXC_SDK_PY_FILES)
+	@echo "==> Creating endpoint_ref.md"
+	script/endpoint_ref.py
+endpointref: endpoint_ref.md
 
 clean:
 	@echo "==> Cleaning previous build artifacts"
