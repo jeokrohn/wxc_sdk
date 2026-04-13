@@ -1,6 +1,13 @@
 Release history
 ===============
 
+1.33.0
+------
+
+- feat: new RecordingServiceData attributes: managed_by, connected_party
+- feat: new CDR attributes: elin, emergency_number_source
+- fix: deserialization of enum values
+
 1.32.0
 ------
 - feat: added "py.typed" to support type checking

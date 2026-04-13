@@ -6,7 +6,7 @@
 * uv lock --upgrade
 * uv sync
 * run "script/test lint" and review/fix
-* update docs/user/changes.rst
+* update docs/user/changes.rst based on "uv run cz bump --dry-run"
 * shelve all changes that should not be part of the build
 * run all tests and check results
 * review TODOs: did we miss anything
