@@ -19,6 +19,7 @@ Create a Markdown reference of SDK methods and their endpoint URLs.
 
 from __future__ import annotations
 
+import argparse
 import ast
 import inspect
 import os
@@ -35,10 +36,20 @@ from wxc_sdk import WebexSimpleApi
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.rest import RestSession
 
-MD_FILE = 'endpoint_ref.md'
 IGNORE_METHODS = {'ep', 'f_ep', 'url'}
 HTTP_METHOD_NAMES = {'get', 'post', 'put', 'delete', 'patch'}
 REST_HTTP_METHOD_NAMES = {'rest_get', 'rest_post', 'rest_put', 'rest_delete', 'rest_patch'}
+RST_PREFIX = """
+Reference of all available endpoints
+====================================
+
+The following table contains a reference of all SDK methods with their HTTP method, endpoint URL, and a short
+description of the operation. The method name is a link to the method documentation.
+
+.. list-table::
+   :header-rows: 1
+
+   * - Method"""
 
 
 class Placeholder(str):
@@ -71,12 +82,14 @@ class EndpointReference:
     :param endpoint: Relative or absolute endpoint URL, for example ``/people`` or
         ``https://analytics.webexapis.com/v1/meeting/qualities``.
     :param description: First non-empty line of the method docstring.
+    :param class_path: Fully-qualified Python path used for the Sphinx ``:meth:`` link.
     """
 
     method: str
     http_method: str
     endpoint: str
     description: str
+    class_path: str
 
 
 def is_base_attr(*, base: type[Any], name: str, attr: Any) -> bool:
@@ -155,14 +168,19 @@ def env_value(parameter: inspect.Parameter) -> Any:
     """
     Choose the synthetic runtime value used while evaluating AST expressions.
 
-    Literal defaults such as ``False`` or ``"analytics-calling.webexapis.com"`` are
-    preserved because they often materially affect the resolved URL. All other values
-    are replaced with named placeholders.
+    Literal defaults such as ``"analytics-calling.webexapis.com"`` are preserved
+    because they often materially affect the resolved URL. Boolean defaults are *not*
+    preserved: when a method chooses between two endpoint paths based on a boolean
+    flag, we prefer to keep both possibilities visible in the generated reference.
+    All other values are replaced with named placeholders.
 
     :param parameter: Function parameter from :func:`inspect.signature`.
     :return: Either the literal default value or a placeholder string.
     """
-    if parameter.default is not inspect.Parameter.empty and isinstance(parameter.default, (str, int, float, bool)):
+    if parameter.default is not inspect.Parameter.empty and (
+        isinstance(parameter.default, str)
+        or (isinstance(parameter.default, (int, float)) and not isinstance(parameter.default, bool))
+    ):
         return parameter.default
     return default_value(parameter.name)
 
@@ -221,7 +239,14 @@ def eval_expr(node: ast.AST, env: dict[str, Any]) -> Any:
     if isinstance(node, ast.Dict):
         return {eval_expr(k, env): eval_expr(v, env) for k, v in zip(node.keys, node.values) if k is not None}
     if isinstance(node, ast.IfExp):
-        return eval_expr(node.body, env)
+        test_value = eval_expr(node.test, env)
+        if isinstance(test_value, bool):
+            return eval_expr(node.body if test_value else node.orelse, env)
+        body_value = eval_expr(node.body, env)
+        orelse_value = eval_expr(node.orelse, env)
+        if body_value == orelse_value:
+            return body_value
+        return f'{{{body_value}|{orelse_value}}}'
     if isinstance(node, ast.Call):
         func = node.func
         if isinstance(func, ast.Name):
@@ -249,6 +274,49 @@ def function_ast(func: Any) -> ast.FunctionDef | ast.AsyncFunctionDef | None:
     if not isinstance(function, (ast.FunctionDef, ast.AsyncFunctionDef)):
         return None
     return function
+
+
+def mod_path(path: str) -> str:
+    """
+    Convert a filesystem path to a dotted Python module path.
+
+    This mirrors the helper in ``script/method_ref.py`` so the generated RST can link
+    to the exact same method documentation targets.
+
+    :param path: Filesystem path ending in ``.py``.
+    :return: Dotted module path without the trailing ``.__init__`` part.
+
+    Example:
+        ``wxc_sdk/people/__init__.py`` becomes ``wxc_sdk.people``.
+    """
+
+    def splitall(current: str) -> Iterator[str]:
+        split = os.path.split(current)
+        if split[0]:
+            yield from splitall(split[0])
+        yield split[1]
+
+    path = path[:-3]
+    parts = list(splitall(path))
+    if parts[-1] == '__init__':
+        parts = parts[:-1]
+    return '.'.join(parts)
+
+
+def method_class_path(obj: Any, method_name: str) -> str:
+    """
+    Build the Sphinx cross-reference target for a method.
+
+    :param obj: Live API object the method belongs to.
+    :param method_name: Name of the method on ``obj``.
+    :return: Cross-reference target such as
+        ``wxc_sdk.people.PeopleApi.list``.
+    """
+    class_file = inspect.getfile(obj.__class__)
+    common_prefix = os.path.commonpath([class_file, __file__])
+    rel_path = os.path.relpath(class_file, common_prefix)
+    module_path = mod_path(rel_path)
+    return f'{module_path}.{obj.__class__.__name__}.{method_name}'
 
 
 def endpoint_calls(func: Any) -> list[ast.Call]:
@@ -407,6 +475,22 @@ def resolve_call(obj: Any, call: ast.Call, env: dict[str, Any]) -> str | None:
     evaluates its arguments, replays the helper against the instantiated SDK object, and
     normalizes the resulting endpoint.
 
+    The ``if/elif`` structure mirrors the distinct helper families used in the SDK:
+
+    1. ``self.<helper>(...)``:
+       This is the most common case and covers direct calls such as ``self.ep(...)``,
+       ``self.f_ep(...)``, ``self._endpoint(...)``, and ``self.url(...)``.
+    2. ``self.session.ep(...)`` / ``self._session.ep(...)``:
+       Some APIs bypass ``ApiChild.ep()`` and ask the REST session to build a URL
+       directly.
+    3. ``super().ep(...)``:
+       A few helper methods call the ``ApiChild`` implementation explicitly.
+
+    The branches are kept separate because each family needs slightly different
+    treatment. In particular, ``self.ep(...)`` can accidentally duplicate the class
+    base or wrap an already-absolute URL, while ``self.session.ep(...)`` always starts
+    from the raw session base URL.
+
     :param obj: Live API object the method belongs to.
     :param call: AST call node returned by :func:`endpoint_calls`.
     :param env: Synthetic evaluation environment used for placeholders.
@@ -416,6 +500,8 @@ def resolve_call(obj: Any, call: ast.Call, env: dict[str, Any]) -> str | None:
         Replaying ``self.f_ep(person_id=person_id)`` with
         ``person_id -> {person_id}`` may return
         ``/telephony/config/people/{person_id}/voicemail``.
+
+        Replaying ``self.session.ep("reports")`` returns ``/reports``.
     """
     func_node = call.func
     args = [eval_expr(arg, env) for arg in call.args]
@@ -424,6 +510,7 @@ def resolve_call(obj: Any, call: ast.Call, env: dict[str, Any]) -> str | None:
 
     if isinstance(func_node, ast.Attribute):
         if isinstance(func_node.value, ast.Name) and func_node.value.id == 'self':
+            # Branch 1: helper invoked on the API object itself.
             # Some SDK methods pass a full absolute URL into self.ep(...). In that
             # case we must keep the value as-is rather than letting ApiChild.ep()
             # prefix it with the regular Webex API base.
@@ -447,6 +534,7 @@ def resolve_call(obj: Any, call: ast.Call, env: dict[str, Any]) -> str | None:
             and func_node.value.attr in {'session', '_session'}
             and func_node.attr == 'ep'
         ):
+            # Branch 2: endpoint built directly via the attached REST session.
             session = getattr(obj, func_node.value.attr, None)
             if session is not None:
                 return normalize_endpoint(session.ep(*args, **kwargs), base)
@@ -456,6 +544,7 @@ def resolve_call(obj: Any, call: ast.Call, env: dict[str, Any]) -> str | None:
             and isinstance(func_node.value.func, ast.Name)
             and func_node.value.func.id == 'super'
         ):
+            # Branch 3: helper explicitly delegated to the ApiChild base class.
             return normalize_endpoint(super(obj.__class__, obj).ep(*args, **kwargs), base)
     return None
 
@@ -474,6 +563,21 @@ def resolve_endpoint(obj: Any, method_name: str) -> str | None:
     The fallback deliberately skips assigned call expressions because those are already
     handled by the structured helper replay above and are too easy to misinterpret if
     reduced only to a string.
+
+    The nested ``if``/``elif`` handling in the second pass exists for three reasons:
+
+    - ``if isinstance(node, ast.Assign)`` limits the fallback to top-level statements
+      in execution order, which lets us build up a simple local environment.
+    - ``if isinstance(target, ast.Name)`` ensures we only track plain local variables
+      such as ``endpoint`` or ``url``. Tuple unpacking and other assignment shapes are
+      ignored on purpose.
+    - ``if target.id in {'url', 'ep'}`` restricts final endpoint extraction to the
+      conventional variable names used throughout the SDK. This keeps the fallback from
+      accidentally treating arbitrary intermediate strings as endpoint URLs.
+
+    In practice, this fallback is what makes manually assembled endpoints like the CDR
+    analytics URL work, while still leaving more complicated helper calls to the first
+    pass.
 
     :param obj: Live API object the method belongs to.
     :param method_name: Name of the method on ``obj``.
@@ -496,6 +600,9 @@ def resolve_endpoint(obj: Any, method_name: str) -> str | None:
         try:
             endpoint = resolve_call(obj, call, env)
         except Exception:
+            # Some candidate helper calls are intentionally optimistic. If one of them
+            # cannot be evaluated safely, we ignore it and continue with the next
+            # candidate instead of failing the whole method.
             continue
         if endpoint:
             return endpoint
@@ -503,11 +610,22 @@ def resolve_endpoint(obj: Any, method_name: str) -> str | None:
     function = function_ast(func)
     if function is None:
         return None
-    for node in ast.walk(function):
+    for node in function.body:
         if isinstance(node, ast.Assign):
             for target in node.targets:
+                if isinstance(target, ast.Name):
+                    try:
+                        # Track simple local values in source order so later
+                        # assignments such as ``url = f".../{endpoint}"`` can resolve
+                        # previously assigned names like ``endpoint``.
+                        env[target.id] = eval_expr(node.value, env)
+                    except Exception:
+                        pass
                 if isinstance(target, ast.Name) and target.id in {'url', 'ep'}:
                     if isinstance(node.value, ast.Call):
+                        # Calls are already handled by the explicit helper replay in
+                        # the first pass. Treating them as raw strings here would lose
+                        # too much information.
                         continue
                     try:
                         endpoint = normalize_endpoint(str(eval_expr(node.value, env)), getattr(obj, 'base', None))
@@ -533,16 +651,39 @@ def resolve_http_method(obj: Any, method_name: str) -> str | None:
     - announcement upload wrappers that route through ``_upload_or_modify`` or a local
       ``meth`` variable chosen from ``super().post`` / ``super().put``
 
+    The branch order matters:
+
+    1. ``if isinstance(func_node, ast.Name) and func_node.id == 'meth'``:
+       Handles the special upload helper pattern where the method is first stored in a
+       local variable named ``meth`` and only later invoked.
+    2. ``elif isinstance(func_node, ast.Attribute)``:
+       Handles the normal SDK request styles.
+       Inside this block:
+       - ``_upload_or_modify`` is inspected first because it hides whether the
+         operation is ``POST`` or ``PUT`` behind an ``is_upload`` flag.
+       - ``follow_pagination`` is treated as ``GET`` because it performs paginated
+         retrieval.
+       - direct ``get/post/put/delete/patch`` methods are then mapped one-to-one.
+       - ``rest_get/rest_post/...`` names are finally normalized by stripping the
+         ``rest_`` prefix.
+
     :param obj: Live API object the method belongs to.
     :param method_name: Name of the method on ``obj``.
     :return: HTTP verb such as ``GET`` or ``POST``, or ``None`` if no request call
         could be identified.
+
+    Example:
+        A method containing ``return self.session.follow_pagination(...)`` resolves to
+        ``GET``.
     """
     bound_method = getattr(obj, method_name)
     func = getattr(bound_method, '__func__', bound_method)
     for call in request_calls(func):
         func_node = call.func
         if isinstance(func_node, ast.Name) and func_node.id == 'meth':
+            # Upload helpers sometimes choose between ``super().post`` and
+            # ``super().put`` first and only invoke the chosen callable later as
+            # ``meth(...)``. The ``is_upload`` flag tells us which verb to report.
             is_upload = next(
                 (
                     kw.value.value
@@ -557,6 +698,8 @@ def resolve_http_method(obj: Any, method_name: str) -> str | None:
                 return 'PUT'
         elif isinstance(func_node, ast.Attribute):
             if func_node.attr == '_upload_or_modify':
+                # Same upload pattern as above, but here the wrapper method is invoked
+                # directly instead of through the local ``meth`` variable.
                 is_upload = next(
                     (
                         kw.value.value
@@ -570,10 +713,12 @@ def resolve_http_method(obj: Any, method_name: str) -> str | None:
                 if is_upload is False:
                     return 'PUT'
             if func_node.attr == 'follow_pagination':
+                # Pagination helpers always fetch data and therefore correspond to GET.
                 return 'GET'
             if func_node.attr in HTTP_METHOD_NAMES:
                 return func_node.attr.upper()
             if func_node.attr in REST_HTTP_METHOD_NAMES:
+                # rest_get -> GET, rest_post -> POST, ...
                 return func_node.attr.split('_', 1)[1].upper()
     return None
 
@@ -596,6 +741,23 @@ def method_description(obj: Any, method_name: str) -> str:
         if line:
             return line
     return ''
+
+
+def rst_description(obj: Any, method_name: str) -> str:
+    """
+    Return the short description style used by ``method_ref.rst``.
+
+    The existing method reference keeps the first sentence of the first non-empty line,
+    so the RST output of this generator follows the same convention for consistency.
+
+    :param obj: Live API object the method belongs to.
+    :param method_name: Name of the method on ``obj``.
+    :return: Short one-line description without a trailing period when possible.
+    """
+    doc = method_description(obj, method_name)
+    if not doc:
+        return ''
+    return doc.split('.')[0].strip()
 
 
 def md_cell(text: str) -> str:
@@ -632,6 +794,7 @@ def endpoint_reference(name: str, obj: Any) -> Iterator[EndpointReference]:
                 http_method=http_method,
                 endpoint=endpoint,
                 description=method_description(obj, method),
+                class_path=method_class_path(obj, method),
             )
 
     for child_name, child in child_apis(obj):
@@ -657,21 +820,98 @@ def markdown_table(rows: list[EndpointReference]) -> str:
     return '\n'.join(lines)
 
 
+def rst_row(row: EndpointReference) -> str:
+    """
+    Render one endpoint reference row in the list-table format used by Sphinx.
+
+    The table keeps a single visible column like ``method_ref.rst``. The description,
+    HTTP method, and URL are emitted as separate indented lines below the method link
+    so the document stays readable in narrower layouts.
+
+    :param row: Endpoint reference row to render.
+    :return: RST snippet for a single ``.. list-table::`` item.
+    """
+    description = rst_description_text(row.description)
+    return (
+        f'\n   * - :meth:`{row.method} <{row.class_path}>`\n'
+        f'        | {description}\n'
+        f'        | ``{row.http_method} {row.endpoint}``'
+    )
+
+
+def rst_description_text(description: str) -> str:
+    """
+    Normalize the description line used in the RST table.
+
+    :param description: Raw description stored on the row.
+    :return: Shortened description compatible with ``method_ref.rst`` style.
+    """
+    if not description:
+        return ''
+    return description.split('.')[0].strip()
+
+
+def rst_table(rows: list[EndpointReference]) -> str:
+    """
+    Render endpoint reference rows as an RST list-table document.
+
+    :param rows: Resolved endpoint reference rows.
+    :return: RST document content suitable for ``docs/user``.
+    """
+    content = [RST_PREFIX]
+    for row in rows:
+        content.append(rst_row(row))
+    content.append('\n')
+    return ''.join(content)
+
+
+def parse_args() -> argparse.Namespace:
+    """
+    Parse command line arguments.
+
+    :return: Parsed CLI namespace with ``format`` and ``output_path`` attributes.
+
+    Example:
+        ``script/endpoint_ref.py docs/user/endpoint_ref.rst --format rst`` writes the
+        RST reference to ``docs/user/endpoint_ref.rst``.
+    """
+    parser = argparse.ArgumentParser(description='Generate an SDK endpoint reference in Markdown or RST format.')
+    parser.add_argument(
+        'output_path',
+        help='output file path, or "-" to write to stdout',
+    )
+    parser.add_argument(
+        '--format',
+        choices=('md', 'rst'),
+        default='md',
+        help='output format to generate (default: md)',
+    )
+    return parser.parse_args()
+
+
 def main() -> None:
     """
-    Generate ``endpoint_ref.md`` from the current SDK source tree.
+    Generate endpoint reference from the current SDK source tree.
 
     The script instantiates :class:`WebexSimpleApi` with a dummy token because endpoint
     discovery only needs the in-memory API object graph, not real network access.
+    The caller must provide the output destination as a positional argument. Use ``-``
+    to write the generated document to stdout.
     """
+    args = parse_args()
     api = WebexSimpleApi(tokens='dummy')
     rows = sorted(endpoint_reference('api', api), key=lambda row: row.method)
+    rendered = markdown_table(rows) if args.format == 'md' else rst_table(rows)
+    path = args.output_path
 
-    md_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', MD_FILE))
-    with open(md_path, mode='w', encoding='utf-8') as f:
-        f.write(markdown_table(rows))
+    if path == '-':
+        sys.stdout.write(rendered)
+        return
 
-    print(f'wrote {len(rows)} endpoint references to {md_path}')
+    with open(path, mode='w', encoding='utf-8') as f:
+        f.write(rendered)
+
+    print(f'wrote {len(rows)} endpoint references to {path}')
 
 
 if __name__ == '__main__':

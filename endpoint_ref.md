@@ -8,7 +8,7 @@
 | `api.authorizations.delete` | `DELETE` | `/authorizations/{authorization_id}` | Deletes an authorization, by authorization ID or client ID and org ID. |
 | `api.authorizations.get_token_expiration_status` | `GET` | `/authorizations/tokenExpiry` | Get expiration status for a token |
 | `api.authorizations.list` | `GET` | `/authorizations` | Lists all authorizations for a user. Either personId or personEmail must be provided. This API does not support |
-| `api.cdr.get_cdr_history` | `GET` | `https://analytics-calling.webexapis.com/v1/{endpoint}` | Provides Webex Calling Detailed Call History data for your organization. |
+| `api.cdr.get_cdr_history` | `GET` | `https://analytics-calling.webexapis.com/v1/{cdr_stream|cdr_feed}` | Provides Webex Calling Detailed Call History data for your organization. |
 | `api.converged_recordings.delete` | `DELETE` | `/convergedRecordings/{recording_id}` | Delete a Recording |
 | `api.converged_recordings.details` | `GET` | `/convergedRecordings/{recording_id}` | Get Recording Details |
 | `api.converged_recordings.list` | `GET` | `/convergedRecordings` | List Recordings |
@@ -324,6 +324,7 @@
 | `api.person_settings.appservices.shared_line.members_count` | `GET` | `/telephony/config/people/{person_id}/applications/availableMembers/count` | Get Count of Shared-Line Appearance Members |
 | `api.person_settings.appservices.shared_line.search_members` | `GET` | `/telephony/config/people/{person_id}/applications/availableMembers` | Search Shared-Line Appearance Members |
 | `api.person_settings.appservices.shared_line.update_members` | `PUT` | `/telephony/config/people/{person_id}/applications/members` | Put Shared-Line Appearance Members New |
+| `api.person_settings.available_numbers.available` | `GET` | `/` | Get Available Phone Numbers |
 | `api.person_settings.available_numbers.call_forward` | `GET` | `/telephony/config/people/{entity_id}/callForwarding/availableNumbers` | Get Call Forward Available Phone Numbers |
 | `api.person_settings.available_numbers.call_intercept` | `GET` | `/telephony/config/people/{entity_id}/callIntercept/availableNumbers` | Get Call Intercept Available Phone Numbers |
 | `api.person_settings.available_numbers.ecbn` | `GET` | `/telephony/config/people/{entity_id}/emergencyCallbackNumber/availableNumbers` | Get ECBN Available Phone Numbers |
@@ -1050,8 +1051,11 @@
 | `api.telephony.virtual_lines.assigned_devices` | `GET` | `/telephony/config/virtualLines/{virtual_line_id}/devices` | Get List of Devices assigned for a Virtual Line |
 | `api.telephony.virtual_lines.available_numbers.available` | `GET` | `/telephony/config/virtualLines/availableNumbers` | Get Available Phone Numbers |
 | `api.telephony.virtual_lines.available_numbers.call_forward` | `GET` | `/telephony/config/virtualLines/{entity_id}/callForwarding/availableNumbers` | Get Call Forward Available Phone Numbers |
+| `api.telephony.virtual_lines.available_numbers.call_intercept` | `GET` | `/callIntercept` | Get Call Intercept Available Phone Numbers |
 | `api.telephony.virtual_lines.available_numbers.ecbn` | `GET` | `/telephony/config/virtualLines/{entity_id}/emergencyCallbackNumber/availableNumbers` | Get ECBN Available Phone Numbers |
 | `api.telephony.virtual_lines.available_numbers.fax_message` | `GET` | `/telephony/config/virtualLines/{entity_id}/faxMessage/availableNumbers` | Get Fax Message Available Phone Numbers |
+| `api.telephony.virtual_lines.available_numbers.primary` | `GET` | `/primary` | Get Person Primary Available Phone Numbers |
+| `api.telephony.virtual_lines.available_numbers.secondary` | `GET` | `/secondary` | Get Person Secondary Available Phone Numbers |
 | `api.telephony.virtual_lines.barge.configure` | `PUT` | `/telephony/config/virtualLines/{entity_id}/bargeIn` | Configure Barge In Settings |
 | `api.telephony.virtual_lines.barge.read` | `GET` | `/telephony/config/virtualLines/{entity_id}/bargeIn` | Retrieve Barge In Settings |
 | `api.telephony.virtual_lines.call_bridge.configure` | `PUT` | `/telephony/config/virtualLines/{entity_id}/callBridge` | Configure Call Bridge Settings |
@@ -1150,6 +1154,7 @@
 | `api.workspace_settings.available_numbers.call_intercept` | `GET` | `/telephony/config/workspaces/{entity_id}/callIntercept/availableNumbers` | Get Call Intercept Available Phone Numbers |
 | `api.workspace_settings.available_numbers.ecbn` | `GET` | `/telephony/config/workspaces/{entity_id}/emergencyCallbackNumber/availableNumbers` | Get ECBN Available Phone Numbers |
 | `api.workspace_settings.available_numbers.fax_message` | `GET` | `/telephony/config/workspaces/{entity_id}/faxMessage/availableNumbers` | Get Fax Message Available Phone Numbers |
+| `api.workspace_settings.available_numbers.primary` | `GET` | `/primary` | Get Person Primary Available Phone Numbers |
 | `api.workspace_settings.available_numbers.secondary` | `GET` | `/telephony/config/workspaces/{entity_id}/secondary/availableNumbers` | Get Person Secondary Available Phone Numbers |
 | `api.workspace_settings.barge.configure` | `PUT` | `/telephony/config/workspaces/{entity_id}/bargeIn` | Configure Barge In Settings |
 | `api.workspace_settings.barge.read` | `GET` | `/telephony/config/workspaces/{entity_id}/bargeIn` | Retrieve Barge In Settings |

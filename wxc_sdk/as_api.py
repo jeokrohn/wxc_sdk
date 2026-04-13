@@ -32872,7 +32872,11 @@ class AsInternalDialingApi(AsApiChild, base='telephony/config/locations'):
     Internal dialing settings for location
     """
 
-    def url(self, location_id: str) -> str:
+    def _url(self, location_id: str) -> str:
+        """
+
+        :meta private:
+        """
         return super().ep(f'{location_id}/internalDialing')
 
     async def read(self, location_id: str, org_id: str = None) -> InternalDialing:
@@ -32894,7 +32898,7 @@ class AsInternalDialingApi(AsApiChild, base='telephony/config/locations'):
         :return: settings
         :rtype: :class:`InternalDialing`
         """
-        url = self.url(location_id=location_id)
+        url = self._url(location_id=location_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.get(url=url, params=params)
         return InternalDialing.model_validate(data)
@@ -32918,7 +32922,7 @@ class AsInternalDialingApi(AsApiChild, base='telephony/config/locations'):
         :param org_id:
         :type org_id: str
         """
-        url = self.url(location_id=location_id)
+        url = self._url(location_id=location_id)
         params = org_id and {'orgId': org_id} or None
         data = update.model_dump_json(exclude_none=False)
         await self.put(url=url, params=params, data=data)

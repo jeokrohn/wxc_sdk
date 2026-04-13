@@ -5,7 +5,7 @@
 .PHONY: all package docs types async methref endpointref apib oas clean rst
 
 # Default target builds everything
-all: clean types methref async docs package
+all: clean types methref endpointref async docs package
 
 # Find all .py files in wxc_sdk (w/ the exception of two auto-generated files)
 WXC_SDK_PY_FILES := $(shell find wxc_sdk -mindepth 1 -name '*.py' -not -name 'as_api.py' -not -name 'all_types.py')
@@ -22,12 +22,12 @@ async: wxc_sdk/as_api.py
 
 docs/user/method_ref.rst: $(WXC_SDK_PY_FILES)
 	@echo "==> Creating method_ref.rst"
-	script/method_ref.py
+	script/endpoint_ref.py docs/user/method_ref.rst --format rst
 methref: docs/user/method_ref.rst
 
 endpoint_ref.md: $(WXC_SDK_PY_FILES)
 	@echo "==> Creating endpoint_ref.md"
-	script/endpoint_ref.py
+	script/endpoint_ref.py endpoint_ref.md
 endpointref: endpoint_ref.md
 
 clean:
@@ -38,7 +38,7 @@ rst:
 	@echo "==> Building RST files"
 	uv run sphinx-apidoc -o docs/apidoc -f -e -M wxc_sdk 'wxc_sdk/all_types.py'
 
-docs:
+docs: methref
 	@echo "==> Building the Docs"
 	uv run make -C docs clean
 	rm -f docs/apidoc/*.rst
