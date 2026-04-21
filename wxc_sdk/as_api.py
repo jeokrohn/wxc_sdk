@@ -6782,7 +6782,7 @@ class AsMeSelectiveForwardApi(AsApiChild, base='telephony/config/people/me'):
 
 
 class AsMeSelectiveRejectApi(AsApiChild, base='telephony/config/people/me'):
-    async def get(self) -> SelectiveReject:
+    async def get(self) -> SelectiveReject:  # type: ignore[override]
         """
         Get Selective Call Reject Settings for User
 
@@ -6876,7 +6876,7 @@ class AsMeSelectiveRejectApi(AsApiChild, base='telephony/config/people/me'):
         :type criteria_id: str
         :rtype: :class:`SelectiveRejectCriteria`
         """
-        url = self.ep(f'settings/selectiveReject/criteria/{id}')
+        url = self.ep(f'settings/selectiveReject/criteria/{criteria_id}')
         data = await super().get(url)
         r = SelectiveRejectCriteria.model_validate(data)
         return r

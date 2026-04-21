@@ -5,7 +5,7 @@ __all__ = ['MeSelectiveRejectApi']
 
 
 class MeSelectiveRejectApi(ApiChild, base='telephony/config/people/me'):
-    def get(self) -> SelectiveReject:
+    def get(self) -> SelectiveReject:  # type: ignore[override]
         """
         Get Selective Call Reject Settings for User
 
@@ -99,7 +99,7 @@ class MeSelectiveRejectApi(ApiChild, base='telephony/config/people/me'):
         :type criteria_id: str
         :rtype: :class:`SelectiveRejectCriteria`
         """
-        url = self.ep(f'settings/selectiveReject/criteria/{id}')
+        url = self.ep(f'settings/selectiveReject/criteria/{criteria_id}')
         data = super().get(url)
         r = SelectiveRejectCriteria.model_validate(data)
         return r

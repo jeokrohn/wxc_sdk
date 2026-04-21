@@ -1,6 +1,8 @@
 Release history
 ===============
 
+- fix: MeSelectiveRejectApi.criteria_get, fixed criteria_id parameter usage
+
 1.33.0
 ------
 

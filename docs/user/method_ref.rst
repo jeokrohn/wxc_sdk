@@ -620,7 +620,7 @@ description of the operation. The method name is a link to the method documentat
         | ``DELETE /telephony/config/people/me/settings/selectiveReject/criteria/{criteria_id}``
    * - :meth:`api.me.selective_reject.criteria_get <wxc_sdk.me.selective_reject.MeSelectiveRejectApi.criteria_get>`
         | Get Selective Call Reject Criteria Settings for User
-        | ``GET /telephony/config/people/me/settings/selectiveReject/criteria/{id}``
+        | ``GET /telephony/config/people/me/settings/selectiveReject/criteria/{criteria_id}``
    * - :meth:`api.me.selective_reject.criteria_update <wxc_sdk.me.selective_reject.MeSelectiveRejectApi.criteria_update>`
         | Modify a Selective Call Reject Criteria
         | ``PUT /telephony/config/people/me/settings/selectiveReject/criteria/{criteria_id}``
