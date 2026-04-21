@@ -8,7 +8,7 @@ import os
 from collections.abc import Generator
 from datetime import datetime
 from io import BufferedReader
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from pydantic import Field
 from requests_toolbelt import MultipartEncoder
@@ -47,6 +47,8 @@ class RepoAnnouncement(IdAndName):
     level: Optional[AnnouncementLevel] = None
     #: The details of location at which this announcement exists.
     location: Optional[IdAndName] = None
+    #: Indicates whether the announcement is text-to-speech.
+    is_text_to_speech: Optional[bool] = None
     #: The below is not returned by list(), only by details()
     #: Reference count of the call features this announcement is assigned to.
     feature_reference_count: Optional[int] = None
@@ -95,7 +97,7 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
         **params,
     ) -> Generator[RepoAnnouncement, None, None]:
         """
-        Fetch list of announcement greetings on location and organization level
+        List Announcements
 
         Fetch a list of binary announcement greetings at an organization as well as location level.
 
@@ -140,13 +142,13 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
         url = self.ep('announcements')
         return self.session.follow_pagination(url=url, model=RepoAnnouncement, item_key='announcements', params=params)
 
-    def _upload_or_modify(self, *, url, name, file, upload_as, params, is_upload) -> dict:
+    def _upload_or_modify(self, *, url, name, file, upload_as, params, is_upload, is_text_to_speech) -> dict[str, Any]:
         """
 
         :meta private:
         """
         """async
-    async def _upload_or_modify(self, *, url, name, file, upload_as, params, is_upload) -> dict:
+    async def _upload_or_modify(self, *, url, name, file, upload_as, params, is_upload, is_text_to_speech) -> dict:
         if isinstance(file, str):
             upload_as = upload_as or os.path.basename(file)
             file = open(file, mode='rb')
@@ -156,7 +158,8 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
             # an existing reader
             if not upload_as:
                 raise ValueError('upload_as is required')
-        encoder = MultipartEncoder({'name': name, 'file': (upload_as, file, 'audio/wav')})
+        encoder = MultipartEncoder({'name': name, 'file': (upload_as, file, 'audio/wav'),
+                                    'is_text_to_speech': is_text_to_speech})
         if is_upload:
             meth = super().post
         else:
@@ -178,7 +181,9 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
             # an existing reader
             if not upload_as:
                 raise ValueError('upload_as is required')
-        encoder = MultipartEncoder({'name': name, 'file': (upload_as, file, 'audio/wav')})
+        encoder = MultipartEncoder(
+            {'name': name, 'file': (upload_as, file, 'audio/wav'), 'is_text_to_speech': is_text_to_speech}
+        )
         if is_upload:
             meth = super().post
         else:
@@ -188,12 +193,13 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
         finally:
             if must_close:
                 file.close()
-        return data
+        return data  # type: ignore[return-value]
 
     def upload_announcement(
         self,
         name: str,
         file: Union[BufferedReader, str],
+        is_text_to_speech: bool = False,
         upload_as: str = None,
         location_id: str = None,
         org_id: str = None,
@@ -216,6 +222,8 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
         :type file: Union[BufferedReader, str]
         :param upload_as: filename for the content. Only required if content is a reader; has to be a .wav file name.
         :type upload_as: str
+        :param is_text_to_speech: Indicates whether the announcement is text-to-speech.
+        :type is_text_to_speech: bool
         :param location_id: Unique identifier of a location where an announcement is being created.
         :type location_id: str
         :param org_id: Create an announcement in this organization.
@@ -250,7 +258,7 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
         """
         """async
     async def upload_announcement(self, name: str, file: Union[BufferedReader, str], upload_as: str = None,
-                            location_id: str = None,
+                            is_text_to_speech: bool = False, location_id: str = None,
                             org_id: str = None) -> str:
         params = org_id and {'orgId': org_id} or None
         if location_id is None:
@@ -258,7 +266,7 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
         else:
             url = self.ep(f'locations/{location_id}/announcements')
         data = await self._upload_or_modify(url=url, name=name, file=file, upload_as=upload_as, params=params,
-                                      is_upload=True)
+                                      is_text_to_speech=is_text_to_speech, is_upload=True)
         return data["id"]
 
         """
@@ -267,8 +275,16 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
             url = self.ep('announcements')
         else:
             url = self.ep(f'locations/{location_id}/announcements')
-        data = self._upload_or_modify(url=url, name=name, file=file, upload_as=upload_as, params=params, is_upload=True)
-        return data['id']
+        data = self._upload_or_modify(
+            url=url,
+            name=name,
+            file=file,
+            upload_as=upload_as,
+            is_text_to_speech=is_text_to_speech,
+            params=params,
+            is_upload=True,
+        )
+        return data['id']  # type: ignore[no-any-return]
 
     def usage(self, location_id: str = None, org_id: str = None) -> RepositoryUsage:
         """
@@ -347,6 +363,7 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
         name: str,
         file: Union[BufferedReader, str],
         upload_as: str = None,
+        is_text_to_speech: bool = False,
         location_id: str = None,
         org_id: str = None,
     ):
@@ -373,6 +390,8 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
         :type file: Union[BufferedReader, str]
         :param upload_as: filename for the content. Only required if content is a reader; has to be a .wav file name.
         :type upload_as: str
+        :param is_text_to_speech: Indicates whether the announcement is text-to-speech.
+        :type is_text_to_speech: bool
         :param location_id: Unique identifier of a location where announcement is being deleted.
         :type location_id: str
         :param org_id: Modify an announcement in this organization.
@@ -381,14 +400,14 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
         """
         """async
     async def modify(self, announcement_id: str, name: str, file: Union[BufferedReader, str],
-               upload_as: str = None, location_id: str = None, org_id: str = None):
+               upload_as: str = None, is_text_to_speech: bool = False, location_id: str = None, org_id: str = None):
         params = org_id and {'orgId': org_id} or None
         if location_id is None:
             url = self.ep(f'announcements/{announcement_id}')
         else:
             url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')
         data = await self._upload_or_modify(url=url, name=name, file=file, upload_as=upload_as, params=params,
-                                      is_upload=False)
+                                      is_upload=False, is_text_to_speech=is_text_to_speech)
         return data["id"]
 
         """
@@ -398,6 +417,12 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
         else:
             url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')
         data = self._upload_or_modify(
-            url=url, name=name, file=file, upload_as=upload_as, params=params, is_upload=False
+            url=url,
+            name=name,
+            file=file,
+            upload_as=upload_as,
+            params=params,
+            is_upload=False,
+            is_text_to_speech=is_text_to_speech,
         )
         return data['id']

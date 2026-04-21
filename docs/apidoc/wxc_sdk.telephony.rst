@@ -35,6 +35,7 @@ Subpackages
    wxc_sdk.telephony.prem_pstn
    wxc_sdk.telephony.pstn
    wxc_sdk.telephony.supervisor
+   wxc_sdk.telephony.text_to_speech
    wxc_sdk.telephony.virtual_extensions
    wxc_sdk.telephony.virtual_line
 

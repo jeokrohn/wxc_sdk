@@ -70,10 +70,10 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsScimApiChild', 'AsScimV2Api', 'AsSelectiveAcceptApi', 'AsSelectiveForwardApi', 'AsSelectiveRejectApi',
            'AsSendActivationEmailApi', 'AsSequentialRingApi', 'AsSimRingApi', 'AsSingleNumberReachApi', 'AsStatusAPI',
            'AsSupervisorApi', 'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi',
-           'AsTelephonyLocationApi', 'AsTransferNumbersApi', 'AsTranslationPatternsApi', 'AsTrunkApi',
-           'AsUpdateDynamicDeviceSettingsJobsApi', 'AsUpdateRoutingPrefixJobsApi', 'AsVirtualExtensionsApi',
-           'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi',
-           'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi',
+           'AsTelephonyLocationApi', 'AsTextToSpeechApi', 'AsTransferNumbersApi', 'AsTranslationPatternsApi',
+           'AsTrunkApi', 'AsUpdateDynamicDeviceSettingsJobsApi', 'AsUpdateRoutingPrefixJobsApi',
+           'AsVirtualExtensionsApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi',
+           'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi',
            'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
            'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi', 'AsWrapupReasonApi',
            'AsXApi']
@@ -19744,7 +19744,7 @@ class AsAnnouncementsRepositoryApi(AsApiChild, base='telephony/config'):
         **params,
     ) -> AsyncGenerator[RepoAnnouncement, None]:
         """
-        Fetch list of announcement greetings on location and organization level
+        List Announcements
 
         Fetch a list of binary announcement greetings at an organization as well as location level.
 
@@ -19801,7 +19801,7 @@ class AsAnnouncementsRepositoryApi(AsApiChild, base='telephony/config'):
         **params,
     ) -> builtins.list[RepoAnnouncement]:
         """
-        Fetch list of announcement greetings on location and organization level
+        List Announcements
 
         Fetch a list of binary announcement greetings at an organization as well as location level.
 
@@ -19846,7 +19846,7 @@ class AsAnnouncementsRepositoryApi(AsApiChild, base='telephony/config'):
         url = self.ep('announcements')
         return [o async for o in self.session.follow_pagination(url=url, model=RepoAnnouncement, item_key='announcements', params=params)]
 
-    async def _upload_or_modify(self, *, url, name, file, upload_as, params, is_upload) -> dict:
+    async def _upload_or_modify(self, *, url, name, file, upload_as, params, is_upload, is_text_to_speech) -> dict:
         if isinstance(file, str):
             upload_as = upload_as or os.path.basename(file)
             file = open(file, mode='rb')
@@ -19856,7 +19856,8 @@ class AsAnnouncementsRepositoryApi(AsApiChild, base='telephony/config'):
             # an existing reader
             if not upload_as:
                 raise ValueError('upload_as is required')
-        encoder = MultipartEncoder({'name': name, 'file': (upload_as, file, 'audio/wav')})
+        encoder = MultipartEncoder({'name': name, 'file': (upload_as, file, 'audio/wav'),
+                                    'is_text_to_speech': is_text_to_speech})
         if is_upload:
             meth = super().post
         else:
@@ -19871,7 +19872,7 @@ class AsAnnouncementsRepositoryApi(AsApiChild, base='telephony/config'):
         
 
     async def upload_announcement(self, name: str, file: Union[BufferedReader, str], upload_as: str = None,
-                            location_id: str = None,
+                            is_text_to_speech: bool = False, location_id: str = None,
                             org_id: str = None) -> str:
         params = org_id and {'orgId': org_id} or None
         if location_id is None:
@@ -19879,7 +19880,7 @@ class AsAnnouncementsRepositoryApi(AsApiChild, base='telephony/config'):
         else:
             url = self.ep(f'locations/{location_id}/announcements')
         data = await self._upload_or_modify(url=url, name=name, file=file, upload_as=upload_as, params=params,
-                                      is_upload=True)
+                                      is_text_to_speech=is_text_to_speech, is_upload=True)
         return data["id"]
 
         
@@ -19956,14 +19957,14 @@ class AsAnnouncementsRepositoryApi(AsApiChild, base='telephony/config'):
         await super().delete(url=url, params=params)
 
     async def modify(self, announcement_id: str, name: str, file: Union[BufferedReader, str],
-               upload_as: str = None, location_id: str = None, org_id: str = None):
+               upload_as: str = None, is_text_to_speech: bool = False, location_id: str = None, org_id: str = None):
         params = org_id and {'orgId': org_id} or None
         if location_id is None:
             url = self.ep(f'announcements/{announcement_id}')
         else:
             url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')
         data = await self._upload_or_modify(url=url, name=name, file=file, upload_as=upload_as, params=params,
-                                      is_upload=False)
+                                      is_upload=False, is_text_to_speech=is_text_to_speech)
         return data["id"]
 
         
@@ -34559,6 +34560,134 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         await super().put(url, params=params, json=body)
 
 
+class AsTextToSpeechApi(AsApiChild, base='telephony/config'):
+    async def generate(self, voice: str, text: str, language_code: str, org_id: str = None) -> str:
+        """
+        Generate a Text-to-Speech Prompt
+
+        Generate a text-to-speech prompt from the provided text, voice, and language.
+
+        Text-to-speech (TTS) efficiently generates prompts, greetings, and announcements by converting written text
+        into synthesized audio using the specified voice. The generated audio functions like a recorded WAV file,
+        eliminating the need for manual recording.
+
+        This API requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param voice: The voice ID used to generate the audio prompt. Use the List Text-to-Speech Voices API to
+            retrieve available voices.
+        :type voice: str
+        :param text: The text to convert to speech.
+        :type text: str
+        :param language_code: The language code used to generate the audio prompt. Use the Read the List of
+            Announcement Languages API to retrieve supported language codes.
+        :type language_code: str
+        :param org_id: Generate text-to-speech for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        body['voice'] = voice
+        body['text'] = text
+        body['languageCode'] = language_code
+        url = self.ep('textToSpeech/actions/generate/invoke')
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    async def usage(self, org_id: str = None) -> TtsUsageResponse:
+        """
+        Get Text-to-Speech Usage
+
+        Retrieve text-to-speech usage information, including the number of API calls made, the maximum allowed within
+        the time window, and the timestamp indicating when the usage will reset.
+
+        Text-to-speech (TTS) efficiently generates prompts, greetings, and announcements by converting written text
+        into synthesized audio using the specified voice. The generated audio functions like a recorded WAV file,
+        eliminating the need for manual recording.
+
+        This API requires a full or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: Get text-to-speech usage for this organization.
+        :type org_id: str
+        :rtype: :class:`TtsUsageResponse`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('textToSpeech/usage')
+        data = await super().get(url, params=params)
+        r = TtsUsageResponse.model_validate(data)
+        return r
+
+    async def voices(self, org_id: str = None) -> builtins.list[TtsVoice]:
+        """
+        List Text-to-Speech Voices
+
+        Fetch a list of available text-to-speech voices. Use the returned voice ID in the generation request.
+
+        Text-to-speech (TTS) efficiently generates prompts, greetings, and announcements by converting written text
+        into synthesized audio using the specified voice. The generated audio functions like a recorded WAV file,
+        eliminating the need for manual recording.
+
+        This API requires a full or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: List text-to-speech voices supported for this organization.
+        :type org_id: str
+        :rtype: list[TtsVoice]
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('textToSpeech/voices')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[TtsVoice]).validate_python(data['voices'])
+        return r
+
+    async def status(self, tts_id: str, org_id: str = None) -> TtsStatusResponse:
+        """
+        Get Text-to-Speech Generation Status
+
+        Get the status of a text-to-speech generation request by its ID. If the status is SUCCESS, the response
+        includes `promptUrl`, `kmsKeyUri`, and `fileUri` to preview or use the audio prompt.
+
+        To preview the audio prompt:
+
+        1. Download the KMS key - use the Webex Node.js SDK and provide `kmsKeyUri` to download the key from KMS.
+
+        2. Download the encrypted audio - The encrypted audio file content is stored in cloud and can be retrieved
+        using `promptURL`.
+
+        3. Decrypt the audio content - Use the jose library to decrypt the content downloaded from `promptUrl` using
+        the downloaded key.
+
+        Text-to-speech (TTS) efficiently generates prompts, greetings, and announcements by converting written text
+        into synthesized audio using the specified voice. The generated audio functions like a recorded WAV file,
+        eliminating the need for manual recording.
+
+        This API requires a full or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param tts_id: Unique identifier of the text-to-speech generation request.
+        :type tts_id: str
+        :param org_id: Get text-to-speech status for this organization.
+        :type org_id: str
+        :rtype: :class:`TtsStatusResponse`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'textToSpeech/{tts_id}')
+        data = await super().get(url, params=params)
+        r = TtsStatusResponse.model_validate(data)
+        return r
+
+
 class AsVirtualExtensionsApi(AsApiChild, base='telephony/config'):
     """
     Features: Virtual Extensions
@@ -35345,7 +35474,7 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
     #: Voicemail Settings
     voicemail: AsVoicemailApi
 
-    def __init__(self, session):
+    def __init__(self, session: AsRestSession) -> None:
         super().__init__(session=session)
         self.agent_caller_id = AsAgentCallerIdApi(session=session, selector=ApiSelector.virtual_line)
         self.available_numbers = AsAvailableNumbersApi(session=session, selector=ApiSelector.virtual_line)
@@ -36484,6 +36613,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     pstn: AsPSTNApi
     schedules: AsScheduleApi
     supervisors: AsSupervisorApi
+    text_to_speech: AsTextToSpeechApi
     virtual_extensions: AsVirtualExtensionsApi
     virtual_lines: AsVirtualLinesApi
     # location voicemail groups
@@ -36530,8 +36660,9 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         self.pnc = AsPrivateNetworkConnectApi(session=session)
         self.prem_pstn = AsPremisePstnApi(session=session)
         self.pstn = AsPSTNApi(session=session)
-        self.schedules = AsScheduleApi(session=session, base=ScheduleApiBase.locations)
+        self.schedules = AsScheduleApi(session=session, base=ScheduleApiBase.locations)  # type: ignore[arg-type]
         self.supervisors = AsSupervisorApi(session=session)
+        self.text_to_speech = AsTextToSpeechApi(session=session)
         self.virtual_extensions = AsVirtualExtensionsApi(session=session)
         self.virtual_lines = AsVirtualLinesApi(session=session)
         self.voicemail_groups = AsVoicemailGroupsApi(session=session)
@@ -36922,7 +37053,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         :rtype: :class:`TestCallRoutingResult`
         """
         params = org_id and {'orgId': org_id} or None
-        body = dict()
+        body: dict[str, Any] = dict()
         body['originatorId'] = originator_id
         body['originatorType'] = enum_str(originator_type)
         if originator_number is not None:
@@ -36954,7 +37085,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: SupportedDevices
         """
-        params = {}
+        params: dict[str, Any] = {}
         if org_id is not None:
             params['orgId'] = org_id
         if allow_configure_layout_enabled is not None:

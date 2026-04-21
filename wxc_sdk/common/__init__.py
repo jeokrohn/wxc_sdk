@@ -1222,8 +1222,10 @@ class AnnAudioFile(ApiModel):
     file_size: Optional[str] = None
     #: Media Type of the audio file.
     media_file_type: Optional[MediaFileType] = None
-    #: Audio announcement file type location.
+    #: Level at which the announcement is defined.
     level: Optional[AnnouncementLevel] = None
+    #: Indicates whether the announcement is text-to-speech.
+    is_text_to_speech: Optional[bool] = None
 
 
 class OwnerType(str, Enum):

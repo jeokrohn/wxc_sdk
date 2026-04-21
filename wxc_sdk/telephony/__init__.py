@@ -4,7 +4,7 @@ Telephony types and API (location and organization settings)
 
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import Field, TypeAdapter
 
@@ -62,6 +62,7 @@ from .pnc import PrivateNetworkConnectApi
 from .prem_pstn import PremisePstnApi
 from .pstn import PSTNApi
 from .supervisor import SupervisorApi
+from .text_to_speech import TextToSpeechApi
 from .virtual_extensions import VirtualExtensionsApi
 from .virtual_line import VirtualLinesApi
 from .vm_rules import VoicemailRulesApi
@@ -583,7 +584,7 @@ class OrgCallCaptions(ApiModel):
     #: Organization-level transcripts are enabled or disabled.
     org_transcripts_enabled: Optional[bool] = None
 
-    def update(self) -> dict:
+    def update(self) -> dict[str, Any]:
         """
         data for update
 
@@ -652,6 +653,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     pstn: PSTNApi
     schedules: ScheduleApi
     supervisors: SupervisorApi
+    text_to_speech: TextToSpeechApi
     virtual_extensions: VirtualExtensionsApi
     virtual_lines: VirtualLinesApi
     # location voicemail groups
@@ -698,8 +700,9 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         self.pnc = PrivateNetworkConnectApi(session=session)
         self.prem_pstn = PremisePstnApi(session=session)
         self.pstn = PSTNApi(session=session)
-        self.schedules = ScheduleApi(session=session, base=ScheduleApiBase.locations)
+        self.schedules = ScheduleApi(session=session, base=ScheduleApiBase.locations)  # type: ignore[arg-type]
         self.supervisors = SupervisorApi(session=session)
+        self.text_to_speech = TextToSpeechApi(session=session)
         self.virtual_extensions = VirtualExtensionsApi(session=session)
         self.virtual_lines = VirtualLinesApi(session=session)
         self.voicemail_groups = VoicemailGroupsApi(session=session)
@@ -965,7 +968,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         :rtype: :class:`TestCallRoutingResult`
         """
         params = org_id and {'orgId': org_id} or None
-        body = dict()
+        body: dict[str, Any] = dict()
         body['originatorId'] = originator_id
         body['originatorType'] = enum_str(originator_type)
         if originator_number is not None:
@@ -997,7 +1000,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: SupportedDevices
         """
-        params = {}
+        params: dict[str, Any] = {}
         if org_id is not None:
             params['orgId'] = org_id
         if allow_configure_layout_enabled is not None:

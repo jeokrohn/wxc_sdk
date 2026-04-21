@@ -1,6 +1,7 @@
 Release history
 ===============
 
+- feat: new API :attr:`api.telephony.text_to_speech <wxc_sdk.telephony.TelephonyApi.text_to_speech>`
 - fix: MeSelectiveRejectApi.criteria_get, fixed criteria_id parameter usage
 
 1.33.0

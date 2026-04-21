@@ -258,6 +258,7 @@ from wxc_sdk.telephony.prem_pstn.trunk import CnameRecord, DeviceStatus, Outboun
     TrunkUsage
 from wxc_sdk.telephony.pstn import PSTNConnectionOption, PSTNServiceType, PSTNType
 from wxc_sdk.telephony.supervisor import AgentOrSupervisor, IdAndAction, SupervisorAgentStatus
+from wxc_sdk.telephony.text_to_speech import TtsStatusResponse, TtsUsageResponse, TtsVoice
 from wxc_sdk.telephony.virtual_extensions import PhoneNumberStatus, ValidatePhoneNumber, \
     ValidateVirtualExtensionRange, ValidateVirtualExtensionStatus, VirtualExtension, VirtualExtensionLevel, \
     VirtualExtensionMode, VirtualExtensionRange, VirtualExtensionRangeAction, \
@@ -451,14 +452,15 @@ __all__ = ['AcdCustomization', 'Action', 'ActionToBePerformed', 'ActionToBePerfo
            'TrackingCodeOption', 'TrackingCodeType', 'Transcript', 'TranscriptSnippet', 'TranscriptStatus',
            'TranslationPattern', 'TranslationPatternConfigurationLevel', 'TranslationPatternLevel', 'TransportType',
            'Trunk', 'TrunkDestination', 'TrunkDetail', 'TrunkDeviceType', 'TrunkType', 'TrunkTypeWithDeviceType',
-           'TrunkUsage', 'Type', 'UCMProfile', 'UnansweredCalls', 'UnlockedMeetingJoinSecurity',
-           'UpdateContactPhoneNumbers', 'UpdateDefaultSiteBody', 'UpdateMeetingInviteeBody', 'UpdateNumbersResponse',
-           'UpdateParticipantBody', 'UpdateParticipantResponse', 'UpdatePersonNumbers', 'UpdatePersonPhoneNumber',
-           'UpdatePersonalMeetingRoomOptionsBody', 'UpdateTranscriptSnippetBody', 'UpdateWorkspacePhoneNumber',
-           'UsageRouteLists', 'UsageType', 'UsbPortsObject', 'UserAddress', 'UserBase', 'UserCallCaptions',
-           'UserDeviceCount', 'UserEndpoint', 'UserEndpointType', 'UserExtension', 'UserFeatureAccessSettings',
-           'UserLicenseType', 'UserLicensesResponse', 'UserManager', 'UserNumber', 'UserPhoneNumber', 'UserType',
-           'UserTypeObject', 'ValidateExtensionStatus', 'ValidateExtensionStatusState', 'ValidateExtensionsResponse',
+           'TrunkUsage', 'TtsStatusResponse', 'TtsUsageResponse', 'TtsVoice', 'Type', 'UCMProfile', 'UnansweredCalls',
+           'UnlockedMeetingJoinSecurity', 'UpdateContactPhoneNumbers', 'UpdateDefaultSiteBody',
+           'UpdateMeetingInviteeBody', 'UpdateNumbersResponse', 'UpdateParticipantBody', 'UpdateParticipantResponse',
+           'UpdatePersonNumbers', 'UpdatePersonPhoneNumber', 'UpdatePersonalMeetingRoomOptionsBody',
+           'UpdateTranscriptSnippetBody', 'UpdateWorkspacePhoneNumber', 'UsageRouteLists', 'UsageType',
+           'UsbPortsObject', 'UserAddress', 'UserBase', 'UserCallCaptions', 'UserDeviceCount', 'UserEndpoint',
+           'UserEndpointType', 'UserExtension', 'UserFeatureAccessSettings', 'UserLicenseType',
+           'UserLicensesResponse', 'UserManager', 'UserNumber', 'UserPhoneNumber', 'UserType', 'UserTypeObject',
+           'ValidateExtensionStatus', 'ValidateExtensionStatusState', 'ValidateExtensionsResponse',
            'ValidatePhoneNumber', 'ValidatePhoneNumberStatus', 'ValidatePhoneNumberStatusState',
            'ValidatePhoneNumbersResponse', 'ValidateVirtualExtensionRange', 'ValidateVirtualExtensionStatus',
            'ValidationRule', 'ValidationRules', 'ValidationStatus', 'Video', 'VideoDevice', 'VideoIn', 'VideoOptions',

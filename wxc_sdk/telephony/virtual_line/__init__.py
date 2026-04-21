@@ -8,8 +8,9 @@ from ...api_child import ApiChild
 from ...base import ApiModel
 from ...common import AssignedDectNetwork, PrimaryOrShared, UserNumber
 from ...locations import LocationAddress
-from ...person_settings import AvailableNumbersApi, DndApi, TelephonyDevice
+from ...person_settings import TelephonyDevice
 from ...person_settings.agent_caller_id import AgentCallerIdApi
+from ...person_settings.available_numbers import AvailableNumbersApi
 from ...person_settings.barge import BargeApi
 from ...person_settings.call_intercept import CallInterceptApi
 from ...person_settings.call_recording import CallRecordingApi
@@ -17,6 +18,7 @@ from ...person_settings.call_waiting import CallWaitingApi
 from ...person_settings.callbridge import CallBridgeApi
 from ...person_settings.caller_id import CallerIdApi, ExternalCallerIdNamePolicy
 from ...person_settings.common import ApiSelector
+from ...person_settings.dnd import DndApi
 from ...person_settings.ecbn import ECBNApi
 from ...person_settings.forwarding import PersonForwardingApi
 from ...person_settings.moh import MusicOnHoldApi
@@ -25,6 +27,7 @@ from ...person_settings.permissions_out import OutgoingPermissionsApi
 from ...person_settings.privacy import PrivacyApi
 from ...person_settings.push_to_talk import PushToTalkApi
 from ...person_settings.voicemail import VoicemailApi
+from ...rest import RestSession
 
 __all__ = [
     'VirtualLine',
@@ -137,7 +140,7 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
     #: Voicemail Settings
     voicemail: VoicemailApi
 
-    def __init__(self, session):
+    def __init__(self, session: RestSession) -> None:
         super().__init__(session=session)
         self.agent_caller_id = AgentCallerIdApi(session=session, selector=ApiSelector.virtual_line)
         self.available_numbers = AvailableNumbersApi(session=session, selector=ApiSelector.virtual_line)

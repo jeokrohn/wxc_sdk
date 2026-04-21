@@ -1549,7 +1549,7 @@ description of the operation. The method name is a link to the method documentat
         | Fetch details of a binary announcement greeting at the organization or location level
         | ``GET /telephony/config/announcements/{announcement_id}``
    * - :meth:`api.telephony.announcements_repo.list <wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.list>`
-        | Fetch list of announcement greetings on location and organization level
+        | List Announcements
         | ``GET /telephony/config/announcements``
    * - :meth:`api.telephony.announcements_repo.modify <wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.modify>`
         | Modify a binary announcement greeting at organization or location level
@@ -3081,6 +3081,18 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.telephony.test_call_routing <wxc_sdk.telephony.TelephonyApi.test_call_routing>`
         | Test Call Routing
         | ``POST /telephony/config/actions/testCallRouting/invoke``
+   * - :meth:`api.telephony.text_to_speech.generate <wxc_sdk.telephony.text_to_speech.TextToSpeechApi.generate>`
+        | Generate a Text-to-Speech Prompt
+        | ``POST /telephony/config/textToSpeech/actions/generate/invoke``
+   * - :meth:`api.telephony.text_to_speech.status <wxc_sdk.telephony.text_to_speech.TextToSpeechApi.status>`
+        | Get Text-to-Speech Generation Status
+        | ``GET /telephony/config/textToSpeech/{tts_id}``
+   * - :meth:`api.telephony.text_to_speech.usage <wxc_sdk.telephony.text_to_speech.TextToSpeechApi.usage>`
+        | Get Text-to-Speech Usage
+        | ``GET /telephony/config/textToSpeech/usage``
+   * - :meth:`api.telephony.text_to_speech.voices <wxc_sdk.telephony.text_to_speech.TextToSpeechApi.voices>`
+        | List Text-to-Speech Voices
+        | ``GET /telephony/config/textToSpeech/voices``
    * - :meth:`api.telephony.ucm_profiles <wxc_sdk.telephony.TelephonyApi.ucm_profiles>`
         | Read the List of UC Manager Profiles
         | ``GET /telephony/config/callingProfiles``
