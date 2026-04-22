@@ -30,6 +30,7 @@ from wxc_sdk.me.endpoints import EndpointType, MeEndpointsApi
 from wxc_sdk.me.executive import MeExecutiveApi
 from wxc_sdk.me.forwarding import MeForwardingApi
 from wxc_sdk.me.go_override import GoOverrideApi
+from wxc_sdk.me.hoteling import MeHotelingApi
 from wxc_sdk.me.mode_management import MeModeManagementApi
 from wxc_sdk.me.personal_assistant import MePersonalAssistantApi
 from wxc_sdk.me.priority_alert import MePriorityAlertApi
@@ -430,6 +431,7 @@ class MeSettingsApi(ApiChild, base='telephony/config/people/me'):
     executive: MeExecutiveApi
     forwarding: MeForwardingApi
     go_override: GoOverrideApi
+    hoteling: MeHotelingApi
     mode_management: MeModeManagementApi
     personal_assistant: MePersonalAssistantApi
     priority_alert: MePriorityAlertApi
@@ -464,6 +466,7 @@ class MeSettingsApi(ApiChild, base='telephony/config/people/me'):
         self.executive = MeExecutiveApi(session=session)
         self.forwarding = MeForwardingApi(session=session)
         self.go_override = GoOverrideApi(session=session)
+        self.hoteling = MeHotelingApi(session=session)
         self.mode_management = MeModeManagementApi(session=session)
         self.personal_assistant = MePersonalAssistantApi(session=session)
         self.priority_alert = MePriorityAlertApi(session=session)

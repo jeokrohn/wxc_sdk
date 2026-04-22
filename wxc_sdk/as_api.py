@@ -51,18 +51,18 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsMSTeamsSettingApi', 'AsManageNumbersJobsApi', 'AsMeAnonCallsApi', 'AsMeBargeApi', 'AsMeCallBlockApi',
            'AsMeCallCenterApi', 'AsMeCallNotifyApi', 'AsMeCallParkApi', 'AsMeCallPickupApi', 'AsMeCallPoliciesApi',
            'AsMeCallWaitingApi', 'AsMeCallerIdApi', 'AsMeDNDApi', 'AsMeEndpointsApi', 'AsMeExecutiveApi',
-           'AsMeForwardingApi', 'AsMeModeManagementApi', 'AsMePersonalAssistantApi', 'AsMePriorityAlertApi',
-           'AsMeRecordingApi', 'AsMeSNRApi', 'AsMeSchedulesApi', 'AsMeSelectiveAcceptApi', 'AsMeSelectiveForwardApi',
-           'AsMeSelectiveRejectApi', 'AsMeSequentialRingApi', 'AsMeSettingsApi', 'AsMeSimRingApi', 'AsMeVoicemailApi',
-           'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
-           'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi',
-           'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsModeManagementApi', 'AsMonitoringApi',
-           'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOperatingModesApi',
-           'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi', 'AsOrganisationAccessCodesApi',
-           'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOrganizationContactsApi',
-           'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi',
-           'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPersonalAssistantApi', 'AsPlayListApi',
-           'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
+           'AsMeForwardingApi', 'AsMeHotelingApi', 'AsMeModeManagementApi', 'AsMePersonalAssistantApi',
+           'AsMePriorityAlertApi', 'AsMeRecordingApi', 'AsMeSNRApi', 'AsMeSchedulesApi', 'AsMeSelectiveAcceptApi',
+           'AsMeSelectiveForwardApi', 'AsMeSelectiveRejectApi', 'AsMeSequentialRingApi', 'AsMeSettingsApi',
+           'AsMeSimRingApi', 'AsMeVoicemailApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi',
+           'AsMeetingInviteesApi', 'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi',
+           'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi',
+           'AsModeManagementApi', 'AsMonitoringApi', 'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi',
+           'AsOperatingModesApi', 'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi',
+           'AsOrganisationAccessCodesApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi',
+           'AsOrganizationContactsApi', 'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi',
+           'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPersonalAssistantApi',
+           'AsPlayListApi', 'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
            'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsQueueCallRecordingSettingsApi',
            'AsRebuildPhonesJobsApi', 'AsReceptionistApi', 'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi',
            'AsReportsApi', 'AsRestSession', 'AsRolesApi', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi',
@@ -5762,6 +5762,105 @@ class AsMeForwardingApi(AsApiChild, base='telephony/config/people/me'):
         await super().put(url, json=body)
 
 
+class AsMeHotelingApi(AsApiChild, base='telephony/config/people/me'):
+    def get_available_hosts_gen(
+        self, name: str = None, phone_number: str = None, **params: Any
+    ) -> AsyncGenerator[AvailableHotelingHost, None]:
+        """
+        Get Available Hoteling Hosts
+
+        Retrieve a list of available hoteling hosts that a person can associate with as a guest. Returns hosts that
+        have hoteling enabled on their devices and are available for guest associations. The list can be filtered by
+        name or phone number and supports pagination.
+
+        Hoteling is a feature of Webex Calling that enables flexible workspace solutions by allowing users to log into
+        shared devices.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param name: Filter hosts by name (first name or last name). Partial match is supported.
+        :type name: str
+        :param phone_number: Filter hosts by phone number. Partial match is supported.
+        :type phone_number: str
+        :return: Generator yielding :class:`AvailableHotelingHost` instances
+        """
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        url = self.ep('settings/hoteling/availableHosts')
+        return self.session.follow_pagination(url=url, model=AvailableHotelingHost, item_key='hosts', params=params)
+
+    async def get_available_hosts(
+        self, name: str = None, phone_number: str = None, **params: Any
+    ) -> builtins.list[AvailableHotelingHost]:
+        """
+        Get Available Hoteling Hosts
+
+        Retrieve a list of available hoteling hosts that a person can associate with as a guest. Returns hosts that
+        have hoteling enabled on their devices and are available for guest associations. The list can be filtered by
+        name or phone number and supports pagination.
+
+        Hoteling is a feature of Webex Calling that enables flexible workspace solutions by allowing users to log into
+        shared devices.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param name: Filter hosts by name (first name or last name). Partial match is supported.
+        :type name: str
+        :param phone_number: Filter hosts by phone number. Partial match is supported.
+        :type phone_number: str
+        :return: Generator yielding :class:`AvailableHotelingHost` instances
+        """
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        url = self.ep('settings/hoteling/availableHosts')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableHotelingHost, item_key='hosts', params=params)]
+
+    async def get_guest_settings(self) -> HotelingGuestSettings:
+        """
+        Get Hoteling Guest Settings
+
+        Retrieve hoteling guest settings for a person. Hoteling allows a person to temporarily use a device as a guest,
+        associating their extension and configuration with that device for a limited time. This API returns the
+        current hoteling guest configuration including any active host association details.
+
+        Hoteling is a feature of Webex Calling that enables flexible workspace solutions by allowing users to log into
+        shared devices.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`HotelingGuestSettings`
+        """
+        url = self.ep('settings/hoteling/guest')
+        data = await super().get(url)
+        r = HotelingGuestSettings.model_validate(data)
+        return r
+
+    async def update_guest_settings(self, settings: HotelingGuestSettings) -> None:
+        """
+        Update Hoteling Guest Settings
+
+        Update hoteling guest settings for a person. Allows enabling or disabling the ability to use hoteling as a
+        guest, configuring whether an association will be removed automatically after a specified time period, and
+        associating with a hoteling host.
+
+        Hoteling is a feature of Webex Calling that enables flexible workspace solutions by allowing users to log into
+        shared devices.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param settings: Hoteling settings to update
+        :type settings: :class:`HotelingGuestSettings`
+        :rtype: None
+        """
+        body = settings.update()
+        url = self.ep('settings/hoteling/guest')
+        await super().put(url, json=body)
+
+
 class AsMeModeManagementApi(AsApiChild, base='telephony/config/people/me'):
     async def get_features(self) -> list[ModeManagementFeature]:
         """
@@ -6004,15 +6103,18 @@ class AsMePersonalAssistantApi(AsApiChild, base='telephony/config/people/me/sett
     Configuring settings requires a user auth token with a scope of `spark:telephony_config_write`.
     """
 
-    async def get(self) -> PersonalAssistant:
+    async def get(self) -> PersonalAssistant:  # type: ignore[override]
         """
-        Get My Personal Assistant
+        Get Personal Assistant Settings
 
-        Retrieve user's own Personal Assistant details.
+        Retrieve personal assistant settings for a person. The personal assistant feature allows users to configure an
+        automated attendant that can handle incoming calls when they are unavailable, including presence-based routing
+        and call transfer options.
 
-        Personal Assistant is used to manage a user's incoming calls when they are away.
+        Personal Assistant is a feature of Webex Calling that helps manage incoming calls based on the user's
+        availability status.
 
-        Retrieving Personal Assistant details requires a user auth token with `spark:telephony_config_read`.
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
 
         :rtype: :class:`PersonalAssistant`
         """
@@ -7279,6 +7381,47 @@ class AsMeVoicemailApi(AsApiChild, base='telephony/config/people/me'):
         """
         return self._configure_greeting(content=content, upload_as=upload_as, greeting_key='noAnswerGreetingUpload')
 
+    async def update_pin(self, passcode: str) -> None:
+        """
+        Update Voicemail PIN
+
+        Set the voicemail PIN for a person. Updates the PIN used to access voicemail messages. The PIN must comply with
+        the passcode rules defined for the organization.
+
+        The voicemail feature is part of Webex Calling, allowing users to secure their voicemail access with a PIN. The
+        PIN is required to retrieve voice messages via phone.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param passcode: Person voicemail PIN. The PIN must comply with the passcode rules defined for the
+            organization.
+        :type passcode: str
+        :rtype: None
+        """
+        body: dict[str, Any] = dict()
+        body['passcode'] = passcode
+        url = self.ep('voicemail/pin')
+        await super().put(url, json=body)
+
+    async def get_voicemail_rules(self) -> UserVoicemailPINRules:
+        """
+        Get Person's Voicemail Rules
+
+        Get person's voicemail passcode rules. Voicemail rules specify the default passcode requirements. They are
+        provided for informational purposes only and cannot be modified.
+
+        The voicemail feature allows users to manage their voicemail settings as part of Webex Calling. Voicemail rules
+        help ensure secure access to voice messages by defining passcode complexity requirements.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`UserVoicemailPINRules`
+        """
+        url = self.ep('voicemail/rules')
+        data = await super().get(url)
+        r = UserVoicemailPINRules.model_validate(data)
+        return r
+
 
 class AsMeSettingsApi(AsApiChild, base='telephony/config/people/me'):
     """
@@ -7306,6 +7449,7 @@ class AsMeSettingsApi(AsApiChild, base='telephony/config/people/me'):
     executive: AsMeExecutiveApi
     forwarding: AsMeForwardingApi
     go_override: AsGoOverrideApi
+    hoteling: AsMeHotelingApi
     mode_management: AsMeModeManagementApi
     personal_assistant: AsMePersonalAssistantApi
     priority_alert: AsMePriorityAlertApi
@@ -7340,6 +7484,7 @@ class AsMeSettingsApi(AsApiChild, base='telephony/config/people/me'):
         self.executive = AsMeExecutiveApi(session=session)
         self.forwarding = AsMeForwardingApi(session=session)
         self.go_override = AsGoOverrideApi(session=session)
+        self.hoteling = AsMeHotelingApi(session=session)
         self.mode_management = AsMeModeManagementApi(session=session)
         self.personal_assistant = AsMePersonalAssistantApi(session=session)
         self.priority_alert = AsMePriorityAlertApi(session=session)
@@ -15765,7 +15910,7 @@ class AsPersonalAssistantApi(AsApiChild, base=''):
 
     """
 
-    async def get(self, person_id: str, org_id: str = None) -> PersonalAssistant:
+    async def get(self, person_id: str, org_id: str = None) -> PersonalAssistant:  # type: ignore[override]
         """
         Get Personal Assistant
 

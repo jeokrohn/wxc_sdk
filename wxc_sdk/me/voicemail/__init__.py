@@ -1,6 +1,6 @@
 import os
 from io import BufferedReader
-from typing import Union
+from typing import Any, Union
 
 from requests_toolbelt import MultipartEncoder
 
@@ -9,6 +9,7 @@ from wxc_sdk.api_child import ApiChild
 __all__ = ['MeVoicemailApi']
 
 from wxc_sdk.person_settings.voicemail import VoicemailSettings
+from wxc_sdk.telephony.vm_rules import UserVoicemailPINRules
 
 
 class MeVoicemailApi(ApiChild, base='telephony/config/people/me'):
@@ -129,3 +130,44 @@ class MeVoicemailApi(ApiChild, base='telephony/config/people/me'):
         :rtype: None
         """
         return self._configure_greeting(content=content, upload_as=upload_as, greeting_key='noAnswerGreetingUpload')
+
+    def update_pin(self, passcode: str) -> None:
+        """
+        Update Voicemail PIN
+
+        Set the voicemail PIN for a person. Updates the PIN used to access voicemail messages. The PIN must comply with
+        the passcode rules defined for the organization.
+
+        The voicemail feature is part of Webex Calling, allowing users to secure their voicemail access with a PIN. The
+        PIN is required to retrieve voice messages via phone.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param passcode: Person voicemail PIN. The PIN must comply with the passcode rules defined for the
+            organization.
+        :type passcode: str
+        :rtype: None
+        """
+        body: dict[str, Any] = dict()
+        body['passcode'] = passcode
+        url = self.ep('voicemail/pin')
+        super().put(url, json=body)
+
+    def get_voicemail_rules(self) -> UserVoicemailPINRules:
+        """
+        Get Person's Voicemail Rules
+
+        Get person's voicemail passcode rules. Voicemail rules specify the default passcode requirements. They are
+        provided for informational purposes only and cannot be modified.
+
+        The voicemail feature allows users to manage their voicemail settings as part of Webex Calling. Voicemail rules
+        help ensure secure access to voice messages by defining passcode complexity requirements.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`UserVoicemailPINRules`
+        """
+        url = self.ep('voicemail/rules')
+        data = super().get(url)
+        r = UserVoicemailPINRules.model_validate(data)
+        return r

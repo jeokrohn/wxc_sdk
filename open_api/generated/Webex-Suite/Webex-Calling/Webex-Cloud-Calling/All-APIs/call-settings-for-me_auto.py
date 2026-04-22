@@ -917,7 +917,7 @@ class CallerIdSettingsGet(ApiModel):
 class CallerIdType(str, Enum):
     #: Caller ID is the default configured caller ID.
     default_clid = 'DEFAULT_CLID'
-    #: Caller ID is an additional number caller ID.
+    #: Caller ID is an additional external caller ID phone number available for the user.
     additional_clid = 'ADDITIONAL_CLID'
     #: Caller ID is associated with a call queue.
     call_queue = 'CALL_QUEUE'
@@ -939,10 +939,10 @@ class SelectedCallerIdSettingsGetSelected(ApiModel):
 
 class SelectedCallerIdSettingsPutSelected(ApiModel):
     type: Optional[CallerIdType] = None
-    #: Unique identifier of the selected caller ID config. Mandatory when setting `CALL_QUEUE` or `HUNT_GROUP` caller
-    #: IDs.
+    #: Unique identifier of the selected caller ID (HuntGroup / CallQueue) config. Required only when setting
+    #: `CALL_QUEUE` or `HUNT_GROUP` caller IDs.
     id: Optional[str] = None
-    #: Direct number of the selected caller ID. Mandatory when setting ADDITIONAL_CLID caller ID.
+    #: Direct number of the selected caller ID. Required only when setting ADDITIONAL_CLID as the selected caller ID.
     direct_number: Optional[str] = None
 
 

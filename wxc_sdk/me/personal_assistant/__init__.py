@@ -13,15 +13,18 @@ class MePersonalAssistantApi(ApiChild, base='telephony/config/people/me/settings
     Configuring settings requires a user auth token with a scope of `spark:telephony_config_write`.
     """
 
-    def get(self) -> PersonalAssistant:
+    def get(self) -> PersonalAssistant:  # type: ignore[override]
         """
-        Get My Personal Assistant
+        Get Personal Assistant Settings
 
-        Retrieve user's own Personal Assistant details.
+        Retrieve personal assistant settings for a person. The personal assistant feature allows users to configure an
+        automated attendant that can handle incoming calls when they are unavailable, including presence-based routing
+        and call transfer options.
 
-        Personal Assistant is used to manage a user's incoming calls when they are away.
+        Personal Assistant is a feature of Webex Calling that helps manage incoming calls based on the user's
+        availability status.
 
-        Retrieving Personal Assistant details requires a user auth token with `spark:telephony_config_read`.
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
 
         :rtype: :class:`PersonalAssistant`
         """

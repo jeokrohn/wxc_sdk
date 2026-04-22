@@ -15,6 +15,7 @@ __all__ = [
     'EnabledAndNumberOfDays',
     'BlockPreviousPasscodes',
     'VoiceMailRules',
+    'UserVoicemailPINRules',
     'VoicemailRulesApi',
 ]
 
@@ -85,14 +86,25 @@ class DefaultVoicemailPinRules(ApiModel):
 
 
 class BlockPreviousPasscodes(ApiModel):
-    """
-    Settings for previous passcode usage.
-    """
-
     #: If enabled, set how many of the previous passcodes are not allowed to be re-used.
     enabled: Optional[bool] = None
-    #: Number of previous passcodes. Min 1, Max 10.
+    #: Number of previous passcodes. The minimum value is 1. The maximum value is 10.
     number_of_passcodes: Optional[int] = None
+
+
+class UserVoicemailPINRules(ApiModel):
+    #: If enabled, the passcode cannot contain repeated patterns. For example, 121212 and 123123.
+    block_repeated_patterns_enabled: Optional[bool] = None
+    #: If enabled, the passcode must not match the user's own phone number.
+    block_user_number_enabled: Optional[bool] = None
+    #: If enabled, the passcode must not match the user's phone number in reverse.
+    block_reversed_user_number_enabled: Optional[bool] = None
+    block_previous_passcodes: Optional[BlockPreviousPasscodes] = None
+    #: If enabled, the passcode must not match the user's old passcodes in reverse.
+    block_reversed_old_passcode_enabled: Optional[bool] = None
+    block_repeated_digits: Optional[BlockRepeatedDigits] = None
+    block_contiguous_sequences: Optional[BlockContiguousSequences] = None
+    length: Optional[PinLength] = None
 
 
 class EnabledAndNumberOfDays(ApiModel):

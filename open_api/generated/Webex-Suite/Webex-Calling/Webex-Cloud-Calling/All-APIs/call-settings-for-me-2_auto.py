@@ -12,9 +12,10 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['CallNotifyGet', 'CallSettingsForMe22Api', 'GuestCallingNumber', 'LocationAssignedNumber',
-           'LocationAssignedNumberOwner', 'LocationAssignedNumberPhoneNumberType', 'LocationAssignedNumberState',
-           'ModeManagementFeatureResponse', 'ModeManagementFeatureResponseModesItem',
+__all__ = ['AvailableHotelingHost', 'BlockContiguousSequences', 'BlockPreviousPasscodes', 'BlockRepeatedDigits',
+           'CallNotifyGet', 'CallSettingsForMe22Api', 'GuestCallingNumber', 'HotelingGuestSettings',
+           'LocationAssignedNumber', 'LocationAssignedNumberOwner', 'LocationAssignedNumberPhoneNumberType',
+           'LocationAssignedNumberState', 'ModeManagementFeatureResponse', 'ModeManagementFeatureResponseModesItem',
            'ModeManagementFeatureResponseModesItemForwardTo',
            'ModeManagementFeatureResponseModesItemForwardToSelection', 'ModeManagementFeatureResponseModesItemLevel',
            'ModeManagementFeatureResponseModesItemType', 'ModeManagementFeaturesResponseFeaturesItem',
@@ -23,7 +24,8 @@ __all__ = ['CallNotifyGet', 'CallSettingsForMe22Api', 'GuestCallingNumber', 'Loc
            'NumberOwnerType', 'OperatingModeResponse', 'OperatingModeResponseDifferentHoursDaily',
            'OperatingModeResponseForwardTo', 'OperatingModeResponseHolidaysItem',
            'OperatingModeResponseHolidaysItemRecurrence', 'OperatingModeResponseSameHoursDaily',
-           'OperatingModeResponseSameHoursDailyMondayToFriday', 'PriorityAlertCriteriaGet',
+           'OperatingModeResponseSameHoursDailyMondayToFriday', 'PasscodeLength', 'PersonalAssistantSettings',
+           'PersonalAssistantSettingsAlerting', 'PersonalAssistantSettingsPresence', 'PriorityAlertCriteriaGet',
            'PriorityAlertCriteriaGetCallsFrom', 'PriorityAlertGet', 'PriorityAlertGetCriteriaObject',
            'PriorityAlertGetCriteriaObjectSource', 'RecurWeeklyObject', 'RecurYearlyByDateObject',
            'RecurYearlyByDateObjectMonth', 'RecurYearlyByDayObject', 'RecurYearlyByDayObjectDay',
@@ -38,7 +40,7 @@ __all__ = ['CallNotifyGet', 'CallSettingsForMe22Api', 'GuestCallingNumber', 'Loc
            'SimultaneousRingCriteriaSummary', 'SimultaneousRingGet', 'SimultaneousRingNumber',
            'UserLocationScheduleEvent', 'UserLocationScheduleGetResponse', 'UserSchedule', 'UserScheduleEvent',
            'UserScheduleEventPatch', 'UserScheduleGetResponse', 'UserScheduleLevel', 'UserScheduleRecurrenceObject',
-           'UserScheduleRecurrenceObjectRecurDaily', 'UserScheduleType']
+           'UserScheduleRecurrenceObjectRecurDaily', 'UserScheduleType', 'VoicemailRules']
 
 
 class UserScheduleType(str, Enum):
@@ -930,6 +932,133 @@ class GuestCallingNumber(ApiModel):
     is_main_number: Optional[bool] = None
 
 
+class BlockPreviousPasscodes(ApiModel):
+    #: If enabled, set how many of the previous passcodes are not allowed to be re-used.
+    enabled: Optional[bool] = None
+    #: Number of previous passcodes. The minimum value is 1. The maximum value is 10.
+    number_of_passcodes: Optional[int] = None
+
+
+class BlockRepeatedDigits(ApiModel):
+    #: If enabled, checks for sequence of the same digit being repeated.
+    enabled: Optional[bool] = None
+    #: Maximum number of repeated digit sequence allowed. The minimum value is 1. The maximum value is 6.
+    max_: Optional[int] = None
+
+
+class BlockContiguousSequences(ApiModel):
+    #: If enabled, passcode should not contain a numerical sequence.
+    enabled: Optional[bool] = None
+    #: Specifies the maximum length of an ascending numerical sequence allowed. The minimum value is 2. The maximum
+    #: value is 5. Example: If this value is set to 3, then 123856 is allowed, but 123485 is not allowed (since the
+    #: ascending sequence 1234 exceeds 3 digits).
+    number_of_ascending_digits: Optional[int] = None
+    #: Specifies the maximum length of a descending numerical sequence allowed. The minimum value is 2. The maximum
+    #: value is 5. Example: If this value is set to 3, then 321856 is allowed, but 432185 is not allowed (since the
+    #: descending sequence 4321 exceeds 3 digits).
+    number_of_descending_digits: Optional[int] = None
+
+
+class PasscodeLength(ApiModel):
+    #: The minimum value is 2. The maximum value is 15.
+    min: Optional[int] = None
+    #: The minimum value is 3. The maximum value is 30.
+    max_: Optional[int] = None
+
+
+class VoicemailRules(ApiModel):
+    #: If enabled, the passcode cannot contain repeated patterns. For example, 121212 and 123123.
+    block_repeated_patterns_enabled: Optional[bool] = None
+    #: If enabled, the passcode must not match the user's own phone number.
+    block_user_number_enabled: Optional[bool] = None
+    #: If enabled, the passcode must not match the user's phone number in reverse.
+    block_reversed_user_number_enabled: Optional[bool] = None
+    block_previous_passcodes: Optional[BlockPreviousPasscodes] = None
+    #: If enabled, the passcode must not match the user's old passcodes in reverse.
+    block_reversed_old_passcode_enabled: Optional[bool] = None
+    block_repeated_digits: Optional[BlockRepeatedDigits] = None
+    block_contiguous_sequences: Optional[BlockContiguousSequences] = None
+    length: Optional[PasscodeLength] = None
+
+
+class HotelingGuestSettings(ApiModel):
+    #: Enable/Disable hoteling guest functionality for the person. When enabled, the person can associate themselves
+    #: with a hoteling host device.
+    enabled: Optional[bool] = None
+    #: When enabled, the person's hoteling guest association will be automatically removed after the specified time
+    #: period.
+    association_limit_enabled: Optional[bool] = None
+    #: Time limit in hours for the hoteling guest association (1-999). Applicable when associationLimitEnabled is true.
+    association_limit_hours: Optional[int] = None
+    #: Time limit in hours configured by the host for guest associations.
+    host_association_limit_hours: Optional[int] = None
+    #: Indicates whether the host has enforced an association time limit.
+    host_enforced_association_limit_enabled: Optional[bool] = None
+    #: First name of the hoteling host.
+    host_first_name: Optional[str] = None
+    #: Last name of the hoteling host.
+    host_last_name: Optional[str] = None
+    #: Unique identifier of the hoteling host person or workspace.
+    host_id: Optional[str] = None
+    #: Phone number of the hoteling host.
+    host_phone_number: Optional[str] = None
+    #: Extension of the hoteling host.
+    host_extension: Optional[str] = None
+    host_location: Optional[ModeManagementFeaturesResponseFeaturesItemLocation] = None
+
+
+class AvailableHotelingHost(ApiModel):
+    #: Unique identifier for the person or workspace.
+    host_id: Optional[str] = None
+    #: First name of the hoteling host.
+    first_name: Optional[str] = None
+    #: Last name of the hoteling host.
+    last_name: Optional[str] = None
+    #: Phone number of the hoteling host.
+    phone_number: Optional[str] = None
+    #: Extension of the hoteling host.
+    extension: Optional[str] = None
+    #: Maximum allowed association duration in hours for this host.
+    allowed_association_duration: Optional[int] = None
+
+
+class PersonalAssistantSettingsPresence(str, Enum):
+    business_trip = 'BUSINESS_TRIP'
+    gone_for_the_day = 'GONE_FOR_THE_DAY'
+    lunch = 'LUNCH'
+    meeting = 'MEETING'
+    out_of_office = 'OUT_OF_OFFICE'
+    temporarily_out = 'TEMPORARILY_OUT'
+    training = 'TRAINING'
+    unavailable = 'UNAVAILABLE'
+    vacation = 'VACATION'
+
+
+class PersonalAssistantSettingsAlerting(str, Enum):
+    alert_me_first = 'ALERT_ME_FIRST'
+    play_ring_reminder = 'PLAY_RING_REMINDER'
+    none_ = 'NONE'
+
+
+class PersonalAssistantSettings(ApiModel):
+    #: Enable/Disable the personal assistant feature.
+    enabled: Optional[bool] = None
+    #: Presence status that triggers the personal assistant.
+    presence: Optional[PersonalAssistantSettingsPresence] = None
+    #: Date and time until which the personal assistant is active (ISO 8601 format).
+    until_date_time: Optional[datetime] = None
+    #: Enable/Disable call transfer when personal assistant is active.
+    transfer_enabled: Optional[bool] = None
+    #: Phone number to transfer calls to when transfer is enabled.
+    transfer_number: Optional[str] = None
+    #: Alerting behavior for incoming calls when personal assistant is active. Possible values: ALERT_ME_FIRST - Ring
+    #: the user's phone first before the personal assistant takes over. PLAY_RING_REMINDER - Play a ring reminder to
+    #: the user. NONE - No alerting.
+    alerting: Optional[PersonalAssistantSettingsAlerting] = None
+    #: Number of rings before transferring the call when alerting is set to ALERT_ME_FIRST.
+    alert_me_first_number_of_rings: Optional[int] = None
+
+
 class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
     """
     Call Settings For Me (2/2)
@@ -1592,6 +1721,92 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         r = TypeAdapter(list[GuestCallingNumber]).validate_python(data['phoneNumbers'])
         return r
 
+    def get_available_hoteling_hosts(self, name: str = None, phone_number: str = None,
+                                     **params: Any) -> Generator[AvailableHotelingHost, None, None]:
+        """
+        Get Available Hoteling Hosts
+
+        Retrieve a list of available hoteling hosts that a person can associate with as a guest. Returns hosts that
+        have hoteling enabled on their devices and are available for guest associations. The list can be filtered by
+        name or phone number and supports pagination.
+
+        Hoteling is a feature of Webex Calling that enables flexible workspace solutions by allowing users to log into
+        shared devices.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param name: Filter hosts by name (first name or last name). Partial match is supported.
+        :type name: str
+        :param phone_number: Filter hosts by phone number. Partial match is supported.
+        :type phone_number: str
+        :return: Generator yielding :class:`AvailableHotelingHost` instances
+        """
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        url = self.ep('settings/hoteling/availableHosts')
+        return self.session.follow_pagination(url=url, model=AvailableHotelingHost, item_key='hosts', params=params)
+
+    def get_hoteling_guest_settings(self) -> HotelingGuestSettings:
+        """
+        Get Hoteling Guest Settings
+
+        Retrieve hoteling guest settings for a person. Hoteling allows a person to temporarily use a device as a guest,
+        associating their extension and configuration with that device for a limited time. This API returns the
+        current hoteling guest configuration including any active host association details.
+
+        Hoteling is a feature of Webex Calling that enables flexible workspace solutions by allowing users to log into
+        shared devices.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`HotelingGuestSettings`
+        """
+        url = self.ep('settings/hoteling/guest')
+        data = super().get(url)
+        r = HotelingGuestSettings.model_validate(data)
+        return r
+
+    def update_hoteling_guest_settings(self, enabled: bool, association_limit_enabled: bool = None,
+                                       association_limit_hours: int = None, host_id: str = None) -> None:
+        """
+        Update Hoteling Guest Settings
+
+        Update hoteling guest settings for a person. Allows enabling or disabling the ability to use hoteling as a
+        guest, configuring whether an association will be removed automatically after a specified time period, and
+        associating with a hoteling host.
+
+        Hoteling is a feature of Webex Calling that enables flexible workspace solutions by allowing users to log into
+        shared devices.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param enabled: Enable/Disable hoteling guest functionality for the person. When enabled, the person can
+            associate themselves with a hoteling host device.
+        :type enabled: bool
+        :param association_limit_enabled: When enabled, the person's hoteling guest association will be automatically
+            removed after the specified time period.
+        :type association_limit_enabled: bool
+        :param association_limit_hours: Time limit in hours for the hoteling guest association (1-999). Applicable when
+            associationLimitEnabled is true.
+        :type association_limit_hours: int
+        :param host_id: Unique identifier of the hoteling host person or workspace to associate with. Required when
+            enabling hoteling guest functionality.
+        :type host_id: str
+        :rtype: None
+        """
+        body: dict[str, Any] = dict()
+        body['enabled'] = enabled
+        if association_limit_enabled is not None:
+            body['associationLimitEnabled'] = association_limit_enabled
+        if association_limit_hours is not None:
+            body['associationLimitHours'] = association_limit_hours
+        if host_id is not None:
+            body['hostId'] = host_id
+        url = self.ep('settings/hoteling/guest')
+        super().put(url, json=body)
+
     def get_mode_management_features(self) -> builtins.list[ModeManagementFeaturesResponseFeaturesItem]:
         """
         Get Mode Management Features
@@ -1819,6 +2034,78 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         data = super().get(url)
         r = data['operatingModeId']
         return r
+
+    def get_personal_assistant_settings(self) -> PersonalAssistantSettings:
+        """
+        Get Personal Assistant Settings
+
+        Retrieve personal assistant settings for a person. The personal assistant feature allows users to configure an
+        automated attendant that can handle incoming calls when they are unavailable, including presence-based routing
+        and call transfer options.
+
+        Personal Assistant is a feature of Webex Calling that helps manage incoming calls based on the user's
+        availability status.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`PersonalAssistantSettings`
+        """
+        url = self.ep('settings/personalAssistant')
+        data = super().get(url)
+        r = PersonalAssistantSettings.model_validate(data)
+        return r
+
+    def update_personal_assistant_settings(self, enabled: bool, presence: PersonalAssistantSettingsPresence = None,
+                                           until_date_time: Union[str, datetime] = None,
+                                           transfer_enabled: bool = None, transfer_number: str = None,
+                                           alerting: PersonalAssistantSettingsAlerting = None,
+                                           alert_me_first_number_of_rings: int = None) -> None:
+        """
+        Update Personal Assistant Settings
+
+        Update personal assistant settings for a person. Allows configuring the personal assistant feature including
+        enabling/disabling it, setting presence status, configuring call transfer options, and alerting preferences.
+
+        Personal Assistant is a feature of Webex Calling that helps manage incoming calls based on the user's
+        availability status.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param enabled: Enable/Disable the personal assistant feature.
+        :type enabled: bool
+        :param presence: Presence status that triggers the personal assistant.
+        :type presence: PersonalAssistantSettingsPresence
+        :param until_date_time: Date and time until which the personal assistant is active (ISO 8601 format).
+        :type until_date_time: Union[str, datetime]
+        :param transfer_enabled: Enable/Disable call transfer when personal assistant is active.
+        :type transfer_enabled: bool
+        :param transfer_number: Phone number to transfer calls to when transfer is enabled.
+        :type transfer_number: str
+        :param alerting: Alerting behavior for incoming calls when personal assistant is active. Possible values:
+            ALERT_ME_FIRST - Ring the user's phone first before the personal assistant takes over. PLAY_RING_REMINDER
+            - Play a ring reminder to the user. NONE - No alerting.
+        :type alerting: PersonalAssistantSettingsAlerting
+        :param alert_me_first_number_of_rings: Number of rings before transferring the call when alerting is set to
+            ALERT_ME_FIRST.
+        :type alert_me_first_number_of_rings: int
+        :rtype: None
+        """
+        body: dict[str, Any] = dict()
+        body['enabled'] = enabled
+        if presence is not None:
+            body['presence'] = enum_str(presence)
+        if until_date_time is not None:
+            body['untilDateTime'] = until_date_time
+        if transfer_enabled is not None:
+            body['transferEnabled'] = transfer_enabled
+        if transfer_number is not None:
+            body['transferNumber'] = transfer_number
+        if alerting is not None:
+            body['alerting'] = enum_str(alerting)
+        if alert_me_first_number_of_rings is not None:
+            body['alertMeFirstNumberOfRings'] = alert_me_first_number_of_rings
+        url = self.ep('settings/personalAssistant')
+        super().put(url, json=body)
 
     def get_my_priority_alert_settings(self) -> PriorityAlertGet:
         """
@@ -3170,3 +3457,44 @@ class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
         body['file'] = file
         url = self.ep('settings/voicemail/actions/noAnswerGreetingUpload/invoke')
         super().post(url, json=body)
+
+    def update_voicemail_pin(self, passcode: str) -> None:
+        """
+        Update Voicemail PIN
+
+        Set the voicemail PIN for a person. Updates the PIN used to access voicemail messages. The PIN must comply with
+        the passcode rules defined for the organization.
+
+        The voicemail feature is part of Webex Calling, allowing users to secure their voicemail access with a PIN. The
+        PIN is required to retrieve voice messages via phone.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param passcode: Person voicemail PIN. The PIN must comply with the passcode rules defined for the
+            organization.
+        :type passcode: str
+        :rtype: None
+        """
+        body: dict[str, Any] = dict()
+        body['passcode'] = passcode
+        url = self.ep('voicemail/pin')
+        super().put(url, json=body)
+
+    def get_user_voicemail_rules(self) -> VoicemailRules:
+        """
+        Get Person's Voicemail Rules
+
+        Get person's voicemail passcode rules. Voicemail rules specify the default passcode requirements. They are
+        provided for informational purposes only and cannot be modified.
+
+        The voicemail feature allows users to manage their voicemail settings as part of Webex Calling. Voicemail rules
+        help ensure secure access to voice messages by defining passcode complexity requirements.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`VoicemailRules`
+        """
+        url = self.ep('voicemail/rules')
+        data = super().get(url)
+        r = VoicemailRules.model_validate(data)
+        return r

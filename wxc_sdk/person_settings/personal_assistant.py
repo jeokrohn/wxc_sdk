@@ -32,28 +32,31 @@ class PersonalAssistantPresence(str, Enum):
 
 
 class PersonalAssistantAlerting(str, Enum):
-    #: Ring the recipient first.
+    #: Ring the user's phone first before the personal assistant takes over.
     alert_me_first = 'ALERT_ME_FIRST'
-    #: Reminder ring the recipient.
+    #: Play a ring reminder to the user.
     play_ring_reminder = 'PLAY_RING_REMINDER'
-    #: No alert.
+    #: No alerting..
     none_ = 'NONE'
 
 
 class PersonalAssistant(ApiModel):
-    #: Toggles feature.
+    #: Enable/Disable the personal assistant feature.
     enabled: Optional[bool] = None
-    #: Person's availability.
+    #: Presence status that triggers the personal assistant..
     presence: Optional[PersonalAssistantPresence] = None
-    #: The date until which personal assistant is active.
+    #: Date and time until which the personal assistant is active (ISO 8601 format).
     until_date_time: Optional[datetime] = None
-    #: If `true`, allows transfer and forwarding for the call type.
+    #: Enable/Disable call transfer when personal assistant is active.
     transfer_enabled: Optional[bool] = None
-    #: Number to transfer to.
+    #: Phone number to transfer calls to when transfer is enabled.
     transfer_number: Optional[str] = None
-    #: Alert type.
+    #: Alerting behavior for incoming calls when personal assistant is active. Possible values:
+    #: ALERT_ME_FIRST - Ring
+    #: the user's phone first before the personal assistant takes over. PLAY_RING_REMINDER - Play a ring reminder to
+    #: the user. NONE - No alerting..
     alerting: Optional[PersonalAssistantAlerting] = None
-    #: Number of rings for alert type: `ALERT_ME_FIRST`; available range is 2-20
+    #: Number of rings before transferring the call when alerting is set to ALERT_ME_FIRST.
     alert_me_first_number_of_rings: Optional[int] = None
 
 
@@ -63,7 +66,7 @@ class PersonalAssistantApi(ApiChild, base=''):
 
     """
 
-    def get(self, person_id: str, org_id: str = None) -> PersonalAssistant:
+    def get(self, person_id: str, org_id: str = None) -> PersonalAssistant:  # type: ignore[override]
         """
         Get Personal Assistant
 

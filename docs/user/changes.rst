@@ -1,6 +1,10 @@
 Release history
 ===============
 
+- feat: new endpoints :meth:`api.me.voicemail.get_voicemail_rules <wxc_sdk.me.voicemail.MeVoicemailApi.get_voicemail_rules>`, :meth:`api.me.voicemail.update_pin <wxc_sdk.me.voicemail.MeVoicemailApi.update_pin>`
+
+
+- feat: new API :attr:`api.me.hoteling <wxc_sdk.me.MeSettingsApi.hoteling`
 - feat: new API :attr:`api.telephony.text_to_speech <wxc_sdk.telephony.TelephonyApi.text_to_speech>`
 - fix: MeSelectiveRejectApi.criteria_get, fixed criteria_id parameter usage
 

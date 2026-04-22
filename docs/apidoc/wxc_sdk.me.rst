@@ -27,6 +27,7 @@ Subpackages
    wxc_sdk.me.executive
    wxc_sdk.me.forwarding
    wxc_sdk.me.go_override
+   wxc_sdk.me.hoteling
    wxc_sdk.me.mode_management
    wxc_sdk.me.personal_assistant
    wxc_sdk.me.priority_alert

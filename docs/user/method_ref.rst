@@ -489,6 +489,15 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.me.guest_calling_numbers <wxc_sdk.me.MeSettingsApi.guest_calling_numbers>`
         | Retrieve My Guest Calling Numbers
         | ``GET /telephony/config/people/me/settings/guestCalling/numbers``
+   * - :meth:`api.me.hoteling.get_available_hosts <wxc_sdk.me.hoteling.MeHotelingApi.get_available_hosts>`
+        | Get Available Hoteling Hosts
+        | ``GET /telephony/config/people/me/settings/hoteling/availableHosts``
+   * - :meth:`api.me.hoteling.get_guest_settings <wxc_sdk.me.hoteling.MeHotelingApi.get_guest_settings>`
+        | Get Hoteling Guest Settings
+        | ``GET /telephony/config/people/me/settings/hoteling/guest``
+   * - :meth:`api.me.hoteling.update_guest_settings <wxc_sdk.me.hoteling.MeHotelingApi.update_guest_settings>`
+        | Update Hoteling Guest Settings
+        | ``PUT /telephony/config/people/me/settings/hoteling/guest``
    * - :meth:`api.me.mode_management.extend_mode <wxc_sdk.me.mode_management.MeModeManagementApi.extend_mode>`
         | Extend Current Operating Mode Duration
         | ``POST /telephony/config/people/me/settings/modeManagement/features/{feature_id}/actions/extendMode/invoke``
@@ -520,7 +529,7 @@ description of the operation. The method name is a link to the method documentat
         | Get My Monitoring Settings
         | ``GET /telephony/config/people/me/settings/monitoring``
    * - :meth:`api.me.personal_assistant.get <wxc_sdk.me.personal_assistant.MePersonalAssistantApi.get>`
-        | Get My Personal Assistant
+        | Get Personal Assistant Settings
         | ``GET /telephony/config/people/me/settings/personalAssistant``
    * - :meth:`api.me.personal_assistant.update <wxc_sdk.me.personal_assistant.MePersonalAssistantApi.update>`
         | Modify My Personal Assistant
@@ -684,9 +693,15 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.me.voicemail.configure <wxc_sdk.me.voicemail.MeVoicemailApi.configure>`
         | Configure Voicemail Settings for a Person
         | ``PUT /telephony/config/people/me/settings/voicemail``
+   * - :meth:`api.me.voicemail.get_voicemail_rules <wxc_sdk.me.voicemail.MeVoicemailApi.get_voicemail_rules>`
+        | Get Person's Voicemail Rules
+        | ``GET /telephony/config/people/me/voicemail/rules``
    * - :meth:`api.me.voicemail.settings <wxc_sdk.me.voicemail.MeVoicemailApi.settings>`
         | Read Voicemail Settings for a Person
         | ``GET /telephony/config/people/me/settings/voicemail``
+   * - :meth:`api.me.voicemail.update_pin <wxc_sdk.me.voicemail.MeVoicemailApi.update_pin>`
+        | Update Voicemail PIN
+        | ``PUT /telephony/config/people/me/voicemail/pin``
    * - :meth:`api.meetings.chats.delete <wxc_sdk.meetings.chats.MeetingChatsApi.delete>`
         | Deletes the meeting chats of a finished meeting instance specified by meetingId
         | ``DELETE /meetings/postMeetingChats``

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import TypeAdapter
 
@@ -12,7 +12,7 @@ __all__ = ['MeCallerIdApi', 'MeCallerIdSettings', 'MeSelectedCallerId']
 class CallerIdType(str, Enum):
     #: Caller ID is the default configured caller ID.
     default_clid = 'DEFAULT_CLID'
-    #: Caller ID is an additional number caller ID.
+    #: Caller ID is an additional external caller ID phone number available for the user.
     additional_clid = 'ADDITIONAL_CLID'
     #: Caller ID is associated with a call queue.
     call_queue = 'CALL_QUEUE'
@@ -29,16 +29,17 @@ class MeCallerIdSettings(ApiModel):
 
 class MeSelectedCallerId(ApiModel):
     type: Optional[CallerIdType] = None
-    #: Unique identifier of the selected caller ID config. Set for `CALL_QUEUE` & `HUNT_GROUP` caller IDs.
+    #: Unique identifier of the selected caller ID (HuntGroup / CallQueue) config. Required only when setting
+    #: `CALL_QUEUE` or `HUNT_GROUP` caller IDs.
     id: Optional[str] = None
     #: Name of the selected caller ID.
     name: Optional[str] = None
-    #: Direct number of the selected caller ID.
+    #: Direct number of the selected caller ID. Required only when setting ADDITIONAL_CLID as the selected caller ID.
     direct_number: Optional[str] = None
     #: Extension of the selected caller ID.
     extension: Optional[str] = None
 
-    def update(self) -> dict:
+    def update(self) -> dict[str, Any]:
         """
         Prepare the object for an update operation by converting it to a dictionary.
 
