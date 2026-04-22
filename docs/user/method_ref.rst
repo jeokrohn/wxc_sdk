@@ -2226,6 +2226,9 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.telephony.get_call_captions_settings <wxc_sdk.telephony.TelephonyApi.get_call_captions_settings>`
         | Get the organization call captions settings
         | ``GET /telephony/config/callCaptions``
+   * - :meth:`api.telephony.get_country_configuration <wxc_sdk.telephony.TelephonyApi.get_country_configuration>`
+        | Get Country Calling Configuration
+        | ``GET /telephony/config/countries/{country_code}``
    * - :meth:`api.telephony.get_large_organization_status <wxc_sdk.telephony.TelephonyApi.get_large_organization_status>`
         | Get Large Organization Status
         | ``GET /telephony/config/largeOrgStatus``

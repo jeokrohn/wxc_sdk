@@ -108,6 +108,7 @@ __all__ = [
     'UsageType',
     'DirectLineCallerIdName',
     'DirectLineCallerIdNameSelection',
+    'CodeAndName',
 ]
 
 
@@ -1370,3 +1371,10 @@ class DirectLineCallerIdName(ApiModel):
     #: Sets or clears the custom direct line caller ID name.  To clear the `customName`, the attribute must be set to
     #: null or empty string. Required if `selection` is set to `CUSTOM_NAME`.
     custom_name: Optional[str] = None
+
+
+class CodeAndName(ApiModel):
+    #: Two-letter state or province abbreviation (e.g., CA for California).
+    code: Optional[str] = None
+    #: Full name of the state or province.
+    name: Optional[str] = None

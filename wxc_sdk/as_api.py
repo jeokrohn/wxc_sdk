@@ -37468,6 +37468,33 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         r = LargeOrgStatus.model_validate(data)
         return r
 
+    async def get_country_configuration(self, country_code: str, org_id: str = None) -> CountryConfig:
+        """
+        Get Country Calling Configuration
+
+        Retrieve country-specific configuration details including state requirements, zip code requirements, available
+        states, and supported time zones.
+
+        This information helps administrators configure user settings with valid timezone and location data for a
+        specific country.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param country_code: The ISO country code to retrieve configuration for.
+        :type country_code: str
+        :param org_id: Organization ID. If not specified, uses the organization from the OAuth token.
+        :type org_id: str
+        :rtype: :class:`CountryConfig`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'countries/{country_code}')
+        data = await super().get(url, params=params)
+        r = CountryConfig.model_validate(data)
+        return r
+
 
 class AsWebhookApi(AsApiChild, base='webhooks'):
     """
