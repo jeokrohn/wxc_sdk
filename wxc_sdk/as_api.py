@@ -37258,7 +37258,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         data = await self.get(url=url, params=params)
         return DeviceCustomization.model_validate(data)
 
-    async def read_list_of_announcement_languages(self) -> list[AnnouncementLanguage]:
+    async def read_list_of_announcement_languages(self, tts_language: bool = None) -> list[AnnouncementLanguage]:
         """
         Read the List of Announcement Languages
 
@@ -37266,9 +37266,16 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
 
         Retrieving announcement languages requires a full or read-only administrator or location administrator auth
         token with a scope of `spark-admin:telephony_config_read`.
+
+        :param tts_language: Filter languages by TTS support.
+        :type tts_language: bool
+        :rtype: list[AnnouncementLanguage]
         """
+        params: dict[str, Any] = dict()
+        if tts_language is not None:
+            params['ttsLanguage'] = str(tts_language).lower()
         url = self.ep('announcementLanguages')
-        data = await super().get(url=url)
+        data = await super().get(url=url, params=params)
         return TypeAdapter(list[AnnouncementLanguage]).validate_python(data['languages'])
 
     async def read_moh(self, org_id: str = None) -> MoHConfig:

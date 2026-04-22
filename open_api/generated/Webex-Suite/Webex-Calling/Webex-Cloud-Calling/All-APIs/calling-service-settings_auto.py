@@ -137,7 +137,7 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
     query parameter.
     """
 
-    def read_the_list_of_announcement_languages(self) -> builtins.list[Language]:
+    def read_the_list_of_announcement_languages(self, tts_language: bool = None) -> builtins.list[Language]:
         """
         Read the List of Announcement Languages
 
@@ -146,10 +146,15 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         Retrieving announcement languages requires a full or read-only administrator or location administrator auth
         token with a scope of `spark-admin:telephony_config_read`.
 
+        :param tts_language: Filter languages by TTS support.
+        :type tts_language: bool
         :rtype: list[Language]
         """
+        params: dict[str, Any] = dict()
+        if tts_language is not None:
+            params['ttsLanguage'] = str(tts_language).lower()
         url = self.ep('announcementLanguages')
-        data = super().get(url)
+        data = super().get(url, params=params)
         r = TypeAdapter(list[Language]).validate_python(data['languages'])
         return r
 
