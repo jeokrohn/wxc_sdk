@@ -20085,7 +20085,12 @@ class AsAnnouncementsRepositoryApi(AsApiChild, base='telephony/config'):
         url = self.ep('announcements')
         return [o async for o in self.session.follow_pagination(url=url, model=RepoAnnouncement, item_key='announcements', params=params)]
 
-    async def _upload_or_modify(self, *, url, name, file, upload_as, params, is_upload, is_text_to_speech) -> dict:
+    async def _upload_or_modify(self, *, url, name, file, file_uri, upload_as, params, is_upload,
+                                is_text_to_speech) -> dict:
+        if is_upload:
+            meth = super().post
+        else:
+            meth = super().put
         if isinstance(file, str):
             upload_as = upload_as or os.path.basename(file)
             file = open(file, mode='rb')
@@ -20095,22 +20100,30 @@ class AsAnnouncementsRepositoryApi(AsApiChild, base='telephony/config'):
             # an existing reader
             if not upload_as:
                 raise ValueError('upload_as is required')
-        encoder = MultipartEncoder({'name': name, 'file': (upload_as, file, 'audio/wav'),
-                                    'is_text_to_speech': is_text_to_speech})
-        if is_upload:
-            meth = super().post
+
+        if file_uri is None:
+            data = MultipartEncoder(
+                {'name': name, 'file': (upload_as, file, 'audio/wav'),
+                 'is_text_to_speech': str(is_text_to_speech).lower()}
+            )
+            ct = data.content_type
+            json = None
         else:
-            meth = super().put
+            json = {'name': name, 'fileUri': file_uri,
+                    'fileName': upload_as,
+                    'is_text_to_speech': str(is_text_to_speech).lower()}
+            data = None
+            ct = 'application/json'
         try:
-            data = await meth(url, data=encoder, headers={'Content-Type': encoder.content_type},
-                        params=params)
+            data = await meth(url, data=data, json=json, headers={'Content-Type': ct}, params=params)
         finally:
             if must_close:
                 file.close()
         return data
         
 
-    async def upload_announcement(self, name: str, file: Union[BufferedReader, str], upload_as: str = None,
+    async def upload_announcement(self, name: str, file_uri: str = None, file: Union[BufferedReader, str] = None,
+                            upload_as: str = None,
                             is_text_to_speech: bool = False, location_id: str = None,
                             org_id: str = None) -> str:
         params = org_id and {'orgId': org_id} or None
@@ -20118,8 +20131,16 @@ class AsAnnouncementsRepositoryApi(AsApiChild, base='telephony/config'):
             url = self.ep('announcements')
         else:
             url = self.ep(f'locations/{location_id}/announcements')
-        data = await self._upload_or_modify(url=url, name=name, file=file, upload_as=upload_as, params=params,
-                                      is_text_to_speech=is_text_to_speech, is_upload=True)
+        data = await self._upload_or_modify(
+            url=url,
+            name=name,
+            file=file,
+            file_uri=file_uri,
+            upload_as=upload_as,
+            params=params,
+            is_text_to_speech=is_text_to_speech,
+            is_upload=True
+        )
         return data["id"]
 
         
@@ -20195,15 +20216,24 @@ class AsAnnouncementsRepositoryApi(AsApiChild, base='telephony/config'):
             url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')
         await super().delete(url=url, params=params)
 
-    async def modify(self, announcement_id: str, name: str, file: Union[BufferedReader, str],
+    async def modify(self, announcement_id: str, name: str, file_uri: str = None,
+                file: Union[BufferedReader, str] = None,
                upload_as: str = None, is_text_to_speech: bool = False, location_id: str = None, org_id: str = None):
         params = org_id and {'orgId': org_id} or None
         if location_id is None:
             url = self.ep(f'announcements/{announcement_id}')
         else:
             url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')
-        data = await self._upload_or_modify(url=url, name=name, file=file, upload_as=upload_as, params=params,
-                                      is_upload=False, is_text_to_speech=is_text_to_speech)
+        data = await self._upload_or_modify(
+            url=url,
+            name=name,
+            file=file,
+            file_uri=file_uri,
+            upload_as=upload_as,
+            params=params,
+            is_text_to_speech=is_text_to_speech,
+            is_upload=False
+        )
         return data["id"]
 
         

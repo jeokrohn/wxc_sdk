@@ -1,6 +1,7 @@
 """
 Tests around announcement repositories
 """
+
 import asyncio
 import base64
 import io
@@ -8,7 +9,8 @@ import random
 from collections.abc import Generator
 from contextlib import contextmanager
 from itertools import chain
-from unittest import skip
+from pathlib import Path
+from time import sleep
 
 from tests.base import TestWithLocations, async_test
 from wxc_sdk.as_rest import AsRestError
@@ -19,10 +21,11 @@ from wxc_sdk.telephony.autoattendant import AutoAttendant
 from wxc_sdk.telephony.callqueue import CallQueue
 from wxc_sdk.telephony.location.moh import LocationMoHGreetingType, LocationMoHSetting
 
+SAMPLE_WAV = str(Path(__file__).parent / 'sample.wav')
 
-@skip('Asked to stop testing by Bob Russel')
+
+# @skip('Asked to stop testing by Bob Russel')
 class Repo(TestWithLocations):
-
     def new_ann_names(self, location_id: str = None) -> Generator[str, None, None]:
         """
         Get a generator of available announcement names at org/location level
@@ -30,9 +33,7 @@ class Repo(TestWithLocations):
         api = self.api.telephony.announcements_repo
         with self.no_log():
             anns = list(api.list(location_id=location_id))
-        new_names = (name
-                     for i in range(1, 1000)
-                     if (name := f'test_ann_{i:03}') not in set(ann.name for ann in anns))
+        new_names = (name for i in range(1, 1000) if (name := f'test_ann_{i:03}') not in set(ann.name for ann in anns))
         return new_names
 
     def test_001_list_all(self):
@@ -44,8 +45,9 @@ class Repo(TestWithLocations):
 
     def test_002_upload_org(self):
         new_name = next(self.new_ann_names())
-        r = self.api.telephony.announcements_repo.upload_announcement(name=new_name, file='sample.wav',
-                                                                      upload_as=f'sample_{new_name[-3:]}.wav')
+        r = self.api.telephony.announcements_repo.upload_announcement(
+            name=new_name, file=SAMPLE_WAV, upload_as=f'sample_{new_name[-3:]}.wav'
+        )
         print(f'Uploaded new announcement: {new_name} id: {r}')
 
     @async_test
@@ -79,20 +81,18 @@ class Repo(TestWithLocations):
 
         print(f'Trying to rename: "{target.name}" to "{new_name}", new file: {upload_as}')
         details_before = api.details(announcement_id=target.id)
-        api.modify(announcement_id=target.id,
-                   name=target.name,
-                   file='sample.wav',
-                   upload_as=upload_as)
+        api.modify(announcement_id=target.id, name=target.name, file='sample.wav', upload_as=upload_as)
 
         details_after = api.details(announcement_id=target.id)
         foo = 1
-        self.assertTrue(False, 'Why can\'t we modify?')
+        self.assertTrue(False, "Why can't we modify?")
 
     def test_004_upload_org_from_file(self):
         new_name = next(self.new_ann_names())
         with open('sample.wav', mode='rb') as wav_file:
-            r = self.api.telephony.announcements_repo.upload_announcement(name=new_name, file=wav_file,
-                                                                          upload_as=f'sample_{new_name[-3:]}.wav')
+            r = self.api.telephony.announcements_repo.upload_announcement(
+                name=new_name, file=wav_file, upload_as=f'sample_{new_name[-3:]}.wav'
+            )
         print(f'Uploaded new announcement: {new_name} id: {r}')
 
     def test_005_upload_org_from_string(self):
@@ -100,8 +100,9 @@ class Repo(TestWithLocations):
         with open('sample.wav', mode='rb') as wav_file:
             data = wav_file.read()
         binary_file = io.BytesIO(data)
-        r = self.api.telephony.announcements_repo.upload_announcement(name=new_name, file=binary_file,
-                                                                      upload_as=f'sample_{new_name[-3:]}.wav')
+        r = self.api.telephony.announcements_repo.upload_announcement(
+            name=new_name, file=binary_file, upload_as=f'sample_{new_name[-3:]}.wav'
+        )
         print(f'Uploaded new announcement: {new_name} id: {r}')
 
     @async_test
@@ -118,8 +119,12 @@ class Repo(TestWithLocations):
         target_location: Location
         print(f'Target location: "{target_location.name}"')
         new_name = next(self.new_ann_names(location_id=target_location.location_id))
-        new_id = api.upload_announcement(name=new_name, file='sample.wav', upload_as=f'sample_{new_name[-3:]}.wav',
-                                         location_id=target_location.location_id)
+        new_id = api.upload_announcement(
+            name=new_name,
+            file='sample.wav',
+            upload_as=f'sample_{new_name[-3:]}.wav',
+            location_id=target_location.location_id,
+        )
 
         print(f'Uploaded new announcement in location: {new_name} id: {new_id}')
         announcements = api.list(location_id=target_location.location_id)
@@ -134,8 +139,10 @@ class Repo(TestWithLocations):
     @async_test
     async def test_009_location_repository_usage(self):
         locations = self.locations
-        usages = await asyncio.gather(*[self.async_api.telephony.announcements_repo.usage(location_id=loc.location_id)
-                                        for loc in locations], return_exceptions=True)
+        usages = await asyncio.gather(
+            *[self.async_api.telephony.announcements_repo.usage(location_id=loc.location_id) for loc in locations],
+            return_exceptions=True,
+        )
         loc_len = max(len(loc.name) for loc in locations)
         for location, usage in zip(locations, usages):
             print(f'{location.name:{loc_len}}: {usage}')
@@ -146,8 +153,7 @@ class Repo(TestWithLocations):
         anns = await api.list()
         if not anns:
             self.skipTest('No announcements at org level')
-        details = await asyncio.gather(*[api.details(announcement_id=ann.id)
-                                         for ann in anns], return_exceptions=True)
+        details = await asyncio.gather(*[api.details(announcement_id=ann.id) for ann in anns], return_exceptions=True)
         err = next((detail for detail in details if isinstance(detail, Exception)), None)
         if err:
             for ann, detail in zip(anns, details):
@@ -165,17 +171,25 @@ class Repo(TestWithLocations):
         Get details for all announcements in all locations
         """
         locations = self.locations
-        anns = await asyncio.gather(*[self.async_api.telephony.announcements_repo.list(location_id=loc.location_id)
-                                      for loc in locations])
+        anns = await asyncio.gather(
+            *[self.async_api.telephony.announcements_repo.list(location_id=loc.location_id) for loc in locations]
+        )
         anns: list[list[RepoAnnouncement]]
         # get details for all announcements in all locations
         details = await asyncio.gather(
-            *[asyncio.gather(*[
-                self.async_api.telephony.announcements_repo.details(announcement_id=ann.id,
-                                                                    location_id=loc.location_id)
-                for ann in loc_anns])
-              for loc, loc_anns in zip(locations, anns)
-              if loc_anns])
+            *[
+                asyncio.gather(
+                    *[
+                        self.async_api.telephony.announcements_repo.details(
+                            announcement_id=ann.id, location_id=loc.location_id
+                        )
+                        for ann in loc_anns
+                    ]
+                )
+                for loc, loc_anns in zip(locations, anns)
+                if loc_anns
+            ]
+        )
         print(f'got details for {sum(len(det) for det in details)} announcements')
 
     @async_test
@@ -185,8 +199,7 @@ class Repo(TestWithLocations):
         if not anns:
             self.skipTest('No org announcements')
         # get details so we see feature references
-        anns = await asyncio.gather(*[api.details(announcement_id=ann.id)
-                                      for ann in anns])
+        anns = await asyncio.gather(*[api.details(announcement_id=ann.id) for ann in anns])
         anns = [ann for ann in anns if ann.feature_references]
         if not anns:
             self.skipTest('No org announcement with references')
@@ -204,8 +217,7 @@ class Repo(TestWithLocations):
         if not anns:
             self.skipTest('No org announcements')
         # get details so we see feature references
-        anns = await asyncio.gather(*[api.details(announcement_id=ann.id)
-                                      for ann in anns])
+        anns = await asyncio.gather(*[api.details(announcement_id=ann.id) for ann in anns])
         anns = [ann for ann in anns if not ann.feature_references]
         if not anns:
             self.skipTest('No org announcement w/o references')
@@ -219,17 +231,24 @@ class Repo(TestWithLocations):
     async def test_014_delete_loc_ann_wo_reference(self):
         api = self.async_api
         locations = self.locations
-        anns = list(chain.from_iterable(
-            await asyncio.gather(*[api.telephony.announcements_repo.list(location_id=loc.location_id)
-                                   for loc in locations])))
+        anns = list(
+            chain.from_iterable(
+                await asyncio.gather(
+                    *[api.telephony.announcements_repo.list(location_id=loc.location_id) for loc in locations]
+                )
+            )
+        )
 
         if not anns:
             self.skipTest('No location announcements')
 
         anns: list[RepoAnnouncement]
-        details = await asyncio.gather(*[api.telephony.announcements_repo.details(announcement_id=ann.id,
-                                                                                  location_id=ann.location.id)
-                                         for ann in anns])
+        details = await asyncio.gather(
+            *[
+                api.telephony.announcements_repo.details(announcement_id=ann.id, location_id=ann.location.id)
+                for ann in anns
+            ]
+        )
         anns = [ann for ann, detail in zip(anns, details) if not detail.feature_references]
         if not anns:
             self.skipTest('No location announcement w/o references')
@@ -244,6 +263,52 @@ class Repo(TestWithLocations):
         api = self.async_api
         with self.assertRaises(AsRestError) as exc:
             await api.telephony.announcements_repo.delete(announcement_id='jhgfdghj')
+
+    def tts_announcement(self) -> str:
+        """
+        create a TTS announcement and return the file URI
+        """
+        api = self.api.telephony.text_to_speech
+        voices = api.voices()
+        voice = voices[0].id
+        tts_id = api.generate(
+            voice=voice, language_code='en_us', text="Sorry, we can't take your call right now. Please try again later"
+        )
+        # wait for TTS to complete
+        while True:
+            status = api.status(tts_id)
+            if status.status not in {'FAILURE', 'SUCCESS'}:
+                sleep(2)
+                continue
+            break
+        if status.file_uri is None:
+            raise ValueError
+        return status.file_uri
+
+    def test_org_tts(self):
+        """
+        Upload TTS announcement at org level
+        """
+        tts_file_uri = self.tts_announcement()
+
+        new_name = next(self.new_ann_names())
+        r = self.api.telephony.announcements_repo.upload_announcement(
+            name=new_name, upload_as=f'sample_{new_name[-3:]}.wav', file_uri=tts_file_uri, is_text_to_speech=True
+        )
+        print(f'Uploaded new announcement: {new_name} id: {r}')
+
+    @async_test
+    async def test_org_tts_async(self):
+        """
+        Upload TTS announcement at org level
+        """
+        tts_file_uri = self.tts_announcement()
+
+        new_name = next(self.new_ann_names())
+        r = await self.async_api.telephony.announcements_repo.upload_announcement(
+            name=new_name, upload_as=f'sample_{new_name[-3:]}.wav', file_uri=tts_file_uri, is_text_to_speech=True
+        )
+        print(f'Uploaded new announcement: {new_name} id: {r}')
 
 
 class RepoUsage(TestWithLocations):
@@ -288,8 +353,14 @@ class RepoUsage(TestWithLocations):
             self.assertEqual(LocationMoHGreetingType.custom, updated.greeting)
 
             # we want MoH in this location to be referenced
-            reference = next((u for u in target_ann_details_after.feature_references
-                              if u.location_id == target_location.location_id and u.name == 'Music On Hold'), None)
+            reference = next(
+                (
+                    u
+                    for u in target_ann_details_after.feature_references
+                    if u.location_id == target_location.location_id and u.name == 'Music On Hold'
+                ),
+                None,
+            )
             self.assertIsNotNone(reference)
 
     def test_002_call_queue(self):
@@ -308,8 +379,7 @@ class RepoUsage(TestWithLocations):
             self.skipTest('No org level announcements')
         target_ann: RepoAnnouncement = random.choice(anns)
 
-        cq_before = api.callqueue.details(location_id=target_queue.location_id,
-                                          queue_id=target_queue.id)
+        cq_before = api.callqueue.details(location_id=target_queue.location_id, queue_id=target_queue.id)
         ann_before = api.announcements_repo.details(announcement_id=target_ann.id)
         try:
             # set a comfort message announcement
@@ -319,21 +389,26 @@ class RepoUsage(TestWithLocations):
             cm.greeting = Greeting.custom
 
             api.callqueue.update(location_id=target_queue.location_id, queue_id=target_queue.id, update=cq_update)
-            cq_after = api.callqueue.details(location_id=target_queue.location_id,
-                                             queue_id=target_queue.id)
+            cq_after = api.callqueue.details(location_id=target_queue.location_id, queue_id=target_queue.id)
             ann_after = api.announcements_repo.details(announcement_id=target_ann.id)
-            feature_ref = next((fr for fr in ann_after.feature_references
-                                if
-                                fr.type == 'Call Queue' and fr.name == cq_before.name and fr.location_id ==
-                                cq_before.location_id),
-                               None)
+            feature_ref = next(
+                (
+                    fr
+                    for fr in ann_after.feature_references
+                    if fr.type == 'Call Queue' and fr.name == cq_before.name and fr.location_id == cq_before.location_id
+                ),
+                None,
+            )
             if not feature_ref:
                 print('No feature ref found in announcement details. Feature refs:')
                 print('\n'.join(f'{fr}' for fr in ann_after.feature_references))
             self.assertIsNotNone(feature_ref)
-            self.assertEqual(cq_before.id, feature_ref.id,
-                             f'{base64.b64decode(cq_before.id + "==").decode()} != '
-                             f'{base64.b64decode(feature_ref.id + "==").decode()} ')
+            self.assertEqual(
+                cq_before.id,
+                feature_ref.id,
+                f'{base64.b64decode(cq_before.id + "==").decode()} != '
+                f'{base64.b64decode(feature_ref.id + "==").decode()} ',
+            )
         finally:
             # restore old settings
             api.callqueue.update(location_id=target_queue.location_id, queue_id=target_queue.id, update=cq_before)
@@ -354,34 +429,46 @@ class RepoUsage(TestWithLocations):
             self.skipTest('No org level announcements')
         target_ann: RepoAnnouncement = random.choice(anns)
 
-        aa_before = api.auto_attendant.details(location_id=target_aa.location_id,
-                                               auto_attendant_id=target_aa.auto_attendant_id)
+        aa_before = api.auto_attendant.details(
+            location_id=target_aa.location_id, auto_attendant_id=target_aa.auto_attendant_id
+        )
         ann_before = api.announcements_repo.details(announcement_id=target_ann.id)
         try:
             # set the business hours menu greeting
             aa_update = aa_before.model_copy(deep=True)
             bhm = aa_update.business_hours_menu
-            bhm.audio_announcement_file = AnnAudioFile(id=target_ann.id,
-                                                       level=AnnouncementLevel.organization)
+            bhm.audio_announcement_file = AnnAudioFile(id=target_ann.id, level=AnnouncementLevel.organization)
             bhm.greeting = Greeting.custom
 
-            api.auto_attendant.update(location_id=target_aa.location_id,
-                                      auto_attendant_id=target_aa.auto_attendant_id,
-                                      settings=aa_update)
-            aa_after = api.auto_attendant.details(location_id=target_aa.location_id,
-                                                  auto_attendant_id=target_aa.auto_attendant_id)
+            api.auto_attendant.update(
+                location_id=target_aa.location_id, auto_attendant_id=target_aa.auto_attendant_id, settings=aa_update
+            )
+            aa_after = api.auto_attendant.details(
+                location_id=target_aa.location_id, auto_attendant_id=target_aa.auto_attendant_id
+            )
             ann_after = api.announcements_repo.details(announcement_id=target_ann.id)
-            feature_ref = next((fr for fr in ann_after.feature_references
-                                if fr.type == 'Auto Attendant' and fr.name == aa_before.name and
-                                fr.location_id == target_aa.location_id), None)
+            feature_ref = next(
+                (
+                    fr
+                    for fr in ann_after.feature_references
+                    if fr.type == 'Auto Attendant'
+                    and fr.name == aa_before.name
+                    and fr.location_id == target_aa.location_id
+                ),
+                None,
+            )
             if not feature_ref:
                 print('No feature ref found in announcement details. Feature refs:')
                 print('\n'.join(f'{fr}' for fr in ann_after.feature_references))
             self.assertIsNotNone(feature_ref)
-            self.assertEqual(aa_before.auto_attendant_id, feature_ref.id,
-                             f'{base64.b64decode(aa_before.auto_attendant_id + "==").decode()} != '
-                             f'{base64.b64decode(feature_ref.id + "==").decode()} ')
+            self.assertEqual(
+                aa_before.auto_attendant_id,
+                feature_ref.id,
+                f'{base64.b64decode(aa_before.auto_attendant_id + "==").decode()} != '
+                f'{base64.b64decode(feature_ref.id + "==").decode()} ',
+            )
         finally:
             # restore old settings
-            api.auto_attendant.update(location_id=target_aa.location_id, auto_attendant_id=target_aa.auto_attendant_id,
-                                      settings=aa_before)
+            api.auto_attendant.update(
+                location_id=target_aa.location_id, auto_attendant_id=target_aa.auto_attendant_id, settings=aa_before
+            )

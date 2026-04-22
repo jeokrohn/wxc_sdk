@@ -14,7 +14,8 @@ from wxc_sdk.base import SafeEnum as Enum
 
 __all__ = ['AnnouncementResponse', 'AnnouncementResponseWithPlaylist', 'AnnouncementUsageResponse',
            'AnnouncementsListResponse', 'AnnouncementsListResponseLevel', 'FeatureReferenceObject',
-           'FeaturesAnnouncementRepositoryApi', 'LocationId', 'LocationObject']
+           'FeaturesAnnouncementRepositoryApi', 'LocationId', 'LocationObject', 'TtsStatusResponse',
+           'TtsUsageResponse', 'TtsVoiceObject']
 
 
 class FeatureReferenceObject(ApiModel):
@@ -48,6 +49,14 @@ class AnnouncementResponse(ApiModel):
     feature_reference_count: Optional[int] = None
     #: Call features referenced by this announcement.
     feature_references: Optional[list[FeatureReferenceObject]] = None
+    #: Indicates whether the announcement is text-to-speech.
+    is_text_to_speech: Optional[bool] = None
+    #: Voice used for text-to-speech announcement.
+    voice: Optional[str] = None
+    #: Language code for the text-to-speech announcement.
+    language: Optional[str] = None
+    #: Text content for text-to-speech announcement.
+    text: Optional[str] = None
 
 
 class LocationObject(ApiModel):
@@ -76,6 +85,14 @@ class AnnouncementResponseWithPlaylist(ApiModel):
     feature_references: Optional[list[FeatureReferenceObject]] = None
     #: List of playlist available for selection.
     playlists: Optional[list[LocationObject]] = None
+    #: Indicates whether the announcement is text-to-speech.
+    is_text_to_speech: Optional[bool] = None
+    #: Voice used for text-to-speech announcement.
+    voice: Optional[str] = None
+    #: Language code for the text-to-speech announcement.
+    language: Optional[str] = None
+    #: Text content for text-to-speech announcement.
+    text: Optional[str] = None
 
 
 class AnnouncementUsageResponse(ApiModel):
@@ -110,6 +127,43 @@ class AnnouncementsListResponse(ApiModel):
     level: Optional[AnnouncementsListResponseLevel] = None
     #: The details of location at which this announcement exists.
     location: Optional[LocationObject] = None
+    #: Indicates whether the announcement is text-to-speech.
+    is_text_to_speech: Optional[bool] = None
+
+
+class TtsUsageResponse(ApiModel):
+    #: Number of API calls made.
+    no_of_api_calls: Optional[int] = None
+    #: Maximum allowed API calls within the time window.
+    max_allowed_api_calls: Optional[int] = None
+    #: Timestamp indicating when the usage will reset.
+    usage_reset_timestamp: Optional[datetime] = None
+
+
+class TtsStatusResponse(ApiModel):
+    #: Unique identifier of the text-to-speech generation request.
+    id: Optional[str] = None
+    #: The voice used for text-to-speech generation.
+    voice: Optional[str] = None
+    #: The text that was converted to speech.
+    text: Optional[str] = None
+    #: The language code used for the text-to-speech generation.
+    language_code: Optional[str] = None
+    #: Status of the text-to-speech generation request.
+    status: Optional[str] = None
+    #: URL to download the encrypted audio prompt.
+    prompt_url: Optional[str] = None
+    #: KMS key URI for decrypting the audio prompt.
+    kms_key_uri: Optional[str] = None
+    #: File URI of the generated audio prompt.
+    file_uri: Optional[str] = None
+
+
+class TtsVoiceObject(ApiModel):
+    #: Unique identifier of the voice.
+    id: Optional[str] = None
+    #: Display label for the voice.
+    label: Optional[str] = None
 
 
 class LocationId(str, Enum):
@@ -186,7 +240,8 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         url = self.ep('announcements')
         return self.session.follow_pagination(url=url, model=AnnouncementsListResponse, item_key='announcements', params=params)
 
-    def upload_a_binary_announcement_greeting_at_organization_level(self, name: str, file: str = None,
+    def upload_a_binary_announcement_greeting_at_organization_level(self, name: str, file_uri: str, file_name: str,
+                                                                    is_text_to_speech: bool,
                                                                     org_id: str = None) -> str:
         """
         Upload a binary announcement greeting at organization level
@@ -195,18 +250,19 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
 
         An admin can upload a file at an organization level. This file will be uploaded to the announcement repository.
 
-        Your request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav`
-        Content-Type.
+        Your request will need to be an `application/json` request with the announcement details including name,
+        fileUri, fileName, and isTextToSpeech fields.
 
-        **Note:** The `name` parameter is required as a form field and should contain the announcement file name (e.g.,
-        "greeting.wav"). Refer to the example below for the complete request structure.
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
-        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write` .
-
-        :param name: The announcement file name (e.g., "greeting.wav"). This is a required field.
+        :param name: Name of the announcement.
         :type name: str
-        :param file: The binary audio file to upload. Must be in WAV format.
-        :type file: str
+        :param file_uri: URI of the announcement file.
+        :type file_uri: str
+        :param file_name: File name of the announcement.
+        :type file_name: str
+        :param is_text_to_speech: Indicates whether the announcement is text-to-speech.
+        :type is_text_to_speech: bool
         :param org_id: Create an announcement in this organization.
         :type org_id: str
         :rtype: str
@@ -216,8 +272,9 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body: dict[str, Any] = dict()
         body['name'] = name
-        if file is not None:
-            body['file'] = file
+        body['fileUri'] = file_uri
+        body['fileName'] = file_name
+        body['isTextToSpeech'] = is_text_to_speech
         url = self.ep('announcements')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -291,23 +348,33 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         r = AnnouncementResponseWithPlaylist.model_validate(data)
         return r
 
-    def modify_a_binary_announcement_greeting_at_organization_level(self, announcement_id: str,
+    def modify_a_binary_announcement_greeting_at_organization_level(self, announcement_id: str, name: str,
+                                                                    file_uri: str, file_name: str,
+                                                                    is_text_to_speech: bool,
                                                                     org_id: str = None) -> None:
         """
         Modify a binary announcement greeting at organization level
 
-        Modify an existing announcement greeting at a organization level.
+        Modify an existing announcement greeting at an organization level.
 
-        An admin can upload a file or modify an existing file at a location level. This file will be uploaded to the
-        announcement repository.
+        An admin can upload a file or modify an existing file at an organization level. This file will be uploaded to
+        the announcement repository.
 
-        Your request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav`
-        Content-Type.
+        Your request will need to be an `application/json` request with the announcement details including name,
+        fileUri, fileName, and isTextToSpeech fields.
 
         This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
         :param announcement_id: Unique identifier of an announcement.
         :type announcement_id: str
+        :param name: Name of the announcement.
+        :type name: str
+        :param file_uri: URI of the announcement file.
+        :type file_uri: str
+        :param file_name: File name of the announcement.
+        :type file_name: str
+        :param is_text_to_speech: Indicates whether the announcement is text-to-speech.
+        :type is_text_to_speech: bool
         :param org_id: Modify an announcement in this organization.
         :type org_id: str
         :rtype: None
@@ -315,11 +382,17 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        body['name'] = name
+        body['fileUri'] = file_uri
+        body['fileName'] = file_name
+        body['isTextToSpeech'] = is_text_to_speech
         url = self.ep(f'announcements/{announcement_id}')
-        super().put(url, params=params)
+        super().put(url, params=params, json=body)
 
-    def upload_a_binary_announcement_greeting_at_the_location_level(self, location_id: str, name: str,
-                                                                    file: str = None, org_id: str = None) -> str:
+    def upload_a_binary_announcement_greeting_at_the_location_level(self, location_id: str, name: str, file_uri: str,
+                                                                    file_name: str, is_text_to_speech: bool,
+                                                                    org_id: str = None) -> str:
         """
         Upload a binary announcement greeting at the location level
 
@@ -327,21 +400,22 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
 
         An admin can upload a file at a location level. This file will be uploaded to the announcement repository.
 
-        Your request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav`
-        Content-Type.
-
-        **Note:** The `name` parameter is required as a form field and should contain the announcement file name (e.g.,
-        "greeting.wav"). Refer to the example below for the complete request structure.
+        Your request will need to be an `application/json` request with the announcement details including name,
+        fileUri, fileName, and isTextToSpeech fields.
 
         This API requires a full administrator or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write` .
+        `spark-admin:telephony_config_write`.
 
         :param location_id: Unique identifier of a location where an announcement is being created.
         :type location_id: str
-        :param name: The announcement file name (e.g., "greeting.wav"). This is a required field.
+        :param name: Name of the announcement.
         :type name: str
-        :param file: The binary audio file to upload. Must be in WAV format.
-        :type file: str
+        :param file_uri: URI of the announcement file.
+        :type file_uri: str
+        :param file_name: File name of the announcement.
+        :type file_name: str
+        :param is_text_to_speech: Indicates whether the announcement is text-to-speech.
+        :type is_text_to_speech: bool
         :param org_id: Create an announcement for location in this organization.
         :type org_id: str
         :rtype: str
@@ -351,8 +425,9 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body: dict[str, Any] = dict()
         body['name'] = name
-        if file is not None:
-            body['file'] = file
+        body['fileUri'] = file_uri
+        body['fileName'] = file_name
+        body['isTextToSpeech'] = is_text_to_speech
         url = self.ep(f'locations/{location_id}/announcements')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -433,7 +508,8 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         return r
 
     def modify_a_binary_announcement_greeting_at_location_level(self, location_id: str, announcement_id: str,
-                                                                org_id: str = None) -> None:
+                                                                name: str, file_uri: str, file_name: str,
+                                                                is_text_to_speech: bool, org_id: str = None) -> None:
         """
         Modify a binary announcement greeting at location level
 
@@ -442,8 +518,8 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         An admin can upload a file or modify an existing file at a location level. This file will be uploaded to the
         announcement repository.
 
-        Your request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav`
-        Content-Type.
+        Your request will need to be an `application/json` request with the announcement details including name,
+        fileUri, fileName, and isTextToSpeech fields.
 
         This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
@@ -451,6 +527,14 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type location_id: str
         :param announcement_id: Unique identifier of an announcement.
         :type announcement_id: str
+        :param name: Name of the announcement.
+        :type name: str
+        :param file_uri: URI of the announcement file.
+        :type file_uri: str
+        :param file_name: File name of the announcement.
+        :type file_name: str
+        :param is_text_to_speech: Indicates whether the announcement is text-to-speech.
+        :type is_text_to_speech: bool
         :param org_id: Modify an announcement for location in this organization.
         :type org_id: str
         :rtype: None
@@ -458,5 +542,139 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        body['name'] = name
+        body['fileUri'] = file_uri
+        body['fileName'] = file_name
+        body['isTextToSpeech'] = is_text_to_speech
         url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')
-        super().put(url, params=params)
+        super().put(url, params=params, json=body)
+
+    def generate_text_to_speech(self, voice: str, text: str, language_code: str, org_id: str = None) -> str:
+        """
+        Generate a Text-to-Speech Prompt
+
+        Generate a text-to-speech prompt from the provided text, voice, and language.
+
+        Text-to-speech (TTS) efficiently generates prompts, greetings, and announcements by converting written text
+        into synthesized audio using the specified voice. The generated audio functions like a recorded WAV file,
+        eliminating the need for manual recording.
+
+        This API requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param voice: The voice to use for text-to-speech generation.
+        :type voice: str
+        :param text: The text to convert to speech.
+        :type text: str
+        :param language_code: The language code for the text-to-speech generation.
+        :type language_code: str
+        :param org_id: Generate text-to-speech for this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        body['voice'] = voice
+        body['text'] = text
+        body['languageCode'] = language_code
+        url = self.ep('textToSpeech/actions/generate/invoke')
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    def get_text_to_speech_usage(self, org_id: str = None) -> TtsUsageResponse:
+        """
+        Get Text-to-Speech Usage
+
+        Retrieve text-to-speech usage information, including the number of API calls made, the maximum allowed within
+        the time window, and the timestamp indicating when the usage will reset.
+
+        Text-to-speech (TTS) efficiently generates prompts, greetings, and announcements by converting written text
+        into synthesized audio using the specified voice. The generated audio functions like a recorded WAV file,
+        eliminating the need for manual recording.
+
+        This API requires a full or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: Get text-to-speech usage for this organization.
+        :type org_id: str
+        :rtype: :class:`TtsUsageResponse`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('textToSpeech/usage')
+        data = super().get(url, params=params)
+        r = TtsUsageResponse.model_validate(data)
+        return r
+
+    def get_text_to_speech_voices(self, language_code: str = None,
+                                  org_id: str = None) -> builtins.list[TtsVoiceObject]:
+        """
+        Get Available Text-to-Speech Voices
+
+        Retrieve the list of available text-to-speech voices that can be used for generating audio prompts.
+
+        Text-to-speech (TTS) efficiently generates prompts, greetings, and announcements by converting written text
+        into synthesized audio using the specified voice. The generated audio functions like a recorded WAV file,
+        eliminating the need for manual recording.
+
+        This API requires a full or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param language_code: Filter voices by language code.
+        :type language_code: str
+        :param org_id: Get text-to-speech voices for this organization.
+        :type org_id: str
+        :rtype: list[TtsVoiceObject]
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        if language_code is not None:
+            params['languageCode'] = language_code
+        url = self.ep('textToSpeech/voices')
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[TtsVoiceObject]).validate_python(data['voices'])
+        return r
+
+    def get_text_to_speech_generation_status(self, tts_id: str, org_id: str = None) -> TtsStatusResponse:
+        """
+        Get Text-to-Speech Generation Status
+
+        Get the status of a text-to-speech generation request by its ID. If the status is SUCCESS, the response
+        includes `promptUrl`, `kmsKeyUri`, and `fileUri` to preview or use the audio prompt.
+
+        To preview the audio prompt:
+
+        1. Download the KMS key - use the Webex Node.js SDK and provide `kmsKeyUri` to download the key from KMS.
+
+        2. Download the encrypted audio - The encrypted audio file content is stored in cloud and can be retrieved
+        using `promptURL`.
+
+        3. Decrypt the audio content - Use the jose library to decrypt the content downloaded from `promptUrl` using
+        the downloaded key.
+
+        Text-to-speech (TTS) efficiently generates prompts, greetings, and announcements by converting written text
+        into synthesized audio using the specified voice. The generated audio functions like a recorded WAV file,
+        eliminating the need for manual recording.
+
+        This API requires a full or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param tts_id: Unique identifier of the text-to-speech generation request.
+        :type tts_id: str
+        :param org_id: Get text-to-speech status for this organization.
+        :type org_id: str
+        :rtype: :class:`TtsStatusResponse`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'textToSpeech/{tts_id}')
+        data = super().get(url, params=params)
+        r = TtsStatusResponse.model_validate(data)
+        return r
