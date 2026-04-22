@@ -1,3 +1,16 @@
+## 1.34.0 (2026-04-22)
+
+### Feat
+
+- new endpoints: api.person_settings.get, api.person_settings.modify
+- new endpoint api.telephony.get_country_configuration
+- new API api.me.hoteling, new endpoints api.me.voicemail.get_voicemail_rules, api.me.voicemail.update_pin
+- new API api.telephony.text_to_speech
+
+### Fix
+
+- MeSelectiveRejectApi.criteria_get, fixed criteria_id parameter usage
+
 ## 1.33.0 (2026-04-13)
 
 ### Feat
