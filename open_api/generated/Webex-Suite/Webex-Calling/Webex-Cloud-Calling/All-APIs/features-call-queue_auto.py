@@ -12,22 +12,23 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['AgentAction', 'AlternateNumbersWithPattern', 'AnnouncementAudioFileGet', 'AnnouncementAudioFileLevel',
+__all__ = ['AgentAction', 'AlternateNumbersWithPattern', 'AnnouncementAudioFile', 'AnnouncementAudioFileLevel',
            'AudioAnnouncementFileFeatureGetObject', 'AudioAnnouncementFileFeatureGetObjectMediaFileType',
-           'AvailableAgentListObject', 'AvailableAgentObject', 'AvailableSupervisorsListObject',
-           'CallForwardRulesGet', 'CallForwardRulesSet', 'CallForwardSettingsGetCallForwarding',
-           'CallForwardSettingsGetCallForwardingAlways', 'CallForwardSettingsGetCallForwardingOperatingModes',
+           'AudioAnnouncementFileFeatureObject', 'AvailableAgentListObject', 'AvailableAgentObject',
+           'AvailableSupervisorsListObject', 'CallForwardRulesGet', 'CallForwardRulesSet',
+           'CallForwardSettingsGetCallForwarding', 'CallForwardSettingsGetCallForwardingAlways',
+           'CallForwardSettingsGetCallForwardingOperatingModes',
            'CallForwardSettingsGetCallForwardingOperatingModesExceptionType', 'CallForwardingNumbers',
            'CallForwardingNumbersType', 'CallQueueCallForwardAvailableNumberObject',
            'CallQueueCallForwardAvailableNumberObjectOwner', 'CallQueueHolidaySchedulesObject',
            'CallQueueHolidaySchedulesObjectScheduleLevel', 'CallQueuePrimaryAvailableNumberObject',
            'CallQueueQueueEssentialsSettingsObject', 'CallQueueQueueEssentialsSettingsObjectOverflow',
-           'CallQueueQueueSettingsGetObject', 'CallQueueQueueSettingsGetObjectComfortMessage',
-           'CallQueueQueueSettingsGetObjectComfortMessageBypass', 'CallQueueQueueSettingsGetObjectMohMessage',
-           'CallQueueQueueSettingsGetObjectMohMessageNormalSource', 'CallQueueQueueSettingsGetObjectOverflow',
            'CallQueueQueueSettingsGetObjectOverflowAction', 'CallQueueQueueSettingsGetObjectOverflowGreeting',
            'CallQueueQueueSettingsGetObjectWaitMessage', 'CallQueueQueueSettingsGetObjectWaitMessageWaitMode',
-           'CallQueueQueueSettingsGetObjectWelcomeMessage', 'CallQueueQueueSettingsGetObjectWhisperMessage',
+           'CallQueueQueueSettingsObject', 'CallQueueQueueSettingsObjectComfortMessage',
+           'CallQueueQueueSettingsObjectComfortMessageBypass', 'CallQueueQueueSettingsObjectMohMessage',
+           'CallQueueQueueSettingsObjectMohMessageNormalSource', 'CallQueueQueueSettingsObjectOverflow',
+           'CallQueueQueueSettingsObjectWelcomeMessage', 'CallQueueQueueSettingsObjectWhisperMessage',
            'CreateCallQueueObjectCallingLineIdPolicy', 'CreateForwardingRuleObjectCallsFrom',
            'CreateForwardingRuleObjectCallsFromCustomNumbers', 'CreateForwardingRuleObjectCallsFromSelection',
            'CreateForwardingRuleObjectCallsTo', 'CreateForwardingRuleObjectForwardTo',
@@ -40,9 +41,8 @@ __all__ = ['AgentAction', 'AlternateNumbersWithPattern', 'AnnouncementAudioFileG
            'GetCallQueueNightServiceObject', 'GetCallQueueNightServiceObjectAnnouncementMode',
            'GetCallQueueObjectAlternateNumberSettings', 'GetCallQueueStrandedCallsObject',
            'GetCallQueueStrandedCallsObjectAction', 'GetForwardingRuleObject', 'GetPersonPlaceObject',
-           'GetPersonPlaceVirtualLineCallQueueObjectType',
-           'GetSupervisorDetailWithCustomerExperienceEssentialsResponse', 'GetUserNumberItemObject',
-           'HuntPolicySelection', 'HuntRoutingTypeSelection', 'ListCallQueueAgentObject',
+           'GetPersonPlaceVirtualLineCallQueueObjectType', 'GetSupervisorDetailWithCustomerAssistResponse',
+           'GetUserNumberItemObject', 'HuntPolicySelection', 'HuntRoutingTypeSelection', 'ListCallQueueAgentObject',
            'ListCallQueueEssentialsObject', 'ListSupervisorAgentObject', 'ListSupervisorObject', 'LocationObject',
            'MediaType', 'ModesGet', 'ModesGetForwardTo', 'ModesGetForwardToDefaultForwardToSelection', 'ModesGetType',
            'ModesPatch', 'ModesPatchForwardTo', 'ModifyAgentsForCallQueueObjectSettingsItem',
@@ -77,10 +77,11 @@ class AnnouncementAudioFileLevel(str, Enum):
     entity = 'ENTITY'
 
 
-class AnnouncementAudioFileGet(ApiModel):
+class AnnouncementAudioFile(ApiModel):
     #: Unique identifier of the Announcement file.
     id: Optional[str] = None
-    #: Name of the announcement file.
+    #: Name of the announcement file. `name`, `mediaFileType`, `level` are mandatory if `id` is not provided for
+    #: uploading an announcement.
     name: Optional[str] = None
     #: Media file type of announcement file.
     media_file_type: Optional[str] = None
@@ -99,6 +100,20 @@ class AudioAnnouncementFileFeatureGetObjectMediaFileType(str, Enum):
 
 class AudioAnnouncementFileFeatureGetObject(ApiModel):
     #: A unique identifier for the announcement.
+    id: Optional[str] = None
+    #: Audio announcement file name.
+    file_name: Optional[str] = None
+    #: Audio announcement file type.
+    media_file_type: Optional[AudioAnnouncementFileFeatureGetObjectMediaFileType] = None
+    #: Audio announcement file type location.
+    level: Optional[AnnouncementAudioFileLevel] = None
+    #: Indicates whether the announcement is a text-to-speech file.
+    is_text_to_speech: Optional[bool] = None
+
+
+class AudioAnnouncementFileFeatureObject(ApiModel):
+    #: A unique identifier for the announcement. `name`, `mediaFileType`, `level` are mandatory if `id` is not provided
+    #: for uploading an announcement.
     id: Optional[str] = None
     #: Audio announcement file name.
     file_name: Optional[str] = None
@@ -289,44 +304,6 @@ class CallQueueQueueSettingsGetObjectOverflowGreeting(str, Enum):
     default = 'DEFAULT'
 
 
-class CallQueueQueueSettingsGetObjectOverflow(ApiModel):
-    #: Indicates how to handle new calls when the queue is full.
-    action: Optional[CallQueueQueueSettingsGetObjectOverflowAction] = None
-    #: When `true`, forwards all calls to a voicemail service of an internal number. This option is ignored when an
-    #: external `transferNumber` is entered.
-    send_to_voicemail: Optional[bool] = None
-    #: Destination number for overflow calls when `action` is set to `TRANSFER_TO_PHONE_NUMBER`.
-    transfer_number: Optional[str] = None
-    #: After calls wait for the configured number of seconds and no agent is available, the overflow treatment is
-    #: triggered.
-    overflow_after_wait_enabled: Optional[bool] = None
-    #: Number of seconds to wait before the overflow treatment is triggered when no agent is available. The minimum
-    #: value 0, The maximum value is 7200 seconds.
-    overflow_after_wait_time: Optional[int] = None
-    #: Indicate overflow audio to be played, otherwise, callers will hear the hold music until the call is answered by
-    #: a user.
-    play_overflow_greeting_enabled: Optional[bool] = None
-    #: Indicates how to handle new calls when the queue is full.
-    greeting: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
-    #: Array of announcement files to be played as `overflow` greetings. These files are from the list of announcement
-    #: files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is mandatory, and the
-    #: maximum is 4.
-    audio_announcement_files: Optional[list[AnnouncementAudioFileGet]] = None
-
-
-class CallQueueQueueSettingsGetObjectWelcomeMessage(ApiModel):
-    #: If enabled play entrance message. The default value is `true`.
-    enabled: Optional[bool] = None
-    #: Mandatory entrance message. The default value is `false`.
-    always_enabled: Optional[bool] = None
-    #: Indicates how to handle new calls when the queue is full.
-    greeting: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
-    #: Array of announcement files to be played as `welcomeMessage` greetings. These files are from the list of
-    #: announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is
-    #: mandatory, and the maximum is 4.
-    audio_announcement_files: Optional[list[AnnouncementAudioFileGet]] = None
-
-
 class CallQueueQueueSettingsGetObjectWaitMessageWaitMode(str, Enum):
     #: Announce the waiting time.
     time = 'TIME'
@@ -362,7 +339,45 @@ class CallQueueQueueSettingsGetObjectWaitMessage(ApiModel):
     play_updated_estimated_wait_message: Optional[bool] = None
 
 
-class CallQueueQueueSettingsGetObjectComfortMessage(ApiModel):
+class CallQueueQueueSettingsObjectOverflow(ApiModel):
+    #: Indicates how to handle new calls when the queue is full.
+    action: Optional[CallQueueQueueSettingsGetObjectOverflowAction] = None
+    #: When `true`, forwards all calls to a voicemail service of an internal number. This option is ignored when an
+    #: external `transferNumber` is entered.
+    send_to_voicemail: Optional[bool] = None
+    #: Destination number for overflow calls when `action` is set to `TRANSFER_TO_PHONE_NUMBER`.
+    transfer_number: Optional[str] = None
+    #: After calls wait for the configured number of seconds and no agent is available, the overflow treatment is
+    #: triggered.
+    overflow_after_wait_enabled: Optional[bool] = None
+    #: Number of seconds to wait before the overflow treatment is triggered when no agent is available. The minimum
+    #: value 0, The maximum value is 7200 seconds.
+    overflow_after_wait_time: Optional[int] = None
+    #: Indicate overflow audio to be played, otherwise, callers will hear the hold music until the call is answered by
+    #: a user.
+    play_overflow_greeting_enabled: Optional[bool] = None
+    #: Indicates how to handle new calls when the queue is full.
+    greeting: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
+    #: Array of announcement files to be played as `overflow` greetings. These files are from the list of announcement
+    #: files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is mandatory, and the
+    #: maximum is 4.
+    audio_announcement_files: Optional[list[AnnouncementAudioFile]] = None
+
+
+class CallQueueQueueSettingsObjectWelcomeMessage(ApiModel):
+    #: If enabled play entrance message. The default value is `true`.
+    enabled: Optional[bool] = None
+    #: Mandatory entrance message. The default value is `false`.
+    always_enabled: Optional[bool] = None
+    #: Indicates how to handle new calls when the queue is full.
+    greeting: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
+    #: Array of announcement files to be played as `welcomeMessage` greetings. These files are from the list of
+    #: announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is
+    #: mandatory, and the maximum is 4.
+    audio_announcement_files: Optional[list[AnnouncementAudioFile]] = None
+
+
+class CallQueueQueueSettingsObjectComfortMessage(ApiModel):
     #: If enabled play periodic comfort message.
     enabled: Optional[bool] = None
     #: The interval in seconds between each repetition of the comfort message played to queued users. The minimum time
@@ -373,10 +388,10 @@ class CallQueueQueueSettingsGetObjectComfortMessage(ApiModel):
     #: Array of announcement files to be played as `comfortMessage` greetings. These files are from the list of
     #: announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is
     #: mandatory, and the maximum is 4.
-    audio_announcement_files: Optional[list[AnnouncementAudioFileGet]] = None
+    audio_announcement_files: Optional[list[AnnouncementAudioFile]] = None
 
 
-class CallQueueQueueSettingsGetObjectComfortMessageBypass(ApiModel):
+class CallQueueQueueSettingsObjectComfortMessageBypass(ApiModel):
     #: If enabled play comfort bypass message.
     enabled: Optional[bool] = None
     #: The interval in seconds between each repetition of the comfort bypass message played to queued users. The
@@ -387,10 +402,10 @@ class CallQueueQueueSettingsGetObjectComfortMessageBypass(ApiModel):
     #: Array of announcement files to be played as `comfortMessageBypass` greetings. These files are from the list of
     #: announcements files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is
     #: mandatory, and the maximum is 4.
-    audio_announcement_files: Optional[list[AnnouncementAudioFileGet]] = None
+    audio_announcement_files: Optional[list[AnnouncementAudioFile]] = None
 
 
-class CallQueueQueueSettingsGetObjectMohMessageNormalSource(ApiModel):
+class CallQueueQueueSettingsObjectMohMessageNormalSource(ApiModel):
     #: Enable media on hold for queued calls.
     enabled: Optional[bool] = None
     #: Indicates how to handle new calls when the queue is full.
@@ -398,17 +413,17 @@ class CallQueueQueueSettingsGetObjectMohMessageNormalSource(ApiModel):
     #: Array of announcement files to be played as `mohMessage` greetings. These files are from the list of
     #: announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is
     #: mandatory, and the maximum is 4.
-    audio_announcement_files: Optional[list[AnnouncementAudioFileGet]] = None
+    audio_announcement_files: Optional[list[AnnouncementAudioFile]] = None
     #: Identifier of the playlist used for this MOH source.
     audio_playlist_id: Optional[str] = None
 
 
-class CallQueueQueueSettingsGetObjectMohMessage(ApiModel):
-    normal_source: Optional[CallQueueQueueSettingsGetObjectMohMessageNormalSource] = None
-    alternate_source: Optional[CallQueueQueueSettingsGetObjectMohMessageNormalSource] = None
+class CallQueueQueueSettingsObjectMohMessage(ApiModel):
+    normal_source: Optional[CallQueueQueueSettingsObjectMohMessageNormalSource] = None
+    alternate_source: Optional[CallQueueQueueSettingsObjectMohMessageNormalSource] = None
 
 
-class CallQueueQueueSettingsGetObjectWhisperMessage(ApiModel):
+class CallQueueQueueSettingsObjectWhisperMessage(ApiModel):
     #: If enabled play the Whisper Message.
     enabled: Optional[bool] = None
     #: Indicates how to handle new calls when the queue is full.
@@ -416,10 +431,10 @@ class CallQueueQueueSettingsGetObjectWhisperMessage(ApiModel):
     #: Array of announcement files to be played as `whisperMessage` greetings. These files are from the list of
     #: announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is
     #: mandatory, and the maximum is 4.
-    audio_announcement_files: Optional[list[AnnouncementAudioFileGet]] = None
+    audio_announcement_files: Optional[list[AnnouncementAudioFile]] = None
 
 
-class CallQueueQueueSettingsGetObject(ApiModel):
+class CallQueueQueueSettingsObject(ApiModel):
     #: The maximum number of calls for this call queue. Once this number is reached, the `overflow` settings are
     #: triggered.
     queue_size: Optional[int] = None
@@ -428,27 +443,27 @@ class CallQueueQueueSettingsGetObject(ApiModel):
     #: Reset caller statistics upon queue entry.
     reset_call_statistics_enabled: Optional[bool] = None
     #: Settings for incoming calls exceed queueSize.
-    overflow: Optional[CallQueueQueueSettingsGetObjectOverflow] = None
+    overflow: Optional[CallQueueQueueSettingsObjectOverflow] = None
     #: Play a message when callers first reach the queue. For example, “Thank you for calling. An agent will be with
     #: you shortly.” It can be set as mandatory. If the mandatory option is not selected and a caller reaches the call
     #: queue while there is an available agent, the caller will not hear this announcement and is transferred to an
     #: agent. The welcome message feature is enabled by default.
-    welcome_message: Optional[CallQueueQueueSettingsGetObjectWelcomeMessage] = None
+    welcome_message: Optional[CallQueueQueueSettingsObjectWelcomeMessage] = None
     #: Notify the caller with either their estimated wait time or position in the queue. If this option is enabled, it
     #: plays after the welcome message and before the comfort message. By default, it is not enabled.
     wait_message: Optional[CallQueueQueueSettingsGetObjectWaitMessage] = None
     #: Play a message after the welcome message and before hold music. This is typically a `CUSTOM` announcement that
     #: plays information, such as current promotions or information about products and services.
-    comfort_message: Optional[CallQueueQueueSettingsGetObjectComfortMessage] = None
+    comfort_message: Optional[CallQueueQueueSettingsObjectComfortMessage] = None
     #: Play a shorter comfort message instead of the usual Comfort or Music On Hold announcement to all the calls that
     #: should be answered quickly. This feature prevents a caller from hearing a short portion of the standard comfort
     #: message that abruptly ends when they are connected to an agent.
-    comfort_message_bypass: Optional[CallQueueQueueSettingsGetObjectComfortMessageBypass] = None
+    comfort_message_bypass: Optional[CallQueueQueueSettingsObjectComfortMessageBypass] = None
     #: Play music after the comforting message in a repetitive loop.
-    moh_message: Optional[CallQueueQueueSettingsGetObjectMohMessage] = None
+    moh_message: Optional[CallQueueQueueSettingsObjectMohMessage] = None
     #: Play a message to the agent immediately before the incoming call is connected. The message typically announces
     #: the identity of the call queue from which the call is coming.
-    whisper_message: Optional[CallQueueQueueSettingsGetObjectWhisperMessage] = None
+    whisper_message: Optional[CallQueueQueueSettingsObjectWhisperMessage] = None
 
 
 class CreateCallQueueObjectCallingLineIdPolicy(str, Enum):
@@ -587,6 +602,8 @@ class GetAnnouncementFileInfo(ApiModel):
     media_file_type: Optional[MediaType] = None
     #: Level where the announcement is created.
     level: Optional[AnnouncementAudioFileLevel] = None
+    #: Indicates whether the announcement is a text-to-speech file.
+    is_text_to_speech: Optional[bool] = None
 
 
 class GetCallQueueForcedForwardObject(ApiModel):
@@ -1091,7 +1108,7 @@ class ListCallQueueEssentialsObject(ApiModel):
     id: Optional[str] = None
     #: Unique name for the call queue.
     name: Optional[str] = None
-    #: Denotes if the call queue has Customer Experience Essentials license.
+    #: Denotes if the call queue has Customer Assist license.
     has_cx_essentials: Optional[bool] = None
     #: Name of location for call queue.
     location_name: Optional[str] = None
@@ -1171,7 +1188,7 @@ class GetCallQueueEssentialsObject(ApiModel):
     id: Optional[str] = None
     #: Unique name for the call queue.
     name: Optional[str] = None
-    #: Denotes if the call queue has Customer Experience Essentials license.
+    #: Denotes if the call queue has Customer Assist license.
     has_cx_essentials: Optional[bool] = None
     #: Whether or not the call queue is enabled.
     enabled: Optional[bool] = None
@@ -1210,7 +1227,7 @@ class GetCallQueueEssentialsObject(ApiModel):
     dial_by_name: Optional[str] = None
 
 
-class GetSupervisorDetailWithCustomerExperienceEssentialsResponse(ApiModel):
+class GetSupervisorDetailWithCustomerAssistResponse(ApiModel):
     #: unique identifier of the supervisor
     id: Optional[str] = None
     #: Array of agents assigned to a specific supervisor.
@@ -1235,22 +1252,21 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
     query parameter.
     """
 
-    def create_a_call_queue_with_customer_experience_essentials(self, location_id: str, name: str,
-                                                                call_policies: GetCallQueueCallPolicyObject,
-                                                                queue_settings: CallQueueQueueSettingsGetObject,
-                                                                agents: list[PostPersonPlaceVirtualLineCallQueueObject],
-                                                                has_cx_essentials: bool = None,
-                                                                phone_number: str = None, extension: str = None,
-                                                                language_code: str = None, first_name: str = None,
-                                                                last_name: str = None, time_zone: str = None,
-                                                                calling_line_id_policy: CreateCallQueueObjectCallingLineIdPolicy = None,
-                                                                calling_line_id_phone_number: str = None,
-                                                                allow_agent_join_enabled: bool = None,
-                                                                phone_number_for_outgoing_calls_enabled: bool = None,
-                                                                direct_line_caller_id_name: DirectLineCallerIdNameObject = None,
-                                                                dial_by_name: str = None, org_id: str = None) -> str:
+    def create_a_call_queue_with_customer_assist(self, location_id: str, name: str,
+                                                 call_policies: GetCallQueueCallPolicyObject,
+                                                 queue_settings: CallQueueQueueSettingsObject,
+                                                 agents: list[PostPersonPlaceVirtualLineCallQueueObject],
+                                                 has_cx_essentials: bool = None, phone_number: str = None,
+                                                 extension: str = None, language_code: str = None,
+                                                 first_name: str = None, last_name: str = None, time_zone: str = None,
+                                                 calling_line_id_policy: CreateCallQueueObjectCallingLineIdPolicy = None,
+                                                 calling_line_id_phone_number: str = None,
+                                                 allow_agent_join_enabled: bool = None,
+                                                 phone_number_for_outgoing_calls_enabled: bool = None,
+                                                 direct_line_caller_id_name: DirectLineCallerIdNameObject = None,
+                                                 dial_by_name: str = None, org_id: str = None) -> str:
         """
-        Create a Call Queue with Customer Experience Essentials
+        Create a Call Queue with Customer Assist
 
         Create new Call Queues for the given location.
 
@@ -1263,10 +1279,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         which can be dialed internally to reach the users assigned to the call queue.
 
         Creating a call queue requires a full administrator or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.<div><Callout type="warning">The fields
-        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in
-        Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to
-        configure and view both caller ID and dial-by-name settings.</Callout></div>
+        `spark-admin:telephony_config_write`.
 
         :param location_id: The location ID where the call queue needs to be created.
         :type location_id: str
@@ -1275,11 +1288,11 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :param call_policies: Policy controlling how calls are routed to `agents`.
         :type call_policies: GetCallQueueCallPolicyObject
         :param queue_settings: Overall call queue settings.
-        :type queue_settings: CallQueueQueueSettingsGetObject
+        :type queue_settings: CallQueueQueueSettingsObject
         :param agents: People, workspaces and virtual lines that are eligible to receive calls.
         :type agents: list[PostPersonPlaceVirtualLineCallQueueObject]
-        :param has_cx_essentials: Creates a Customer Experience Essentials call queue, when `true`. This requires
-            Customer Experience Essentials licensed agents.
+        :param has_cx_essentials: Creates a Customer Assist call queue, when `true`. This requires Customer Assist
+            licensed agents.
         :type has_cx_essentials: bool
         :param phone_number: Primary phone number of the call queue. Either a `phoneNumber` or `extension` is
             mandatory.
@@ -1497,11 +1510,11 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/queues/{queue_id}')
         super().delete(url, params=params)
 
-    def get_details_for_a_call_queue_with_customer_experience_essentials(self, location_id: str, queue_id: str,
-                                                                         has_cx_essentials: bool = None,
-                                                                         org_id: str = None) -> GetCallQueueEssentialsObject:
+    def get_details_for_a_call_queue_with_customer_assist(self, location_id: str, queue_id: str,
+                                                          has_cx_essentials: bool = None,
+                                                          org_id: str = None) -> GetCallQueueEssentialsObject:
         """
-        Get Details for a Call Queue with Customer Experience Essentials
+        Get Details for a Call Queue with Customer Assist
 
         Retrieve Call Queue details.
 
@@ -1514,17 +1527,14 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         which can be dialed internally to reach the users assigned to the call queue.
 
         Retrieving call queue details requires a full or read-only administrator auth token with a scope of
-        `spark-admin:telephony_config_read`.<div><Callout type="warning">The fields
-        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in
-        Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to
-        configure and view both caller ID and dial-by-name settings.</Callout></div>
+        `spark-admin:telephony_config_read`.
 
         :param location_id: Retrieves the details of a call queue in this location.
         :type location_id: str
         :param queue_id: Retrieves the details of call queue with this identifier.
         :type queue_id: str
-        :param has_cx_essentials: Must be set to `true`, to view the details of a call queue with Customer Experience
-            Essentials license. This can otherwise be ommited or set to `false`.
+        :param has_cx_essentials: Must be set to `true`, to view the details of a call queue with Customer Assist
+            license. This can otherwise be ommited or set to `false`.
         :type has_cx_essentials: bool
         :param org_id: Retrieves the details of a call queue in this organization.
         :type org_id: str
@@ -1540,7 +1550,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         r = GetCallQueueEssentialsObject.model_validate(data)
         return r
 
-    def update_a_call_queue(self, location_id: str, queue_id: str, queue_settings: CallQueueQueueSettingsGetObject,
+    def update_a_call_queue(self, location_id: str, queue_id: str, queue_settings: CallQueueQueueSettingsObject,
                             enabled: bool = None, name: str = None, language_code: str = None, first_name: str = None,
                             last_name: str = None, time_zone: str = None, phone_number: str = None,
                             extension: str = None,
@@ -1568,17 +1578,14 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         internally to reach users assigned to the call queue.
 
         Updating a call queue requires a full administrator or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.<div><Callout type="warning">The fields
-        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in
-        Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to
-        configure and view both caller ID and dial-by-name settings.</Callout></div>
+        `spark-admin:telephony_config_write`.
 
         :param location_id: Location in which this call queue exists.
         :type location_id: str
         :param queue_id: Update setting for the call queue with the matching ID.
         :type queue_id: str
         :param queue_settings: Overall call queue settings.
-        :type queue_settings: CallQueueQueueSettingsGetObject
+        :type queue_settings: CallQueueQueueSettingsObject
         :param enabled: Whether or not the call queue is enabled.
         :type enabled: bool
         :param name: Unique name for the call queue.
@@ -2065,7 +2072,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                                                    play_announcement_before_enabled: bool,
                                                    audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
                                                    transfer_phone_number: str = None,
-                                                   audio_files: list[AudioAnnouncementFileFeatureGetObject] = None,
+                                                   audio_files: list[AudioAnnouncementFileFeatureObject] = None,
                                                    org_id: str = None) -> None:
         """
         Update a Call Queue Forced Forward service
@@ -2094,7 +2101,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             also be an extension.
         :type transfer_phone_number: str
         :param audio_files: List of pre-configured Announcement Audio Files when `audioMessageSelection` is `CUSTOM`.
-        :type audio_files: list[AudioAnnouncementFileFeatureGetObject]
+        :type audio_files: list[AudioAnnouncementFileFeatureObject]
         :param org_id: Update call queue settings from this organization.
         :type org_id: str
         :rtype: None
@@ -2109,7 +2116,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         body['playAnnouncementBeforeEnabled'] = play_announcement_before_enabled
         body['audioMessageSelection'] = enum_str(audio_message_selection)
         if audio_files is not None:
-            body['audioFiles'] = TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_python(audio_files, mode='json', by_alias=True, exclude_none=True)
+            body['audioFiles'] = TypeAdapter(list[AudioAnnouncementFileFeatureObject]).dump_python(audio_files, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/forcedForward')
         super().put(url, params=params, json=body)
 
@@ -2147,7 +2154,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                                             play_announcement_before_enabled: bool,
                                             audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
                                             holiday_schedule_name: str = None, transfer_phone_number: str = None,
-                                            audio_files: list[AudioAnnouncementFileFeatureGetObject] = None,
+                                            audio_files: list[AudioAnnouncementFileFeatureObject] = None,
                                             org_id: str = None) -> None:
         """
         Update a Call Queue Holiday Service
@@ -2182,7 +2189,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             also be an extension.
         :type transfer_phone_number: str
         :param audio_files: List of pre-configured Announcement Audio Files when `audioMessageSelection` is `CUSTOM`.
-        :type audio_files: list[AudioAnnouncementFileFeatureGetObject]
+        :type audio_files: list[AudioAnnouncementFileFeatureObject]
         :param org_id: Update call queue settings from this organization.
         :type org_id: str
         :rtype: None
@@ -2201,7 +2208,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         body['playAnnouncementBeforeEnabled'] = play_announcement_before_enabled
         body['audioMessageSelection'] = enum_str(audio_message_selection)
         if audio_files is not None:
-            body['audioFiles'] = TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_python(audio_files, mode='json', by_alias=True, exclude_none=True)
+            body['audioFiles'] = TypeAdapter(list[AudioAnnouncementFileFeatureObject]).dump_python(audio_files, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/holidayService')
         super().put(url, params=params, json=body)
 
@@ -2242,10 +2249,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                                           manual_audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
                                           action: GetCallQueueHolidayObjectAction = None,
                                           transfer_phone_number: str = None,
-                                          audio_files: list[AudioAnnouncementFileFeatureGetObject] = None,
+                                          audio_files: list[AudioAnnouncementFileFeatureObject] = None,
                                           business_hours_name: str = None,
                                           business_hours_level: CallQueueHolidaySchedulesObjectScheduleLevel = None,
-                                          manual_audio_files: list[AudioAnnouncementFileFeatureGetObject] = None,
+                                          manual_audio_files: list[AudioAnnouncementFileFeatureObject] = None,
                                           org_id: str = None) -> None:
         """
         Update a Call Queue Night Service
@@ -2283,7 +2290,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             also be an extension.
         :type transfer_phone_number: str
         :param audio_files: List of pre-configured Announcement Audio Files when `audioMessageSelection` is `CUSTOM`.
-        :type audio_files: list[AudioAnnouncementFileFeatureGetObject]
+        :type audio_files: list[AudioAnnouncementFileFeatureObject]
         :param business_hours_name: Name of the schedule configured for a night service as one of from
             `businessHourSchedules` list.
         :type business_hours_name: str
@@ -2291,7 +2298,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             `businessHourSchedules` list)
         :type business_hours_level: CallQueueHolidaySchedulesObjectScheduleLevel
         :param manual_audio_files: List Of pre-configured Audio Files.
-        :type manual_audio_files: list[AudioAnnouncementFileFeatureGetObject]
+        :type manual_audio_files: list[AudioAnnouncementFileFeatureObject]
         :param org_id: Update call queue night service settings from this organization.
         :type org_id: str
         :rtype: None
@@ -2309,7 +2316,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         body['announcementMode'] = enum_str(announcement_mode)
         body['audioMessageSelection'] = enum_str(audio_message_selection)
         if audio_files is not None:
-            body['audioFiles'] = TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_python(audio_files, mode='json', by_alias=True, exclude_none=True)
+            body['audioFiles'] = TypeAdapter(list[AudioAnnouncementFileFeatureObject]).dump_python(audio_files, mode='json', by_alias=True, exclude_none=True)
         if business_hours_name is not None:
             body['businessHoursName'] = business_hours_name
         if business_hours_level is not None:
@@ -2317,7 +2324,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         body['forceNightServiceEnabled'] = force_night_service_enabled
         body['manualAudioMessageSelection'] = enum_str(manual_audio_message_selection)
         if manual_audio_files is not None:
-            body['manualAudioFiles'] = TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_python(manual_audio_files, mode='json', by_alias=True, exclude_none=True)
+            body['manualAudioFiles'] = TypeAdapter(list[AudioAnnouncementFileFeatureObject]).dump_python(manual_audio_files, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/nightService')
         super().put(url, params=params, json=body)
 
@@ -2356,7 +2363,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                                                    action: GetCallQueueHolidayObjectAction,
                                                    audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
                                                    transfer_phone_number: str = None,
-                                                   audio_files: list[AudioAnnouncementFileFeatureGetObject] = None,
+                                                   audio_files: list[AudioAnnouncementFileFeatureObject] = None,
                                                    org_id: str = None) -> None:
         """
         Update a Call Queue Stranded Calls service
@@ -2380,7 +2387,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             also be an extension.
         :type transfer_phone_number: str
         :param audio_files: List of pre-configured Announcement Audio Files when `audioMessageSelection` is `CUSTOM`.
-        :type audio_files: list[AudioAnnouncementFileFeatureGetObject]
+        :type audio_files: list[AudioAnnouncementFileFeatureObject]
         :param org_id: Update call queue settings from this organization.
         :type org_id: str
         :rtype: None
@@ -2394,19 +2401,17 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             body['transferPhoneNumber'] = transfer_phone_number
         body['audioMessageSelection'] = enum_str(audio_message_selection)
         if audio_files is not None:
-            body['audioFiles'] = TypeAdapter(list[AudioAnnouncementFileFeatureGetObject]).dump_python(audio_files, mode='json', by_alias=True, exclude_none=True)
+            body['audioFiles'] = TypeAdapter(list[AudioAnnouncementFileFeatureObject]).dump_python(audio_files, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/strandedCalls')
         super().put(url, params=params, json=body)
 
-    def read_the_list_of_call_queues_with_customer_experience_essentials(self, location_id: str = None,
-                                                                         name: str = None, phone_number: str = None,
-                                                                         department_id: str = None,
-                                                                         department_name: str = None,
-                                                                         has_cx_essentials: bool = None,
-                                                                         org_id: str = None,
-                                                                         **params: Any) -> Generator[ListCallQueueEssentialsObject, None, None]:
+    def read_the_list_of_call_queues_with_customer_assist(self, location_id: str = None, name: str = None,
+                                                          phone_number: str = None, department_id: str = None,
+                                                          department_name: str = None, has_cx_essentials: bool = None,
+                                                          org_id: str = None,
+                                                          **params: Any) -> Generator[ListCallQueueEssentialsObject, None, None]:
         """
-        Read the List of Call Queues with Customer Experience Essentials
+        Read the List of Call Queues with Customer Assist
 
         List all Call Queues for the organization.
 
@@ -2430,8 +2435,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type department_id: str
         :param department_name: Returns only call queues matching the given department name.
         :type department_name: str
-        :param has_cx_essentials: Returns only the list of call queues with Customer Experience Essentials license when
-            `true`, otherwise returns the list of Customer Experience Basic call queues.
+        :param has_cx_essentials: Returns only the list of call queues with Customer Assist license when `true`,
+            otherwise returns the list of Customer Experience Basic call queues.
         :type has_cx_essentials: bool
         :param org_id: Returns the list of call queues in this organization.
         :type org_id: str
@@ -2454,15 +2459,14 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep('queues')
         return self.session.follow_pagination(url=url, model=ListCallQueueEssentialsObject, item_key='queues', params=params)
 
-    def read_the_list_of_call_queue_agents_with_customer_experience_essentials(self, location_id: str = None,
-                                                                               queue_id: str = None, name: str = None,
-                                                                               phone_number: str = None,
-                                                                               join_enabled: bool = None,
-                                                                               has_cx_essentials: bool = None,
-                                                                               order: str = None, org_id: str = None,
-                                                                               **params: Any) -> Generator[ListCallQueueAgentObject, None, None]:
+    def read_the_list_of_call_queue_agents_with_customer_assist(self, location_id: str = None, queue_id: str = None,
+                                                                name: str = None, phone_number: str = None,
+                                                                join_enabled: bool = None,
+                                                                has_cx_essentials: bool = None, order: str = None,
+                                                                org_id: str = None,
+                                                                **params: Any) -> Generator[ListCallQueueAgentObject, None, None]:
         """
-        Read the List of Call Queue Agents with Customer Experience Essentials
+        Read the List of Call Queue Agents with Customer Assist
 
         List all Call Queues Agents for the organization.
 
@@ -2486,8 +2490,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type phone_number: str
         :param join_enabled: Returns only the list of call queue agents that match the given `joinEnabled` value.
         :type join_enabled: bool
-        :param has_cx_essentials: Returns only the list of call queues with Customer Experience Essentials license when
-            `true`, otherwise returns the list of Customer Experience Basic call queues.
+        :param has_cx_essentials: Returns only the list of call queues with Customer Assist license when `true`,
+            otherwise returns the list of Customer Experience Basic call queues.
         :type has_cx_essentials: bool
         :param order: Sort results alphabetically by call queue agent's name, in ascending or descending order.
         :type order: str
@@ -2558,11 +2562,11 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep('queues/agents/availableAgents')
         return self.session.follow_pagination(url=url, model=AvailableAgentObject, item_key='agents', params=params)
 
-    def get_details_for_a_call_queue_agent_with_customer_experience_essentials(self, id: str, max_: int, start: int,
-                                                                               has_cx_essentials: bool = None,
-                                                                               org_id: str = None) -> GetCallQueueAgentObject:
+    def get_details_for_a_call_queue_agent_with_customer_assist(self, id: str, max_: int, start: int,
+                                                                has_cx_essentials: bool = None,
+                                                                org_id: str = None) -> GetCallQueueAgentObject:
         """
-        Get Details for a Call Queue Agent with Customer Experience Essentials
+        Get Details for a Call Queue Agent with Customer Assist
 
         Retrieve details of a particular Call queue agent based on the agent ID.
 
@@ -2583,8 +2587,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
-        :param has_cx_essentials: Must be set to `true` to view the details of an agent with Customer Experience
-            Essentials license. This can otherwise be ommited or set to `false`.
+        :param has_cx_essentials: Must be set to `true` to view the details of an agent with Customer Assist license.
+            This can otherwise be ommited or set to `false`.
         :type has_cx_essentials: bool
         :param org_id: Retrieve call queue agents from this organization.
         :type org_id: str
@@ -2602,12 +2606,12 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         r = GetCallQueueAgentObject.model_validate(data)
         return r
 
-    def update_an_agent_s_settings_of_one_or_more_call_queues_with_customer_experience_essentials(self, id: str,
-                                                                                                  settings: list[ModifyAgentsForCallQueueObjectSettingsItem],
-                                                                                                  has_cx_essentials: bool = None,
-                                                                                                  org_id: str = None) -> None:
+    def update_an_agent_s_settings_of_one_or_more_call_queues_with_customer_assist(self, id: str,
+                                                                                   settings: list[ModifyAgentsForCallQueueObjectSettingsItem],
+                                                                                   has_cx_essentials: bool = None,
+                                                                                   org_id: str = None) -> None:
         """
-        Update an Agent's Settings of One or More Call Queues with Customer Experience Essentials
+        Update an Agent's Settings of One or More Call Queues with Customer Assist
 
         Modify an agent's call queue settings for an organization.
 
@@ -2620,8 +2624,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type id: str
         :param settings: -
         :type settings: list[ModifyAgentsForCallQueueObjectSettingsItem]
-        :param has_cx_essentials: Must be set to `true` to modify an agent that has Customer Experience Essentials
-            license. This can otherwise be ommited or set to `false`.
+        :param has_cx_essentials: Must be set to `true` to modify an agent that has Customer Assist license. This can
+            otherwise be ommited or set to `false`.
         :type has_cx_essentials: bool
         :param org_id: Update the settings of an agent in this organization.
         :type org_id: str
@@ -2666,12 +2670,12 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep('supervisors')
         super().delete(url, params=params, json=body)
 
-    def get_list_of_supervisors_with_customer_experience_essentials(self, name: str = None, phone_number: str = None,
-                                                                    order: str = None, has_cx_essentials: bool = None,
-                                                                    org_id: str = None,
-                                                                    **params: Any) -> Generator[ListSupervisorObject, None, None]:
+    def get_list_of_supervisors_with_customer_assist(self, name: str = None, phone_number: str = None,
+                                                     order: str = None, has_cx_essentials: bool = None,
+                                                     org_id: str = None,
+                                                     **params: Any) -> Generator[ListSupervisorObject, None, None]:
         """
-        Get List of Supervisors with Customer Experience Essentials
+        Get List of Supervisors with Customer Assist
 
         Get list of supervisors for an organization.
 
@@ -2687,8 +2691,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type phone_number: str
         :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
         :type order: str
-        :param has_cx_essentials: Returns only the list of supervisors with Customer Experience Essentials license,
-            when `true`. Otherwise returns the list of supervisors with Customer Experience Basic license.
+        :param has_cx_essentials: Returns only the list of supervisors with Customer Assist license, when `true`.
+            Otherwise returns the list of supervisors with Customer Experience Basic license.
         :type has_cx_essentials: bool
         :param org_id: List the supervisors in this organization.
         :type org_id: str
@@ -2707,12 +2711,11 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep('supervisors')
         return self.session.follow_pagination(url=url, model=ListSupervisorObject, item_key='supervisors', params=params)
 
-    def create_a_supervisor_with_customer_experience_essentials(self, id: str,
-                                                                agents: list[PostPersonPlaceVirtualLineSupervisorObject],
-                                                                has_cx_essentials: bool = None,
-                                                                org_id: str = None) -> None:
+    def create_a_supervisor_with_customer_assist(self, id: str,
+                                                 agents: list[PostPersonPlaceVirtualLineSupervisorObject],
+                                                 has_cx_essentials: bool = None, org_id: str = None) -> None:
         """
-        Create a Supervisor with Customer Experience Essentials
+        Create a Supervisor with Customer Assist
 
         Create a new supervisor. The supervisor must be created with at least one agent.
 
@@ -2726,8 +2729,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type id: str
         :param agents: People, workspaces and virtual lines that are eligible to receive calls.
         :type agents: list[PostPersonPlaceVirtualLineSupervisorObject]
-        :param has_cx_essentials: Creates a Customer Experience Essentials queue supervisor, when `true`. Customer
-            Experience Essentials queue supervisors must have a Customer Experience Essentials license.
+        :param has_cx_essentials: Creates a Customer Assist queue supervisor, when `true`. Customer Assist queue
+            supervisors must have a Customer Assist license.
         :type has_cx_essentials: bool
         :param org_id: The organization ID where the supervisor needs to be created.
         :type org_id: str
@@ -2744,12 +2747,11 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep('supervisors')
         super().post(url, params=params, json=body)
 
-    def list_available_agents_with_customer_experience_essentials(self, name: str = None, phone_number: str = None,
-                                                                  order: str = None, has_cx_essentials: bool = None,
-                                                                  org_id: str = None,
-                                                                  **params: Any) -> Generator[AvailableAgentListObject, None, None]:
+    def list_available_agents_with_customer_assist(self, name: str = None, phone_number: str = None, order: str = None,
+                                                   has_cx_essentials: bool = None, org_id: str = None,
+                                                   **params: Any) -> Generator[AvailableAgentListObject, None, None]:
         """
-        List Available Agents with Customer Experience Essentials
+        List Available Agents with Customer Assist
 
         Get list of available agents for an organization.
 
@@ -2765,9 +2767,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type phone_number: str
         :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
         :type order: str
-        :param has_cx_essentials: Returns only the list of available agents with Customer Experience Essentials
-            license, when `true`. When ommited or set to `false`, will return the list of available agents with
-            Customer Experience Basic license.
+        :param has_cx_essentials: Returns only the list of available agents with Customer Assist license, when `true`.
+            When ommited or set to `false`, will return the list of available agents with Customer Experience Basic
+            license.
         :type has_cx_essentials: bool
         :param org_id: List of available agents in a supervisor's list for this organization.
         :type org_id: str
@@ -2786,13 +2788,12 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep('supervisors/availableAgents')
         return self.session.follow_pagination(url=url, model=AvailableAgentListObject, item_key='agents', params=params)
 
-    def list_available_supervisors_with_customer_experience_essentials(self, name: str = None,
-                                                                       phone_number: str = None, order: str = None,
-                                                                       has_cx_essentials: bool = None,
-                                                                       org_id: str = None,
-                                                                       **params: Any) -> Generator[AvailableSupervisorsListObject, None, None]:
+    def list_available_supervisors_with_customer_assist(self, name: str = None, phone_number: str = None,
+                                                        order: str = None, has_cx_essentials: bool = None,
+                                                        org_id: str = None,
+                                                        **params: Any) -> Generator[AvailableSupervisorsListObject, None, None]:
         """
-        List Available Supervisors with Customer Experience Essentials
+        List Available Supervisors with Customer Assist
 
         Get list of available supervisors for an organization.
 
@@ -2808,9 +2809,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type phone_number: str
         :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
         :type order: str
-        :param has_cx_essentials: Returns only the list of available supervisors with Customer Experience Essentials
-            license, when `true`. When ommited or set to 'false', will return the list of available supervisors with
-            Customer Experience Basic license.
+        :param has_cx_essentials: Returns only the list of available supervisors with Customer Assist license, when
+            `true`. When ommited or set to 'false', will return the list of available supervisors with Customer
+            Experience Basic license.
         :type has_cx_essentials: bool
         :param org_id: List the available supervisors in this organization.
         :type org_id: str
@@ -2851,13 +2852,12 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep(f'supervisors/{supervisor_id}')
         super().delete(url, params=params)
 
-    def get_supervisor_detail_with_customer_experience_essentials(self, supervisor_id: str, max_: int = None,
-                                                                  start: int = None, name: str = None,
-                                                                  phone_number: str = None, order: str = None,
-                                                                  has_cx_essentials: bool = None,
-                                                                  org_id: str = None) -> GetSupervisorDetailWithCustomerExperienceEssentialsResponse:
+    def get_supervisor_detail_with_customer_assist(self, supervisor_id: str, max_: int = None, start: int = None,
+                                                   name: str = None, phone_number: str = None, order: str = None,
+                                                   has_cx_essentials: bool = None,
+                                                   org_id: str = None) -> GetSupervisorDetailWithCustomerAssistResponse:
         """
-        GET Supervisor Detail with Customer Experience Essentials
+        GET Supervisor Detail with Customer Assist
 
         Get details of a specific supervisor, which includes the agents associated agents with the supervisor, in an
         organization.
@@ -2880,12 +2880,12 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type phone_number: str
         :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
         :type order: str
-        :param has_cx_essentials: Must be set to `true`, to view the details of a supervisor with Customer Experience
-            Essentials license. This can otherwise be ommited or set to `false`.
+        :param has_cx_essentials: Must be set to `true`, to view the details of a supervisor with Customer Assist
+            license. This can otherwise be ommited or set to `false`.
         :type has_cx_essentials: bool
         :param org_id: List the agents assigned to a supervisor in this organization.
         :type org_id: str
-        :rtype: :class:`GetSupervisorDetailWithCustomerExperienceEssentialsResponse`
+        :rtype: :class:`GetSupervisorDetailWithCustomerAssistResponse`
         """
         params: dict[str, Any] = dict()
         if org_id is not None:
@@ -2904,15 +2904,15 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             params['hasCxEssentials'] = str(has_cx_essentials).lower()
         url = self.ep(f'supervisors/{supervisor_id}')
         data = super().get(url, params=params)
-        r = GetSupervisorDetailWithCustomerExperienceEssentialsResponse.model_validate(data)
+        r = GetSupervisorDetailWithCustomerAssistResponse.model_validate(data)
         return r
 
-    def assign_or_unassign_agents_to_supervisor_with_customer_experience_essentials(self, supervisor_id: str,
-                                                                                    agents: list[PutPersonPlaceVirtualLineAgentObject],
-                                                                                    has_cx_essentials: bool = None,
-                                                                                    org_id: str = None) -> None:
+    def assign_or_unassign_agents_to_supervisor_with_customer_assist(self, supervisor_id: str,
+                                                                     agents: list[PutPersonPlaceVirtualLineAgentObject],
+                                                                     has_cx_essentials: bool = None,
+                                                                     org_id: str = None) -> None:
         """
-        Assign or Unassign Agents to Supervisor with Customer Experience Essentials
+        Assign or Unassign Agents to Supervisor with Customer Assist
 
         Assign or unassign agents to the supervisor for an organization.
 
@@ -2927,8 +2927,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             returned is in UUID format, since we don't have agentType from OCI response. This will be converting to
             Hydra type in future release.
         :type agents: list[PutPersonPlaceVirtualLineAgentObject]
-        :param has_cx_essentials: Must be set to `true` to modify a supervisor with Customer Experience Essentials
-            license. This can otherwise be ommited or set to `false`.
+        :param has_cx_essentials: Must be set to `true` to modify a supervisor with Customer Assist license. This can
+            otherwise be ommited or set to `false`.
         :type has_cx_essentials: bool
         :param org_id: Assign or unassign agents to a supervisor in this organization.
         :type org_id: str

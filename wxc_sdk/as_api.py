@@ -22490,7 +22490,7 @@ class AsCallQueueApi(AsApiChild, base=''):
         :type department_id: str
         :param department_name: Returns only call queues matching the given department name.
         :type department_name: str
-        :param has_cx_essentials: Returns only the list of call queues with Customer Experience Essentials license when
+        :param has_cx_essentials: Returns only the list of call queues with Customer Assist license when
             `true`, otherwise returns the list of Customer Experience Basic call queues.
         :type has_cx_essentials: bool
         :param org_id: Returns the list of call queues in this organization.
@@ -22551,7 +22551,7 @@ class AsCallQueueApi(AsApiChild, base=''):
         :type department_id: str
         :param department_name: Returns only call queues matching the given department name.
         :type department_name: str
-        :param has_cx_essentials: Returns only the list of call queues with Customer Experience Essentials license when
+        :param has_cx_essentials: Returns only the list of call queues with Customer Assist license when
             `true`, otherwise returns the list of Customer Experience Basic call queues.
         :type has_cx_essentials: bool
         :param org_id: Returns the list of call queues in this organization.
@@ -22620,8 +22620,8 @@ class AsCallQueueApi(AsApiChild, base=''):
         :type location_id: str
         :param settings: parameters for queue creation.
         :type settings: :class:`CallQueue`
-        :param has_cx_essentials: Creates a Customer Experience Essentials call queue, when `true`. This requires
-            Customer Experience Essentials licensed agents. If this parameter is not set, the `has_cx_essentials`
+        :param has_cx_essentials: Creates a Customer Assist call queue, when `true`. This requires
+            Customer Assist licensed agents. If this parameter is not set, the `has_cx_essentials`
             attribute of the `settings` object is considered.
         :type has_cx_essentials: bool
         :param org_id: Create the call queue for this organization.
@@ -22700,8 +22700,8 @@ class AsCallQueueApi(AsApiChild, base=''):
         :type location_id: str
         :param queue_id: Retrieves the details of call queue with this identifier.
         :type queue_id: str
-        :param has_cx_essentials: Must be set to `true`, to view the details of a call queue with Customer Experience
-            Essentials license. This can otherwise be omited or set to `false`.
+        :param has_cx_essentials: Must be set to `true`, to view the details of a call queue with Customer Assist
+            license. This can otherwise be omitted or set to `false`.
         :type has_cx_essentials: bool
         :param org_id: Retrieves the details of a call queue in this organization.
         :type org_id: str
