@@ -106,9 +106,9 @@ class LocationsApi(ApiChild, base='locations'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=Location, item_key='items', params=params)
 
-    def create_a_location(self, name: str, time_zone: str, preferred_language: str, announcement_language: str,
-                          address: LocationAddress, latitude: str = None, longitude: str = None, notes: str = None,
-                          org_id: str = None) -> str:
+    def create_location(self, name: str, time_zone: str, preferred_language: str, announcement_language: str,
+                        address: LocationAddress, latitude: str = None, longitude: str = None, notes: str = None,
+                        org_id: str = None) -> str:
         """
         Create a Location
 
@@ -230,9 +230,8 @@ class LocationsApi(ApiChild, base='locations'):
         r = Location.model_validate(data)
         return r
 
-    def update_a_location(self, location_id: str, name: str = None, time_zone: str = None,
-                          preferred_language: str = None, address: LocationAddress = None,
-                          org_id: str = None) -> None:
+    def update_location(self, location_id: str, name: str = None, time_zone: str = None,
+                        preferred_language: str = None, address: LocationAddress = None, org_id: str = None) -> None:
         """
         Update a Location
 
@@ -294,7 +293,7 @@ class LocationsApi(ApiChild, base='locations'):
         r = TypeAdapter(list[Floor]).validate_python(data['items'])
         return r
 
-    def create_a_location_floor(self, location_id: str, floor_number: int, display_name: str = None) -> Floor:
+    def create_location_floor(self, location_id: str, floor_number: int, display_name: str = None) -> Floor:
         """
         Create a Location Floor
 
@@ -319,7 +318,7 @@ class LocationsApi(ApiChild, base='locations'):
         r = Floor.model_validate(data)
         return r
 
-    def delete_a_location_floor(self, location_id: str, floor_id: str) -> None:
+    def delete_location_floor(self, location_id: str, floor_id: str) -> None:
         """
         Delete a Location Floor
 
@@ -353,8 +352,8 @@ class LocationsApi(ApiChild, base='locations'):
         r = Floor.model_validate(data)
         return r
 
-    def update_a_location_floor(self, location_id: str, floor_id: str, floor_number: int,
-                                display_name: str = None) -> Floor:
+    def update_location_floor(self, location_id: str, floor_id: str, floor_number: int,
+                              display_name: str = None) -> Floor:
         """
         Update a Location Floor
 
