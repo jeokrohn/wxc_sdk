@@ -3,7 +3,7 @@ Person settings
 """
 
 from dataclasses import dataclass
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import Field
 
@@ -58,8 +58,10 @@ __all__ = [
     'TelephonyDevice',
     'DeviceList',
     'UserCallCaptions',
+    'PersonSettings',
 ]
 
+# mypy: disable-error-code="assignment,type-arg,arg-type,override"
 
 # TODO: UC profile
 
@@ -163,6 +165,14 @@ class UserCallCaptions(ApiModel):
             exclude_unset=True,
             exclude={'location_closed_captions_enabled', 'location_transcripts_enabled'},
         )
+
+
+class PersonSettings(ApiModel):
+    #: Person's phone announcement language.
+    announcement_language: Optional[str] = None
+    #: Timezone associated with the person for calling package. Refer to the Get Country Configuration API to retrieve
+    #: the list of available timezones for a specific country.
+    time_zone: Optional[str] = None
 
 
 @dataclass(init=False, repr=False)
@@ -325,7 +335,7 @@ class PersonSettingsApi(ApiChild, base='people'):
         """
         params = org_id and {'orgId': org_id} or None
         url = self.session.ep(f'telephony/config/people/{person_id}/devices')
-        data = self.get(url=url, params=params)
+        data = super().get(url=url, params=params)
         return DeviceList.model_validate(data)
 
     def modify_hoteling_settings_primary_devices(self, person_id: str, hoteling: Hoteling, org_id: str = None):
@@ -413,4 +423,65 @@ class PersonSettingsApi(ApiChild, base='people'):
             params['orgId'] = org_id
         body = settings.update()
         url = self.session.ep(f'telephony/config/people/{person_id}/callCaptions')
+        super().put(url, params=params, json=body)
+
+    def get(self, person_id: str, org_id: str = None) -> PersonSettings:
+        """
+        Get Timezone and Announcement Language Settings of a Person
+
+        Retrieve a person's timezone and announcement language settings.
+
+        Webex Calling supports configuring timezone and announcement language preferences, allowing personalized call
+        experience based on their location and language preferences.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: Retrieve timezone and announcement language settings of this person.
+        :type person_id: str
+        :param org_id: Organization ID. If not specified, uses the organization from the OAuth token.
+        :type org_id: str
+        :rtype: :class:`PersonSettings`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.session.ep(f'telephony/config/people/{person_id}')
+        data = super().get(url, params=params)
+        r = PersonSettings.model_validate(data)
+        return r
+
+    def modify(
+        self, person_id: str, announcement_language: str = None, time_zone: str = None, org_id: str = None
+    ) -> None:
+        """
+        Update Timezone and Announcement Language Settings of a Person
+
+        Modify a person's timezone and announcement language settings.
+
+        Webex Calling supports configuring timezone and announcement language preferences, allowing personalized call
+        experience based on their location and language preferences.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param person_id: Modify timezone and announcement language settings of this person.
+        :type person_id: str
+        :param announcement_language: Person's phone announcement language.
+        :type announcement_language: str
+        :param time_zone: Timezone associated with the person for calling configuration. Refer to the Get Country
+            Configuration API to retrieve the list of available timezones for a specific country.
+        :type time_zone: str
+        :param org_id: Organization ID. If not specified, uses the organization from the OAuth token.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        if announcement_language is not None:
+            body['announcementLanguage'] = announcement_language
+        if time_zone is not None:
+            body['timeZone'] = time_zone
+        url = self.session.ep(f'telephony/config/people/{person_id}')
         super().put(url, params=params, json=body)

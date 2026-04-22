@@ -1149,6 +1149,9 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.person_settings.forwarding.read <wxc_sdk.person_settings.forwarding.PersonForwardingApi.read>`
         | Retrieve an entity's Call Forwarding Settings
         | ``GET /people/{entity_id}/features/callForwarding``
+   * - :meth:`api.person_settings.get <wxc_sdk.person_settings.PersonSettingsApi.get>`
+        | Get Timezone and Announcement Language Settings of a Person
+        | ``GET /telephony/config/people/{person_id}``
    * - :meth:`api.person_settings.get_call_captions_settings <wxc_sdk.person_settings.PersonSettingsApi.get_call_captions_settings>`
         | Get the user call captions settings
         | ``GET /telephony/config/people/{person_id}/callCaptions``
@@ -1167,6 +1170,9 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.person_settings.mode_management.available_features <wxc_sdk.person_settings.mode_management.ModeManagementApi.available_features>`
         | Retrieve the List of Available Features
         | ``GET /telephony/config/people/{person_id}/modeManagement/availableFeatures``
+   * - :meth:`api.person_settings.modify <wxc_sdk.person_settings.PersonSettingsApi.modify>`
+        | Update Timezone and Announcement Language Settings of a Person
+        | ``PUT /telephony/config/people/{person_id}``
    * - :meth:`api.person_settings.modify_hoteling_settings_primary_devices <wxc_sdk.person_settings.PersonSettingsApi.modify_hoteling_settings_primary_devices>`
         | Modify Hoteling Settings for a Person's Primary Devices
         | ``PUT /telephony/config/people/{person_id}/devices/settings/hoteling``

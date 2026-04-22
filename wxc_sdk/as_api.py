@@ -17757,7 +17757,7 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
         """
         params = org_id and {'orgId': org_id} or None
         url = self.session.ep(f'telephony/config/people/{person_id}/devices')
-        data = await self.get(url=url, params=params)
+        data = await super().get(url=url, params=params)
         return DeviceList.model_validate(data)
 
     async def modify_hoteling_settings_primary_devices(self, person_id: str, hoteling: Hoteling, org_id: str = None):
@@ -17845,6 +17845,67 @@ class AsPersonSettingsApi(AsApiChild, base='people'):
             params['orgId'] = org_id
         body = settings.update()
         url = self.session.ep(f'telephony/config/people/{person_id}/callCaptions')
+        await super().put(url, params=params, json=body)
+
+    async def get(self, person_id: str, org_id: str = None) -> PersonSettings:
+        """
+        Get Timezone and Announcement Language Settings of a Person
+
+        Retrieve a person's timezone and announcement language settings.
+
+        Webex Calling supports configuring timezone and announcement language preferences, allowing personalized call
+        experience based on their location and language preferences.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: Retrieve timezone and announcement language settings of this person.
+        :type person_id: str
+        :param org_id: Organization ID. If not specified, uses the organization from the OAuth token.
+        :type org_id: str
+        :rtype: :class:`PersonSettings`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.session.ep(f'telephony/config/people/{person_id}')
+        data = await super().get(url, params=params)
+        r = PersonSettings.model_validate(data)
+        return r
+
+    async def modify(
+        self, person_id: str, announcement_language: str = None, time_zone: str = None, org_id: str = None
+    ) -> None:
+        """
+        Update Timezone and Announcement Language Settings of a Person
+
+        Modify a person's timezone and announcement language settings.
+
+        Webex Calling supports configuring timezone and announcement language preferences, allowing personalized call
+        experience based on their location and language preferences.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param person_id: Modify timezone and announcement language settings of this person.
+        :type person_id: str
+        :param announcement_language: Person's phone announcement language.
+        :type announcement_language: str
+        :param time_zone: Timezone associated with the person for calling configuration. Refer to the Get Country
+            Configuration API to retrieve the list of available timezones for a specific country.
+        :type time_zone: str
+        :param org_id: Organization ID. If not specified, uses the organization from the OAuth token.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        if announcement_language is not None:
+            body['announcementLanguage'] = announcement_language
+        if time_zone is not None:
+            body['timeZone'] = time_zone
+        url = self.session.ep(f'telephony/config/people/{person_id}')
         await super().put(url, params=params, json=body)
 
 

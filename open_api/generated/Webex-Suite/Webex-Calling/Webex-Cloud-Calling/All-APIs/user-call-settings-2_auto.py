@@ -16,19 +16,19 @@ __all__ = ['AccessLevel', 'Action', 'AgentCallerIdType', 'ApplicationPutSharedLi
            'Assistant', 'AudioAnnouncementFileGetObject', 'AudioAnnouncementFileGetObjectLevel',
            'AudioAnnouncementFileGetObjectMediaFileType', 'AuthorizationCode', 'AuthorizationCodeLevel',
            'AvailableAssistant', 'AvailableCallerIdObject', 'AvailableSharedLineMemberItem', 'CallsFrom',
-           'CallsFromSelectiveAccept', 'CallsFromSelectiveReject', 'CountObject', 'Criteria', 'CriteriaAccept',
-           'CriteriaForward', 'DeviceType', 'EndpointInformation', 'Endpoints', 'ErrorMessageObject', 'ErrorObject',
-           'ErrorOrImpactItem', 'ExceptionTypeObject', 'Executive', 'ExecutiveAlertGet',
-           'ExecutiveAlertGetAlertingMode', 'ExecutiveAlertGetClidNameMode', 'ExecutiveAlertGetClidPhoneNumberMode',
-           'ExecutiveAlertGetRolloverAction', 'ExecutiveAssistantSettingsGet', 'ExecutiveCallFilteringCriteriaGet',
-           'ExecutiveCallFilteringCriteriaGetCallsToNumbersItem',
+           'CallsFromSelectiveAccept', 'CallsFromSelectiveReject', 'CountObject', 'CountryConfigGet', 'Criteria',
+           'CriteriaAccept', 'CriteriaForward', 'DeviceType', 'EndpointInformation', 'Endpoints',
+           'ErrorMessageObject', 'ErrorObject', 'ErrorOrImpactItem', 'ExceptionTypeObject', 'Executive',
+           'ExecutiveAlertGet', 'ExecutiveAlertGetAlertingMode', 'ExecutiveAlertGetClidNameMode',
+           'ExecutiveAlertGetClidPhoneNumberMode', 'ExecutiveAlertGetRolloverAction', 'ExecutiveAssistantSettingsGet',
+           'ExecutiveCallFilteringCriteriaGet', 'ExecutiveCallFilteringCriteriaGetCallsToNumbersItem',
            'ExecutiveCallFilteringCriteriaGetCallsToNumbersItemType', 'ExecutiveCallFilteringGet',
            'ExecutiveCallFilteringGetCriteriaItem', 'ExecutiveCallFilteringGetFilterType',
            'ExecutiveCallFilteringPatchCriteriaActivationItem', 'ExecutivePut', 'ExecutiveScreeningGet',
            'ExecutiveScreeningGetAlertType', 'GetMessageSummaryResponse', 'GetMusicOnHoldObject',
-           'GetMusicOnHoldObjectGreeting', 'GetSharedLineMemberItem', 'GetSharedLineMemberList',
-           'GetUserCallCaptionsObject', 'GetUserMSTeamsSettingsObject', 'ItemObject', 'JobDetailsResponse',
-           'JobDetailsResponseById', 'JobDetailsResponseLatestExecutionExitCode',
+           'GetMusicOnHoldObjectGreeting', 'GetPersonDetailsObject', 'GetSharedLineMemberItem',
+           'GetSharedLineMemberList', 'GetUserCallCaptionsObject', 'GetUserMSTeamsSettingsObject', 'ItemObject',
+           'JobDetailsResponse', 'JobDetailsResponseById', 'JobDetailsResponseLatestExecutionExitCode',
            'JobDetailsResponseLatestExecutionStatus', 'JobExecutionStatusObject', 'LicenseType', 'LineType',
            'Location', 'ModeManagementFeatureTypeObject', 'ModifyUserMSTeamsSettingsObjectSettingName',
            'NumberOwnerType', 'PersonCallForwardAvailableNumberObject', 'PersonCallForwardAvailableNumberObjectOwner',
@@ -39,13 +39,39 @@ __all__ = ['AccessLevel', 'Action', 'AgentCallerIdType', 'ApplicationPutSharedLi
            'PutSharedLineMemberItem', 'RingPattern', 'STATE', 'ScheduleLevel', 'ScheduleType',
            'SelectiveAcceptCallCriteriaGet', 'SelectiveAcceptCallGet', 'SelectiveForwardCallCriteriaGet',
            'SelectiveForwardCallGet', 'SelectiveRejectCallCriteriaGet', 'SelectiveRejectCallGet', 'SettingsObject',
-           'SettingsObjectLevel', 'SettingsObjectSettingName', 'Source', 'SourceSelectiveAccept',
+           'SettingsObjectLevel', 'SettingsObjectSettingName', 'Source', 'SourceSelectiveAccept', 'StateGet',
            'StepExecutionStatusesObject', 'TelephonyType', 'TransferNumberGet', 'UserCallSettings22Api',
            'UserDigitPatternObject', 'UserItem', 'UserListItem', 'UserModeManagementAvailableFeaturesObject',
            'UserModeManagementFeatureObject', 'UserOutgoingPermissionDigitPatternGetListObject',
            'UserOutgoingPermissionDigitPatternPostObjectAction', 'UserPlaceAuthorizationCodeListGet',
            'UserSettingsPermissionsGet', 'UserSettingsPermissionsGetDefault', 'UserType', 'UsersListItem',
            'VoiceMailPartyInformation', 'VoiceMessageDetails']
+
+
+class GetPersonDetailsObject(ApiModel):
+    #: Person's phone announcement language.
+    announcement_language: Optional[str] = None
+    #: Timezone associated with the person for calling package. Refer to the Get Country Configuration API to retrieve
+    #: the list of available timezones for a specific country.
+    time_zone: Optional[str] = None
+
+
+class StateGet(ApiModel):
+    #: Two-letter state or province abbreviation (e.g., CA for California).
+    code: Optional[str] = None
+    #: Full name of the state or province.
+    name: Optional[str] = None
+
+
+class CountryConfigGet(ApiModel):
+    #: Indicates whether state is required for this country.
+    state_required: Optional[bool] = None
+    #: Indicates whether zip code is required for this country.
+    zip_code_required: Optional[bool] = None
+    #: List of states available for this country. Returns all items in a single response.
+    states: Optional[list[StateGet]] = None
+    #: List of time zones supported for this country. Returns all items in a single response.
+    time_zones: Optional[list[str]] = None
 
 
 class Action(str, Enum):
@@ -1575,6 +1601,33 @@ class UserCallSettings22Api(ApiChild, base=''):
         r = ApplicationsSetting.model_validate(data)
         return r
 
+    def get_country_configuration(self, country_code: str, org_id: str = None) -> CountryConfigGet:
+        """
+        Get Country Calling Configuration
+
+        Retrieve country-specific configuration details including state requirements, zip code requirements, available
+        states, and supported time zones.
+
+        This information helps administrators configure user settings with valid timezone and location data for a
+        specific country.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param country_code: The ISO country code to retrieve configuration for.
+        :type country_code: str
+        :param org_id: Organization ID. If not specified, uses the organization from the OAuth token.
+        :type org_id: str
+        :rtype: :class:`CountryConfigGet`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/countries/{country_code}')
+        data = super().get(url, params=params)
+        r = CountryConfigGet.model_validate(data)
+        return r
+
     def list_move_users_jobs(self, org_id: str = None, **params: Any) -> Generator[JobDetailsResponse, None, None]:
         """
         List Move Users Jobs
@@ -2281,6 +2334,68 @@ class UserCallSettings22Api(ApiChild, base=''):
             body['voicemailDownload'] = enum_str(voicemail_download)
         url = self.ep('telephony/config/people/settings/permissions')
         super().put(url, json=body)
+
+    def get_timezone_announcement_language_settings_of_aperson(self, person_id: str,
+                                                               org_id: str = None) -> GetPersonDetailsObject:
+        """
+        Get Timezone and Announcement Language Settings of a Person
+
+        Retrieve a person's timezone and announcement language settings.
+
+        Webex Calling supports configuring timezone and announcement language preferences, allowing personalized call
+        experience based on their location and language preferences.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: Retrieve timezone and announcement language settings of this person.
+        :type person_id: str
+        :param org_id: Organization ID. If not specified, uses the organization from the OAuth token.
+        :type org_id: str
+        :rtype: :class:`GetPersonDetailsObject`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/people/{person_id}')
+        data = super().get(url, params=params)
+        r = GetPersonDetailsObject.model_validate(data)
+        return r
+
+    def modify_timezone_announcement_language_settings_of_aperson(self, person_id: str,
+                                                                  announcement_language: str = None,
+                                                                  time_zone: str = None, org_id: str = None) -> None:
+        """
+        Update Timezone and Announcement Language Settings of a Person
+
+        Modify a person's timezone and announcement language settings.
+
+        Webex Calling supports configuring timezone and announcement language preferences, allowing personalized call
+        experience based on their location and language preferences.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param person_id: Modify timezone and announcement language settings of this person.
+        :type person_id: str
+        :param announcement_language: Person's phone announcement language.
+        :type announcement_language: str
+        :param time_zone: Timezone associated with the person for calling configuration. Refer to the Get Country
+            Configuration API to retrieve the list of available timezones for a specific country.
+        :type time_zone: str
+        :param org_id: Organization ID. If not specified, uses the organization from the OAuth token.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        if announcement_language is not None:
+            body['announcementLanguage'] = announcement_language
+        if time_zone is not None:
+            body['timeZone'] = time_zone
+        url = self.ep(f'telephony/config/people/{person_id}')
+        super().put(url, params=params, json=body)
 
     def retrieve_agents_list_of_available_caller_ids(self, person_id: str,
                                                      org_id: str = None) -> builtins.list[AvailableCallerIdObject]:

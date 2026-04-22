@@ -89,8 +89,8 @@ from wxc_sdk.org_contacts import Contact, ContactAddress, ContactEmail, ContactI
 from wxc_sdk.organizations import Organization
 from wxc_sdk.people import PeopleStatus, Person, PersonAddress, PersonType, PhoneNumber, PhoneNumberType, \
     SipAddress, SipType
-from wxc_sdk.person_settings import DeviceActivationState, DeviceList, DeviceOwner, Hoteling, TelephonyDevice, \
-    UserCallCaptions
+from wxc_sdk.person_settings import DeviceActivationState, DeviceList, DeviceOwner, Hoteling, PersonSettings, \
+    TelephonyDevice, UserCallCaptions
 from wxc_sdk.person_settings.agent_caller_id import AgentCallerId, AvailableCallerIdType
 from wxc_sdk.person_settings.appservices import AppServicesSettings
 from wxc_sdk.person_settings.available_numbers import AvailableNumber, AvailablePhoneNumberLicenseType
@@ -409,7 +409,7 @@ __all__ = ['AcdCustomization', 'Action', 'ActionToBePerformed', 'ActionToBePerfo
            'PasscodeRules', 'PatchMeetingBody', 'PatchMeetingResponse', 'PatchUserOperation', 'PatchUserOperationOp',
            'PatternAction', 'PatternAndAction', 'PbxUserDestination', 'PeopleStatus', 'Person', 'PersonAddress',
            'PersonECBN', 'PersonECBNDirectLine', 'PersonForwardingSetting', 'PersonNumbers', 'PersonPhoneNumber',
-           'PersonPlaceAgent', 'PersonSettingsApiChild', 'PersonType', 'PersonalAssistant',
+           'PersonPlaceAgent', 'PersonSettings', 'PersonSettingsApiChild', 'PersonType', 'PersonalAssistant',
            'PersonalAssistantAlerting', 'PersonalAssistantPresence', 'PersonalMeetingRoom',
            'PersonalMeetingRoomOptions', 'Personality', 'PhoneLanguage', 'PhoneNumber', 'PhoneNumberStatus',
            'PhoneNumberType', 'PhotoObject', 'PhotoObjectType', 'PickupNotificationType', 'PinLength', 'PlayList',

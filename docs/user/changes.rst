@@ -1,6 +1,7 @@
 Release history
 ===============
 
+- feat: new endpoints :meth:`api.person_settings.get <wxc_sdk.person_settings.PersonSettingsApi.get>`, :meth:`api.person_settings.modify <wxc_sdk.person_settings.PersonSettingsApi.modify>`
 - feat: new endpoint :meth:`api.telephony.get_country_configuration <wxc_sdk.telephony.TelephonyApi.get_country_configuration>`
 - feat: new endpoints :meth:`api.me.voicemail.get_voicemail_rules <wxc_sdk.me.voicemail.MeVoicemailApi.get_voicemail_rules>`, :meth:`api.me.voicemail.update_pin <wxc_sdk.me.voicemail.MeVoicemailApi.update_pin>`
 - feat: new API :attr:`api.me.hoteling <wxc_sdk.me.MeSettingsApi.hoteling`
