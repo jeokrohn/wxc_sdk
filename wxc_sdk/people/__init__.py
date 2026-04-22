@@ -1,27 +1,28 @@
 """
 People types and API
 
-    **As of January 2024, the Webex APIs have been fully upgraded to support the
-    industry-standard** :class:`SCIM2.0 <wxc_sdk.scim.ScimV2Api>`
-    **protocol, which is
+    As of January 2024, the Webex APIs have been fully upgraded to support the
+    industry-standard `SCIM 2.0
+    <https://developer.webex.com/docs/api/v1/scim-2-users>`_ protocol, which is
     used for user and group management, provisioning, and maintenance. Developers
     are advised to use this API instead of the people API, due to its higher
-    performance and readily available connectors. Users created via SCIM can be
-    licensed using the /licenses API, even in large quantities, using
-    the new** :meth:`PATCH method <wxc_sdk.licenses.LicensesApi.assign_licenses_to_users>`.
+    performance and readily available connectors. Users created via SCIM should be
+    licensed using the /licenses API, even in large quantities, using the new
+    `PATCH method
+    <https://developer.webex.com/docs/api/v1/licenses/assign-licenses-to-users>`_.
 
-    People are registered users of Webex. Searching and viewing People requires an auth token with a
-    `scope <https://developer.webex.com/docs/integrations#scopes>`_
-    of `spark:people_read`. Viewing the list of all People in your organization requires an administrator auth token
-    with `spark-admin:people_read` scope. Adding, updating, and removing People requires an administrator auth token
-    with the `spark-admin:people_write` and `spark-admin:people_read` scope.
+    People are registered users of Webex. Searching and viewing People requires an auth token with a `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_ of
+    `spark:people_read`.
+    Viewing the list of all People in your organization requires an administrator auth token with
+    `spark-admin:people_read` scope. Adding, updating, and removing People requires an administrator auth token with
+    the `spark-admin:people_write` and `spark-admin:people_read` scope.
 
     A person's call settings are for `Webex Calling` and necessitate Webex Calling licenses.
 
-    To learn more about managing people in a room see the :class:`Memberships API
-    <wxc_sdk.memberships.MembershipApi>`. For information about how to allocate Hybrid
+    To learn more about managing people in a room see the `Memberships API
+    <https://developer.webex.com/docs/api/v1/memberships>`_. For information about how to allocate Hybrid
     Services licenses to people, see the `Managing Hybrid Services
-    <https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses>`_ guide.
 """
 
 import datetime
@@ -45,6 +46,8 @@ __all__ = [
     'Person',
     'PeopleApi',
 ]
+
+# mypy: disable-error-code="return-value,type-arg"
 
 # there seems to be a problem with getting too many users with calling data at the same time
 # this is the maximum number the SDK enforces
@@ -282,25 +285,29 @@ class PeopleApi(ApiChild, base='people'):
     """
     People
 
-        **As of January 2024, the Webex APIs have been fully upgraded to support the
-        industry-standard** :class:`SCIM2.0 <wxc_sdk.scim.ScimV2Api>`
-        **protocol, which is
-        used for user and group management, provisioning, and maintenance. Developers
-        are advised to use this API instead of the people API, due to its higher
-        performance and readily available connectors. Users created via SCIM can be
-        licensed using the /licenses API, even in large quantities, using
-        the new** :meth:`PATCH method <wxc_sdk.licenses.LicensesApi.assign_licenses_to_users>`.
+    As of January 2024, the Webex APIs have been fully upgraded to support the
+    industry-standard `SCIM 2.0
+    <https://developer.webex.com/docs/api/v1/scim-2-users>`_ protocol, which is
+    used for user and group management, provisioning, and maintenance. Developers
+    are advised to use this API instead of the people API, due to its higher
+    performance and readily available connectors. Users created via SCIM should be
+    licensed using the /licenses API, even in large quantities, using the new
+    `PATCH method
+    <https://developer.webex.com/docs/api/v1/licenses/assign-licenses-to-users>`_.
 
-    People are registered users of Webex. Searching and viewing People requires an auth token with a
-    `scope <https://developer.webex.com/docs/integrations#scopes>`_
-    of `spark:people_read`. Viewing the list of all People in your organization requires an administrator auth token
-    with `spark-admin:people_read` scope. Adding, updating, and removing People requires an administrator auth token
-    with the `spark-admin:people_write` and `spark-admin:people_read` scope.
+
+
+    People are registered users of Webex. Searching and viewing People requires an auth token with a `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_ of
+    `spark:people_read`.
+    Viewing the list of all People in your organization requires an administrator auth token with
+    `spark-admin:people_read` scope. Adding, updating, and removing People requires an administrator auth token with
+    the `spark-admin:people_write` and `spark-admin:people_read` scope.
 
     A person's call settings are for `Webex Calling` and necessitate Webex Calling licenses.
 
-    To learn more about managing people in a room see the :class:`Memberships API
-    <wxc_sdk.memberships.MembershipApi>`. For information about how to allocate Hybrid
+    To learn more about managing people in a room see the `Memberships API
+    <https://developer.webex.com/docs/api/v1/memberships>`_. For information about how to allocate Hybrid
     Services licenses to people, see the `Managing Hybrid Services
     <https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses>`_ guide.
     """

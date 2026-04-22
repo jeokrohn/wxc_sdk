@@ -713,10 +713,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         your system.
 
         Creating an auto attendant requires a full administrator or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.<div><Callout type="warning">The fields
-        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in
-        Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to
-        configure and view both caller ID and dial-by-name settings.</Callout></div>
+        `spark-admin:telephony_config_write`.
 
         :param location_id: Create the auto attendant for this location.
         :type location_id: str
@@ -947,10 +944,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         your system.
 
         Retrieving an auto attendant details requires a full or read-only administrator or location administrator auth
-        token with a scope of `spark-admin:telephony_config_read`.<div><Callout type="warning">The fields
-        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in
-        Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to
-        configure and view both caller ID and dial-by-name settings.</Callout></div>
+        token with a scope of `spark-admin:telephony_config_read`.
 
         :param location_id: Retrieve an auto attendant details in this location.
         :type location_id: str
@@ -988,10 +982,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         your system.
 
         Updating an auto attendant requires a full administrator or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.<div><Callout type="warning">The fields
-        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in
-        Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to
-        configure and view both caller ID and dial-by-name settings.</Callout></div>
+        `spark-admin:telephony_config_write`.
 
         :param location_id: Location in which this auto attendant exists.
         :type location_id: str

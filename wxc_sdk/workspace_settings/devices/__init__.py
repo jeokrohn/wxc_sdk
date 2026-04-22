@@ -9,7 +9,10 @@ __all__ = ['WorkspaceDevicesApi']
 class WorkspaceDevicesApi(ApiChild, base='telephony/config/workspaces'):
     def list(self, workspace_id: str, org_id: str = None) -> Generator[TelephonyDevice, None, None]:
         """
+        Get Workspace Devices
+
         Get all devices for a workspace.
+
         This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
 
         :param workspace_id: ID of the workspace for which to retrieve devices.
@@ -27,7 +30,10 @@ class WorkspaceDevicesApi(ApiChild, base='telephony/config/workspaces'):
 
     def list_and_counts(self, workspace_id: str, org_id: str = None) -> DeviceList:
         """
+        Get Workspace Devices
+
         Get all devices for a workspace.
+
         This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
 
         :param workspace_id: ID of the workspace for which to retrieve devices.

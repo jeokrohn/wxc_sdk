@@ -1238,6 +1238,8 @@ class DeviceList(ApiModel):
     devices: Optional[list[Devices]] = None
     #: Maximum number of devices a person can be assigned to.
     max_device_count: Optional[int] = None
+    #: Maximum number of devices a person can own.
+    max_owned_device_count: Optional[int] = None
 
 
 class StepExecutionStatusesObject(ApiModel):
@@ -1347,6 +1349,8 @@ class PlaceDeviceList(ApiModel):
     devices: Optional[list[PlaceDevices]] = None
     #: Maximum number of devices a workspace can be assigned to.
     max_device_count: Optional[int] = None
+    #: Maximum number of devices a workspace can own.
+    max_owned_device_count: Optional[int] = None
 
 
 class LineKeyType(str, Enum):

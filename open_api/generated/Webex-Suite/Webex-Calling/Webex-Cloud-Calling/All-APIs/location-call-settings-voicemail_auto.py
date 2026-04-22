@@ -314,10 +314,7 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         system so administrators can manage auto attendant announcements.
 
         Retrieving voice portal information for an organization requires a full read-only administrator or location
-        administrator auth token with a scope of `spark-admin:telephony_config_read`.<div><Callout type="warning">The
-        fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not
-        supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName`
-        fields to configure and view both caller ID and dial-by-name settings.</Callout></div>
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param location_id: Location to which the voice portal belongs.
         :type location_id: str
@@ -347,10 +344,7 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         system so administrators can manage auto attendant anouncements.
 
         Updating voice portal information for an organization and/or rules requires a full administrator or location
-        administrator auth token with a scope of `spark-admin:telephony_config_write`.<div><Callout type="warning">The
-        fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not
-        supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName`
-        fields to configure and view both caller ID and dial-by-name settings.</Callout></div>
+        administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
         :param location_id: Location to which the voice portal belongs.
         :type location_id: str
@@ -538,10 +532,7 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         A voicemail group can be created for given location for a customer.
 
         Creating a voicemail group for the given location requires a full or user administrator or location
-        administrator auth token with a scope of `spark-admin:telephony_config_write`.<div><Callout type="warning">The
-        fields `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not
-        supported in Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName`
-        fields to configure and view both caller ID and dial-by-name settings.</Callout></div>
+        administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
         :param location_id: Create a new voice mail group for this location.
         :type location_id: str
@@ -712,10 +703,7 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         message storage settings, and how you would like to be notified of new voicemail messages.
 
         Retrieving voicemail group details requires a full, user or read-only administrator or location administrator
-        auth token with a scope of `spark-admin:telephony_config_read`.<div><Callout type="warning">The fields
-        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in
-        Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to
-        configure and view both caller ID and dial-by-name settings.</Callout></div>
+        auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param location_id: Retrieve voicemail group details for this location.
         :type location_id: str
@@ -755,10 +743,7 @@ class LocationCallSettingsVoicemailApi(ApiChild, base='telephony/config'):
         how you would like to be notified of new voicemail messages.
 
         Modifying the voicemail group location details requires a full, user administrator or location administrator
-        auth token with a scope of `spark-admin:telephony_config_write`.<div><Callout type="warning">The fields
-        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in
-        Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to
-        configure and view both caller ID and dial-by-name settings.</Callout></div>
+        auth token with a scope of `spark-admin:telephony_config_write`.
 
         :param location_id: Modifies the voicemail group details for this location.
         :type location_id: str

@@ -1,6 +1,7 @@
 """
 Auto attendant data types and API
 """
+# mypy: disable-error_code="arg-type,assignment"
 
 import builtins
 from collections.abc import Generator
@@ -423,14 +424,8 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         Auto attendants play customized prompts and provide callers with menu options for routing their calls through
         your system.
 
-        Creating an auto attendant requires a full administrator or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.
-
-        The fields
-        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in
-        Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to
-        configure and view both caller ID and dial-by-name settings
-
+        Creating an auto attendant requires a full administrator or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
 
         :param location_id: Create the auto attendant for this location.
         :type location_id: str
@@ -502,6 +497,7 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
 
         List service and standard numbers that are available to be assigned as the auto attendant's primary phone
         number.
+
         These numbers are associated with the location specified in the request URL, can be active or inactive, and are
         unassigned.
 

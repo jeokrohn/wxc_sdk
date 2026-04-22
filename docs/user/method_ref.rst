@@ -67,7 +67,7 @@ description of the operation. The method name is a link to the method documentat
         | Create a Device Activation Code
         | ``POST /devices/activationCode``
    * - :meth:`api.devices.create_by_mac_address <wxc_sdk.devices.DevicesApi.create_by_mac_address>`
-        | Create a phone by it's MAC address in a specific workspace or for a person
+        | Create a Device by MAC Address
         | ``POST /devices``
    * - :meth:`api.devices.delete <wxc_sdk.devices.DevicesApi.delete>`
         | Delete a Device
@@ -1936,7 +1936,7 @@ description of the operation. The method name is a link to the method documentat
         | Create a call token
         | ``POST /telephony/click2call/callToken``
    * - :meth:`api.telephony.cx_essentials.available_agents <wxc_sdk.telephony.cx_essentials.CustomerExperienceEssentialsApi.available_agents>`
-        | Get List of available agents for Customer Experience Essentials
+        | List Available Agents
         | ``GET /telephony/config/locations/{location_id}/cxEssentials/agents/availableAgents``
    * - :meth:`api.telephony.cx_essentials.callqueue_recording.configure <wxc_sdk.telephony.cx_essentials.callqueue_recording.QueueCallRecordingSettingsApi.configure>`
         | Configure Queue Call Recording Settings for a Queue
@@ -3541,10 +3541,10 @@ description of the operation. The method name is a link to the method documentat
         | Retrieve Caller ID Settings
         | ``GET /workspaces/{entity_id}/features/callerId``
    * - :meth:`api.workspace_settings.devices.list <wxc_sdk.workspace_settings.devices.WorkspaceDevicesApi.list>`
-        | Get all devices for a workspace
+        | Get Workspace Devices
         | ``GET /telephony/config/workspaces/{workspace_id}/devices``
    * - :meth:`api.workspace_settings.devices.list_and_counts <wxc_sdk.workspace_settings.devices.WorkspaceDevicesApi.list_and_counts>`
-        | Get all devices for a workspace
+        | Get Workspace Devices
         | ``GET /telephony/config/workspaces/{workspace_id}/devices``
    * - :meth:`api.workspace_settings.devices.modify_hoteling <wxc_sdk.workspace_settings.devices.WorkspaceDevicesApi.modify_hoteling>`
         | Modify devices for a workspace

@@ -197,14 +197,14 @@ class PeopleApi(ApiChild, base='people'):
     People
     
     As of January 2024, the Webex APIs have been fully upgraded to support the
-    industry-standard [SCIM
-    2.0](https://developer.webex.com/docs/api/v1/scim2-user) protocol, which is
+    industry-standard `SCIM 2.0
+    <https://developer.webex.com/docs/api/v1/scim-2-users>`_ protocol, which is
     used for user and group management, provisioning, and maintenance. Developers
     are advised to use this API instead of the people API, due to its higher
     performance and readily available connectors. Users created via SCIM should be
     licensed using the /licenses API, even in large quantities, using the new
-    [PATCH method](https://developer.webex.com/docs/api/v1/licenses/assign-
-    licenses-to-users).
+    `PATCH method
+    <https://developer.webex.com/docs/api/v1/licenses/assign-licenses-to-users>`_.
     
     
     
@@ -240,9 +240,9 @@ class PeopleApi(ApiChild, base='people'):
         therefore discouraged.
 
         Admin users can include `Webex Calling` (BroadCloud) user details in the response by specifying `callingData`
-        parameter as `true`. Admin users can list all users in a location or with a specific phone number. Admin users
-        will receive an enriched payload with additional administrative fields like `licenses`,`roles`, `locations`
-        etc. These fields are shown when accessing a user via GET /people/{id}, not when doing a GET /people?id=
+        parameter as `true`. Admin users can list all users in a location. Admin users will receive an enriched
+        payload with additional administrative fields like `licenses`,`roles`, `locations` etc. These fields are shown
+        when accessing a user via GET /people/{id}, not when doing a GET /people?id=
 
         Lookup by `email` is only supported for people within the same org or where a partner admin relationship is in
         place.

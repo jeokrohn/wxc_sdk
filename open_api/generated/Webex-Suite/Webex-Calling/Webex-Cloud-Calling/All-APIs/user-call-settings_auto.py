@@ -1393,10 +1393,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         Caller ID settings control how a person's information is displayed when making outgoing calls.
 
         This API requires a full, user, or read-only administrator or location administrator auth token with a scope of
-        `spark-admin:people_read`.<div><Callout type="warning">The fields `directLineCallerIdName.selection`,
-        `directLineCallerIdName.customName`, `dialByFirstName`, and `dialByLastName` are not supported in Webex for
-        Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and
-        view both caller ID and dial-by-name settings.</Callout></div>
+        `spark-admin:people_read`.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
@@ -1433,10 +1430,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         Caller ID settings control how a person's information is displayed when making outgoing calls.
 
         This API requires a full or user administrator or location administrator auth token with the
-        `spark-admin:people_write` scope.<div><Callout type="warning">The fields `directLineCallerIdName.selection`,
-        `directLineCallerIdName.customName`, `dialByFirstName`, and `dialByLastName` are not supported in Webex for
-        Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to configure and
-        view both caller ID and dial-by-name settings.</Callout></div>
+        `spark-admin:people_write` scope.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str

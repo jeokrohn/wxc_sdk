@@ -143,7 +143,7 @@ class Device(ApiModel):
 class TagOp(str, Enum):
     add = 'add'
     remove = 'remove'
-    replace = 'replace'
+    replace = 'replace'  # type: ignore[assignment]
 
 
 class ActivationCodeResponse(ApiModel):
@@ -367,8 +367,9 @@ class DevicesApi(ApiChild, base='devices'):
         Create a Device Activation Code
 
         Generate an activation code for a device in a specific workspace by `workspaceId` or for a person by
-        `personId`. This requires an auth token with the `identity:placeonetimepassword_create` and
-        `spark-admin:devices_write` scopes.
+        `personId`. This requires an auth token with the `spark-admin:devices_write` scope, and either
+        `identity:placeonetimepassword_create` (allows creating activation codes for workspaces only) or
+        `identity:one_time_password` (allows creating activation codes for workspaces or persons).
 
         * Adding a device to a workspace with calling type `none` or `thirdPartySipCalling` will reset the workspace
           calling type to `freeCalling`.
@@ -381,6 +382,13 @@ class DevicesApi(ApiChild, base='devices'):
           `supported devices
           <https://developer.webex.com/docs/api/v1/device-call-settings/read-the-list-of-supported-devices>`_ API.
 
+        Adding a device to a person with a Webex Calling Standard license will disable
+        Webex Calling across their Webex mobile, tablet, desktop, and browser
+        applications.
+
+        When adding devices to a Webex Calling Professional licensed person or workspace, wait for each API call to
+        finish before starting the next. This prevents race conditions that can cause errors when assigning primary
+        versus secondary device status.
 
         :param workspace_id: The ID of the workspace where the device will be activated.
         :type workspace_id: str
@@ -414,8 +422,29 @@ class DevicesApi(ApiChild, base='devices'):
         org_id: str = None,
     ) -> Optional[Device]:
         """
-        Create a phone by it's MAC address in a specific workspace or for a person.
-        Specify the mac, model and either workspaceId or personId.
+        Create a Device by MAC Address
+
+        CCreate a phone by its MAC address in a specific workspace or for a person.
+
+        Specify the `mac`, `model` and either `workspaceId` or `personId`.
+
+        * You can get the `model` from the `supported devices
+        <https://developer.webex.com/docs/api/v1/device-call-settings/read-the-list-of-supported-devices>`_ API.
+
+        * Either `workspaceId` or `personId` should be provided. If both are supplied, the request will be invalid.
+
+        * The `password` field is only required for third party devices. You can obtain the required third party phone
+        configuration from `here
+        <https://developer.webex.com/docs/api/v1/beta-device-call-settings-with-third-party-device-support/get-third
+        -party-device>`_.
+
+        Adding a device to a person with a Webex Calling Standard license will disable
+        Webex Calling across their Webex mobile, tablet, desktop, and browser
+        applications.
+
+        When adding devices to a Webex Calling Professional licensed person or workspace, wait for each API call to
+        finish before starting the next. This prevents race conditions that can cause errors when assigning primary
+        versus secondary device status.
 
         :param mac: The MAC address of the device being created.
         :type mac: str

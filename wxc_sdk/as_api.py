@@ -1830,8 +1830,9 @@ class AsDevicesApi(AsApiChild, base='devices'):
         Create a Device Activation Code
 
         Generate an activation code for a device in a specific workspace by `workspaceId` or for a person by
-        `personId`. This requires an auth token with the `identity:placeonetimepassword_create` and
-        `spark-admin:devices_write` scopes.
+        `personId`. This requires an auth token with the `spark-admin:devices_write` scope, and either
+        `identity:placeonetimepassword_create` (allows creating activation codes for workspaces only) or
+        `identity:one_time_password` (allows creating activation codes for workspaces or persons).
 
         * Adding a device to a workspace with calling type `none` or `thirdPartySipCalling` will reset the workspace
           calling type to `freeCalling`.
@@ -1844,6 +1845,13 @@ class AsDevicesApi(AsApiChild, base='devices'):
           `supported devices
           <https://developer.webex.com/docs/api/v1/device-call-settings/read-the-list-of-supported-devices>`_ API.
 
+        Adding a device to a person with a Webex Calling Standard license will disable
+        Webex Calling across their Webex mobile, tablet, desktop, and browser
+        applications.
+
+        When adding devices to a Webex Calling Professional licensed person or workspace, wait for each API call to
+        finish before starting the next. This prevents race conditions that can cause errors when assigning primary
+        versus secondary device status.
 
         :param workspace_id: The ID of the workspace where the device will be activated.
         :type workspace_id: str
@@ -1877,8 +1885,29 @@ class AsDevicesApi(AsApiChild, base='devices'):
         org_id: str = None,
     ) -> Optional[Device]:
         """
-        Create a phone by it's MAC address in a specific workspace or for a person.
-        Specify the mac, model and either workspaceId or personId.
+        Create a Device by MAC Address
+
+        CCreate a phone by its MAC address in a specific workspace or for a person.
+
+        Specify the `mac`, `model` and either `workspaceId` or `personId`.
+
+        * You can get the `model` from the `supported devices
+        <https://developer.webex.com/docs/api/v1/device-call-settings/read-the-list-of-supported-devices>`_ API.
+
+        * Either `workspaceId` or `personId` should be provided. If both are supplied, the request will be invalid.
+
+        * The `password` field is only required for third party devices. You can obtain the required third party phone
+        configuration from `here
+        <https://developer.webex.com/docs/api/v1/beta-device-call-settings-with-third-party-device-support/get-third
+        -party-device>`_.
+
+        Adding a device to a person with a Webex Calling Standard license will disable
+        Webex Calling across their Webex mobile, tablet, desktop, and browser
+        applications.
+
+        When adding devices to a Webex Calling Professional licensed person or workspace, wait for each API call to
+        finish before starting the next. This prevents race conditions that can cause errors when assigning primary
+        versus secondary device status.
 
         :param mac: The MAC address of the device being created.
         :type mac: str
@@ -12024,25 +12053,29 @@ class AsPeopleApi(AsApiChild, base='people'):
     """
     People
 
-        **As of January 2024, the Webex APIs have been fully upgraded to support the
-        industry-standard** :class:`SCIM2.0 <wxc_sdk.scim.ScimV2Api>`
-        **protocol, which is
-        used for user and group management, provisioning, and maintenance. Developers
-        are advised to use this API instead of the people API, due to its higher
-        performance and readily available connectors. Users created via SCIM can be
-        licensed using the /licenses API, even in large quantities, using
-        the new** :meth:`PATCH method <wxc_sdk.licenses.AsLicensesApi.assign_licenses_to_users>`.
+    As of January 2024, the Webex APIs have been fully upgraded to support the
+    industry-standard `SCIM 2.0
+    <https://developer.webex.com/docs/api/v1/scim-2-users>`_ protocol, which is
+    used for user and group management, provisioning, and maintenance. Developers
+    are advised to use this API instead of the people API, due to its higher
+    performance and readily available connectors. Users created via SCIM should be
+    licensed using the /licenses API, even in large quantities, using the new
+    `PATCH method
+    <https://developer.webex.com/docs/api/v1/licenses/assign-licenses-to-users>`_.
 
-    People are registered users of Webex. Searching and viewing People requires an auth token with a
-    `scope <https://developer.webex.com/docs/integrations#scopes>`_
-    of `spark:people_read`. Viewing the list of all People in your organization requires an administrator auth token
-    with `spark-admin:people_read` scope. Adding, updating, and removing People requires an administrator auth token
-    with the `spark-admin:people_write` and `spark-admin:people_read` scope.
+
+
+    People are registered users of Webex. Searching and viewing People requires an auth token with a `scope
+    <https://developer.webex.com/docs/integrations#scopes>`_ of
+    `spark:people_read`.
+    Viewing the list of all People in your organization requires an administrator auth token with
+    `spark-admin:people_read` scope. Adding, updating, and removing People requires an administrator auth token with
+    the `spark-admin:people_write` and `spark-admin:people_read` scope.
 
     A person's call settings are for `Webex Calling` and necessitate Webex Calling licenses.
 
-    To learn more about managing people in a room see the :class:`Memberships API
-    <wxc_sdk.memberships.AsMembershipApi>`. For information about how to allocate Hybrid
+    To learn more about managing people in a room see the `Memberships API
+    <https://developer.webex.com/docs/api/v1/memberships>`_. For information about how to allocate Hybrid
     Services licenses to people, see the `Managing Hybrid Services
     <https://developer.webex.com/docs/api/guides/managing-hybrid-services-licenses>`_ guide.
     """
@@ -20495,14 +20528,8 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
         Auto attendants play customized prompts and provide callers with menu options for routing their calls through
         your system.
 
-        Creating an auto attendant requires a full administrator or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.
-
-        The fields
-        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in
-        Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to
-        configure and view both caller ID and dial-by-name settings
-
+        Creating an auto attendant requires a full administrator or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
 
         :param location_id: Create the auto attendant for this location.
         :type location_id: str
@@ -20574,6 +20601,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
 
         List service and standard numbers that are available to be assigned as the auto attendant's primary phone
         number.
+
         These numbers are associated with the location specified in the request URL, can be active or inactive, and are
         unassigned.
 
@@ -20608,6 +20636,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
 
         List service and standard numbers that are available to be assigned as the auto attendant's primary phone
         number.
+
         These numbers are associated with the location specified in the request URL, can be active or inactive, and are
         unassigned.
 
@@ -25505,21 +25534,46 @@ class AsWrapupReasonApi(AsApiChild, base='telephony/config'):
 
 class AsCustomerExperienceEssentialsApi(AsApiChild, base='telephony/config'):
     """
-    Customer Experience Essentials
+    Features: Customer Assist
+    Features: Customer Assist
 
-    Webex Customer Experience Essentials APIs provide the core capabilities of the Webex Contact Center solution. These
-    APIs allow you to
-    manage Customer Experience Essentials features such as supervisor configuration, agent configuration, and call
-    queue configuration, which are distinct from the Customer Experience Basic suite.
+    Webex Customer Assist APIs provide the core capabilities of the Webex Contact Center solution. These APIs allow you
+    to
+    manage Customer Assist features such as supervisor configuration, agent configuration, and call queue
+    configuration, which are distinct from the Customer Experience Basic suite.
 
-    `Learn more about the customer Experience Essentials suite.
+    `Learn more about the Customer Assist suite.
     <https://help.webex.com/en-us/article/72sb3r/Webex-Customer-Experience-Essentials>`_
 
-    Viewing the read-only customer Experience Essentials APIs requires a full, device or read-only administrator auth
-    token with a scope of `spark-admin:telephony_config_read`.
+    Viewing the read-only Customer Assist APIs requires a full, device or read-only administrator auth token with a
+    scope of
+    `spark-admin:telephony_config_read`.
 
-    Modifying the customer Experience Essentials APIs requires a full or device administrator auth token with a scope
-    of `spark-admin:telephony_config_write`.
+    Modifying the Customer Assist APIs requires a full or device administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+
+    Webex Customer Experience Basic is an offering available as part of the Webex Suite or Webex Calling Professional
+    license at no additional cost.
+    It includes a simple and powerful set of features which are bundled together to deliver the call center
+    functionalities.
+    The features such as Voice Queues, skill-based routing, call queue monitoring and analytics, multi call window, and
+    more, help users to engage with customers efficiently.
+    Also, with our Webex Calling for Microsoft Teams integration, the Microsoft Teams users can access the features
+    directly from Teams.
+
+    Webex Customer Assist provides the fundamental capabilities of the Webex Contact Center solution.
+    It includes all the Webex Calling professional capabilities, Customer Experience Basic features, and some
+    additional key features accessible through the Webex App for both agents and supervisors.
+    The features like screen pop, supervisor experience in Webex App, and real-time and historical agent and queue view
+    make the Customer Assist distinct from Customer Experience Basic.
+
+    Webex Customer Assist APIs allows you to manage Customer Assist features such as supervisor configuration, agent
+    configuration, and call queue configuration, which are distinct from Customer Experience Basic.
+
+    `Learn more about the Customer Assist suite
+    <https://help.webex.com/en-us/article/72sb3r/Webex-Customer-Experience-Essentials>`_
+    `Learn more about the customer Experience Basic suite
+    <https://help.webex.com/en-us/article/nzkg083/Webex-Customer-Experience-Basic>`_
     """
 
     callqueue_recording: AsQueueCallRecordingSettingsApi
@@ -25584,17 +25638,17 @@ class AsCustomerExperienceEssentialsApi(AsApiChild, base='telephony/config'):
         self, location_id: str, has_cx_essentials: bool = None, org_id: str = None
     ) -> AsyncGenerator[AvailableAgent, None]:
         """
-        Get List of available agents for Customer Experience Essentials
+        List Available Agents
 
-        Retrieve the list of available agents with Customer Experience Essentials license in a location.
+        Return a list of available agents with Customer Assist license in a location.
 
-        This operation requires a full or read-only administrator auth token with a scope of
+        Retrieving the list of available agents requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
         :param location_id: Retrieve the list of avaiilable agents in this location.
         :type location_id: str
-        :param has_cx_essentials: Returns only the list of available agents with Customer Experience Essentials license
-            when `true`, otherwise returns the list of available agents with Customer Experience Basic license.
+        :param has_cx_essentials: Returns only the list of available agents with Customer Assist license when `true`,
+            otherwise returns the list of available agents with Customer Experience Basic license.
         :type has_cx_essentials: bool
         :param org_id: The organization ID of the customer or partner's organization.
         :type org_id: str
@@ -25612,17 +25666,17 @@ class AsCustomerExperienceEssentialsApi(AsApiChild, base='telephony/config'):
         self, location_id: str, has_cx_essentials: bool = None, org_id: str = None
     ) -> builtins.list[AvailableAgent]:
         """
-        Get List of available agents for Customer Experience Essentials
+        List Available Agents
 
-        Retrieve the list of available agents with Customer Experience Essentials license in a location.
+        Return a list of available agents with Customer Assist license in a location.
 
-        This operation requires a full or read-only administrator auth token with a scope of
+        Retrieving the list of available agents requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
         :param location_id: Retrieve the list of avaiilable agents in this location.
         :type location_id: str
-        :param has_cx_essentials: Returns only the list of available agents with Customer Experience Essentials license
-            when `true`, otherwise returns the list of available agents with Customer Experience Basic license.
+        :param has_cx_essentials: Returns only the list of available agents with Customer Assist license when `true`,
+            otherwise returns the list of available agents with Customer Experience Basic license.
         :type has_cx_essentials: bool
         :param org_id: The organization ID of the customer or partner's organization.
         :type org_id: str
@@ -38611,7 +38665,10 @@ class AsSimRingApi(AsPersonSettingsApiChild):
 class AsWorkspaceDevicesApi(AsApiChild, base='telephony/config/workspaces'):
     def list_gen(self, workspace_id: str, org_id: str = None) -> AsyncGenerator[TelephonyDevice, None]:
         """
+        Get Workspace Devices
+
         Get all devices for a workspace.
+
         This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
 
         :param workspace_id: ID of the workspace for which to retrieve devices.
@@ -38629,7 +38686,10 @@ class AsWorkspaceDevicesApi(AsApiChild, base='telephony/config/workspaces'):
 
     async def list(self, workspace_id: str, org_id: str = None) -> builtins.list[TelephonyDevice]:
         """
+        Get Workspace Devices
+
         Get all devices for a workspace.
+
         This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
 
         :param workspace_id: ID of the workspace for which to retrieve devices.
@@ -38647,7 +38707,10 @@ class AsWorkspaceDevicesApi(AsApiChild, base='telephony/config/workspaces'):
 
     async def list_and_counts(self, workspace_id: str, org_id: str = None) -> DeviceList:
         """
+        Get Workspace Devices
+
         Get all devices for a workspace.
+
         This requires a full or read-only administrator auth token with a scope of spark-admin:telephony_config_read.
 
         :param workspace_id: ID of the workspace for which to retrieve devices.

@@ -1951,11 +1951,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         Caller ID settings control how a virtual line's information is displayed when making outgoing calls.
 
         Retrieving the caller ID settings for a virtual line requires a full, user, or read-only administrator auth
-        token with a scope of `spark-admin:telephony_config_read`.<div><Callout type="warning">The fields
-        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, `dialByFirstName`, and
-        `dialByLastName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the
-        `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name
-        settings.</Callout></div>
+        token with a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -1993,11 +1989,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         Caller ID settings control how a virtual line's information is displayed when making outgoing calls.
 
         Updating the caller ID settings for a virtual line requires a full or user administrator auth token with a
-        scope of `spark-admin:telephony_config_write`.<div><Callout type="warning">The fields
-        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, `dialByFirstName`, and
-        `dialByLastName` are not supported in Webex for Government (FedRAMP). Instead, administrators must use the
-        `firstName` and `lastName` fields to configure and view both caller ID and dial-by-name
-        settings.</Callout></div>
+        scope of `spark-admin:telephony_config_write`.
 
         :param virtual_line_id: Update settings for a virtual line with the matching ID.
         :type virtual_line_id: str

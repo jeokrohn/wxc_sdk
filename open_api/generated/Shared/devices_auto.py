@@ -315,7 +315,11 @@ class DevicesApi(ApiChild, base='devices'):
         <https://developer.webex.com/docs/api/v1/beta-device-call-settings-with-third-party-device-support/get-third-party-device>`_.
 
         <div><Callout type="warning">Adding a device to a person with a Webex Calling Standard license will disable
-        Webex Calling across their Webex mobile, tablet, desktop, and browser applications.</Callout></div>
+        Webex Calling across their Webex mobile, tablet, desktop, and browser
+        applications.</Callout></div><br><div><Callout type="warning">When adding devices to a Webex Calling
+        Professional licensed person or workspace, wait for each API call to finish before starting the next. This
+        prevents race conditions that can cause errors when assigning primary versus secondary device
+        status.</Callout></div>
 
         :param mac: The MAC address of the device being created.
         :type mac: str
@@ -372,7 +376,11 @@ class DevicesApi(ApiChild, base='devices'):
         <https://developer.webex.com/docs/api/v1/device-call-settings/read-the-list-of-supported-devices>`_ API.
 
         <div><Callout type="warning">Adding a device to a person with a Webex Calling Standard license will disable
-        Webex Calling across their Webex mobile, tablet, desktop, and browser applications.</Callout></div>
+        Webex Calling across their Webex mobile, tablet, desktop, and browser
+        applications.</Callout></div><br><div><Callout type="warning">When adding devices to a Webex Calling
+        Professional licensed person or workspace, wait for each API call to finish before starting the next. This
+        prevents race conditions that can cause errors when assigning primary versus secondary device
+        status.</Callout></div>
 
         :param workspace_id: The ID of the workspace where the device will be activated.
         :type workspace_id: str

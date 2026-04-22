@@ -1,7 +1,7 @@
 import builtins
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import Field
 
@@ -37,6 +37,8 @@ __all__ = [
     'AvailableAgent',
     'CallQueueSettings',
 ]
+
+# mypy: disable-error-code="call-arg,arg-type,assignment"
 
 
 class CallBounce(ApiModel):
@@ -355,7 +357,7 @@ class CallQueue(HGandCQ):
     has_cx_essentials: Optional[bool] = None
 
     @staticmethod
-    def exclude_update_or_create() -> dict:
+    def exclude_update_or_create() -> dict[str, Any]:
         """
         Exclude dict for update or create calls
         :return: dict
@@ -444,21 +446,21 @@ class CallQueueSettings(ApiModel):
 
 
 class AvailableAgent(ApiModel):
-    #: ID of a person, workspace or virtual line.
+    #: Unique agent identifier.
     id: Optional[str] = None
-    #: Last name of a person, workspace or virtual line.
+    #: Last name of the agent assigned to the particular location.
     last_name: Optional[str] = None
-    #: First name of a person, workspace or virtual line.
+    #: First name of the agent assigned to the particular location. Defaults to ".".
     first_name: Optional[str] = None
-    #: Display name of a person, workspace or virtual line.
+    #: Display name of the agent.
     display_name: Optional[str] = None
     #: Type of the person, workspace or virtual line.
     type: Optional[UserType] = None
-    #: Email of a person, workspace or virtual line.
+    #: Email of the agent.
     email: Optional[str] = None
-    #: Person has the CX Essentials license.
+    #: Denotes whether the agent has Customer Assist license.
     has_cx_essentials: Optional[bool] = None
-    #: List of phone numbers of a person, workspace or virtual line.
+    #: Phone number and extension of the agent.
     phone_numbers: Optional[list[UserNumber]] = None
 
 

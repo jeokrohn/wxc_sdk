@@ -12,7 +12,7 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['FeaturesCustomerExperienceEssentialsApi', 'GetAvailableAgentsCallQueueObject',
+__all__ = ['FeaturesCustomerAssistApi', 'GetAvailableAgentsCallQueueObject',
            'GetAvailableAgentsCallQueueObjectPhoneNumbers', 'GetScreenPopConfigurationObject', 'QueryParamsObject',
            'QueueObject', 'QueueObjectWithDefaultEnabled', 'QueueWrapUpReasonObject',
            'ReadWrapUpReasonSettingsResponse', 'UserType', 'WrapUpReasonDetailsObject', 'WrapUpReasonObject']
@@ -68,7 +68,7 @@ class GetAvailableAgentsCallQueueObject(ApiModel):
     type: Optional[UserType] = None
     #: Email of the agent.
     email: Optional[str] = None
-    #: Denotes whether the agent has Customer Experience Essentials license.
+    #: Denotes whether the agent has Customer Assist license.
     has_cx_essentials: Optional[bool] = None
     #: Phone number and extension of the agent.
     phone_numbers: Optional[GetAvailableAgentsCallQueueObjectPhoneNumbers] = None
@@ -148,24 +148,23 @@ class ReadWrapUpReasonSettingsResponse(ApiModel):
     wrapup_reasons: Optional[list[QueueWrapUpReasonObject]] = None
 
 
-class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config'):
+class FeaturesCustomerAssistApi(ApiChild, base='telephony/config'):
     """
-    Features: Customer Experience Essentials
+    Features: Customer Assist
     
-    Webex Customer Experience Essentials APIs provide the core capabilities of the Webex Contact Center solution. These
-    APIs allow you to
-    manage Customer Experience Essentials features such as supervisor configuration, agent configuration, and call
-    queue configuration, which are distinct from the Customer Experience Basic suite.
+    Webex Customer Assist APIs provide the core capabilities of the Webex Contact Center solution. These APIs allow you
+    to
+    manage Customer Assist features such as supervisor configuration, agent configuration, and call queue
+    configuration, which are distinct from the Customer Experience Basic suite.
     
-    `Learn more about the customer Experience Essentials suite.
+    `Learn more about the Customer Assist suite.
     <https://help.webex.com/en-us/article/72sb3r/Webex-Customer-Experience-Essentials>`_
     
-    Viewing the read-only customer Experience Essentials APIs requires a full, device or read-only administrator auth
-    token with a scope of
+    Viewing the read-only Customer Assist APIs requires a full, device or read-only administrator auth token with a
+    scope of
     `spark-admin:telephony_config_read`.
     
-    Modifying the customer Experience Essentials APIs requires a full or device administrator auth token with a scope
-    of
+    Modifying the Customer Assist APIs requires a full or device administrator auth token with a scope of
     `spark-admin:telephony_config_write`.
     
     Webex Customer Experience Basic is an offering available as part of the Webex Suite or Webex Calling Professional
@@ -177,17 +176,16 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
     Also, with our Webex Calling for Microsoft Teams integration, the Microsoft Teams users can access the features
     directly from Teams.
     
-    Webex Customer Experience Essentials provides the fundamental capabilities of the Webex Contact Center solution.
+    Webex Customer Assist provides the fundamental capabilities of the Webex Contact Center solution.
     It includes all the Webex Calling professional capabilities, Customer Experience Basic features, and some
     additional key features accessible through the Webex App for both agents and supervisors.
     The features like screen pop, supervisor experience in Webex App, and real-time and historical agent and queue view
-    make the Customer Experience Essentials distinct from Customer Experience Basic.
+    make the Customer Assist distinct from Customer Experience Basic.
     
-    Webex Customer Experience Essentials APIs allows you to manage Customer Experience Essentials features such as
-    supervisor configuration, agent configuration, and call queue configuration, which are distinct from Customer
-    Experience Basic.
+    Webex Customer Assist APIs allows you to manage Customer Assist features such as supervisor configuration, agent
+    configuration, and call queue configuration, which are distinct from Customer Experience Basic.
     
-    `Learn more about the customer Experience Essentials suite
+    `Learn more about the Customer Assist suite
     <https://help.webex.com/en-us/article/72sb3r/Webex-Customer-Experience-Essentials>`_
     `Learn more about the customer Experience Basic suite
     <https://help.webex.com/en-us/article/nzkg083/Webex-Customer-Experience-Basic>`_
@@ -480,15 +478,15 @@ class FeaturesCustomerExperienceEssentialsApi(ApiChild, base='telephony/config')
         """
         List Available Agents
 
-        Return a list of available agents with Customer Experience Essentials license in a location.
+        Return a list of available agents with Customer Assist license in a location.
 
         Retrieving the list of available agents requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
         :param location_id: Retrieve the list of avaiilable agents in this location.
         :type location_id: str
-        :param has_cx_essentials: Returns only the list of available agents with Customer Experience Essentials license
-            when `true`, otherwise returns the list of available agents with Customer Experience Basic license.
+        :param has_cx_essentials: Returns only the list of available agents with Customer Assist license when `true`,
+            otherwise returns the list of available agents with Customer Experience Basic license.
         :type has_cx_essentials: bool
         :param org_id: The organization ID of the customer or partner's organization.
         :type org_id: str

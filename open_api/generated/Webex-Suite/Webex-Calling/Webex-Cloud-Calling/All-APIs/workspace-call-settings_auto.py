@@ -633,10 +633,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
 
         This API requires a full or read-only administrator or location administrator auth token with a scope of
         `spark-admin:workspaces_read` or a user auth token with `spark:workspaces_read` scope can be used to read
-        workspace settings.<div><Callout type="warning">The fields `directLineCallerIdName.selection`,
-        `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP).
-        Instead, administrators must use the `displayName` and `displayDetail` fields to configure and view both
-        caller ID and dial-by-name settings.</Callout></div>
+        workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
@@ -672,10 +669,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
 
         This API requires a full or user administrator or location administrator auth token with the
         `spark-admin:workspaces_write` scope or a user auth token with `spark:workspaces_write` scope can be used to
-        update workspace settings.<div><Callout type="warning">The fields `directLineCallerIdName.selection`,
-        `directLineCallerIdName.customName`, and `dialByName` are not supported in Webex for Government (FedRAMP).
-        Instead, administrators must use the `displayName` and `displayDetail` fields to configure and view both
-        caller ID and dial-by-name settings.</Callout></div>
+        update workspace settings.
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str

@@ -182,10 +182,7 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         simultaneous call to all the assigned targets.
 
         Creating a paging group requires a full administrator or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.<div><Callout type="warning">The fields
-        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in
-        Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to
-        configure and view both caller ID and dial-by-name settings.</Callout></div>
+        `spark-admin:telephony_config_write`.
 
         :param location_id: Create the paging group for this location.
         :type location_id: str
@@ -328,10 +325,7 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         simultaneous call to all the assigned targets.
 
         Retrieving paging group details requires a full or read-only administrator or location administrator auth token
-        with a scope of `spark-admin:telephony_config_read`.<div><Callout type="warning">The fields
-        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in
-        Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to
-        configure and view both caller ID and dial-by-name settings.</Callout></div>
+        with a scope of `spark-admin:telephony_config_read`.
 
         :param location_id: Retrieve settings for a paging group in this location.
         :type location_id: str
@@ -367,10 +361,7 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         simultaneous call to all the assigned targets.
 
         Updating a paging group requires a full administrator or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.<div><Callout type="warning">The fields
-        `directLineCallerIdName.selection`, `directLineCallerIdName.customName`, and `dialByName` are not supported in
-        Webex for Government (FedRAMP). Instead, administrators must use the `firstName` and `lastName` fields to
-        configure and view both caller ID and dial-by-name settings.</Callout></div>
+        `spark-admin:telephony_config_write`.
 
         :param location_id: Update settings for a paging group in this location.
         :type location_id: str
