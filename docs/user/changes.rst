@@ -1,6 +1,8 @@
 Release history
 ===============
 
+- fix: :meth:`api.scim.groups.patch <wxc_sdk.scim.groups.SCIM2GroupsApi.patch>`, made "schemas" parameter optional
+
 1.34.0
 ------
 - feat: new endpoints :meth:`api.person_settings.get <wxc_sdk.person_settings.PersonSettingsApi.get>`, :meth:`api.person_settings.modify <wxc_sdk.person_settings.PersonSettingsApi.modify>`

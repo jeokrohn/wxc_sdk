@@ -570,8 +570,8 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
         self,
         org_id: str,
         group_id: str,
-        schemas: list[str],
-        operations: list[PatchUserOperation],
+        schemas: list[str] = None,
+        operations: list[PatchUserOperation] = None,
     ) -> ScimGroup:
         """
         Update a group with PATCH
@@ -687,6 +687,9 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
         :rtype: :class:`ScimGroup`
         """
         body = dict()
+        if operations is None:
+            raise ValueError('operations cannot be None')
+        schemas = schemas or ['urn:ietf:params:scim:api:messages:2.0:PatchOp']
         body['schemas'] = schemas
         body['Operations'] = TypeAdapter(list[PatchUserOperation]).dump_python(
             operations, mode='json', by_alias=True, exclude_none=True

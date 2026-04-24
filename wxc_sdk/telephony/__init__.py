@@ -158,6 +158,7 @@ class NumberListPhoneNumber(ApiModel):
     routing_profile: Optional[str] = None
     #: If `true`, the phone number is a service number; otherwise, it is a standard number.
     is_service_number: Optional[bool] = None
+    elin_enabled: Optional[bool] = None
     location: IdAndName
     owner: Optional[NumberOwner] = None
 

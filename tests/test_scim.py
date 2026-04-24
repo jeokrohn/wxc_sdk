@@ -37,6 +37,7 @@ from wxc_sdk.common import OwnerType
 from wxc_sdk.groups import Group
 from wxc_sdk.integration import Integration
 from wxc_sdk.licenses import LicenseProperties, LicenseRequest, LicenseRequestOperation
+from wxc_sdk.locations import Location
 from wxc_sdk.org_contacts import (
     Contact,
     ContactAddress,
@@ -141,6 +142,7 @@ def get_tokens() -> Optional[Tokens]:
 
 @dataclass(init=False, repr=False)
 class TestWithScimToken(TestCaseWithLog):
+    # API instance with "normal" tokens
     test_api: ClassVar[WebexSimpleApi]
     org_id: ClassVar[str]
 
@@ -152,6 +154,7 @@ class TestWithScimToken(TestCaseWithLog):
 
         # create API with standard token
         cls.test_api = WebexSimpleApi(tokens=cls.api.access_token)
+
         # replace session access token with service app access token
         cls.api.session._tokens.access_token = tokens.access_token
         # cache our org id
@@ -160,6 +163,9 @@ class TestWithScimToken(TestCaseWithLog):
 
     def setUp(self) -> None:
         super().setUp()
+        if self.with_har:
+            # enable har logging for test API
+            self.har_writer.register_webex_api(self.test_api)
 
 
 class TestScimRead(TestWithScimToken):
@@ -779,6 +785,128 @@ class TestScimAndPeople(TestScimCreate, TestWithLocations):
                     sleep(3)
                 else:
                     break
+
+    @async_test
+    async def test_group_memberships_of_calling_user(self):
+        """
+        Create  a calling user, then remove the calling license again, and finally also remove the user from the SCIM
+        group representing the locations.
+        """
+
+        def assert_user_is_in_group() -> tuple[ScimGroup, Group]:
+            # confirm that the user now belongs to a group
+            scim_user_details = self.api.scim.users.search(
+                org_id=self.org_id, filter=f'id eq "{scim_user.id}"', include_group_details=True
+            ).resources[0]
+            groups = scim_user_details.groups
+            self.assertIsNotNone(groups, 'SCIM user should belong to at least one group')
+            member_group = next((g for g in groups if g.display == target_location.name), None)
+            self.assertIsNotNone(member_group, f'SCIM user should belong to SCIM group "{target_location.name}"')
+            # get scim group details
+            scim_group = self.api.scim.groups.details(org_id=self.org_id, group_id=member_group.value)
+
+            # get members of group
+            scim_group_members = list(self.api.scim.groups.members_all(org_id=self.org_id, group_id=scim_group.id))
+            user_member = next((m for m in scim_group_members if m.value == scim_user.id), None)
+            self.assertIsNotNone(user_member, 'User not found in SCIM group members')
+
+            # check that user also is member of group
+            group = next((self.test_api.groups.list(list_filter=f'display_name eq "{target_location.name}"')), None)
+            self.assertIsNotNone(group, f'group "{target_location.name}" not found')
+            members = list(self.test_api.groups.members(group_id=group.group_id))
+            user_in_members = next((m for m in members if m.member_id == webex_user.person_id), None)
+            self.assertIsNotNone(user_in_members, 'User not found in group members')
+            return scim_group, group  # type: ignore[return-value]
+
+        def execute_test():
+            print(f'testing with user {webex_user.display_name}({webex_user.emails[0]})')
+            print(f'with extension {extension} in location "{target_location.name}"')
+
+            # enable user for calling (standard license)
+            # try to add standard license to user
+            print('enabling user for calling...')
+            self.test_api.licenses.assign_licenses_to_users(
+                person_id=webex_user.person_id,
+                licenses=[
+                    LicenseRequest(
+                        operation=LicenseRequestOperation.add,
+                        id=standard_license.license_id,
+                        properties=LicenseProperties(location_id=target_location.location_id, extension=extension),
+                    )
+                ],
+            )
+            print('checking group memberships')
+            assert_user_is_in_group()
+
+            print('disable calling')
+            # disable calling license again
+            self.test_api.licenses.assign_licenses_to_users(
+                person_id=webex_user.person_id,
+                licenses=[LicenseRequest(operation=LicenseRequestOperation.remove, id=standard_license.license_id)],
+            )
+
+            print('checking group memberships')
+            # assert that the location in the people api is gone
+            webex_user_after = self.test_api.people.details(person_id=webex_user.person_id, calling_data=True)
+            self.assertIsNone(
+                webex_user_after.location_id, 'Location id in people API should be cleared by removing calling license'
+            )
+
+            # .. but user should still be in the group until we remove it
+            scim_group, group = assert_user_is_in_group()
+
+            print('removing user from group')
+            # now remove the user from the group
+            operations = [
+                PatchUserOperation(op=PatchUserOperationOp.remove, path=f'members[value eq "{scim_user.id}"]')
+            ]
+            self.api.scim.groups.patch(org_id=self.org_id, group_id=scim_group.id, operations=operations)
+
+            print('checking group memberships')
+            # check members of SCIM group
+            scim_group_members = list(self.api.scim.groups.members_all(org_id=self.org_id, group_id=scim_group.id))
+            user_member = next((m for m in scim_group_members if m.value == scim_user.id), None)
+            self.assertIsNone(user_member, 'User still found in SCIM group members')
+
+            # check members of group
+            members = list(self.test_api.groups.members(group_id=group.group_id))
+            user_in_members = next((m for m in members if m.member_id == webex_user.person_id), None)
+            self.assertIsNone(user_in_members, 'User still found in group members')
+            return
+
+        with self.no_log():
+            # get new random user
+            new_user = (
+                await random_users(api=self.async_api, user_count=1, inc=['name', 'location', 'phone', 'cell'])
+            )[0]
+            scim_user = self.scim_user_from_random_user(new_user)
+
+            # get calling license
+            standard_license = next(lic for lic in self.test_api.licenses.list() if lic.webex_calling_basic)
+            standard_license = self.test_api.licenses.details(license_id=standard_license.license_id)
+
+            # pick a calling location
+            target_location: Location = random.choice(self.locations)
+
+            # get extension in location
+            extension = next(available_extensions_gen(api=self.api, location_id=target_location.location_id))
+
+        api = self.api.scim.users
+        org_id = self.org_id
+
+        # create user using SCIM
+        scim_user = api.create(org_id=org_id, user=scim_user)
+        with self.no_log():
+            # get the user via the people API
+            webex_user = next(user for user in self.test_api.people.list(email=new_user.email))
+        # get user details
+        webex_user = self.test_api.people.details(person_id=webex_user.person_id, calling_data=True)
+        try:
+            execute_test()
+        finally:
+            # cleanup: remove the user again
+            self.api.scim.users.delete(org_id=org_id, user_id=scim_user.id)
+        return
 
 
 @dataclass(init=False, repr=False)

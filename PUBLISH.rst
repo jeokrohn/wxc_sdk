@@ -17,6 +17,7 @@
 * run "uv run cz bump" and review
 * check changelog, tag, commit
 * build: make package
+* uv publish
 * git push --tags
 * review read the docs: especially check build logs for errors
 * readthedocs: set new default version
