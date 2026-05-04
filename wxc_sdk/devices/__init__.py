@@ -47,11 +47,11 @@ class Lifecycle(str, Enum):
 
 
 class Device(ApiModel):
-    #: A unique identifier for the device.
-    device_id: str = Field(alias='id')
-    #: A unique identifier for the device specifically for use with Webex Calling APIs.
+    #: A unique identifier for the device. May be null.
+    device_id: Optional[str] = Field(None, alias='id')
+    #: A unique identifier for the device specifically for use with Webex Calling APIs. May be null.
     calling_device_id: Optional[str] = None
-    #: A unique identifier for the device specifically for use with Webex Devices APIs.
+    #: A unique identifier for the device specifically for use with Webex Devices APIs. May be null.
     webex_device_id: Optional[str] = None
     #: A friendly name for the device.
     display_name: str

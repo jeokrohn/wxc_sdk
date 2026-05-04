@@ -65,11 +65,11 @@ class MaintenanceMode(str, Enum):
 
 
 class Device(ApiModel):
-    #: A unique identifier for the device.
+    #: A unique identifier for the device. May be null.
     id: Optional[str] = None
-    #: A unique identifier for the device specifically for use with Webex Calling APIs.
+    #: A unique identifier for the device specifically for use with Webex Calling APIs. May be null.
     calling_device_id: Optional[str] = None
-    #: A unique identifier for the device specifically for use with Webex Devices APIs.
+    #: A unique identifier for the device specifically for use with Webex Devices APIs. May be null.
     webex_device_id: Optional[str] = None
     #: A friendly name for the device.
     display_name: Optional[str] = None

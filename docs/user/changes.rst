@@ -1,6 +1,7 @@
 Release history
 ===============
 
+- fix: Device.id is optional
 - fix: :meth:`api.scim.groups.patch <wxc_sdk.scim.groups.SCIM2GroupsApi.patch>`, made "schemas" parameter optional
 
 1.34.0

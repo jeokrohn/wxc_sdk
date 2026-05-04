@@ -10,13 +10,14 @@ from contextlib import contextmanager
 from functools import reduce
 from itertools import chain
 from operator import attrgetter
-from typing import Callable
+from typing import Any, Callable
 from unittest import skip
 
 from tests.base import TestCaseWithUsers, async_test, gather
 from wxc_sdk.base import to_camel
 from wxc_sdk.common import Greeting, OwnerType
 from wxc_sdk.people import Person
+from wxc_sdk.person_settings import PersonSettings
 from wxc_sdk.person_settings.appservices import AppServicesSettings
 from wxc_sdk.person_settings.barge import BargeSettings
 from wxc_sdk.person_settings.call_intercept import InterceptSetting, InterceptTypeIncoming
@@ -31,7 +32,7 @@ from wxc_sdk.telephony import NumberListPhoneNumber, NumberType
 
 
 class TestRead(TestCaseWithUsers):
-    def execute_read_test(self, f: Callable):
+    def execute_read_test(self, f: Callable):  # type: ignore[type-arg]
         with ThreadPoolExecutor() as pool:
             result_map = pool.map(lambda user: f(user.person_id), self.users)
             results = list(gather(result_map, return_exceptions=True))
@@ -74,12 +75,18 @@ class TestRead(TestCaseWithUsers):
                 continue
             result: CallRecordingSetting
             print(f'{user.display_name}')
-            print('\n'.join(f'  {l}'
-                            for l in json.dumps(result.model_dump(mode='json', exclude_unset=True, by_alias=True),
-                                                indent=2).splitlines()))
+            print(
+                '\n'.join(
+                    f'  {l}'
+                    for l in json.dumps(
+                        result.model_dump(mode='json', exclude_unset=True, by_alias=True), indent=2
+                    ).splitlines()
+                )
+            )
             if result.call_recording_access_settings:
                 print(
-                    f'{user.display_name} has call recording access settings: {result.call_recording_access_settings}')
+                    f'{user.display_name} has call recording access settings: {result.call_recording_access_settings}'
+                )
 
         for u, e in ((u, r) for u, r in zip(self.users, results) if isinstance(r, Exception)):
             u: Person
@@ -110,8 +117,9 @@ class TestRead(TestCaseWithUsers):
                 print(f'{pa_setting}')
             else:
                 if pa_setting.preferred_answer_endpoint_id:
-                    pae = next((ep for ep in pa_setting.endpoints if ep.id == pa_setting.preferred_answer_endpoint_id),
-                               None)
+                    pae = next(
+                        (ep for ep in pa_setting.endpoints if ep.id == pa_setting.preferred_answer_endpoint_id), None
+                    )
                     if pae is None:
                         print('preferred_answer_endpoint_id set but ep not found in list')
                     else:
@@ -119,7 +127,21 @@ class TestRead(TestCaseWithUsers):
                 else:
                     print('preferred_answer_endpoint_id is None')
                 for ep in sorted(pa_setting.endpoints, key=attrgetter('name')):
-                    print(f'  {ep.type}, {ep.name}: {base64.b64decode(ep.id+"==").decode()}')
+                    print(f'  {ep.type}, {ep.name}: {base64.b64decode(ep.id + "==").decode()}')
+        self.assertFalse(any(isinstance(r, Exception) for r in results))
+
+    def test_timezone_and_announcement_settings(self):
+        results = self.execute_read_test(self.api.person_settings.get)
+        for e in (r for r in results if isinstance(r, Exception)):
+            print(f'{e}')
+        dn_len = max(len(user.display_name) for user in self.users)
+        for user, pa_setting in zip(self.users, results):
+            pa_setting: PersonSettings
+            print(f'{user.display_name:{dn_len}} - ', end='')
+            if isinstance(pa_setting, Exception):
+                print(f'{pa_setting}')
+            else:
+                print(f'{pa_setting}')
         self.assertFalse(any(isinstance(r, Exception) for r in results))
 
 
@@ -144,15 +166,16 @@ class TestConfigure(TestCaseWithUsers):
             """
             target_user = random.choice(self.users)
             barge_settings = self.api.person_settings.barge.read(entity_id=target_user.person_id)
-            print(f'target user: {target_user.display_name}: enabled: {barge_settings.enabled}, tone enabled: '
-                  f'{barge_settings.tone_enabled}')
+            print(
+                f'target user: {target_user.display_name}: enabled: {barge_settings.enabled}, tone enabled: '
+                f'{barge_settings.tone_enabled}'
+            )
             try:
                 yield target_user
             finally:
                 # restore barge settings
                 print(f'restore enabled: {barge_settings.enabled}, tone enabled: {barge_settings.tone_enabled}')
-                self.api.person_settings.barge.configure(entity_id=target_user.person_id,
-                                                         barge_settings=barge_settings)
+                self.api.person_settings.barge.configure(entity_id=target_user.person_id, barge_settings=barge_settings)
 
         def update_and_check(barge_settings: BargeSettings):
             """
@@ -241,8 +264,7 @@ class TestConfigure(TestCaseWithUsers):
             with open(self.wav_path, mode='rb') as wav_file:
                 upload_as = f'w{uuid.uuid4()}.wav'
                 ps = self.api.person_settings
-                ps.call_intercept.greeting(entity_id=user.person_id, content=wav_file,
-                                           upload_as=upload_as)
+                ps.call_intercept.greeting(entity_id=user.person_id, content=wav_file, upload_as=upload_as)
                 intercept = ps.call_intercept.read(entity_id=user.person_id)
         self.assertEqual(upload_as, intercept.incoming.announcements.file_name)
 
@@ -259,8 +281,7 @@ class TestConfigure(TestCaseWithUsers):
             # first upload custom greeting
             with open(self.wav_path, mode='rb') as file:
                 upload_as = f'w{uuid.uuid4()}.wav'
-                ps.call_intercept.greeting(entity_id=user.person_id, content=file,
-                                           upload_as=upload_as)
+                ps.call_intercept.greeting(entity_id=user.person_id, content=file, upload_as=upload_as)
             intermediate = ps.call_intercept.read(entity_id=user.person_id)
             # .. and then set the greeting to custom
             ps.call_intercept.configure(entity_id=user.person_id, intercept=intercept)
@@ -278,32 +299,32 @@ class TestConfigure(TestCaseWithUsers):
         """
         api = self.async_api.person_settings.preferred_answer
         # get preferred answer settings for all users
-        pa_settings = await asyncio.gather(
-            *[api.read(person_id=user.person_id) for user in self.users])
+        pa_settings = await asyncio.gather(*[api.read(person_id=user.person_id) for user in self.users])
         pa_settings: list[PreferredAnswerResponse]
 
         # pic a user where an alternative endpoint exists
         pa: PreferredAnswerResponse
-        candidates = [(user, pa) for user, pa in zip(self.users, pa_settings)
-                      if pa.endpoints]
+        candidates = [(user, pa) for user, pa in zip(self.users, pa_settings) if pa.endpoints]
         target_user, pa_setting = random.choice(candidates)
         target_user: Person
         pa_setting: PreferredAnswerResponse
 
         # update endpoint
         new_preferred = pa_setting.endpoints[0]
-        print(f'Updating preferred answer endpoint for "{target_user.display_name}" to: '
-              f'{new_preferred.type}, {new_preferred.name}')
-        await api.modify(person_id=target_user.person_id,
-                         preferred_answer_endpoint_id=new_preferred.id)
+        print(
+            f'Updating preferred answer endpoint for "{target_user.display_name}" to: '
+            f'{new_preferred.type}, {new_preferred.name}'
+        )
+        await api.modify(person_id=target_user.person_id, preferred_answer_endpoint_id=new_preferred.id)
         try:
             # verify
             pa_after = await api.read(person_id=target_user.person_id)
             self.assertEqual(new_preferred.id, pa_after.preferred_answer_endpoint_id)
         finally:
             # restore
-            await api.modify(person_id=target_user.person_id,
-                             preferred_answer_endpoint_id=pa_setting.preferred_answer_endpoint_id)
+            await api.modify(
+                person_id=target_user.person_id, preferred_answer_endpoint_id=pa_setting.preferred_answer_endpoint_id
+            )
             restored = await api.read(person_id=target_user.person_id)
             self.assertEqual(pa_setting, restored)
 
@@ -318,13 +339,13 @@ class TestConfigure(TestCaseWithUsers):
 
         async def app_services_settings() -> list[AppServicesSettings]:
             return await asyncio.gather(
-                *[self.async_api.person_settings.appservices.read(person_id=user.person_id)
-                  for user in self.users])
+                *[self.async_api.person_settings.appservices.read(person_id=user.person_id) for user in self.users]
+            )
 
         async def preferred_answer_settings() -> list[PreferredAnswerResponse]:
             return await asyncio.gather(
-                *[self.async_api.person_settings.preferred_answer.read(person_id=user.person_id)
-                  for user in self.users])
+                *[self.async_api.person_settings.preferred_answer.read(person_id=user.person_id) for user in self.users]
+            )
 
         # for all users get application settings
         # for all users get preferred answer settings
@@ -338,23 +359,31 @@ class TestConfigure(TestCaseWithUsers):
             user: Person
             app_setting: AppServicesSettings
             pa: PreferredAnswerResponse
-            app_available_as_pa = next((endpoint for endpoint in preferred_answer.endpoints
-                                        if endpoint.type == PreferredAnswerEndpointType.application and
-                                        endpoint.name == 'Webex Desktop Application'),
-                                       None)
+            app_available_as_pa = next(
+                (
+                    endpoint
+                    for endpoint in preferred_answer.endpoints
+                    if endpoint.type == PreferredAnswerEndpointType.application
+                    and endpoint.name == 'Webex Desktop Application'
+                ),
+                None,
+            )
             is_app_available_as_pa = app_available_as_pa is not None
             if is_app_available_as_pa != app_setting.desktop_client_enabled:
                 print(
                     f'!!! {user.display_name}: app available as preferred answer endpoint ({is_app_available_as_pa}), '
-                    f'desktop client enabled ({app_setting.desktop_client_enabled})')
+                    f'desktop client enabled ({app_setting.desktop_client_enabled})'
+                )
                 err = True
             if app_available_as_pa:
                 app_available_as_pa: PreferredAnswerEndpoint
                 if app_available_as_pa.id != app_setting.desktop_client_id:
-                    print(f'!!! {user.display_name}: desktop id (preferred answer endpoint): '
-                          f'{base64.b64decode(app_available_as_pa.id + "==").decode()}, '
-                          f'desktop id (user app settings): '
-                          f'{base64.b64decode(app_setting.desktop_client_id + "==").decode()}')
+                    print(
+                        f'!!! {user.display_name}: desktop id (preferred answer endpoint): '
+                        f'{base64.b64decode(app_available_as_pa.id + "==").decode()}, '
+                        f'desktop id (user app settings): '
+                        f'{base64.b64decode(app_setting.desktop_client_id + "==").decode()}'
+                    )
                     err = True
             foo = 1
         self.assertFalse(err, 'check output for errors')
@@ -370,10 +399,15 @@ class TestConfigure(TestCaseWithUsers):
         preferred_answer = ps_api.preferred_answer.read(person_id=target_user.person_id)
 
         def validate(apps: AppServicesSettings, preferred: PreferredAnswerResponse) -> bool:
-            desktop_app = next((endpoint for endpoint in preferred.endpoints
-                                if endpoint.type == PreferredAnswerEndpointType.application and
-                                endpoint.name == 'Webex Desktop Application'),
-                               None)
+            desktop_app = next(
+                (
+                    endpoint
+                    for endpoint in preferred.endpoints
+                    if endpoint.type == PreferredAnswerEndpointType.application
+                    and endpoint.name == 'Webex Desktop Application'
+                ),
+                None,
+            )
             return apps.desktop_client_enabled == (desktop_app is not None)
 
         try:
@@ -398,16 +432,20 @@ class TestConfigure(TestCaseWithUsers):
         """
         enable call recording for all users
         """
-        setting = CallRecordingSetting(enabled=True,
-                                       record=Record.always,
-                                       record_voicemail_enabled=True,
-                                       call_recording_access_settings=CallRecordingAccessSettings(
-                                           view_and_play_recordings_enabled=True, download_recordings_enabled=True,
-                                           delete_recordings_enabled=True, share_recordings_enabled=True))
+        setting = CallRecordingSetting(
+            enabled=True,
+            record=Record.always,
+            record_voicemail_enabled=True,
+            call_recording_access_settings=CallRecordingAccessSettings(
+                view_and_play_recordings_enabled=True,
+                download_recordings_enabled=True,
+                delete_recordings_enabled=True,
+                share_recordings_enabled=True,
+            ),
+        )
         results = await asyncio.gather(
-            *[self.async_api.person_settings.call_recording.configure(user.person_id,
-                                                                     setting)
-              for user in self.users])
+            *[self.async_api.person_settings.call_recording.configure(user.person_id, setting) for user in self.users]
+        )
         err = None
         for user, result in zip(self.users, results):
             if isinstance(result, Exception):
@@ -423,9 +461,8 @@ class TestConfigure(TestCaseWithUsers):
     async def test_recording_002_disable_for_all_users(self):
         setting = CallRecordingSetting(enabled=False)
         results = await asyncio.gather(
-            *[self.async_api.person_settings.call_recording.configure(user.person_id,
-                                                                      setting)
-              for user in self.users])
+            *[self.async_api.person_settings.call_recording.configure(user.person_id, setting) for user in self.users]
+        )
         err = None
         for user, result in zip(self.users, results):
             if isinstance(result, Exception):
@@ -444,8 +481,7 @@ class TestCallerIdConfigure(TestCaseWithUsers):
 
     @contextmanager
     def user_context(self, *, users_with_tn: bool) -> Person:
-        candidates = [user for user in self.users
-                      if not users_with_tn or user.tn]
+        candidates = [user for user in self.users if not users_with_tn or user.tn]
 
         if not candidates:
             self.skipTest('No candidate user for test found')
@@ -486,15 +522,18 @@ class TestCallerIdConfigure(TestCaseWithUsers):
             self.assertEqual(CallerIdSelectedType.location_number, after.selected)
 
     @staticmethod
-    def verify_e164(body: dict) -> list[tuple[str, str]]:
+    def verify_e164(body: dict[str, Any]) -> list[tuple[str, str]]:
         """
         verify that numbers are E.164
 
         :return: list od tuples (field, value) for numbers that are not E.164
         """
         fields = ['direct_number', 'location_number', 'mobile_number', 'custom_number']
-        return [(field, number) for field in fields
-                if (number := body.get(to_camel(field))) is not None and number[0] != '+']
+        return [
+            (field, number)
+            for field in fields
+            if (number := body.get(to_camel(field))) is not None and number[0] != '+'
+        ]
 
     def assert_number_format_e164(self):
         """
@@ -507,7 +546,7 @@ class TestCallerIdConfigure(TestCaseWithUsers):
             if non_e164:
                 e164_issue = True
                 print('Not E.164: ', end='')
-                print(", ".join(": ".join(ne) for ne in non_e164))
+                print(', '.join(': '.join(ne) for ne in non_e164))
         self.assertFalse(e164_issue, 'Some numbers are not E.164')
 
     def test_003_set_location_number_verify_number_format(self):
@@ -528,28 +567,37 @@ class TestCallerIdConfigure(TestCaseWithUsers):
         Try to set number to another assigned numbers
         """
         # get phone numbers assigned to users
-        numbers = await self.async_api.telephony.phone_numbers(number_type=NumberType.number,
-                                                               owner_type=OwnerType.people)
+        numbers = await self.async_api.telephony.phone_numbers(
+            number_type=NumberType.number, owner_type=OwnerType.people
+        )
         # group phone numbers by location
         numbers_by_location: dict[str, list[NumberListPhoneNumber]] = reduce(
-            lambda red, r: red[r.location.id].append(r) or red,
-            numbers, defaultdict(list))
+            lambda red, r: red[r.location.id].append(r) or red, numbers, defaultdict(list)
+        )
         # pick random number(and user) from users within locations with at least two users
-        target_number: NumberListPhoneNumber = random.choice(list(chain.from_iterable(number_list
-                                                                                      for number_list in
-                                                                                      numbers_by_location.values()
-                                                                                      if len(number_list) > 1)))
+        target_number: NumberListPhoneNumber = random.choice(
+            list(
+                chain.from_iterable(number_list for number_list in numbers_by_location.values() if len(number_list) > 1)
+            )
+        )
 
         # pick second number and user with number in same location
         second_number: NumberListPhoneNumber = random.choice(
-            [n for n in numbers_by_location[target_number.location.id]
-             if n.owner.owner_id != target_number.owner.owner_id])
+            [
+                n
+                for n in numbers_by_location[target_number.location.id]
+                if n.owner.owner_id != target_number.owner.owner_id
+            ]
+        )
         # try to set the caller id of owner of 1st number
         api = self.async_api.person_settings.caller_id
         before = await api.read(entity_id=target_number.owner.owner_id)
         try:
-            await api.configure(entity_id=target_number.owner.owner_id,
-                                selected=CallerIdSelectedType.custom, custom_number=second_number.phone_number)
+            await api.configure(
+                entity_id=target_number.owner.owner_id,
+                selected=CallerIdSelectedType.custom,
+                custom_number=second_number.phone_number,
+            )
             after = await api.read(entity_id=target_number.owner.owner_id)
         finally:
             await api.configure_settings(entity_id=target_number.owner.owner_id, settings=before)
@@ -580,8 +628,9 @@ class TestCallerIdConfigure(TestCaseWithUsers):
             user: Person
             api = self.api.person_settings.caller_id
             before = api.read(entity_id=user.person_id)
-            update = CallerId(selected=before.selected,
-                              block_in_forward_calls_enabled=not before.block_in_forward_calls_enabled)
+            update = CallerId(
+                selected=before.selected, block_in_forward_calls_enabled=not before.block_in_forward_calls_enabled
+            )
             api.configure_settings(entity_id=user.person_id, settings=update)
             after = api.read(entity_id=user.person_id)
         expected = before.model_copy(deep=True)
@@ -596,9 +645,11 @@ class TestCallerIdConfigure(TestCaseWithUsers):
             user: Person
             api = self.api.person_settings.caller_id
             before = api.read(entity_id=user.person_id)
-            update = CallerId(selected=before.selected,
-                              external_caller_id_name_policy=ExternalCallerIdNamePolicy.other,
-                              custom_external_caller_id_name='foo custom')
+            update = CallerId(
+                selected=before.selected,
+                external_caller_id_name_policy=ExternalCallerIdNamePolicy.other,
+                custom_external_caller_id_name='foo custom',
+            )
             api.configure_settings(entity_id=user.person_id, settings=update)
             after = api.read(entity_id=user.person_id)
         expected = before.model_copy(deep=True)
