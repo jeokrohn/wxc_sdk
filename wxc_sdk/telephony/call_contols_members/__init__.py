@@ -104,7 +104,14 @@ class CallControlsMembersApi(ApiChild, base='telephony/calls/members'):
         r = TelephonyCall.model_validate(data)
         return r
 
-    def dial(self, member_id: str, destination: str, endpoint_id: str = None, org_id: str = None) -> CallInfo:
+    def dial(
+        self,
+        member_id: str,
+        destination: str,
+        endpoint_id: str = None,
+        single_number_reach_phone_number: str = None,
+        org_id: str = None,
+    ) -> CallInfo:
         """
         Dial by Member ID
 
@@ -122,8 +129,12 @@ class CallControlsMembersApi(ApiChild, base='telephony/calls/members'):
         :type destination: str
         :param endpoint_id: The ID of the device or application to use for the call. The `endpointId` must be one of
             the endpointIds returned by the `Get Preferred Answer Endpoint API
-            <https://developer.webex.com/docs/api/v1/user-call-settings-2-2/get-preferred-answer-endpoint>`_.
+            <https://developer.webex.com/docs/api/v1/user-call-settings-2-2/get-preferred-answer-endpoint>`_. Mutually
+             exclusive with `singleNumberReachPhoneNumber`.
         :type endpoint_id: str
+        :param single_number_reach_phone_number: The Single Number Reach phone number to use for the call. Mutually
+            exclusive with `endpointId`.
+        :type single_number_reach_phone_number: str
         :param org_id: Id of the organization to which the member belongs. If not provided, the orgId of the Service
             App is used. If provided, the organization must be the same as or managed by the Service App's
             organization.
@@ -137,6 +148,8 @@ class CallControlsMembersApi(ApiChild, base='telephony/calls/members'):
         body['destination'] = destination
         if endpoint_id is not None:
             body['endpointId'] = endpoint_id
+        if single_number_reach_phone_number is not None:
+            body['singleNumberReachPhoneNumber'] = single_number_reach_phone_number
         url = self.ep(f'{member_id}/dial')
         data = super().post(url, params=params, json=body)
         r = CallInfo.model_validate(data)
