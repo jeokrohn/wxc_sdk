@@ -495,24 +495,21 @@ class CallQueueApi(ApiChild, base=''):
         self.announcement = AnnouncementApi(session=session)
         self.policy = CQPolicyApi(session=session)
 
-    def _endpoint(self, *, location_id: str = None, queue_id: str = None, path: str = None):
+    def _endpoint(self, *, location_id: str = None, path: str = None):
         """
         Helper to get URL for API endpoints
 
         :meta private:
         :param location_id:
-        :param queue_id:
+        :param path:
         :return:
         """
         if location_id is None:
             return self.ep('telephony/config/queues')
-        else:
-            ep = self.ep(f'telephony/config/locations/{location_id}/queues')
-            if queue_id:
-                ep = f'{ep}/{queue_id}'
-            if path:
-                ep = f'{ep}/{path}'
-            return ep
+        ep = self.ep(f'telephony/config/locations/{location_id}/queues')
+        if path:
+            ep = f'{ep}/{path}'
+        return ep
 
     def list(
         self,
@@ -674,7 +671,7 @@ class CallQueueApi(ApiChild, base=''):
         :param org_id: Delete the call queue from this organization.
         :type org_id: str
         """
-        url = self._endpoint(location_id=location_id, queue_id=queue_id)
+        url = self._endpoint(location_id=location_id, path=queue_id)
         params = org_id and {'orgId': org_id} or None
         self.delete(url=url, params=params)
 
@@ -707,7 +704,7 @@ class CallQueueApi(ApiChild, base=''):
         :return: call queue details
         :rtype: :class:`CallQueue`
         """
-        url = self._endpoint(location_id=location_id, queue_id=queue_id)
+        url = self._endpoint(location_id=location_id, path=queue_id)
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
@@ -788,7 +785,7 @@ class CallQueueApi(ApiChild, base=''):
         if location_id is None or queue_id is None:
             raise ValueError('location_id and queue_id cannot be None')
         cq_data = update.create_or_update()
-        url = self._endpoint(location_id=location_id, queue_id=queue_id)
+        url = self._endpoint(location_id=location_id, path=queue_id)
         self.put(url=url, json=cq_data, params=params)
 
     def get_call_queue_settings(self, org_id: str = None) -> CallQueueSettings:

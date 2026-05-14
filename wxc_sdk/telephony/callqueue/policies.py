@@ -7,11 +7,11 @@ from typing import Optional
 
 from pydantic import Field
 
+from ...api_child import ApiChild
 from ...base import ApiModel
 from ...base import SafeEnum as Enum
 from ...common import AnnAudioFile, Greeting
 from ...common.schedules import ScheduleLevel
-from ...rest import RestSession
 
 __all__ = [
     'CPActionType',
@@ -173,14 +173,9 @@ class ForcedForward(ApiModel):
 
 
 @dataclass(init=False, repr=False)
-class CQPolicyApi:
-    _session: RestSession
-
+class CQPolicyApi(ApiChild, base=''):
     def _ep(self, location_id: str, queue_id: str, path: str):
-        return self._session.ep(f'telephony/config/locations/{location_id}/queues/{queue_id}/{path}')
-
-    def __init__(self, session: RestSession):
-        self._session = session
+        return self.ep(f'telephony/config/locations/{location_id}/queues/{queue_id}/{path}')
 
     def holiday_service_details(self, location_id: str, queue_id: str, org_id: str = None) -> HolidayService:
         """
@@ -204,7 +199,7 @@ class CQPolicyApi:
         """
         url = self._ep(location_id, queue_id, 'holidayService')
         params = org_id and {'orgId': org_id} or None
-        data = self._session.rest_get(url=url, params=params)
+        data = self.get(url=url, params=params)
         return HolidayService.model_validate(data)
 
     def holiday_service_update(self, location_id: str, queue_id: str, update: HolidayService, org_id: str = None):
@@ -230,7 +225,7 @@ class CQPolicyApi:
         url = self._ep(location_id, queue_id, 'holidayService')
         params = org_id and {'orgId': org_id} or None
         body = update.model_dump_json(exclude={'holiday_schedules'})
-        self._session.rest_put(url=url, params=params, data=body)
+        self.put(url=url, params=params, data=body)
 
     def night_service_detail(self, location_id: str, queue_id: str, org_id: str = None) -> NightService:
         """
@@ -255,7 +250,7 @@ class CQPolicyApi:
         """
         url = self._ep(location_id, queue_id, 'nightService')
         params = org_id and {'orgId': org_id} or None
-        data = self._session.rest_get(url=url, params=params)
+        data = self.get(url=url, params=params)
         return NightService.model_validate(data)
 
     def night_service_update(self, location_id: str, queue_id: str, update: NightService, org_id: str = None):
@@ -282,7 +277,7 @@ class CQPolicyApi:
         url = self._ep(location_id, queue_id, 'nightService')
         params = org_id and {'orgId': org_id} or None
         body = update.model_dump_json(exclude={'business_hour_schedules'})
-        self._session.rest_put(url=url, params=params, data=body)
+        self.put(url=url, params=params, data=body)
 
     def stranded_calls_details(self, location_id: str, queue_id: str, org_id: str = None) -> StrandedCalls:
         """
@@ -308,7 +303,7 @@ class CQPolicyApi:
         """
         url = self._ep(location_id, queue_id, 'strandedCalls')
         params = org_id and {'orgId': org_id} or None
-        data = self._session.rest_get(url=url, params=params)
+        data = self.get(url=url, params=params)
         return StrandedCalls.model_validate(data)
 
     def stranded_calls_update(self, location_id: str, queue_id: str, update: StrandedCalls, org_id: str = None):
@@ -333,7 +328,7 @@ class CQPolicyApi:
         """
         url = self._ep(location_id, queue_id, 'strandedCalls')
         params = org_id and {'orgId': org_id} or None
-        self._session.rest_put(url=url, params=params, data=update.model_dump_json())
+        self.put(url=url, params=params, data=update.model_dump_json())
 
     def forced_forward_details(self, location_id: str, queue_id: str, org_id: str = None) -> ForcedForward:
         """
@@ -354,7 +349,7 @@ class CQPolicyApi:
         """
         url = self._ep(location_id, queue_id, 'forcedForward')
         params = org_id and {'orgId': org_id} or None
-        data = self._session.rest_get(url=url, params=params)
+        data = self.get(url=url, params=params)
         return ForcedForward.model_validate(data)
 
     def forced_forward_update(self, location_id: str, queue_id: str, update: ForcedForward, org_id: str = None):
@@ -381,4 +376,4 @@ class CQPolicyApi:
         """
         url = self._ep(location_id, queue_id, 'forcedForward')
         params = org_id and {'orgId': org_id} or None
-        self._session.rest_put(url=url, params=params, data=update.model_dump_json())
+        self.put(url=url, params=params, data=update.model_dump_json())

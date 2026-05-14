@@ -1824,6 +1824,30 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.telephony.callqueue.list <wxc_sdk.telephony.callqueue.CallQueueApi.list>`
         | Read the List of Call Queues
         | ``GET /telephony/config/queues``
+   * - :meth:`api.telephony.callqueue.policy.forced_forward_details <wxc_sdk.telephony.callqueue.policies.CQPolicyApi.forced_forward_details>`
+        | Get Details for a Call Queue Forced Forward
+        | ``GET /telephony/config/locations/{location_id}/queues/{queue_id}/forcedForward``
+   * - :meth:`api.telephony.callqueue.policy.forced_forward_update <wxc_sdk.telephony.callqueue.policies.CQPolicyApi.forced_forward_update>`
+        | Update a Call Queue Forced Forward service
+        | ``PUT /telephony/config/locations/{location_id}/queues/{queue_id}/forcedForward``
+   * - :meth:`api.telephony.callqueue.policy.holiday_service_details <wxc_sdk.telephony.callqueue.policies.CQPolicyApi.holiday_service_details>`
+        | Get Details for a Call Queue Holiday Service
+        | ``GET /telephony/config/locations/{location_id}/queues/{queue_id}/holidayService``
+   * - :meth:`api.telephony.callqueue.policy.holiday_service_update <wxc_sdk.telephony.callqueue.policies.CQPolicyApi.holiday_service_update>`
+        | Update a Call Queue Holiday Service
+        | ``PUT /telephony/config/locations/{location_id}/queues/{queue_id}/holidayService``
+   * - :meth:`api.telephony.callqueue.policy.night_service_detail <wxc_sdk.telephony.callqueue.policies.CQPolicyApi.night_service_detail>`
+        | Get Details for a Call Queue Night Service
+        | ``GET /telephony/config/locations/{location_id}/queues/{queue_id}/nightService``
+   * - :meth:`api.telephony.callqueue.policy.night_service_update <wxc_sdk.telephony.callqueue.policies.CQPolicyApi.night_service_update>`
+        | Update a Call Queue Night Service
+        | ``PUT /telephony/config/locations/{location_id}/queues/{queue_id}/nightService``
+   * - :meth:`api.telephony.callqueue.policy.stranded_calls_details <wxc_sdk.telephony.callqueue.policies.CQPolicyApi.stranded_calls_details>`
+        | Get Details for a Call Queue Stranded Calls
+        | ``GET /telephony/config/locations/{location_id}/queues/{queue_id}/strandedCalls``
+   * - :meth:`api.telephony.callqueue.policy.stranded_calls_update <wxc_sdk.telephony.callqueue.policies.CQPolicyApi.stranded_calls_update>`
+        | Update a Call Queue Stranded Calls service
+        | ``PUT /telephony/config/locations/{location_id}/queues/{queue_id}/strandedCalls``
    * - :meth:`api.telephony.callqueue.primary_available_phone_numbers <wxc_sdk.telephony.callqueue.CallQueueApi.primary_available_phone_numbers>`
         | Get Call Queue Primary Available Phone Numbers
         | ``GET /telephony/config/locations/{location_id}/queues/availableNumbers``

@@ -21978,14 +21978,9 @@ class AsAnnouncementApi:
         await self._session.delete(url=url, params=params)
 
 
-class AsCQPolicyApi:
-    _session: AsRestSession
-
+class AsCQPolicyApi(AsApiChild, base=''):
     def _ep(self, location_id: str, queue_id: str, path: str):
-        return self._session.ep(f'telephony/config/locations/{location_id}/queues/{queue_id}/{path}')
-
-    def __init__(self, session: AsRestSession):
-        self._session = session
+        return self.ep(f'telephony/config/locations/{location_id}/queues/{queue_id}/{path}')
 
     async def holiday_service_details(self, location_id: str, queue_id: str, org_id: str = None) -> HolidayService:
         """
@@ -22009,7 +22004,7 @@ class AsCQPolicyApi:
         """
         url = self._ep(location_id, queue_id, 'holidayService')
         params = org_id and {'orgId': org_id} or None
-        data = await self._session.rest_get(url=url, params=params)
+        data = await self.get(url=url, params=params)
         return HolidayService.model_validate(data)
 
     async def holiday_service_update(self, location_id: str, queue_id: str, update: HolidayService, org_id: str = None):
@@ -22035,7 +22030,7 @@ class AsCQPolicyApi:
         url = self._ep(location_id, queue_id, 'holidayService')
         params = org_id and {'orgId': org_id} or None
         body = update.model_dump_json(exclude={'holiday_schedules'})
-        await self._session.rest_put(url=url, params=params, data=body)
+        await self.put(url=url, params=params, data=body)
 
     async def night_service_detail(self, location_id: str, queue_id: str, org_id: str = None) -> NightService:
         """
@@ -22060,7 +22055,7 @@ class AsCQPolicyApi:
         """
         url = self._ep(location_id, queue_id, 'nightService')
         params = org_id and {'orgId': org_id} or None
-        data = await self._session.rest_get(url=url, params=params)
+        data = await self.get(url=url, params=params)
         return NightService.model_validate(data)
 
     async def night_service_update(self, location_id: str, queue_id: str, update: NightService, org_id: str = None):
@@ -22087,7 +22082,7 @@ class AsCQPolicyApi:
         url = self._ep(location_id, queue_id, 'nightService')
         params = org_id and {'orgId': org_id} or None
         body = update.model_dump_json(exclude={'business_hour_schedules'})
-        await self._session.rest_put(url=url, params=params, data=body)
+        await self.put(url=url, params=params, data=body)
 
     async def stranded_calls_details(self, location_id: str, queue_id: str, org_id: str = None) -> StrandedCalls:
         """
@@ -22113,7 +22108,7 @@ class AsCQPolicyApi:
         """
         url = self._ep(location_id, queue_id, 'strandedCalls')
         params = org_id and {'orgId': org_id} or None
-        data = await self._session.rest_get(url=url, params=params)
+        data = await self.get(url=url, params=params)
         return StrandedCalls.model_validate(data)
 
     async def stranded_calls_update(self, location_id: str, queue_id: str, update: StrandedCalls, org_id: str = None):
@@ -22138,7 +22133,7 @@ class AsCQPolicyApi:
         """
         url = self._ep(location_id, queue_id, 'strandedCalls')
         params = org_id and {'orgId': org_id} or None
-        await self._session.rest_put(url=url, params=params, data=update.model_dump_json())
+        await self.put(url=url, params=params, data=update.model_dump_json())
 
     async def forced_forward_details(self, location_id: str, queue_id: str, org_id: str = None) -> ForcedForward:
         """
@@ -22159,7 +22154,7 @@ class AsCQPolicyApi:
         """
         url = self._ep(location_id, queue_id, 'forcedForward')
         params = org_id and {'orgId': org_id} or None
-        data = await self._session.rest_get(url=url, params=params)
+        data = await self.get(url=url, params=params)
         return ForcedForward.model_validate(data)
 
     async def forced_forward_update(self, location_id: str, queue_id: str, update: ForcedForward, org_id: str = None):
@@ -22186,7 +22181,7 @@ class AsCQPolicyApi:
         """
         url = self._ep(location_id, queue_id, 'forcedForward')
         params = org_id and {'orgId': org_id} or None
-        await self._session.rest_put(url=url, params=params, data=update.model_dump_json())
+        await self.put(url=url, params=params, data=update.model_dump_json())
 
 
 class AsCallQueueAgentsApi(AsApiChild, base='telephony/config/queues/agents'):
@@ -22438,24 +22433,21 @@ class AsCallQueueApi(AsApiChild, base=''):
         self.announcement = AsAnnouncementApi(session=session)
         self.policy = AsCQPolicyApi(session=session)
 
-    def _endpoint(self, *, location_id: str = None, queue_id: str = None, path: str = None):
+    def _endpoint(self, *, location_id: str = None, path: str = None):
         """
         Helper to get URL for API endpoints
 
         :meta private:
         :param location_id:
-        :param queue_id:
+        :param path:
         :return:
         """
         if location_id is None:
             return self.ep('telephony/config/queues')
-        else:
-            ep = self.ep(f'telephony/config/locations/{location_id}/queues')
-            if queue_id:
-                ep = f'{ep}/{queue_id}'
-            if path:
-                ep = f'{ep}/{path}'
-            return ep
+        ep = self.ep(f'telephony/config/locations/{location_id}/queues')
+        if path:
+            ep = f'{ep}/{path}'
+        return ep
 
     def list_gen(
         self,
@@ -22678,7 +22670,7 @@ class AsCallQueueApi(AsApiChild, base=''):
         :param org_id: Delete the call queue from this organization.
         :type org_id: str
         """
-        url = self._endpoint(location_id=location_id, queue_id=queue_id)
+        url = self._endpoint(location_id=location_id, path=queue_id)
         params = org_id and {'orgId': org_id} or None
         await self.delete(url=url, params=params)
 
@@ -22711,7 +22703,7 @@ class AsCallQueueApi(AsApiChild, base=''):
         :return: call queue details
         :rtype: :class:`CallQueue`
         """
-        url = self._endpoint(location_id=location_id, queue_id=queue_id)
+        url = self._endpoint(location_id=location_id, path=queue_id)
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
@@ -22792,7 +22784,7 @@ class AsCallQueueApi(AsApiChild, base=''):
         if location_id is None or queue_id is None:
             raise ValueError('location_id and queue_id cannot be None')
         cq_data = update.create_or_update()
-        url = self._endpoint(location_id=location_id, queue_id=queue_id)
+        url = self._endpoint(location_id=location_id, path=queue_id)
         await self.put(url=url, json=cq_data, params=params)
 
     async def get_call_queue_settings(self, org_id: str = None) -> CallQueueSettings:

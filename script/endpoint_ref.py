@@ -357,7 +357,11 @@ def endpoint_calls(func: Any) -> list[ast.Call]:
                 if (
                     isinstance(func_node.value, ast.Name)
                     and func_node.value.id == 'self'
-                    and (func_node.attr in {'ep', 'f_ep'} or 'endpoint' in func_node.attr or 'url' in func_node.attr)
+                    and (
+                        func_node.attr.lstrip('_') in {'ep', 'f_ep'}
+                        or 'endpoint' in func_node.attr
+                        or 'url' in func_node.attr
+                    )
                 ):
                     calls.append(node)
                 elif (
