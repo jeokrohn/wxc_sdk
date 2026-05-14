@@ -29,11 +29,15 @@ import subprocess
 import sys
 from collections import Counter
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from . import aliases as _aliases
 from . import dispatcher as _dispatcher
-from .differ import diff_irs
+from .differ import ChangeRecord, diff_irs
 from .ir import extract, extract_from_text
+
+if TYPE_CHECKING:
+    from .matcher import Match
 
 # Repo root is three levels above this file.
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -156,12 +160,23 @@ def main(argv: list[str] | None = None) -> int:
             # Don't take the whole run down because one stub failed to parse.
             skipped.append((stub_rel, f'syntax error: {exc}'))
             continue
-        for record in diff_irs(old_ir, new_ir):
-            # Imported lazily here to avoid a circular import at module-load
-            # time (matcher imports `aliases`, which the driver also uses).
-            from .matcher import match as match_record
+        # Imported lazily here to avoid a circular import at module-load
+        # time (matcher imports `aliases`, which the driver also uses).
+        from .matcher import match as match_record
 
-            m = match_record(record, new_ir, store)
+        # Materialize all (record, match) pairs first so we can detect
+        # stub-side renames: when a method_removed and a method_added in the
+        # same stub both resolve to the same SDK target, the SDK already
+        # implements both — the stub just renamed itself.
+        matched: list[tuple[ChangeRecord, Match | None]] = [
+            (record, match_record(record, new_ir, store)) for record in diff_irs(old_ir, new_ir)
+        ]
+        renamed_targets = _detect_rename_targets(matched)
+        for record, m in matched:
+            rename_detail = _rename_supersedes(record, m, renamed_targets)
+            if rename_detail is not None:
+                outcomes.append(_dispatcher.Outcome(record, m, 'already_in_sync', detail=rename_detail))
+                continue
             outcome = _dispatcher.dispatch(record, m, config, pending_writes=pending_writes)
             outcomes.append(outcome)
 
@@ -184,6 +199,88 @@ def main(argv: list[str] | None = None) -> int:
 
     failures = sum(n for s, n in counts.items() if s.startswith('punted'))
     return 0 if failures == 0 else 1
+
+
+# ---------------------------------------------------------------------------
+# Stub-rename detection
+#
+# The OpenAPI generator periodically renames its method names (e.g.,
+# ``delete_a_supervisor`` → ``delete_call_queue_supervisor``). The differ
+# sees these as a paired ``method_removed`` + ``method_added``. When both
+# resolve to the same SDK target, the SDK already implements both names'
+# semantics — the disappearance carries no SDK-side action.
+# ---------------------------------------------------------------------------
+
+# Confidence floor for treating a paired (removed, added) as a rename. Both
+# sides must independently clear this bar; lower-confidence matches may
+# point at the wrong SDK method, and silently swallowing a method_removed
+# based on a guess is the dangerous failure mode.
+_RENAME_CONFIDENCE_FLOOR = 1.0
+
+
+def _detect_rename_targets(
+    matched: list[tuple[ChangeRecord, Match | None]],
+) -> set[tuple[Path, str, str | None, str]]:
+    """Return SDK targets covered by a high-confidence ``method_added``.
+
+    Each target is the tuple ``(sdk_path, sdk_class, sdk_member, stub_module)``
+    where ``stub_module`` keeps the pairing scoped to a single auto-stub file
+    so a removal in one stub can't mask an addition in another.
+
+    Only matches with ``confidence >= _RENAME_CONFIDENCE_FLOOR`` participate.
+
+    :param matched: Per-stub list of ``(record, match)`` pairs from one
+        ``diff_irs`` run.
+    :return: Set of tuples used by :func:`_rename_supersedes` to look up a
+        candidate ``method_removed``.
+    """
+    targets: set[tuple[Path, str, str | None, str]] = set()
+    for record, m in matched:
+        if record.kind != 'method_added' or m is None:
+            continue
+        if m.confidence < _RENAME_CONFIDENCE_FLOOR:
+            continue
+        targets.add((m.sdk_path, m.sdk_class, m.sdk_member, _stub_module_of(record)))
+    return targets
+
+
+def _rename_supersedes(
+    record: ChangeRecord,
+    match: Match | None,
+    renamed_targets: set[tuple[Path, str, str | None, str]],
+) -> str | None:
+    """Decide whether a ``method_removed`` is superseded by a paired add.
+
+    :param record: The change record under consideration.
+    :param match: The matcher's resolution for ``record``, or ``None``.
+    :param renamed_targets: Output of :func:`_detect_rename_targets`.
+    :return: A human-readable detail string for the resulting
+        ``already_in_sync`` outcome, or ``None`` when the record should
+        flow through the normal dispatcher.
+    """
+    if record.kind != 'method_removed' or match is None:
+        return None
+    if match.confidence < _RENAME_CONFIDENCE_FLOOR:
+        return None
+    key = (match.sdk_path, match.sdk_class, match.sdk_member, _stub_module_of(record))
+    if key not in renamed_targets:
+        return None
+    return f'rename detected; {match.sdk_class}.{match.sdk_member} now reached via a renamed stub method'
+
+
+def _stub_module_of(record: ChangeRecord) -> str:
+    """Best-effort extraction of the stub module for a record.
+
+    Records emitted by :mod:`script.sdk_sync.differ` don't carry the stub
+    path directly, but ``ChangeRecord.qualname`` always starts with the
+    stub class name, which is unique per stub module. Using the class name
+    as the scoping key is sufficient: rename pairing is meaningful only
+    inside the same auto-stub class.
+
+    :param record: A change record produced by :mod:`script.sdk_sync.differ`.
+    :return: The stub class name (e.g. ``'FeaturesCallQueueApi'``).
+    """
+    return record.qualname.split('.', 1)[0]
 
 
 def _resolve_stub_arg(value: str) -> list[str]:
