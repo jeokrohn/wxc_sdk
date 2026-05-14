@@ -2,7 +2,7 @@
 # Copyright (c) 2026 Johannes Krohn <jkrohn@cisco.com>
 # License: MIT
 
-.PHONY: all package docs types async methref endpointref apib oas oas-hybrid clean rst
+.PHONY: all package docs types clean rst async methref endpointref apib oas oas-hybrid sync-stubs sync-stubs-dry sync-stubs-no-llm
 # Default target builds everything
 all: clean types methref endpointref async docs package
 
@@ -58,3 +58,15 @@ oas-hybrid:
 	@echo "==> Creating Python sources from OAS files (--body-style hybrid)"
 	script/oas2py.py --cleanup
 	script/oas2py.py --with-examples --body-style hybrid
+
+sync-stubs:
+	@echo "==> Syncing wxc_sdk/ with stub changes (deterministic + LLM)"
+	uv run python -m script.sdk_sync
+
+sync-stubs-dry:
+	@echo "==> Syncing wxc_sdk/ — dry run, report only"
+	uv run python -m script.sdk_sync --dry-run
+
+sync-stubs-no-llm:
+	@echo "==> Syncing wxc_sdk/ — deterministic patches only"
+	uv run python -m script.sdk_sync --no-llm

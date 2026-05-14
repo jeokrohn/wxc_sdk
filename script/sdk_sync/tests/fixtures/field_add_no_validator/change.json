@@ -1,0 +1,13 @@
+{
+  "kind": "model_field_added",
+  "qualname": "Widget.color",
+  "old": null,
+  "new": {
+    "name": "color",
+    "annotation": "Optional[str]",
+    "default": "None",
+    "doc_comment": "The widget color."
+  },
+  "severity": "trivial",
+  "notes": []
+}

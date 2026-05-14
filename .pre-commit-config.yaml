@@ -7,8 +7,8 @@ repos:
       language: system
       types: [python]
       pass_filenames: true
-      # exclude generated OAS sources from type checking
-      exclude: ^(open_api/generated/|apib/|open_api/open_api_class_registry/)
+      # exclude generated OAS sources and sdk_sync test fixtures from type checking
+      exclude: ^(open_api/generated/|apib/|open_api/open_api_class_registry/|script/sdk_sync/tests/fixtures/)
 
 - repo: https://github.com/astral-sh/ruff-pre-commit
   # Ruff version.

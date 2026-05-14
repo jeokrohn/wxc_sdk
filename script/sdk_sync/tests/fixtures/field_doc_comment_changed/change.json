@@ -1,0 +1,8 @@
+{
+  "kind": "docstring_changed",
+  "qualname": "Widget.name",
+  "old": {"doc_comment": "Old description."},
+  "new": {"doc_comment": "New friendly description."},
+  "severity": "trivial",
+  "notes": []
+}

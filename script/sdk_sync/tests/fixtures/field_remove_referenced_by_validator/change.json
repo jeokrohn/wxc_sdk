@@ -1,0 +1,13 @@
+{
+  "kind": "model_field_removed",
+  "qualname": "Widget.mac",
+  "old": {
+    "name": "mac",
+    "annotation": "Optional[str]",
+    "default": "None",
+    "doc_comment": "MAC address."
+  },
+  "new": null,
+  "severity": "trivial",
+  "notes": []
+}

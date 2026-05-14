@@ -130,6 +130,7 @@ exclude = [
     "developer.webex.com/generated",
     "apib/tests",
     "open_api/generated",
+    "script/sdk_sync/tests/fixtures",
 ]
 
 [tool.ruff.format]
@@ -175,6 +176,10 @@ ignore_missing_imports = false
 # disable_error_code = ["import-untyped"]
 no_implicit_optional = false
 warn_unused_configs = true
+# Fixture files under script/sdk_sync/tests/fixtures/ are test data, not
+# importable modules — several of them share the basename `before.py` and
+# would otherwise trip mypy's duplicate-module check.
+exclude = ['^script/sdk_sync/tests/fixtures/']
 
 [[tool.mypy.overrides]]
 module = "wxc_sdk.as_api"

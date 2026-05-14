@@ -1,0 +1,12 @@
+{
+  "kind": "enum_value_added",
+  "qualname": "Color.yellow",
+  "old": null,
+  "new": {
+    "name": "yellow",
+    "value": "'yellow'",
+    "doc_comment": null
+  },
+  "severity": "trivial",
+  "notes": []
+}

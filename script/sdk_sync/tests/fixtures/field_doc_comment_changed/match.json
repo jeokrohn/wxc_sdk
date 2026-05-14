@@ -1,0 +1,6 @@
+{
+  "kind": "model_field",
+  "sdk_class": "Widget",
+  "sdk_member": "name",
+  "matched_by": "exact"
+}
