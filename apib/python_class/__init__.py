@@ -17,6 +17,7 @@ from apib.apib import ApibEnum
 from apib.apib.classes import ApibApi
 from apib.tools import (
     break_line,
+    escape_for_docstring,
     lines_for_docstring,
     remove_div,
     remove_html_comments,
@@ -112,7 +113,7 @@ class Parameter:
         ' * 1st line has ":param <xyc>: '
         ' * following lines just have docstring lines'
         yield from lines_for_docstring(
-            docstring=self.docstring or '-',
+            docstring=escape_for_docstring(self.docstring) or '-',
             text_prefix_for_1st_line=f':param {self.python_name}: ',
             indent=4,
             indent_first_line=0,
@@ -449,7 +450,7 @@ class Endpoint:
                 source.print(f'{self.title}')
                 print(file=source)
         if self.docstring:
-            for line in lines_for_docstring(docstring=self.docstring, width=112):
+            for line in lines_for_docstring(docstring=escape_for_docstring(self.docstring), width=112):
                 source.print(line)
             source.print()
         # parameter docstrings
@@ -463,7 +464,7 @@ class Endpoint:
                     map(
                         source.print,
                         lines_for_docstring(
-                            docstring=paginated.docstring,
+                            docstring=escape_for_docstring(paginated.docstring),
                             text_prefix_for_1st_line=':return: ',
                             indent=4,
                             indent_first_line=0,
@@ -851,7 +852,9 @@ class PythonClass:
         else:
             # break description into lines
             desc_source = '\n'.join(
-                chain.from_iterable(break_line(line, prefix=' ' * 4) for line in self.description.splitlines())
+                chain.from_iterable(
+                    break_line(escape_for_docstring(line), prefix=' ' * 4) for line in self.description.splitlines()
+                )
             )
             desc_source = DESC_TEMPLATE.format(docstring=desc_source)
         result = CLASS_TEMPLATE.format(

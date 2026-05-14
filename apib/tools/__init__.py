@@ -1,8 +1,18 @@
 import re
 from collections.abc import Generator, Iterable, Iterator
 
-__all__ = ['break_line', 'remove_links', 'sanitize_class_name', 'remove_html_comments', 'snake_case', 'words_to_camel',
-           'lines_for_docstring', 'remove_div', 'simple_python_type', 'cap_first']
+__all__ = [
+    'break_line',
+    'remove_links',
+    'sanitize_class_name',
+    'remove_html_comments',
+    'snake_case',
+    'words_to_camel',
+    'lines_for_docstring',
+    'remove_div',
+    'simple_python_type',
+    'cap_first',
+]
 
 from itertools import chain, repeat
 from re import Match
@@ -69,8 +79,9 @@ def sanitize_class_name(class_name: Optional[str]) -> str:
     return r
 
 
-def break_line(line: str, width: int = None, prefix: str = '',
-               prefix_first_line: str = None) -> Generator[str, None, None]:
+def break_line(
+    line: str, width: int = None, prefix: str = '', prefix_first_line: str = None
+) -> Generator[str, None, None]:
     """
     Break line in multiple lines of given length
     """
@@ -90,13 +101,18 @@ def break_line(line: str, width: int = None, prefix: str = '',
     #   ... this link (https://.....) for the format.
     # to something like this:
     #   ... this [link](https://.....) for the format.
-    line, _ = re.subn(r"""(\S+)     # capture: sequence of non spaces
+    line, _ = re.subn(
+        r"""(\S+)     # capture: sequence of non spaces
                           \s+       # followed by space(s)
-                          (         # capture: 
+                          (         # capture:
                             \(      # opening bracket
                             https?:[^\)]+  # sequence of characters except closing bracket
                             \)      # closing bracket
-                          )""", '[\\1]\\2', line, flags=re.VERBOSE)
+                          )""",
+        '[\\1]\\2',
+        line,
+        flags=re.VERBOSE,
+    )
     # consume line tokens while length of combined token sequence (for links only consider text) smaller than desired
     # width. If token that's pushing to next line is a scope (bla:blub) then also push the previous token to next line.
     # when yielding a line convert links to RST links .. which breaks the line into two lines
@@ -151,11 +167,13 @@ def break_line(line: str, width: int = None, prefix: str = '',
     return
 
 
-LINKS = re.compile(r"""\[               # links start with a squared bracket
-                        (.+?)]            # followed by some text until the closing bracket
-                        \((.+?)\)   # and then the URL in rounded brackets. We want to extract the part 
-                                        # in the brackets""",
-                   re.X + re.MULTILINE)
+LINKS = re.compile(
+    r"""\[                  # links start with a squared bracket
+                        (.+?)]      # followed by some text until the closing bracket
+                        \((.+?)\)   # and then the URL in rounded brackets. We want to extract the part
+                                    # in the brackets""",
+    re.X + re.MULTILINE,
+)
 
 
 def remove_links(line: str) -> str:
@@ -218,36 +236,49 @@ def remove_div(text: str):
 
 
 def line_parts(line: str) -> Iterator[str]:
-    fiter = re.finditer(r"""(?P<word>\s*
+    fiter = re.finditer(
+        r"""(?P<word>\s*
                                      (?:     # split lines in sequences of ...
                                      (?:\[               # links: start with a squared bracket
                                           (.+?)]            # followed by some text until the closing bracket
                                           \((.+?)\))    # .. and the actual link in brackets
-                                     |\S    # or a non-whitespace character 
+                                     |\S    # or a non-whitespace character
                                     )+)""",
-                        line,
-                        re.VERBOSE)
+        line,
+        re.VERBOSE,
+    )
     return (m.group('word') for m in fiter)
 
 
-def lines_for_docstring(docstring: str, text_prefix_for_1st_line: str = '', indent: int = 0,
-                        indent_first_line: int = 0, width: int = None) -> Iterable[str]:
+def escape_for_docstring(text: str) -> str:
+    """Make text safe to embed inside a Python triple-quoted docstring.
+
+    Doubles backslashes so that sequences like ``\\``` (literal backslash + backtick),
+    common in OpenAPI descriptions, do not produce ``SyntaxWarning: invalid escape sequence``
+    when the generated module is parsed.
+    """
+    if not text:
+        return text
+    return text.replace('\\', '\\\\')
+
+
+def lines_for_docstring(
+    docstring: str, text_prefix_for_1st_line: str = '', indent: int = 0, indent_first_line: int = 0, width: int = None
+) -> Iterable[str]:
     """
     Break a docstring in lines where the 1st line has a leading text, make sure that all lines are properly indented
     """
     if not docstring:
         return []
-    doc_string_lines = (f'{p}{line}' for p, line in zip(chain([text_prefix_for_1st_line],
-                                                              repeat('')),
-                                                        docstring.splitlines()))
-    return chain.from_iterable(break_line(line, prefix=' ' * indent,
-                                          prefix_first_line=' ' * indent_first,
-                                          width=width)
-                               for line, (indent_first, indent) in zip(doc_string_lines,
-                                                                       chain([(indent_first_line, indent)],
-                                                                             repeat((indent_first_line,
-                                                                                     indent_first_line)
-                                                                                    ))))
+    doc_string_lines = (
+        f'{p}{line}' for p, line in zip(chain([text_prefix_for_1st_line], repeat('')), docstring.splitlines())
+    )
+    return chain.from_iterable(
+        break_line(line, prefix=' ' * indent, prefix_first_line=' ' * indent_first, width=width)
+        for line, (indent_first, indent) in zip(
+            doc_string_lines, chain([(indent_first_line, indent)], repeat((indent_first_line, indent_first_line)))
+        )
+    )
 
 
 def simple_python_type(type_hint: str, value: Any = None) -> str:
