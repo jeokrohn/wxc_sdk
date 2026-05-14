@@ -29,6 +29,7 @@ import json
 import re
 import shutil
 import subprocess
+import time
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -119,7 +120,14 @@ def render_prompt(record: ChangeRecord, match: Match, sdk_text: str) -> str:
     return '\n'.join(parts)
 
 
-def propose_diff(record: ChangeRecord, match: Match, sdk_text: str, *, timeout: float = 180.0) -> str:
+def propose_diff(
+    record: ChangeRecord,
+    match: Match,
+    sdk_text: str,
+    *,
+    timeout: float = 180.0,
+    verbose: bool = False,
+) -> str:
     """Invoke ``claude -p`` and return the extracted unified diff.
 
     The CLI is required to be on ``PATH``. The function reads its JSON output,
@@ -132,6 +140,9 @@ def propose_diff(record: ChangeRecord, match: Match, sdk_text: str, *, timeout: 
     :param sdk_text: Current contents of the SDK file.
     :param timeout: Maximum seconds to wait for the CLI to finish; raises
         :class:`LLMError` on timeout.
+    :param verbose: When ``True``, print ``[llm] calling claude (...)``
+        before invoking the CLI and ``[llm] claude returned in Xs (...)``
+        once it returns. Default keeps the call silent.
     :return: Unified diff text, guaranteed to end with a newline.
     :raises LLMError: If the CLI is missing, returns a non-zero exit code,
         times out, or emits non-JSON output.
@@ -139,6 +150,9 @@ def propose_diff(record: ChangeRecord, match: Match, sdk_text: str, *, timeout: 
     if shutil.which('claude') is None:
         raise LLMError('the `claude` CLI is not on PATH; install Claude Code to enable LLM-driven sync')
     prompt = render_prompt(record, match, sdk_text)
+    if verbose:
+        print(f'[llm] calling claude (prompt: {len(prompt)} chars, target: {_relative_sdk_path(match.sdk_path)})')
+    t0 = time.monotonic()
     try:
         proc = subprocess.run(
             ['claude', '-p', '--output-format', 'json', '--append-system-prompt', _SYSTEM_CONSTRAINTS],
@@ -152,6 +166,9 @@ def propose_diff(record: ChangeRecord, match: Match, sdk_text: str, *, timeout: 
         raise LLMError(f'claude CLI failed (rc={exc.returncode}): {exc.stderr[:400]}') from exc
     except subprocess.TimeoutExpired as exc:
         raise LLMError(f'claude CLI timed out after {timeout}s') from exc
+    if verbose:
+        elapsed = time.monotonic() - t0
+        print(f'[llm] claude returned in {elapsed:.1f}s (stdout: {len(proc.stdout)} bytes)')
     try:
         payload = json.loads(proc.stdout)
     except json.JSONDecodeError as exc:

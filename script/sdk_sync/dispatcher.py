@@ -83,10 +83,15 @@ class DispatchConfig:
     :param use_llm: When ``False``, changes that the deterministic patcher
         refuses become ``punted_patcher_refused`` outcomes; the LLM step is
         not consulted at all.
+    :param verbose: When ``True``, the dispatcher prints one ``[llm-dispatch]``
+        line per LLM-bound record and one ``[llm] ...`` line per claude CLI
+        call (including elapsed time and outcome). Default keeps the script
+        silent until the end-of-run summary.
     """
 
     dry_run: bool = False
     use_llm: bool = True
+    verbose: bool = False
 
 
 def dispatch(
@@ -140,10 +145,14 @@ def dispatch(
         # Patcher refused for some other reason — fall through to LLM if enabled.
         if not config.use_llm:
             return Outcome(record, match, 'punted_patcher_refused', detail=result.reason)
+        if config.verbose:
+            _print_dispatch(record, match, fallback_reason=result.reason)
         return _try_llm(record, match, config, pending_writes, fallback_reason=result.reason)
 
     if not config.use_llm:
         return Outcome(record, match, 'punted_patcher_refused', detail='requires LLM but disabled')
+    if config.verbose:
+        _print_dispatch(record, match)
     return _try_llm(record, match, config, pending_writes)
 
 
@@ -179,21 +188,57 @@ def _try_llm(
         else match.sdk_path.read_text()
     )
     try:
-        diff = _llm.propose_diff(record, match, sdk_text)
+        diff = _llm.propose_diff(record, match, sdk_text, verbose=config.verbose)
     except _llm.LLMError as exc:
-        return Outcome(record, match, 'punted_llm_unavailable', detail=f'{fallback_reason} | LLM: {exc}')
+        outcome = Outcome(record, match, 'punted_llm_unavailable', detail=f'{fallback_reason} | LLM: {exc}')
+        if config.verbose:
+            print(f'[llm] error: {exc}')
+        return outcome
+    # An empty (or `---`-less) response means the LLM judged the SDK already
+    # in sync — e.g. for `docstring_changed` where the SDK's docstring
+    # already reflects the new stub state. Surface that as `already_in_sync`
+    # so the report doesn't conflate it with a malformed diff.
+    if not diff.strip() or '---' not in diff:
+        if config.verbose:
+            print('[llm] no diff returned — SDK already in sync per LLM')
+        return Outcome(record, match, 'already_in_sync', detail='LLM judged SDK already in sync')
+    diff_lines = len(diff.splitlines())
     if not _git_apply_check(diff):
+        if config.verbose:
+            print(f'[llm] diff rejected by `git apply --check` ({diff_lines} lines)')
         return Outcome(record, match, 'punted_diff_rejected', detail=fallback_reason, diff=diff)
     if config.dry_run:
+        if config.verbose:
+            print(f'[llm] dry-run, diff captured ({diff_lines} lines)')
         return Outcome(record, match, 'dry_run_pending', detail=fallback_reason, diff=diff)
     if not _git_apply(diff):
+        if config.verbose:
+            print(f'[llm] apply failed after passing --check ({diff_lines} lines)')
         return Outcome(record, match, 'punted_diff_rejected', detail='applied check passed but apply failed', diff=diff)
     # After a successful git apply, the on-disk file is now the source of
     # truth — drop any stale entry in pending_writes so a later trivial
     # patch on the same file re-reads the freshly applied text.
     if pending_writes is not None and match.sdk_path in pending_writes:
         del pending_writes[match.sdk_path]
+    if config.verbose:
+        print(f'[llm] applied ({diff_lines} diff lines)')
     return Outcome(record, match, 'applied_llm', detail='LLM patch applied', diff=diff)
+
+
+def _print_dispatch(record: ChangeRecord, match: Match, fallback_reason: str = '') -> None:
+    """Print a single ``[llm-dispatch]`` line announcing an LLM-bound record.
+
+    Called from :func:`dispatch` only when ``config.verbose`` is set.
+    Mirrors the style of the per-record line in ``sync_report.md`` so the
+    console output and report stay legibly correlated.
+    """
+    try:
+        rel = str(match.sdk_path.relative_to(_REPO_ROOT))
+    except ValueError:
+        rel = str(match.sdk_path)
+    target = f'{rel}::{match.sdk_class}.{match.sdk_member or ""}'
+    suffix = f' (fallback: {fallback_reason})' if fallback_reason else ''
+    print(f'[llm-dispatch] {record.kind} {record.qualname} → {target}{suffix}')
 
 
 def _refresh_match(match: Match, new_text: str) -> Match:
@@ -227,23 +272,33 @@ def _refresh_match(match: Match, new_text: str) -> Match:
 def _git_apply_check(diff: str) -> bool:
     """Run ``git apply --check`` against a diff string.
 
+    ``--recount`` is on because LLMs routinely emit hunk headers with wrong
+    line totals (e.g. ``@@ -141,7 +141,8 @@`` when the hunk actually contains
+    5/6 lines). ``--recount`` ignores the header counts and infers them from
+    the hunk body. ``--unidiff-zero`` keeps zero-context diffs valid. Combined
+    with git's built-in fuzzy line-number matching, this absorbs the most
+    common LLM diff quirks without sacrificing the content-correctness check.
+
     :param diff: Unified diff text.
     :return: ``True`` if git considers the diff applicable cleanly; ``False``
         for empty diffs and any non-zero exit from git.
     """
     if not diff.strip():
         return False
-    return _run_git_apply(['git', 'apply', '--check', '--unidiff-zero', '-'], diff)
+    return _run_git_apply(['git', 'apply', '--check', '--recount', '--unidiff-zero', '-'], diff)
 
 
 def _git_apply(diff: str) -> bool:
     """Run ``git apply`` against a diff string and modify the working tree.
 
+    Uses the same ``--recount --unidiff-zero`` combination as
+    :func:`_git_apply_check` so what passes the check also applies.
+
     :param diff: Unified diff text (presumed already validated via
         :func:`_git_apply_check`).
     :return: ``True`` on a clean apply, ``False`` otherwise.
     """
-    return _run_git_apply(['git', 'apply', '--unidiff-zero', '-'], diff)
+    return _run_git_apply(['git', 'apply', '--recount', '--unidiff-zero', '-'], diff)
 
 
 def _run_git_apply(cmd: list[str], diff: str) -> bool:

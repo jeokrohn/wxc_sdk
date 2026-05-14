@@ -2,7 +2,7 @@
 # Copyright (c) 2026 Johannes Krohn <jkrohn@cisco.com>
 # License: MIT
 
-.PHONY: all package docs types clean rst async methref endpointref apib oas oas-hybrid sync-stubs sync-stubs-dry sync-stubs-no-llm
+.PHONY: all package docs types clean rst async methref endpointref apib oas oas-hybrid sync-stubs sync-stubs-dry sync-stubs-no-llm sync-stubs-verbose sync-stubs-one
 # Default target builds everything
 all: clean types methref endpointref async docs package
 
@@ -70,3 +70,12 @@ sync-stubs-dry:
 sync-stubs-no-llm:
 	@echo "==> Syncing wxc_sdk/ — deterministic patches only"
 	uv run python -m script.sdk_sync --no-llm
+
+sync-stubs-verbose:
+	@echo "==> Syncing wxc_sdk/ with stub changes (deterministic + LLM, verbose)"
+	uv run python -m script.sdk_sync --verbose
+
+sync-stubs-one:
+	@if [ -z "$(STUB)" ]; then echo "Usage: make sync-stubs-one STUB=<basename-or-path>"; exit 2; fi
+	@echo "==> Syncing wxc_sdk/ — single stub ($(STUB)), deterministic + LLM, verbose"
+	uv run python -m script.sdk_sync --verbose --stub "$(STUB)"

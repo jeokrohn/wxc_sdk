@@ -23,6 +23,8 @@ default is to invoke the tool manually via ``make sync-stubs``.
 from __future__ import annotations
 
 import argparse
+import fnmatch
+import glob
 import subprocess
 import sys
 from collections import Counter
@@ -38,6 +40,10 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 
 # The per-run markdown report lives at the repo root and is gitignored.
 _REPORT_PATH = _REPO_ROOT / 'sync_report.md'
+
+# Stub-file discovery is always restricted to this subtree. `--stub` basenames
+# and globs without a directory part are resolved beneath it.
+_STUB_ROOT = 'open_api/generated'
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -66,15 +72,53 @@ def main(argv: list[str] | None = None) -> int:
         '--stub',
         action='append',
         default=None,
-        help='Restrict the run to specific stub paths (repeat for multiple). Default: all stubs modified vs HEAD.',
+        help=(
+            'Restrict the run to specific stubs (repeat for multiple). Each value may be a '
+            'repo-relative path, a bare basename (resolved as `open_api/generated/**/<name>`), '
+            'or a glob. Default: all stubs modified vs HEAD.'
+        ),
+    )
+    parser.add_argument(
+        '--only',
+        action='append',
+        default=None,
+        help=(
+            'After discovery, keep only stubs whose repo-relative path or basename matches one '
+            'of these glob patterns (repeat for multiple). Intersects with both default discovery '
+            'and --stub.'
+        ),
+    )
+    parser.add_argument(
+        '--verbose',
+        '-v',
+        action='store_true',
+        help='Print one line per LLM dispatch and per claude CLI call (start, elapsed, outcome).',
     )
     args = parser.parse_args(argv)
 
-    config = _dispatcher.DispatchConfig(dry_run=args.dry_run, use_llm=not args.no_llm)
+    config = _dispatcher.DispatchConfig(dry_run=args.dry_run, use_llm=not args.no_llm, verbose=args.verbose)
 
     # `--stub` overrides the default git-derived scope. Useful for replays or
     # targeted reruns once aliases have been hand-curated.
-    stubs = args.stub if args.stub else _git_diff_name_only('HEAD', 'open_api/generated/')
+    if args.stub:
+        stubs: list[str] = []
+        seen: set[str] = set()
+        for value in args.stub:
+            resolved = _resolve_stub_arg(value)
+            if not resolved:
+                parser.error(f'--stub {value!r} did not match any file under {_STUB_ROOT}/')
+            for resolved_path in resolved:
+                if resolved_path not in seen:
+                    seen.add(resolved_path)
+                    stubs.append(resolved_path)
+    else:
+        stubs = _git_diff_name_only('HEAD', f'{_STUB_ROOT}/')
+
+    if args.only:
+        stubs = [
+            s for s in stubs if any(fnmatch.fnmatch(s, pat) or fnmatch.fnmatch(Path(s).name, pat) for pat in args.only)
+        ]
+
     if not stubs:
         print('No stub changes to sync.')
         return 0
@@ -142,6 +186,38 @@ def main(argv: list[str] | None = None) -> int:
     return 0 if failures == 0 else 1
 
 
+def _resolve_stub_arg(value: str) -> list[str]:
+    """Expand a single ``--stub`` argument into repo-relative stub paths.
+
+    Resolution order:
+
+    1. Literal path (relative to the repo root) that exists on disk → returned as-is.
+    2. Value containing ``*`` or ``?`` → ``glob.glob`` rooted at the repo, then
+       filtered to entries under ``open_api/generated/``.
+    3. Bare token (no path separator and no wildcard) → resolved as
+       ``open_api/generated/**/<value>`` so basenames like
+       ``call-controls-members_auto.py`` work.
+
+    :param value: The raw ``--stub`` value as typed by the user.
+    :return: List of repo-relative paths (possibly empty if no match found).
+    """
+    candidate = _REPO_ROOT / value
+    if candidate.is_file():
+        return [value]
+    has_wildcard = any(ch in value for ch in '*?[')
+    has_sep = '/' in value or '\\' in value
+    if not has_wildcard and not has_sep:
+        pattern = f'{_STUB_ROOT}/**/{value}'
+    elif has_wildcard:
+        pattern = value
+    else:
+        # Path-like value that didn't exist on disk and has no wildcard;
+        # no useful glob expansion to try.
+        return []
+    matches = glob.glob(pattern, root_dir=str(_REPO_ROOT), recursive=True)
+    return sorted(m for m in matches if m.startswith(f'{_STUB_ROOT}/'))
+
+
 def _git_show(path: str) -> str:
     """Return ``git show HEAD:<path>`` output as a string.
 
@@ -204,7 +280,9 @@ def _write_report(
     lines.append('')
     lines.append(f'- dry_run: `{args.dry_run}`')
     lines.append(f'- use_llm: `{not args.no_llm}`')
+    lines.append(f'- verbose: `{args.verbose}`')
     lines.append(f'- stubs scoped: `{args.stub or "<all changed>"}`')
+    lines.append(f'- only: `{args.only or "<none>"}`')
     lines.append('')
     counts = Counter(o.status for o in outcomes)
     lines.append('## Summary')
