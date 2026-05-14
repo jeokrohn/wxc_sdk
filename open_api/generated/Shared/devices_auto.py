@@ -39,6 +39,7 @@ class DeviceConnectionStatus(str, Enum):
     connected_with_issues = 'connected_with_issues'
     offline_expired = 'offline_expired'
     activating = 'activating'
+    pending = 'pending'
     unknown = 'unknown'
     offline_deep_sleep = 'offline_deep_sleep'
 

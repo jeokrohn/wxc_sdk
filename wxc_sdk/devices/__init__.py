@@ -34,6 +34,7 @@ class ConnectionStatus(str, Enum):
     activating = 'activating'
     unknown = 'unknown'
     offline_deep_sleep = 'offline_deep_sleep'
+    pending = 'pending'
 
 
 class Lifecycle(str, Enum):
