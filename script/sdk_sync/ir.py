@@ -372,16 +372,29 @@ def extract_from_text(source: str, path: str = '<string>', is_sdk: bool = False)
 def _enrich_api_class_with_live_replay(api_class: ApiClassIR) -> ApiClassIR:
     """Override AST-derived ``verb``/``ep_template`` with live-replay results.
 
-    For each method on ``api_class``, look up a live instance of the class in
-    the cached :func:`live_api_index` and ask the shared resolver to recover
-    the HTTP verb and full URL template by replaying the method body with
+    For each method on ``api_class``, look up the live instances of the class
+    in :func:`live_api_index` and ask the shared resolver to recover the HTTP
+    verb and full URL template by replaying the method body with
     :class:`Placeholder` arguments. The resolver handles arbitrary helper
     methods (``self._ep(...)``, ``self.session.ep(...)``, ``super().ep(...)``)
     that the pure-AST walker cannot follow.
 
-    The leading ``/`` produced by the resolver is stripped so the result
-    canonicalizes to the same form as :func:`_canonical_ep_template` (which
-    builds suffix paths without a leading slash).
+    Some helper classes (notably ``ForwardingApi``) are instantiated multiple
+    times with different constructor arguments and each instance resolves to
+    a different concrete URL — for example ``ForwardingApi`` produces
+    ``.../queues/...``, ``.../huntGroups/...`` and ``.../autoAttendants/...``
+    URLs depending on its ``FeatureSelector``. To let the matcher exact-match
+    every flavor against its corresponding stub, we emit one :class:`MethodIR`
+    per distinct ``(verb, ep_template)`` variant produced across all live
+    instances. Single-instance classes still produce exactly one MethodIR per
+    method. Duplicate variants share the original ``lineno``/``end_lineno``,
+    so the patcher (which targets methods by name and returns the first hit)
+    operates on the same source range regardless of which variant matched.
+
+    The resolver's leading ``/`` is stripped and ``_erase_placeholders`` is
+    applied so the result canonicalizes to the same form as
+    :func:`_canonical_ep_template` (which produces suffix paths without a
+    leading slash and with bare ``{}`` placeholders).
 
     Resolver failures are non-fatal: the original AST values are kept for any
     method whose live lookup raises or returns ``None``. The class itself is
@@ -390,8 +403,8 @@ def _enrich_api_class_with_live_replay(api_class: ApiClassIR) -> ApiClassIR:
     into ``WebexSimpleApi``), the AST IR is returned unchanged.
 
     :param api_class: API class IR built by :func:`_extract_api_class`.
-    :return: New :class:`ApiClassIR` with ``verb`` and ``ep_template`` updated
-        on every method the resolver could handle.
+    :return: New :class:`ApiClassIR` with the methods tuple expanded so each
+        live ``(verb, ep_template)`` variant becomes its own MethodIR entry.
     """
     try:
         from ._endpoint_resolver import live_api_index, resolve_endpoint, resolve_http_method
@@ -401,29 +414,39 @@ def _enrich_api_class_with_live_replay(api_class: ApiClassIR) -> ApiClassIR:
         index = live_api_index()
     except Exception:
         return api_class
-    obj = index.get(api_class.name)
-    if obj is None:
+    instances = index.get(api_class.name)
+    if not instances:
         return api_class
     new_methods: list[MethodIR] = []
     for m in api_class.methods:
-        verb = m.verb
-        ep_template = m.ep_template
-        try:
-            live_verb = resolve_http_method(obj, m.name)
-        except Exception:
-            live_verb = None
-        if live_verb:
-            verb = live_verb.lower()
-        try:
-            live_ep = resolve_endpoint(obj, m.name)
-        except Exception:
-            live_ep = None
-        if live_ep:
-            # Strip the resolver's leading '/' so the template canonicalizes
-            # to the same form as `_canonical_ep_template` (which produces
-            # suffix paths without a leading slash).
-            ep_template = live_ep[1:] if live_ep.startswith('/') else live_ep
-        new_methods.append(replace(m, verb=verb, ep_template=ep_template))
+        seen: set[tuple[str | None, str | None]] = set()
+        variants: list[tuple[str | None, str | None]] = []
+        for obj in instances:
+            verb = m.verb
+            ep_template = m.ep_template
+            try:
+                live_verb = resolve_http_method(obj, m.name)
+            except Exception:
+                live_verb = None
+            if live_verb:
+                verb = live_verb.lower()
+            try:
+                live_ep = resolve_endpoint(obj, m.name)
+            except Exception:
+                live_ep = None
+            if live_ep:
+                stripped = live_ep[1:] if live_ep.startswith('/') else live_ep
+                ep_template = _erase_placeholders(stripped)
+            key = (verb, ep_template)
+            if key in seen:
+                continue
+            seen.add(key)
+            variants.append(key)
+        if not variants:
+            new_methods.append(m)
+            continue
+        for verb, ep_template in variants:
+            new_methods.append(replace(m, verb=verb, ep_template=ep_template))
     return replace(api_class, methods=tuple(new_methods))
 
 
@@ -930,11 +953,18 @@ def _resolve_node(node: ast.AST) -> str:
 
     - String constants → the literal value.
     - JoinedStr (f-strings) → each constant chunk inlined, each ``{expr}``
-      replaced with ``{name}`` produced by :func:`_placeholder_name`.
-    - Name nodes (a bare variable) → ``{name}``.
+      replaced with the bare placeholder ``{}``.
+    - Name nodes (a bare variable) → ``{}``.
     - ``Add`` BinOps → concatenation of the resolved operands.
     - Call nodes → recurse into the first positional argument; this handles
       wrappers such as ``urllib.parse.quote(person_id)`` or ``enum_str(x)``.
+
+    Placeholder identifiers are intentionally erased so the same URL spelled
+    with different parameter names on the stub and SDK side (for example
+    ``queue_id`` vs ``feature_id`` for the shared ``ForwardingApi``)
+    canonicalizes to the same key. The matcher's heuristic Jaccard already
+    drops ``{placeholder}`` tokens (see :func:`script.sdk_sync.matcher._url_jaccard`),
+    so the change only affects the exact-match path.
 
     Anything else falls back to :func:`ast.unparse`, and unparseable nodes
     return ``'?'``.
@@ -950,10 +980,10 @@ def _resolve_node(node: ast.AST) -> str:
             if isinstance(v, ast.Constant):
                 parts.append(str(v.value))
             elif isinstance(v, ast.FormattedValue):
-                parts.append('{' + _placeholder_name(v.value) + '}')
+                parts.append('{}')
         return ''.join(parts)
     if isinstance(node, ast.Name):
-        return '{' + node.id + '}'
+        return '{}'
     if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Add):
         return _resolve_node(node.left) + _resolve_node(node.right)
     if isinstance(node, ast.Call):
@@ -967,23 +997,19 @@ def _resolve_node(node: ast.AST) -> str:
         return '?'
 
 
-def _placeholder_name(node: ast.AST) -> str:
-    """Derive the placeholder name for an f-string interpolation expression.
+_PLACEHOLDER_RE = re.compile(r'\{[^{}]*\}')
 
-    For a simple ``{device_id}`` we return ``"device_id"``. For attribute
-    accesses (``{self.device_id}``) we use the rightmost attribute. For
-    wrapping calls (``{enum_str(kind)}``) we recurse to the inner expression.
 
-    :param node: An AST expression that appeared inside an f-string ``{}``.
-    :return: A short identifier used as the placeholder text.
+def _erase_placeholders(template: str) -> str:
+    """Replace every ``{name}`` placeholder with the bare token ``{}``.
+
+    Used to canonicalize URL templates produced by the live-replay resolver
+    (``script/sdk_sync/_endpoint_resolver.py``), which interpolates the
+    method's actual parameter name (e.g. ``{feature_id}``). The AST path
+    in :func:`_resolve_node` already emits ``{}`` directly; this helper
+    keeps the live-replay path consistent with it.
+
+    :param template: A URL template with named ``{placeholder}`` segments.
+    :return: The same template with every ``{...}`` collapsed to ``{}``.
     """
-    if isinstance(node, ast.Name):
-        return node.id
-    if isinstance(node, ast.Attribute):
-        return node.attr
-    if isinstance(node, ast.Call) and node.args:
-        return _placeholder_name(node.args[0])
-    try:
-        return ast.unparse(node)
-    except Exception:
-        return '?'
+    return _PLACEHOLDER_RE.sub('{}', template)

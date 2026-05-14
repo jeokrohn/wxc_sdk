@@ -82,7 +82,10 @@ def test_api_method_endpoint_canonicalization() -> None:
     assert ir.api_class is not None
     methods = {m.name: m for m in ir.api_class.methods}
     assert methods['get_item'].verb == 'get'
-    assert methods['get_item'].ep_template == 'foo/bar/{item_id}/details'
+    # Placeholder identifiers are erased to bare `{}` so the same URL spelled
+    # with different parameter names on the stub and SDK side canonicalizes
+    # to the same key.
+    assert methods['get_item'].ep_template == 'foo/bar/{}/details'
     assert methods['list_items'].verb == 'get'
     assert methods['list_items'].ep_template == 'foo/bar'
     assert methods['create'].verb == 'post'

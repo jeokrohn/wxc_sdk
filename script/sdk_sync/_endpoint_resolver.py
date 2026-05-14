@@ -626,23 +626,35 @@ def _live_api() -> Any:
 
 
 @functools.lru_cache(maxsize=1)
-def live_api_index() -> dict[str, Any]:
+def live_api_index() -> dict[str, list[Any]]:
     """
     Index every ``ApiChild`` instance in the live ``WebexSimpleApi`` tree by class name.
 
     Built once per process and cached. Used by :mod:`script.sdk_sync.ir` to look up
-    a live API object given an SDK class name (for example ``CQPolicyApi``) so that
-    :func:`resolve_endpoint` and :func:`resolve_http_method` can run against it.
+    live API objects for an SDK class so :func:`resolve_endpoint` and
+    :func:`resolve_http_method` can run against them.
 
-    :return: Mapping from class name to the first encountered live instance.
+    Some helper classes (notably ``ForwardingApi``) are instantiated multiple times
+    with different constructor arguments (one per ``FeatureSelector`` value) and
+    each instance resolves to a different concrete URL. The index returns the full
+    list of instances per class so callers can produce one URL variant per
+    instance. Single-instance classes get a one-element list.
+
+    Each instance appears at most once even when it shows up under multiple
+    attribute paths in the tree.
+
+    :return: Mapping from class name to the list of live instances of that class.
     """
     api = _live_api()
-    result: dict[str, Any] = {}
+    result: dict[str, list[Any]] = {}
+    seen_ids: set[int] = set()
 
     def walk(obj: Any) -> None:
         for _, child in child_apis(obj):
-            cls_name = child.__class__.__name__
-            result.setdefault(cls_name, child)
+            if id(child) in seen_ids:
+                continue
+            seen_ids.add(id(child))
+            result.setdefault(child.__class__.__name__, []).append(child)
             walk(child)
 
     walk(api)
