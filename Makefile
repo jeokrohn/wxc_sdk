@@ -2,8 +2,7 @@
 # Copyright (c) 2026 Johannes Krohn <jkrohn@cisco.com>
 # License: MIT
 
-.PHONY: all package docs types async methref endpointref apib oas clean rst
-
+.PHONY: all package docs types async methref endpointref apib oas oas-hybrid clean rst
 # Default target builds everything
 all: clean types methref endpointref async docs package
 
@@ -53,4 +52,9 @@ package:
 oas:
 	@echo "==> Creating Python sources from OAS files"
 	script/oas2py.py --cleanup
-	script/oas2py.py --with-examples
+	script/oas2py.py --with-examples --body-style args
+
+oas-hybrid:
+	@echo "==> Creating Python sources from OAS files (--body-style hybrid)"
+	script/oas2py.py --cleanup
+	script/oas2py.py --with-examples --body-style hybrid

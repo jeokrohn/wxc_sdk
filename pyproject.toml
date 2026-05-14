@@ -150,7 +150,7 @@ select = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["E722", "E741", "F403", "F405", "F841", "F842"]
-"apib/**" = ["F403", "F841", "E731", "F821"]
+"apib/**" = ["F403", "F841", "E731", "F821", "B007", "B904"]
 "examples/*" = ["F403", "F405"]
 "open_api/tests/*" = ["F841"]
 "script/*" = ["E402"]
