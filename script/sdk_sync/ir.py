@@ -13,10 +13,20 @@ the SDK counterpart of every change:
 - The single API class per module with its ``base=`` URL prefix and methods
   keyed by ``(verb, canonical ep_template)``.
 
-The extractor is a pure function over source text — it never imports the module
-under analysis. This means it can be run against ``git show HEAD:<path>``
-output exactly as easily as against the working tree, without writing temp
-files.
+The extractor is AST-only by default — it never imports the module under
+analysis. This means it can be run against ``git show HEAD:<path>`` output
+exactly as easily as against the working tree, without writing temp files.
+
+For SDK working-tree files only (``is_sdk=True``), the extractor additionally
+calls into :mod:`script.sdk_sync._endpoint_resolver` (shared with
+:mod:`script.endpoint_ref`) to resolve method ``verb`` and ``ep_template``
+via live replay against an instantiated ``WebexSimpleApi``. This recovers
+URL templates from SDK methods that route through custom helpers like
+``CQPolicyApi._ep`` — cases where the pure-AST walker can only see the
+helper call and not the full URL it builds. The live-replay results
+override the AST results when available; if the resolver fails for any
+reason the AST result is kept. Stubs and historical source (``is_sdk=False``,
+the default) continue to use AST-only extraction.
 
 Python's :mod:`ast` discards comments, so the ``#:`` Pydantic field doc-comments
 are recovered by scanning the source-text lines immediately above each
@@ -29,7 +39,7 @@ from __future__ import annotations
 import ast
 import hashlib
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Literal
 
@@ -296,18 +306,22 @@ class ModuleIR:
 # ---------------------------------------------------------------------------
 
 
-def extract(path: str | Path) -> ModuleIR:
+def extract(path: str | Path, is_sdk: bool = False) -> ModuleIR:
     """Read a Python source file from disk and extract its IR.
 
     :param path: Path to the source file. May be a string or :class:`pathlib.Path`.
+    :param is_sdk: When ``True``, enrich API methods with live-replay verb/URL
+        resolution from :mod:`script.sdk_sync._endpoint_resolver`. The path must
+        point to an importable SDK file in the working tree. Stubs and any
+        ``git show HEAD:<path>`` source must use the default ``False``.
     :return: A fully-populated :class:`ModuleIR`.
     :raises SyntaxError: If the file cannot be parsed.
     """
     p = Path(path)
-    return extract_from_text(p.read_text(), str(p))
+    return extract_from_text(p.read_text(), str(p), is_sdk=is_sdk)
 
 
-def extract_from_text(source: str, path: str = '<string>') -> ModuleIR:
+def extract_from_text(source: str, path: str = '<string>', is_sdk: bool = False) -> ModuleIR:
     """Parse a source string and extract its IR.
 
     This is the workhorse: ``extract()`` is a thin convenience wrapper. The
@@ -316,6 +330,12 @@ def extract_from_text(source: str, path: str = '<string>') -> ModuleIR:
 
     :param source: Python source text.
     :param path: Informational path string (defaults to ``'<string>'``).
+    :param is_sdk: When ``True``, the API class is post-processed via
+        :func:`_enrich_api_class_with_live_replay`, which calls into the shared
+        endpoint resolver to fill in verb/URL templates that the AST walker
+        cannot reach (custom helpers like ``CQPolicyApi._ep``). Live-replay
+        requires the SDK module to be importable; pass ``False`` for stubs and
+        for historical revisions retrieved from ``git show``.
     :return: A :class:`ModuleIR` with models, enums, optional API class, the
         SHA-1 of the source, and the source text retained for the patcher.
     :raises SyntaxError: If ``source`` does not parse.
@@ -337,6 +357,8 @@ def extract_from_text(source: str, path: str = '<string>') -> ModuleIR:
             models.append(_extract_model(node, source_lines))
         elif kind == 'api':
             api_class = _extract_api_class(node)
+    if is_sdk and api_class is not None:
+        api_class = _enrich_api_class_with_live_replay(api_class)
     return ModuleIR(
         path=path,
         models=tuple(models),
@@ -345,6 +367,64 @@ def extract_from_text(source: str, path: str = '<string>') -> ModuleIR:
         source_sha=hashlib.sha1(source.encode('utf-8')).hexdigest(),
         source_text=source,
     )
+
+
+def _enrich_api_class_with_live_replay(api_class: ApiClassIR) -> ApiClassIR:
+    """Override AST-derived ``verb``/``ep_template`` with live-replay results.
+
+    For each method on ``api_class``, look up a live instance of the class in
+    the cached :func:`live_api_index` and ask the shared resolver to recover
+    the HTTP verb and full URL template by replaying the method body with
+    :class:`Placeholder` arguments. The resolver handles arbitrary helper
+    methods (``self._ep(...)``, ``self.session.ep(...)``, ``super().ep(...)``)
+    that the pure-AST walker cannot follow.
+
+    The leading ``/`` produced by the resolver is stripped so the result
+    canonicalizes to the same form as :func:`_canonical_ep_template` (which
+    builds suffix paths without a leading slash).
+
+    Resolver failures are non-fatal: the original AST values are kept for any
+    method whose live lookup raises or returns ``None``. The class itself is
+    looked up by name only — if the SDK module isn't reachable from the live
+    ``WebexSimpleApi`` tree (rare; e.g. a freshly added file not yet wired
+    into ``WebexSimpleApi``), the AST IR is returned unchanged.
+
+    :param api_class: API class IR built by :func:`_extract_api_class`.
+    :return: New :class:`ApiClassIR` with ``verb`` and ``ep_template`` updated
+        on every method the resolver could handle.
+    """
+    try:
+        from ._endpoint_resolver import live_api_index, resolve_endpoint, resolve_http_method
+    except Exception:
+        return api_class
+    try:
+        index = live_api_index()
+    except Exception:
+        return api_class
+    obj = index.get(api_class.name)
+    if obj is None:
+        return api_class
+    new_methods: list[MethodIR] = []
+    for m in api_class.methods:
+        verb = m.verb
+        ep_template = m.ep_template
+        try:
+            live_verb = resolve_http_method(obj, m.name)
+        except Exception:
+            live_verb = None
+        if live_verb:
+            verb = live_verb.lower()
+        try:
+            live_ep = resolve_endpoint(obj, m.name)
+        except Exception:
+            live_ep = None
+        if live_ep:
+            # Strip the resolver's leading '/' so the template canonicalizes
+            # to the same form as `_canonical_ep_template` (which produces
+            # suffix paths without a leading slash).
+            ep_template = live_ep[1:] if live_ep.startswith('/') else live_ep
+        new_methods.append(replace(m, verb=verb, ep_template=ep_template))
+    return replace(api_class, methods=tuple(new_methods))
 
 
 # ---------------------------------------------------------------------------

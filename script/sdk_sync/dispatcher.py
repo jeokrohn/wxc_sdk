@@ -257,7 +257,9 @@ def _refresh_match(match: Match, new_text: str) -> Match:
     # apparent circular dependency through the matcher.
     from .ir import extract_from_text
 
-    new_ir = extract_from_text(new_text, str(match.sdk_path))
+    # is_sdk=True so the refreshed IR uses the same live-replay endpoint
+    # resolution as the cached SDK index in matcher._SDKIndex.
+    new_ir = extract_from_text(new_text, str(match.sdk_path), is_sdk=True)
     return Match(
         sdk_path=match.sdk_path,
         kind=match.kind,

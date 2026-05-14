@@ -107,7 +107,10 @@ class _SDKIndex:
             if path.name.startswith('test_'):
                 continue
             try:
-                self._irs.append(extract(path))
+                # is_sdk=True enables the shared endpoint_resolver's live-replay
+                # path so we can recover URL templates from custom helpers
+                # (e.g. CQPolicyApi._ep) that the pure-AST walker can't follow.
+                self._irs.append(extract(path, is_sdk=True))
             except SyntaxError:
                 # Skip anything that fails to parse so one broken file
                 # doesn't take the whole sync run down.
@@ -421,7 +424,7 @@ def _match_method(record: ChangeRecord, stub_ir: ModuleIR, store: _aliases.Alias
         try:
             sdk_ir = next(ir for ir in _index.all() if Path(ir.path) == sdk_path)
         except StopIteration:
-            sdk_ir = extract(sdk_path)
+            sdk_ir = extract(sdk_path, is_sdk=True)
         return Match(sdk_path, 'method', a.sdk_class, a.sdk_method, sdk_ir, a.confidence, 'alias')
 
     stub_method = _stub_method_from_record(record, stub_ir)
