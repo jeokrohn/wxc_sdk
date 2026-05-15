@@ -25,7 +25,9 @@ captured under ``dry_run_pending`` and not applied.
 
 from __future__ import annotations
 
+import re
 import subprocess
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
@@ -194,27 +196,44 @@ def _try_llm(
         if config.verbose:
             print(f'[llm] error: {exc}')
         return outcome
-    # An empty (or `---`-less) response means the LLM judged the SDK already
+    # An empty (or hunk-less) response means the LLM judged the SDK already
     # in sync — e.g. for `docstring_changed` where the SDK's docstring
     # already reflects the new stub state. Surface that as `already_in_sync`
-    # so the report doesn't conflate it with a malformed diff.
-    if not diff.strip() or '---' not in diff:
+    # so the report doesn't conflate it with a malformed diff. We require a
+    # full minimal-diff shape (file headers + at least one `@@` hunk + at
+    # least one `+`/`-` change line) so we don't dispatch obviously-empty
+    # patches to `git apply` only to have it bounce them with "No valid
+    # patches in input".
+    if not _looks_like_diff(diff):
         if config.verbose:
             print('[llm] no diff returned — SDK already in sync per LLM')
         return Outcome(record, match, 'already_in_sync', detail='LLM judged SDK already in sync')
     diff_lines = len(diff.splitlines())
-    if not _git_apply_check(diff):
+    ok, err = _git_apply_check(diff)
+    if not ok:
+        err_one_line = _flatten_git_err(err)
+        _dump_rejected(record, match, diff, err)
         if config.verbose:
-            print(f'[llm] diff rejected by `git apply --check` ({diff_lines} lines)')
-        return Outcome(record, match, 'punted_diff_rejected', detail=fallback_reason, diff=diff)
+            print(f'[llm] diff rejected by `git apply --check` ({diff_lines} lines): {err_one_line}')
+        detail = f'{fallback_reason} | git apply: {err_one_line}' if fallback_reason else f'git apply: {err_one_line}'
+        return Outcome(record, match, 'punted_diff_rejected', detail=detail, diff=diff)
     if config.dry_run:
         if config.verbose:
             print(f'[llm] dry-run, diff captured ({diff_lines} lines)')
         return Outcome(record, match, 'dry_run_pending', detail=fallback_reason, diff=diff)
-    if not _git_apply(diff):
+    ok, err = _git_apply(diff)
+    if not ok:
+        err_one_line = _flatten_git_err(err)
+        _dump_rejected(record, match, diff, err)
         if config.verbose:
-            print(f'[llm] apply failed after passing --check ({diff_lines} lines)')
-        return Outcome(record, match, 'punted_diff_rejected', detail='applied check passed but apply failed', diff=diff)
+            print(f'[llm] apply failed after passing --check ({diff_lines} lines): {err_one_line}')
+        return Outcome(
+            record,
+            match,
+            'punted_diff_rejected',
+            detail=f'applied check passed but apply failed | git apply: {err_one_line}',
+            diff=diff,
+        )
     # After a successful git apply, the on-disk file is now the source of
     # truth — drop any stale entry in pending_writes so a later trivial
     # patch on the same file re-reads the freshly applied text.
@@ -271,7 +290,42 @@ def _refresh_match(match: Match, new_text: str) -> Match:
     )
 
 
-def _git_apply_check(diff: str) -> bool:
+def _looks_like_diff(diff: str) -> bool:
+    """Cheap structural sanity check for a unified diff.
+
+    ``git apply --check`` rejects empty or header-only payloads with a noisy
+    ``No valid patches in input`` error. The dispatcher already treats a
+    truly-empty LLM reply as "already in sync"; this predicate extends the
+    same handling to the in-between case where the LLM returned a couple of
+    lines that happen to contain ``---`` but no actual hunk, sparing us a
+    pointless ``git apply`` round-trip and a misleading rejection log line.
+
+    A minimal valid unified diff requires:
+
+    1. ``--- `` and ``+++ `` file headers (anywhere — `git apply` tolerates
+       leading text);
+    2. at least one ``@@`` hunk header;
+    3. at least one body line starting with ``+`` or ``-`` that is *not*
+       another file header.
+
+    :param diff: Cleaned LLM diff text (post-fence-strip).
+    :return: ``True`` only if all three structural elements are present.
+    """
+    if not diff.strip():
+        return False
+    if '\n--- ' not in '\n' + diff or '\n+++ ' not in '\n' + diff:
+        return False
+    if '\n@@' not in '\n' + diff:
+        return False
+    for line in diff.splitlines():
+        if line.startswith(('+++', '---')):
+            continue
+        if line.startswith(('+', '-')):
+            return True
+    return False
+
+
+def _git_apply_check(diff: str) -> tuple[bool, str]:
     """Run ``git apply --check`` against a diff string.
 
     ``--recount`` is on because LLMs routinely emit hunk headers with wrong
@@ -282,15 +336,17 @@ def _git_apply_check(diff: str) -> bool:
     common LLM diff quirks without sacrificing the content-correctness check.
 
     :param diff: Unified diff text.
-    :return: ``True`` if git considers the diff applicable cleanly; ``False``
-        for empty diffs and any non-zero exit from git.
+    :return: ``(ok, stderr)``. ``ok`` is ``True`` only if git considers the
+        diff applicable cleanly. ``stderr`` carries git's diagnostic for
+        rejected diffs so callers can surface the real reason; for an empty
+        diff it is ``'empty diff'``.
     """
     if not diff.strip():
-        return False
+        return False, 'empty diff'
     return _run_git_apply(['git', 'apply', '--check', '--recount', '--unidiff-zero', '-'], diff)
 
 
-def _git_apply(diff: str) -> bool:
+def _git_apply(diff: str) -> tuple[bool, str]:
     """Run ``git apply`` against a diff string and modify the working tree.
 
     Uses the same ``--recount --unidiff-zero`` combination as
@@ -298,22 +354,84 @@ def _git_apply(diff: str) -> bool:
 
     :param diff: Unified diff text (presumed already validated via
         :func:`_git_apply_check`).
-    :return: ``True`` on a clean apply, ``False`` otherwise.
+    :return: ``(ok, stderr)`` — same convention as :func:`_git_apply_check`.
     """
     return _run_git_apply(['git', 'apply', '--recount', '--unidiff-zero', '-'], diff)
 
 
-def _run_git_apply(cmd: list[str], diff: str) -> bool:
+def _run_git_apply(cmd: list[str], diff: str) -> tuple[bool, str]:
     """Invoke a ``git apply`` (or ``--check``) subprocess.
 
     :param cmd: The full argv to run, ending in ``'-'`` so the diff is read
         from stdin.
     :param diff: Diff text fed to stdin.
-    :return: ``True`` if the command exits 0. Returns ``False`` if git is
-        missing (``FileNotFoundError``) — the caller still wants to know.
+    :return: ``(ok, stderr)``. ``ok`` is ``True`` iff the command exits 0.
+        ``stderr`` is git's diagnostic output (or ``'git executable not
+        found'`` when the binary is missing).
     """
     try:
         proc = subprocess.run(cmd, input=diff, text=True, capture_output=True, cwd=_REPO_ROOT, check=False)
     except FileNotFoundError:
-        return False
-    return proc.returncode == 0
+        return False, 'git executable not found'
+    return proc.returncode == 0, proc.stderr
+
+
+#: Directory where rejected LLM diffs are dumped for post-mortem inspection.
+#: Sits beside the dispatcher module so the path is stable regardless of the
+#: caller's working directory. Excluded via the repo-root ``.gitignore``.
+_REJECTED_DIR = Path(__file__).resolve().parent / '.rejected'
+
+
+def _flatten_git_err(err: str) -> str:
+    """Collapse git's multi-line stderr to a single readable line.
+
+    The end-of-run ``sync_report.md`` renders ``Outcome.detail`` on one bullet
+    line, and the verbose console log line is also single-line. Newlines
+    become ``\\n``, runs of whitespace are squeezed, and the result is
+    truncated so a chatty error doesn't dominate the report.
+
+    :param err: Raw stderr text from a ``git apply`` invocation.
+    :return: A single-line, length-bounded representation.
+    """
+    flat = re.sub(r'\s+', ' ', err.replace('\n', '\\n')).strip()
+    if len(flat) > 400:
+        flat = flat[:397] + '...'
+    return flat or '(no stderr)'
+
+
+def _dump_rejected(record: ChangeRecord, match: Match, diff: str, err: str) -> None:
+    """Write the rejected diff plus git's error to ``.rejected/`` for later inspection.
+
+    Failures are intentionally swallowed (with a single warning line) so that
+    a transient I/O problem in this debug aid never aborts the sync run.
+
+    :param record: The change record whose diff was rejected.
+    :param match: The resolved SDK target the diff was meant to patch.
+    :param diff: The rejected unified-diff text.
+    :param err: Stderr from ``git apply --check`` (or ``git apply``).
+    """
+    try:
+        _REJECTED_DIR.mkdir(parents=True, exist_ok=True)
+        try:
+            rel_target = str(match.sdk_path.relative_to(_REPO_ROOT))
+        except ValueError:
+            rel_target = str(match.sdk_path)
+        target_full = f'{rel_target}::{match.sdk_class}.{match.sdk_member or ""}'
+        timestamp = time.strftime('%Y%m%dT%H%M%S')
+        safe_qual = re.sub(r'[^A-Za-z0-9_]+', '_', record.qualname)
+        safe_target = re.sub(r'[^A-Za-z0-9_]+', '_', target_full)
+        filename = f'{timestamp}__{record.kind}__{safe_qual}__{safe_target}.diff'
+        # Keep filenames within typical filesystem limits.
+        if len(filename) > 240:
+            filename = filename[:240] + '.diff'
+        path = _REJECTED_DIR / filename
+        indented_err = '\n'.join(f'#           {line}' for line in err.splitlines() or ['(no stderr)'])
+        header = (
+            f'# record:   {record.kind} {record.qualname}\n'
+            f'# target:   {target_full}\n'
+            f'# git err:\n{indented_err}\n'
+            f'# ---\n'
+        )
+        path.write_text(header + diff)
+    except OSError as exc:
+        print(f'[llm] could not dump rejected diff: {exc}')

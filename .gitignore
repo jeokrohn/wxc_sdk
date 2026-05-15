@@ -183,4 +183,5 @@ cython_debug/
 /open_api/generated/Customer-Experience/
 /open_api/generated/Webex-Suite/Webex-Calling/Webex-Calling-Beta/
 /sync_report.md
+/script/sdk_sync/.rejected/
 /user_tokens.yml
