@@ -96,7 +96,7 @@ def main(argv: list[str] | None = None) -> int:
         '--verbose',
         '-v',
         action='store_true',
-        help='Print one line per LLM dispatch and per claude CLI call (start, elapsed, outcome).',
+        help='Print one line per LLM dispatch and per LLM CLI call (start, elapsed, outcome).',
     )
     args = parser.parse_args(argv)
 

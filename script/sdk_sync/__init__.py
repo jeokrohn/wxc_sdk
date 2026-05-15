@@ -15,7 +15,7 @@ Pipeline (one direction per change record):
    URL+docstring heuristic.
 4. :mod:`~script.sdk_sync.dispatcher` — route the record to either the
    deterministic :mod:`~script.sdk_sync.patcher` or to the
-   :mod:`~script.sdk_sync.llm` step (a ``claude`` CLI subprocess), with
+   :mod:`~script.sdk_sync.llm` step (a Codex/Claude CLI subprocess), with
    ``git apply --check`` gating any LLM-produced diff.
 5. :mod:`~script.sdk_sync.driver` — orchestrate the run end-to-end,
    persist :mod:`~script.sdk_sync.aliases`, and render ``sync_report.md``.

@@ -1,5 +1,5 @@
 """
-LLM step: shell out to the ``claude`` CLI to propose a unified diff.
+LLM step: shell out to a local coding-agent CLI to propose a unified diff.
 
 The contract with the CLI is intentionally strict:
 
@@ -8,15 +8,14 @@ The contract with the CLI is intentionally strict:
 - **Output** — a single unified diff (``--- a/<path>``/``+++ b/<path>``)
   applicable from the repo root via ``git apply``. No prose, no fences.
 
-Why subprocess the CLI rather than calling the Anthropic SDK directly:
+Why subprocess the CLI rather than calling a model SDK directly:
 
-- The maintainer's existing ``claude`` CLI session handles auth and billing.
-  Contributors should not need to set ``ANTHROPIC_API_KEY`` just to run
-  ``make sync-stubs``.
+- The maintainer's existing CLI session handles auth and billing.
+  Contributors should not need to set API-key environment variables just to
+  run ``make sync-stubs``.
 - A subprocess boundary is trivial to mock in tests by monkeypatching
   :func:`subprocess.run`.
-- We can swap the implementation later without touching the rest of the
-  pipeline.
+- The rest of the pipeline stays independent of the selected CLI backend.
 
 The dispatcher catches :class:`LLMError` and records a punt; the patch is
 never blindly applied — the dispatcher first runs ``git apply --check`` so a
@@ -29,6 +28,7 @@ import json
 import re
 import shutil
 import subprocess
+import tempfile
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -36,7 +36,11 @@ from pathlib import Path
 from .differ import ChangeRecord
 from .matcher import Match
 
-# System prompt appended to every `claude -p` invocation. Pins the output
+# Repo root is three levels above this file: script/sdk_sync/llm.py
+# → script/sdk_sync → script → repo root.
+_REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+
+# System prompt passed to every CLI invocation. Pins the output
 # contract (unified diff only, no prose) and forbids edits that would break
 # SDK-side invariants (validator blocks, single-quote style, 120-char lines).
 _SYSTEM_CONSTRAINTS = (
@@ -49,7 +53,7 @@ _SYSTEM_CONSTRAINTS = (
 
 
 class LLMError(RuntimeError):
-    """Raised when the ``claude`` CLI is unavailable, fails, or returns garbage.
+    """Raised when the selected LLM CLI is unavailable, fails, or returns garbage.
 
     The dispatcher catches this and records a ``punted_llm_unavailable``
     outcome so the rest of the run can continue.
@@ -74,7 +78,7 @@ class LLMRequest:
 
 
 def render_prompt(record: ChangeRecord, match: Match, sdk_text: str) -> str:
-    """Build the prompt that will be piped to ``claude -p``.
+    """Build the prompt that will be piped to the selected CLI.
 
     Sections:
 
@@ -125,31 +129,102 @@ def propose_diff(
     match: Match,
     sdk_text: str,
     *,
-    timeout: float = 180.0,
+    timeout: float = 240.0,
     verbose: bool = False,
 ) -> str:
-    """Invoke ``claude -p`` and return the extracted unified diff.
+    """Invoke a local LLM CLI and return the extracted unified diff.
 
-    The CLI is required to be on ``PATH``. The function reads its JSON output,
-    extracts the ``result`` field (the assistant's text), and strips any
-    accidental code fences to leave a raw diff. The dispatcher applies
-    ``git apply --check`` to the returned string before trusting it.
+    Codex CLI is preferred when available; otherwise we fall back to the
+    legacy Claude CLI path. The selected runner returns assistant text, and
+    this function strips any accidental code fences to leave a raw diff. The
+    dispatcher applies ``git apply --check`` to the returned string before
+    trusting it.
 
     :param record: The change record to apply.
     :param match: The resolved SDK target.
     :param sdk_text: Current contents of the SDK file.
     :param timeout: Maximum seconds to wait for the CLI to finish; raises
         :class:`LLMError` on timeout.
-    :param verbose: When ``True``, print ``[llm] calling claude (...)``
-        before invoking the CLI and ``[llm] claude returned in Xs (...)``
+    :param verbose: When ``True``, print ``[llm] calling <backend> (...)``
+        before invoking the CLI and ``[llm] <backend> returned in Xs (...)``
         once it returns. Default keeps the call silent.
     :return: Unified diff text, guaranteed to end with a newline.
     :raises LLMError: If the CLI is missing, returns a non-zero exit code,
         times out, or emits non-JSON output.
     """
-    if shutil.which('claude') is None:
-        raise LLMError('the `claude` CLI is not on PATH; install Claude Code to enable LLM-driven sync')
     prompt = render_prompt(record, match, sdk_text)
+    backend = _select_backend()
+    runner = _run_codex if backend == 'codex' else _run_claude
+    result = runner(prompt, match, timeout=timeout, verbose=verbose)
+    return _extract_unified_diff(result)
+
+
+def _select_backend() -> str:
+    """Return the preferred available CLI backend name.
+
+    Codex is preferred because it is the current target CLI for this sync
+    helper. Claude remains supported as a compatibility fallback for
+    environments that have not migrated yet.
+    """
+    if shutil.which('codex') is not None:
+        return 'codex'
+    if shutil.which('claude') is not None:
+        return 'claude'
+    raise LLMError('neither `codex` nor `claude` CLI is on PATH; install Codex CLI to enable LLM-driven sync')
+
+
+def _run_codex(prompt: str, match: Match, *, timeout: float, verbose: bool) -> str:
+    """Invoke ``codex exec`` and return the final assistant message.
+
+    ``codex exec`` may print event/progress output to stdout. The
+    ``--output-last-message`` file gives us a stable, prose-free place to read
+    the model's final answer from before running the shared diff extraction.
+    """
+    full_prompt = f'{_SYSTEM_CONSTRAINTS}\n\n{prompt}'
+    target = _relative_sdk_path(match.sdk_path)
+    if verbose:
+        print(f'[llm] calling codex (prompt: {len(full_prompt)} chars, target: {target})')
+    t0 = time.monotonic()
+    with tempfile.TemporaryDirectory(prefix='sdk-sync-codex-') as tmp:
+        output_path = Path(tmp) / 'last-message.txt'
+        try:
+            proc = subprocess.run(
+                [
+                    'codex',
+                    'exec',
+                    '--cd',
+                    str(_REPO_ROOT),
+                    '--sandbox',
+                    'read-only',
+                    '--ephemeral',
+                    '--color',
+                    'never',
+                    '--output-last-message',
+                    str(output_path),
+                    '-',
+                ],
+                input=full_prompt,
+                capture_output=True,
+                text=True,
+                timeout=timeout,
+                check=True,
+                cwd=_REPO_ROOT,
+            )
+        except subprocess.CalledProcessError as exc:
+            raise LLMError(f'codex CLI failed (rc={exc.returncode}): {exc.stderr[:400]}') from exc
+        except subprocess.TimeoutExpired as exc:
+            raise LLMError(f'codex CLI timed out after {timeout}s') from exc
+        if verbose:
+            elapsed = time.monotonic() - t0
+            print(f'[llm] codex returned in {elapsed:.1f}s (stdout: {len(proc.stdout)} bytes)')
+        try:
+            return output_path.read_text()
+        except FileNotFoundError as exc:
+            raise LLMError('codex CLI did not write the final message file') from exc
+
+
+def _run_claude(prompt: str, match: Match, *, timeout: float, verbose: bool) -> str:
+    """Invoke ``claude -p`` and return the assistant text from its JSON output."""
     if verbose:
         print(f'[llm] calling claude (prompt: {len(prompt)} chars, target: {_relative_sdk_path(match.sdk_path)})')
     t0 = time.monotonic()
@@ -173,8 +248,7 @@ def propose_diff(
         payload = json.loads(proc.stdout)
     except json.JSONDecodeError as exc:
         raise LLMError(f'claude CLI did not return valid JSON: {proc.stdout[:400]}') from exc
-    result = payload.get('result') or payload.get('text') or ''
-    return _extract_unified_diff(result)
+    return payload.get('result') or payload.get('text') or ''
 
 
 def _extract_unified_diff(text: str) -> str:
@@ -210,7 +284,6 @@ def _relative_sdk_path(path: Path) -> str:
         Falls back to ``str(path)`` if the path isn't under the repo root.
     """
     try:
-        repo_root = Path(__file__).resolve().parent.parent.parent
-        return str(path.relative_to(repo_root))
+        return str(path.relative_to(_REPO_ROOT))
     except ValueError:
         return str(path)
