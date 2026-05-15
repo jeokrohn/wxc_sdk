@@ -3,7 +3,7 @@ Forwarding settings and API for call queues, hunt groups, and auto attendants
 """
 
 from dataclasses import dataclass
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import Field, field_validator
 
@@ -34,6 +34,8 @@ __all__ = [
     'FeatureSelector',
     'ForwardingApi',
 ]
+
+# mypy: disable-error-code="assignment,arg-type"
 
 
 def assert_plus1(number: str) -> str:
@@ -155,7 +157,7 @@ class CallForwarding(ApiModel):
     def default() -> 'CallForwarding':
         return CallForwarding(always=ForwardingSetting.default(), selective=ForwardingSetting.default(), rules=[])
 
-    def update(self) -> dict:
+    def update(self) -> dict[str, Any]:
         """
         Date for updating call
 
@@ -338,8 +340,7 @@ class ForwardingApi(ApiChild, base=''):
 
     def settings(self, location_id: str, feature_id: str, org_id: str = None) -> CallForwarding:
         """
-        Retrieve Call Forwarding settings for the designated feature including the list of call
-        forwarding rules.
+        Retrieve Call Forwarding settings for the designated feature including the list of call forwarding rules.
 
         The call forwarding feature allows you to direct all incoming calls based on specific criteria that you define.
         Below are the available options for configuring your call forwarding:
@@ -347,7 +348,7 @@ class ForwardingApi(ApiChild, base=''):
         2. Forward calls to a designated number based on certain criteria.
         3. Forward calls using different modes.
 
-        Retrieving call forwarding settings for an auto attendant requires a full or read-only administrator or
+        Retrieving call forwarding settings requires a full or read-only administrator or
         location administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param location_id: Location in which this feature exists.
@@ -393,13 +394,18 @@ class ForwardingApi(ApiChild, base=''):
         self, location_id: str, feature_id: str, forwarding_rule: ForwardingRuleDetails, org_id: str = None
     ) -> str:
         """
-        Create a Selective Call Forwarding Rule feature
+        Create a Selective Call Forwarding Rule for a feature
 
-        A selective call forwarding rule for feature to be forwarded or not
-        forwarded to the designated number, based on the defined criteria.
+        A selective call forwarding rule for a feature allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
 
-        Note that the list of existing call forward rules is available feature's call
-        forwarding settings.
+        Note that the list of existing call forward rules is available in the feature's call forwarding settings.
+
+        Creating a selective call forwarding rule requires a full administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
+
+        **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
+
         :param location_id: Location in which the call queue exists.
         :type location_id: str
         :param feature_id: Create the rule for this feature
@@ -409,7 +415,7 @@ class ForwardingApi(ApiChild, base=''):
         :param org_id: Create the feature forwarding rule for this organization.
         :type org_id: str
         :return: forwarding rule id
-        :rtype; str
+        :rtype: str
         """
         url = self._endpoint(location_id=location_id, feature_id=feature_id, path='selectiveRules')
         params = org_id and {'orgId': org_id} or None
@@ -428,8 +434,13 @@ class ForwardingApi(ApiChild, base=''):
 
         Note that the list of existing call forward rules is available in the feature's call
         forwarding settings.
+
+        Retrieving a selective call forwarding rule's settings requires a full or read-only administrator or
+        location administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
         :param location_id: Location in which the feature exists.
-        :type location_id: stre
+        :type location_id: str
         :param feature_id: Retrieve setting for a rule for this feature.
         :type feature_id: str
         :param rule_id: feature rule you are retrieving settings for.
@@ -486,28 +497,45 @@ class ForwardingApi(ApiChild, base=''):
         data = self._session.rest_put(url=url, params=params, data=body)
         return data['id']
 
-    def delete_call_forwarding_rule(self, location_id: str, feature_id: str, rule_id: str, org_id: str = None):
+    def delete_call_forwarding_rule(self, location_id: str, feature_id: str, rule_id: str, org_id: str = None) -> None:
         """
         Delete a Selective Call Forwarding Rule for the designated feature.
 
         A selective call forwarding rule for a feature allows calls to be forwarded or not forwarded
         to the designated number, based on the defined criteria.
 
-        Note that the list of existing call forward rules is available in the feature's call
-        forwarding
+        Note that the list of existing call forward rules is available in the feature's call forwarding
         settings.
+
+        Deleting a selective call forwarding rule requires a full administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
+
+        :param location_id: Location in which this feature exists.
+        :type location_id: str
+        :param feature_id: Delete the rule for this feature.
+        :type feature_id: str
+        :param rule_id: Feature rule you are deleting.
+        :type rule_id: str
+        :param org_id: Delete feature rule from this organization.
+        :type org_id: str
+        :rtype: None
         """
         url = self._endpoint(location_id=location_id, feature_id=feature_id, path=f'selectiveRules/{rule_id}')
         params = org_id and {'orgId': org_id} or None
         self._session.rest_delete(url=url, params=params)
 
-    def switch_mode_for_call_forwarding(self, location_id: str, feature_id: str, org_id: str = None):
+    def switch_mode_for_call_forwarding(self, location_id: str, feature_id: str, org_id: str = None) -> None:
         """
         Switch Mode for Call Forwarding Settings for an entity
 
         Switches the current operating mode to the mode as per normal operations.
 
-        Switching operating mode a full, or location administrator auth token with a scope
+        Operating modes allow call forwarding to be configured based on predefined schedules, enabling different
+        routing behaviors during business hours, after hours, or holidays.
+
+        Switching operating mode requires a full, or location administrator auth token with a scope
         of `spark-admin:telephony_config_write`.
 
         :param location_id: `Location` in which this `call queue` exists.

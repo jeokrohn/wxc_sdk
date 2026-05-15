@@ -210,8 +210,8 @@ class CQPolicyApi(ApiChild, base=''):
 
         Configure the call queue to route calls differently during the holidays.
 
-        Updating a call queue holiday service requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+        Updating a call queue holiday service requires a full administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_write`.
 
         :param location_id: Location in which this call queue exists.
         :type location_id: str
@@ -236,8 +236,8 @@ class CQPolicyApi(ApiChild, base=''):
         Configure the call queue to route calls differently during the hours when the queue is not in service. This
         is determined by a schedule that defines the business hours of the queue.
 
-        Retrieving call queue details requires a full or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
+        Retrieving call queue details requires a full or read-only administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_read`.
 
         :param location_id: Retrieve settings for a call queue in this location.
         :type location_id: str
@@ -245,8 +245,7 @@ class CQPolicyApi(ApiChild, base=''):
         :type queue_id: str
         :param org_id: Retrieve call queue night service settings from this organisation
         :type org_id: str
-        :return: Call Queue Night service details
-        :rtype: NightService
+        :rtype: :class:`NightService`
         """
         url = self._ep(location_id, queue_id, 'nightService')
         params = org_id and {'orgId': org_id} or None
@@ -262,12 +261,12 @@ class CQPolicyApi(ApiChild, base=''):
         Configure the call queue to route calls differently during the hours when the queue is not in service. This
         is determined by a schedule that defines the business hours of the queue.
 
-        Retrieving call queue night service details requires a full or read-only administrator auth token with a
-        scope of spark-admin:telephony_config_read.
+        Updating call queue night service details requires a full administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
 
-        :param location_id: update settings for a call queue in this location.
+        :param location_id: Update settings for a call queue in this location.
         :type location_id: str
-        :param queue_id: update settings for the call queue night service with this identifier.
+        :param queue_id: Update settings for the call queue night service with this identifier.
         :type queue_id: str
         :param update: new night service settings
         :type update: NightService
@@ -289,8 +288,8 @@ class CQPolicyApi(ApiChild, base=''):
         then all calls in the queue become stranded. Stranded-Unavailable Policy: This policy allows for the
         configuration of the processing of calls that are in a staffed queue when all agents are unavailable.
 
-        Retrieving call queue Stranded Calls details requires a full or read-only administrator auth token with a
-        scope of spark-admin:telephony_config_read.
+        Retrieving call queue Stranded Calls details requires a full or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param location_id: Retrieve settings for a call queue in this location.
         :type location_id: str
@@ -314,8 +313,8 @@ class CQPolicyApi(ApiChild, base=''):
 
         Allow admin to modify configured Stranded Calls settings.
 
-        Updating a call queue stranded calls requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+        Updating a call queue stranded calls requires a full administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_write`.
 
         :param location_id: Location in which this call queue exists.
         :type location_id: str
@@ -338,12 +337,15 @@ class CQPolicyApi(ApiChild, base=''):
 
         This policy allows calls to be temporarily diverted to a configured destination.
 
-        Retrieving call queue Forced Forward details requires a full or read-only administrator auth token with a
-        scope of spark-admin:telephony_config_read.
+        Retrieving call queue Forced Forward details requires a full or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
-        :param location_id: Location in which this call queue exists.
-        :param queue_id: Retrieve setting for the call queue with the matching ID.
-        :param org_id: Retrieve call queue settings from this organisation.
+        :param location_id: Retrieve settings for a call queue in this location.
+        :type location_id: str
+        :param queue_id: Retrieve settings for the call queue with this identifier.
+        :type queue_id: str
+        :param org_id: Retrieve call queue settings from this organization.
+        :type org_id: str
         :return: Call Queue policy Forced Forward details.
         :rtype: ForcedForward
         """
@@ -359,11 +361,11 @@ class CQPolicyApi(ApiChild, base=''):
         Update the designated Forced Forward Service.
 
         If the option is enabled, then incoming calls to the queue are forwarded to the configured destination. Calls
-        that are already in the queue remain queued. The policy can be configured to play an announcement prior to
-        proceeding with the forward.
+        that are already in the queue remain queued.
+        The policy can be configured to play an announcement prior to proceeding with the forward.
 
-        Updating a call queue Forced Forward service requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+        Updating a call queue Forced Forward service requires a full administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
 
         :param location_id: Location in which this call queue exists.
         :type location_id: str

@@ -20280,8 +20280,7 @@ class AsForwardingApi(AsApiChild, base=''):
 
     async def settings(self, location_id: str, feature_id: str, org_id: str = None) -> CallForwarding:
         """
-        Retrieve Call Forwarding settings for the designated feature including the list of call
-        forwarding rules.
+        Retrieve Call Forwarding settings for the designated feature including the list of call forwarding rules.
 
         The call forwarding feature allows you to direct all incoming calls based on specific criteria that you define.
         Below are the available options for configuring your call forwarding:
@@ -20289,7 +20288,7 @@ class AsForwardingApi(AsApiChild, base=''):
         2. Forward calls to a designated number based on certain criteria.
         3. Forward calls using different modes.
 
-        Retrieving call forwarding settings for an auto attendant requires a full or read-only administrator or
+        Retrieving call forwarding settings requires a full or read-only administrator or
         location administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param location_id: Location in which this feature exists.
@@ -20335,13 +20334,18 @@ class AsForwardingApi(AsApiChild, base=''):
         self, location_id: str, feature_id: str, forwarding_rule: ForwardingRuleDetails, org_id: str = None
     ) -> str:
         """
-        Create a Selective Call Forwarding Rule feature
+        Create a Selective Call Forwarding Rule for a feature
 
-        A selective call forwarding rule for feature to be forwarded or not
-        forwarded to the designated number, based on the defined criteria.
+        A selective call forwarding rule for a feature allows calls to be forwarded or not forwarded to the
+        designated number, based on the defined criteria.
 
-        Note that the list of existing call forward rules is available feature's call
-        forwarding settings.
+        Note that the list of existing call forward rules is available in the feature's call forwarding settings.
+
+        Creating a selective call forwarding rule requires a full administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
+
+        **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
+
         :param location_id: Location in which the call queue exists.
         :type location_id: str
         :param feature_id: Create the rule for this feature
@@ -20351,7 +20355,7 @@ class AsForwardingApi(AsApiChild, base=''):
         :param org_id: Create the feature forwarding rule for this organization.
         :type org_id: str
         :return: forwarding rule id
-        :rtype; str
+        :rtype: str
         """
         url = self._endpoint(location_id=location_id, feature_id=feature_id, path='selectiveRules')
         params = org_id and {'orgId': org_id} or None
@@ -20370,8 +20374,13 @@ class AsForwardingApi(AsApiChild, base=''):
 
         Note that the list of existing call forward rules is available in the feature's call
         forwarding settings.
+
+        Retrieving a selective call forwarding rule's settings requires a full or read-only administrator or
+        location administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
         :param location_id: Location in which the feature exists.
-        :type location_id: stre
+        :type location_id: str
         :param feature_id: Retrieve setting for a rule for this feature.
         :type feature_id: str
         :param rule_id: feature rule you are retrieving settings for.
@@ -20428,28 +20437,45 @@ class AsForwardingApi(AsApiChild, base=''):
         data = await self._session.rest_put(url=url, params=params, data=body)
         return data['id']
 
-    async def delete_call_forwarding_rule(self, location_id: str, feature_id: str, rule_id: str, org_id: str = None):
+    async def delete_call_forwarding_rule(self, location_id: str, feature_id: str, rule_id: str, org_id: str = None) -> None:
         """
         Delete a Selective Call Forwarding Rule for the designated feature.
 
         A selective call forwarding rule for a feature allows calls to be forwarded or not forwarded
         to the designated number, based on the defined criteria.
 
-        Note that the list of existing call forward rules is available in the feature's call
-        forwarding
+        Note that the list of existing call forward rules is available in the feature's call forwarding
         settings.
+
+        Deleting a selective call forwarding rule requires a full administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        **NOTE**: The Call Forwarding Rule ID will change upon modification of the Call Forwarding Rule name.
+
+        :param location_id: Location in which this feature exists.
+        :type location_id: str
+        :param feature_id: Delete the rule for this feature.
+        :type feature_id: str
+        :param rule_id: Feature rule you are deleting.
+        :type rule_id: str
+        :param org_id: Delete feature rule from this organization.
+        :type org_id: str
+        :rtype: None
         """
         url = self._endpoint(location_id=location_id, feature_id=feature_id, path=f'selectiveRules/{rule_id}')
         params = org_id and {'orgId': org_id} or None
         await self._session.rest_delete(url=url, params=params)
 
-    async def switch_mode_for_call_forwarding(self, location_id: str, feature_id: str, org_id: str = None):
+    async def switch_mode_for_call_forwarding(self, location_id: str, feature_id: str, org_id: str = None) -> None:
         """
         Switch Mode for Call Forwarding Settings for an entity
 
         Switches the current operating mode to the mode as per normal operations.
 
-        Switching operating mode a full, or location administrator auth token with a scope
+        Operating modes allow call forwarding to be configured based on predefined schedules, enabling different
+        routing behaviors during business hours, after hours, or holidays.
+
+        Switching operating mode requires a full, or location administrator auth token with a scope
         of `spark-admin:telephony_config_write`.
 
         :param location_id: `Location` in which this `call queue` exists.
@@ -22028,8 +22054,8 @@ class AsCQPolicyApi(AsApiChild, base=''):
 
         Configure the call queue to route calls differently during the holidays.
 
-        Updating a call queue holiday service requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+        Updating a call queue holiday service requires a full administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_write`.
 
         :param location_id: Location in which this call queue exists.
         :type location_id: str
@@ -22054,8 +22080,8 @@ class AsCQPolicyApi(AsApiChild, base=''):
         Configure the call queue to route calls differently during the hours when the queue is not in service. This
         is determined by a schedule that defines the business hours of the queue.
 
-        Retrieving call queue details requires a full or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
+        Retrieving call queue details requires a full or read-only administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_read`.
 
         :param location_id: Retrieve settings for a call queue in this location.
         :type location_id: str
@@ -22063,8 +22089,7 @@ class AsCQPolicyApi(AsApiChild, base=''):
         :type queue_id: str
         :param org_id: Retrieve call queue night service settings from this organisation
         :type org_id: str
-        :return: Call Queue Night service details
-        :rtype: NightService
+        :rtype: :class:`NightService`
         """
         url = self._ep(location_id, queue_id, 'nightService')
         params = org_id and {'orgId': org_id} or None
@@ -22080,12 +22105,12 @@ class AsCQPolicyApi(AsApiChild, base=''):
         Configure the call queue to route calls differently during the hours when the queue is not in service. This
         is determined by a schedule that defines the business hours of the queue.
 
-        Retrieving call queue night service details requires a full or read-only administrator auth token with a
-        scope of spark-admin:telephony_config_read.
+        Updating call queue night service details requires a full administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
 
-        :param location_id: update settings for a call queue in this location.
+        :param location_id: Update settings for a call queue in this location.
         :type location_id: str
-        :param queue_id: update settings for the call queue night service with this identifier.
+        :param queue_id: Update settings for the call queue night service with this identifier.
         :type queue_id: str
         :param update: new night service settings
         :type update: NightService
@@ -22107,8 +22132,8 @@ class AsCQPolicyApi(AsApiChild, base=''):
         then all calls in the queue become stranded. Stranded-Unavailable Policy: This policy allows for the
         configuration of the processing of calls that are in a staffed queue when all agents are unavailable.
 
-        Retrieving call queue Stranded Calls details requires a full or read-only administrator auth token with a
-        scope of spark-admin:telephony_config_read.
+        Retrieving call queue Stranded Calls details requires a full or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param location_id: Retrieve settings for a call queue in this location.
         :type location_id: str
@@ -22132,8 +22157,8 @@ class AsCQPolicyApi(AsApiChild, base=''):
 
         Allow admin to modify configured Stranded Calls settings.
 
-        Updating a call queue stranded calls requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+        Updating a call queue stranded calls requires a full administrator or location administrator auth token with a
+        scope of `spark-admin:telephony_config_write`.
 
         :param location_id: Location in which this call queue exists.
         :type location_id: str
@@ -22156,12 +22181,15 @@ class AsCQPolicyApi(AsApiChild, base=''):
 
         This policy allows calls to be temporarily diverted to a configured destination.
 
-        Retrieving call queue Forced Forward details requires a full or read-only administrator auth token with a
-        scope of spark-admin:telephony_config_read.
+        Retrieving call queue Forced Forward details requires a full or read-only administrator or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
-        :param location_id: Location in which this call queue exists.
-        :param queue_id: Retrieve setting for the call queue with the matching ID.
-        :param org_id: Retrieve call queue settings from this organisation.
+        :param location_id: Retrieve settings for a call queue in this location.
+        :type location_id: str
+        :param queue_id: Retrieve settings for the call queue with this identifier.
+        :type queue_id: str
+        :param org_id: Retrieve call queue settings from this organization.
+        :type org_id: str
         :return: Call Queue policy Forced Forward details.
         :rtype: ForcedForward
         """
@@ -22177,11 +22205,11 @@ class AsCQPolicyApi(AsApiChild, base=''):
         Update the designated Forced Forward Service.
 
         If the option is enabled, then incoming calls to the queue are forwarded to the configured destination. Calls
-        that are already in the queue remain queued. The policy can be configured to play an announcement prior to
-        proceeding with the forward.
+        that are already in the queue remain queued.
+        The policy can be configured to play an announcement prior to proceeding with the forward.
 
-        Updating a call queue Forced Forward service requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+        Updating a call queue Forced Forward service requires a full administrator or location administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
 
         :param location_id: Location in which this call queue exists.
         :type location_id: str
@@ -22215,7 +22243,7 @@ class AsCallQueueAgentsApi(AsApiChild, base='telephony/config/queues/agents'):
         **params,
     ) -> AsyncGenerator[CallQueueAgent, None]:
         """
-        Read the List of Call Queue Agents
+        Read the List of Call Queue Agents with Customer Assist
 
         List all Call Queues Agents for the organization.
 
@@ -22239,8 +22267,8 @@ class AsCallQueueAgentsApi(AsApiChild, base='telephony/config/queues/agents'):
         :type phone_number: str
         :param join_enabled: Returns only the list of call queue agents that match the given `joinEnabled` value.
         :type join_enabled: bool
-        :param has_cx_essentials: Returns only the list of call queues with Customer Experience Essentials license when
-            `true`, otherwise returns the list of Customer Experience Basic call queues.
+        :param has_cx_essentials: Returns only the list of call queues with Customer Assist license when `true`,
+            otherwise returns the list of Customer Experience Basic call queues.
         :type has_cx_essentials: bool
         :param order: Sort results alphabetically by call queue agent's name, in ascending or descending order.
         :type order: str
@@ -22280,7 +22308,7 @@ class AsCallQueueAgentsApi(AsApiChild, base='telephony/config/queues/agents'):
         **params,
     ) -> builtins.list[CallQueueAgent]:
         """
-        Read the List of Call Queue Agents
+        Read the List of Call Queue Agents with Customer Assist
 
         List all Call Queues Agents for the organization.
 
@@ -22304,8 +22332,8 @@ class AsCallQueueAgentsApi(AsApiChild, base='telephony/config/queues/agents'):
         :type phone_number: str
         :param join_enabled: Returns only the list of call queue agents that match the given `joinEnabled` value.
         :type join_enabled: bool
-        :param has_cx_essentials: Returns only the list of call queues with Customer Experience Essentials license when
-            `true`, otherwise returns the list of Customer Experience Basic call queues.
+        :param has_cx_essentials: Returns only the list of call queues with Customer Assist license when `true`,
+            otherwise returns the list of Customer Experience Basic call queues.
         :type has_cx_essentials: bool
         :param order: Sort results alphabetically by call queue agent's name, in ascending or descending order.
         :type order: str
@@ -22336,7 +22364,7 @@ class AsCallQueueAgentsApi(AsApiChild, base='telephony/config/queues/agents'):
         self, id: str, has_cx_essentials: bool = None, max_: int = 50, start: int = 0, org_id: str = None
     ) -> CallQueueAgentDetail:
         """
-        Get Details for a Call Queue Agent
+        Get Details for a Call Queue Agent with Customer Assist
 
         Retrieve details of a particular Call queue agent based on the agent ID.
 
@@ -22353,12 +22381,12 @@ class AsCallQueueAgentsApi(AsApiChild, base='telephony/config/queues/agents'):
 
         :param id: Retrieve call queue agents with this identifier.
         :type id: str
-        :param max_: Limits the number of objects returned to this maximum count.
+        :param max_: Limit the number of objects returned to this maximum count.
         :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
-        :param has_cx_essentials: Must be set to `true` to view the details of an agent with Customer Experience
-            Essentials license. This can otherwise be ommited or set to `false`.
+        :param has_cx_essentials: Must be set to `true` to view the details of an agent with Customer Assist license.
+            This can otherwise be ommited or set to `false`.
         :type has_cx_essentials: bool
         :param org_id: Retrieve call queue agents from this organization.
         :type org_id: str
@@ -22382,9 +22410,9 @@ class AsCallQueueAgentsApi(AsApiChild, base='telephony/config/queues/agents'):
         settings: builtins.list[AgentCallQueueSetting],
         has_cx_essentials: bool = None,
         org_id: str = None,
-    ):
+    ) -> None:
         """
-        Update an Agent's Settings of One or More Call Queues
+        Update an Agent's Settings of One or More Call Queues with Customer Assist
 
         Modify an agent's call queue settings for an organization.
 
@@ -22395,9 +22423,10 @@ class AsCallQueueAgentsApi(AsApiChild, base='telephony/config/queues/agents'):
 
         :param id: Identifier of the agent to be updated.
         :type id: str
-        :type settings: list[ModifyAgentsForCallQueueObjectSettings]
-        :param has_cx_essentials: Must be set to `true` to modify an agent that has Customer Experience Essentials
-            license. This can otherwise be ommited or set to `false`.
+        :param settings: -
+        :type settings: list[ModifyAgentsForCallQueueObjectSettingsItem]
+        :param has_cx_essentials: Must be set to `true` to modify an agent that has Customer Assist license. This can
+            otherwise be ommited or set to `false`.
         :type has_cx_essentials: bool
         :param org_id: Update the settings of an agent in this organization.
         :type org_id: str
@@ -22474,7 +22503,7 @@ class AsCallQueueApi(AsApiChild, base=''):
         **params,
     ) -> AsyncGenerator[CallQueue, None]:
         """
-        Read the List of Call Queues
+        Read the List of Call Queues with Customer Assist
 
         List all Call Queues for the organization.
 
@@ -22535,7 +22564,7 @@ class AsCallQueueApi(AsApiChild, base=''):
         **params,
     ) -> builtins.list[CallQueue]:
         """
-        Read the List of Call Queues
+        Read the List of Call Queues with Customer Assist
 
         List all Call Queues for the organization.
 
@@ -22665,6 +22694,7 @@ class AsCallQueueApi(AsApiChild, base=''):
     async def delete_queue(self, location_id: str, queue_id: str, org_id: str = None):
         """
         Delete a Call Queue
+
         Delete the designated Call Queue.
 
         Call queues temporarily hold calls in the cloud when all agents, which can be users or agents, assigned to
@@ -22673,8 +22703,8 @@ class AsCallQueueApi(AsApiChild, base=''):
         to reach users assigned to the call queue. Call queues are also assigned an internal extension, which can be
         dialed internally to reach users assigned to the call queue.
 
-        Deleting a call queue requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+        Deleting a call queue requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         :param location_id: Location from which to delete a call queue.
         :type location_id: str
@@ -22682,6 +22712,7 @@ class AsCallQueueApi(AsApiChild, base=''):
         :type queue_id: str
         :param org_id: Delete the call queue from this organization.
         :type org_id: str
+        :rtype: None
         """
         url = self._endpoint(location_id=location_id, path=queue_id)
         params = org_id and {'orgId': org_id} or None
@@ -22689,7 +22720,7 @@ class AsCallQueueApi(AsApiChild, base=''):
 
     async def details(self, location_id: str, queue_id: str, has_cx_essentials: bool = None, org_id: str = None) -> CallQueue:
         """
-        Get Details for a Call Queue
+        Get Details for a Call Queue with Customer Assist
 
         Retrieve Call Queue details.
 
@@ -22741,7 +22772,7 @@ class AsCallQueueApi(AsApiChild, base=''):
         dialed internally to reach users assigned to the call queue.
 
         Updating a call queue requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+        of `spark-admin:telephony_config_write`.
 
         :param location_id: Location in which this call queue exists.
         :type location_id: str
@@ -31451,7 +31482,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         **params,
     ) -> AsyncGenerator[AgentOrSupervisor, None]:
         """
-        Get List of Supervisors
+        Get List of Supervisors with Customer Assist
 
         Get list of supervisors for an organization.
 
@@ -31467,8 +31498,8 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         :type phone_number: str
         :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
         :type order: str
-        :param has_cx_essentials: Returns only the list of supervisors with Customer Experience Essentials license,
-            when `true`. Otherwise returns the list of supervisors with Customer Experience Basic license.
+        :param has_cx_essentials: Returns only the list of supervisors with Customer Assist license, when `true`.
+            Otherwise returns the list of supervisors with Customer Experience Basic license.
         :type has_cx_essentials: bool
         :param org_id: List the supervisors in this organization.
         :type org_id: str
@@ -31497,7 +31528,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         **params,
     ) -> builtins.list[AgentOrSupervisor]:
         """
-        Get List of Supervisors
+        Get List of Supervisors with Customer Assist
 
         Get list of supervisors for an organization.
 
@@ -31513,8 +31544,8 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         :type phone_number: str
         :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
         :type order: str
-        :param has_cx_essentials: Returns only the list of supervisors with Customer Experience Essentials license,
-            when `true`. Otherwise returns the list of supervisors with Customer Experience Basic license.
+        :param has_cx_essentials: Returns only the list of supervisors with Customer Assist license, when `true`.
+            Otherwise returns the list of supervisors with Customer Experience Basic license.
         :type has_cx_essentials: bool
         :param org_id: List the supervisors in this organization.
         :type org_id: str
@@ -31535,7 +31566,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
 
     async def create(self, id: str, agents: builtins.list[str], has_cx_essentials: bool = None, org_id: str = None):
         """
-        Create a Supervisor
+        Create a Supervisor with Customer Assist
 
         Create a new supervisor. The supervisor must be created with at least one agent.
 
@@ -31549,8 +31580,8 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         :type id: str
         :param agents: People, workspaces and virtual lines that are eligible to receive calls.
         :type agents: list[str]
-        :param has_cx_essentials: Creates a Customer Experience Essentials queue supervisor, when `true`. Customer
-            Experience Essentials queue supervisors must have a Customer Experience Essentials license.
+        :param has_cx_essentials: Creates a Customer Assist queue supervisor, when `true`. Customer Assist queue
+            supervisors must have a Customer Assist license.
         :type has_cx_essentials: bool
         :param org_id: The organization ID where the supervisor needs to be created.
         :type org_id: str
@@ -31569,7 +31600,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
 
     async def delete(self, supervisor_id: str, org_id: str = None):
         """
-        Delete A Supervisor
+        Delete a Supervisor
 
         Deletes the supervisor from an organization.
 
@@ -31589,9 +31620,9 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         url = self.ep(supervisor_id)
         await super().delete(url, params=params)
 
-    async def delete_bulk(self, supervisors_ids: builtins.list[str], delete_all: bool = None, org_id: str = None):
+    async def delete_bulk(self, supervisor_ids: builtins.list[str], delete_all: bool = None, org_id: str = None) -> None:
         """
-        Delete Bulk supervisors
+        Delete Bulk Supervisors
 
         Deletes supervisors in bulk from an organization.
 
@@ -31599,8 +31630,8 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
 
         Requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
-        :param supervisors_ids: Array of supervisors IDs to be deleted.
-        :type supervisors_ids: list[str]
+        :param supervisor_ids: Array of supervisors IDs to be deleted.
+        :type supervisor_ids: list[str]
         :param delete_all: If present the `supervisorIds` array is ignored, and all supervisors in the context are
             deleted. **WARNING**: This will remove all supervisors from the organization.
         :type delete_all: bool
@@ -31612,7 +31643,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['supervisorsIds'] = supervisors_ids
+        body['supervisorIds'] = supervisor_ids
         if delete_all is not None:
             body['deleteAll'] = delete_all
         url = self.ep()
@@ -31628,7 +31659,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         **params,
     ) -> AsyncGenerator[AgentOrSupervisor, None]:
         """
-        List Available Supervisors
+        List Available Supervisors with Customer Assist
 
         Get list of available supervisors for an organization.
 
@@ -31644,9 +31675,9 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         :type phone_number: str
         :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
         :type order: str
-        :param has_cx_essentials: Returns only the list of available supervisors with Customer Experience Essentials
-            license, when `true`. When ommited or set to 'false', will return the list of available supervisors with
-            Customer Experience Basic license.
+        :param has_cx_essentials: Returns only the list of available supervisors with Customer Assist license, when
+            `true`. When ommited or set to 'false', will return the list of available supervisors with Customer
+            Experience Basic license.
         :type has_cx_essentials: bool
         :param org_id: List the available supervisors in this organization.
         :type org_id: str
@@ -31675,7 +31706,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         **params,
     ) -> builtins.list[AgentOrSupervisor]:
         """
-        List Available Supervisors
+        List Available Supervisors with Customer Assist
 
         Get list of available supervisors for an organization.
 
@@ -31691,9 +31722,9 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         :type phone_number: str
         :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
         :type order: str
-        :param has_cx_essentials: Returns only the list of available supervisors with Customer Experience Essentials
-            license, when `true`. When ommited or set to 'false', will return the list of available supervisors with
-            Customer Experience Basic license.
+        :param has_cx_essentials: Returns only the list of available supervisors with Customer Assist license, when
+            `true`. When ommited or set to 'false', will return the list of available supervisors with Customer
+            Experience Basic license.
         :type has_cx_essentials: bool
         :param org_id: List the available supervisors in this organization.
         :type org_id: str
@@ -31864,7 +31895,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         **params,
     ) -> AsyncGenerator[AgentOrSupervisor, None]:
         """
-        List Available Agents
+        List Available Agents with Customer Assist
 
         Get list of available agents for an organization.
 
@@ -31880,9 +31911,9 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         :type phone_number: str
         :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
         :type order: str
-        :param has_cx_essentials: Returns only the list of available agents with Customer Experience Essentials
-            license, when `true`. When ommited or set to `false`, will return the list of available agents with
-            Customer Experience Basic license.
+        :param has_cx_essentials: Returns only the list of available agents with Customer Assist license, when `true`.
+            When ommited or set to `false`, will return the list of available agents with Customer Experience Basic
+            license.
         :type has_cx_essentials: bool
         :param org_id: List of available agents in a supervisor's list for this organization.
         :type org_id: str
@@ -31911,7 +31942,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         **params,
     ) -> builtins.list[AgentOrSupervisor]:
         """
-        List Available Agents
+        List Available Agents with Customer Assist
 
         Get list of available agents for an organization.
 
@@ -31927,9 +31958,9 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         :type phone_number: str
         :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
         :type order: str
-        :param has_cx_essentials: Returns only the list of available agents with Customer Experience Essentials
-            license, when `true`. When ommited or set to `false`, will return the list of available agents with
-            Customer Experience Basic license.
+        :param has_cx_essentials: Returns only the list of available agents with Customer Assist license, when `true`.
+            When ommited or set to `false`, will return the list of available agents with Customer Experience Basic
+            license.
         :type has_cx_essentials: bool
         :param org_id: List of available agents in a supervisor's list for this organization.
         :type org_id: str

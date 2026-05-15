@@ -16,6 +16,8 @@ __all__ = [
     'CallQueueAgentsApi',
 ]
 
+# mypy: disable-error-code="assignment"
+
 
 class CallQueueAgent(ApiModel):
     #: Unique call queue agent identifier.
@@ -96,7 +98,7 @@ class CallQueueAgentsApi(ApiChild, base='telephony/config/queues/agents'):
         **params,
     ) -> Generator[CallQueueAgent, None, None]:
         """
-        Read the List of Call Queue Agents
+        Read the List of Call Queue Agents with Customer Assist
 
         List all Call Queues Agents for the organization.
 
@@ -120,8 +122,8 @@ class CallQueueAgentsApi(ApiChild, base='telephony/config/queues/agents'):
         :type phone_number: str
         :param join_enabled: Returns only the list of call queue agents that match the given `joinEnabled` value.
         :type join_enabled: bool
-        :param has_cx_essentials: Returns only the list of call queues with Customer Experience Essentials license when
-            `true`, otherwise returns the list of Customer Experience Basic call queues.
+        :param has_cx_essentials: Returns only the list of call queues with Customer Assist license when `true`,
+            otherwise returns the list of Customer Experience Basic call queues.
         :type has_cx_essentials: bool
         :param order: Sort results alphabetically by call queue agent's name, in ascending or descending order.
         :type order: str
@@ -152,7 +154,7 @@ class CallQueueAgentsApi(ApiChild, base='telephony/config/queues/agents'):
         self, id: str, has_cx_essentials: bool = None, max_: int = 50, start: int = 0, org_id: str = None
     ) -> CallQueueAgentDetail:
         """
-        Get Details for a Call Queue Agent
+        Get Details for a Call Queue Agent with Customer Assist
 
         Retrieve details of a particular Call queue agent based on the agent ID.
 
@@ -169,12 +171,12 @@ class CallQueueAgentsApi(ApiChild, base='telephony/config/queues/agents'):
 
         :param id: Retrieve call queue agents with this identifier.
         :type id: str
-        :param max_: Limits the number of objects returned to this maximum count.
+        :param max_: Limit the number of objects returned to this maximum count.
         :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
-        :param has_cx_essentials: Must be set to `true` to view the details of an agent with Customer Experience
-            Essentials license. This can otherwise be ommited or set to `false`.
+        :param has_cx_essentials: Must be set to `true` to view the details of an agent with Customer Assist license.
+            This can otherwise be ommited or set to `false`.
         :type has_cx_essentials: bool
         :param org_id: Retrieve call queue agents from this organization.
         :type org_id: str
@@ -198,9 +200,9 @@ class CallQueueAgentsApi(ApiChild, base='telephony/config/queues/agents'):
         settings: builtins.list[AgentCallQueueSetting],
         has_cx_essentials: bool = None,
         org_id: str = None,
-    ):
+    ) -> None:
         """
-        Update an Agent's Settings of One or More Call Queues
+        Update an Agent's Settings of One or More Call Queues with Customer Assist
 
         Modify an agent's call queue settings for an organization.
 
@@ -211,9 +213,10 @@ class CallQueueAgentsApi(ApiChild, base='telephony/config/queues/agents'):
 
         :param id: Identifier of the agent to be updated.
         :type id: str
-        :type settings: list[ModifyAgentsForCallQueueObjectSettings]
-        :param has_cx_essentials: Must be set to `true` to modify an agent that has Customer Experience Essentials
-            license. This can otherwise be ommited or set to `false`.
+        :param settings: -
+        :type settings: list[ModifyAgentsForCallQueueObjectSettingsItem]
+        :param has_cx_essentials: Must be set to `true` to modify an agent that has Customer Assist license. This can
+            otherwise be ommited or set to `false`.
         :type has_cx_essentials: bool
         :param org_id: Update the settings of an agent in this organization.
         :type org_id: str

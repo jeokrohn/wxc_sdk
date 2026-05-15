@@ -1603,13 +1603,13 @@ description of the operation. The method name is a link to the method documentat
         | Retrieve a Selective Call Forwarding Rule's settings for the designated Call Queue
         | ``GET /telephony/config/locations/{location_id}/autoAttendants/{feature_id}/callForwarding/selectiveRules/{rule_id}``
    * - :meth:`api.telephony.auto_attendant.forwarding.create_call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.create_call_forwarding_rule>`
-        | Create a Selective Call Forwarding Rule feature
+        | Create a Selective Call Forwarding Rule for a feature
         | ``POST /telephony/config/locations/{location_id}/autoAttendants/{feature_id}/callForwarding/selectiveRules``
    * - :meth:`api.telephony.auto_attendant.forwarding.delete_call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.delete_call_forwarding_rule>`
         | Delete a Selective Call Forwarding Rule for the designated feature
         | ``DELETE /telephony/config/locations/{location_id}/autoAttendants/{feature_id}/callForwarding/selectiveRules/{rule_id}``
    * - :meth:`api.telephony.auto_attendant.forwarding.settings <wxc_sdk.telephony.forwarding.ForwardingApi.settings>`
-        | Retrieve Call Forwarding settings for the designated feature including the list of call
+        | Retrieve Call Forwarding settings for the designated feature including the list of call forwarding rules
         | ``GET /telephony/config/locations/{location_id}/autoAttendants/{feature_id}/callForwarding``
    * - :meth:`api.telephony.auto_attendant.forwarding.switch_mode_for_call_forwarding <wxc_sdk.telephony.forwarding.ForwardingApi.switch_mode_for_call_forwarding>`
         | Switch Mode for Call Forwarding Settings for an entity
@@ -1771,13 +1771,13 @@ description of the operation. The method name is a link to the method documentat
         | Update a Call Park Extension
         | ``PUT /telephony/config/locations/{location_id}/callParkExtensions/{cpe_id}``
    * - :meth:`api.telephony.callqueue.agents.details <wxc_sdk.telephony.callqueue.agents.CallQueueAgentsApi.details>`
-        | Get Details for a Call Queue Agent
+        | Get Details for a Call Queue Agent with Customer Assist
         | ``GET /telephony/config/queues/agents/{id}``
    * - :meth:`api.telephony.callqueue.agents.list <wxc_sdk.telephony.callqueue.agents.CallQueueAgentsApi.list>`
-        | Read the List of Call Queue Agents
+        | Read the List of Call Queue Agents with Customer Assist
         | ``GET /telephony/config/queues/agents``
    * - :meth:`api.telephony.callqueue.agents.update_call_queue_settings <wxc_sdk.telephony.callqueue.agents.CallQueueAgentsApi.update_call_queue_settings>`
-        | Update an Agent's Settings of One or More Call Queues
+        | Update an Agent's Settings of One or More Call Queues with Customer Assist
         | ``PUT /telephony/config/queues/agents/{id}/settings``
    * - :meth:`api.telephony.callqueue.alternate_available_phone_numbers <wxc_sdk.telephony.callqueue.CallQueueApi.alternate_available_phone_numbers>`
         | Get Call Queue Alternate Available Phone Numbers
@@ -1795,19 +1795,19 @@ description of the operation. The method name is a link to the method documentat
         | Delete a Call Queue
         | ``DELETE /telephony/config/locations/{location_id}/queues/{queue_id}``
    * - :meth:`api.telephony.callqueue.details <wxc_sdk.telephony.callqueue.CallQueueApi.details>`
-        | Get Details for a Call Queue
+        | Get Details for a Call Queue with Customer Assist
         | ``GET /telephony/config/locations/{location_id}/queues/{queue_id}``
    * - :meth:`api.telephony.callqueue.forwarding.call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.call_forwarding_rule>`
         | Retrieve a Selective Call Forwarding Rule's settings for the designated Call Queue
         | ``GET /telephony/config/locations/{location_id}/queues/{feature_id}/callForwarding/selectiveRules/{rule_id}``
    * - :meth:`api.telephony.callqueue.forwarding.create_call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.create_call_forwarding_rule>`
-        | Create a Selective Call Forwarding Rule feature
+        | Create a Selective Call Forwarding Rule for a feature
         | ``POST /telephony/config/locations/{location_id}/queues/{feature_id}/callForwarding/selectiveRules``
    * - :meth:`api.telephony.callqueue.forwarding.delete_call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.delete_call_forwarding_rule>`
         | Delete a Selective Call Forwarding Rule for the designated feature
         | ``DELETE /telephony/config/locations/{location_id}/queues/{feature_id}/callForwarding/selectiveRules/{rule_id}``
    * - :meth:`api.telephony.callqueue.forwarding.settings <wxc_sdk.telephony.forwarding.ForwardingApi.settings>`
-        | Retrieve Call Forwarding settings for the designated feature including the list of call
+        | Retrieve Call Forwarding settings for the designated feature including the list of call forwarding rules
         | ``GET /telephony/config/locations/{location_id}/queues/{feature_id}/callForwarding``
    * - :meth:`api.telephony.callqueue.forwarding.switch_mode_for_call_forwarding <wxc_sdk.telephony.forwarding.ForwardingApi.switch_mode_for_call_forwarding>`
         | Switch Mode for Call Forwarding Settings for an entity
@@ -1822,7 +1822,7 @@ description of the operation. The method name is a link to the method documentat
         | Get Call Queue Settings
         | ``GET /telephony/config/queues/settings``
    * - :meth:`api.telephony.callqueue.list <wxc_sdk.telephony.callqueue.CallQueueApi.list>`
-        | Read the List of Call Queues
+        | Read the List of Call Queues with Customer Assist
         | ``GET /telephony/config/queues``
    * - :meth:`api.telephony.callqueue.policy.forced_forward_details <wxc_sdk.telephony.callqueue.policies.CQPolicyApi.forced_forward_details>`
         | Get Details for a Call Queue Forced Forward
@@ -2311,13 +2311,13 @@ description of the operation. The method name is a link to the method documentat
         | Retrieve a Selective Call Forwarding Rule's settings for the designated Call Queue
         | ``GET /telephony/config/locations/{location_id}/huntGroups/{feature_id}/callForwarding/selectiveRules/{rule_id}``
    * - :meth:`api.telephony.huntgroup.forwarding.create_call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.create_call_forwarding_rule>`
-        | Create a Selective Call Forwarding Rule feature
+        | Create a Selective Call Forwarding Rule for a feature
         | ``POST /telephony/config/locations/{location_id}/huntGroups/{feature_id}/callForwarding/selectiveRules``
    * - :meth:`api.telephony.huntgroup.forwarding.delete_call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.delete_call_forwarding_rule>`
         | Delete a Selective Call Forwarding Rule for the designated feature
         | ``DELETE /telephony/config/locations/{location_id}/huntGroups/{feature_id}/callForwarding/selectiveRules/{rule_id}``
    * - :meth:`api.telephony.huntgroup.forwarding.settings <wxc_sdk.telephony.forwarding.ForwardingApi.settings>`
-        | Retrieve Call Forwarding settings for the designated feature including the list of call
+        | Retrieve Call Forwarding settings for the designated feature including the list of call forwarding rules
         | ``GET /telephony/config/locations/{location_id}/huntGroups/{feature_id}/callForwarding``
    * - :meth:`api.telephony.huntgroup.forwarding.switch_mode_for_call_forwarding <wxc_sdk.telephony.forwarding.ForwardingApi.switch_mode_for_call_forwarding>`
         | Switch Mode for Call Forwarding Settings for an entity
@@ -3103,25 +3103,25 @@ description of the operation. The method name is a link to the method documentat
         | Assign or Unassign Agents to Supervisor
         | ``PUT /telephony/config/supervisors/{supervisor_id}``
    * - :meth:`api.telephony.supervisors.available_agents <wxc_sdk.telephony.supervisor.SupervisorApi.available_agents>`
-        | List Available Agents
+        | List Available Agents with Customer Assist
         | ``GET /telephony/config/supervisors/availableAgents``
    * - :meth:`api.telephony.supervisors.available_supervisors <wxc_sdk.telephony.supervisor.SupervisorApi.available_supervisors>`
-        | List Available Supervisors
+        | List Available Supervisors with Customer Assist
         | ``GET /telephony/config/supervisors/availableSupervisors``
    * - :meth:`api.telephony.supervisors.create <wxc_sdk.telephony.supervisor.SupervisorApi.create>`
-        | Create a Supervisor
+        | Create a Supervisor with Customer Assist
         | ``POST /telephony/config/supervisors``
    * - :meth:`api.telephony.supervisors.delete <wxc_sdk.telephony.supervisor.SupervisorApi.delete>`
-        | Delete A Supervisor
+        | Delete a Supervisor
         | ``DELETE /telephony/config/supervisors/{supervisor_id}``
    * - :meth:`api.telephony.supervisors.delete_bulk <wxc_sdk.telephony.supervisor.SupervisorApi.delete_bulk>`
-        | Delete Bulk supervisors
+        | Delete Bulk Supervisors
         | ``DELETE /telephony/config/supervisors``
    * - :meth:`api.telephony.supervisors.details <wxc_sdk.telephony.supervisor.SupervisorApi.details>`
         | GET Supervisor Details
         | ``GET /telephony/config/supervisors/{supervisor_id}``
    * - :meth:`api.telephony.supervisors.list <wxc_sdk.telephony.supervisor.SupervisorApi.list>`
-        | Get List of Supervisors
+        | Get List of Supervisors with Customer Assist
         | ``GET /telephony/config/supervisors``
    * - :meth:`api.telephony.supported_devices <wxc_sdk.telephony.TelephonyApi.supported_devices>`
         | Read the List of Supported Devices

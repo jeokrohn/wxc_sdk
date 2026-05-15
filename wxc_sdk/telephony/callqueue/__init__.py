@@ -523,7 +523,7 @@ class CallQueueApi(ApiChild, base=''):
         **params,
     ) -> Generator[CallQueue, None, None]:
         """
-        Read the List of Call Queues
+        Read the List of Call Queues with Customer Assist
 
         List all Call Queues for the organization.
 
@@ -653,6 +653,7 @@ class CallQueueApi(ApiChild, base=''):
     def delete_queue(self, location_id: str, queue_id: str, org_id: str = None):
         """
         Delete a Call Queue
+
         Delete the designated Call Queue.
 
         Call queues temporarily hold calls in the cloud when all agents, which can be users or agents, assigned to
@@ -661,8 +662,8 @@ class CallQueueApi(ApiChild, base=''):
         to reach users assigned to the call queue. Call queues are also assigned an internal extension, which can be
         dialed internally to reach users assigned to the call queue.
 
-        Deleting a call queue requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+        Deleting a call queue requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         :param location_id: Location from which to delete a call queue.
         :type location_id: str
@@ -670,6 +671,7 @@ class CallQueueApi(ApiChild, base=''):
         :type queue_id: str
         :param org_id: Delete the call queue from this organization.
         :type org_id: str
+        :rtype: None
         """
         url = self._endpoint(location_id=location_id, path=queue_id)
         params = org_id and {'orgId': org_id} or None
@@ -677,7 +679,7 @@ class CallQueueApi(ApiChild, base=''):
 
     def details(self, location_id: str, queue_id: str, has_cx_essentials: bool = None, org_id: str = None) -> CallQueue:
         """
-        Get Details for a Call Queue
+        Get Details for a Call Queue with Customer Assist
 
         Retrieve Call Queue details.
 
@@ -729,7 +731,7 @@ class CallQueueApi(ApiChild, base=''):
         dialed internally to reach users assigned to the call queue.
 
         Updating a call queue requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+        of `spark-admin:telephony_config_write`.
 
         :param location_id: Location in which this call queue exists.
         :type location_id: str

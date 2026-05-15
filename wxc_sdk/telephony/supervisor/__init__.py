@@ -10,6 +10,8 @@ from wxc_sdk.common import PatternAction, UserType
 
 __all__ = ['SupervisorApi', 'IdAndAction', 'SupervisorAgentStatus', 'AgentOrSupervisor']
 
+# mypy: disable-error-code="assignment"
+
 
 class AgentOrSupervisor(ApiModel):
     #: A unique identifier for the supervisor.
@@ -76,7 +78,7 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         **params,
     ) -> Generator[AgentOrSupervisor, None, None]:
         """
-        Get List of Supervisors
+        Get List of Supervisors with Customer Assist
 
         Get list of supervisors for an organization.
 
@@ -92,8 +94,8 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         :type phone_number: str
         :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
         :type order: str
-        :param has_cx_essentials: Returns only the list of supervisors with Customer Experience Essentials license,
-            when `true`. Otherwise returns the list of supervisors with Customer Experience Basic license.
+        :param has_cx_essentials: Returns only the list of supervisors with Customer Assist license, when `true`.
+            Otherwise returns the list of supervisors with Customer Experience Basic license.
         :type has_cx_essentials: bool
         :param org_id: List the supervisors in this organization.
         :type org_id: str
@@ -114,7 +116,7 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
 
     def create(self, id: str, agents: builtins.list[str], has_cx_essentials: bool = None, org_id: str = None):
         """
-        Create a Supervisor
+        Create a Supervisor with Customer Assist
 
         Create a new supervisor. The supervisor must be created with at least one agent.
 
@@ -128,8 +130,8 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         :type id: str
         :param agents: People, workspaces and virtual lines that are eligible to receive calls.
         :type agents: list[str]
-        :param has_cx_essentials: Creates a Customer Experience Essentials queue supervisor, when `true`. Customer
-            Experience Essentials queue supervisors must have a Customer Experience Essentials license.
+        :param has_cx_essentials: Creates a Customer Assist queue supervisor, when `true`. Customer Assist queue
+            supervisors must have a Customer Assist license.
         :type has_cx_essentials: bool
         :param org_id: The organization ID where the supervisor needs to be created.
         :type org_id: str
@@ -148,7 +150,7 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
 
     def delete(self, supervisor_id: str, org_id: str = None):
         """
-        Delete A Supervisor
+        Delete a Supervisor
 
         Deletes the supervisor from an organization.
 
@@ -168,9 +170,9 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         url = self.ep(supervisor_id)
         super().delete(url, params=params)
 
-    def delete_bulk(self, supervisors_ids: builtins.list[str], delete_all: bool = None, org_id: str = None):
+    def delete_bulk(self, supervisor_ids: builtins.list[str], delete_all: bool = None, org_id: str = None) -> None:
         """
-        Delete Bulk supervisors
+        Delete Bulk Supervisors
 
         Deletes supervisors in bulk from an organization.
 
@@ -178,8 +180,8 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
 
         Requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
-        :param supervisors_ids: Array of supervisors IDs to be deleted.
-        :type supervisors_ids: list[str]
+        :param supervisor_ids: Array of supervisors IDs to be deleted.
+        :type supervisor_ids: list[str]
         :param delete_all: If present the `supervisorIds` array is ignored, and all supervisors in the context are
             deleted. **WARNING**: This will remove all supervisors from the organization.
         :type delete_all: bool
@@ -191,7 +193,7 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         if org_id is not None:
             params['orgId'] = org_id
         body = dict()
-        body['supervisorsIds'] = supervisors_ids
+        body['supervisorIds'] = supervisor_ids
         if delete_all is not None:
             body['deleteAll'] = delete_all
         url = self.ep()
@@ -207,7 +209,7 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         **params,
     ) -> Generator[AgentOrSupervisor, None, None]:
         """
-        List Available Supervisors
+        List Available Supervisors with Customer Assist
 
         Get list of available supervisors for an organization.
 
@@ -223,9 +225,9 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         :type phone_number: str
         :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
         :type order: str
-        :param has_cx_essentials: Returns only the list of available supervisors with Customer Experience Essentials
-            license, when `true`. When ommited or set to 'false', will return the list of available supervisors with
-            Customer Experience Basic license.
+        :param has_cx_essentials: Returns only the list of available supervisors with Customer Assist license, when
+            `true`. When ommited or set to 'false', will return the list of available supervisors with Customer
+            Experience Basic license.
         :type has_cx_essentials: bool
         :param org_id: List the available supervisors in this organization.
         :type org_id: str
@@ -344,7 +346,7 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         **params,
     ) -> Generator[AgentOrSupervisor, None, None]:
         """
-        List Available Agents
+        List Available Agents with Customer Assist
 
         Get list of available agents for an organization.
 
@@ -360,9 +362,9 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         :type phone_number: str
         :param order: Sort results alphabetically by supervisor name, in ascending or descending order.
         :type order: str
-        :param has_cx_essentials: Returns only the list of available agents with Customer Experience Essentials
-            license, when `true`. When ommited or set to `false`, will return the list of available agents with
-            Customer Experience Basic license.
+        :param has_cx_essentials: Returns only the list of available agents with Customer Assist license, when `true`.
+            When ommited or set to `false`, will return the list of available agents with Customer Experience Basic
+            license.
         :type has_cx_essentials: bool
         :param org_id: List of available agents in a supervisor's list for this organization.
         :type org_id: str

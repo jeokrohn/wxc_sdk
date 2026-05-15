@@ -40,16 +40,16 @@ __all__ = ['AgentAction', 'AlternateNumbersWithPattern', 'AnnouncementAudioFile'
            'GetCallQueueForcedForwardObject', 'GetCallQueueHolidayObject', 'GetCallQueueHolidayObjectAction',
            'GetCallQueueNightServiceObject', 'GetCallQueueNightServiceObjectAnnouncementMode',
            'GetCallQueueObjectAlternateNumberSettings', 'GetCallQueueStrandedCallsObject',
-           'GetCallQueueStrandedCallsObjectAction', 'GetForwardingRuleObject', 'GetPersonPlaceObject',
-           'GetPersonPlaceVirtualLineCallQueueObjectType', 'GetSupervisorDetailWithCustomerAssistResponse',
-           'GetUserNumberItemObject', 'HuntPolicySelection', 'HuntRoutingTypeSelection', 'ListCallQueueAgentObject',
+           'GetCallQueueStrandedCallsObjectAction', 'GetCallQueueSupervisorResponse', 'GetForwardingRuleObject',
+           'GetPersonPlaceObject', 'GetPersonPlaceVirtualLineCallQueueObjectType', 'GetUserNumberItemObject',
+           'HuntPolicySelection', 'HuntRoutingTypeSelection', 'ListCallQueueAgentObject',
            'ListCallQueueEssentialsObject', 'ListSupervisorAgentObject', 'ListSupervisorObject', 'LocationObject',
            'MediaType', 'ModesGet', 'ModesGetForwardTo', 'ModesGetForwardToDefaultForwardToSelection', 'ModesGetType',
            'ModesPatch', 'ModesPatchForwardTo', 'ModifyAgentsForCallQueueObjectSettingsItem',
-           'ModifyCallForwardingObjectCallForwarding', 'ModifyPersonPlaceVirtualLineCallQueueObject',
-           'NumberOwnerType', 'PostPersonPlaceVirtualLineCallQueueObject',
-           'PostPersonPlaceVirtualLineSupervisorObject', 'PutPersonPlaceVirtualLineAgentObject', 'RingPatternObject',
-           'STATE', 'SelectionObject', 'TelephonyType']
+           'ModifyCallForwardingObjectCallForwarding', 'ModifyCallForwardingObjectCallForwardingOperatingModes',
+           'ModifyPersonPlaceVirtualLineCallQueueObject', 'NumberOwnerType',
+           'PostPersonPlaceVirtualLineCallQueueObject', 'PostPersonPlaceVirtualLineSupervisorObject',
+           'PutPersonPlaceVirtualLineAgentObject', 'RingPatternObject', 'STATE', 'SelectionObject', 'TelephonyType']
 
 
 class RingPatternObject(str, Enum):
@@ -195,7 +195,7 @@ class CallQueueHolidaySchedulesObjectScheduleLevel(str, Enum):
 
 
 class CreateForwardingRuleObjectForwardToSelection(str, Enum):
-    #: When the rule matches, forward to the destination for the hunt group.
+    #: When the rule matches, forward to the destination for the call queue.
     forward_to_default_number = 'FORWARD_TO_DEFAULT_NUMBER'
     #: When the rule matches, forward to the destination for this rule.
     forward_to_specified_number = 'FORWARD_TO_SPECIFIED_NUMBER'
@@ -547,7 +547,7 @@ class PostPersonPlaceVirtualLineCallQueueObject(ApiModel):
 class CreateForwardingRuleObjectForwardTo(ApiModel):
     #: Controls what happens when the rule matches.
     selection: Optional[CreateForwardingRuleObjectForwardToSelection] = None
-    #: Phone number used if selection is `FORWARD_TO_SPECIFIED_NUMBER`.
+    #: Phone number to forward calls to. Required when selection is `FORWARD_TO_SPECIFIED_NUMBER`.
     phone_number: Optional[str] = None
 
 
@@ -775,6 +775,13 @@ class ModesPatch(ApiModel):
     forward_to: Optional[ModesPatchForwardTo] = None
 
 
+class ModifyCallForwardingObjectCallForwardingOperatingModes(ApiModel):
+    #: Indicates whether operating modes forwarding is enabled.
+    enabled: Optional[bool] = None
+    #: List of operating mode configurations.
+    modes: Optional[list[ModesPatch]] = None
+
+
 class ModifyCallForwardingObjectCallForwarding(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you choose.
     always: Optional[CallForwardSettingsGetCallForwardingAlways] = None
@@ -784,7 +791,7 @@ class ModifyCallForwardingObjectCallForwarding(ApiModel):
     #: Rules for selectively forwarding calls.
     rules: Optional[list[CallForwardRulesSet]] = None
     #: Configuration for forwarding via Operating modes (Schedule Based Routing).
-    modes: Optional[list[ModesPatch]] = None
+    operating_modes: Optional[ModifyCallForwardingObjectCallForwardingOperatingModes] = None
 
 
 class ModifyPersonPlaceVirtualLineCallQueueObject(ApiModel):
@@ -948,7 +955,7 @@ class ListSupervisorObject(ApiModel):
     #: Routing prefix + extension of a person.
     esn: Optional[str] = None
     #: Number of agents managed by supervisor. A supervisor must manage at least one agent.
-    agent_count: Optional[str] = None
+    agent_count: Optional[int] = None
 
 
 class PostPersonPlaceVirtualLineSupervisorObject(ApiModel):
@@ -1227,7 +1234,7 @@ class GetCallQueueEssentialsObject(ApiModel):
     dial_by_name: Optional[str] = None
 
 
-class GetSupervisorDetailWithCustomerAssistResponse(ApiModel):
+class GetCallQueueSupervisorResponse(ApiModel):
     #: unique identifier of the supervisor
     id: Optional[str] = None
     #: Array of agents assigned to a specific supervisor.
@@ -1236,7 +1243,7 @@ class GetSupervisorDetailWithCustomerAssistResponse(ApiModel):
 
 class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
     """
-    Features:  Call Queue
+    Features: Call Queue
     
     Features: Call Queue supports reading and writing of Webex Calling Call Queue settings for a specific organization.
     
@@ -1248,23 +1255,20 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
     Modifying these organization settings requires a full administrator auth token with a scope of
     `spark-admin:telephony_config_write`.
     
-    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
-    query parameter.
+    A partner administrator can retrieve or change settings in another organization using the optional `orgId` query
+    parameter.
     """
 
-    def create_a_call_queue_with_customer_assist(self, location_id: str, name: str,
-                                                 call_policies: GetCallQueueCallPolicyObject,
-                                                 queue_settings: CallQueueQueueSettingsObject,
-                                                 agents: list[PostPersonPlaceVirtualLineCallQueueObject],
-                                                 has_cx_essentials: bool = None, phone_number: str = None,
-                                                 extension: str = None, language_code: str = None,
-                                                 first_name: str = None, last_name: str = None, time_zone: str = None,
-                                                 calling_line_id_policy: CreateCallQueueObjectCallingLineIdPolicy = None,
-                                                 calling_line_id_phone_number: str = None,
-                                                 allow_agent_join_enabled: bool = None,
-                                                 phone_number_for_outgoing_calls_enabled: bool = None,
-                                                 direct_line_caller_id_name: DirectLineCallerIdNameObject = None,
-                                                 dial_by_name: str = None, org_id: str = None) -> str:
+    def create_call_queue(self, location_id: str, name: str, call_policies: GetCallQueueCallPolicyObject,
+                          queue_settings: CallQueueQueueSettingsObject,
+                          agents: list[PostPersonPlaceVirtualLineCallQueueObject], has_cx_essentials: bool = None,
+                          phone_number: str = None, extension: str = None, language_code: str = None,
+                          first_name: str = None, last_name: str = None, time_zone: str = None,
+                          calling_line_id_policy: CreateCallQueueObjectCallingLineIdPolicy = None,
+                          calling_line_id_phone_number: str = None, allow_agent_join_enabled: bool = None,
+                          phone_number_for_outgoing_calls_enabled: bool = None,
+                          direct_line_caller_id_name: DirectLineCallerIdNameObject = None, dial_by_name: str = None,
+                          org_id: str = None) -> str:
         """
         Create a Call Queue with Customer Assist
 
@@ -1321,7 +1325,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type phone_number_for_outgoing_calls_enabled: bool
         :param direct_line_caller_id_name: Settings for the direct line caller ID name to be shown for this call queue.
         :type direct_line_caller_id_name: DirectLineCallerIdNameObject
-        :param dial_by_name: The name to be used for dial by name functions. Characters of `%`,  `+`, `\`, `"` and
+        :param dial_by_name: The name to be used for dial by name functions. Characters of `%`,  `+`, `\\`, `"` and
             Unicode characters are not allowed.
         :type dial_by_name: str
         :param org_id: The organization ID where the call queue needs to be created.
@@ -1479,7 +1483,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/queues/callForwarding/availableNumbers')
         return self.session.follow_pagination(url=url, model=CallQueueCallForwardAvailableNumberObject, item_key='phoneNumbers', params=params)
 
-    def delete_a_call_queue(self, location_id: str, queue_id: str, org_id: str = None) -> None:
+    def delete_call_queue(self, location_id: str, queue_id: str, org_id: str = None) -> None:
         """
         Delete a Call Queue
 
@@ -1510,9 +1514,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/queues/{queue_id}')
         super().delete(url, params=params)
 
-    def get_details_for_a_call_queue_with_customer_assist(self, location_id: str, queue_id: str,
-                                                          has_cx_essentials: bool = None,
-                                                          org_id: str = None) -> GetCallQueueEssentialsObject:
+    def get_call_queue_with_customer_assist(self, location_id: str, queue_id: str, has_cx_essentials: bool = None,
+                                            org_id: str = None) -> GetCallQueueEssentialsObject:
         """
         Get Details for a Call Queue with Customer Assist
 
@@ -1550,20 +1553,19 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         r = GetCallQueueEssentialsObject.model_validate(data)
         return r
 
-    def update_a_call_queue(self, location_id: str, queue_id: str, queue_settings: CallQueueQueueSettingsObject,
-                            enabled: bool = None, name: str = None, language_code: str = None, first_name: str = None,
-                            last_name: str = None, time_zone: str = None, phone_number: str = None,
-                            extension: str = None,
-                            alternate_number_settings: GetCallQueueObjectAlternateNumberSettings = None,
-                            call_policies: GetCallQueueCallPolicyObject = None,
-                            calling_line_id_policy: CreateCallQueueObjectCallingLineIdPolicy = None,
-                            calling_line_id_phone_number: str = None,
-                            allow_call_waiting_for_agents_enabled: bool = None,
-                            agents: list[ModifyPersonPlaceVirtualLineCallQueueObject] = None,
-                            allow_agent_join_enabled: bool = None,
-                            phone_number_for_outgoing_calls_enabled: bool = None,
-                            direct_line_caller_id_name: DirectLineCallerIdNameObject = None, dial_by_name: str = None,
-                            org_id: str = None) -> None:
+    def update_call_queue(self, location_id: str, queue_id: str, queue_settings: CallQueueQueueSettingsObject,
+                          enabled: bool = None, name: str = None, language_code: str = None, first_name: str = None,
+                          last_name: str = None, time_zone: str = None, phone_number: str = None,
+                          extension: str = None,
+                          alternate_number_settings: GetCallQueueObjectAlternateNumberSettings = None,
+                          call_policies: GetCallQueueCallPolicyObject = None,
+                          calling_line_id_policy: CreateCallQueueObjectCallingLineIdPolicy = None,
+                          calling_line_id_phone_number: str = None,
+                          allow_call_waiting_for_agents_enabled: bool = None,
+                          agents: list[ModifyPersonPlaceVirtualLineCallQueueObject] = None,
+                          allow_agent_join_enabled: bool = None, phone_number_for_outgoing_calls_enabled: bool = None,
+                          direct_line_caller_id_name: DirectLineCallerIdNameObject = None, dial_by_name: str = None,
+                          org_id: str = None) -> None:
         """
         Update a Call Queue
 
@@ -1628,7 +1630,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :param direct_line_caller_id_name: Settings for the direct line caller ID name to be shown for this call queue.
         :type direct_line_caller_id_name: DirectLineCallerIdNameObject
         :param dial_by_name: Sets or clears the name to be used for dial by name functions. To clear the `dialByName`,
-            the attribute must be set to null or empty string. Characters of `%`,  `+`, `\`, `"` and Unicode
+            the attribute must be set to null or empty string. Characters of `%`,  `+`, `\\`, `"` and Unicode
             characters are not allowed.
         :type dial_by_name: str
         :param org_id: Update call queue settings from this organization.
@@ -1679,8 +1681,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/queues/{queue_id}')
         super().put(url, params=params, json=body)
 
-    def read_the_list_of_call_queue_announcement_files(self, location_id: str, queue_id: str,
-                                                       org_id: str = None) -> builtins.list[GetAnnouncementFileInfo]:
+    def list_call_queue_announcement_files(self, location_id: str, queue_id: str,
+                                           org_id: str = None) -> builtins.list[GetAnnouncementFileInfo]:
         """
         Read the List of Call Queue Announcement Files
 
@@ -1711,8 +1713,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[GetAnnouncementFileInfo]).validate_python(data['announcements'])
         return r
 
-    def delete_a_call_queue_announcement_file(self, location_id: str, queue_id: str, file_name: str,
-                                              org_id: str = None) -> None:
+    def delete_call_queue_announcement_file(self, location_id: str, queue_id: str, file_name: str,
+                                            org_id: str = None) -> None:
         """
         Delete a Call Queue Announcement File
 
@@ -1740,8 +1742,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/announcements/{file_name}')
         super().delete(url, params=params)
 
-    def get_call_forwarding_settings_for_a_call_queue(self, location_id: str, queue_id: str,
-                                                      org_id: str = None) -> CallForwardSettingsGetCallForwarding:
+    def get_call_queue_call_forwarding_settings(self, location_id: str, queue_id: str,
+                                                org_id: str = None) -> CallForwardSettingsGetCallForwarding:
         """
         Get Call Forwarding Settings for a Call Queue
 
@@ -1772,9 +1774,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         r = CallForwardSettingsGetCallForwarding.model_validate(data['callForwarding'])
         return r
 
-    def update_call_forwarding_settings_for_a_call_queue(self, location_id: str, queue_id: str,
-                                                         call_forwarding: ModifyCallForwardingObjectCallForwarding = None,
-                                                         org_id: str = None) -> None:
+    def update_call_queue_call_forwarding_settings(self, location_id: str, queue_id: str,
+                                                   call_forwarding: ModifyCallForwardingObjectCallForwarding = None,
+                                                   org_id: str = None) -> None:
         """
         Update Call Forwarding Settings for a Call Queue
 
@@ -1808,12 +1810,14 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding')
         super().put(url, params=params, json=body)
 
-    def switch_mode_for_call_forwarding_settings_for_a_call_queue(self, location_id: str, queue_id: str,
-                                                                  org_id: str = None) -> None:
+    def switch_call_queue_call_forwarding_mode(self, location_id: str, queue_id: str, org_id: str = None) -> None:
         """
         Switch Mode for Call Forwarding Settings for a Call Queue
 
         Switches the current operating mode of the `Call Queue` to the mode as per normal operations.
+
+        Operating modes allow call forwarding to be configured based on predefined schedules, enabling different
+        routing behaviors during business hours, after hours, or holidays.
 
         Switching operating mode for a `call queue` requires a full, or location administrator auth token with a scope
         of `spark-admin:telephony_config_write`.
@@ -1832,13 +1836,13 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding/actions/switchMode/invoke')
         super().post(url, params=params)
 
-    def create_a_selective_call_forwarding_rule_for_a_call_queue(self, location_id: str, queue_id: str, name: str,
-                                                                 calls_from: CreateForwardingRuleObjectCallsFrom,
-                                                                 calls_to: CreateForwardingRuleObjectCallsTo,
-                                                                 enabled: bool = None, holiday_schedule: str = None,
-                                                                 business_schedule: str = None,
-                                                                 forward_to: CreateForwardingRuleObjectForwardTo = None,
-                                                                 org_id: str = None) -> str:
+    def create_call_queue_selective_call_forwarding_rule(self, location_id: str, queue_id: str, name: str,
+                                                         calls_from: CreateForwardingRuleObjectCallsFrom,
+                                                         calls_to: CreateForwardingRuleObjectCallsTo,
+                                                         enabled: bool = None, holiday_schedule: str = None,
+                                                         business_schedule: str = None,
+                                                         forward_to: CreateForwardingRuleObjectForwardTo = None,
+                                                         org_id: str = None) -> str:
         """
         Create a Selective Call Forwarding Rule for a Call Queue
 
@@ -1899,8 +1903,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         r = data['id']
         return r
 
-    def delete_a_selective_call_forwarding_rule_for_a_call_queue(self, location_id: str, queue_id: str, rule_id: str,
-                                                                 org_id: str = None) -> None:
+    def delete_call_queue_selective_call_forwarding_rule(self, location_id: str, queue_id: str, rule_id: str,
+                                                         org_id: str = None) -> None:
         """
         Delete a Selective Call Forwarding Rule for a Call Queue
 
@@ -1932,8 +1936,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding/selectiveRules/{rule_id}')
         super().delete(url, params=params)
 
-    def get_selective_call_forwarding_rule_for_a_call_queue(self, location_id: str, queue_id: str, rule_id: str,
-                                                            org_id: str = None) -> GetForwardingRuleObject:
+    def get_call_queue_selective_call_forwarding_rule(self, location_id: str, queue_id: str, rule_id: str,
+                                                      org_id: str = None) -> GetForwardingRuleObject:
         """
         Get Selective Call Forwarding Rule for a Call Queue
 
@@ -1967,14 +1971,13 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         r = GetForwardingRuleObject.model_validate(data)
         return r
 
-    def update_a_selective_call_forwarding_rule_for_a_call_queue(self, location_id: str, queue_id: str, rule_id: str,
-                                                                 name: str = None, enabled: bool = None,
-                                                                 holiday_schedule: str = None,
-                                                                 business_schedule: str = None,
-                                                                 forward_to: CreateForwardingRuleObjectForwardTo = None,
-                                                                 calls_from: CreateForwardingRuleObjectCallsFrom = None,
-                                                                 calls_to: CreateForwardingRuleObjectCallsTo = None,
-                                                                 org_id: str = None) -> str:
+    def update_call_queue_selective_call_forwarding_rule(self, location_id: str, queue_id: str, rule_id: str,
+                                                         name: str = None, enabled: bool = None,
+                                                         holiday_schedule: str = None, business_schedule: str = None,
+                                                         forward_to: CreateForwardingRuleObjectForwardTo = None,
+                                                         calls_from: CreateForwardingRuleObjectCallsFrom = None,
+                                                         calls_to: CreateForwardingRuleObjectCallsTo = None,
+                                                         org_id: str = None) -> str:
         """
         Update a Selective Call Forwarding Rule for a Call Queue
 
@@ -2040,8 +2043,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         r = data['id']
         return r
 
-    def get_details_for_a_call_queue_forced_forward(self, location_id: str, queue_id: str,
-                                                    org_id: str = None) -> GetCallQueueForcedForwardObject:
+    def get_call_queue_forced_forward(self, location_id: str, queue_id: str,
+                                      org_id: str = None) -> GetCallQueueForcedForwardObject:
         """
         Get Details for a Call Queue Forced Forward
 
@@ -2068,14 +2071,14 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         r = GetCallQueueForcedForwardObject.model_validate(data)
         return r
 
-    def update_a_call_queue_forced_forward_service(self, location_id: str, queue_id: str, forced_forward_enabled: bool,
-                                                   play_announcement_before_enabled: bool,
-                                                   audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
-                                                   transfer_phone_number: str = None,
-                                                   audio_files: list[AudioAnnouncementFileFeatureObject] = None,
-                                                   org_id: str = None) -> None:
+    def update_call_queue_forced_forward(self, location_id: str, queue_id: str, forced_forward_enabled: bool,
+                                         play_announcement_before_enabled: bool,
+                                         audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
+                                         transfer_phone_number: str = None,
+                                         audio_files: list[AudioAnnouncementFileFeatureObject] = None,
+                                         org_id: str = None) -> None:
         """
-        Update a Call Queue Forced Forward service
+        Update a Call Queue Forced Forward Service
 
         Update the designated Forced Forward Service.
 
@@ -2120,8 +2123,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/forcedForward')
         super().put(url, params=params, json=body)
 
-    def get_details_for_a_call_queue_holiday_service(self, location_id: str, queue_id: str,
-                                                     org_id: str = None) -> GetCallQueueHolidayObject:
+    def get_call_queue_holiday_service(self, location_id: str, queue_id: str,
+                                       org_id: str = None) -> GetCallQueueHolidayObject:
         """
         Get Details for a Call Queue Holiday Service
 
@@ -2148,14 +2151,14 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         r = GetCallQueueHolidayObject.model_validate(data)
         return r
 
-    def update_a_call_queue_holiday_service(self, location_id: str, queue_id: str, holiday_service_enabled: bool,
-                                            action: GetCallQueueHolidayObjectAction,
-                                            holiday_schedule_level: CallQueueHolidaySchedulesObjectScheduleLevel,
-                                            play_announcement_before_enabled: bool,
-                                            audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
-                                            holiday_schedule_name: str = None, transfer_phone_number: str = None,
-                                            audio_files: list[AudioAnnouncementFileFeatureObject] = None,
-                                            org_id: str = None) -> None:
+    def update_call_queue_holiday_service(self, location_id: str, queue_id: str, holiday_service_enabled: bool,
+                                          action: GetCallQueueHolidayObjectAction,
+                                          holiday_schedule_level: CallQueueHolidaySchedulesObjectScheduleLevel,
+                                          play_announcement_before_enabled: bool,
+                                          audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
+                                          holiday_schedule_name: str = None, transfer_phone_number: str = None,
+                                          audio_files: list[AudioAnnouncementFileFeatureObject] = None,
+                                          org_id: str = None) -> None:
         """
         Update a Call Queue Holiday Service
 
@@ -2212,8 +2215,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/holidayService')
         super().put(url, params=params, json=body)
 
-    def get_details_for_a_call_queue_night_service(self, location_id: str, queue_id: str,
-                                                   org_id: str = None) -> GetCallQueueNightServiceObject:
+    def get_call_queue_night_service(self, location_id: str, queue_id: str,
+                                     org_id: str = None) -> GetCallQueueNightServiceObject:
         """
         Get Details for a Call Queue Night Service
 
@@ -2241,19 +2244,19 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         r = GetCallQueueNightServiceObject.model_validate(data)
         return r
 
-    def update_a_call_queue_night_service(self, location_id: str, queue_id: str, night_service_enabled: bool,
-                                          play_announcement_before_enabled: bool,
-                                          announcement_mode: GetCallQueueNightServiceObjectAnnouncementMode,
-                                          audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
-                                          force_night_service_enabled: bool,
-                                          manual_audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
-                                          action: GetCallQueueHolidayObjectAction = None,
-                                          transfer_phone_number: str = None,
-                                          audio_files: list[AudioAnnouncementFileFeatureObject] = None,
-                                          business_hours_name: str = None,
-                                          business_hours_level: CallQueueHolidaySchedulesObjectScheduleLevel = None,
-                                          manual_audio_files: list[AudioAnnouncementFileFeatureObject] = None,
-                                          org_id: str = None) -> None:
+    def update_call_queue_night_service(self, location_id: str, queue_id: str, night_service_enabled: bool,
+                                        play_announcement_before_enabled: bool,
+                                        announcement_mode: GetCallQueueNightServiceObjectAnnouncementMode,
+                                        audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
+                                        force_night_service_enabled: bool,
+                                        manual_audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
+                                        action: GetCallQueueHolidayObjectAction = None,
+                                        transfer_phone_number: str = None,
+                                        audio_files: list[AudioAnnouncementFileFeatureObject] = None,
+                                        business_hours_name: str = None,
+                                        business_hours_level: CallQueueHolidaySchedulesObjectScheduleLevel = None,
+                                        manual_audio_files: list[AudioAnnouncementFileFeatureObject] = None,
+                                        org_id: str = None) -> None:
         """
         Update a Call Queue Night Service
 
@@ -2328,8 +2331,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/nightService')
         super().put(url, params=params, json=body)
 
-    def get_details_for_a_call_queue_stranded_calls(self, location_id: str, queue_id: str,
-                                                    org_id: str = None) -> GetCallQueueStrandedCallsObject:
+    def get_call_queue_stranded_calls(self, location_id: str, queue_id: str,
+                                      org_id: str = None) -> GetCallQueueStrandedCallsObject:
         """
         Get Details for a Call Queue Stranded Calls
 
@@ -2359,14 +2362,14 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         r = GetCallQueueStrandedCallsObject.model_validate(data)
         return r
 
-    def update_a_call_queue_stranded_calls_service(self, location_id: str, queue_id: str,
-                                                   action: GetCallQueueHolidayObjectAction,
-                                                   audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
-                                                   transfer_phone_number: str = None,
-                                                   audio_files: list[AudioAnnouncementFileFeatureObject] = None,
-                                                   org_id: str = None) -> None:
+    def update_call_queue_stranded_calls(self, location_id: str, queue_id: str,
+                                         action: GetCallQueueHolidayObjectAction,
+                                         audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
+                                         transfer_phone_number: str = None,
+                                         audio_files: list[AudioAnnouncementFileFeatureObject] = None,
+                                         org_id: str = None) -> None:
         """
-        Update a Call Queue Stranded Calls service
+        Update a Call Queue Stranded Calls Service
 
         Update the designated Call Stranded Calls Service.
 
@@ -2405,11 +2408,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/strandedCalls')
         super().put(url, params=params, json=body)
 
-    def read_the_list_of_call_queues_with_customer_assist(self, location_id: str = None, name: str = None,
-                                                          phone_number: str = None, department_id: str = None,
-                                                          department_name: str = None, has_cx_essentials: bool = None,
-                                                          org_id: str = None,
-                                                          **params: Any) -> Generator[ListCallQueueEssentialsObject, None, None]:
+    def list_call_queues(self, location_id: str = None, name: str = None, phone_number: str = None,
+                         department_id: str = None, department_name: str = None, has_cx_essentials: bool = None,
+                         org_id: str = None, **params: Any) -> Generator[ListCallQueueEssentialsObject, None, None]:
         """
         Read the List of Call Queues with Customer Assist
 
@@ -2459,12 +2460,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep('queues')
         return self.session.follow_pagination(url=url, model=ListCallQueueEssentialsObject, item_key='queues', params=params)
 
-    def read_the_list_of_call_queue_agents_with_customer_assist(self, location_id: str = None, queue_id: str = None,
-                                                                name: str = None, phone_number: str = None,
-                                                                join_enabled: bool = None,
-                                                                has_cx_essentials: bool = None, order: str = None,
-                                                                org_id: str = None,
-                                                                **params: Any) -> Generator[ListCallQueueAgentObject, None, None]:
+    def list_call_queue_agents(self, location_id: str = None, queue_id: str = None, name: str = None,
+                               phone_number: str = None, join_enabled: bool = None, has_cx_essentials: bool = None,
+                               order: str = None, org_id: str = None,
+                               **params: Any) -> Generator[ListCallQueueAgentObject, None, None]:
         """
         Read the List of Call Queue Agents with Customer Assist
 
@@ -2562,9 +2561,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep('queues/agents/availableAgents')
         return self.session.follow_pagination(url=url, model=AvailableAgentObject, item_key='agents', params=params)
 
-    def get_details_for_a_call_queue_agent_with_customer_assist(self, id: str, max_: int, start: int,
-                                                                has_cx_essentials: bool = None,
-                                                                org_id: str = None) -> GetCallQueueAgentObject:
+    def get_call_queue_agent(self, id: str, max_: int, start: int, has_cx_essentials: bool = None,
+                             org_id: str = None) -> GetCallQueueAgentObject:
         """
         Get Details for a Call Queue Agent with Customer Assist
 
@@ -2606,10 +2604,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         r = GetCallQueueAgentObject.model_validate(data)
         return r
 
-    def update_an_agent_s_settings_of_one_or_more_call_queues_with_customer_assist(self, id: str,
-                                                                                   settings: list[ModifyAgentsForCallQueueObjectSettingsItem],
-                                                                                   has_cx_essentials: bool = None,
-                                                                                   org_id: str = None) -> None:
+    def update_agent_call_queue_settings(self, id: str, settings: list[ModifyAgentsForCallQueueObjectSettingsItem],
+                                         has_cx_essentials: bool = None, org_id: str = None) -> None:
         """
         Update an Agent's Settings of One or More Call Queues with Customer Assist
 
@@ -2641,9 +2637,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep(f'queues/agents/{id}/settings')
         super().put(url, params=params, json=body)
 
-    def delete_bulk_supervisors(self, supervisor_ids: list[str], delete_all: bool = None, org_id: str = None) -> None:
+    def delete_bulk_call_queue_supervisors(self, supervisor_ids: list[str], delete_all: bool = None,
+                                           org_id: str = None) -> None:
         """
-        Delete Bulk supervisors
+        Delete Bulk Supervisors
 
         Deletes supervisors in bulk from an organization.
 
@@ -2670,10 +2667,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep('supervisors')
         super().delete(url, params=params, json=body)
 
-    def get_list_of_supervisors_with_customer_assist(self, name: str = None, phone_number: str = None,
-                                                     order: str = None, has_cx_essentials: bool = None,
-                                                     org_id: str = None,
-                                                     **params: Any) -> Generator[ListSupervisorObject, None, None]:
+    def list_call_queue_supervisors(self, name: str = None, phone_number: str = None, order: str = None,
+                                    has_cx_essentials: bool = None, org_id: str = None,
+                                    **params: Any) -> Generator[ListSupervisorObject, None, None]:
         """
         Get List of Supervisors with Customer Assist
 
@@ -2711,9 +2707,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep('supervisors')
         return self.session.follow_pagination(url=url, model=ListSupervisorObject, item_key='supervisors', params=params)
 
-    def create_a_supervisor_with_customer_assist(self, id: str,
-                                                 agents: list[PostPersonPlaceVirtualLineSupervisorObject],
-                                                 has_cx_essentials: bool = None, org_id: str = None) -> None:
+    def create_call_queue_supervisor(self, id: str, agents: list[PostPersonPlaceVirtualLineSupervisorObject],
+                                     has_cx_essentials: bool = None, org_id: str = None) -> None:
         """
         Create a Supervisor with Customer Assist
 
@@ -2747,9 +2742,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep('supervisors')
         super().post(url, params=params, json=body)
 
-    def list_available_agents_with_customer_assist(self, name: str = None, phone_number: str = None, order: str = None,
-                                                   has_cx_essentials: bool = None, org_id: str = None,
-                                                   **params: Any) -> Generator[AvailableAgentListObject, None, None]:
+    def list_available_call_queue_agents(self, name: str = None, phone_number: str = None, order: str = None,
+                                         has_cx_essentials: bool = None, org_id: str = None,
+                                         **params: Any) -> Generator[AvailableAgentListObject, None, None]:
         """
         List Available Agents with Customer Assist
 
@@ -2788,10 +2783,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep('supervisors/availableAgents')
         return self.session.follow_pagination(url=url, model=AvailableAgentListObject, item_key='agents', params=params)
 
-    def list_available_supervisors_with_customer_assist(self, name: str = None, phone_number: str = None,
-                                                        order: str = None, has_cx_essentials: bool = None,
-                                                        org_id: str = None,
-                                                        **params: Any) -> Generator[AvailableSupervisorsListObject, None, None]:
+    def list_available_call_queue_supervisors(self, name: str = None, phone_number: str = None, order: str = None,
+                                              has_cx_essentials: bool = None, org_id: str = None,
+                                              **params: Any) -> Generator[AvailableSupervisorsListObject, None, None]:
         """
         List Available Supervisors with Customer Assist
 
@@ -2830,9 +2824,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep('supervisors/availableSupervisors')
         return self.session.follow_pagination(url=url, model=AvailableSupervisorsListObject, item_key='supervisors', params=params)
 
-    def delete_a_supervisor(self, supervisor_id: str, org_id: str = None) -> None:
+    def delete_call_queue_supervisor(self, supervisor_id: str, org_id: str = None) -> None:
         """
-        Delete A Supervisor
+        Delete a Supervisor
 
         Deletes the supervisor from an organization.
 
@@ -2852,12 +2846,11 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep(f'supervisors/{supervisor_id}')
         super().delete(url, params=params)
 
-    def get_supervisor_detail_with_customer_assist(self, supervisor_id: str, max_: int = None, start: int = None,
-                                                   name: str = None, phone_number: str = None, order: str = None,
-                                                   has_cx_essentials: bool = None,
-                                                   org_id: str = None) -> GetSupervisorDetailWithCustomerAssistResponse:
+    def get_call_queue_supervisor(self, supervisor_id: str, max_: int = None, start: int = None, name: str = None,
+                                  phone_number: str = None, order: str = None, has_cx_essentials: bool = None,
+                                  org_id: str = None) -> GetCallQueueSupervisorResponse:
         """
-        GET Supervisor Detail with Customer Assist
+        Get Supervisor Detail with Customer Assist
 
         Get details of a specific supervisor, which includes the agents associated agents with the supervisor, in an
         organization.
@@ -2885,7 +2878,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type has_cx_essentials: bool
         :param org_id: List the agents assigned to a supervisor in this organization.
         :type org_id: str
-        :rtype: :class:`GetSupervisorDetailWithCustomerAssistResponse`
+        :rtype: :class:`GetCallQueueSupervisorResponse`
         """
         params: dict[str, Any] = dict()
         if org_id is not None:
@@ -2904,13 +2897,12 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             params['hasCxEssentials'] = str(has_cx_essentials).lower()
         url = self.ep(f'supervisors/{supervisor_id}')
         data = super().get(url, params=params)
-        r = GetSupervisorDetailWithCustomerAssistResponse.model_validate(data)
+        r = GetCallQueueSupervisorResponse.model_validate(data)
         return r
 
-    def assign_or_unassign_agents_to_supervisor_with_customer_assist(self, supervisor_id: str,
-                                                                     agents: list[PutPersonPlaceVirtualLineAgentObject],
-                                                                     has_cx_essentials: bool = None,
-                                                                     org_id: str = None) -> None:
+    def update_call_queue_supervisor_agents(self, supervisor_id: str,
+                                            agents: list[PutPersonPlaceVirtualLineAgentObject],
+                                            has_cx_essentials: bool = None, org_id: str = None) -> None:
         """
         Assign or Unassign Agents to Supervisor with Customer Assist
 
