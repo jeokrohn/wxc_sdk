@@ -98,9 +98,21 @@ def main(argv: list[str] | None = None) -> int:
         action='store_true',
         help='Print one line per LLM dispatch and per LLM CLI call (start, elapsed, outcome).',
     )
+    parser.add_argument(
+        '--print-prompts',
+        action='store_true',
+        help='Print full LLM prompts to stdout before invoking the model; requires -v/--verbose.',
+    )
     args = parser.parse_args(argv)
+    if args.print_prompts and not args.verbose:
+        parser.error('--print-prompts requires -v/--verbose')
 
-    config = _dispatcher.DispatchConfig(dry_run=args.dry_run, use_llm=not args.no_llm, verbose=args.verbose)
+    config = _dispatcher.DispatchConfig(
+        dry_run=args.dry_run,
+        use_llm=not args.no_llm,
+        verbose=args.verbose,
+        print_prompts=args.print_prompts,
+    )
 
     # `--stub` overrides the default git-derived scope. Useful for replays or
     # targeted reruns once aliases have been hand-curated.

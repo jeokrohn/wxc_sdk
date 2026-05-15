@@ -1,8 +1,10 @@
 """Smoke tests for driver-side scoping helpers and main() flag wiring."""
+# mypy: disable-error-code="attr-defined"
 
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -136,6 +138,29 @@ def test_main_unknown_stub_exits(capsys: pytest.CaptureFixture[str]) -> None:
     assert exc.value.code != 0
     err = capsys.readouterr().err
     assert 'no_such_stub_auto.py' in err
+
+
+def test_print_prompts_requires_verbose(capsys: pytest.CaptureFixture[str]) -> None:
+    with pytest.raises(SystemExit) as exc:
+        _driver.main(['--dry-run', '--no-llm', '--print-prompts'])
+    assert exc.value.code != 0
+    assert '--print-prompts requires -v/--verbose' in capsys.readouterr().err
+
+
+def test_print_prompts_reaches_dispatch_config(monkeypatch: pytest.MonkeyPatch) -> None:
+    captured: dict[str, Any] = {}
+
+    def fake_config(**kwargs: Any) -> object:
+        captured.update(kwargs)
+        return object()
+
+    monkeypatch.setattr(_driver._dispatcher, 'DispatchConfig', fake_config)
+    monkeypatch.setattr(_driver, '_git_diff_name_only', lambda rev, scope: [])
+
+    rc = _driver.main(['--dry-run', '--no-llm', '-v', '--print-prompts'])
+
+    assert rc == 0
+    assert captured == {'dry_run': True, 'use_llm': False, 'verbose': True, 'print_prompts': True}
 
 
 def test_main_only_filter_drops_everything(

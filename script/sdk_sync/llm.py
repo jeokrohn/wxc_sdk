@@ -131,6 +131,7 @@ def propose_diff(
     *,
     timeout: float = 240.0,
     verbose: bool = False,
+    print_prompts: bool = False,
 ) -> str:
     """Invoke a local LLM CLI and return the extracted unified diff.
 
@@ -148,6 +149,8 @@ def propose_diff(
     :param verbose: When ``True``, print ``[llm] calling <backend> (...)``
         before invoking the CLI and ``[llm] <backend> returned in Xs (...)``
         once it returns. Default keeps the call silent.
+    :param print_prompts: When ``True`` and ``verbose`` is also ``True``, print
+        the full backend prompt before invoking the CLI.
     :return: Unified diff text, guaranteed to end with a newline.
     :raises LLMError: If the CLI is missing, returns a non-zero exit code,
         times out, or emits non-JSON output.
@@ -155,7 +158,7 @@ def propose_diff(
     prompt = render_prompt(record, match, sdk_text)
     backend = _select_backend()
     runner = _run_codex if backend == 'codex' else _run_claude
-    result = runner(prompt, match, timeout=timeout, verbose=verbose)
+    result = runner(prompt, match, timeout=timeout, verbose=verbose, print_prompts=print_prompts)
     return _extract_unified_diff(result)
 
 
@@ -173,7 +176,7 @@ def _select_backend() -> str:
     raise LLMError('neither `codex` nor `claude` CLI is on PATH; install Codex CLI to enable LLM-driven sync')
 
 
-def _run_codex(prompt: str, match: Match, *, timeout: float, verbose: bool) -> str:
+def _run_codex(prompt: str, match: Match, *, timeout: float, verbose: bool, print_prompts: bool) -> str:
     """Invoke ``codex exec`` and return the final assistant message.
 
     ``codex exec`` may print event/progress output to stdout. The
@@ -184,6 +187,8 @@ def _run_codex(prompt: str, match: Match, *, timeout: float, verbose: bool) -> s
     target = _relative_sdk_path(match.sdk_path)
     if verbose:
         print(f'[llm] calling codex (prompt: {len(full_prompt)} chars, target: {target})')
+    if verbose and print_prompts:
+        _print_prompt('codex', target, full_prompt)
     t0 = time.monotonic()
     with tempfile.TemporaryDirectory(prefix='sdk-sync-codex-') as tmp:
         output_path = Path(tmp) / 'last-message.txt'
@@ -223,10 +228,13 @@ def _run_codex(prompt: str, match: Match, *, timeout: float, verbose: bool) -> s
             raise LLMError('codex CLI did not write the final message file') from exc
 
 
-def _run_claude(prompt: str, match: Match, *, timeout: float, verbose: bool) -> str:
+def _run_claude(prompt: str, match: Match, *, timeout: float, verbose: bool, print_prompts: bool) -> str:
     """Invoke ``claude -p`` and return the assistant text from its JSON output."""
+    target = _relative_sdk_path(match.sdk_path)
     if verbose:
-        print(f'[llm] calling claude (prompt: {len(prompt)} chars, target: {_relative_sdk_path(match.sdk_path)})')
+        print(f'[llm] calling claude (prompt: {len(prompt)} chars, target: {target})')
+    if verbose and print_prompts:
+        _print_prompt('claude', target, f'SYSTEM:\n{_SYSTEM_CONSTRAINTS}\n\nSTDIN:\n{prompt}')
     t0 = time.monotonic()
     try:
         proc = subprocess.run(
@@ -249,6 +257,13 @@ def _run_claude(prompt: str, match: Match, *, timeout: float, verbose: bool) -> 
     except json.JSONDecodeError as exc:
         raise LLMError(f'claude CLI did not return valid JSON: {proc.stdout[:400]}') from exc
     return payload.get('result') or payload.get('text') or ''
+
+
+def _print_prompt(backend: str, target: str, prompt: str) -> None:
+    """Print a backend prompt with clear delimiters for verbose debugging."""
+    print(f'[llm-prompt] begin {backend} target={target}')
+    print(prompt)
+    print(f'[llm-prompt] end {backend} target={target}')
 
 
 def _extract_unified_diff(text: str) -> str:

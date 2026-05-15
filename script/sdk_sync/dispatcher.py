@@ -86,14 +86,17 @@ class DispatchConfig:
         refuses become ``punted_patcher_refused`` outcomes; the LLM step is
         not consulted at all.
     :param verbose: When ``True``, the dispatcher prints one ``[llm-dispatch]``
-        line per LLM-bound record and one ``[llm] ...`` line per claude CLI
+        line per LLM-bound record and one ``[llm] ...`` line per LLM CLI
         call (including elapsed time and outcome). Default keeps the script
         silent until the end-of-run summary.
+    :param print_prompts: When ``True`` and ``verbose`` is also ``True``, print
+        the full prompt before each LLM CLI invocation.
     """
 
     dry_run: bool = False
     use_llm: bool = True
     verbose: bool = False
+    print_prompts: bool = False
 
 
 def dispatch(
@@ -190,7 +193,13 @@ def _try_llm(
         else match.sdk_path.read_text()
     )
     try:
-        diff = _llm.propose_diff(record, match, sdk_text, verbose=config.verbose)
+        diff = _llm.propose_diff(
+            record,
+            match,
+            sdk_text,
+            verbose=config.verbose,
+            print_prompts=config.print_prompts,
+        )
     except _llm.LLMError as exc:
         outcome = Outcome(record, match, 'punted_llm_unavailable', detail=f'{fallback_reason} | LLM: {exc}')
         if config.verbose:
