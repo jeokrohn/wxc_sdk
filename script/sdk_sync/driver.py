@@ -103,15 +103,24 @@ def main(argv: list[str] | None = None) -> int:
         action='store_true',
         help='Print full LLM prompts to stdout before invoking the model; requires -v/--verbose.',
     )
+    parser.add_argument(
+        '--llm-timeout',
+        type=float,
+        default=240.0,
+        help='Maximum seconds to wait for each LLM CLI invocation. Default: 240.',
+    )
     args = parser.parse_args(argv)
     if args.print_prompts and not args.verbose:
         parser.error('--print-prompts requires -v/--verbose')
+    if args.llm_timeout <= 0:
+        parser.error('--llm-timeout must be greater than zero')
 
     config = _dispatcher.DispatchConfig(
         dry_run=args.dry_run,
         use_llm=not args.no_llm,
         verbose=args.verbose,
         print_prompts=args.print_prompts,
+        llm_timeout=args.llm_timeout,
     )
 
     # `--stub` overrides the default git-derived scope. Useful for replays or

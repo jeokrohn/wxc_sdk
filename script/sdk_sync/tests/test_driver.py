@@ -160,7 +160,36 @@ def test_print_prompts_reaches_dispatch_config(monkeypatch: pytest.MonkeyPatch) 
     rc = _driver.main(['--dry-run', '--no-llm', '-v', '--print-prompts'])
 
     assert rc == 0
-    assert captured == {'dry_run': True, 'use_llm': False, 'verbose': True, 'print_prompts': True}
+    assert captured == {
+        'dry_run': True,
+        'use_llm': False,
+        'verbose': True,
+        'print_prompts': True,
+        'llm_timeout': 240.0,
+    }
+
+
+def test_llm_timeout_reaches_dispatch_config(monkeypatch: pytest.MonkeyPatch) -> None:
+    captured: dict[str, Any] = {}
+
+    def fake_config(**kwargs: Any) -> object:
+        captured.update(kwargs)
+        return object()
+
+    monkeypatch.setattr(_driver._dispatcher, 'DispatchConfig', fake_config)
+    monkeypatch.setattr(_driver, '_git_diff_name_only', lambda rev, scope: [])
+
+    rc = _driver.main(['--dry-run', '--no-llm', '--llm-timeout', '600'])
+
+    assert rc == 0
+    assert captured['llm_timeout'] == 600.0
+
+
+def test_llm_timeout_must_be_positive(capsys: pytest.CaptureFixture[str]) -> None:
+    with pytest.raises(SystemExit) as exc:
+        _driver.main(['--dry-run', '--no-llm', '--llm-timeout', '0'])
+    assert exc.value.code != 0
+    assert '--llm-timeout must be greater than zero' in capsys.readouterr().err
 
 
 def test_main_only_filter_drops_everything(

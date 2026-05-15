@@ -186,3 +186,8 @@ def test_claude_prints_system_and_stdin_prompts(
 
 def test_extract_unified_diff_strips_fence_and_leading_prose() -> None:
     assert llm._extract_unified_diff(f'Here is the patch:\n```diff\n{_diff()}```') == _diff()
+
+
+def test_extract_unified_diff_strips_apply_patch_markers() -> None:
+    text = f'*** Begin Patch\n{_diff()}*** End Patch\n'
+    assert llm._extract_unified_diff(text) == _diff()

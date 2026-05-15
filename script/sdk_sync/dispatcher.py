@@ -91,12 +91,15 @@ class DispatchConfig:
         silent until the end-of-run summary.
     :param print_prompts: When ``True`` and ``verbose`` is also ``True``, print
         the full prompt before each LLM CLI invocation.
+    :param llm_timeout: Maximum seconds to wait for each individual LLM CLI
+        invocation.
     """
 
     dry_run: bool = False
     use_llm: bool = True
     verbose: bool = False
     print_prompts: bool = False
+    llm_timeout: float = 240.0
 
 
 def dispatch(
@@ -197,6 +200,7 @@ def _try_llm(
             record,
             match,
             sdk_text,
+            timeout=config.llm_timeout,
             verbose=config.verbose,
             print_prompts=config.print_prompts,
         )
@@ -217,9 +221,22 @@ def _try_llm(
         if config.verbose:
             print('[llm] no diff returned — SDK already in sync per LLM')
         return Outcome(record, match, 'already_in_sync', detail='LLM judged SDK already in sync')
+    try:
+        diff = _normalize_diff_paths(diff, match)
+    except ValueError as exc:
+        err_one_line = _flatten_git_err(str(exc))
+        _dump_rejected(record, match, diff, str(exc))
+        if config.verbose:
+            print(f'[llm] diff rejected before `git apply --check`: {err_one_line}')
+        detail = f'{fallback_reason} | diff path: {err_one_line}' if fallback_reason else f'diff path: {err_one_line}'
+        return Outcome(record, match, 'punted_diff_rejected', detail=detail, diff=diff)
     diff_lines = len(diff.splitlines())
     ok, err = _git_apply_check(diff)
     if not ok:
+        if _should_retry_llm_diff(err):
+            retry_outcome = _retry_llm_diff(record, match, sdk_text, config, pending_writes, fallback_reason, diff, err)
+            if retry_outcome is not None:
+                return retry_outcome
         err_one_line = _flatten_git_err(err)
         _dump_rejected(record, match, diff, err)
         if config.verbose:
@@ -251,6 +268,95 @@ def _try_llm(
     if config.verbose:
         print(f'[llm] applied ({diff_lines} diff lines)')
     return Outcome(record, match, 'applied_llm', detail='LLM patch applied', diff=diff)
+
+
+def _retry_llm_diff(
+    record: ChangeRecord,
+    match: Match,
+    sdk_text: str,
+    config: DispatchConfig,
+    pending_writes: dict[Path, str] | None,
+    fallback_reason: str,
+    rejected_diff: str,
+    git_error: str,
+) -> Outcome | None:
+    """Ask the LLM for one fresh diff after a stale-context rejection.
+
+    Returns an :class:`Outcome` for any terminal retry result, or ``None`` if
+    the caller should keep handling the original failed diff.
+    """
+    if config.verbose:
+        print(f'[llm] retrying after `git apply --check` failed: {_flatten_git_err(git_error)}')
+    try:
+        retry_diff = _llm.propose_diff(
+            record,
+            match,
+            sdk_text,
+            timeout=config.llm_timeout,
+            verbose=config.verbose,
+            print_prompts=config.print_prompts,
+            rejected_diff=rejected_diff,
+            git_error=git_error,
+        )
+    except _llm.LLMError as exc:
+        detail = f'{fallback_reason} | ' if fallback_reason else ''
+        detail += f'git apply: {_flatten_git_err(git_error)} | retry LLM: {exc}'
+        if config.verbose:
+            print(f'[llm] retry error: {exc}')
+        return Outcome(record, match, 'punted_diff_rejected', detail=detail, diff=rejected_diff)
+    if not _looks_like_diff(retry_diff):
+        if config.verbose:
+            print('[llm] retry returned no diff — SDK already in sync per LLM')
+        return Outcome(record, match, 'already_in_sync', detail='LLM retry judged SDK already in sync')
+    try:
+        retry_diff = _normalize_diff_paths(retry_diff, match)
+    except ValueError as exc:
+        err_one_line = _flatten_git_err(str(exc))
+        _dump_rejected(record, match, retry_diff, str(exc))
+        if config.verbose:
+            print(f'[llm] retry diff rejected before `git apply --check`: {err_one_line}')
+        detail = (
+            f'{fallback_reason} | retry diff path: {err_one_line}'
+            if fallback_reason
+            else (f'retry diff path: {err_one_line}')
+        )
+        return Outcome(record, match, 'punted_diff_rejected', detail=detail, diff=retry_diff)
+    ok, err = _git_apply_check(retry_diff)
+    if not ok:
+        err_one_line = _flatten_git_err(err)
+        _dump_rejected(record, match, retry_diff, err)
+        if config.verbose:
+            retry_diff_lines = len(retry_diff.splitlines())
+            print(f'[llm] retry diff rejected by `git apply --check` ({retry_diff_lines} lines): {err_one_line}')
+        detail = (
+            f'{fallback_reason} | retry git apply: {err_one_line}'
+            if fallback_reason
+            else (f'retry git apply: {err_one_line}')
+        )
+        return Outcome(record, match, 'punted_diff_rejected', detail=detail, diff=retry_diff)
+    diff_lines = len(retry_diff.splitlines())
+    if config.dry_run:
+        if config.verbose:
+            print(f'[llm] retry dry-run, diff captured ({diff_lines} lines)')
+        return Outcome(record, match, 'dry_run_pending', detail=fallback_reason, diff=retry_diff)
+    ok, err = _git_apply(retry_diff)
+    if not ok:
+        err_one_line = _flatten_git_err(err)
+        _dump_rejected(record, match, retry_diff, err)
+        if config.verbose:
+            print(f'[llm] retry apply failed after passing --check ({diff_lines} lines): {err_one_line}')
+        return Outcome(
+            record,
+            match,
+            'punted_diff_rejected',
+            detail=f'retry check passed but apply failed | git apply: {err_one_line}',
+            diff=retry_diff,
+        )
+    if pending_writes is not None and match.sdk_path in pending_writes:
+        del pending_writes[match.sdk_path]
+    if config.verbose:
+        print(f'[llm] retry applied ({diff_lines} diff lines)')
+    return Outcome(record, match, 'applied_llm', detail='LLM patch applied after retry', diff=retry_diff)
 
 
 def _print_dispatch(record: ChangeRecord, match: Match, fallback_reason: str = '') -> None:
@@ -332,6 +438,72 @@ def _looks_like_diff(diff: str) -> bool:
         if line.startswith(('+', '-')):
             return True
     return False
+
+
+def _normalize_diff_paths(diff: str, match: Match) -> str:
+    """Canonicalize unified-diff file headers to ``a/<target>`` / ``b/<target>``.
+
+    LLMs often emit ``--- wxc_sdk/...`` headers. ``git apply`` strips one
+    path component by default, so those otherwise valid repo-root paths become
+    ``telephony/...`` and fail. This normalizes all accepted spellings to the
+    canonical ``a/``/``b/`` form and rejects patches that touch any other file.
+    """
+    target = _relative_target_path(match.sdk_path)
+    raw_lines = diff.splitlines()
+    lines: list[str] = []
+    i = 0
+    while i < len(raw_lines):
+        old_header = re.match(r'^(---) ([^\t ]+)(.*)$', raw_lines[i])
+        new_header = re.match(r'^(\+\+\+) ([^\t ]+)(.*)$', raw_lines[i + 1]) if i + 1 < len(raw_lines) else None
+        has_hunk_after_headers = i + 2 < len(raw_lines) and raw_lines[i + 2].startswith('@@')
+        if old_header is None or new_header is None or not has_hunk_after_headers:
+            lines.append(raw_lines[i])
+            i += 1
+            continue
+        lines.append(_normalize_diff_header(old_header, target))
+        lines.append(_normalize_diff_header(new_header, target))
+        i += 2
+    normalized = '\n'.join(lines)
+    if diff.endswith('\n'):
+        normalized += '\n'
+    return normalized
+
+
+def _normalize_diff_header(match: re.Match[str], target: str) -> str:
+    """Normalize one file-header line from a paired unified-diff header."""
+    prefix, raw_path, suffix = match.groups()
+    if raw_path == '/dev/null':
+        return f'{prefix} {raw_path}{suffix}'
+    if not _diff_path_matches_target(raw_path, target):
+        raise ValueError(f'diff touches unexpected path {raw_path!r}; expected {target!r}')
+    side = 'a' if prefix == '---' else 'b'
+    return f'{prefix} {side}/{target}{suffix}'
+
+
+def _relative_target_path(path: Path) -> str:
+    """Return a repo-root relative path for diff-header validation."""
+    try:
+        return path.resolve().relative_to(_REPO_ROOT).as_posix()
+    except ValueError:
+        return path.as_posix()
+
+
+def _diff_path_matches_target(raw_path: str, target: str) -> bool:
+    """Return whether a model-produced diff path unambiguously names target."""
+    path = raw_path
+    if path.startswith(('a/', 'b/')):
+        path = path[2:]
+    if path == target:
+        return True
+    # Accept package-relative paths such as ``telephony/forwarding.py`` for
+    # target ``wxc_sdk/telephony/forwarding.py``. Require a slash so bare
+    # basenames don't accidentally match multiple SDK modules.
+    return '/' in path and target.endswith(f'/{path}')
+
+
+def _should_retry_llm_diff(err: str) -> bool:
+    """Return ``True`` for git diagnostics that a fresh-context retry may fix."""
+    return 'patch does not apply' in err or 'patch failed:' in err
 
 
 def _git_apply_check(diff: str) -> tuple[bool, str]:

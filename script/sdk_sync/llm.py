@@ -124,6 +124,36 @@ def render_prompt(record: ChangeRecord, match: Match, sdk_text: str) -> str:
     return '\n'.join(parts)
 
 
+def render_repair_prompt(record: ChangeRecord, match: Match, sdk_text: str, rejected_diff: str, git_error: str) -> str:
+    """Build a second-pass prompt after ``git apply --check`` rejected a diff.
+
+    The repair prompt includes the same current SDK file content as the first
+    attempt plus the rejected diff and exact git diagnostic. This gives the
+    model enough information to regenerate a patch with current context,
+    while preserving the same strict unified-diff contract.
+    """
+    parts = [
+        render_prompt(record, match, sdk_text),
+        '',
+        'The previous diff was rejected by `git apply --check`.',
+        'Regenerate a fresh unified diff using the CURRENT SDK FILE CONTENT above as the only source of context.',
+        'Do not reuse stale line context from the rejected diff.',
+        '',
+        'REJECTED DIFF:',
+        '```diff',
+        rejected_diff,
+        '```',
+        '',
+        'GIT APPLY STDERR:',
+        '```text',
+        git_error,
+        '```',
+        '',
+        'Produce a replacement unified diff only. No prose, no code fences.',
+    ]
+    return '\n'.join(parts)
+
+
 def propose_diff(
     record: ChangeRecord,
     match: Match,
@@ -132,6 +162,8 @@ def propose_diff(
     timeout: float = 240.0,
     verbose: bool = False,
     print_prompts: bool = False,
+    rejected_diff: str = '',
+    git_error: str = '',
 ) -> str:
     """Invoke a local LLM CLI and return the extracted unified diff.
 
@@ -151,11 +183,18 @@ def propose_diff(
         once it returns. Default keeps the call silent.
     :param print_prompts: When ``True`` and ``verbose`` is also ``True``, print
         the full backend prompt before invoking the CLI.
+    :param rejected_diff: Optional previous diff that failed
+        ``git apply --check``. When provided with ``git_error``, the model is
+        asked to generate a fresh repair diff.
+    :param git_error: Stderr from the failed ``git apply --check`` attempt.
     :return: Unified diff text, guaranteed to end with a newline.
     :raises LLMError: If the CLI is missing, returns a non-zero exit code,
         times out, or emits non-JSON output.
     """
-    prompt = render_prompt(record, match, sdk_text)
+    if rejected_diff or git_error:
+        prompt = render_repair_prompt(record, match, sdk_text, rejected_diff, git_error)
+    else:
+        prompt = render_prompt(record, match, sdk_text)
     backend = _select_backend()
     runner = _run_codex if backend == 'codex' else _run_claude
     result = runner(prompt, match, timeout=timeout, verbose=verbose, print_prompts=print_prompts)
@@ -286,6 +325,9 @@ def _extract_unified_diff(text: str) -> str:
         m = re.search(r'^---.*', body, re.MULTILINE)
         if m:
             body = body[m.start() :]
+    body = '\n'.join(
+        line for line in body.splitlines() if line.strip() not in {'*** Begin Patch', '*** End Patch'}
+    ).strip()
     if not body.endswith('\n'):
         body += '\n'
     return body
