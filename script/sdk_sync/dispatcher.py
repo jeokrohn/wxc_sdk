@@ -524,7 +524,7 @@ def _git_apply_check(diff: str) -> tuple[bool, str]:
     """
     if not diff.strip():
         return False, 'empty diff'
-    return _run_git_apply(['git', 'apply', '--check', '--recount', '--unidiff-zero', '-'], diff)
+    return _run_git_apply(['git', 'apply', '--check', '--recount', '--unidiff-zero', '-C0', '-'], diff)
 
 
 def _git_apply(diff: str) -> tuple[bool, str]:
@@ -537,7 +537,7 @@ def _git_apply(diff: str) -> tuple[bool, str]:
         :func:`_git_apply_check`).
     :return: ``(ok, stderr)`` — same convention as :func:`_git_apply_check`.
     """
-    return _run_git_apply(['git', 'apply', '--recount', '--unidiff-zero', '-'], diff)
+    return _run_git_apply(['git', 'apply', '--recount', '--unidiff-zero', '-C0', '-'], diff)
 
 
 def _run_git_apply(cmd: list[str], diff: str) -> tuple[bool, str]:

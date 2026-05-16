@@ -50,6 +50,7 @@ _SYSTEM_CONSTRAINTS = (
     'Do not modify `@field_validator` or `@model_validator` blocks. Use single quotes. '
     'Respect a 120-character line limit. Make the smallest change required.'
 )
+_CODEX_TIMEOUT_RETRY_SECONDS = 600.0
 
 
 class LLMError(RuntimeError):
@@ -228,6 +229,27 @@ def _run_codex(prompt: str, match: Match, *, timeout: float, verbose: bool, prin
         print(f'[llm] calling codex (prompt: {len(full_prompt)} chars, target: {target})')
     if verbose and print_prompts:
         _print_prompt('codex', target, full_prompt)
+    attempts = [timeout]
+    if timeout < _CODEX_TIMEOUT_RETRY_SECONDS:
+        attempts.append(_CODEX_TIMEOUT_RETRY_SECONDS)
+    last_timeout: subprocess.TimeoutExpired | None = None
+    for i, attempt_timeout in enumerate(attempts):
+        try:
+            return _run_codex_once(full_prompt, timeout=attempt_timeout, verbose=verbose, target=target)
+        except subprocess.TimeoutExpired as exc:
+            last_timeout = exc
+            if i + 1 >= len(attempts):
+                break
+            if verbose:
+                print(
+                    f'[llm] codex timed out after {attempt_timeout}s; '
+                    f'retrying once with {_CODEX_TIMEOUT_RETRY_SECONDS}s'
+                )
+    raise LLMError(f'codex CLI timed out after {timeout}s') from last_timeout
+
+
+def _run_codex_once(full_prompt: str, *, timeout: float, verbose: bool, target: str) -> str:
+    """Invoke ``codex exec`` once and return the final assistant message."""
     t0 = time.monotonic()
     with tempfile.TemporaryDirectory(prefix='sdk-sync-codex-') as tmp:
         output_path = Path(tmp) / 'last-message.txt'
@@ -257,7 +279,7 @@ def _run_codex(prompt: str, match: Match, *, timeout: float, verbose: bool, prin
         except subprocess.CalledProcessError as exc:
             raise LLMError(f'codex CLI failed (rc={exc.returncode}): {exc.stderr[:400]}') from exc
         except subprocess.TimeoutExpired as exc:
-            raise LLMError(f'codex CLI timed out after {timeout}s') from exc
+            raise exc
         if verbose:
             elapsed = time.monotonic() - t0
             print(f'[llm] codex returned in {elapsed:.1f}s (stdout: {len(proc.stdout)} bytes)')
@@ -325,12 +347,18 @@ def _extract_unified_diff(text: str) -> str:
         m = re.search(r'^---.*', body, re.MULTILINE)
         if m:
             body = body[m.start() :]
-    body = '\n'.join(
-        line for line in body.splitlines() if line.strip() not in {'*** Begin Patch', '*** End Patch'}
-    ).strip()
+    body = '\n'.join(line for line in body.splitlines() if not _is_bare_patch_marker(line)).strip()
     if not body.endswith('\n'):
         body += '\n'
     return body
+
+
+def _is_bare_patch_marker(line: str) -> bool:
+    """Return whether a line is a standalone non-unified-diff marker."""
+    stripped = line.strip()
+    if stripped in {'*** Begin Patch', '*** End Patch'}:
+        return True
+    return bool(re.fullmatch(r'\*\*\* [A-Za-z ]+\*{3}', stripped))
 
 
 def _relative_sdk_path(path: Path) -> str:

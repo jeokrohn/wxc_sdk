@@ -191,3 +191,63 @@ def test_extract_unified_diff_strips_fence_and_leading_prose() -> None:
 def test_extract_unified_diff_strips_apply_patch_markers() -> None:
     text = f'*** Begin Patch\n{_diff()}*** End Patch\n'
     assert llm._extract_unified_diff(text) == _diff()
+
+
+def test_extract_unified_diff_strips_bare_sentinel_markers() -> None:
+    text = f'{_diff()}*** END OF FILE***\n'
+    assert llm._extract_unified_diff(text) == _diff()
+
+
+def test_extract_unified_diff_preserves_marker_like_hunk_lines() -> None:
+    diff = (
+        '--- a/wxc_sdk/demo.py\n'
+        '+++ b/wxc_sdk/demo.py\n'
+        '@@ -1,3 +1,3 @@\n'
+        ' class Demo:\n'
+        '-*** old marker text\n'
+        '+*** new marker text\n'
+    )
+    assert llm._extract_unified_diff(diff) == diff
+
+
+def test_codex_timeout_retries_once_with_longer_timeout(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    calls: list[float] = []
+
+    def fake_run(cmd: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        calls.append(kwargs['timeout'])
+        if len(calls) == 1:
+            raise subprocess.TimeoutExpired(cmd, kwargs['timeout'])
+        output_path = Path(cmd[cmd.index('--output-last-message') + 1])
+        output_path.write_text(_diff())
+        return subprocess.CompletedProcess(cmd, 0, stdout='', stderr='')
+
+    monkeypatch.setattr(llm.shutil, 'which', lambda name: '/usr/bin/codex' if name == 'codex' else None)
+    monkeypatch.setattr(llm.subprocess, 'run', fake_run)
+
+    diff = llm.propose_diff(_record(), _match(tmp_path), 'class Demo:\n    value: str\n', timeout=12.0, verbose=True)
+
+    assert diff == _diff()
+    assert calls == [12.0, llm._CODEX_TIMEOUT_RETRY_SECONDS]
+    assert 'codex timed out after 12.0s; retrying once with 600.0s' in capsys.readouterr().out
+
+
+def test_codex_timeout_reports_after_retry_also_times_out(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    calls: list[float] = []
+
+    def fake_run(cmd: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        calls.append(kwargs['timeout'])
+        raise subprocess.TimeoutExpired(cmd, kwargs['timeout'])
+
+    monkeypatch.setattr(llm.shutil, 'which', lambda name: '/usr/bin/codex' if name == 'codex' else None)
+    monkeypatch.setattr(llm.subprocess, 'run', fake_run)
+
+    with pytest.raises(llm.LLMError, match='codex CLI timed out after 12.0s'):
+        llm.propose_diff(_record(), _match(tmp_path), 'class Demo:\n    value: str\n', timeout=12.0)
+    assert calls == [12.0, llm._CODEX_TIMEOUT_RETRY_SECONDS]

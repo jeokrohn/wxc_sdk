@@ -115,3 +115,20 @@ def test_try_llm_retries_patch_that_does_not_apply(
     assert calls[0]['timeout'] == 12.5
     assert calls[1]['rejected_diff'] == 'bad diff'
     assert 'patch does not apply' in calls[1]['git_error']
+
+
+def test_git_apply_check_allows_reduced_context(monkeypatch: pytest.MonkeyPatch) -> None:
+    captured: dict[str, Any] = {}
+
+    def fake_run_git_apply(cmd: list[str], diff: str) -> tuple[bool, str]:
+        captured['cmd'] = cmd
+        captured['diff'] = diff
+        return True, ''
+
+    monkeypatch.setattr(dispatcher, '_run_git_apply', fake_run_git_apply)
+
+    ok, err = dispatcher._git_apply_check('diff text')
+
+    assert ok
+    assert err == ''
+    assert captured['cmd'] == ['git', 'apply', '--check', '--recount', '--unidiff-zero', '-C0', '-']
