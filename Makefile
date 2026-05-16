@@ -61,21 +61,21 @@ oas-hybrid:
 
 sync-stubs:
 	@echo "==> Syncing wxc_sdk/ with stub changes (deterministic + LLM)"
-	uv run python -m script.sdk_sync
+	script/sdk-sync
 
 sync-stubs-dry:
 	@echo "==> Syncing wxc_sdk/ — dry run, report only"
-	uv run python -m script.sdk_sync --dry-run
+	script/sdk-sync --dry-run
 
 sync-stubs-no-llm:
 	@echo "==> Syncing wxc_sdk/ — deterministic patches only"
-	uv run python -m script.sdk_sync --no-llm
+	script/sdk-sync --no-llm
 
 sync-stubs-verbose:
 	@echo "==> Syncing wxc_sdk/ with stub changes (deterministic + LLM, verbose)"
-	uv run python -m script.sdk_sync --verbose
+	script/sdk-sync --verbose
 
 sync-stubs-one:
 	@if [ -z "$(STUB)" ]; then echo "Usage: make sync-stubs-one STUB=<basename-or-path>"; exit 2; fi
 	@echo "==> Syncing wxc_sdk/ — single stub ($(STUB)), deterministic + LLM, verbose"
-	uv run python -m script.sdk_sync --verbose --stub "$(STUB)"
+	script/sdk-sync --verbose --stub "$(STUB)"

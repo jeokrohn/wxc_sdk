@@ -1,5 +1,5 @@
 """
-Top-level driver for ``python -m script.sdk_sync``.
+Top-level driver for ``script/sdk-sync``.
 
 Pipeline executed per run:
 
@@ -16,8 +16,9 @@ Pipeline executed per run:
    ``sync_report.md`` with the per-change outcomes.
 
 Exit code is ``0`` when no record produced a ``punted_*`` outcome and
-``1`` otherwise — convenient for wiring into CI even though the current
-default is to invoke the tool manually via ``make sync-stubs``.
+``1`` otherwise -- convenient for wiring into CI even though the current
+default is to invoke the tool manually via ``script/sdk-sync`` or
+``make sync-stubs``.
 """
 
 from __future__ import annotations
@@ -61,7 +62,11 @@ def main(argv: list[str] | None = None) -> int:
     :return: Exit status — ``0`` on full success, ``1`` if at least one
         record ended in a ``punted_*`` state.
     """
-    parser = argparse.ArgumentParser(prog='sdk_sync', description=__doc__)
+    parser = argparse.ArgumentParser(
+        prog='sdk-sync',
+        description=__doc__.strip() if __doc__ else None,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     parser.add_argument(
         '--dry-run',
         action='store_true',

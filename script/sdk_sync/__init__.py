@@ -20,6 +20,8 @@ Pipeline (one direction per change record):
 5. :mod:`~script.sdk_sync.driver` — orchestrate the run end-to-end,
    persist :mod:`~script.sdk_sync.aliases`, and render ``sync_report.md``.
 
-Invoke via ``python -m script.sdk_sync`` or the ``make sync-stubs`` /
-``make sync-stubs-dry`` / ``make sync-stubs-no-llm`` targets.
+Invoke via ``script/sdk-sync`` or the ``make sync-stubs`` /
+``make sync-stubs-dry`` / ``make sync-stubs-no-llm`` targets. The
+``python -m script.sdk_sync`` module entry point remains available for
+backwards compatibility.
 """
