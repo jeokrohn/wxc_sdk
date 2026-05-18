@@ -2030,12 +2030,12 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
             line.
         :type direct_line_caller_id_name: DirectLineCallerIdNameObject
         :param dial_by_first_name: Sets or clears the first name to be used for dial-by-name functions. To clear the
-            `dialByFirstName`, the attribute must be set to null or empty string. Characters of `%`,  `+`, `\`, `"`
+            `dialByFirstName`, the attribute must be set to null or empty string. Characters of `%`,  `+`, `\\`, `"`
             and Unicode characters are not allowed.
         :type dial_by_first_name: str
         :param dial_by_last_name: Sets or clears the last name to be used for dial-by-name functions. To clear the
-            `dialByLastName`, the attribute must be set to null or empty string. Characters of `%`,  `+`, `\`, `"` and
-            Unicode characters are not allowed.
+            `dialByLastName`, the attribute must be set to null or empty string. Characters of `%`,  `+`, `\\`, `"`
+            and Unicode characters are not allowed.
         :type dial_by_last_name: str
         :param org_id: ID of the organization in which the virtual line resides. Only admin users of another
             organization (such as partners) may use this parameter, as the default is the same organization as the
