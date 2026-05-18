@@ -452,7 +452,7 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         your system.
 
         Updating an auto attendant requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+        of `spark-admin:telephony_config_write`.
 
         :param location_id: Location in which this auto attendant exists.
         :type location_id: str
@@ -462,21 +462,24 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         :type settings: :class:`AutoAttendant`
         :param org_id: Create the auto attendant for this organization.
         :type org_id: str
+        :rtype: None
         """
         data = settings.create_or_update()
         url = self._endpoint(location_id=location_id, auto_attendant_id=auto_attendant_id)
         params = org_id and {'orgId': org_id} or None
         self.put(url, data=data, params=params)
 
-    def delete_auto_attendant(self, location_id: str, auto_attendant_id: str, org_id: str = None):
+    def delete_auto_attendant(self, location_id: str, auto_attendant_id: str, org_id: str = None) -> None:
         """
-        elete the designated Auto Attendant.
+        Delete an Auto Attendant
+
+        Delete the designated Auto Attendant.
 
         Auto attendants play customized prompts and provide callers with menu options for routing their calls through
         your system.
 
-        Deleting an auto attendant requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+        Deleting an auto attendant requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         :param location_id: Location from which to delete an auto attendant.
         :type location_id: str
@@ -484,6 +487,7 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         :type auto_attendant_id: str
         :param org_id: Delete the auto attendant from this organization.
         :type org_id: str
+        :rtype: None
         """
         url = self._endpoint(location_id=location_id, auto_attendant_id=auto_attendant_id)
         params = org_id and {'orgId': org_id} or None
@@ -627,7 +631,7 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         :type location_id: str
         :param auto_attendant_id: Retrieve announcement files for the auto attendant with this identifier.
         :type auto_attendant_id: str
-        :param org_id: Retrieve announcement files for an auto attendant from this organization.
+        :param org_id: Retrieve announcement files for a auto attendant from this organization.
         :type org_id: str
         :rtype: list[AnnAudioFile]
         """
@@ -641,7 +645,9 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         r = TypeAdapter(list[AnnAudioFile]).validate_python(data['announcements'])
         return r
 
-    def delete_announcement_file(self, location_id: str, auto_attendant_id: str, file_name: str, org_id: str = None):
+    def delete_announcement_file(
+        self, location_id: str, auto_attendant_id: str, file_name: str, org_id: str = None
+    ) -> None:
         """
         Delete an Auto Attendant Announcement File
 
@@ -657,6 +663,7 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         :type location_id: str
         :param auto_attendant_id: Delete an announcement for the auto attendant with this identifier.
         :type auto_attendant_id: str
+        :param file_name: -
         :type file_name: str
         :param org_id: Delete auto attendant announcement from this organization.
         :type org_id: str

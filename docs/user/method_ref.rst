@@ -1594,7 +1594,7 @@ description of the operation. The method name is a link to the method documentat
         | Delete an Auto Attendant Announcement File
         | ``DELETE /telephony/config/locations/{location_id}/autoAttendants/{auto_attendant_id}/announcements/{file_name}``
    * - :meth:`api.telephony.auto_attendant.delete_auto_attendant <wxc_sdk.telephony.autoattendant.AutoAttendantApi.delete_auto_attendant>`
-        | elete the designated Auto Attendant
+        | Delete an Auto Attendant
         | ``DELETE /telephony/config/locations/{location_id}/autoAttendants/{auto_attendant_id}``
    * - :meth:`api.telephony.auto_attendant.details <wxc_sdk.telephony.autoattendant.AutoAttendantApi.details>`
         | Get Details for an Auto Attendant
@@ -1612,7 +1612,7 @@ description of the operation. The method name is a link to the method documentat
         | Retrieve Call Forwarding settings for the designated feature including the list of call forwarding rules
         | ``GET /telephony/config/locations/{location_id}/autoAttendants/{feature_id}/callForwarding``
    * - :meth:`api.telephony.auto_attendant.forwarding.switch_mode_for_call_forwarding <wxc_sdk.telephony.forwarding.ForwardingApi.switch_mode_for_call_forwarding>`
-        | Switch Mode for Call Forwarding Settings for a feature
+        | Switch Mode for Call Forwarding Settings for a feature, including auto attendants
         | ``POST /telephony/config/locations/{location_id}/autoAttendants/{feature_id}/callForwarding/actions/switchMode/invoke``
    * - :meth:`api.telephony.auto_attendant.forwarding.update <wxc_sdk.telephony.forwarding.ForwardingApi.update>`
         | Update Call Forwarding Settings for a feature
@@ -1810,7 +1810,7 @@ description of the operation. The method name is a link to the method documentat
         | Retrieve Call Forwarding settings for the designated feature including the list of call forwarding rules
         | ``GET /telephony/config/locations/{location_id}/queues/{feature_id}/callForwarding``
    * - :meth:`api.telephony.callqueue.forwarding.switch_mode_for_call_forwarding <wxc_sdk.telephony.forwarding.ForwardingApi.switch_mode_for_call_forwarding>`
-        | Switch Mode for Call Forwarding Settings for a feature
+        | Switch Mode for Call Forwarding Settings for a feature, including auto attendants
         | ``POST /telephony/config/locations/{location_id}/queues/{feature_id}/callForwarding/actions/switchMode/invoke``
    * - :meth:`api.telephony.callqueue.forwarding.update <wxc_sdk.telephony.forwarding.ForwardingApi.update>`
         | Update Call Forwarding Settings for a feature
@@ -2320,7 +2320,7 @@ description of the operation. The method name is a link to the method documentat
         | Retrieve Call Forwarding settings for the designated feature including the list of call forwarding rules
         | ``GET /telephony/config/locations/{location_id}/huntGroups/{feature_id}/callForwarding``
    * - :meth:`api.telephony.huntgroup.forwarding.switch_mode_for_call_forwarding <wxc_sdk.telephony.forwarding.ForwardingApi.switch_mode_for_call_forwarding>`
-        | Switch Mode for Call Forwarding Settings for a feature
+        | Switch Mode for Call Forwarding Settings for a feature, including auto attendants
         | ``POST /telephony/config/locations/{location_id}/huntGroups/{feature_id}/callForwarding/actions/switchMode/invoke``
    * - :meth:`api.telephony.huntgroup.forwarding.update <wxc_sdk.telephony.forwarding.ForwardingApi.update>`
         | Update Call Forwarding Settings for a feature

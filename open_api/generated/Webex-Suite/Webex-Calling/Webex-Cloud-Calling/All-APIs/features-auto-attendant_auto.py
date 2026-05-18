@@ -18,8 +18,9 @@ __all__ = ['ActionToBePerformedObject', 'ActionToBePerformedObjectAction', 'Alte
            'AutoAttendantCallForwardAvailableNumberObjectOwner', 'AutoAttendantCallForwardSettingsDetailsObject',
            'AutoAttendantCallForwardSettingsDetailsObjectOperatingModes',
            'AutoAttendantCallForwardSettingsDetailsObjectOperatingModesExceptionType',
-           'AutoAttendantCallForwardSettingsModifyDetailsObject', 'AutoAttendantPrimaryAvailableNumberObject',
-           'CallForwardRulesModifyObject', 'CallForwardRulesObject',
+           'AutoAttendantCallForwardSettingsModifyDetailsObject',
+           'AutoAttendantCallForwardSettingsModifyDetailsObjectOperatingModes',
+           'AutoAttendantPrimaryAvailableNumberObject', 'CallForwardRulesModifyObject', 'CallForwardRulesObject',
            'CallForwardSelectiveCallsFromCustomNumbersObject', 'CallForwardSelectiveCallsFromObject',
            'CallForwardSelectiveCallsFromObjectSelection', 'CallForwardSelectiveCallsToNumbersObject',
            'CallForwardSelectiveCallsToNumbersObjectType', 'CallForwardSelectiveCallsToObject',
@@ -203,14 +204,6 @@ class AutoAttendantCallForwardSettingsDetailsObject(ApiModel):
     operating_modes: Optional[AutoAttendantCallForwardSettingsDetailsObjectOperatingModes] = None
 
 
-class CallForwardRulesModifyObject(ApiModel):
-    #: A unique identifier for the auto attendant call forward selective rule.
-    id: Optional[str] = None
-    #: Flag to indicate if always call forwarding selective rule criteria is active. If not set, flag will be set to
-    #: false.
-    enabled: Optional[bool] = None
-
-
 class ModesPatchForwardTo(ApiModel):
     #: The selection for forwarding.
     selection: Optional[CallForwardSelectiveForwardToObjectSelection] = None
@@ -230,6 +223,21 @@ class ModesPatch(ApiModel):
     forward_to: Optional[ModesPatchForwardTo] = None
 
 
+class AutoAttendantCallForwardSettingsModifyDetailsObjectOperatingModes(ApiModel):
+    #: Indicates whether operating modes forwarding is enabled.
+    enabled: Optional[bool] = None
+    #: List of operating mode configurations.
+    modes: Optional[list[ModesPatch]] = None
+
+
+class CallForwardRulesModifyObject(ApiModel):
+    #: A unique identifier for the auto attendant call forward selective rule.
+    id: Optional[str] = None
+    #: Flag to indicate if always call forwarding selective rule criteria is active. If not set, flag will be set to
+    #: false.
+    enabled: Optional[bool] = None
+
+
 class AutoAttendantCallForwardSettingsModifyDetailsObject(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you choose.
     always: Optional[GetCallForwardAlwaysSettingObject] = None
@@ -239,7 +247,7 @@ class AutoAttendantCallForwardSettingsModifyDetailsObject(ApiModel):
     #: Rules for selectively forwarding calls. (Rules which are omitted in the list will not be deleted.)
     rules: Optional[list[CallForwardRulesModifyObject]] = None
     #: Configuration for forwarding via Operating modes (Schedule Based Routing).
-    modes: Optional[list[ModesPatch]] = None
+    operating_modes: Optional[AutoAttendantCallForwardSettingsModifyDetailsObjectOperatingModes] = None
 
 
 class CallForwardSelectiveCallsFromCustomNumbersObject(ApiModel):
@@ -645,7 +653,7 @@ class GetAnnouncementFileInfo(ApiModel):
 
 class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
     """
-    Features:  Auto Attendant
+    Features: Auto Attendant
     
     Features: Auto Attendant support reading and writing of Webex Calling Auto Attendant settings for a specific
     organization.
@@ -656,13 +664,12 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
     Modifying these organization settings requires a full administrator auth token with a scope of
     `spark-admin:telephony_config_write`.
     
-    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
-    query parameter.
+    A partner administrator can retrieve or change settings in another organization using the optional `orgId` query
+    parameter.
     """
 
-    def read_the_list_of_auto_attendants(self, location_id: str = None, name: str = None, phone_number: str = None,
-                                         org_id: str = None,
-                                         **params: Any) -> Generator[ListAutoAttendantObject, None, None]:
+    def list_auto_attendants(self, location_id: str = None, name: str = None, phone_number: str = None,
+                             org_id: str = None, **params: Any) -> Generator[ListAutoAttendantObject, None, None]:
         """
         Read the List of Auto Attendants
 
@@ -695,15 +702,15 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         url = self.ep('autoAttendants')
         return self.session.follow_pagination(url=url, model=ListAutoAttendantObject, item_key='autoAttendants', params=params)
 
-    def create_an_auto_attendant(self, location_id: str, name: str, business_schedule: str,
-                                 business_hours_menu: HoursMenuGetObject, after_hours_menu: HoursMenuGetObject,
-                                 phone_number: str = None, extension: str = None, first_name: str = None,
-                                 last_name: str = None, alternate_numbers: list[AlternateNumbersObject] = None,
-                                 language_code: str = None, holiday_schedule: str = None,
-                                 extension_dialing: GetAutoAttendantObjectExtensionDialing = None,
-                                 name_dialing: GetAutoAttendantObjectExtensionDialing = None, time_zone: str = None,
-                                 direct_line_caller_id_name: DirectLineCallerIdNameObjectForPut = None,
-                                 dial_by_name: str = None, org_id: str = None) -> str:
+    def create_auto_attendant(self, location_id: str, name: str, business_schedule: str,
+                              business_hours_menu: HoursMenuGetObject, after_hours_menu: HoursMenuGetObject,
+                              phone_number: str = None, extension: str = None, first_name: str = None,
+                              last_name: str = None, alternate_numbers: list[AlternateNumbersObject] = None,
+                              language_code: str = None, holiday_schedule: str = None,
+                              extension_dialing: GetAutoAttendantObjectExtensionDialing = None,
+                              name_dialing: GetAutoAttendantObjectExtensionDialing = None, time_zone: str = None,
+                              direct_line_caller_id_name: DirectLineCallerIdNameObjectForPut = None,
+                              dial_by_name: str = None, org_id: str = None) -> str:
         """
         Create an Auto Attendant
 
@@ -751,7 +758,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :param direct_line_caller_id_name: Settings for the direct line caller ID name to be shown for this auto
             attendant.
         :type direct_line_caller_id_name: DirectLineCallerIdNameObjectForPut
-        :param dial_by_name: The name to be used for dial by name functions.  Characters of `%`,  `+`, `\`, `"` and
+        :param dial_by_name: The name to be used for dial by name functions. Characters of `%`,  `+`, `\\`, `"` and
             Unicode characters are not allowed.
         :type dial_by_name: str
         :param org_id: Create the auto attendant for this organization.
@@ -907,7 +914,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/autoAttendants/callForwarding/availableNumbers')
         return self.session.follow_pagination(url=url, model=AutoAttendantCallForwardAvailableNumberObject, item_key='phoneNumbers', params=params)
 
-    def delete_an_auto_attendant(self, location_id: str, auto_attendant_id: str, org_id: str = None) -> None:
+    def delete_auto_attendant(self, location_id: str, auto_attendant_id: str, org_id: str = None) -> None:
         """
         Delete an Auto Attendant
 
@@ -933,8 +940,8 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
         super().delete(url, params=params)
 
-    def get_details_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
-                                          org_id: str = None) -> GetAutoAttendantObject:
+    def get_auto_attendant(self, location_id: str, auto_attendant_id: str,
+                           org_id: str = None) -> GetAutoAttendantObject:
         """
         Get Details for an Auto Attendant
 
@@ -962,17 +969,16 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         r = GetAutoAttendantObject.model_validate(data)
         return r
 
-    def update_an_auto_attendant(self, location_id: str, auto_attendant_id: str, name: str = None,
-                                 phone_number: str = None, extension: str = None, first_name: str = None,
-                                 last_name: str = None, alternate_numbers: list[AlternateNumbersObject] = None,
-                                 language_code: str = None, business_schedule: str = None,
-                                 holiday_schedule: str = None,
-                                 extension_dialing: GetAutoAttendantObjectExtensionDialing = None,
-                                 name_dialing: GetAutoAttendantObjectExtensionDialing = None, time_zone: str = None,
-                                 business_hours_menu: HoursMenuGetObject = None,
-                                 after_hours_menu: HoursMenuGetObject = None,
-                                 direct_line_caller_id_name: DirectLineCallerIdNameObjectForPut = None,
-                                 dial_by_name: str = None, org_id: str = None) -> None:
+    def update_auto_attendant(self, location_id: str, auto_attendant_id: str, name: str = None,
+                              phone_number: str = None, extension: str = None, first_name: str = None,
+                              last_name: str = None, alternate_numbers: list[AlternateNumbersObject] = None,
+                              language_code: str = None, business_schedule: str = None, holiday_schedule: str = None,
+                              extension_dialing: GetAutoAttendantObjectExtensionDialing = None,
+                              name_dialing: GetAutoAttendantObjectExtensionDialing = None, time_zone: str = None,
+                              business_hours_menu: HoursMenuGetObject = None,
+                              after_hours_menu: HoursMenuGetObject = None,
+                              direct_line_caller_id_name: DirectLineCallerIdNameObjectForPut = None,
+                              dial_by_name: str = None, org_id: str = None) -> None:
         """
         Update an Auto Attendant
 
@@ -1023,7 +1029,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
             attendant.
         :type direct_line_caller_id_name: DirectLineCallerIdNameObjectForPut
         :param dial_by_name: Sets or clears the name to be used for dial by name functions. To clear the `dialByName`,
-            the attribute must be set to null or empty string. Characters of `%`,  `+`, `\`, `"` and Unicode
+            the attribute must be set to null or empty string. Characters of `%`,  `+`, `\\`, `"` and Unicode
             characters are not allowed.
         :type dial_by_name: str
         :param org_id: Update an auto attendant from this organization.
@@ -1069,8 +1075,8 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}')
         super().put(url, params=params, json=body)
 
-    def read_the_list_of_auto_attendant_announcement_files(self, location_id: str, auto_attendant_id: str,
-                                                           org_id: str = None) -> builtins.list[GetAnnouncementFileInfo]:
+    def list_auto_attendant_announcement_files(self, location_id: str, auto_attendant_id: str,
+                                               org_id: str = None) -> builtins.list[GetAnnouncementFileInfo]:
         """
         Read the List of Auto Attendant Announcement Files
 
@@ -1101,8 +1107,8 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[GetAnnouncementFileInfo]).validate_python(data['announcements'])
         return r
 
-    def delete_a_auto_attendant_announcement_file(self, location_id: str, auto_attendant_id: str, file_name: str,
-                                                  org_id: str = None) -> None:
+    def delete_auto_attendant_announcement_file(self, location_id: str, auto_attendant_id: str, file_name: str,
+                                                org_id: str = None) -> None:
         """
         Delete a Auto Attendant Announcement File
 
@@ -1130,8 +1136,8 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/announcements/{file_name}')
         super().delete(url, params=params)
 
-    def get_call_forwarding_settings_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
-                                                           org_id: str = None) -> AutoAttendantCallForwardSettingsDetailsObject:
+    def get_auto_attendant_call_forwarding_settings(self, location_id: str, auto_attendant_id: str,
+                                                    org_id: str = None) -> AutoAttendantCallForwardSettingsDetailsObject:
         """
         Get Call Forwarding Settings for an Auto Attendant
 
@@ -1163,9 +1169,9 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         r = AutoAttendantCallForwardSettingsDetailsObject.model_validate(data['callForwarding'])
         return r
 
-    def update_call_forwarding_settings_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
-                                                              call_forwarding: AutoAttendantCallForwardSettingsModifyDetailsObject,
-                                                              org_id: str = None) -> None:
+    def update_auto_attendant_call_forwarding_settings(self, location_id: str, auto_attendant_id: str,
+                                                       call_forwarding: AutoAttendantCallForwardSettingsModifyDetailsObject,
+                                                       org_id: str = None) -> None:
         """
         Update Call Forwarding Settings for an Auto Attendant
 
@@ -1198,12 +1204,15 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding')
         super().put(url, params=params, json=body)
 
-    def switch_mode_for_call_forwarding_settings_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
-                                                                       org_id: str = None) -> None:
+    def switch_auto_attendant_call_forwarding_mode(self, location_id: str, auto_attendant_id: str,
+                                                   org_id: str = None) -> None:
         """
         Switch Mode for Call Forwarding Settings for an Auto Attendant
 
         Switches the current operating mode of the `Auto Attendant` to the mode as per normal operations.
+
+        Operating modes allow call forwarding to be configured based on predefined schedules, enabling different
+        routing behaviors during business hours, after hours, or holidays.
 
         Switching operating mode for an `auto attendant` requires a full, or location administrator auth token with a
         scope of `spark-admin:telephony_config_write`.
@@ -1222,15 +1231,13 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding/actions/switchMode/invoke')
         super().post(url, params=params)
 
-    def create_a_selective_call_forwarding_rule_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
-                                                                      name: str,
-                                                                      forward_to: CallForwardSelectiveForwardToObject,
-                                                                      calls_from: CallForwardSelectiveCallsFromObject,
-                                                                      enabled: bool = None,
-                                                                      business_schedule: str = None,
-                                                                      holiday_schedule: str = None,
-                                                                      calls_to: CallForwardSelectiveCallsToObject = None,
-                                                                      org_id: str = None) -> str:
+    def create_auto_attendant_selective_call_forwarding_rule(self, location_id: str, auto_attendant_id: str, name: str,
+                                                             forward_to: CallForwardSelectiveForwardToObject,
+                                                             calls_from: CallForwardSelectiveCallsFromObject,
+                                                             enabled: bool = None, business_schedule: str = None,
+                                                             holiday_schedule: str = None,
+                                                             calls_to: CallForwardSelectiveCallsToObject = None,
+                                                             org_id: str = None) -> str:
         """
         Create a Selective Call Forwarding Rule for an Auto Attendant
 
@@ -1292,8 +1299,8 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         r = data['id']
         return r
 
-    def delete_a_selective_call_forwarding_rule_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
-                                                                      rule_id: str, org_id: str = None) -> None:
+    def delete_auto_attendant_selective_call_forwarding_rule(self, location_id: str, auto_attendant_id: str,
+                                                             rule_id: str, org_id: str = None) -> None:
         """
         Delete a Selective Call Forwarding Rule for an Auto Attendant
 
@@ -1326,9 +1333,8 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/autoAttendants/{auto_attendant_id}/callForwarding/selectiveRules/{rule_id}')
         super().delete(url, params=params)
 
-    def get_selective_call_forwarding_rule_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
-                                                                 rule_id: str,
-                                                                 org_id: str = None) -> GetAutoAttendantCallForwardSelectiveRuleObject:
+    def get_auto_attendant_selective_call_forwarding_rule(self, location_id: str, auto_attendant_id: str, rule_id: str,
+                                                          org_id: str = None) -> GetAutoAttendantCallForwardSelectiveRuleObject:
         """
         Get Selective Call Forwarding Rule for an Auto Attendant
 
@@ -1363,14 +1369,14 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         r = GetAutoAttendantCallForwardSelectiveRuleObject.model_validate(data)
         return r
 
-    def update_selective_call_forwarding_rule_for_an_auto_attendant(self, location_id: str, auto_attendant_id: str,
-                                                                    rule_id: str, name: str, enabled: bool = None,
-                                                                    business_schedule: str = None,
-                                                                    holiday_schedule: str = None,
-                                                                    forward_to: CallForwardSelectiveForwardToObject = None,
-                                                                    calls_from: CallForwardSelectiveCallsFromObject = None,
-                                                                    calls_to: CallForwardSelectiveCallsToObject = None,
-                                                                    org_id: str = None) -> str:
+    def update_auto_attendant_selective_call_forwarding_rule(self, location_id: str, auto_attendant_id: str,
+                                                             rule_id: str, name: str, enabled: bool = None,
+                                                             business_schedule: str = None,
+                                                             holiday_schedule: str = None,
+                                                             forward_to: CallForwardSelectiveForwardToObject = None,
+                                                             calls_from: CallForwardSelectiveCallsFromObject = None,
+                                                             calls_to: CallForwardSelectiveCallsToObject = None,
+                                                             org_id: str = None) -> str:
         """
         Update Selective Call Forwarding Rule for an Auto Attendant
 

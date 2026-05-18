@@ -382,7 +382,7 @@ class ForwardingApi(ApiChild, base=''):
 
         :param location_id: Location in which this feature exists.
         :type location_id: str
-        :param feature_id: Retrieve the call forwarding settings for this entity
+        :param feature_id: Retrieve the call forwarding settings for this entity.
         :type feature_id: str
         :param org_id: Retrieve call forwarding settings from this organization.
         :type org_id: str
@@ -557,7 +557,7 @@ class ForwardingApi(ApiChild, base=''):
 
     def switch_mode_for_call_forwarding(self, location_id: str, feature_id: str, org_id: str = None) -> None:
         """
-        Switch Mode for Call Forwarding Settings for a feature
+        Switch Mode for Call Forwarding Settings for a feature, including auto attendants
 
         Switches the current operating mode of the feature to the mode as per normal operations.
 
