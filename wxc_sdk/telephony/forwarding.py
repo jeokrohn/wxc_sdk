@@ -35,6 +35,7 @@ __all__ = [
     'ForwardingApi',
 ]
 
+
 # mypy: disable-error-code="assignment,arg-type"
 
 
@@ -150,7 +151,7 @@ class CallForwarding(ApiModel):
     selective: Optional[ForwardingSetting] = None
     #: Rules for selectively forwarding calls.
     rules: Optional[list[ForwardingRule]] = None
-    #: Settings related to operating modes.
+    #: Configuration for forwarding via Operating modes (Schedule Based Routing).
     operating_modes: Optional[ForwardOperatingModes] = None
 
     @staticmethod
@@ -167,7 +168,25 @@ class CallForwarding(ApiModel):
             mode='json',
             exclude_unset=True,
             by_alias=True,
-            exclude={'rules': {'__all__': {'calls_from', 'forward_to', 'calls_to', 'name'}}},
+            exclude={
+                'rules': {'__all__': {'calls_from', 'forward_to', 'calls_to', 'name'}},
+                'operating_modes': {
+                    'current_operating_mode_id': True,
+                    'exception_type': True,
+                    'modes': {
+                        '__all__': {
+                            'name': True,
+                            'type': True,
+                            'level': True,
+                            'forward_to': {
+                                'default_destination',
+                                'default_destination_voicemail_enabled',
+                                'default_forward_to_selection',
+                            },
+                        }
+                    },
+                },
+            },
         )
 
 
@@ -303,6 +322,14 @@ class ForwardingRuleDetails(ApiModel):
             name=name, enabled=True, forward_to=ForwardTo(), calls_to=ForwardCallsTo(), calls_from=CallsFrom()
         )
 
+    def update(self) -> dict[str, Any]:
+        """
+        Data for update
+
+        :meta private:
+        """
+        return self.model_dump(mode='json', by_alias=True, exclude_none=True, exclude={'id'})
+
 
 class FeatureSelector(str, Enum):
     queues = 'queues'
@@ -342,6 +369,8 @@ class ForwardingApi(ApiChild, base=''):
         """
         Retrieve Call Forwarding settings for the designated feature including the list of call forwarding rules.
 
+        Also used to retrieve Call Forwarding settings for Hunt Groups.
+
         The call forwarding feature allows you to direct all incoming calls based on specific criteria that you define.
         Below are the available options for configuring your call forwarding:
         1. Always forward calls to a designated number.
@@ -380,7 +409,7 @@ class ForwardingApi(ApiChild, base=''):
         :param feature_id: Update call forwarding settings for this feature.
         :type feature_id: str
         :param forwarding: Forwarding settings
-        :type forwarding: :class:`CallForwarding`
+        :type forwarding: CallForwarding
         :param org_id: Update feature forwarding settings from this organization.
         :type org_id: str
         """
@@ -419,7 +448,7 @@ class ForwardingApi(ApiChild, base=''):
         """
         url = self._endpoint(location_id=location_id, feature_id=feature_id, path='selectiveRules')
         params = org_id and {'orgId': org_id} or None
-        body = forwarding_rule.model_dump_json()
+        body = forwarding_rule.update()
         data = self._session.rest_post(url=url, data=body, params=params)
         return data['id']
 
@@ -427,7 +456,7 @@ class ForwardingApi(ApiChild, base=''):
         self, location_id: str, feature_id: str, rule_id: str, org_id: str = None
     ) -> ForwardingRuleDetails:
         """
-        Retrieve a Selective Call Forwarding Rule's settings for the designated Call Queue.
+        Retrieve a Selective Call Forwarding Rule's settings for the designated feature.
 
         A selective call forwarding rule for feature allows calls to be forwarded or not forwarded
         to the designated number, based on the defined criteria.
@@ -493,13 +522,13 @@ class ForwardingApi(ApiChild, base=''):
         """
         url = self._endpoint(location_id=location_id, feature_id=feature_id, path=f'selectiveRules/{rule_id}')
         params = org_id and {'orgId': org_id} or None
-        body = forwarding_rule.model_dump_json(exclude={'id'})
-        data = self._session.rest_put(url=url, params=params, data=body)
+        body = forwarding_rule.update()
+        data = self._session.rest_put(url=url, params=params, json=body)
         return data['id']
 
     def delete_call_forwarding_rule(self, location_id: str, feature_id: str, rule_id: str, org_id: str = None) -> None:
         """
-        Delete a Selective Call Forwarding Rule for the designated feature.
+        Delete a Selective Call Forwarding Rule for the designated feature, including hunt groups.
 
         A selective call forwarding rule for a feature allows calls to be forwarded or not forwarded
         to the designated number, based on the defined criteria.
@@ -528,21 +557,21 @@ class ForwardingApi(ApiChild, base=''):
 
     def switch_mode_for_call_forwarding(self, location_id: str, feature_id: str, org_id: str = None) -> None:
         """
-        Switch Mode for Call Forwarding Settings for an entity
+        Switch Mode for Call Forwarding Settings for a feature
 
-        Switches the current operating mode to the mode as per normal operations.
+        Switches the current operating mode of the feature to the mode as per normal operations.
 
         Operating modes allow call forwarding to be configured based on predefined schedules, enabling different
         routing behaviors during business hours, after hours, or holidays.
 
-        Switching operating mode requires a full, or location administrator auth token with a scope
+        Switching operating mode for a feature requires a full, or location administrator auth token with a scope
         of `spark-admin:telephony_config_write`.
 
-        :param location_id: `Location` in which this `call queue` exists.
+        :param location_id: `Location` in which this feature exists.
         :type location_id: str
-        :param feature_id: Switch operating mode to normal operations for this entity.
+        :param feature_id: Switch operating mode to normal operations for this feature.
         :type feature_id: str
-        :param org_id: Switch operating mode as per normal operations for this entity from this organization.
+        :param org_id: Switch operating mode as per normal operations for this feature from this organization.
         :type org_id: str
         :rtype: None
         """

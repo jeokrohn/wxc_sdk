@@ -20282,6 +20282,8 @@ class AsForwardingApi(AsApiChild, base=''):
         """
         Retrieve Call Forwarding settings for the designated feature including the list of call forwarding rules.
 
+        Also used to retrieve Call Forwarding settings for Hunt Groups.
+
         The call forwarding feature allows you to direct all incoming calls based on specific criteria that you define.
         Below are the available options for configuring your call forwarding:
         1. Always forward calls to a designated number.
@@ -20320,7 +20322,7 @@ class AsForwardingApi(AsApiChild, base=''):
         :param feature_id: Update call forwarding settings for this feature.
         :type feature_id: str
         :param forwarding: Forwarding settings
-        :type forwarding: :class:`CallForwarding`
+        :type forwarding: CallForwarding
         :param org_id: Update feature forwarding settings from this organization.
         :type org_id: str
         """
@@ -20359,7 +20361,7 @@ class AsForwardingApi(AsApiChild, base=''):
         """
         url = self._endpoint(location_id=location_id, feature_id=feature_id, path='selectiveRules')
         params = org_id and {'orgId': org_id} or None
-        body = forwarding_rule.model_dump_json()
+        body = forwarding_rule.update()
         data = await self._session.rest_post(url=url, data=body, params=params)
         return data['id']
 
@@ -20367,7 +20369,7 @@ class AsForwardingApi(AsApiChild, base=''):
         self, location_id: str, feature_id: str, rule_id: str, org_id: str = None
     ) -> ForwardingRuleDetails:
         """
-        Retrieve a Selective Call Forwarding Rule's settings for the designated Call Queue.
+        Retrieve a Selective Call Forwarding Rule's settings for the designated feature.
 
         A selective call forwarding rule for feature allows calls to be forwarded or not forwarded
         to the designated number, based on the defined criteria.
@@ -20433,13 +20435,13 @@ class AsForwardingApi(AsApiChild, base=''):
         """
         url = self._endpoint(location_id=location_id, feature_id=feature_id, path=f'selectiveRules/{rule_id}')
         params = org_id and {'orgId': org_id} or None
-        body = forwarding_rule.model_dump_json(exclude={'id'})
-        data = await self._session.rest_put(url=url, params=params, data=body)
+        body = forwarding_rule.update()
+        data = await self._session.rest_put(url=url, params=params, json=body)
         return data['id']
 
     async def delete_call_forwarding_rule(self, location_id: str, feature_id: str, rule_id: str, org_id: str = None) -> None:
         """
-        Delete a Selective Call Forwarding Rule for the designated feature.
+        Delete a Selective Call Forwarding Rule for the designated feature, including hunt groups.
 
         A selective call forwarding rule for a feature allows calls to be forwarded or not forwarded
         to the designated number, based on the defined criteria.
@@ -20468,21 +20470,21 @@ class AsForwardingApi(AsApiChild, base=''):
 
     async def switch_mode_for_call_forwarding(self, location_id: str, feature_id: str, org_id: str = None) -> None:
         """
-        Switch Mode for Call Forwarding Settings for an entity
+        Switch Mode for Call Forwarding Settings for a feature
 
-        Switches the current operating mode to the mode as per normal operations.
+        Switches the current operating mode of the feature to the mode as per normal operations.
 
         Operating modes allow call forwarding to be configured based on predefined schedules, enabling different
         routing behaviors during business hours, after hours, or holidays.
 
-        Switching operating mode requires a full, or location administrator auth token with a scope
+        Switching operating mode for a feature requires a full, or location administrator auth token with a scope
         of `spark-admin:telephony_config_write`.
 
-        :param location_id: `Location` in which this `call queue` exists.
+        :param location_id: `Location` in which this feature exists.
         :type location_id: str
-        :param feature_id: Switch operating mode to normal operations for this entity.
+        :param feature_id: Switch operating mode to normal operations for this feature.
         :type feature_id: str
-        :param org_id: Switch operating mode as per normal operations for this entity from this organization.
+        :param org_id: Switch operating mode as per normal operations for this feature from this organization.
         :type org_id: str
         :rtype: None
         """
@@ -27417,7 +27419,7 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
 
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
-        self.forwarding = AsForwardingApi(session=session, feature_selector=AsFeatureSelector.huntgroups)
+        self.forwarding = AsForwardingApi(session=session, feature_selector=AsFeatureSelector.huntgroups)  # type: ignore[arg-type]
 
     def _endpoint(self, *, location_id: str = None, huntgroup_id: str = None, path: str = None) -> str:
         """
@@ -27513,11 +27515,11 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
 
         Create new Hunt Groups for the given location.
 
-        Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to
-        route to a whole group.
+        Hunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure
+        a pattern to route to a whole group.
 
-        Creating a hunt group requires a full administrator auth token with a scope of
-        spark-admin:telephony_config_write.
+        Creating a hunt group requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         :param location_id: Create the hunt group for the given location.
         :type location_id: str
@@ -27532,8 +27534,8 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
         settings.call_policies = settings.call_policies or HGCallPolicies().default()
         data = settings.create_or_update()
         url = self._endpoint(location_id=location_id)
-        data = await self.post(url, json=data, params=params)
-        return data['id']
+        data = await self.post(url, json=data, params=params)  # type: ignore[assignment]
+        return data['id']  # type: ignore[no-any-return]
 
     async def delete_huntgroup(self, location_id: str, huntgroup_id: str, org_id: str = None):
         """
@@ -27584,25 +27586,26 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
         result = HuntGroup.model_validate(data)
         return result
 
-    async def update(self, location_id: str, huntgroup_id: str, update: HuntGroup, org_id: str = None):
+    async def update(self, location_id: str, huntgroup_id: str, update: HuntGroup, org_id: str = None) -> None:
         """
         Update a Hunt Group
 
         Update the designated Hunt Group.
 
-        Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to
-        route to a whole group.
+        Hunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure
+        a pattern to route to a whole group.
 
-        Updating a hunt group requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+        Updating a hunt group requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         :param location_id: Update the hunt group for this location.
         :type location_id: str
-        :param huntgroup_id: Update setting for the hunt group with the matching ID.
+        :param huntgroup_id: Update settings for the hunt group with the matching ID.
         :type huntgroup_id: str
         :param update: hunt group settings
         :type update: :class:`HuntGroup`
         :param org_id: Update hunt group settings from this organization.
+        :rtype: None
         """
         params = org_id and {'orgId': org_id} or None
         data = update.create_or_update()

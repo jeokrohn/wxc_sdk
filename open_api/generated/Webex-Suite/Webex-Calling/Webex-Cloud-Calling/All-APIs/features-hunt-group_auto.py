@@ -25,7 +25,8 @@ __all__ = ['AlternateNumbersWithPattern', 'CallForwardRulesGet', 'CallForwardRul
            'HuntGroupCallForwardAvailableNumberObject', 'HuntGroupCallForwardAvailableNumberObjectOwner',
            'HuntGroupPrimaryAvailableNumberObject', 'HuntPolicySelection', 'ListHuntGroupObject', 'ModesGet',
            'ModesGetForwardTo', 'ModesGetForwardToDefaultForwardToSelection', 'ModesGetLevel', 'ModesGetType',
-           'ModesPatch', 'ModesPatchForwardTo', 'ModifyCallForwardingObjectCallForwarding', 'NumberOwnerType',
+           'ModesPatch', 'ModesPatchForwardTo', 'ModifyCallForwardingObjectCallForwarding',
+           'ModifyCallForwardingObjectCallForwardingOperatingModes', 'NumberOwnerType',
            'PostHuntGroupCallPolicyObject', 'PostHuntGroupCallPolicyObjectNoAnswer',
            'PostPersonPlaceVirtualLineHuntGroupObject', 'RingPatternObject', 'STATE', 'SelectionObject',
            'TelephonyType']
@@ -212,7 +213,7 @@ class CallForwardingNumbers(ApiModel):
 class CreateForwardingRuleObjectForwardTo(ApiModel):
     #: Controls what happens when the rule matches.
     selection: Optional[CreateForwardingRuleObjectForwardToSelection] = None
-    #: Phone number used if selection is `FORWARD_TO_SPECIFIED_NUMBER`.
+    #: Phone number to forward calls to. Required when selection is `FORWARD_TO_SPECIFIED_NUMBER`.
     phone_number: Optional[str] = None
 
 
@@ -492,6 +493,13 @@ class ModesPatch(ApiModel):
     forward_to: Optional[ModesPatchForwardTo] = None
 
 
+class ModifyCallForwardingObjectCallForwardingOperatingModes(ApiModel):
+    #: Indicates whether operating modes forwarding is enabled.
+    enabled: Optional[bool] = None
+    #: List of operating mode configurations.
+    modes: Optional[list[ModesPatch]] = None
+
+
 class ModifyCallForwardingObjectCallForwarding(ApiModel):
     #: Settings for forwarding all incoming calls to the destination you choose.
     always: Optional[CallForwardSettingsGetCallForwardingAlways] = None
@@ -501,7 +509,7 @@ class ModifyCallForwardingObjectCallForwarding(ApiModel):
     #: Rules for selectively forwarding calls.
     rules: Optional[list[CallForwardRulesSet]] = None
     #: Configuration for forwarding via Operating modes (Schedule Based Routing).
-    modes: Optional[list[ModesPatch]] = None
+    operating_modes: Optional[ModifyCallForwardingObjectCallForwardingOperatingModes] = None
 
 
 class STATE(str, Enum):
@@ -600,7 +608,7 @@ class HuntGroupCallForwardAvailableNumberObject(ApiModel):
 
 class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
     """
-    Features:  Hunt Group
+    Features: Hunt Group
     
     Features: Hunt Group supports reading and writing of Webex Calling Hunt Group settings for a specific organization.
     
@@ -610,12 +618,12 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
     Modifying these organization settings requires a full administrator auth token with a scope of
     `spark-admin:telephony_config_write`.
     
-    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
-    query parameter.
+    A partner administrator can retrieve or change settings in another organization using the optional `orgId` query
+    parameter.
     """
 
-    def read_the_list_of_hunt_groups(self, location_id: str = None, name: str = None, phone_number: str = None,
-                                     org_id: str = None, **params: Any) -> Generator[ListHuntGroupObject, None, None]:
+    def list_hunt_groups(self, location_id: str = None, name: str = None, phone_number: str = None, org_id: str = None,
+                         **params: Any) -> Generator[ListHuntGroupObject, None, None]:
         """
         Read the List of Hunt Groups
 
@@ -648,13 +656,13 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         url = self.ep('huntGroups')
         return self.session.follow_pagination(url=url, model=ListHuntGroupObject, item_key='huntGroups', params=params)
 
-    def create_a_hunt_group(self, location_id: str, name: str, call_policies: PostHuntGroupCallPolicyObject,
-                            agents: list[PostPersonPlaceVirtualLineHuntGroupObject], enabled: bool,
-                            phone_number: str = None, extension: str = None, language_code: str = None,
-                            first_name: str = None, last_name: str = None, time_zone: str = None,
-                            hunt_group_caller_id_for_outgoing_calls_enabled: bool = None,
-                            direct_line_caller_id_name: DirectLineCallerIdNameObject = None, dial_by_name: str = None,
-                            org_id: str = None) -> str:
+    def create_hunt_group(self, location_id: str, name: str, call_policies: PostHuntGroupCallPolicyObject,
+                          agents: list[PostPersonPlaceVirtualLineHuntGroupObject], enabled: bool,
+                          phone_number: str = None, extension: str = None, language_code: str = None,
+                          first_name: str = None, last_name: str = None, time_zone: str = None,
+                          hunt_group_caller_id_for_outgoing_calls_enabled: bool = None,
+                          direct_line_caller_id_name: DirectLineCallerIdNameObject = None, dial_by_name: str = None,
+                          org_id: str = None) -> str:
         """
         Create a Hunt Group
 
@@ -696,7 +704,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :type hunt_group_caller_id_for_outgoing_calls_enabled: bool
         :param direct_line_caller_id_name: Settings for the direct line caller ID name to be shown for this hunt group.
         :type direct_line_caller_id_name: DirectLineCallerIdNameObject
-        :param dial_by_name: The name to be used for dial by name functions.  Characters of `%`,  `+`, `\`, `"` and
+        :param dial_by_name: The name to be used for dial by name functions.  Characters of `%`,  `+`, `\\`, `"` and
             Unicode characters are not allowed.
         :type dial_by_name: str
         :param org_id: Create the hunt group for this organization.
@@ -846,7 +854,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/huntGroups/callForwarding/availableNumbers')
         return self.session.follow_pagination(url=url, model=HuntGroupCallForwardAvailableNumberObject, item_key='phoneNumbers', params=params)
 
-    def delete_a_hunt_group(self, location_id: str, hunt_group_id: str, org_id: str = None) -> None:
+    def delete_hunt_group(self, location_id: str, hunt_group_id: str, org_id: str = None) -> None:
         """
         Delete a Hunt Group
 
@@ -872,8 +880,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}')
         super().delete(url, params=params)
 
-    def get_details_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
-                                     org_id: str = None) -> GetHuntGroupObject:
+    def get_hunt_group(self, location_id: str, hunt_group_id: str, org_id: str = None) -> GetHuntGroupObject:
         """
         Get Details for a Hunt Group
 
@@ -901,15 +908,15 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         r = GetHuntGroupObject.model_validate(data)
         return r
 
-    def update_a_hunt_group(self, location_id: str, hunt_group_id: str, enabled: bool = None, name: str = None,
-                            phone_number: str = None, extension: str = None, distinctive_ring: bool = None,
-                            alternate_numbers: list[AlternateNumbersWithPattern] = None, language_code: str = None,
-                            first_name: str = None, last_name: str = None, time_zone: str = None,
-                            call_policies: PostHuntGroupCallPolicyObject = None,
-                            agents: list[PostPersonPlaceVirtualLineHuntGroupObject] = None,
-                            hunt_group_caller_id_for_outgoing_calls_enabled: bool = None,
-                            direct_line_caller_id_name: DirectLineCallerIdNameObject = None, dial_by_name: str = None,
-                            org_id: str = None) -> None:
+    def update_hunt_group(self, location_id: str, hunt_group_id: str, enabled: bool = None, name: str = None,
+                          phone_number: str = None, extension: str = None, distinctive_ring: bool = None,
+                          alternate_numbers: list[AlternateNumbersWithPattern] = None, language_code: str = None,
+                          first_name: str = None, last_name: str = None, time_zone: str = None,
+                          call_policies: PostHuntGroupCallPolicyObject = None,
+                          agents: list[PostPersonPlaceVirtualLineHuntGroupObject] = None,
+                          hunt_group_caller_id_for_outgoing_calls_enabled: bool = None,
+                          direct_line_caller_id_name: DirectLineCallerIdNameObject = None, dial_by_name: str = None,
+                          org_id: str = None) -> None:
         """
         Update a Hunt Group
 
@@ -961,7 +968,7 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :param direct_line_caller_id_name: Settings for the direct line caller ID name to be shown for this hunt group.
         :type direct_line_caller_id_name: DirectLineCallerIdNameObject
         :param dial_by_name: Sets or clears the name to be used for dial by name functions. To clear the `dialByName`,
-            the attribute must be set to null or empty string. Characters of `%`,  `+`, `\`, `"` and Unicode
+            the attribute must be set to null or empty string. Characters of `%`,  `+`, `\\`, `"` and Unicode
             characters are not allowed.
         :type dial_by_name: str
         :param org_id: Update hunt group settings from this organization.
@@ -1005,8 +1012,8 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}')
         super().put(url, params=params, json=body)
 
-    def get_call_forwarding_settings_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
-                                                      org_id: str = None) -> CallForwardSettingsGetCallForwarding:
+    def get_hunt_group_call_forwarding_settings(self, location_id: str, hunt_group_id: str,
+                                                org_id: str = None) -> CallForwardSettingsGetCallForwarding:
         """
         Get Call Forwarding Settings for a Hunt Group
 
@@ -1037,9 +1044,9 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         r = CallForwardSettingsGetCallForwarding.model_validate(data['callForwarding'])
         return r
 
-    def update_call_forwarding_settings_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
-                                                         call_forwarding: ModifyCallForwardingObjectCallForwarding = None,
-                                                         org_id: str = None) -> None:
+    def update_hunt_group_call_forwarding_settings(self, location_id: str, hunt_group_id: str,
+                                                   call_forwarding: ModifyCallForwardingObjectCallForwarding = None,
+                                                   org_id: str = None) -> None:
         """
         Update Call Forwarding Settings for a Hunt Group
 
@@ -1073,12 +1080,14 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding')
         super().put(url, params=params, json=body)
 
-    def switch_mode_for_call_forwarding_settings_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
-                                                                  org_id: str = None) -> None:
+    def switch_hunt_group_call_forwarding_mode(self, location_id: str, hunt_group_id: str, org_id: str = None) -> None:
         """
         Switch Mode for Call Forwarding Settings for a Hunt Group
 
         Switches the current operating mode of the `Hunt Group` to the mode as per normal operations.
+
+        Operating modes allow call forwarding to be configured based on predefined schedules, enabling different
+        routing behaviors during business hours, after hours, or holidays.
 
         Switching operating mode for a `hunt group` requires a full, or location administrator auth token with a scope
         of `spark-admin:telephony_config_write`.
@@ -1097,13 +1106,13 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding/actions/switchMode/invoke')
         super().post(url, params=params)
 
-    def create_a_selective_call_forwarding_rule_for_a_hunt_group(self, location_id: str, hunt_group_id: str, name: str,
-                                                                 calls_from: CreateForwardingRuleObjectCallsFrom,
-                                                                 calls_to: CreateForwardingRuleObjectCallsTo,
-                                                                 enabled: bool = None, holiday_schedule: str = None,
-                                                                 business_schedule: str = None,
-                                                                 forward_to: CreateForwardingRuleObjectForwardTo = None,
-                                                                 org_id: str = None) -> str:
+    def create_hunt_group_selective_call_forwarding_rule(self, location_id: str, hunt_group_id: str, name: str,
+                                                         calls_from: CreateForwardingRuleObjectCallsFrom,
+                                                         calls_to: CreateForwardingRuleObjectCallsTo,
+                                                         enabled: bool = None, holiday_schedule: str = None,
+                                                         business_schedule: str = None,
+                                                         forward_to: CreateForwardingRuleObjectForwardTo = None,
+                                                         org_id: str = None) -> str:
         """
         Create a Selective Call Forwarding Rule for a Hunt Group
 
@@ -1164,8 +1173,8 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         r = data['id']
         return r
 
-    def delete_a_selective_call_forwarding_rule_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
-                                                                 rule_id: str, org_id: str = None) -> None:
+    def delete_hunt_group_selective_call_forwarding_rule(self, location_id: str, hunt_group_id: str, rule_id: str,
+                                                         org_id: str = None) -> None:
         """
         Delete a Selective Call Forwarding Rule for a Hunt Group
 
@@ -1197,8 +1206,8 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding/selectiveRules/{rule_id}')
         super().delete(url, params=params)
 
-    def get_selective_call_forwarding_rule_for_a_hunt_group(self, location_id: str, hunt_group_id: str, rule_id: str,
-                                                            org_id: str = None) -> GetForwardingRuleObject:
+    def get_hunt_group_selective_call_forwarding_rule(self, location_id: str, hunt_group_id: str, rule_id: str,
+                                                      org_id: str = None) -> GetForwardingRuleObject:
         """
         Get Selective Call Forwarding Rule for a Hunt Group
 
@@ -1232,14 +1241,13 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         r = GetForwardingRuleObject.model_validate(data)
         return r
 
-    def update_a_selective_call_forwarding_rule_for_a_hunt_group(self, location_id: str, hunt_group_id: str,
-                                                                 rule_id: str, name: str = None, enabled: bool = None,
-                                                                 holiday_schedule: str = None,
-                                                                 business_schedule: str = None,
-                                                                 forward_to: CreateForwardingRuleObjectForwardTo = None,
-                                                                 calls_from: CreateForwardingRuleObjectCallsFrom = None,
-                                                                 calls_to: CreateForwardingRuleObjectCallsTo = None,
-                                                                 org_id: str = None) -> str:
+    def update_hunt_group_selective_call_forwarding_rule(self, location_id: str, hunt_group_id: str, rule_id: str,
+                                                         name: str = None, enabled: bool = None,
+                                                         holiday_schedule: str = None, business_schedule: str = None,
+                                                         forward_to: CreateForwardingRuleObjectForwardTo = None,
+                                                         calls_from: CreateForwardingRuleObjectCallsFrom = None,
+                                                         calls_to: CreateForwardingRuleObjectCallsTo = None,
+                                                         org_id: str = None) -> str:
         """
         Update a Selective Call Forwarding Rule for a Hunt Group
 

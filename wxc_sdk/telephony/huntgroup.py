@@ -2,7 +2,7 @@ import builtins
 import logging
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import Optional
+from typing import Any, Optional
 
 from ..api_child import ApiChild
 from ..base import ApiModel, to_camel
@@ -92,7 +92,7 @@ class HGCallPolicies(ApiModel):
     @staticmethod
     def default() -> 'HGCallPolicies':
         return HGCallPolicies(
-            policy=Policy.circular,
+            policy=Policy.circular,  # type: ignore[arg-type]
             waiting_enabled=False,
             no_answer=NoAnswer.default(),
             busy_redirect=BusinessContinuity.default(),
@@ -115,7 +115,7 @@ class HuntGroup(HGandCQ):
     hunt_group_caller_id_for_outgoing_calls_enabled: Optional[bool] = None
 
     @staticmethod
-    def exclude_update_or_create() -> dict:
+    def exclude_update_or_create() -> dict[str, Any]:
         """
         Exclude dict for update or create calls
 
@@ -149,7 +149,7 @@ class HuntGroup(HGandCQ):
             raise ValueError('at least one of phone_number or extension has to be set')
         return HuntGroup(name=name, phone_number=phone_number, extension=extension)
 
-    def create_or_update(self) -> dict:
+    def create_or_update(self) -> dict[str, Any]:
         """
         Get data for create or update
 
@@ -169,7 +169,7 @@ class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
 
     def __init__(self, session: RestSession):
         super().__init__(session=session)
-        self.forwarding = ForwardingApi(session=session, feature_selector=FeatureSelector.huntgroups)
+        self.forwarding = ForwardingApi(session=session, feature_selector=FeatureSelector.huntgroups)  # type: ignore[arg-type]
 
     def _endpoint(self, *, location_id: str = None, huntgroup_id: str = None, path: str = None) -> str:
         """
@@ -238,11 +238,11 @@ class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
 
         Create new Hunt Groups for the given location.
 
-        Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to
-        route to a whole group.
+        Hunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure
+        a pattern to route to a whole group.
 
-        Creating a hunt group requires a full administrator auth token with a scope of
-        spark-admin:telephony_config_write.
+        Creating a hunt group requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         :param location_id: Create the hunt group for the given location.
         :type location_id: str
@@ -257,8 +257,8 @@ class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
         settings.call_policies = settings.call_policies or HGCallPolicies().default()
         data = settings.create_or_update()
         url = self._endpoint(location_id=location_id)
-        data = self.post(url, json=data, params=params)
-        return data['id']
+        data = self.post(url, json=data, params=params)  # type: ignore[assignment]
+        return data['id']  # type: ignore[no-any-return]
 
     def delete_huntgroup(self, location_id: str, huntgroup_id: str, org_id: str = None):
         """
@@ -309,25 +309,26 @@ class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
         result = HuntGroup.model_validate(data)
         return result
 
-    def update(self, location_id: str, huntgroup_id: str, update: HuntGroup, org_id: str = None):
+    def update(self, location_id: str, huntgroup_id: str, update: HuntGroup, org_id: str = None) -> None:
         """
         Update a Hunt Group
 
         Update the designated Hunt Group.
 
-        Hunt groups can route incoming calls to a group of people or workspaces. You can even configure a pattern to
-        route to a whole group.
+        Hunt groups can route incoming calls to a group of people, workspaces or virtual lines. You can even configure
+        a pattern to route to a whole group.
 
-        Updating a hunt group requires a full administrator auth token with a scope
-        of spark-admin:telephony_config_write.
+        Updating a hunt group requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         :param location_id: Update the hunt group for this location.
         :type location_id: str
-        :param huntgroup_id: Update setting for the hunt group with the matching ID.
+        :param huntgroup_id: Update settings for the hunt group with the matching ID.
         :type huntgroup_id: str
         :param update: hunt group settings
         :type update: :class:`HuntGroup`
         :param org_id: Update hunt group settings from this organization.
+        :rtype: None
         """
         params = org_id and {'orgId': org_id} or None
         data = update.create_or_update()
