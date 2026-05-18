@@ -1323,8 +1323,8 @@ class AsDeviceConfigurationsApi(AsApiChild, base='deviceConfigurations'):
             Absolute gives only one configuration as a result. Conference.MaxReceiveCallRate for example gives the
             ConferenceMaxReceiveCallRate configuration.
 
-            Wildcards (*) can specify multiple configurations with shared segments. Audio.Ultrasound.* for example
-            will filter on all Audio Ultrasound configurations.
+            Wildcards (*) can specify multiple configurations with shared segments. Audio.Ultrasound.* for
+            example will filter on all Audio Ultrasound configurations.
 
             Range ([number]) can be used to filter numbered segments. FacilityService.Service[1].Name for instance
             only shows the first FacilityService Service Name configuration, FacilityService.Service[*].Name shows all,

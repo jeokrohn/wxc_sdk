@@ -118,8 +118,8 @@ class DeviceConfigurationsApi(ApiChild, base='deviceConfigurations'):
         - **Absolute** gives only one configuration as a result. `Conference.MaxReceiveCallRate` for example gives the
         Conference `MaxReceiveCallRate` configuration.
 
-        + **Wildcards** (\*) can specify multiple configurations with shared segments. `Audio.Ultrasound.*` for example
-        will filter on all Audio Ultrasound configurations.
+        + **Wildcards** (\\*) can specify multiple configurations with shared segments. `Audio.Ultrasound.*` for
+        example will filter on all Audio Ultrasound configurations.
 
         - **Range**
         (`_number_]) can be used to filter numbered segments. `FacilityService.Service[1].Name` for instance only shows the first `FacilityService` Service Name configuration, `FacilityService.Service[*].Name` shows all, `FacilityService.Service[1..3].Name` shows the first three and `FacilityService.Service[2..n].Name` shows all starting at 2. Note that [RFC 3986 3.2.2
