@@ -1,7 +1,7 @@
 import builtins
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import Field, TypeAdapter
 
@@ -104,7 +104,7 @@ class TelephonyLocation(ApiModel):
     #: True if E911 setup is required.
     e911_setup_required: Optional[bool] = None
 
-    def update(self) -> dict:
+    def update(self) -> dict[str, Any]:
         """
         restricted data used for updates
 
@@ -169,6 +169,10 @@ class LocationECBN(ApiModel):
     location_member_info: Optional[LocationECBNLocationMember] = None
     #: Selected number type to configure emergency call back.
     selected: Optional[CallBackSelected] = None
+    #: ELIN (Emergency Location Identification Number) provides location-specific callback information to emergency
+    #: responders. This field indicates the time in minutes that the ELIN association remains active after being
+    #: established. The default value is 60 minutes, and the valid values range from 10 to 1440 minutes.
+    elin_expiry_time_minutes: Optional[int] = None
 
 
 class ContactDetails(ApiModel):
@@ -249,7 +253,7 @@ class LocationCallCaptions(ApiModel):
     #: and transcripts. Otherwise, location-level settings are used.
     use_org_settings_enabled: Optional[bool] = None
 
-    def update(self) -> dict:
+    def update(self) -> dict[str, Any]:
         """
         dict for updates
 
@@ -448,10 +452,10 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         data = settings.update()
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id)
-        data = self.put(url=url, json=data, params=params)
+        data = self.put(url=url, json=data, params=params)  # type: ignore[assignment]
         if data:
             return data.get('batchJobId')
-        return
+        return None
 
     def change_announcement_language(
         self,
@@ -485,7 +489,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         :type org_id: str
         """
         params = org_id and {'orgId': org_id} or None
-        body = {'announcementLanguageCode': language_code}
+        body: dict[str, Any] = {'announcementLanguageCode': language_code}
         if agent_enabled is not None:
             body['agentEnabled'] = agent_enabled
         if service_enabled is not None:
@@ -517,7 +521,12 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         return r
 
     def update_ecbn(
-        self, location_id: str, selected: CallBackSelected, location_member_id: str = None, org_id: str = None
+        self,
+        location_id: str,
+        selected: CallBackSelected,
+        location_member_id: str = None,
+        elin_expiry_time_minutes: int = None,
+        org_id: str = None,
     ):
         """
         Update a Location Emergency callback number
@@ -534,6 +543,10 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         :param location_member_id: Member ID of user/place within the location. Required if `LOCATION_MEMBER_NUMBER` is
             selected.
         :type location_member_id: str
+        :param elin_expiry_time_minutes: ELIN (Emergency Location Identification Number) provides location-specific
+            callback information to emergency responders. This field indicates the time in minutes that the ELIN
+            association remains active after being established. Valid values are between 10 and 1440 minutes.
+        :type elin_expiry_time_minutes: int
         :param org_id: Update location attributes for this organization.
         :type org_id: str
         :rtype: None
@@ -541,10 +554,12 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['selected'] = enum_str(selected)
         if location_member_id is not None:
             body['locationMemberId'] = location_member_id
+        if elin_expiry_time_minutes is not None:
+            body['elinExpiryTimeMinutes'] = elin_expiry_time_minutes
         url = self.ep(f'{location_id}/features/emergencyCallbackNumber')
         super().put(url, params=params, json=body)
 
@@ -849,7 +864,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['contacts'] = contacts
         url = self.ep(f'{location_id}/receptionistContacts/directories')
@@ -1009,7 +1024,7 @@ class TelephonyLocationApi(ApiChild, base='telephony/config/locations'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['contacts'] = contacts
         url = self.ep(f'{location_id}/receptionistContacts/directories/{directory_id}')

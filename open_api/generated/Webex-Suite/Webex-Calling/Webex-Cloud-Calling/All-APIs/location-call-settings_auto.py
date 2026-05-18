@@ -199,6 +199,10 @@ class GetLocationCallBackNumberObject(ApiModel):
     location_member_info: Optional[GetLocationCallBackNumberObjectLocationMemberInfo] = None
     #: Selected number type to configure emergency call back.
     selected: Optional[CallBackSelected] = None
+    #: ELIN (Emergency Location Identification Number) provides location-specific callback information to emergency
+    #: responders. This field indicates the time in minutes that the ELIN association remains active after being
+    #: established. The default value is 60 minutes, and the valid values range from 10 to 1440 minutes.
+    elin_expiry_time_minutes: Optional[int] = None
 
 
 class GetMusicOnHoldObjectGreeting(str, Enum):
@@ -1605,7 +1609,8 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def update_a_location_emergency_callback_number(self, location_id: str, selected: CallBackSelected,
-                                                    location_member_id: str, org_id: str = None) -> None:
+                                                    location_member_id: str, elin_expiry_time_minutes: int = None,
+                                                    org_id: str = None) -> None:
         """
         Update a Location Emergency callback number
 
@@ -1621,6 +1626,10 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         :param location_member_id: Member ID of user/place/virtual line/hunt group within the location. Required if
             `LOCATION_MEMBER_NUMBER` is selected.
         :type location_member_id: str
+        :param elin_expiry_time_minutes: ELIN (Emergency Location Identification Number) provides location-specific
+            callback information to emergency responders. This field indicates the time in minutes that the ELIN
+            association remains active after being established. Valid values are between 10 and 1440 minutes.
+        :type elin_expiry_time_minutes: int
         :param org_id: Update location attributes for this organization.
         :type org_id: str
         :rtype: None
@@ -1631,6 +1640,8 @@ class LocationCallSettingsApi(ApiChild, base='telephony/config'):
         body: dict[str, Any] = dict()
         body['selected'] = enum_str(selected)
         body['locationMemberId'] = location_member_id
+        if elin_expiry_time_minutes is not None:
+            body['elinExpiryTimeMinutes'] = elin_expiry_time_minutes
         url = self.ep(f'locations/{location_id}/features/emergencyCallbackNumber')
         super().put(url, params=params, json=body)
 

@@ -34029,10 +34029,10 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         data = settings.update()
         params = org_id and {'orgId': org_id} or None
         url = self.ep(location_id)
-        data = await self.put(url=url, json=data, params=params)
+        data = await self.put(url=url, json=data, params=params)  # type: ignore[assignment]
         if data:
             return data.get('batchJobId')
-        return
+        return None
 
     async def change_announcement_language(
         self,
@@ -34066,7 +34066,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         :type org_id: str
         """
         params = org_id and {'orgId': org_id} or None
-        body = {'announcementLanguageCode': language_code}
+        body: dict[str, Any] = {'announcementLanguageCode': language_code}
         if agent_enabled is not None:
             body['agentEnabled'] = agent_enabled
         if service_enabled is not None:
@@ -34098,7 +34098,12 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         return r
 
     async def update_ecbn(
-        self, location_id: str, selected: CallBackSelected, location_member_id: str = None, org_id: str = None
+        self,
+        location_id: str,
+        selected: CallBackSelected,
+        location_member_id: str = None,
+        elin_expiry_time_minutes: int = None,
+        org_id: str = None,
     ):
         """
         Update a Location Emergency callback number
@@ -34115,6 +34120,10 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         :param location_member_id: Member ID of user/place within the location. Required if `LOCATION_MEMBER_NUMBER` is
             selected.
         :type location_member_id: str
+        :param elin_expiry_time_minutes: ELIN (Emergency Location Identification Number) provides location-specific
+            callback information to emergency responders. This field indicates the time in minutes that the ELIN
+            association remains active after being established. Valid values are between 10 and 1440 minutes.
+        :type elin_expiry_time_minutes: int
         :param org_id: Update location attributes for this organization.
         :type org_id: str
         :rtype: None
@@ -34122,10 +34131,12 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['selected'] = enum_str(selected)
         if location_member_id is not None:
             body['locationMemberId'] = location_member_id
+        if elin_expiry_time_minutes is not None:
+            body['elinExpiryTimeMinutes'] = elin_expiry_time_minutes
         url = self.ep(f'{location_id}/features/emergencyCallbackNumber')
         await super().put(url, params=params, json=body)
 
@@ -34685,7 +34696,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['contacts'] = contacts
         url = self.ep(f'{location_id}/receptionistContacts/directories')
@@ -34845,7 +34856,7 @@ class AsTelephonyLocationApi(AsApiChild, base='telephony/config/locations'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         body['contacts'] = contacts
         url = self.ep(f'{location_id}/receptionistContacts/directories/{directory_id}')
