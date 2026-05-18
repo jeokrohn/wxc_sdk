@@ -2615,7 +2615,7 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'devices/{device_id}/actions/applyChanges/invoke')
         super().post(url, params=params)
 
-    def upload_adevice_background_image(self, device_id: str,
+    def upload_adevice_background_image(self, device_id: str, file: str, file_name: str,
                                         org_id: str = None) -> UploadAdeviceBackgroundImageResponse:
         """
         Upload a Device Background Image
@@ -2637,6 +2637,10 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
 
         :param device_id: Unique identifier for the device.
         :type device_id: str
+        :param file: The image file to upload. Must be in `.jpeg` or `.png` format. Maximum file size is 625 KB.
+        :type file: str
+        :param file_name: The name of the image file being uploaded.
+        :type file_name: str
         :param org_id: Uploads the image in this organization.
         :type org_id: str
         :rtype: :class:`UploadAdeviceBackgroundImageResponse`
@@ -2644,8 +2648,11 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        body['file'] = file
+        body['fileName'] = file_name
         url = self.ep(f'devices/{device_id}/actions/backgroundImageUpload/invoke')
-        data = super().post(url, params=params)
+        data = super().post(url, params=params, json=body)
         r = UploadAdeviceBackgroundImageResponse.model_validate(data)
         return r
 
