@@ -48,7 +48,8 @@ _SYSTEM_CONSTRAINTS = (
     'hand-maintained Python SDK. Output ONLY a unified diff with `---`/`+++` headers '
     'relative to the repo root. No prose, no code fences. Preserve `#:` doc-comments. '
     'Do not modify `@field_validator` or `@model_validator` blocks. Use single quotes. '
-    'Respect a 120-character line limit. Make the smallest change required.'
+    'Respect a 120-character line limit. Preserve method parameter order from the stub metadata. '
+    'Make the smallest change required.'
 )
 _CODEX_TIMEOUT_RETRY_SECONDS = 600.0
 
@@ -113,30 +114,65 @@ def render_prompt(record: ChangeRecord, match: Match, sdk_text: str) -> str:
         '```json',
         json.dumps(record.new, indent=2, default=str) if record.new else '(null)',
         '```',
-        '',
-        f'CURRENT SDK FILE CONTENT ({rel_path}):',
-        '```python',
-        sdk_text,
-        '```',
-        '',
-        'Produce a unified diff that updates the SDK file to reflect the stub change.',
-        'The diff MUST apply cleanly from the repo root via `git apply`.',
     ]
+    param_order = _parameter_order_instruction(record)
+    if param_order:
+        parts.extend(['', 'PARAMETER ORDER REQUIREMENT:', *param_order])
+    parts.extend(
+        [
+            '',
+            f'CURRENT SDK FILE CONTENT ({rel_path}):',
+            '```python',
+            sdk_text,
+            '```',
+            '',
+            'Produce a unified diff that updates the SDK file to reflect the stub change.',
+            'The diff MUST apply cleanly from the repo root via `git apply`.',
+        ]
+    )
     return '\n'.join(parts)
 
 
+def _parameter_order_instruction(record: ChangeRecord) -> list[str]:
+    """Return explicit parameter-order guidance for method parameter additions."""
+    if record.kind != 'method_param_added':
+        return []
+    payload = record.new or {}
+    param = payload.get('param') or {}
+    name = param.get('name')
+    params = payload.get('params') or []
+    order = [p.get('name') for p in params if isinstance(p, dict) and p.get('name')]
+    if not name or not order:
+        return []
+    insert_after = payload.get('insert_after')
+    insert_before = payload.get('insert_before')
+    anchor_bits: list[str] = []
+    if insert_after:
+        anchor_bits.append(f'after `{insert_after}`')
+    if insert_before:
+        anchor_bits.append(f'before `{insert_before}`')
+    if not anchor_bits:
+        anchor_bits.append('at the stub-defined position')
+    quoted_order = ', '.join(f'`{p}`' for p in order)
+    return [
+        f'- Stub signature order: {quoted_order}.',
+        f'- Insert `{name}` {" and ".join(anchor_bits)} in the SDK method signature.',
+        '- If the SDK method already contains multiple stub parameters, preserve their relative order.',
+    ]
+
+
 def render_repair_prompt(record: ChangeRecord, match: Match, sdk_text: str, rejected_diff: str, git_error: str) -> str:
-    """Build a second-pass prompt after ``git apply --check`` rejected a diff.
+    """Build a second-pass prompt after validation rejected a diff.
 
     The repair prompt includes the same current SDK file content as the first
-    attempt plus the rejected diff and exact git diagnostic. This gives the
-    model enough information to regenerate a patch with current context,
+    attempt plus the rejected diff and exact validation diagnostic. This gives
+    the model enough information to regenerate a patch with current context,
     while preserving the same strict unified-diff contract.
     """
     parts = [
         render_prompt(record, match, sdk_text),
         '',
-        'The previous diff was rejected by `git apply --check`.',
+        'The previous diff was rejected during validation.',
         'Regenerate a fresh unified diff using the CURRENT SDK FILE CONTENT above as the only source of context.',
         'Do not reuse stale line context from the rejected diff.',
         '',
@@ -145,7 +181,7 @@ def render_repair_prompt(record: ChangeRecord, match: Match, sdk_text: str, reje
         rejected_diff,
         '```',
         '',
-        'GIT APPLY STDERR:',
+        'VALIDATION ERROR:',
         '```text',
         git_error,
         '```',

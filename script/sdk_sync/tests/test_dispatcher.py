@@ -21,6 +21,25 @@ def _record() -> ChangeRecord:
     )
 
 
+def _param_added_record() -> ChangeRecord:
+    return ChangeRecord(
+        kind='method_param_added',
+        qualname='DemoApi.call',
+        old=None,
+        new={
+            'param': {'name': 'b', 'annotation': 'str', 'default': 'None', 'kind': 'positional'},
+            'params': [
+                {'name': 'a', 'annotation': 'str', 'default': 'None', 'kind': 'positional'},
+                {'name': 'b', 'annotation': 'str', 'default': 'None', 'kind': 'positional'},
+                {'name': 'c', 'annotation': 'str', 'default': 'None', 'kind': 'positional'},
+            ],
+            'insert_after': 'a',
+            'insert_before': 'c',
+        },
+        severity='review',
+    )
+
+
 def _match(path: Path) -> Match:
     return Match(
         sdk_path=path,
@@ -33,8 +52,42 @@ def _match(path: Path) -> Match:
     )
 
 
+def _method_match() -> Match:
+    return Match(
+        sdk_path=dispatcher._REPO_ROOT / 'wxc_sdk' / 'demo.py',
+        kind='method',
+        sdk_class='DemoApi',
+        sdk_member='call',
+        sdk_module_ir=cast(Any, None),
+        confidence=1.0,
+        matched_by='exact',
+    )
+
+
 def _diff(path: str) -> str:
     return f'--- {path}\n+++ {path}\n@@ -1,2 +1,2 @@\n class Demo:\n-    value: str\n+    value: int\n'
+
+
+def _bad_param_order_diff() -> str:
+    return (
+        '--- a/wxc_sdk/demo.py\n'
+        '+++ b/wxc_sdk/demo.py\n'
+        '@@ -1,4 +1,4 @@\n'
+        ' from wxc_sdk.api_child import ApiChild\n'
+        " class DemoApi(ApiChild, base='x'):\n"
+        '-    def call(self, a: str = None, c: str = None):\n'
+        '+    def call(self, a: str = None, c: str = None, b: str = None):\n'
+        '         pass\n'
+    )
+
+
+def _demo_api_source() -> str:
+    return (
+        'from wxc_sdk.api_child import ApiChild\n'
+        "class DemoApi(ApiChild, base='x'):\n"
+        '    def call(self, a: str = None, c: str = None):\n'
+        '        pass\n'
+    )
 
 
 def test_normalize_diff_paths_adds_git_prefixes_for_repo_root_path() -> None:
@@ -115,6 +168,33 @@ def test_try_llm_retries_patch_that_does_not_apply(
     assert calls[0]['timeout'] == 12.5
     assert calls[1]['rejected_diff'] == 'bad diff'
     assert 'patch does not apply' in calls[1]['git_error']
+
+
+def test_try_llm_rejects_method_param_added_with_wrong_order(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[dict[str, Any]] = []
+
+    def fake_propose_diff(*args: Any, **kwargs: Any) -> str:
+        calls.append(kwargs)
+        return _bad_param_order_diff()
+
+    monkeypatch.setattr(dispatcher._llm, 'propose_diff', fake_propose_diff)
+    monkeypatch.setattr(dispatcher, '_git_apply_check', lambda diff: (True, ''))
+
+    match = _method_match()
+    outcome = dispatcher._try_llm(
+        _param_added_record(),
+        match,
+        dispatcher.DispatchConfig(dry_run=True),
+        pending_writes={match.sdk_path: _demo_api_source()},
+    )
+
+    assert outcome.status == 'punted_diff_rejected'
+    assert 'retry semantic validation' in outcome.detail
+    assert 'expected shared stub order' in outcome.detail
+    assert len(calls) == 2
+    assert 'semantic parameter order validation failed' in calls[1]['git_error']
 
 
 def test_git_apply_check_allows_reduced_context(monkeypatch: pytest.MonkeyPatch) -> None:

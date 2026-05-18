@@ -29,7 +29,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, field
 from typing import Any, Literal
 
-from .ir import EnumIR, EnumValueIR, FieldIR, MethodIR, ModelIR, ModuleIR
+from .ir import EnumIR, EnumValueIR, FieldIR, MethodIR, ModelIR, ModuleIR, ParamIR
 
 #: All the change categories the differ can emit. Kept as a closed enumeration
 #: so the dispatcher's routing table can be exhaustive.
@@ -431,13 +431,17 @@ def _diff_method(class_name: str, old: MethodIR, new: MethodIR) -> list[ChangeRe
     qn = f'{class_name}.{new.name}'
     old_params = {p.name: p for p in old.params}
     new_params = {p.name: p for p in new.params}
-    for pname in new_params.keys() - old_params.keys():
+    new_param_names = [p.name for p in new.params]
+    added_param_names = {p.name for p in new.params if p.name not in old_params}
+    for pname in new_param_names:
+        if pname not in added_param_names:
+            continue
         out.append(
             ChangeRecord(
                 kind='method_param_added',
                 qualname=qn,
                 old=None,
-                new={'param': asdict(new_params[pname])},
+                new=_method_param_added_payload(new.params, pname, added_param_names),
                 severity='review',
             )
         )
@@ -546,6 +550,25 @@ def _field_to_dict(f: FieldIR) -> dict[str, Any]:
         'annotation': f.annotation,
         'default': f.default,
         'doc_comment': f.doc_comment,
+    }
+
+
+def _method_param_added_payload(params: tuple[ParamIR, ...], name: str, added_names: set[str]) -> dict[str, Any]:
+    """Build the payload for one added method parameter.
+
+    The full stub-side parameter order is carried with each add so downstream
+    LLM prompts and semantic validation can enforce where the new parameter
+    belongs relative to existing SDK parameters.
+    """
+    param_list = [asdict(p) for p in params]
+    names = [p['name'] for p in param_list]
+    index = names.index(name)
+    insert_before = next((candidate for candidate in names[index + 1 :] if candidate not in added_names), None)
+    return {
+        'param': param_list[index],
+        'params': param_list,
+        'insert_after': names[index - 1] if index > 0 else None,
+        'insert_before': insert_before,
     }
 
 

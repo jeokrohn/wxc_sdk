@@ -24,6 +24,26 @@ def _record() -> ChangeRecord:
     )
 
 
+def _method_param_added_record() -> ChangeRecord:
+    return ChangeRecord(
+        kind='method_param_added',
+        qualname='DemoApi.call',
+        old=None,
+        new={
+            'param': {'name': 'single_number_reach_phone_number', 'annotation': 'str', 'default': 'None'},
+            'params': [
+                {'name': 'target', 'annotation': 'str', 'default': None},
+                {'name': 'endpoint_id', 'annotation': 'str', 'default': 'None'},
+                {'name': 'single_number_reach_phone_number', 'annotation': 'str', 'default': 'None'},
+                {'name': 'line_owner_id', 'annotation': 'str', 'default': 'None'},
+            ],
+            'insert_after': 'endpoint_id',
+            'insert_before': 'line_owner_id',
+        },
+        severity='review',
+    )
+
+
 def _match(tmp_path: Path) -> Match:
     return Match(
         sdk_path=tmp_path / 'wxc_sdk' / 'demo.py',
@@ -182,6 +202,16 @@ def test_claude_prints_system_and_stdin_prompts(
     assert f'SYSTEM:\n{llm._SYSTEM_CONSTRAINTS}' in out
     assert 'STDIN:\nSTUB CHANGE: type_changed' in out
     assert '[llm-prompt] end claude target=' in out
+
+
+def test_render_prompt_includes_method_parameter_order_requirement(tmp_path: Path) -> None:
+    prompt = llm.render_prompt(_method_param_added_record(), _match(tmp_path), 'class DemoApi:\n    pass\n')
+
+    assert 'PARAMETER ORDER REQUIREMENT:' in prompt
+    assert (
+        'Stub signature order: `target`, `endpoint_id`, `single_number_reach_phone_number`, `line_owner_id`' in prompt
+    )
+    assert 'Insert `single_number_reach_phone_number` after `endpoint_id` and before `line_owner_id`' in prompt
 
 
 def test_extract_unified_diff_strips_fence_and_leading_prose() -> None:

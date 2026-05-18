@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import re
 import subprocess
+import tempfile
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -218,6 +219,13 @@ def _try_llm(
     # patches to `git apply` only to have it bounce them with "No valid
     # patches in input".
     if not _looks_like_diff(diff):
+        semantic_err = _semantic_validation_error(record, match, sdk_text)
+        if semantic_err:
+            retry_outcome = _retry_llm_diff(
+                record, match, sdk_text, config, pending_writes, fallback_reason, diff, semantic_err
+            )
+            if retry_outcome is not None:
+                return retry_outcome
         if config.verbose:
             print('[llm] no diff returned — SDK already in sync per LLM')
         return Outcome(record, match, 'already_in_sync', detail='LLM judged SDK already in sync')
@@ -243,6 +251,15 @@ def _try_llm(
             print(f'[llm] diff rejected by `git apply --check` ({diff_lines} lines): {err_one_line}')
         detail = f'{fallback_reason} | git apply: {err_one_line}' if fallback_reason else f'git apply: {err_one_line}'
         return Outcome(record, match, 'punted_diff_rejected', detail=detail, diff=diff)
+    semantic_err = _semantic_validation_error_for_diff(record, match, sdk_text, diff)
+    if semantic_err:
+        if config.verbose:
+            print(f'[llm] diff rejected by semantic validation: {_flatten_git_err(semantic_err)}')
+        retry_outcome = _retry_llm_diff(
+            record, match, sdk_text, config, pending_writes, fallback_reason, diff, semantic_err
+        )
+        if retry_outcome is not None:
+            return retry_outcome
     if config.dry_run:
         if config.verbose:
             print(f'[llm] dry-run, diff captured ({diff_lines} lines)')
@@ -305,6 +322,13 @@ def _retry_llm_diff(
             print(f'[llm] retry error: {exc}')
         return Outcome(record, match, 'punted_diff_rejected', detail=detail, diff=rejected_diff)
     if not _looks_like_diff(retry_diff):
+        semantic_err = _semantic_validation_error(record, match, sdk_text)
+        if semantic_err:
+            detail = f'{fallback_reason} | ' if fallback_reason else ''
+            detail += f'retry returned no diff but semantic validation failed: {_flatten_git_err(semantic_err)}'
+            if config.verbose:
+                print(f'[llm] retry returned no diff but semantic validation failed: {_flatten_git_err(semantic_err)}')
+            return Outcome(record, match, 'punted_diff_rejected', detail=detail, diff=retry_diff)
         if config.verbose:
             print('[llm] retry returned no diff — SDK already in sync per LLM')
         return Outcome(record, match, 'already_in_sync', detail='LLM retry judged SDK already in sync')
@@ -332,6 +356,19 @@ def _retry_llm_diff(
             f'{fallback_reason} | retry git apply: {err_one_line}'
             if fallback_reason
             else (f'retry git apply: {err_one_line}')
+        )
+        return Outcome(record, match, 'punted_diff_rejected', detail=detail, diff=retry_diff)
+    semantic_err = _semantic_validation_error_for_diff(record, match, sdk_text, retry_diff)
+    if semantic_err:
+        err_one_line = _flatten_git_err(semantic_err)
+        _dump_rejected(record, match, retry_diff, semantic_err)
+        if config.verbose:
+            retry_diff_lines = len(retry_diff.splitlines())
+            print(f'[llm] retry diff rejected by semantic validation ({retry_diff_lines} lines): {err_one_line}')
+        detail = (
+            f'{fallback_reason} | retry semantic validation: {err_one_line}'
+            if fallback_reason
+            else (f'retry semantic validation: {err_one_line}')
         )
         return Outcome(record, match, 'punted_diff_rejected', detail=detail, diff=retry_diff)
     diff_lines = len(retry_diff.splitlines())
@@ -403,6 +440,93 @@ def _refresh_match(match: Match, new_text: str) -> Match:
         confidence=match.confidence,
         matched_by=match.matched_by,
     )
+
+
+def _semantic_validation_error_for_diff(record: ChangeRecord, match: Match, base_text: str, diff: str) -> str:
+    """Return a semantic validation error for a candidate diff, or ``''``."""
+    if not _needs_semantic_validation(record):
+        return ''
+    ok, patched_or_err = _apply_diff_to_temp_text(diff, match, base_text)
+    if not ok:
+        return f'semantic validation could not apply diff to temporary target: {patched_or_err}'
+    return _semantic_validation_error(record, match, patched_or_err)
+
+
+def _semantic_validation_error(record: ChangeRecord, match: Match, sdk_text: str) -> str:
+    """Return a semantic validation error for SDK source text, or ``''``."""
+    if record.kind == 'method_param_added':
+        return _method_param_order_error(record, match, sdk_text)
+    return ''
+
+
+def _needs_semantic_validation(record: ChangeRecord) -> bool:
+    """Return whether a record needs post-diff semantic validation."""
+    return record.kind == 'method_param_added'
+
+
+def _apply_diff_to_temp_text(diff: str, match: Match, base_text: str) -> tuple[bool, str]:
+    """Apply ``diff`` to a temporary copy of the target file and return its text."""
+    target = Path(_relative_target_path(match.sdk_path))
+    if target.is_absolute():
+        return False, f'cannot validate non-repo-relative target path {target.as_posix()!r}'
+    with tempfile.TemporaryDirectory(prefix='sdk-sync-validate-') as tmp:
+        tmp_root = Path(tmp)
+        target_path = tmp_root / target
+        target_path.parent.mkdir(parents=True, exist_ok=True)
+        target_path.write_text(base_text)
+        try:
+            proc = subprocess.run(
+                ['git', 'apply', '--recount', '--unidiff-zero', '-C0', '-'],
+                input=diff,
+                text=True,
+                capture_output=True,
+                cwd=tmp_root,
+                check=False,
+            )
+        except FileNotFoundError:
+            return False, 'git executable not found'
+        if proc.returncode != 0:
+            return False, proc.stderr or '(no stderr)'
+        try:
+            return True, target_path.read_text()
+        except FileNotFoundError:
+            return False, f'target {target.as_posix()!r} disappeared while applying diff'
+
+
+def _method_param_order_error(record: ChangeRecord, match: Match, sdk_text: str) -> str:
+    """Return a method-parameter order validation error, or ``''``."""
+    if match.kind != 'method' or match.sdk_member is None:
+        return 'semantic parameter order validation requires a matched SDK method'
+    payload = record.new or {}
+    param = payload.get('param') or {}
+    name = param.get('name') if isinstance(param, dict) else None
+    params = payload.get('params') or []
+    stub_order = [p.get('name') for p in params if isinstance(p, dict) and isinstance(p.get('name'), str)]
+    if not isinstance(name, str) or not stub_order:
+        return ''
+    try:
+        from .ir import extract_from_text
+
+        ir = extract_from_text(sdk_text, str(match.sdk_path), is_sdk=False)
+    except SyntaxError as exc:
+        return f'semantic parameter order validation could not parse patched SDK file: {exc}'
+    if ir.api_class is None or ir.api_class.name != match.sdk_class:
+        return f'semantic parameter order validation could not find SDK class {match.sdk_class}'
+    method = next((m for m in ir.api_class.methods if m.name == match.sdk_member), None)
+    if method is None:
+        return f'semantic parameter order validation could not find SDK method {match.sdk_member}'
+    sdk_order = [p.name for p in method.params]
+    if name not in sdk_order:
+        return f'semantic parameter order validation did not find added parameter {name!r} in SDK signature'
+    stub_names = set(stub_order)
+    expected = [p for p in stub_order if p in sdk_order]
+    actual = [p for p in sdk_order if p in stub_names]
+    if actual != expected:
+        return (
+            f'semantic parameter order validation failed for {match.sdk_class}.{match.sdk_member}: '
+            f'expected shared stub order {expected}, got {actual}'
+        )
+    return ''
 
 
 def _looks_like_diff(diff: str) -> bool:

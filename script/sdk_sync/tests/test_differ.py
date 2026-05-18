@@ -68,3 +68,30 @@ def test_method_param_added_is_review() -> None:
     """)
     records = diff_irs(extract_from_text(old, 'a'), extract_from_text(new, 'b'))
     assert any(r.kind == 'method_param_added' and r.severity == 'review' for r in records)
+
+
+def test_method_param_additions_preserve_stub_order_and_anchors() -> None:
+    old = textwrap.dedent("""\
+    from wxc_sdk.api_child import ApiChild
+    class A(ApiChild, base='x'):
+        def do(self, a: str = None, d: str = None):
+            url = self.ep()
+            return super().get(url)
+    """)
+    new = textwrap.dedent("""\
+    from wxc_sdk.api_child import ApiChild
+    class A(ApiChild, base='x'):
+        def do(self, a: str = None, b: str = None, c: str = None, d: str = None):
+            url = self.ep()
+            return super().get(url)
+    """)
+    records = [
+        r for r in diff_irs(extract_from_text(old, 'a'), extract_from_text(new, 'b')) if r.kind == 'method_param_added'
+    ]
+
+    assert [r.new['param']['name'] for r in records if r.new is not None] == ['b', 'c']
+    assert [r.new['insert_after'] for r in records if r.new is not None] == ['a', 'b']
+    assert [r.new['insert_before'] for r in records if r.new is not None] == ['d', 'd']
+    first_new = records[0].new
+    assert first_new is not None
+    assert [p['name'] for p in first_new['params']] == ['a', 'b', 'c', 'd']
