@@ -214,7 +214,7 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
         :param direct_line_caller_id_name: Settings for the direct line caller ID name to be shown for this paging
             group.
         :type direct_line_caller_id_name: DirectLineCallerIdNameObject
-        :param dial_by_name: The name to be used for dial by name functions.  Characters of `%`,  `+`, `\`, `"` and
+        :param dial_by_name: The name to be used for dial by name functions.  Characters of `%`,  `+`, `\\`, `"` and
             Unicode characters are not allowed.
         :type dial_by_name: str
         :param org_id: Create the paging group for this organization.
@@ -397,7 +397,7 @@ class FeaturesPagingGroupApi(ApiChild, base='telephony/config'):
             group.
         :type direct_line_caller_id_name: DirectLineCallerIdNameObject
         :param dial_by_name: Sets or clears the name to be used for dial by name functions. To clear the `dialByName`,
-            the attribute must be set to null or empty string. Characters of `%`,  `+`, `\`, `"` and Unicode
+            the attribute must be set to null or empty string. Characters of `%`,  `+`, `\\`, `"` and Unicode
             characters are not allowed.
         :type dial_by_name: str
         :param org_id: Update paging group settings from this organization.
