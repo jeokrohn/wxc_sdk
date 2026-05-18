@@ -286,7 +286,8 @@ class CallControlsApi(ApiChild, base='telephony'):
         url = self.ep('calls/answer')
         super().post(url, json=body)
 
-    def bargein(self, target: str, endpoint_id: str = None, line_owner_id: str = None) -> BargeinResponse:
+    def bargein(self, target: str, endpoint_id: str = None, single_number_reach_phone_number: str = None,
+                line_owner_id: str = None) -> BargeinResponse:
         """
         Barge In
 
@@ -299,8 +300,12 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type target: str
         :param endpoint_id: The ID of the device or application to use for the barge-in. The `endpointId` must be one
             of the endpointIds returned by the `Get Preferred Answer Endpoint API
-            <https://developer.webex.com/docs/api/v1/user-call-settings-2-2/get-preferred-answer-endpoint>`_.
+            <https://developer.webex.com/docs/api/v1/user-call-settings-2-2/get-preferred-answer-endpoint>`_. Mutually exclusive with
+            `singleNumberReachPhoneNumber`.
         :type endpoint_id: str
+        :param single_number_reach_phone_number: The Single Number Reach phone number to use for the barge-in. Mutually
+            exclusive with `endpointId`.
+        :type single_number_reach_phone_number: str
         :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
             device owned by the user invoking the API.
         :type line_owner_id: str
@@ -310,6 +315,8 @@ class CallControlsApi(ApiChild, base='telephony'):
         body['target'] = target
         if endpoint_id is not None:
             body['endpointId'] = endpoint_id
+        if single_number_reach_phone_number is not None:
+            body['singleNumberReachPhoneNumber'] = single_number_reach_phone_number
         if line_owner_id is not None:
             body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/bargeIn')
@@ -317,7 +324,8 @@ class CallControlsApi(ApiChild, base='telephony'):
         r = BargeinResponse.model_validate(data)
         return r
 
-    def dial(self, destination: str, endpoint_id: str = None, line_owner_id: str = None) -> BargeinResponse:
+    def dial(self, destination: str, endpoint_id: str = None, single_number_reach_phone_number: str = None,
+             line_owner_id: str = None) -> BargeinResponse:
         """
         Dial
 
@@ -332,8 +340,12 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type destination: str
         :param endpoint_id: The ID of the device or application to use for the call. The `endpointId` must be one of
             the endpointIds returned by the `Get Preferred Answer Endpoint API
-            <https://developer.webex.com/docs/api/v1/user-call-settings-2-2/get-preferred-answer-endpoint>`_.
+            <https://developer.webex.com/docs/api/v1/user-call-settings-2-2/get-preferred-answer-endpoint>`_. Mutually exclusive with
+            `singleNumberReachPhoneNumber`.
         :type endpoint_id: str
+        :param single_number_reach_phone_number: The Single Number Reach phone number to use for the call. Mutually
+            exclusive with `endpointId`.
+        :type single_number_reach_phone_number: str
         :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
             device owned by the user invoking the API.
         :type line_owner_id: str
@@ -343,6 +355,8 @@ class CallControlsApi(ApiChild, base='telephony'):
         body['destination'] = destination
         if endpoint_id is not None:
             body['endpointId'] = endpoint_id
+        if single_number_reach_phone_number is not None:
+            body['singleNumberReachPhoneNumber'] = single_number_reach_phone_number
         if line_owner_id is not None:
             body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/dial')
@@ -521,7 +535,8 @@ class CallControlsApi(ApiChild, base='telephony'):
         url = self.ep('calls/pauseRecording')
         super().post(url, json=body)
 
-    def pickup(self, target: str = None, endpoint_id: str = None, line_owner_id: str = None) -> BargeinResponse:
+    def pickup(self, target: str = None, endpoint_id: str = None, single_number_reach_phone_number: str = None,
+               line_owner_id: str = None) -> BargeinResponse:
         """
         Pickup
 
@@ -536,8 +551,12 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type target: str
         :param endpoint_id: The ID of the device or application to use for the pickup. The `endpointId` must be one of
             the endpointIds returned by the `Get Preferred Answer Endpoint API
-            <https://developer.webex.com/docs/api/v1/user-call-settings-2-2/get-preferred-answer-endpoint>`_.
+            <https://developer.webex.com/docs/api/v1/user-call-settings-2-2/get-preferred-answer-endpoint>`_. Mutually exclusive with
+            `singleNumberReachPhoneNumber`.
         :type endpoint_id: str
+        :param single_number_reach_phone_number: The Single Number Reach phone number to use for the pickup. Mutually
+            exclusive with `endpointId`.
+        :type single_number_reach_phone_number: str
         :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
             device owned by the user invoking the API.
         :type line_owner_id: str
@@ -548,6 +567,8 @@ class CallControlsApi(ApiChild, base='telephony'):
             body['target'] = target
         if endpoint_id is not None:
             body['endpointId'] = endpoint_id
+        if single_number_reach_phone_number is not None:
+            body['singleNumberReachPhoneNumber'] = single_number_reach_phone_number
         if line_owner_id is not None:
             body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/pickup')
@@ -671,7 +692,8 @@ class CallControlsApi(ApiChild, base='telephony'):
         url = self.ep('calls/resumeRecording')
         super().post(url, json=body)
 
-    def retrieve(self, destination: str = None, endpoint_id: str = None, line_owner_id: str = None) -> BargeinResponse:
+    def retrieve(self, destination: str = None, endpoint_id: str = None, single_number_reach_phone_number: str = None,
+                 line_owner_id: str = None) -> BargeinResponse:
         """
         Retrieve
 
@@ -686,8 +708,12 @@ class CallControlsApi(ApiChild, base='telephony'):
         :type destination: str
         :param endpoint_id: The ID of the device or application to use for the retrieval. The `endpointId` must be one
             of the endpointIds returned by the `Get Preferred Answer Endpoint API
-            <https://developer.webex.com/docs/api/v1/user-call-settings-2-2/get-preferred-answer-endpoint>`_.
+            <https://developer.webex.com/docs/api/v1/user-call-settings-2-2/get-preferred-answer-endpoint>`_. Mutually exclusive with
+            `singleNumberReachPhoneNumber`.
         :type endpoint_id: str
+        :param single_number_reach_phone_number: The Single Number Reach phone number to use for the retrieval.
+            Mutually exclusive with `endpointId`.
+        :type single_number_reach_phone_number: str
         :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
             device owned by the user invoking the API.
         :type line_owner_id: str
@@ -698,6 +724,8 @@ class CallControlsApi(ApiChild, base='telephony'):
             body['destination'] = destination
         if endpoint_id is not None:
             body['endpointId'] = endpoint_id
+        if single_number_reach_phone_number is not None:
+            body['singleNumberReachPhoneNumber'] = single_number_reach_phone_number
         if line_owner_id is not None:
             body['lineOwnerId'] = line_owner_id
         url = self.ep('calls/retrieve')

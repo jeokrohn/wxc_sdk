@@ -4,7 +4,7 @@ Webhook types and API
 
 import datetime
 from collections.abc import Generator
-from typing import ClassVar, Optional, Union
+from typing import Any, ClassVar, Optional, Union
 
 from pydantic import ConfigDict, Field, model_validator
 
@@ -159,29 +159,29 @@ class Webhook(ApiModel):
     owned_by: Optional[str] = None
 
     @property
-    def app_id_uuid(self) -> str:
+    def app_id_uuid(self) -> str | None:
         return webex_id_to_uuid(self.app_id)
 
     @property
-    def webhook_id_uuid(self) -> str:
+    def webhook_id_uuid(self) -> str | None:
         return webex_id_to_uuid(self.webhook_id)
 
     @property
-    def org_id_uuid(self) -> str:
+    def org_id_uuid(self) -> str | None:
         return webex_id_to_uuid(self.org_id)
 
     @property
-    def created_by_uuid(self) -> str:
+    def created_by_uuid(self) -> str | None:
         return webex_id_to_uuid(self.created_by)
 
 
 class WebhookEventDataForbid(ApiModel):
-    resource: ClassVar = None
-    _registry: ClassVar = dict()
+    resource: ClassVar[str | None] = None
+    _registry: ClassVar[dict[str, Any]] = dict()
 
     model_config = ConfigDict(extra='forbid')
 
-    def __init_subclass__(cls: 'WebhookEventDataForbid', **kwargs):
+    def __init_subclass__(cls, **kwargs):
         """
 
         :meta private:
@@ -232,7 +232,7 @@ class WebhookEvent(Webhook):
     #: resource specific event data; for registered subclasses of :class:`wwx_sdk.webhook.WebhookEventData` an
     #: instance of this subclass is returned. If no class is registered for the given resource, then data is returned as
     #: generic WebhookEventData instance
-    data: Union[WebhookEventDataForbid, dict]
+    data: Union[WebhookEventDataForbid, dict[str, Any]]
 
     @model_validator(mode='before')
     @classmethod
