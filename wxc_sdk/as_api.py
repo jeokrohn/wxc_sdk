@@ -14170,7 +14170,15 @@ class AsECBNApi(AsPersonSettingsApiChild):
         r = PersonECBN.model_validate(data)
         return r
 
-    async def configure(self, entity_id: str, selected: SelectedECBN, location_member_id: str = None, org_id: str = None):
+    async def configure(
+        self,
+        entity_id: str,
+        selected: SelectedECBN = None,
+        location_member_id: str = None,
+        elin_enabled: bool = None,
+        elin_for_webex_app_enabled: bool = None,
+        org_id: str = None,
+    ):
         """
         Update an entity's Emergency Callback Number.
 
@@ -14191,6 +14199,12 @@ class AsECBNApi(AsPersonSettingsApiChild):
         :type selected: SelectedECBN
         :param location_member_id: Member ID of person/workspace/virtual line within the location.
         :type location_member_id: str
+        :param elin_enabled: Indicates whether this person is allowed to use an Emergency Location Identification
+            Number (ELIN) for emergency calls made from one of its devices.
+        :type elin_enabled: bool
+        :param elin_for_webex_app_enabled: Indicates whether this member is allowed to use an Emergency Location
+            Identification Number (ELIN) for emergency calls made using Webex App.
+        :type elin_for_webex_app_enabled: bool
         :param org_id: ID of the organization within which the entity resides. Only admin users of another organization
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
@@ -14200,10 +14214,14 @@ class AsECBNApi(AsPersonSettingsApiChild):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['selected'] = enum_str(selected)
         if location_member_id is not None:
             body['locationMemberId'] = location_member_id
+        if elin_enabled is not None:
+            body['elinEnabled'] = elin_enabled
+        if elin_for_webex_app_enabled is not None:
+            body['elinForWebexAppEnabled'] = elin_for_webex_app_enabled
         url = self.f_ep(entity_id)
         await super().put(url, params=params, json=body)
 

@@ -19,11 +19,11 @@ __all__ = ['AddressObject', 'CallBackSelectedPatch', 'ComplianceStatusLocationSt
            'GetComplianceStatusResponse', 'GetComplianceStatusResponseLocationStateEnum',
            'GetComplianceStatusResponseLocationStatusObject', 'GetComplianceStatusResponseRedSkyClientLocation',
            'GetLocationCallNotificationObject', 'GetLocationCallingParamtersResponse',
-           'GetLocationComplianceStatusResponse', 'LocationMemberInfoEffectiveLevelType', 'LoginResponse',
-           'MemberType', 'OrgCallNotificationObject', 'OrgPrefixObject', 'OrgStatusEnum', 'RedSkyGetObject',
-           'UpdateComplianceStatusResponseLocationStateEnum', 'VirtualLinesECBNDependenciesObject',
-           'VirtualLinesECBNObject', 'VirtualLinesECBNObjectDefaultInfo', 'VirtualLinesECBNObjectDirectLineInfo',
-           'VirtualLinesECBNObjectLocationMemberInfo']
+           'GetLocationComplianceStatusResponse', 'GetPersonCallbackNumberObject', 'GetWorkspaceCallbackNumberObject',
+           'LocationMemberInfoEffectiveLevelType', 'LoginResponse', 'MemberType', 'OrgCallNotificationObject',
+           'OrgPrefixObject', 'OrgStatusEnum', 'RedSkyGetObject', 'UpdateComplianceStatusResponseLocationStateEnum',
+           'VirtualLinesECBNDependenciesObject', 'VirtualLinesECBNObject', 'VirtualLinesECBNObjectDefaultInfo',
+           'VirtualLinesECBNObjectDirectLineInfo', 'VirtualLinesECBNObjectLocationMemberInfo']
 
 
 class OrgPrefixObject(str, Enum):
@@ -399,6 +399,43 @@ class CallBackSelectedPatch(str, Enum):
     location_member_number = 'LOCATION_MEMBER_NUMBER'
 
 
+class GetWorkspaceCallbackNumberObject(ApiModel):
+    #: Selected number type to configure emergency call back.
+    selected: Optional[ECBNSelectionType] = None
+    #: Data relevant to the ECBN for this user/location/virtual line/hunt group.
+    direct_line_info: Optional[VirtualLinesECBNObjectDirectLineInfo] = None
+    #: Data relevant to the user/place/virtual line/hunt group selected for ECBN for this location.
+    location_ecbninfo: Optional[VirtualLinesECBNObjectDirectLineInfo] = Field(alias='locationECBNInfo', default=None)
+    #: Data relevant to the user/place/virtual line/hunt group selected for ECBN.
+    location_member_info: Optional[VirtualLinesECBNObjectLocationMemberInfo] = None
+    #: Gives Emergency Callback Number effective value when none of the above is assigned or some other value is set
+    #: behind the scene.
+    default_info: Optional[VirtualLinesECBNObjectDefaultInfo] = None
+    #: Indicates whether this workspace is allowed to use an Emergency Location Identification Number (ELIN) for
+    #: emergency calls made from one of its devices.
+    elin_enabled: Optional[bool] = None
+
+
+class GetPersonCallbackNumberObject(ApiModel):
+    #: Selected number type to configure emergency callback.
+    selected: Optional[ECBNSelectionType] = None
+    #: Data relevant to the ECBN for this user/location/virtual line/hunt group.
+    direct_line_info: Optional[VirtualLinesECBNObjectDirectLineInfo] = None
+    #: Data relevant to the ECBN for this user/location/virtual line/hunt group.
+    location_ecbninfo: Optional[VirtualLinesECBNObjectDirectLineInfo] = Field(alias='locationECBNInfo', default=None)
+    #: Data relevant to the ECBN for this user/location/virtual line/hunt group.
+    location_member_info: Optional[VirtualLinesECBNObjectLocationMemberInfo] = None
+    #: Gives Emergency Callback Number effective value when none of the above is assigned or some other value is set
+    #: behind the scene.
+    default_info: Optional[VirtualLinesECBNObjectDefaultInfo] = None
+    #: Indicates whether this person is allowed to use an Emergency Location Identification Number (ELIN) for emergency
+    #: calls made from one of their devices.
+    elin_enabled: Optional[bool] = None
+    #: Indicates whether this person is allowed to use an Emergency Location Identification Number (ELIN) for emergency
+    #: calls made using Webex App.
+    elin_for_webex_app_enabled: Optional[bool] = None
+
+
 class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
     """
     Emergency Services Settings
@@ -750,7 +787,8 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         r = ComplianceStatusLocationStatusObject.model_validate(data['locationsStatus'])
         return r
 
-    def get_a_person_s_emergency_callback_number(self, person_id: str, org_id: str = None) -> VirtualLinesECBNObject:
+    def get_a_person_s_emergency_callback_number(self, person_id: str,
+                                                 org_id: str = None) -> GetPersonCallbackNumberObject:
         """
         Get a Person's Emergency Callback Number
 
@@ -771,18 +809,20 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
         :type org_id: str
-        :rtype: :class:`VirtualLinesECBNObject`
+        :rtype: :class:`GetPersonCallbackNumberObject`
         """
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'people/{person_id}/emergencyCallbackNumber')
         data = super().get(url, params=params)
-        r = VirtualLinesECBNObject.model_validate(data)
+        r = GetPersonCallbackNumberObject.model_validate(data)
         return r
 
-    def update_a_person_s_emergency_callback_number(self, person_id: str, selected: CallBackSelectedPatch,
-                                                    location_member_id: str = None, org_id: str = None) -> None:
+    def update_a_person_s_emergency_callback_number(self, person_id: str, selected: CallBackSelectedPatch = None,
+                                                    location_member_id: str = None, elin_enabled: bool = None,
+                                                    elin_for_webex_app_enabled: bool = None,
+                                                    org_id: str = None) -> None:
         """
         Update a Person's Emergency Callback Number
 
@@ -804,6 +844,12 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :param location_member_id: Member ID of person/workspace/virtual line/hunt group within the location. Required
             when `selected` is `LOCATION_MEMBER_NUMBER`.
         :type location_member_id: str
+        :param elin_enabled: Indicates whether this person is allowed to use an Emergency Location Identification
+            Number (ELIN) for emergency calls made from one of their devices.
+        :type elin_enabled: bool
+        :param elin_for_webex_app_enabled: Indicates whether this member is allowed to use an Emergency Location
+            Identification Number (ELIN) for emergency calls made using Webex App.
+        :type elin_for_webex_app_enabled: bool
         :param org_id: ID of the organization within which the person resides. Only admin users of another organization
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
@@ -814,9 +860,14 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body: dict[str, Any] = dict()
-        body['selected'] = enum_str(selected)
+        if selected is not None:
+            body['selected'] = enum_str(selected)
         if location_member_id is not None:
             body['locationMemberId'] = location_member_id
+        if elin_enabled is not None:
+            body['elinEnabled'] = elin_enabled
+        if elin_for_webex_app_enabled is not None:
+            body['elinForWebexAppEnabled'] = elin_for_webex_app_enabled
         url = self.ep(f'people/{person_id}/emergencyCallbackNumber')
         super().put(url, params=params, json=body)
 
@@ -1186,7 +1237,7 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def get_a_workspace_emergency_callback_number(self, workspace_id: str,
-                                                  org_id: str = None) -> VirtualLinesECBNObject:
+                                                  org_id: str = None) -> GetWorkspaceCallbackNumberObject:
         """
         Get a Workspace Emergency Callback Number
 
@@ -1205,18 +1256,19 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :type workspace_id: str
         :param org_id: Retrieve Emergency Callback Number attributes for this organization.
         :type org_id: str
-        :rtype: :class:`VirtualLinesECBNObject`
+        :rtype: :class:`GetWorkspaceCallbackNumberObject`
         """
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep(f'workspaces/{workspace_id}/emergencyCallbackNumber')
         data = super().get(url, params=params)
-        r = VirtualLinesECBNObject.model_validate(data)
+        r = GetWorkspaceCallbackNumberObject.model_validate(data)
         return r
 
-    def update_a_workspace_emergency_callback_number(self, workspace_id: str, selected: CallBackSelectedPatch,
-                                                     location_member_id: str = None, org_id: str = None) -> None:
+    def update_a_workspace_emergency_callback_number(self, workspace_id: str, selected: CallBackSelectedPatch = None,
+                                                     location_member_id: str = None, elin_enabled: bool = None,
+                                                     org_id: str = None) -> None:
         """
         Update a Workspace Emergency Callback Number
 
@@ -1238,6 +1290,9 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         :param location_member_id: Member ID of person/workspace/virtual line/hunt group within the location. Required
             when `selected` is `LOCATION_MEMBER_NUMBER`.
         :type location_member_id: str
+        :param elin_enabled: Indicates whether this workspace is allowed to use an Emergency Location Identification
+            Number (ELIN) for emergency calls made from one of its devices.
+        :type elin_enabled: bool
         :param org_id: Updating Emergency Callback Number attributes for this organization.
         :type org_id: str
         :rtype: None
@@ -1246,9 +1301,12 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         if org_id is not None:
             params['orgId'] = org_id
         body: dict[str, Any] = dict()
-        body['selected'] = enum_str(selected)
+        if selected is not None:
+            body['selected'] = enum_str(selected)
         if location_member_id is not None:
             body['locationMemberId'] = location_member_id
+        if elin_enabled is not None:
+            body['elinEnabled'] = elin_enabled
         url = self.ep(f'workspaces/{workspace_id}/emergencyCallbackNumber')
         super().put(url, params=params, json=body)
 

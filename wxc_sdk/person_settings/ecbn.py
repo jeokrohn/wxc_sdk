@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import Field
 
@@ -136,6 +136,12 @@ class PersonECBN(ApiModel):
     #: Gives Emergency Callback Number effective value when none of the above is assigned or some other value is set
     #: behind the scene.
     default_info: Optional[ECBNDefault] = None
+    #: Indicates whether this workspace is allowed to use an Emergency Location Identification Number (ELIN) for
+    #: emergency calls made from one of its devices.
+    elin_enabled: Optional[bool] = None
+    #: Indicates whether this person is allowed to use an Emergency Location Identification Number (ELIN) for emergency
+    #: calls made using Webex App.
+    elin_for_webex_app_enabled: Optional[bool] = None
 
 
 class SelectedECBN(str, Enum):
@@ -205,7 +211,15 @@ class ECBNApi(PersonSettingsApiChild):
         r = PersonECBN.model_validate(data)
         return r
 
-    def configure(self, entity_id: str, selected: SelectedECBN, location_member_id: str = None, org_id: str = None):
+    def configure(
+        self,
+        entity_id: str,
+        selected: SelectedECBN = None,
+        location_member_id: str = None,
+        elin_enabled: bool = None,
+        elin_for_webex_app_enabled: bool = None,
+        org_id: str = None,
+    ):
         """
         Update an entity's Emergency Callback Number.
 
@@ -226,6 +240,12 @@ class ECBNApi(PersonSettingsApiChild):
         :type selected: SelectedECBN
         :param location_member_id: Member ID of person/workspace/virtual line within the location.
         :type location_member_id: str
+        :param elin_enabled: Indicates whether this person is allowed to use an Emergency Location Identification
+            Number (ELIN) for emergency calls made from one of its devices.
+        :type elin_enabled: bool
+        :param elin_for_webex_app_enabled: Indicates whether this member is allowed to use an Emergency Location
+            Identification Number (ELIN) for emergency calls made using Webex App.
+        :type elin_for_webex_app_enabled: bool
         :param org_id: ID of the organization within which the entity resides. Only admin users of another organization
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
@@ -235,10 +255,14 @@ class ECBNApi(PersonSettingsApiChild):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['selected'] = enum_str(selected)
         if location_member_id is not None:
             body['locationMemberId'] = location_member_id
+        if elin_enabled is not None:
+            body['elinEnabled'] = elin_enabled
+        if elin_for_webex_app_enabled is not None:
+            body['elinForWebexAppEnabled'] = elin_for_webex_app_enabled
         url = self.f_ep(entity_id)
         super().put(url, params=params, json=body)
 
