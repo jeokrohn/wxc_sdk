@@ -45,6 +45,10 @@ class AuditEventData(ApiModel):
     action_text: Optional[str] = None
     #: The name of the organization being acted upon.
     target_org_name: Optional[str] = None
+    #: User operation failure message.
+    error_message: Optional[str] = None
+    #: User operation failure code.
+    error_code: Optional[str] = None
 
     account_name: Optional[Any] = None
     action_client_id: Optional[Any] = None
@@ -246,4 +250,4 @@ class AdminAuditEventsApi(ApiChild, base='adminAudit'):
         url = self.ep('eventCategories')
         data = super().get(url)
         r = data['eventCategories']
-        return r
+        return r  # type: ignore[return-value]

@@ -288,7 +288,7 @@ class AsAdminAuditEventsApi(AsApiChild, base='adminAudit'):
         url = self.ep('eventCategories')
         data = await super().get(url)
         r = data['eventCategories']
-        return r
+        return r  # type: ignore[return-value]
 
 
 class AsAttachmentActionsApi(AsApiChild, base='attachment/actions'):
@@ -308,6 +308,29 @@ class AsAttachmentActionsApi(AsApiChild, base='attachment/actions'):
         url = self.ep(f'{action_id}')
         data = await super().get(url=url)
         return AttachmentAction.model_validate(data)
+
+    async def create(self, type: str, message_id: str, inputs: dict[str, Any]) -> AttachmentAction:
+        """
+        Create an Attachment Action
+
+        Create a new attachment action.
+
+        :param type: The type of action to perform.
+        :type type: str
+        :param message_id: The ID of the message which contains the attachment.
+        :type message_id: str
+        :param inputs: The attachment action's inputs.
+        :type inputs: SubmitCardActionInputs
+        :rtype: :class:`AttachmentAction`
+        """
+        body: dict[str, Any] = dict()
+        body['type'] = type
+        body['messageId'] = message_id
+        body['inputs'] = inputs
+        url = self.ep()
+        data = await super().post(url, json=body)
+        r = AttachmentAction.model_validate(data)
+        return r
 
 
 class AsAuthorizationsApi(AsApiChild, base='authorizations'):

@@ -15,6 +15,9 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.admin_audit.list_events <wxc_sdk.admin_audit.AdminAuditEventsApi.list_events>`
         | List Admin Audit Events
         | ``GET /adminAudit/events``
+   * - :meth:`api.attachment_actions.create <wxc_sdk.attachment_actions.AttachmentActionsApi.create>`
+        | Create an Attachment Action
+        | ``POST /attachment/actions``
    * - :meth:`api.attachment_actions.details <wxc_sdk.attachment_actions.AttachmentActionsApi.details>`
         | Shows details for a attachment action, by ID
         | ``GET /attachment/actions/{action_id}``
