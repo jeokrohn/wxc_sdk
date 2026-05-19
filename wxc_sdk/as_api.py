@@ -37715,7 +37715,24 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
 
 class AsWebhookApi(AsApiChild, base='webhooks'):
     """
-    API for webhook management
+    Webhooks
+
+    For Webex for Government (FedRAMP), the following resource types are not
+    available for Webhooks: meetingTranscripts.
+
+
+
+    Webhooks allow your app to be notified via HTTP when a specific event occurs in Webex. For example, your app can
+    register a webhook to be notified when a new message is posted into a specific room.
+
+    Events trigger in near real-time allowing your app and backend IT systems to stay in sync with new content and room
+    activity.
+
+    Check The `Webhooks Guide
+    <https://developer.webex.com/docs/api/guides/webhooks>`_ and `our blog
+
+    Long result sets will be split into `pages
+    <https://developer.webex.com/docs/basics#pagination>`_.
     """
 
     def list_gen(self, owned_by: str = None, **params) -> AsyncGenerator[Webhook, None]:

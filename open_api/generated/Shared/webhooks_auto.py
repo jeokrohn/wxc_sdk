@@ -131,8 +131,7 @@ class WebhooksApi(ApiChild, base='webhooks'):
     Webhooks
     
     For Webex for Government (FedRAMP), the following resource types are not
-    available for Webhooks: meetings, recordings, meetingParticipants, and
-    meetingTranscripts.
+    available for Webhooks: meetingTranscripts.
     
     
     
