@@ -471,30 +471,34 @@ def _base_names(node: ast.ClassDef) -> tuple[str, ...]:
     return tuple(names)
 
 
+def _is_api_child_base(base: str) -> bool:
+    """Return whether a textual base class name represents an API child base."""
+    final_name = base.rsplit('.', maxsplit=1)[-1]
+    return final_name == 'ApiChild' or final_name.endswith('ApiChild')
+
+
 def _classify_class(node: ast.ClassDef) -> Literal['enum', 'model', 'api', 'other']:
     """Classify a class definition into one of the four IR roles.
 
     The check is purely textual on the base-class expressions; we never import
-    the module so we cannot resolve subclass relationships. This is good enough
-    because the stub generator and SDK consistently spell the bases as
-    ``Enum``/``str, Enum``, ``ApiModel`` and ``ApiChild``.
+    the module so we cannot resolve subclass relationships. This is good
+    enough because the stub generator and SDK consistently spell the bases as
+    ``Enum``/``str, Enum``, ``ApiModel``, direct ``ApiChild``, dotted
+    ``*.ApiChild``, or helper bases such as ``PersonSettingsApiChild``.
 
     :param node: A class definition node.
     :return: ``'enum'`` for ``SafeEnum``/``Enum`` subclasses, ``'model'`` for
-        :class:`ApiModel` subclasses, ``'api'`` for :class:`ApiChild`
-        subclasses (including those carrying a ``base=`` kwarg), otherwise
-        ``'other'``.
+        :class:`ApiModel` subclasses, ``'api'`` for API child subclasses
+        (including helper bases and classes carrying a ``base=`` kwarg),
+        otherwise ``'other'``.
     """
     bases = _base_names(node)
     if any('Enum' in b for b in bases):
         return 'enum'
     if any(b == 'ApiModel' or b.endswith('.ApiModel') for b in bases):
         return 'model'
-    if any(b == 'ApiChild' or b.endswith('.ApiChild') or b.startswith('ApiChild,') for b in bases):
+    if any(_is_api_child_base(b) for b in bases):
         return 'api'
-    for base in node.bases:
-        if isinstance(base, ast.Name) and base.id == 'ApiChild':
-            return 'api'
     # Fallback heuristic: any class with a `base=` kwarg is treated as an
     # API class, since that pattern is unique to `ApiChild` in this codebase.
     if node.keywords and any(kw.arg == 'base' for kw in node.keywords):

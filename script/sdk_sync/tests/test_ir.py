@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import textwrap
+from pathlib import Path
 
-from script.sdk_sync.ir import extract_from_text
+from script.sdk_sync.ir import extract, extract_from_text
+
+_REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
 def test_enum_with_doc_comments() -> None:
@@ -90,3 +93,40 @@ def test_api_method_endpoint_canonicalization() -> None:
     assert methods['list_items'].ep_template == 'foo/bar'
     assert methods['create'].verb == 'post'
     assert methods['create'].ep_template == 'foo/bar/new'
+
+
+def test_api_child_helper_bases_are_api_classes() -> None:
+    plain_src = textwrap.dedent("""\
+    from wxc_sdk.person_settings.common import PersonSettingsApiChild
+
+
+    class PlainHelperApi(PersonSettingsApiChild):
+        pass
+    """)
+    dotted_src = textwrap.dedent("""\
+    from wxc_sdk.person_settings import common
+
+
+    class DottedHelperApi(common.PersonSettingsApiChild):
+        pass
+    """)
+    plain_ir = extract_from_text(plain_src, '<plain>')
+    dotted_ir = extract_from_text(dotted_src, '<dotted>')
+
+    assert plain_ir.api_class is not None
+    assert plain_ir.api_class.name == 'PlainHelperApi'
+    assert dotted_ir.api_class is not None
+    assert dotted_ir.api_class.name == 'DottedHelperApi'
+
+
+def test_ecbn_api_live_replay_includes_person_workspace_and_virtual_line_urls() -> None:
+    ir = extract(_REPO_ROOT / 'wxc_sdk/person_settings/ecbn.py', is_sdk=True)
+
+    assert ir.api_class is not None
+    assert ir.api_class.name == 'ECBNApi'
+    read_templates = {m.ep_template for m in ir.api_class.methods if m.name == 'read'}
+    assert {
+        'telephony/config/people/{}/emergencyCallbackNumber',
+        'telephony/config/workspaces/{}/emergencyCallbackNumber',
+        'telephony/config/virtualLines/{}/emergencyCallbackNumber',
+    } <= read_templates
