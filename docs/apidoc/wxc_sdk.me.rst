@@ -22,6 +22,7 @@ Subpackages
    wxc_sdk.me.callpark
    wxc_sdk.me.callpickup
    wxc_sdk.me.callpolicy
+   wxc_sdk.me.calls
    wxc_sdk.me.dnd
    wxc_sdk.me.endpoints
    wxc_sdk.me.executive

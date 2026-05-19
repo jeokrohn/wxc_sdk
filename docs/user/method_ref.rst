@@ -396,6 +396,21 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.me.calling_services_list <wxc_sdk.me.MeSettingsApi.calling_services_list>`
         | Get My Calling Services List
         | ``GET /telephony/config/people/me/settings/services``
+   * - :meth:`api.me.calls.answer <wxc_sdk.me.calls.MeCallControlApi.answer>`
+        | Answer
+        | ``POST /telephony/calls/members/me/answer``
+   * - :meth:`api.me.calls.call_details <wxc_sdk.me.calls.MeCallControlApi.call_details>`
+        | Get Call Details
+        | ``GET /telephony/calls/members/me/calls/{call_id}``
+   * - :meth:`api.me.calls.dial <wxc_sdk.me.calls.MeCallControlApi.dial>`
+        | Dial
+        | ``POST /telephony/calls/members/me/dial``
+   * - :meth:`api.me.calls.hangup <wxc_sdk.me.calls.MeCallControlApi.hangup>`
+        | Hangup
+        | ``POST /telephony/calls/members/me/hangup``
+   * - :meth:`api.me.calls.list_calls <wxc_sdk.me.calls.MeCallControlApi.list_calls>`
+        | List Calls
+        | ``GET /telephony/calls/members/me/calls``
    * - :meth:`api.me.contact_center_extensions <wxc_sdk.me.MeSettingsApi.contact_center_extensions>`
         | Read the Contact Center Extensions
         | ``GET /telephony/config/people/me``

@@ -25,6 +25,7 @@ from wxc_sdk.me.callerid import MeCallerIdApi
 from wxc_sdk.me.callpark import MeCallParkApi
 from wxc_sdk.me.callpickup import MeCallPickupApi
 from wxc_sdk.me.callpolicy import MeCallPoliciesApi
+from wxc_sdk.me.calls import MeCallControlApi
 from wxc_sdk.me.dnd import MeDNDApi
 from wxc_sdk.me.endpoints import EndpointType, MeEndpointsApi
 from wxc_sdk.me.executive import MeExecutiveApi
@@ -426,6 +427,7 @@ class MeSettingsApi(ApiChild, base='telephony/config/people/me'):
     call_policies: MeCallPoliciesApi
     call_waiting: MeCallWaitingApi
     caller_id: MeCallerIdApi
+    calls: MeCallControlApi
     dnd: MeDNDApi
     endpoints: MeEndpointsApi
     executive: MeExecutiveApi
@@ -461,6 +463,7 @@ class MeSettingsApi(ApiChild, base='telephony/config/people/me'):
         self.call_policies = MeCallPoliciesApi(session=session)
         self.call_waiting = MeCallWaitingApi(session=session)
         self.caller_id = MeCallerIdApi(session=session)
+        self.calls = MeCallControlApi(session=session)
         self.dnd: MeDNDApi = MeDNDApi(session=session)
         self.endpoints = MeEndpointsApi(session=session)
         self.executive = MeExecutiveApi(session=session)
