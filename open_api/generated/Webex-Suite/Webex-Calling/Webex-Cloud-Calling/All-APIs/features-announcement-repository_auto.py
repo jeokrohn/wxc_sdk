@@ -15,7 +15,7 @@ from wxc_sdk.base import SafeEnum as Enum
 __all__ = ['AnnouncementResponse', 'AnnouncementResponseWithPlaylist', 'AnnouncementUsageResponse',
            'AnnouncementsListResponse', 'AnnouncementsListResponseLevel', 'FeatureReferenceObject',
            'FeaturesAnnouncementRepositoryApi', 'LocationId', 'LocationObject', 'TtsStatusResponse',
-           'TtsUsageResponse', 'TtsVoiceObject']
+           'TtsStatusResponseStatus', 'TtsUsageResponse', 'TtsVoice']
 
 
 class FeatureReferenceObject(ApiModel):
@@ -132,37 +132,47 @@ class AnnouncementsListResponse(ApiModel):
 
 
 class TtsUsageResponse(ApiModel):
-    #: Number of API calls made.
+    #: The number of text-to-speech API calls made in the current time window.
     no_of_api_calls: Optional[int] = None
-    #: Maximum allowed API calls within the time window.
+    #: The maximum number of text-to-speech API calls allowed in the current time window.
     max_allowed_api_calls: Optional[int] = None
-    #: Timestamp indicating when the usage will reset.
+    #: The timestamp when the usage counter will reset. It will be returned when reaching the maximum allowed API calls
+    #: in the time window.
     usage_reset_timestamp: Optional[datetime] = None
+
+
+class TtsStatusResponseStatus(str, Enum):
+    in_progress = 'IN_PROGRESS'
+    success = 'SUCCESS'
+    failure = 'FAILURE'
 
 
 class TtsStatusResponse(ApiModel):
     #: Unique identifier of the text-to-speech generation request.
     id: Optional[str] = None
-    #: The voice used for text-to-speech generation.
+    #: The voice ID used to generate the audio prompt.
     voice: Optional[str] = None
-    #: The text that was converted to speech.
+    #: The input text used to generate the audio prompt.
     text: Optional[str] = None
-    #: The language code used for the text-to-speech generation.
+    #: The language code used to generate the audio prompt.
     language_code: Optional[str] = None
-    #: Status of the text-to-speech generation request.
-    status: Optional[str] = None
-    #: URL to download the encrypted audio prompt.
+    #: The status of the text-to-speech generation request.
+    status: Optional[TtsStatusResponseStatus] = None
+    #: A URL to download the encrypted audio prompt. Only available when status is `SUCCESS`.
     prompt_url: Optional[str] = None
-    #: KMS key URI for decrypting the audio prompt.
+    #: The KMS key URI required to decrypt the prompt downloaded from `promptUrl`. Only available when status is
+    #: `SUCCESS`.
     kms_key_uri: Optional[str] = None
-    #: File URI of the generated audio prompt.
+    #: A file URI you can use when configuring an announcement. Only available when status is `SUCCESS`.
     file_uri: Optional[str] = None
+    #: A detailed message describing why generation failed. Only present when status is `FAILURE`.
+    error_message: Optional[str] = None
 
 
-class TtsVoiceObject(ApiModel):
-    #: Unique identifier of the voice.
+class TtsVoice(ApiModel):
+    #: The voice ID used to generate the audio prompt.
     id: Optional[str] = None
-    #: Display label for the voice.
+    #: The voice label, including the voice name and gender.
     label: Optional[str] = None
 
 
@@ -563,11 +573,13 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         This API requires a full administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
-        :param voice: The voice to use for text-to-speech generation.
+        :param voice: The voice ID used to generate the audio prompt. Use the List Text-to-Speech Voices API to
+            retrieve available voices.
         :type voice: str
         :param text: The text to convert to speech.
         :type text: str
-        :param language_code: The language code for the text-to-speech generation.
+        :param language_code: The language code used to generate the audio prompt. Use the Read the List of
+            Announcement Languages API to retrieve supported language codes.
         :type language_code: str
         :param org_id: Generate text-to-speech for this organization.
         :type org_id: str
@@ -611,12 +623,11 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         r = TtsUsageResponse.model_validate(data)
         return r
 
-    def get_text_to_speech_voices(self, language_code: str = None,
-                                  org_id: str = None) -> builtins.list[TtsVoiceObject]:
+    def list_text_to_speech_voices(self, org_id: str = None) -> builtins.list[TtsVoice]:
         """
-        Get Available Text-to-Speech Voices
+        List Text-to-Speech Voices
 
-        Retrieve the list of available text-to-speech voices that can be used for generating audio prompts.
+        Fetch a list of available text-to-speech voices. Use the returned voice ID in the generation request.
 
         Text-to-speech (TTS) efficiently generates prompts, greetings, and announcements by converting written text
         into synthesized audio using the specified voice. The generated audio functions like a recorded WAV file,
@@ -625,20 +636,16 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         This API requires a full or read-only administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param language_code: Filter voices by language code.
-        :type language_code: str
-        :param org_id: Get text-to-speech voices for this organization.
+        :param org_id: List text-to-speech voices supported for this organization.
         :type org_id: str
-        :rtype: list[TtsVoiceObject]
+        :rtype: list[TtsVoice]
         """
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        if language_code is not None:
-            params['languageCode'] = language_code
         url = self.ep('textToSpeech/voices')
         data = super().get(url, params=params)
-        r = TypeAdapter(list[TtsVoiceObject]).validate_python(data['voices'])
+        r = TypeAdapter(list[TtsVoice]).validate_python(data['voices'])
         return r
 
     def get_text_to_speech_generation_status(self, tts_id: str, org_id: str = None) -> TtsStatusResponse:

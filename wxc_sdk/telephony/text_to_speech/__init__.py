@@ -8,7 +8,7 @@ from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 from wxc_sdk.base import SafeEnum as Enum
 
-__all__ = ['TtsUsageResponse', 'TtsStatusResponse', 'TtsVoice', 'TextToSpeechApi']
+__all__ = ['TtsUsageResponse', 'TtsStatusResponse', 'TtsStatusResponseStatus', 'TtsVoice', 'TextToSpeechApi']
 
 
 class TtsUsageResponse(ApiModel):
