@@ -351,9 +351,11 @@ def _diff_model_fields(old: ModelIR, new: ModelIR) -> list[ChangeRecord]:
 def _diff_api(old: ModuleIR, new: ModuleIR) -> list[ChangeRecord]:
     """Compute differences between the API classes of two modules.
 
-    Adding or removing the API class itself is reported as a single
-    coarse-grained record (``qualname='<Class>.*'``); the LLM stage is the
-    only sensible handler for such a sweeping change.
+    Adding an API class emits one ``method_added`` record per method so the
+    matcher can resolve already-implemented SDK endpoints by concrete
+    ``(verb, ep_template)`` keys. Removing an API class remains a single
+    coarse-grained record because the removed methods are absent from the
+    current stub IR the matcher uses for normal method lookup.
 
     :param old: IR of the file at the previous revision.
     :param new: IR of the file in the working tree.
@@ -366,12 +368,12 @@ def _diff_api(old: ModuleIR, new: ModuleIR) -> list[ChangeRecord]:
         return [
             ChangeRecord(
                 kind='method_added',
-                qualname=f'{cls.name}.*',
+                qualname=f'{cls.name}.{m.name}',
                 old=None,
-                new={'class': cls.name},
+                new=_method_to_dict(m),
                 severity='review',
-                notes=('entire API class added/removed',),
             )
+            for m in cls.methods
         ]
     if old.api_class is not None and new.api_class is None:
         cls = old.api_class

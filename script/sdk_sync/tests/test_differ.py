@@ -70,6 +70,28 @@ def test_method_param_added_is_review() -> None:
     assert any(r.kind == 'method_param_added' and r.severity == 'review' for r in records)
 
 
+def test_new_api_class_emits_concrete_method_additions() -> None:
+    new = textwrap.dedent("""\
+    from wxc_sdk.api_child import ApiChild
+    class A(ApiChild, base='x'):
+        def first(self):
+            url = self.ep('first')
+            return super().get(url)
+
+        def second(self):
+            url = self.ep('second')
+            return super().post(url)
+    """)
+    records = diff_irs(extract_from_text('', 'a'), extract_from_text(new, 'b'))
+
+    assert [(r.kind, r.qualname) for r in records] == [
+        ('method_added', 'A.first'),
+        ('method_added', 'A.second'),
+    ]
+    assert all(r.new is not None and r.new['name'] in {'first', 'second'} for r in records)
+    assert all(r.qualname != 'A.*' for r in records)
+
+
 def test_method_param_additions_preserve_stub_order_and_anchors() -> None:
     old = textwrap.dedent("""\
     from wxc_sdk.api_child import ApiChild

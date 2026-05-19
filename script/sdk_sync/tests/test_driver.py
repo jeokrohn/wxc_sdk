@@ -3,11 +3,13 @@
 
 from __future__ import annotations
 
+import subprocess
 from pathlib import Path
 from typing import Any
 
 import pytest
 
+from script.sdk_sync import dispatcher as _dispatcher
 from script.sdk_sync import driver as _driver
 from script.sdk_sync.differ import ChangeRecord
 from script.sdk_sync.ir import ApiClassIR, ModuleIR
@@ -205,3 +207,70 @@ def test_main_only_filter_drops_everything(
     rc = _driver.main(['--dry-run', '--no-llm', '--only', '*__nope__*'])
     assert rc == 0
     assert 'No stub changes to sync.' in capsys.readouterr().out
+
+
+def test_main_processes_new_stub_without_head_revision(monkeypatch: pytest.MonkeyPatch) -> None:
+    existing_stub = (
+        'open_api/generated/Webex-Suite/Webex-Calling/Webex-Cloud-Calling/All-APIs/call-controls-members_auto.py'
+    )
+    missing_stub = 'open_api/generated/__missing_new_stub_auto.py'
+    old_ir = ModuleIR(path=existing_stub, models=(), enums=(), api_class=None, source_sha='', source_text='')
+    new_ir = ModuleIR(
+        path=existing_stub,
+        models=(),
+        enums=(),
+        api_class=ApiClassIR(name='NewStubApi', base='', methods=(), lineno=1, end_lineno=1),
+        source_sha='',
+        source_text='',
+    )
+    record = ChangeRecord(
+        kind='method_added',
+        qualname='NewStubApi.list_new_stub_items',
+        old=None,
+        new={'name': 'list_new_stub_items'},
+        severity='review',
+    )
+    captured: dict[str, Any] = {}
+
+    def fake_git_show(path: str) -> str:
+        raise subprocess.CalledProcessError(128, ['git', 'show', f'HEAD:{path}'])
+
+    def fake_extract_from_text(source: str, path: str) -> ModuleIR:
+        assert source == ''
+        assert path == existing_stub
+        return old_ir
+
+    def fake_dispatch(
+        rec: ChangeRecord,
+        match: Match | None,
+        config: _dispatcher.DispatchConfig,
+        pending_writes: dict[Path, str] | None = None,
+    ) -> _dispatcher.Outcome:
+        captured.setdefault('dispatched', []).append((rec, match, pending_writes))
+        return _dispatcher.Outcome(rec, match, 'already_in_sync', detail='processed new stub')
+
+    def fake_write_report(
+        outcomes: list[_dispatcher.Outcome],
+        skipped: list[tuple[str, str]],
+        args: Any,
+    ) -> None:
+        captured['outcomes'] = outcomes
+        captured['skipped'] = skipped
+
+    monkeypatch.setattr(_driver, '_git_diff_name_only', lambda rev, scope: [existing_stub, missing_stub])
+    monkeypatch.setattr(_driver, '_git_show', fake_git_show)
+    monkeypatch.setattr(_driver, 'extract_from_text', fake_extract_from_text)
+    monkeypatch.setattr(_driver, 'extract', lambda path: new_ir)
+    monkeypatch.setattr(_driver, 'diff_irs', lambda old, new: [record])
+    monkeypatch.setattr('script.sdk_sync.matcher.match', lambda rec, ir, store: None)
+    monkeypatch.setattr(_driver._dispatcher, 'dispatch', fake_dispatch)
+    monkeypatch.setattr(_driver._aliases, 'load', lambda: _driver._aliases.AliasStore())
+    monkeypatch.setattr(_driver._aliases, 'save', lambda store: None)
+    monkeypatch.setattr(_driver, '_write_report', fake_write_report)
+
+    rc = _driver.main(['--dry-run', '--no-llm'])
+
+    assert rc == 0
+    assert [item[0] for item in captured['dispatched']] == [record]
+    assert captured['outcomes'][0].record == record
+    assert captured['skipped'] == [(missing_stub, 'file does not exist in working tree')]

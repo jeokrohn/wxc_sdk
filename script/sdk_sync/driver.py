@@ -174,11 +174,6 @@ def main(argv: list[str] | None = None) -> int:
         if not new_path.exists():
             skipped.append((stub_rel, 'file does not exist in working tree'))
             continue
-        if not old_text.strip():
-            # New (untracked) stub file: no `git show HEAD:<path>` output, so
-            # nothing to diff against. Skip with a note in the report.
-            skipped.append((stub_rel, 'new file with no HEAD revision (no diff to compute)'))
-            continue
         try:
             old_ir = extract_from_text(old_text, stub_rel)
             new_ir = extract(new_path)
