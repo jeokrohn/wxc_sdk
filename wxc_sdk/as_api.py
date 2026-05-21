@@ -2092,26 +2092,33 @@ class AsGroupsApi(AsApiChild, base='groups'):
         sort_by: str = None,
         sort_order: str = None,
         list_filter: str = None,
+        start_index: int = None,
+        count: int = None,
         org_id: str = None,
         **params,
     ) -> AsyncGenerator[Group, None]:
         """
         List groups in your organization.
 
-        :param include_members: Include members in list response
+        :param include_members: Optionally return group members in the response. The maximum number of members returned
+            is 500.
         :type include_members: bool
-        :param attributes: comma separated list of attributes to return
+        :param attributes: The attributes to return.
         :type attributes: str
-        :param sort_by: attribute to sort by
+        :param list_filter: Searches the group by `displayName` with an operator and a value. The available operators
+            are `eq` (equal) and `sw` (starts with). Only `displayName` can be used to filter results.
+        :type list_filter: str
+        :param sort_by: Sort the results based by group `displayName`.
         :type sort_by: str
-        :param sort_order: sort order, ascending or descending
+        :param sort_order: Sort results alphabetically by group display name, in ascending or descending order.
         :type sort_order: str
+        :param start_index: The index to start for group pagination.
+        :type start_index: int
+        :param count: Specifies the desired number of search results per page.
+        :type count: int
         :param org_id: List groups in this organization. Only admin users of another organization (such as partners)
             may use this parameter.
         :type org_id: str
-        :param list_filter: Searches the group by displayName with an operator and a value. The available operators
-            are eq (equal) and sw (starts with). Only displayName can be used to filter results.
-        :type list_filter: str
         :param params:
         :return: generator of :class:`Group` objects
         """
@@ -2133,26 +2140,33 @@ class AsGroupsApi(AsApiChild, base='groups'):
         sort_by: str = None,
         sort_order: str = None,
         list_filter: str = None,
+        start_index: int = None,
+        count: int = None,
         org_id: str = None,
         **params,
     ) -> builtins.list[Group]:
         """
         List groups in your organization.
 
-        :param include_members: Include members in list response
+        :param include_members: Optionally return group members in the response. The maximum number of members returned
+            is 500.
         :type include_members: bool
-        :param attributes: comma separated list of attributes to return
+        :param attributes: The attributes to return.
         :type attributes: str
-        :param sort_by: attribute to sort by
+        :param list_filter: Searches the group by `displayName` with an operator and a value. The available operators
+            are `eq` (equal) and `sw` (starts with). Only `displayName` can be used to filter results.
+        :type list_filter: str
+        :param sort_by: Sort the results based by group `displayName`.
         :type sort_by: str
-        :param sort_order: sort order, ascending or descending
+        :param sort_order: Sort results alphabetically by group display name, in ascending or descending order.
         :type sort_order: str
+        :param start_index: The index to start for group pagination.
+        :type start_index: int
+        :param count: Specifies the desired number of search results per page.
+        :type count: int
         :param org_id: List groups in this organization. Only admin users of another organization (such as partners)
             may use this parameter.
         :type org_id: str
-        :param list_filter: Searches the group by displayName with an operator and a value. The available operators
-            are eq (equal) and sw (starts with). Only displayName can be used to filter results.
-        :type list_filter: str
         :param params:
         :return: generator of :class:`Group` objects
         """
@@ -2190,17 +2204,21 @@ class AsGroupsApi(AsApiChild, base='groups'):
 
     async def details(self, group_id: str, include_members: bool = None) -> Group:
         """
-        Get group details
+        Get Group Details
 
-        :param group_id: group id
+        Get details for a group, by ID.
+
+        Optionally, the members may be retrieved with this request. The maximum number of members returned is 500.
+
+        :param group_id: A unique identifier for the group.
         :type group_id: str
-        :param include_members: return members in response
+        :param include_members: Include the members as part of the response.
         :type include_members: bool
-        :return: group details
-        :rtype: Group
+        :rtype: :class:`Group`
         """
         url = self.ep(group_id)
         params = dict()
+
         if include_members is not None:
             params['includeMembers'] = 'true' if include_members else 'false'
         data = await self.get(url, params=params)
@@ -2232,9 +2250,9 @@ class AsGroupsApi(AsApiChild, base='groups'):
 
     async def update(self, group_id: str, settings: Group = None, remove_all: bool = None) -> Group:
         """
-        update group information.
+        Update a Group
 
-        Options: change displayName, add new members, remove some or all members, replace all members
+        Update the group details, by ID.
 
         :param group_id:
         :param settings:
@@ -2258,12 +2276,17 @@ class AsGroupsApi(AsApiChild, base='groups'):
         data = await self.patch(url, data=body)
         return Group.model_validate(data)
 
-    async def delete_group(self, group_id: str):
+    async def delete_group(self, group_id: str) -> None:
         """
-        Delete a group
+        Delete a Group
 
-        :param group_id: group id
+        Remove a group from the system.
+
+        Specify the group ID in the `groupId` parameter in the URI.
+
+        :param group_id: A unique identifier for the group.
         :type group_id: str
+        :rtype: None
         """
         url = self.ep(group_id)
         await self.delete(url)

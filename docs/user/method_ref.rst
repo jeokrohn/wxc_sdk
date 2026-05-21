@@ -106,10 +106,10 @@ description of the operation. The method name is a link to the method documentat
         | Create a new group using the provided settings
         | ``POST /groups``
    * - :meth:`api.groups.delete_group <wxc_sdk.groups.GroupsApi.delete_group>`
-        | Delete a group
+        | Delete a Group
         | ``DELETE /groups/{group_id}``
    * - :meth:`api.groups.details <wxc_sdk.groups.GroupsApi.details>`
-        | Get group details
+        | Get Group Details
         | ``GET /groups/{group_id}``
    * - :meth:`api.groups.list <wxc_sdk.groups.GroupsApi.list>`
         | List groups in your organization
@@ -118,7 +118,7 @@ description of the operation. The method name is a link to the method documentat
         | Query members of a group
         | ``GET /groups/{group_id}/Members``
    * - :meth:`api.groups.update <wxc_sdk.groups.GroupsApi.update>`
-        | update group information
+        | Update a Group
         | ``PATCH /groups/{group_id}``
    * - :meth:`api.guests.create <wxc_sdk.guests.GuestManagementApi.create>`
         | Create a Guest
