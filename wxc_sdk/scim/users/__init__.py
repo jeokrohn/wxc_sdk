@@ -63,13 +63,13 @@ class UserManager(ApiModel):
 
 
 class SipAddressObject(ApiModel):
-    #: The sip address value.
+    #: The `sipAddress` value.
     value: Optional[str] = None
-    #: The type of the sipAddress.
+    #: `sipAddress` type.
     type: Optional[str] = None
     #: A human-readable description, primarily used for display purposes.
     display: Optional[str] = None
-    #: Designate the primary sipAddress.
+    #: Designate the primary `sipAddress`.
     primary: Optional[bool] = None
 
 
@@ -188,7 +188,7 @@ class PhotoObject(ApiModel):
     type: Optional[PhotoObjectType] = None
     #: A human-readable description, primarily used for display purposes.
     display: Optional[str] = None
-    #: A Boolean value indicating the photo usage status.
+    #: A Boolean value for the photo usage status.
     primary: Optional[bool] = None
 
 
@@ -222,8 +222,7 @@ class EmailObject(ApiModel):
     type: Optional[EmailObjectType] = None
     #: A human-readable description, primarily used for display purposes.
     display: Optional[str] = None
-    #: A Boolean value indicating the email status. If the type is work and primary is true, the value must equal
-    #: "userName".
+    #: Email status boolean value. If the type is work and primary is true, the value must equal `userName`.
     primary: Optional[bool] = None
 
 
@@ -411,6 +410,11 @@ class SCIM2UsersApi(ScimApiChild, base='identity/scim'):
         1. Unrecognized schemas (ID/section) are ignored.
 
         1. Read-only attributes provided as input values are ignored.
+
+        The following roles cannot be assigned to a user:
+
+        1. Location Admin
+        1. Webex Site Admin
 
         :param org_id: Webex Identity assigned organization identifier for user's organization.
         :type org_id: str

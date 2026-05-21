@@ -19421,6 +19421,11 @@ class AsSCIM2UsersApi(AsScimApiChild, base='identity/scim'):
 
         1. Read-only attributes provided as input values are ignored.
 
+        The following roles cannot be assigned to a user:
+
+        1. Location Admin
+        1. Webex Site Admin
+
         :param org_id: Webex Identity assigned organization identifier for user's organization.
         :type org_id: str
         :param user: User settings
