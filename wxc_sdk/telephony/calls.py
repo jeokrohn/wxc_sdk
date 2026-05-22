@@ -216,6 +216,10 @@ class TelephonyCall(ApiModel):
     mute_capable: Optional[bool] = None
     #: Indicates whether the call is currently muted.
     muted: Optional[bool] = None
+    endpoint_id: Optional[str] = None
+    completed_elsewhere: Optional[bool] = None
+    endpoint_type: Optional[str] = None
+    allowedRecordingControls: Optional[str] = None
 
 
 class HistoryType(str, Enum):
