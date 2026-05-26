@@ -48,7 +48,7 @@ from .xapi import XApi
 
 __all__ = ['WebexSimpleApi']
 
-__version__ = '1.34.0'
+__version__ = '1.35.0'
 
 log = logging.getLogger(__name__)
 

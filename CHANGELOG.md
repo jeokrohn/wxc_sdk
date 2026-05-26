@@ -1,3 +1,19 @@
+## 1.35.0 (2026-05-26)
+
+### Feat
+
+- new method api.person_settings.get_calling_services, new apis (api.person_settings.hotdesking, api.person_settings.sim_ring, api.person_settings.anon_calls)
+- new api api.me.calls
+- new attributes PersonECBN.elin_enabled and elin_for_webex_app_enabled
+- new attribute elin_expiry_time_minutes for LocationECBN
+- new parameter single_number_reach_phone_number for CallControlsMembersApi.dial
+- new enum DeviceConnectionStatus.pending
+
+### Fix
+
+- corrected endpoint URLs in method_ref.rst for CQPolicyApi methods
+- Device.id is optional
+
 ## 1.34.0 (2026-04-22)
 
 ### Feat

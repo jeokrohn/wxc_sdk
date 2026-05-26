@@ -64,6 +64,24 @@
       "confirmed_by": "auto",
       "confirmed_at": "2026-05-14"
     },
+    "/Users/jkrohn/Library/CloudStorage/Dropbox/ln/workspace/wxc_sdk/open_api/generated/Webex-Suite/Webex-Calling/Webex-Cloud-Calling/All-APIs/call-settings-for-me_auto.py::CallSettingsForMe12Api::modify_my_secondary_lines_voicemail_settings": {
+      "sdk_path": "wxc_sdk/me/secondary_line/voicemail/__init__.py",
+      "sdk_class": "MeSecondaryLineVoicemailApi",
+      "sdk_method": "configure",
+      "confidence": 1.0,
+      "matched_by": "exact",
+      "confirmed_by": "auto",
+      "confirmed_at": "2026-05-26"
+    },
+    "/Users/jkrohn/Library/CloudStorage/Dropbox/ln/workspace/wxc_sdk/open_api/generated/Webex-Suite/Webex-Calling/Webex-Cloud-Calling/All-APIs/call-settings-for-me_auto.py::CallSettingsForMe12Api::modify_my_voicemail_settings": {
+      "sdk_path": "wxc_sdk/me/voicemail/__init__.py",
+      "sdk_class": "MeVoicemailApi",
+      "sdk_method": "configure",
+      "confidence": 1.0,
+      "matched_by": "exact",
+      "confirmed_by": "auto",
+      "confirmed_at": "2026-05-26"
+    },
     "/Users/jkrohn/Library/CloudStorage/Dropbox/ln/workspace/wxc_sdk/open_api/generated/Webex-Suite/Webex-Calling/Webex-Cloud-Calling/All-APIs/features-announcement-repository_auto.py::FeaturesAnnouncementRepositoryApi::generate_text_to_speech": {
       "sdk_path": "wxc_sdk/telephony/text_to_speech/__init__.py",
       "sdk_class": "TextToSpeechApi",
@@ -1135,188 +1153,29 @@
   },
   "unmatched": [
     {
-      "stub_key": "docstring_changed::CreateForwardingRuleObjectForwardToSelection.forward_to_default_number",
+      "stub_key": "model_added::VoicemailInfoTransferToNumber",
       "best_score": 0.0,
       "candidates": []
     },
     {
-      "stub_key": "model_added::ModifyCallForwardingObjectCallForwardingOperatingModes",
+      "stub_key": "model_field_added::VoicemailInfoNotifications.sms_destination",
       "best_score": 0.0,
       "candidates": []
     },
     {
-      "stub_key": "model_added::GetCallQueueSupervisorResponse",
+      "stub_key": "docstring_changed::VoicemailInfoNotifications.destination",
       "best_score": 0.0,
       "candidates": []
     },
     {
-      "stub_key": "model_removed::GetSupervisorDetailWithCustomerAssistResponse",
+      "stub_key": "docstring_changed::VoicemailInfoNotifications.enabled",
       "best_score": 0.0,
       "candidates": []
     },
     {
-      "stub_key": "type_changed::ListSupervisorObject.agent_count",
+      "stub_key": "type_changed::VoicemailInfo.transfer_to_number",
       "best_score": 0.0,
       "candidates": []
-    },
-    {
-      "stub_key": "docstring_changed::CreateForwardingRuleObjectForwardTo.phone_number",
-      "best_score": 0.0,
-      "candidates": []
-    },
-    {
-      "stub_key": "model_field_added::ModifyCallForwardingObjectCallForwarding.operating_modes",
-      "best_score": 0.0,
-      "candidates": []
-    },
-    {
-      "stub_key": "model_field_removed::ModifyCallForwardingObjectCallForwarding.modes",
-      "best_score": 0.0,
-      "candidates": []
-    },
-    {
-      "stub_key": "method_added::FeaturesCallQueueApi.list_call_queue_announcement_files",
-      "best_score": 0.3895,
-      "candidates": [
-        {
-          "sdk_path": "wxc_sdk/telephony/announcements_repo/__init__.py",
-          "sdk_class": "AnnouncementsRepositoryApi",
-          "sdk_method": "list",
-          "score": 0.3895
-        },
-        {
-          "sdk_path": "wxc_sdk/telephony/emergency_services/__init__.py",
-          "sdk_class": "OrgEmergencyServicesApi",
-          "sdk_method": "get_location_notification",
-          "score": 0.3775
-        },
-        {
-          "sdk_path": "wxc_sdk/telephony/emergency_services/__init__.py",
-          "sdk_class": "OrgEmergencyServicesApi",
-          "sdk_method": "get_location_parameters",
-          "score": 0.3725
-        },
-        {
-          "sdk_path": "wxc_sdk/telephony/announcements_repo/__init__.py",
-          "sdk_class": "AnnouncementsRepositoryApi",
-          "sdk_method": "details",
-          "score": 0.3711
-        },
-        {
-          "sdk_path": "wxc_sdk/telephony/cx_essentials/wrapup_reasons/__init__.py",
-          "sdk_class": "WrapupReasonApi",
-          "sdk_method": "read_queue_settings",
-          "score": 0.3634
-        }
-      ]
-    },
-    {
-      "stub_key": "method_added::FeaturesCallQueueApi.delete_call_queue_announcement_file",
-      "best_score": 0.5291,
-      "candidates": [
-        {
-          "sdk_path": "wxc_sdk/telephony/announcements_repo/__init__.py",
-          "sdk_class": "AnnouncementsRepositoryApi",
-          "sdk_method": "delete",
-          "score": 0.5291
-        },
-        {
-          "sdk_path": "wxc_sdk/telephony/dect_devices/__init__.py",
-          "sdk_class": "DECTDevicesApi",
-          "sdk_method": "delete_dect_network",
-          "score": 0.3932
-        },
-        {
-          "sdk_path": "wxc_sdk/telephony/paging.py",
-          "sdk_class": "PagingApi",
-          "sdk_method": "delete_paging",
-          "score": 0.3476
-        },
-        {
-          "sdk_path": "wxc_sdk/telephony/operating_modes/__init__.py",
-          "sdk_class": "OperatingModesApi",
-          "sdk_method": "delete",
-          "score": 0.347
-        },
-        {
-          "sdk_path": "wxc_sdk/telephony/dect_devices/__init__.py",
-          "sdk_class": "DECTDevicesApi",
-          "sdk_method": "delete_handset",
-          "score": 0.3387
-        }
-      ]
-    },
-    {
-      "stub_key": "method_removed::FeaturesCallQueueApi.read_the_list_of_call_queue_announcement_files",
-      "best_score": 0.3895,
-      "candidates": [
-        {
-          "sdk_path": "wxc_sdk/telephony/announcements_repo/__init__.py",
-          "sdk_class": "AnnouncementsRepositoryApi",
-          "sdk_method": "list",
-          "score": 0.3895
-        },
-        {
-          "sdk_path": "wxc_sdk/telephony/emergency_services/__init__.py",
-          "sdk_class": "OrgEmergencyServicesApi",
-          "sdk_method": "get_location_notification",
-          "score": 0.3775
-        },
-        {
-          "sdk_path": "wxc_sdk/telephony/emergency_services/__init__.py",
-          "sdk_class": "OrgEmergencyServicesApi",
-          "sdk_method": "get_location_parameters",
-          "score": 0.3725
-        },
-        {
-          "sdk_path": "wxc_sdk/telephony/announcements_repo/__init__.py",
-          "sdk_class": "AnnouncementsRepositoryApi",
-          "sdk_method": "details",
-          "score": 0.3711
-        },
-        {
-          "sdk_path": "wxc_sdk/telephony/cx_essentials/wrapup_reasons/__init__.py",
-          "sdk_class": "WrapupReasonApi",
-          "sdk_method": "read_queue_settings",
-          "score": 0.3634
-        }
-      ]
-    },
-    {
-      "stub_key": "method_removed::FeaturesCallQueueApi.delete_a_call_queue_announcement_file",
-      "best_score": 0.5291,
-      "candidates": [
-        {
-          "sdk_path": "wxc_sdk/telephony/announcements_repo/__init__.py",
-          "sdk_class": "AnnouncementsRepositoryApi",
-          "sdk_method": "delete",
-          "score": 0.5291
-        },
-        {
-          "sdk_path": "wxc_sdk/telephony/dect_devices/__init__.py",
-          "sdk_class": "DECTDevicesApi",
-          "sdk_method": "delete_dect_network",
-          "score": 0.3932
-        },
-        {
-          "sdk_path": "wxc_sdk/telephony/paging.py",
-          "sdk_class": "PagingApi",
-          "sdk_method": "delete_paging",
-          "score": 0.3476
-        },
-        {
-          "sdk_path": "wxc_sdk/telephony/operating_modes/__init__.py",
-          "sdk_class": "OperatingModesApi",
-          "sdk_method": "delete",
-          "score": 0.347
-        },
-        {
-          "sdk_path": "wxc_sdk/telephony/dect_devices/__init__.py",
-          "sdk_class": "DECTDevicesApi",
-          "sdk_method": "delete_handset",
-          "score": 0.3387
-        }
-      ]
     }
   ]
 }
