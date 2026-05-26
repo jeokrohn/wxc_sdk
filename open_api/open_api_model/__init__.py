@@ -47,12 +47,13 @@ class OAServer(OABaseModel):
 
 
 class OAParameter(OABaseModel):
-    name: str
-    in_: str = Field(..., alias='in')
+    ref: Optional[str] = Field(None, alias='$ref')
+    name: Optional[str] = None
+    in_: Optional[str] = Field(None, alias='in')
     description: Optional[str] = None
     required: bool = False
     example: Optional[Any] = None
-    schema_: Optional['OASchemaProperty'] = Field(alias='schema', default=None)
+    schema_: Optional['OASchemaProperty'] = Field(None, alias='schema')
     style: Optional[str] = None
     explode: Optional[bool] = None
     allow_reserved: Optional[bool] = None
@@ -313,6 +314,7 @@ class OASpecSchema(OABaseModel):
 
 
 class OAComponents(OABaseModel):
+    parameters: Optional[dict[str, OAParameter]] = Field(default_factory=dict)
     schemas: dict[str, OASchemaProperty] = Field(default_factory=dict)
     request_bodies: Optional[dict[str, OARequestBody]] = None
     security_schemes: Optional[dict[str, Any]] = None
@@ -358,7 +360,7 @@ class OASpec(OABaseModel):
         schema_ref = ref_match and ref_match.group(1) or schema_ref
         return self.components.schemas[schema_ref]
 
-    def deref(self, ref: str) -> Union[OAResponse, OASchemaProperty, None]:
+    def deref(self, ref: str) -> Union[OAResponse, OASchemaProperty, OAParameter, None]:
         """
         Dereference a ref like '#/components/responses/BadRequestError'
         :param ref:
@@ -373,5 +375,17 @@ class OASpec(OABaseModel):
             return self.components.schemas[component_name]
         elif component_type == 'responses':
             return self.components.responses[component_name]  # type: ignore[index]
+        elif component_type == 'parameters':
+            return self.components.parameters[component_name]  # type: ignore[index]
         else:
             raise ValueError(f'Unknown component type: {component_type}')
+
+    def deref_parameters(self) -> None:
+        """
+        Deref all parameters defined with $ref in this API spec
+        """
+        for _, _, op in self.operations():
+            if not op.parameters:
+                continue
+            op.parameters = [self.deref(p.ref) if p.ref else p for p in op.parameters]  # type: ignore[misc]
+        return

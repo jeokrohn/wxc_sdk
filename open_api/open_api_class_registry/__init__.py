@@ -845,6 +845,8 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         with open(spec_info.spec_path) as f:
             data = json.load(f)
         open_api_spec = OASpec.model_validate(data)
+        # dereference all parameters defined as $ref
+        open_api_spec.deref_parameters()
 
         # add PythonAPI instance
         host = open_api_spec.servers and open_api_spec.servers[0].url
