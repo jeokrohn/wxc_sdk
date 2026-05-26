@@ -506,11 +506,11 @@ class VoicemailNotifications(VoicemailEnabled):
     Settings for notifications when there are any new voicemails.
     """
 
-    #: Email address to which the notification will be sent. For text messages, use an email to text message gateway
-    #: like 2025551212@txt.att.net.
+    #: Email address for notification delivery. For US/Canada text messages, use the `smsDestination` field rather than
+    #: providing a SMS gateway address like `12025551212@txt.example.net` here.
     destination: Optional[str] = None
-    #: SMS destination for notification delivery. Must be a US or Canada phone number in E.164 format
-    #: (e.g., +12025551212).
+    #: SMS destination for notification delivery. Must be a US or Canada phone number in E.164 format (e.g.,
+    #: +12025551212).
     sms_destination: Optional[str] = None
 
 

@@ -41,8 +41,8 @@ __all__ = ['ApplicationsSetting', 'BargeInInfo', 'CallForwardingInfo', 'CallForw
            'RetrieveExecutiveAssistantSettingsForAPersonResponseType', 'ScheduleLevel', 'ScheduleLongDetails',
            'ScheduleShortDetails', 'ScheduleType', 'UserCallSettings12Api', 'UserSelectionObject', 'VoicemailInfo',
            'VoicemailInfoEmailCopyOfMessage', 'VoicemailInfoFaxMessage', 'VoicemailInfoMessageStorage',
-           'VoicemailInfoMessageStorageStorageType', 'VoicemailInfoSendBusyCalls', 'VoicemailInfoSendUnansweredCalls',
-           'VoicemailPutSendBusyCalls', 'VoicemailPutSendUnansweredCalls']
+           'VoicemailInfoMessageStorageStorageType', 'VoicemailInfoNotifications', 'VoicemailInfoSendBusyCalls',
+           'VoicemailInfoSendUnansweredCalls', 'VoicemailPutSendBusyCalls', 'VoicemailPutSendUnansweredCalls']
 
 
 class ApplicationsSetting(ApiModel):
@@ -880,6 +880,17 @@ class VoicemailInfoSendUnansweredCalls(ApiModel):
     system_max_number_of_rings: Optional[int] = None
 
 
+class VoicemailInfoNotifications(ApiModel):
+    #: Notifications for voicemails will be sent if enabled.
+    enabled: Optional[bool] = None
+    #: Email address for notification delivery. For US/Canada text messages, use the `smsDestination` field rather than
+    #: providing a SMS gateway address like `12025551212@txt.example.net` here.
+    destination: Optional[str] = None
+    #: SMS destination for notification delivery. Must be a US or Canada phone number in E.164 format (e.g.,
+    #: +12025551212).
+    sms_destination: Optional[str] = None
+
+
 class VoicemailInfoEmailCopyOfMessage(ApiModel):
     #: When `true` copy of new voicemail message audio will be sent to the designated email.
     enabled: Optional[bool] = None
@@ -923,7 +934,7 @@ class VoicemailInfo(ApiModel):
     send_busy_calls: Optional[VoicemailInfoSendBusyCalls] = None
     send_unanswered_calls: Optional[VoicemailInfoSendUnansweredCalls] = None
     #: Settings for notifications when there are any new voicemails.
-    notifications: Optional[CallInterceptInfoIncomingAnnouncementsNewNumber] = None
+    notifications: Optional[VoicemailInfoNotifications] = None
     #: Settings for voicemail caller to transfer to a different number by pressing zero (0).
     transfer_to_number: Optional[CallInterceptInfoIncomingAnnouncementsNewNumber] = None
     #: Settings for sending a copy of new voicemail message audio via email.
@@ -2782,8 +2793,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         r = VoicemailInfo.model_validate(data)
         return r
 
-    def configure_voicemail_settings_for_a_person(self, person_id: str,
-                                                  notifications: CallInterceptInfoIncomingAnnouncementsNewNumber,
+    def configure_voicemail_settings_for_a_person(self, person_id: str, notifications: VoicemailInfoNotifications,
                                                   transfer_to_number: CallInterceptInfoIncomingAnnouncementsNewNumber,
                                                   enabled: bool = None, send_all_calls: CallWaitingInfo = None,
                                                   send_busy_calls: VoicemailPutSendBusyCalls = None,
@@ -2810,7 +2820,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :param person_id: Unique identifier for the person.
         :type person_id: str
         :param notifications: Settings for notifications when there are any new voicemails.
-        :type notifications: CallInterceptInfoIncomingAnnouncementsNewNumber
+        :type notifications: VoicemailInfoNotifications
         :param transfer_to_number: Settings for voicemail caller to transfer to a different number by pressing zero
             (0).
         :type transfer_to_number: CallInterceptInfoIncomingAnnouncementsNewNumber

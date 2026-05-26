@@ -32,11 +32,11 @@ __all__ = ['Action', 'AnonymousCallRejectionGet', 'AudioAnnouncementFileGetObjec
            'UserCallPoliciesGetConnectedLineIdPrivacyOnRedirectedCalls', 'VoicemailInfo',
            'VoicemailInfoEmailCopyOfMessage', 'VoicemailInfoFaxMessage', 'VoicemailInfoMessageStorage',
            'VoicemailInfoMessageStorageStorageType', 'VoicemailInfoNotifications', 'VoicemailInfoSendBusyCalls',
-           'VoicemailInfoSendUnansweredCalls', 'VoicemailPutSendBusyCalls', 'VoicemailPutSendUnansweredCalls',
-           'WorkspaceAvailableNumberObject', 'WorkspaceCallForwardAvailableNumberObject',
-           'WorkspaceCallSettings22Api', 'WorkspaceDigitPatternObject', 'WorkspaceECBNAvailableNumberObject',
-           'WorkspaceECBNAvailableNumberObjectOwner', 'WorkspaceECBNAvailableNumberObjectOwnerType',
-           'WorkspaceOutgoingPermissionDigitPatternGetListObject',
+           'VoicemailInfoSendUnansweredCalls', 'VoicemailInfoTransferToNumber', 'VoicemailPutSendBusyCalls',
+           'VoicemailPutSendUnansweredCalls', 'WorkspaceAvailableNumberObject',
+           'WorkspaceCallForwardAvailableNumberObject', 'WorkspaceCallSettings22Api', 'WorkspaceDigitPatternObject',
+           'WorkspaceECBNAvailableNumberObject', 'WorkspaceECBNAvailableNumberObjectOwner',
+           'WorkspaceECBNAvailableNumberObjectOwnerType', 'WorkspaceOutgoingPermissionDigitPatternGetListObject',
            'WorkspaceOutgoingPermissionDigitPatternPostObjectAction']
 
 
@@ -347,10 +347,20 @@ class VoicemailInfoSendUnansweredCalls(ApiModel):
 
 
 class VoicemailInfoNotifications(ApiModel):
-    #: Send of unanswered calls to voicemail is enabled or disabled.
+    #: Notifications for voicemails will be sent if enabled.
     enabled: Optional[bool] = None
-    #: Email address to which the notification will be sent. For text messages, use an email to text message gateway
-    #: like `2025551212@txt.example.net`.
+    #: Email address for notification delivery. For US/Canada text messages, use the `smsDestination` field rather than
+    #: providing a SMS gateway address like `12025551212@txt.example.net` here.
+    destination: Optional[str] = None
+    #: SMS destination for notification delivery. Must be a US or Canada phone number in E.164 format (e.g.,
+    #: +12025551212).
+    sms_destination: Optional[str] = None
+
+
+class VoicemailInfoTransferToNumber(ApiModel):
+    #: Enabled or disabled state of giving caller option to transfer to destination when pressing zero (0).
+    enabled: Optional[bool] = None
+    #: Number voicemail caller will be transferred to when they press zero (0).
     destination: Optional[str] = None
 
 
@@ -399,7 +409,7 @@ class VoicemailInfo(ApiModel):
     #: Settings for notifications when there are any new voicemails.
     notifications: Optional[VoicemailInfoNotifications] = None
     #: Settings for voicemail caller to transfer to a different number by pressing zero (0).
-    transfer_to_number: Optional[VoicemailInfoNotifications] = None
+    transfer_to_number: Optional[VoicemailInfoTransferToNumber] = None
     #: Settings for sending a copy of new voicemail message audio via email.
     email_copy_of_message: Optional[VoicemailInfoEmailCopyOfMessage] = None
     message_storage: Optional[VoicemailInfoMessageStorage] = None
@@ -3892,7 +3902,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
 
     def configure_voicemail_settings_for_a_workspace(self, workspace_id: str,
                                                      notifications: VoicemailInfoNotifications,
-                                                     transfer_to_number: VoicemailInfoNotifications,
+                                                     transfer_to_number: VoicemailInfoTransferToNumber,
                                                      enabled: bool = None,
                                                      send_all_calls: AnonymousCallRejectionGet = None,
                                                      send_busy_calls: VoicemailPutSendBusyCalls = None,
@@ -3923,7 +3933,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type notifications: VoicemailInfoNotifications
         :param transfer_to_number: Settings for voicemail caller to transfer to a different number by pressing zero
             (0).
-        :type transfer_to_number: VoicemailInfoNotifications
+        :type transfer_to_number: VoicemailInfoTransferToNumber
         :param enabled: Voicemail is enabled or disabled.
         :type enabled: bool
         :param send_all_calls: Settings for sending all calls to voicemail.
