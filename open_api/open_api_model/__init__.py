@@ -82,6 +82,10 @@ class OADiscriminator(OABaseModel):
     property_name: str
 
 
+class OASchemaRef(OABaseModel):
+    ref: str = Field(alias='$ref')
+
+
 class OASchemaProperty(OABaseModel):
     title: Optional[str] = None
     type: Optional[Union[str, OASchemaPropertyItemsRef]] = None
@@ -101,7 +105,7 @@ class OASchemaProperty(OABaseModel):
     # list of possible types
     any_of: Optional[list['OASchemaProperty']] = None
     all_of: Optional[list['OASchemaProperty']] = None
-    one_of: Optional[list[Any]] = None
+    one_of: Optional[list['OASchemaRef']] = None
     format: Optional[str] = None
     max_length: Optional[int] = None
     min_length: Optional[int] = None
@@ -130,7 +134,7 @@ class OASchemaProperty(OABaseModel):
         return v
 
     @model_validator(mode='after')
-    def remove_none_from_enum(self: 'OASchemaProperty') -> 'OASchemaProperty':
+    def cleanup_after(self: 'OASchemaProperty') -> 'OASchemaProperty':
         """
         remove None from enum values. None represents the null value and is not a valid enum value.
         """
@@ -388,4 +392,98 @@ class OASpec(OABaseModel):
             if not op.parameters:
                 continue
             op.parameters = [self.deref(p.ref) if p.ref else p for p in op.parameters]  # type: ignore[misc]
+        return
+
+    def unify_one_of_schemas(self) -> None:
+        """
+        Unify ``oneOf`` schemas in ``components/schemas`` in-place.
+
+        For every schema whose ``one_of`` field is set this method:
+
+        1. Validates that no other schema-defining fields (beyond ``description``) are set.
+        2. Dereferences every ``$ref`` listed in ``one_of``.
+        3. Computes the union of all properties across the referenced schemas.
+        4. Marks a property as *required* only when it is required in **every** referenced schema.
+        5. For enum-typed properties, merges the enum value lists across all referenced schemas
+           that carry that property, preserving original order with duplicates removed.
+        6. Replaces ``one_of`` with the unified ``type='object'`` / ``properties`` / ``required``
+           representation on the schema object so that downstream codegen sees a normal object.
+        """
+
+        def ref_to_schema_name(ref: str) -> str:
+            ref_match = re.match(r'^#/components/schemas/(.+)$', ref)
+            return ref_match.group(1) if ref_match else ref
+
+        for schema_name, schema in self.components.schemas.items():
+            if schema.one_of is None:
+                continue
+
+            # Validate: only description and one_of may be explicitly set.
+            disallowed_fields = sorted(schema.model_fields_set - {'description', 'one_of', 'title'})
+            if disallowed_fields:
+                raise ValueError(
+                    f'Schema {schema_name!r}: one_of cannot be unified when other fields are set: '
+                    f'{", ".join(disallowed_fields)}'
+                )
+
+            # --- 1. Dereference ---
+            referenced: list[OASchemaProperty] = [self.get_schema(ref.ref) for ref in schema.one_of]
+
+            # Collect schema names referenced inside oneOf.
+            one_of_schema_names = sorted({ref_to_schema_name(schema_one_of.ref) for schema_one_of in schema.one_of})
+
+            # --- 2. Collect all property names ---
+            all_names: list[str] = []
+            seen: set[str] = set()
+            for ref_schema in referenced:
+                for name in ref_schema.properties or {}:
+                    if name not in seen:
+                        all_names.append(name)
+                        seen.add(name)
+
+            # --- 3. Merge properties ---
+            merged_properties: dict[str, OASchemaProperty] = {}
+            for prop_name in all_names:
+                instances: list[OASchemaProperty] = [
+                    ref_schema.properties[prop_name]
+                    for ref_schema in referenced
+                    if ref_schema.properties and prop_name in ref_schema.properties
+                ]
+                if len(instances) == 1:
+                    merged_properties[prop_name] = instances[0].model_copy(deep=True)
+                else:
+                    # Start with a deep copy of the first occurrence.
+                    merged = instances[0].model_copy(deep=True)
+                    # If property carries enum values, union them while preserving order.
+                    if merged.enum is not None:
+                        merged_enum: list[str | int] = list(merged.enum)  # type: ignore[arg-type]
+                        seen_enum: set[str | int] = set(merged_enum)
+                        for other in instances[1:]:
+                            for ev in other.enum or []:
+                                if ev not in seen_enum:
+                                    merged_enum.append(ev)  # type: ignore[arg-type]
+                                    seen_enum.add(ev)  # type: ignore[arg-type]
+                        merged.enum = merged_enum  # type: ignore[assignment]
+                    merged_properties[prop_name] = merged
+
+            # --- 4. Required = intersection across all referenced schemas ---
+            if referenced:
+                required_in_all: set[str] = set(referenced[0].required or [])
+                for ref_schema in referenced[1:]:
+                    required_in_all &= set(ref_schema.required or [])
+            else:
+                required_in_all = set()
+
+            # --- 5. Update the schema in-place ---
+            log.info(
+                'unify_one_of_schemas: schema_name=%s one_of_refs=%s merged_properties=%s',
+                schema_name,
+                one_of_schema_names,
+                list(merged_properties.keys()),
+            )
+
+            schema.type = 'object'
+            schema.properties = merged_properties
+            schema.required = sorted(required_in_all)
+            schema.one_of = None
         return

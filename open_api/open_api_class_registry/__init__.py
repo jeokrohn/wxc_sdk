@@ -847,6 +847,8 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         open_api_spec = OASpec.model_validate(data)
         # dereference all parameters defined as $ref
         open_api_spec.deref_parameters()
+        # clean up schemas with one_of definition
+        open_api_spec.unify_one_of_schemas()
 
         # add PythonAPI instance
         host = open_api_spec.servers and open_api_spec.servers[0].url
