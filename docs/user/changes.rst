@@ -1,6 +1,15 @@
 Release history
 ===============
 
+1.35.0
+------
+- feat: new method api.person_settings.get_calling_services, new apis (api.person_settings.hotdesking, api.person_settings.sim_ring, api.person_settings.anon_calls)
+- feat: new api api.me.calls
+- feat: new attributes PersonECBN.elin_enabled and elin_for_webex_app_enabled
+- feat: new attribute elin_expiry_time_minutes for LocationECBN
+- feat: new parameter single_number_reach_phone_number for CallControlsMembersApi.dial
+- feat: new enum DeviceConnectionStatus.pending
+- fix: corrected endpoint URLs in method_ref.rst for CQPolicyApi methods
 - fix: Device.id is optional
 - fix: :meth:`api.scim.groups.patch <wxc_sdk.scim.groups.SCIM2GroupsApi.patch>`, made "schemas" parameter optional
 
