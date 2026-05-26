@@ -5,7 +5,7 @@ __all__ = ['AnonCallsApi']
 
 class AnonCallsApi(PersonSettingsApiChild):
     """
-    API for anonymous call reject settings; so far only used for workspaces
+    API for anonymous call reject settings; so far only used for workspaces and users
     """
 
     feature = 'anonymousCallReject'
@@ -32,7 +32,7 @@ class AnonCallsApi(PersonSettingsApiChild):
         url = self.f_ep(entity_id)
         data = super().get(url, params=params)
         r = data['enabled']
-        return r
+        return r  # type: ignore[return-value]
 
     def configure(self, entity_id: str, enabled: bool, org_id: str = None):
         """

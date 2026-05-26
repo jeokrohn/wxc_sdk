@@ -144,7 +144,8 @@ def plus1(v: Optional[str]) -> Optional[str]:
 def e164(v: str) -> str:
     if not isinstance(v, str):
         return v
-    v = re.sub(r'[^+\d]+', '', v)
+    # remove everything other than "+" or digits
+    v, _ = re.subn(r'[^+\d]+', '', v)
     if len(v) == 10 and v[0] != '+':
         # convert 10D to +1<10D>
         v = f'+1{v}' or v

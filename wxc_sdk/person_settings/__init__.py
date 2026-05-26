@@ -2,6 +2,7 @@
 Person settings
 """
 
+import builtins
 from dataclasses import dataclass
 from typing import Any, Optional
 
@@ -14,6 +15,7 @@ from ..common import DeviceType, IdAndName, PrimaryOrShared, UserType
 from ..common.schedules import ScheduleApi, ScheduleApiBase
 from ..rest import RestSession
 from .agent_caller_id import AgentCallerIdApi
+from .anon_calls import AnonCallsApi
 from .app_shared_line import AppSharedLineApi
 from .appservices import AppServicesApi
 from .available_numbers import AvailableNumbersApi
@@ -31,6 +33,7 @@ from .exec_assistant import ExecAssistantApi
 from .executive import ExecutiveSettingsApi
 from .feature_access import FeatureAccessApi
 from .forwarding import PersonForwardingApi
+from .hotdesking import HotDeskingApi
 from .hoteling import HotelingApi
 from .mode_management import ModeManagementApi
 from .moh import MusicOnHoldApi
@@ -47,6 +50,7 @@ from .receptionist import ReceptionistApi
 from .selective_accept import SelectiveAcceptApi
 from .selective_forward import SelectiveForwardApi
 from .selective_reject import SelectiveRejectApi
+from .sim_ring import SimRingApi
 from .single_number_reach import SingleNumberReachApi
 from .voicemail import VoicemailApi
 
@@ -60,6 +64,7 @@ __all__ = [
     'UserCallCaptions',
     'PersonSettings',
 ]
+
 
 # mypy: disable-error-code="assignment,type-arg,arg-type,override"
 
@@ -183,6 +188,7 @@ class PersonSettingsApi(ApiChild, base='people'):
 
     #: agent caller id Api
     agent_caller_id: AgentCallerIdApi
+    anon_calls: AnonCallsApi
     app_shared_line: AppSharedLineApi
     #: Person's Application Services Settings
     appservices: AppServicesApi
@@ -214,6 +220,7 @@ class PersonSettingsApi(ApiChild, base='people'):
     feature_access: FeatureAccessApi
     #: Forwarding Settings for a Person
     forwarding: PersonForwardingApi
+    hotdesking: HotDeskingApi
     #: Hoteling Settings for a Person
     hoteling: HotelingApi
     #: Person's mode management settings
@@ -248,6 +255,7 @@ class PersonSettingsApi(ApiChild, base='people'):
     selective_forward: SelectiveForwardApi
     #: selective reject settings
     selective_reject: SelectiveRejectApi
+    sim_ring: SimRingApi
     #: single nunber reach settings
     single_number_reach: SingleNumberReachApi
 
@@ -261,6 +269,7 @@ class PersonSettingsApi(ApiChild, base='people'):
         """
         super().__init__(session=session)
         self.agent_caller_id = AgentCallerIdApi(session=session)
+        self.anon_calls = AnonCallsApi(session=session)
         self.app_shared_line = AppSharedLineApi(session=session)
         self.appservices = AppServicesApi(session=session)
         self.available_numbers = AvailableNumbersApi(session=session)
@@ -277,6 +286,7 @@ class PersonSettingsApi(ApiChild, base='people'):
         self.executive = ExecutiveSettingsApi(session=session)
         self.feature_access = FeatureAccessApi(session=session)
         self.forwarding = PersonForwardingApi(session=session)
+        self.hotdesking = HotDeskingApi(session=session)
         self.hoteling = HotelingApi(session=session)
         self.mode_management = ModeManagementApi(session=session)
         self.monitoring = MonitoringApi(session=session)
@@ -294,6 +304,7 @@ class PersonSettingsApi(ApiChild, base='people'):
         self.selective_accept = SelectiveAcceptApi(session=session, selector=ApiSelector.person)
         self.selective_forward = SelectiveForwardApi(session=session, selector=ApiSelector.person)
         self.selective_reject = SelectiveRejectApi(session=session, selector=ApiSelector.person)
+        self.sim_ring = SimRingApi(session=session, selector=ApiSelector.person)
         self.single_number_reach = SingleNumberReachApi(session=session)
         self.voicemail = VoicemailApi(session=session)
 
@@ -338,6 +349,7 @@ class PersonSettingsApi(ApiChild, base='people'):
         data = super().get(url=url, params=params)
         return DeviceList.model_validate(data)
 
+    # noinspection PyShadowingNames
     def modify_hoteling_settings_primary_devices(self, person_id: str, hoteling: Hoteling, org_id: str = None):
         """
         Modify Hoteling Settings for a Person's Primary Devices
@@ -485,3 +497,29 @@ class PersonSettingsApi(ApiChild, base='people'):
             body['timeZone'] = time_zone
         url = self.session.ep(f'telephony/config/people/{person_id}')
         super().put(url, params=params, json=body)
+
+    def get_calling_services(self, person_id: str, org_id: str = None) -> builtins.list[str]:
+        """
+        List Enabled Calling Services for a Person
+
+        Retrieves the list of enabled calling services for a person.
+
+        Calling services are designed to improve call handling and ensure that people can manage their communications
+        effectively.
+
+        Viewing requires a full, read-only, user, or location administrator auth token with a scope of
+        `spark-admin:people_read`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param org_id: Organization ID. If not specified, uses the organization from the OAuth token.
+        :type org_id: str
+        :rtype: list[str]
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.session.ep(f'telephony/config/people/{person_id}/services')
+        data = super().get(url, params=params)
+        r = data['services']
+        return r  # type: ignore[return-value]

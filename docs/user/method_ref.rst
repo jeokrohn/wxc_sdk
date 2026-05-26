@@ -978,6 +978,12 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.person_settings.agent_caller_id.read <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.read>`
         | Retrieve Agent's Caller ID Information
         | ``GET /telephony/config/people/{entity_id}/agent/callerId``
+   * - :meth:`api.person_settings.anon_calls.configure <wxc_sdk.person_settings.anon_calls.AnonCallsApi.configure>`
+        | Modify Anonymous Call Settings for an entity
+        | ``PUT /telephony/config/people/{entity_id}/anonymousCallReject``
+   * - :meth:`api.person_settings.anon_calls.read <wxc_sdk.person_settings.anon_calls.AnonCallsApi.read>`
+        | Retrieve Anonymous Call Settings for an entity
+        | ``GET /telephony/config/people/{entity_id}/anonymousCallReject``
    * - :meth:`api.person_settings.app_shared_line.get_members <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.get_members>`
         | Get Shared-Line Appearance Members
         | ``GET /telephony/config/people/{person_id}/applications/members``
@@ -1173,6 +1179,18 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.person_settings.get_call_captions_settings <wxc_sdk.person_settings.PersonSettingsApi.get_call_captions_settings>`
         | Get the user call captions settings
         | ``GET /telephony/config/people/{person_id}/callCaptions``
+   * - :meth:`api.person_settings.get_calling_services <wxc_sdk.person_settings.PersonSettingsApi.get_calling_services>`
+        | List Enabled Calling Services for a Person
+        | ``GET /telephony/config/people/{person_id}/services``
+   * - :meth:`api.person_settings.hotdesking.available_members <wxc_sdk.person_settings.hotdesking.HotDeskingApi.available_members>`
+        | Search Available Hot Desking Members
+        | ``GET /telephony/config/people/{person_id}/features/hotDesking/availableMembers``
+   * - :meth:`api.person_settings.hotdesking.get_members <wxc_sdk.person_settings.hotdesking.HotDeskingApi.get_members>`
+        | Get Hot Desking Members
+        | ``GET /telephony/config/people/{person_id}/features/hotDesking/members``
+   * - :meth:`api.person_settings.hotdesking.update_members <wxc_sdk.person_settings.hotdesking.HotDeskingApi.update_members>`
+        | Update Hot Desking Members
+        | ``GET /telephony/config/people/{person_id}/features/hotDesking/members``
    * - :meth:`api.person_settings.hoteling.configure <wxc_sdk.person_settings.hoteling.HotelingApi.configure>`
         | Configure Hoteling Settings for a Person
         | ``PUT /people/{person_id}/features/hoteling``
@@ -1383,6 +1401,24 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.person_settings.selective_reject.read_criteria <wxc_sdk.person_settings.selective_reject.SelectiveRejectApi.read_criteria>`
         | Retrieve Selective Reject Criteria for an entity
         | ``GET /telephony/config/people/{entity_id}/selectiveReject/criteria/{id}``
+   * - :meth:`api.person_settings.sim_ring.configure <wxc_sdk.person_settings.sim_ring.SimRingApi.configure>`
+        | Modify Simultaneous Ring Settings for an entity
+        | ``PUT /telephony/config/people/{entity_id}/simultaneousRing``
+   * - :meth:`api.person_settings.sim_ring.configure_criteria <wxc_sdk.person_settings.sim_ring.SimRingApi.configure_criteria>`
+        | Modify Simultaneous Ring Criteria for an entity
+        | ``PUT /telephony/config/people/{entity_id}/simultaneousRing/criteria/{id}``
+   * - :meth:`api.person_settings.sim_ring.create_criteria <wxc_sdk.person_settings.sim_ring.SimRingApi.create_criteria>`
+        | Create Simultaneous Ring Criteria for an entity
+        | ``POST /telephony/config/people/{entity_id}/simultaneousRing/criteria``
+   * - :meth:`api.person_settings.sim_ring.delete_criteria <wxc_sdk.person_settings.sim_ring.SimRingApi.delete_criteria>`
+        | Delete Simultaneous Ring Criteria for an entity
+        | ``DELETE /telephony/config/people/{entity_id}/simultaneousRing/criteria/{id}``
+   * - :meth:`api.person_settings.sim_ring.read <wxc_sdk.person_settings.sim_ring.SimRingApi.read>`
+        | Retrieve Simultaneous Ring Settings for an entity
+        | ``GET /telephony/config/people/{entity_id}/simultaneousRing``
+   * - :meth:`api.person_settings.sim_ring.read_criteria <wxc_sdk.person_settings.sim_ring.SimRingApi.read_criteria>`
+        | Retrieve Simultaneous Ring Criteria for an entity
+        | ``GET /telephony/config/people/{entity_id}/simultaneousRing/criteria/{id}``
    * - :meth:`api.person_settings.single_number_reach.available_phone_numbers <wxc_sdk.person_settings.single_number_reach.SingleNumberReachApi.available_phone_numbers>`
         | Get Single Number Reach Primary Available Phone Numbers
         | ``GET /telephony/config/locations/{location_id}/singleNumberReach/availableNumbers``

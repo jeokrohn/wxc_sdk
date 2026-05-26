@@ -117,6 +117,7 @@ from wxc_sdk.person_settings.feature_access import FeatureAccessLevel, FeatureAc
     UserFeatureAccessSettings
 from wxc_sdk.person_settings.forwarding import CallForwardingAlways, CallForwardingCommon, CallForwardingNoAnswer, \
     CallForwardingPerson, PersonForwardingSetting
+from wxc_sdk.person_settings.hotdesking import HotDeskingAvailableMember, HotDeskingMember, HotDeskingMembers
 from wxc_sdk.person_settings.mode_management import AvailableFeature, ExceptionType, FeatureType, \
     ModeManagementFeature
 from wxc_sdk.person_settings.moh import MusicOnHold
@@ -363,12 +364,12 @@ __all__ = ['AcdCustomization', 'Action', 'ActionToBePerformed', 'ActionToBePerfo
            'GetMeetingSurveyResponse', 'GetRoomMeetingDetailsResponse', 'Greeting', 'Group', 'GroupMember',
            'GroupMemberObject', 'GroupMemberResponse', 'GroupMeta', 'Guest', 'GuestCallingNumber',
            'GuestCallingSettings', 'HGCallPolicies', 'HGandCQ', 'Handset', 'HistoryType', 'HolidayService',
-           'HostedFeatureDestination', 'HostedUserDestination', 'HotDesk', 'HotDeskingVoicePortalSetting',
-           'HotdeskingStatus', 'Hoteling', 'HotelingGuestSettings', 'HttpProxy', 'HttpProxyMode', 'HuntGroup',
-           'IdAndAction', 'IdAndName', 'IdOnly', 'InProgressDevice', 'Incident', 'IncidentUpdate',
-           'IncomingPermissions', 'InitiateMoveNumberJobsBody', 'InputMode', 'InterceptAnnouncements',
-           'InterceptNumber', 'InterceptSetting', 'InterceptSettingIncoming', 'InterceptSettingOutgoing',
-           'InterceptTypeIncoming', 'InterceptTypeOutgoing', 'InternalDialing',
+           'HostedFeatureDestination', 'HostedUserDestination', 'HotDesk', 'HotDeskingAvailableMember',
+           'HotDeskingMember', 'HotDeskingMembers', 'HotDeskingVoicePortalSetting', 'HotdeskingStatus', 'Hoteling',
+           'HotelingGuestSettings', 'HttpProxy', 'HttpProxyMode', 'HuntGroup', 'IdAndAction', 'IdAndName', 'IdOnly',
+           'InProgressDevice', 'Incident', 'IncidentUpdate', 'IncomingPermissions', 'InitiateMoveNumberJobsBody',
+           'InputMode', 'InterceptAnnouncements', 'InterceptNumber', 'InterceptSetting', 'InterceptSettingIncoming',
+           'InterceptSettingOutgoing', 'InterceptTypeIncoming', 'InterceptTypeOutgoing', 'InternalDialing',
            'InterpreterForSimultaneousInterpretation', 'Invitee', 'InviteeForCreateMeeting', 'JobError',
            'JobErrorItem', 'JobErrorMessage', 'JobExecutionStatus', 'JoinMeetingBody', 'JoinMeetingResponse',
            'KemKey', 'KemModuleType', 'LargeOrgStatus', 'LayoutMode', 'License', 'LicenseProperties',
