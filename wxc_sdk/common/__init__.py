@@ -1260,6 +1260,7 @@ class OwnerType(str, Enum):
     voicemail_group = 'VOICEMAIL_GROUP'
     #: The PSTN phone number's owner is a collaborate bridge.
     collaborate_bridge = 'COLLABORATE_BRIDGE'
+    ai_receptionist = 'AI_RECEPTIONIST'
 
 
 class NumberOwner(ApiModel):
