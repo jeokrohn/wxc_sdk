@@ -135,6 +135,7 @@ def main() -> None:
             print(f'got oas path "{from_env}" from "{env_path}"')
             oas_path = os.path.join(from_env, oas_basename)
     else:
+        oas_dirname = os.path.expanduser(oas_dirname)
         if os.path.isdir(oas_dirname):
             oas_path = os.path.join(oas_dirname, oas_basename)
         elif os.path.isdir(os.path.join(oas_spec_path, oas_dirname)):
@@ -210,6 +211,8 @@ def main() -> None:
                     if path_components[-2] == 'v1':
                         # something like "people"
                         py_basename = path_components[-3]
+                    elif path_components[-2] == 'public-spec':
+                        py_basename = os.path.splitext(path_components[-1])[0]
                     else:
                         # something like "people_v2"
                         py_basename = f'{path_components[-3]}_{path_components[-2]}'
@@ -223,6 +226,12 @@ def main() -> None:
                         rel_dir = spec_path[len(oas_spec_path) :].strip(os.sep)
                         rel_dirs = rel_dir.split(os.sep)[:-3]
                         dirname = os.path.join(oas_py_path, *rel_dirs)
+                        # make sure that the directories exist
+                        if not os.path.isdir(dirname):
+                            os.makedirs(dirname)
+                        pysrc = os.path.join(dirname, py_basename)
+                    elif path_components[-2] == 'public-spec':
+                        dirname = os.path.join(oas_py_path, 'public-spec')
                         # make sure that the directories exist
                         if not os.path.isdir(dirname):
                             os.makedirs(dirname)

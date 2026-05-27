@@ -2,7 +2,7 @@
 # Copyright (c) 2026 Johannes Krohn <jkrohn@cisco.com>
 # License: MIT
 
-.PHONY: all package docs types clean rst async methref endpointref apib oas oas-hybrid sync-stubs sync-stubs-dry sync-stubs-no-llm sync-stubs-verbose sync-stubs-one
+.PHONY: all package docs types clean rst async methref endpointref apib oas oas-hybrid sync-stubs sync-stubs-dry sync-stubs-no-llm sync-stubs-verbose sync-stubs-one oas-public
 # Default target builds everything
 all: clean types methref endpointref async docs package
 
@@ -58,6 +58,10 @@ oas-hybrid:
 	@echo "==> Creating Python sources from OAS files (--body-style hybrid)"
 	script/oas2py.py --cleanup
 	script/oas2py.py --with-examples --body-style hybrid
+
+oas-public:
+	@echo "==> Creating Python sources from public spec OAS files"
+	script/oas2py.py --oas "~/Documents/workspace/open-api-specs/public-spec/*.json"
 
 sync-stubs:
 	@echo "==> Syncing wxc_sdk/ with stub changes (deterministic + LLM)"
