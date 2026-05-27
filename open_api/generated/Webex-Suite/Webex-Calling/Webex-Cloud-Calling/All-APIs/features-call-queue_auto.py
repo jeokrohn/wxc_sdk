@@ -29,7 +29,7 @@ __all__ = ['AgentAction', 'AlternateNumbersWithPattern', 'AnnouncementAudioFile'
            'CallQueueQueueSettingsObjectComfortMessageBypass', 'CallQueueQueueSettingsObjectMohMessage',
            'CallQueueQueueSettingsObjectMohMessageNormalSource', 'CallQueueQueueSettingsObjectOverflow',
            'CallQueueQueueSettingsObjectWelcomeMessage', 'CallQueueQueueSettingsObjectWhisperMessage',
-           'CreateCallQueueObjectCallingLineIdPolicy', 'CreateForwardingRuleObjectCallsFrom',
+           'CallQueueSettingsGet', 'CreateCallQueueObjectCallingLineIdPolicy', 'CreateForwardingRuleObjectCallsFrom',
            'CreateForwardingRuleObjectCallsFromCustomNumbers', 'CreateForwardingRuleObjectCallsFromSelection',
            'CreateForwardingRuleObjectCallsTo', 'CreateForwardingRuleObjectForwardTo',
            'CreateForwardingRuleObjectForwardToSelection', 'DirectLineCallerIdNameObject', 'FeaturesCallQueueApi',
@@ -464,6 +464,32 @@ class CallQueueQueueSettingsObject(ApiModel):
     #: Play a message to the agent immediately before the incoming call is connected. The message typically announces
     #: the identity of the call queue from which the call is coming.
     whisper_message: Optional[CallQueueQueueSettingsObjectWhisperMessage] = None
+    #: When `true`, the call queue uses the organization-level play tone settings and ignores the queue-level
+    #: `playToneToAgent*` values. When `false`, the queue-level `playToneToAgent*` values are used.
+    use_enterprise_play_tone_to_agent_settings_enabled: Optional[bool] = None
+    #: Queue-specific setting that plays a tone to agents when a supervisor joins an active call using barge in.
+    #: Applies only when `useEnterprisePlayToneToAgentSettingsEnabled` is `false`.
+    play_tone_to_agent_for_barge_in_enabled: Optional[bool] = None
+    #: Queue-specific setting that plays a tone to agents when a supervisor monitors their active call without joining.
+    #: Applies only when `useEnterprisePlayToneToAgentSettingsEnabled` is `false`.
+    play_tone_to_agent_for_silent_monitoring_enabled: Optional[bool] = None
+    #: Queue-specific setting that plays a tone to agents when a supervisor coaches an agent during an active call.
+    #: Applies only when `useEnterprisePlayToneToAgentSettingsEnabled` is `false`.
+    play_tone_to_agent_for_supervisor_coaching_enabled: Optional[bool] = None
+
+
+class CallQueueSettingsGet(ApiModel):
+    #: Indicates whether callers keep their queue position when simultaneous ringing routes a call to multiple agents.
+    maintain_queue_position_for_sim_ring_enabled: Optional[bool] = None
+    #: Indicates whether Customer Assist agents are changed to unavailable after bounced calls.
+    force_agent_unavailable_on_bounced_enabled: Optional[bool] = None
+    #: Organization-wide default that plays a tone to agents when a supervisor joins an active call using barge in.
+    play_tone_to_agent_for_barge_in_enabled: Optional[bool] = None
+    #: Organization-wide default that plays a tone to agents when a supervisor monitors their active call without
+    #: joining.
+    play_tone_to_agent_for_silent_monitoring_enabled: Optional[bool] = None
+    #: Organization-wide default that plays a tone to agents when a supervisor coaches an agent during an active call.
+    play_tone_to_agent_for_supervisor_coaching_enabled: Optional[bool] = None
 
 
 class CreateCallQueueObjectCallingLineIdPolicy(str, Enum):
@@ -2635,6 +2661,87 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         body: dict[str, Any] = dict()
         body['settings'] = TypeAdapter(list[ModifyAgentsForCallQueueObjectSettingsItem]).dump_python(settings, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'queues/agents/{id}/settings')
+        super().put(url, params=params, json=body)
+
+    def get_call_queue_settings(self, org_id: str = None) -> CallQueueSettingsGet:
+        """
+        Get Call Queue Settings
+
+        Retrieve Call Queue Settings for a specific organization.
+
+        Call Queue Settings configure organization-wide defaults for call queues, including supervisor tone
+        notifications for barge in, silent monitoring, and coaching; optimized simultaneous-ring handling that
+        preserves caller queue position; and bounced-call handling for Customer Assist agents. Individual call queues
+        can use the organization-level tone defaults or override them with queue-specific `playToneToAgent*` settings.
+
+        Retrieving Call Queue Settings requires a full, user, or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: Call Queue Settings for this organization.
+        :type org_id: str
+        :rtype: :class:`CallQueueSettingsGet`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('queues/settings')
+        data = super().get(url, params=params)
+        r = CallQueueSettingsGet.model_validate(data)
+        return r
+
+    def update_call_queue_settings(self, maintain_queue_position_for_sim_ring_enabled: bool = None,
+                                   force_agent_unavailable_on_bounced_enabled: bool = None,
+                                   play_tone_to_agent_for_barge_in_enabled: bool = None,
+                                   play_tone_to_agent_for_silent_monitoring_enabled: bool = None,
+                                   play_tone_to_agent_for_supervisor_coaching_enabled: bool = None,
+                                   org_id: str = None) -> None:
+        """
+        Update Call Queue Settings
+
+        Update Call Queue Settings for a specific organization.
+
+        Call Queue Settings configure organization-wide defaults for call queues, including supervisor tone
+        notifications for barge in, silent monitoring, and coaching; optimized simultaneous-ring handling that
+        preserves caller queue position; and bounced-call handling for Customer Assist agents. Individual call queues
+        can use the organization-level tone defaults or override them with queue-specific `playToneToAgent*` settings.
+
+        Updating Call Queue Settings requires a full or user administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param maintain_queue_position_for_sim_ring_enabled: Indicates whether callers keep their queue position when
+            simultaneous ringing routes a call to multiple agents.
+        :type maintain_queue_position_for_sim_ring_enabled: bool
+        :param force_agent_unavailable_on_bounced_enabled: Indicates whether Customer Assist agents are changed to
+            unavailable after bounced calls.
+        :type force_agent_unavailable_on_bounced_enabled: bool
+        :param play_tone_to_agent_for_barge_in_enabled: Organization-wide default that plays a tone to agents when a
+            supervisor joins an active call using barge in.
+        :type play_tone_to_agent_for_barge_in_enabled: bool
+        :param play_tone_to_agent_for_silent_monitoring_enabled: Organization-wide default that plays a tone to agents
+            when a supervisor monitors their active call without joining.
+        :type play_tone_to_agent_for_silent_monitoring_enabled: bool
+        :param play_tone_to_agent_for_supervisor_coaching_enabled: Organization-wide default that plays a tone to
+            agents when a supervisor coaches an agent during an active call.
+        :type play_tone_to_agent_for_supervisor_coaching_enabled: bool
+        :param org_id: Call Queue Settings for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        if maintain_queue_position_for_sim_ring_enabled is not None:
+            body['maintainQueuePositionForSimRingEnabled'] = maintain_queue_position_for_sim_ring_enabled
+        if force_agent_unavailable_on_bounced_enabled is not None:
+            body['forceAgentUnavailableOnBouncedEnabled'] = force_agent_unavailable_on_bounced_enabled
+        if play_tone_to_agent_for_barge_in_enabled is not None:
+            body['playToneToAgentForBargeInEnabled'] = play_tone_to_agent_for_barge_in_enabled
+        if play_tone_to_agent_for_silent_monitoring_enabled is not None:
+            body['playToneToAgentForSilentMonitoringEnabled'] = play_tone_to_agent_for_silent_monitoring_enabled
+        if play_tone_to_agent_for_supervisor_coaching_enabled is not None:
+            body['playToneToAgentForSupervisorCoachingEnabled'] = play_tone_to_agent_for_supervisor_coaching_enabled
+        url = self.ep('queues/settings')
         super().put(url, params=params, json=body)
 
     def delete_bulk_call_queue_supervisors(self, supervisor_ids: list[str], delete_all: bool = None,

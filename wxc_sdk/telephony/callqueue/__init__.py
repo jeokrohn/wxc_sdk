@@ -38,6 +38,7 @@ __all__ = [
     'CallQueueSettings',
 ]
 
+
 # mypy: disable-error-code="call-arg,arg-type,assignment"
 
 
@@ -320,9 +321,17 @@ class QueueSettings(ApiModel):
     #: Play a message to the agent immediately before the incoming call is connected. The message typically announces
     #: the identity of the call queue from which the call is coming.
     whisper_message: Optional[AudioSource] = None
+    #: When `true`, the call queue uses the organization-level play tone settings and ignores the queue-level
+    #: `playToneToAgent*` values. When `false`, the queue-level `playToneToAgent*` values are used.
     use_enterprise_play_tone_to_agent_settings_enabled: Optional[bool] = None
+    #: Queue-specific setting that plays a tone to agents when a supervisor joins an active call using barge in.
+    #: Applies only when `useEnterprisePlayToneToAgentSettingsEnabled` is `false`.
     play_tone_to_agent_for_barge_in_enabled: Optional[bool] = None
+    #: Queue-specific setting that plays a tone to agents when a supervisor monitors their active call without joining.
+    #: Applies only when `useEnterprisePlayToneToAgentSettingsEnabled` is `false`.
     play_tone_to_agent_for_silent_monitoring_enabled: Optional[bool] = None
+    #: Queue-specific setting that plays a tone to agents when a supervisor coaches an agent during an active call.
+    #: Applies only when `useEnterprisePlayToneToAgentSettingsEnabled` is `false`.
     play_tone_to_agent_for_supervisor_coaching_enabled: Optional[bool] = None
 
     @staticmethod
@@ -440,9 +449,21 @@ class CallQueueSettings(ApiModel):
     maintain_queue_position_for_sim_ring_enabled: Optional[bool] = None
     #: Enable this setting to change the status of an agent to unavailable in case of bounced calls.
     force_agent_unavailable_on_bounced_enabled: Optional[bool] = None
+    #: Organization-wide default that plays a tone to agents when a supervisor joins an active call using barge in.
     play_tone_to_agent_for_barge_in_enabled: Optional[bool] = None
+    #: Organization-wide default that plays a tone to agents when a supervisor monitors their active call without
+    #: joining.
     play_tone_to_agent_for_silent_monitoring_enabled: Optional[bool] = None
+    #: Organization-wide default that plays a tone to agents when a supervisor coaches an agent during an active call.
     play_tone_to_agent_for_supervisor_coaching_enabled: Optional[bool] = None
+
+    def update(self) -> dict[str, Any]:
+        """
+        Data for update()
+
+        :meta private:
+        """
+        return self.model_dump(mode='json', by_alias=True, exclude_none=True)
 
 
 class AvailableAgent(ApiModel):
@@ -796,8 +817,10 @@ class CallQueueApi(ApiChild, base=''):
 
         Retrieve Call Queue Settings for a specific organization.
 
-        Call Queue Settings are used to enable the Simultaneous Ringing algorithm that maintains queue positions for
-        customers.
+        Call Queue Settings configure organization-wide defaults for call queues, including supervisor tone
+        notifications for barge in, silent monitoring, and coaching; optimized simultaneous-ring handling that
+        preserves caller queue position; and bounced-call handling for Customer Assist agents. Individual call queues
+        can use the organization-level tone defaults or override them with queue-specific `playToneToAgent*` settings.
 
         Retrieving Call Queue Settings requires a full, user, or read-only administrator auth token with a scope
         of `spark-admin:telephony_config_read`.
@@ -820,11 +843,13 @@ class CallQueueApi(ApiChild, base=''):
 
         Update Call Queue Settings for a specific organization.
 
-        Call Queue Settings are used to enable the Simultaneous Ringing algorithm that maintains queue positions for
-        customers.
+        Call Queue Settings configure organization-wide defaults for call queues, including supervisor tone
+        notifications for barge in, silent monitoring, and coaching; optimized simultaneous-ring handling that
+        preserves caller queue position; and bounced-call handling for Customer Assist agents. Individual call queues
+        can use the organization-level tone defaults or override them with queue-specific `playToneToAgent*` settings.
 
         Updating Call Queue Settings requires a full or user administrator auth token with a scope
-        `spark-admin:telephony_config_write`.
+        of `spark-admin:telephony_config_write`.
 
         :param settings: Call Queue Settings for this organization.
         :param org_id: update Call Queue Settings for this organization.
@@ -834,7 +859,7 @@ class CallQueueApi(ApiChild, base=''):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = settings.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body = settings.update()
         url = self.ep('telephony/config/queues/settings')
         self.put(url, params=params, json=body)
 
