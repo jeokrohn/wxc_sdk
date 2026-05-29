@@ -154,7 +154,7 @@ class GroupMemberResponse(ApiModel):
     #: Start at the one-based offset in the list of matching groups.
     start_index: Optional[int] = None
     #: A list of members of this group.
-    members: Optional[list[ScimGroupMember]] = None
+    members: list[ScimGroupMember] = Field(default_factory=list)
 
 
 class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
@@ -511,7 +511,7 @@ class SCIM2GroupsApi(ScimApiChild, base='identity/scim'):
         start_index = None
         while True:
             paginated_result = self.members(**params, start_index=start_index, count=count)
-            yield from paginated_result.members  # type: ignore[misc]
+            yield from paginated_result.members
             # prepare getting the next page
             count = paginated_result.items_per_page
             start_index = paginated_result.start_index + paginated_result.items_per_page  # type: ignore[operator]

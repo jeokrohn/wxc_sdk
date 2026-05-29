@@ -32,6 +32,8 @@ from wxc_sdk.telephony.callqueue import CallQueue
 from wxc_sdk.telephony.location import TelephonyLocation
 from wxc_sdk.workspaces import CallingType
 
+# mypy: disable-error-code="type-arg,str-unpack"
+
 TO_DELETE = re.compile(
     r'^(?:(?:\w{2}_|many_|test_|test_ann_|test_user_|workspace test |CPE |cpe_|cp)\d{3})|National Holidays$'
 )
@@ -110,7 +112,12 @@ def cleanup_devices(pool: ThreadPoolExecutor, api: WebexSimpleApi):
 
     print(f'deleting {len(devices_to_delete)} devices: {", ".join(mpp.display_name for mpp in mpp_devices)}')
     if not DRY_RUN:
-        list(pool.map(lambda mpp: api.devices.delete(device_id=mpp.device_id), devices_to_delete))
+        # we can only delete devices with an actual device id
+        list(
+            pool.map(
+                lambda mpp: api.devices.delete(device_id=mpp.device_id), (d for d in devices_to_delete if d.device_id)
+            )
+        )
 
 
 async def main():

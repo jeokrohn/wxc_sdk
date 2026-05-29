@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Optional
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
@@ -89,8 +89,11 @@ class FeatureAccessSettings(ApiModel):
     generate_activation_code: Optional[FeatureAccessLevel] = None
     #: Set whether end users have access to download voicemail via User Hub, or other clients (Webex, etc.).
     voicemail_download: Optional[FeatureAccessLevel] = None
+    #: Set whether end users have access to make changes to their `Speed Dial` feature via UserHub, or other clients
+    #: (Webex, IP phone, etc.).
+    speed_dial: Optional[FeatureAccessLevel] = None
 
-    def update(self) -> dict:
+    def update(self) -> dict[str, Any]:
         """
         get data for update
 

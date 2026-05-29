@@ -8,7 +8,7 @@ import zipfile
 from collections.abc import Generator, Iterable
 from dataclasses import dataclass
 from datetime import date, datetime
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import Field, TypeAdapter
 
@@ -41,6 +41,7 @@ class ReportTemplate(ApiModel):
     identifier: Optional[str] = None
     #: an array of validation rules
     validations: Optional[list[ValidationRules]] = None
+    timezone_enabled: Optional[bool] = None
 
 
 class Report(ApiModel):
@@ -67,6 +68,7 @@ class Report(ApiModel):
     download_domain: Optional[str] = None
     #: The link from which the report can be downloaded.
     download_url: Optional[str] = Field(alias='downloadURL', default=None)
+    timezone_name: Optional[str] = None
 
 
 class CallingCDR(CDR):
@@ -75,7 +77,7 @@ class CallingCDR(CDR):
     """
 
     @classmethod
-    def from_dicts(cls, dicts: Iterable[dict]) -> Generator['CallingCDR', None, None]:
+    def from_dicts(cls, dicts: Iterable[dict[str, Any]]) -> Generator['CallingCDR', None, None]:
         """
         Yield :class:`CallingCDR` instances from dicts
 
@@ -206,7 +208,7 @@ class ReportsApi(ApiChild, base='devices'):
         """
         # TODO: https://developer.webex.com/docs/api/v1/reports/create-a-report, documentation bug
         #   result actually is something like: {'items': {'Id': 'Y2...lMg'}}
-        body = {'templateId': template_id}
+        body: dict[str, Any] = {'templateId': template_id}
         if start_date:
             body['startDate'] = start_date.strftime('%Y-%m-%d')
         if end_date:
@@ -258,7 +260,7 @@ class ReportsApi(ApiChild, base='devices'):
         url = self.session.ep(f'reports/{report_id}')
         super().delete(url=url)
 
-    def download(self, url: str) -> Generator[dict, None, None]:
+    def download(self, url: str) -> Generator[dict[str, Any], None, None]:
         """
         Download a report from the given URL and yield the rows as dicts
 

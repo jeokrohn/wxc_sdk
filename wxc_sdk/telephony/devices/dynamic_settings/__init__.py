@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from pydantic import TypeAdapter
 
@@ -19,6 +19,7 @@ __all__ = [
     'DeviceDynamicTag',
     'DeviceDynamicSettings',
     'DevicesDynamicSettingsApi',
+    'ShowWhen',
 ]
 
 
@@ -28,9 +29,15 @@ class SettingsType(str, Enum):
     all = 'ALL'
 
 
+class ShowWhen(ApiModel):
+    tag_set: Optional[list[str]] = None
+    value_set: Optional[list[Any]] = None
+
+
 class DeviceSettingsGroupTag(ApiModel):
     #: Array of tags associated with the settings group.
     tag_block: Optional[list[str]] = None
+    show_when: Optional[ShowWhen] = None
 
 
 class SettingsGroup(ApiModel):

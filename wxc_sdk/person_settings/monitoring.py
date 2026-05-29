@@ -2,7 +2,7 @@
 call monitoring API
 """
 
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from pydantic import Field
 
@@ -36,6 +36,8 @@ class Monitoring(ApiModel):
     #: for updates IDs can be used directly instead of :class:`MonitoredElement` objects.
     #: Maximum 50 elements.
     monitored_elements: Optional[list[Union[str, MonitoredElement]]] = None
+    #: Indicates additional number of entries that can be stored (more than the number of entries listed).
+    available_entries_count: Optional[int] = None
 
     @property
     def monitored_cpes(self) -> list[CallParkExtension]:
@@ -104,7 +106,7 @@ class MonitoringApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
-        data = {}
+        data: dict[str, Any] = {}
         if settings.call_park_notification_enabled is not None:
             data['enableCallParkNotification'] = settings.call_park_notification_enabled
         if settings.monitored_elements is not None:
@@ -113,6 +115,6 @@ class MonitoringApi(PersonSettingsApiChild):
                 if isinstance(me, str):
                     id_list.append(me)
                 else:
-                    id_list.append(me.member and me.member.member_id or me.cpe and me.cpe.cpe_id)
+                    id_list.append(me.member and me.member.member_id or me.cpe and me.cpe.cpe_id)  # type: ignore[arg-type]
             data['monitoredElements'] = id_list
         self.put(ep, params=params, json=data)

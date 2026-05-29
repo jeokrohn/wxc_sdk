@@ -221,7 +221,7 @@ class TestScimRead(TestWithScimToken):
         issues = [
             user
             for user in users_attrs
-            if set(user.model_dump(exclude_none=True)) != {'schemas', 'id', 'user_name', 'display_name'}
+            if set(user.model_dump(exclude_none=True)) != {'schemas', 'id', 'user_name', 'display_name', 'first_admin'}
         ]
         if issues:
             print(json.dumps(TypeAdapter(list[ScimUser]).dump_python(issues, mode='json', exclude_none=True), indent=2))

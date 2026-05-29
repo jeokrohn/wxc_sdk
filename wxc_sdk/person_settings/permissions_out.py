@@ -10,11 +10,11 @@ API is used in:
 
 import json
 from dataclasses import dataclass
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from pydantic import ConfigDict, field_validator, model_validator
 
-from ..base import ApiModel
+from ..base import ApiModel, E164Number
 from ..base import SafeEnum as Enum
 from ..common import AuthCode
 from ..rest import RestSession
@@ -87,7 +87,7 @@ class CallTypePermission(ApiModel):
 
     @staticmethod
     def default() -> 'CallTypePermission':
-        return CallTypePermission(action=Action.allow, transfer_enabled=True)
+        return CallTypePermission(action=Action.allow, transfer_enabled=True)  # type: ignore[arg-type]
 
 
 class CallingPermissions(ApiModel):
@@ -142,9 +142,9 @@ class CallingPermissions(ApiModel):
             call_type = call_type.name
         except AttributeError:
             # ignore AttributeError; call_type most probably was a string already -> use lower case as attribute name
-            call_type = call_type.lower()
+            call_type = call_type.lower()  # type: ignore[assignment]
         try:
-            return getattr(self, call_type)
+            return getattr(self, call_type)  # type: ignore[no-any-return]
         except AttributeError:
             return None
 
@@ -165,7 +165,7 @@ class CallingPermissions(ApiModel):
         :rtype: CallingPermissions
         """
         init_dict = {
-            call_type: CallTypePermission(action=Action.allow, transfer_enabled=True)
+            call_type: CallTypePermission(action=Action.allow, transfer_enabled=True)  # type: ignore[arg-type]
             for call_type in CallingPermissions.model_fields
         }
         return CallingPermissions(**init_dict)
@@ -185,7 +185,7 @@ class CallingPermissions(ApiModel):
             OutgoingPermissionCallType.premium_services_i,
             OutgoingPermissionCallType.premium_services_ii,
         ):
-            ctp = r.for_call_type(call_type)
+            ctp = r.for_call_type(call_type)  # type: ignore[arg-type]
             ctp.transfer_enabled = False
             ctp.action = Action.block
         return r
@@ -244,10 +244,11 @@ class OutgoingPermissions(ApiModel):
         return r
 
     # noinspection PyMethodOverriding
-    def model_dump(self, drop_call_types: set[str] = None) -> dict:
+    def model_dump(self, drop_call_types: set[str] = None) -> dict[str, Any]:  # type: ignore[override]
         """
 
         :meta private:
+
         calling permissions are converted back to a list of objects.
         drop_call_types can be a set of call types to be excluded from callingPermissions
         """
@@ -255,11 +256,11 @@ class OutgoingPermissions(ApiModel):
             # default call types to be excluded from updates
             drop_call_types = {'url_dialing', 'unknown', 'casual'}
         # dump w/o calling_permissions; we build that extra
+        # noinspection Pydantic
         data = super().model_dump(exclude={'calling_permissions'}, by_alias=True)
         if self.calling_permissions is not None:
             permissions = []
             for call_type, call_type_permission in self.calling_permissions:
-                call_type_permission: CallTypePermission
                 if not call_type_permission or (call_type in drop_call_types):
                     continue
                 ct_dict = call_type_permission.model_dump(by_alias=True)
@@ -268,7 +269,8 @@ class OutgoingPermissions(ApiModel):
             data['callingPermissions'] = permissions
         return data
 
-    def model_dump_json(self, drop_call_types: set[str] = None) -> str:
+    # noinspection PyMethodOverriding
+    def model_dump_json(self, drop_call_types: set[str] = None) -> str:  # type: ignore[override]
         """
 
         :meta private:
@@ -287,13 +289,13 @@ class AutoTransferNumbers(ApiModel):
     use_custom_transfer_numbers: Optional[bool] = None
     #: Calls placed meeting the criteria in an outbound rule whose action is TRANSFER_NUMBER_1 will be transferred to
     #: this number
-    auto_transfer_number1: Optional[str] = None
+    auto_transfer_number1: Optional[E164Number] = None
     #: Calls placed meeting the criteria in an outbound rule whose action is TRANSFER_NUMBER_2 will be transferred to
     #: this number
-    auto_transfer_number2: Optional[str] = None
+    auto_transfer_number2: Optional[E164Number] = None
     #: Calls placed meeting the criteria in an outbound rule whose action is TRANSFER_NUMBER_3 will be transferred to
     #: this number
-    auto_transfer_number3: Optional[str] = None
+    auto_transfer_number3: Optional[E164Number] = None
 
     @property
     def configure_unset_numbers(self) -> 'AutoTransferNumbers':
@@ -325,7 +327,7 @@ class DigitPattern(ApiModel):
     #: Option to allow or disallow transfer of calls.
     transfer_enabled: Optional[bool] = None
 
-    def create_or_update(self) -> dict:
+    def create_or_update(self) -> dict[str, Any]:
         """
         data for create or update
 
@@ -470,7 +472,12 @@ class AccessCodesApi(PersonSettingsApiChild):
         if use_custom_access_codes is not None:
             body['useCustomAccessCodes'] = use_custom_access_codes
         if delete_codes is not None:
-            body['deleteCodes'] = [ac.code if isinstance(ac, AuthCode) else ac for ac in delete_codes]
+            body['deleteCodes'] = [
+                ac.code  # type: ignore[assignment]
+                if isinstance(ac, AuthCode)
+                else ac
+                for ac in delete_codes
+            ]
         super().put(url, params=params, json=body)
 
     def create(self, entity_id: str, code: str, description: str, org_id: str = None):
@@ -729,14 +736,15 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
             raise AttributeError('access_codes API is not available for locations. Use the telephony access_codes API')
         return super().__getattribute__(item)
 
-    def __init__(self, *, session: RestSession, selector: ApiSelector = 'person'):
+    def __init__(self, *, session: RestSession, selector: ApiSelector = ApiSelector.person):
         super().__init__(session=session, selector=selector)
         self.transfer_numbers = TransferNumbersApi(session=session, selector=selector)
         if selector == ApiSelector.location:
             # Apparently there is a difference between access code API for locations on one hand and users,
             # workspaces, and virtual lines one the other.
             # For locations, we can create multiple access codes at once.
-            self.access_codes = None  # instead use the access_codes API at the telephony level
+            # instead use the access_codes API at the telephony level
+            self.access_codes = None  # type: ignore[assignment]
         else:
             self.access_codes = AccessCodesApi(session=session, selector=selector)
         self.digit_patterns = DigitPatternsApi(session=session, selector=selector)

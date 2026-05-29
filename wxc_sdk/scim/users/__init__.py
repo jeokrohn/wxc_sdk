@@ -330,6 +330,7 @@ class ScimUser(ApiModel):
     meta: Optional[ScimMeta] = None
     entitlements: Optional[list[dict[Any, Any]]] = None
     roles: Optional[list[dict[Any, Any]]] = None
+    first_admin: Optional[bool] = None
 
     def create_update(self) -> dict[str, Any]:
         """

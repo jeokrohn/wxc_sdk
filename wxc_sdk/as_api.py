@@ -15745,7 +15745,7 @@ class AsMonitoringApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
-        data = {}
+        data: dict[str, Any] = {}
         if settings.call_park_notification_enabled is not None:
             data['enableCallParkNotification'] = settings.call_park_notification_enabled
         if settings.monitored_elements is not None:
@@ -15754,7 +15754,7 @@ class AsMonitoringApi(AsPersonSettingsApiChild):
                 if isinstance(me, str):
                     id_list.append(me)
                 else:
-                    id_list.append(me.member and me.member.member_id or me.cpe and me.cpe.cpe_id)
+                    id_list.append(me.member and me.member.member_id or me.cpe and me.cpe.cpe_id)  # type: ignore[arg-type]
             data['monitoredElements'] = id_list
         await self.put(ep, params=params, json=data)
 
@@ -15940,7 +15940,12 @@ class AsAccessCodesApi(AsPersonSettingsApiChild):
         if use_custom_access_codes is not None:
             body['useCustomAccessCodes'] = use_custom_access_codes
         if delete_codes is not None:
-            body['deleteCodes'] = [ac.code if isinstance(ac, AuthCode) else ac for ac in delete_codes]
+            body['deleteCodes'] = [
+                ac.code  # type: ignore[assignment]
+                if isinstance(ac, AuthCode)
+                else ac
+                for ac in delete_codes
+            ]
         await super().put(url, params=params, json=body)
 
     async def create(self, entity_id: str, code: str, description: str, org_id: str = None):
@@ -16254,14 +16259,15 @@ class AsOutgoingPermissionsApi(AsPersonSettingsApiChild):
             raise AttributeError('access_codes API is not available for locations. Use the telephony access_codes API')
         return super().__getattribute__(item)
 
-    def __init__(self, *, session: AsRestSession, selector: ApiSelector = 'person'):
+    def __init__(self, *, session: AsRestSession, selector: ApiSelector = ApiSelector.person):
         super().__init__(session=session, selector=selector)
         self.transfer_numbers = AsTransferNumbersApi(session=session, selector=selector)
         if selector == ApiSelector.location:
             # Apparently there is a difference between access code API for locations on one hand and users,
             # workspaces, and virtual lines one the other.
             # For locations, we can create multiple access codes at once.
-            self.access_codes = None  # instead use the access_codes API at the telephony level
+            # instead use the access_codes API at the telephony level
+            self.access_codes = None  # type: ignore[assignment]
         else:
             self.access_codes = AsAccessCodesApi(session=session, selector=selector)
         self.digit_patterns = AsDigitPatternsApi(session=session, selector=selector)
@@ -18775,7 +18781,7 @@ class AsReportsApi(AsApiChild, base='devices'):
         """
         # TODO: https://developer.webex.com/docs/api/v1/reports/create-a-report, documentation bug
         #   result actually is something like: {'items': {'Id': 'Y2...lMg'}}
-        body = {'templateId': template_id}
+        body: dict[str, Any] = {'templateId': template_id}
         if start_date:
             body['startDate'] = start_date.strftime('%Y-%m-%d')
         if end_date:
@@ -20378,7 +20384,7 @@ class AsStatusAPI(AsApiChild, base='status'):
     """
 
     # noinspection PyMethodOverriding
-    def ep(self, path: str):
+    def ep(self, path: str):  # type: ignore[override]
         """
 
         :meta private:

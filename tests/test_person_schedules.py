@@ -161,7 +161,7 @@ class TestCreateOrUpdate(TestCaseWithUsers):
         # new schedule has to be in user schedule list
         in_list = next((schedule for schedule in user_schedules_after if schedule.schedule_id == new_schedule_id), None)
         self.assertTrue(in_list is not None)
-        self.assertEqual('USER', in_list.level, 'New schedule should be a user schedule')
+        self.assertEqual(ScheduleLevel.people, in_list.level, 'New schedule should be a user schedule')
 
     def test_002_create_name_conflict(self):
         """

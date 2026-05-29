@@ -38,8 +38,11 @@ class TestPersonFeatureAccess(TestCaseWithUsers):
         fields = before.__class__.model_fields
         field_to_modify = random.choice(list(fields))
         current_value = before.__getattribute__(field_to_modify)
-        new_value = FeatureAccessLevel.full_access if current_value != FeatureAccessLevel.full_access else (
-            FeatureAccessLevel.no_access)
+        new_value = (
+            FeatureAccessLevel.full_access
+            if current_value != FeatureAccessLevel.full_access
+            else (FeatureAccessLevel.no_access)
+        )
         update_settings = FeatureAccessSettings(**{field_to_modify: new_value})
         try:
             print(f'Update {field_to_modify} from {current_value} to {new_value}')
@@ -70,15 +73,21 @@ class TestPersonFeatureAccess(TestCaseWithUsers):
             settings: list[UserFeatureAccessSettings]
 
             # verify that person settings for users that user default settings match the default settings
-            mismatched_users = [(u, s) for u, s in zip(self.users, settings)
-                                if
-                                s.user_org_settings_permission_enabled and s.user_settings_permissions != defaults]
+            mismatched_users = [
+                (u, s)
+                for u, s in zip(self.users, settings)
+                if s.user_org_settings_permission_enabled and s.user_settings_permissions != defaults
+            ]
             for user, setting in mismatched_users:
                 print(f'User {user.display_name} has mismatched settings:')
-                print('\n'.join(f'  {l}'
-                                for l in json.dumps(setting.user_settings_permissions.model_dump(mode='json',
-                                                                                                 by_alias=True),
-                                                    indent=2).splitlines()))
+                print(
+                    '\n'.join(
+                        f'  {l}'
+                        for l in json.dumps(
+                            setting.user_settings_permissions.model_dump(mode='json', by_alias=True), indent=2
+                        ).splitlines()
+                    )
+                )
             self.assertTrue(not mismatched_users)
             return
 
@@ -99,8 +108,11 @@ class TestPersonFeatureAccess(TestCaseWithUsers):
             fields = default_settings.__class__.model_fields
             field_to_modify = random.choice(list(fields))
             current_value = default_settings.__getattribute__(field_to_modify)
-            new_value = FeatureAccessLevel.full_access if current_value != FeatureAccessLevel.full_access else (
-                FeatureAccessLevel.no_access)
+            new_value = (
+                FeatureAccessLevel.full_access
+                if current_value != FeatureAccessLevel.full_access
+                else (FeatureAccessLevel.no_access)
+            )
             new_value: FeatureAccessLevel
             update = FeatureAccessSettings(**{field_to_modify: new_value})
             print(f'Update {field_to_modify} from {current_value} to {new_value.value}')
@@ -126,19 +138,21 @@ class TestPersonFeatureAccess(TestCaseWithUsers):
         api = self.async_api.person_settings.feature_access
         print(f'Reading feature access settings for {len(self.users)} users...')
         # Read feature access settings for all users in parallel
-        settings = await asyncio.gather(*[api.read(u.person_id) for u in self.users],
-                                        return_exceptions=True)
+        settings = await asyncio.gather(*[api.read(u.person_id) for u in self.users], return_exceptions=True)
         err = None
         for user, setting in zip(self.users, settings):
             if isinstance(setting, Exception):
                 err = err or setting
                 print(f'Error reading feature access for {user.display_name}: {setting}')
-            setting: UserFeatureAccessSettings
+                continue
             if setting.user_settings_permissions:
                 print(user.display_name)
-                print('\n'.join(f'  {l}' for l in json.dumps(setting.model_dump(mode='json',
-                                                                                by_alias=True),
-                                                             indent=2).splitlines()))
+                print(
+                    '\n'.join(
+                        f'  {l}'
+                        for l in json.dumps(setting.model_dump(mode='json', by_alias=True), indent=2).splitlines()
+                    )
+                )
             else:
                 print(f'{user.display_name} has no user settings permissions.')
                 err = err or ValueError(f'User {user.display_name} has no user settings permissions.')
@@ -172,8 +186,11 @@ class TestPersonFeatureAccess(TestCaseWithUsers):
 
         # toggle the feature access level
         current_value = default_settings.__getattribute__(field_to_modify)
-        new_value = FeatureAccessLevel.full_access if current_value != FeatureAccessLevel.full_access else (
-            FeatureAccessLevel.no_access)
+        new_value = (
+            FeatureAccessLevel.full_access
+            if current_value != FeatureAccessLevel.full_access
+            else (FeatureAccessLevel.no_access)
+        )
         new_value: FeatureAccessLevel
         update_settings = FeatureAccessSettings(**{field_to_modify: new_value})
 
@@ -181,12 +198,19 @@ class TestPersonFeatureAccess(TestCaseWithUsers):
         api.update(target_user.person_id, update_settings)
         after = api.read(target_user.person_id)
         try:
-            self.assertEqual(getattr(after.user_settings_permissions, field_to_modify), new_value,
-                             'modified field value does not match')
-            self.assertTrue(all(getattr(after.user_settings_permissions, field) == getattr(default_settings, field)
-                                for field in default_settings.__class__.model_fields
-                                if field != field_to_modify),
-                            'other fields should not be modified')
+            self.assertEqual(
+                getattr(after.user_settings_permissions, field_to_modify),
+                new_value,
+                'modified field value does not match',
+            )
+            self.assertTrue(
+                all(
+                    getattr(after.user_settings_permissions, field) == getattr(default_settings, field)
+                    for field in default_settings.__class__.model_fields
+                    if field != field_to_modify
+                ),
+                'other fields should not be modified',
+            )
         finally:
             api.reset(target_user.person_id)
             restored = api.read(target_user.person_id)
@@ -201,8 +225,7 @@ class TestPersonFeatureAccess(TestCaseWithUsers):
         api = self.async_api.person_settings.feature_access
         print(f'Resetting feature access settings for {len(self.users)} users...')
         # Reset feature access settings for all users in parallel
-        results = await asyncio.gather(*[api.reset(u.person_id) for u in self.users],
-                                       return_exceptions=True)
+        results = await asyncio.gather(*[api.reset(u.person_id) for u in self.users], return_exceptions=True)
         print('All user feature access settings have been reset.')
         err = None
         for user, result in zip(self.users, results):

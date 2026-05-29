@@ -3,7 +3,7 @@ Webex Status API as described at https://status.webex.com/api
 """
 
 from datetime import datetime
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import Field, TypeAdapter
 
@@ -31,6 +31,8 @@ class Component(ApiModel):
     external_id: Optional[str] = None
     help_link: Optional[str] = Field(alias='helpLink')
     service_id: Optional[str] = None
+    unavailable_regions: Optional[list[Any]] = Field(default_factory=list)
+    region_status_map: Any
 
 
 class AffectComponent(ApiModel):
@@ -95,6 +97,15 @@ class Incident(ApiModel):
     auto_status_setting: Optional[bool] = None
     service_id: Optional[str] = None
     locations: Optional[str] = None
+    maintenance_components: list[str] = Field(default_factory=list)
+    commercial_flag: Any
+    regions: list[str] = Field(default_factory=list)
+    degraded_components: Optional[list[Any]] = Field(default_factory=list)
+    major_components: Optional[list[Any]] = Field(default_factory=list)
+    auto_status_setting_flag: Optional[bool] = Field(None)
+    force_restore_components_flag: Optional[bool] = Field(None)
+    force_restore_components: Optional[bool] = Field(None)
+    fedramp_flag: Optional[bool] = Field(None, alias='fedRAMPFlag')
 
 
 class WebexStatus(ApiModel):
@@ -114,7 +125,7 @@ class StatusAPI(ApiChild, base='status'):
     """
 
     # noinspection PyMethodOverriding
-    def ep(self, path: str):
+    def ep(self, path: str):  # type: ignore[override]
         """
 
         :meta private:

@@ -2,13 +2,15 @@
 Call recording API
 """
 
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import Field
 
-from ..base import ApiModel
+from ..base import ApiModel, to_camel
 from ..base import SafeEnum as Enum
 from .common import PersonSettingsApiChild
+
+# mypy: disable-error-code="arg-type,call-arg"
 
 __all__ = [
     'Record',
@@ -17,8 +19,14 @@ __all__ = [
     'Notification',
     'CallRecordingSetting',
     'StartStopAnnouncement',
+    'CallRecordingAccessSettings',
+    'PostCallRecordingSettings',
+    'CallRecordingAnnouncement',
+    'CallRecordingAnnouncements',
     'CallRecordingApi',
 ]
+
+from ..common import AnnAudioFile, Greeting
 
 
 class Record(str, Enum):
@@ -95,6 +103,55 @@ class PostCallRecordingSettings(ApiModel):
     transcript_enabled: Optional[bool] = None
 
 
+class CallRecordingAnnouncement(ApiModel):
+    #: Type of announcement to play when call recording starts.
+    type: Optional[Greeting] = None
+    audio_announcement_file: Optional[AnnAudioFile] = None
+
+    def update(self) -> dict[str, Any]:
+        """
+        dict for update()
+
+        :meta private:
+        """
+        data = self.model_dump(mode='json', by_alias=True, exclude_unset=True)
+        # update only has announcement file ID
+        if self.audio_announcement_file:
+            data.pop('audioAnnouncementFile')
+            data['audioAnnouncementFileId'] = self.audio_announcement_file.id
+        return data
+
+
+class CallRecordingAnnouncements(ApiModel):
+    #: When `true`, the location level custom announcement settings are used. When `false`, queue custom announcement
+    #: settings are used.
+    use_location_level_enabled: Optional[bool] = None
+    #: The start announcement settings for this queue.
+    start: Optional[CallRecordingAnnouncement] = None
+    #: The stop announcement settings for this queue.
+    stop: Optional[CallRecordingAnnouncement] = None
+    #: The pause announcement settings for this queue.
+    pause: Optional[CallRecordingAnnouncement] = None
+    #: The resume announcement settings for this queue.
+    resume: Optional[CallRecordingAnnouncement] = None
+    #: The failure end with call announcement settings for this queue.
+    failure_end_with_call: Optional[CallRecordingAnnouncement] = None
+    #: The failure proceed with call announcement settings for this queue.
+    failure_proceed_with_call: Optional[CallRecordingAnnouncement] = None
+
+    def update(self) -> dict[str, Any]:
+        """
+        dict for update()
+
+        :meta private:
+        """
+        data = self.model_dump(mode='json', by_alias=True, exclude_unset=True)
+        for attr in ['start', 'stop', 'pause', 'resume', 'failure_end_with_call', 'failure_proceed_with_call']:
+            if v := getattr(self, attr):
+                data[to_camel(attr)] = v.update()
+        return data
+
+
 class CallRecordingSetting(ApiModel):
     #: true if call recording is enabled.
     enabled: Optional[bool] = None
@@ -121,6 +178,8 @@ class CallRecordingSetting(ApiModel):
     call_recording_access_settings: Optional[CallRecordingAccessSettings] = None
     #: TODO: undocumented, issue 201
     post_call_recording_settings: Optional[PostCallRecordingSettings] = None
+    #: Announcement settings
+    announcements: Optional[CallRecordingAnnouncements] = None
 
     @staticmethod
     def default() -> 'CallRecordingSetting':
@@ -137,7 +196,7 @@ class CallRecordingSetting(ApiModel):
             start_stop_announcement=StartStopAnnouncement(internal_calls_enabled=False, pstn_calls_enabled=False),
         )
 
-    def update(self) -> dict:
+    def update(self) -> dict[str, Any]:
         """
         date for update
 
@@ -152,6 +211,9 @@ class CallRecordingSetting(ApiModel):
         if self.notification and self.notification.notification_type == NotificationType.none:
             # Read on API returns "None" but update has to be null
             data['notification']['type'] = None
+        # special data for announcements update
+        if self.announcements:
+            data['announcements'] = self.announcements.update()
         return data
 
 

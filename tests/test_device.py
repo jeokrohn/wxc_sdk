@@ -19,6 +19,8 @@ from wxc_sdk.workspaces import CallingType, Workspace, WorkspaceSupportedDevices
 
 # TODO: validate all new endpoint signatures
 
+# mypy: disable-error-code="type-var"
+
 
 class TestDevice(TestCaseWithLog):
     def test_001_list(self):
@@ -171,7 +173,7 @@ class TestDevice(TestCaseWithLog):
         if not devices:
             self.skipTest('No devices')
         details_list = await asyncio.gather(
-            *[self.async_api.devices.details(device_id=device.device_id) for device in devices]
+            *[self.async_api.devices.details(device_id=device.device_id) for device in devices if device.device_id]
         )
         for device in details_list:
             print(f'{device.display_name}: ')

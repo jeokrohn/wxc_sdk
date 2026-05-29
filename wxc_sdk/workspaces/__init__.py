@@ -226,6 +226,8 @@ class CapabilityMap(ApiModel):
     hot_desking: Optional[SupportAndConfiguredInfo] = None
     check_in: Optional[SupportAndConfiguredInfo] = None
     adhoc_booking: Optional[SupportAndConfiguredInfo] = None
+    reverberation_time: Optional[SupportAndConfiguredInfo] = None
+    lighting_conditions: Optional[list[SupportAndConfiguredInfo]] = None
 
 
 class Workspace(ApiModel):

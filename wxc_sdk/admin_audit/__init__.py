@@ -58,9 +58,9 @@ class AuditEventData(ApiModel):
     actor_client_id: Optional[Any] = None
     actor_client_name: Optional[Any] = None
     added_pattern: Optional[Any] = None
+    api_version: Optional[Any] = None
     attributes: Optional[Any] = None
     authorized_status: Optional[Any] = None
-    api_version: Optional[Any] = None
     business_text_status: Optional[Any] = None
     capacity: Optional[Any] = None
     category: Optional[Any] = None
@@ -115,6 +115,7 @@ class AuditEventData(ApiModel):
     new_vendor_name: Optional[Any] = None
     numbers_updated: Optional[Any] = None
     numbers: Optional[Any] = None
+    offer_code: Optional[Any] = None
     offer_map: Optional[Any] = None
     old_org_default_enabled: Optional[Any] = None
     old_vendor_name: Optional[Any] = None
@@ -129,6 +130,7 @@ class AuditEventData(ApiModel):
     portability_numbers: Optional[Any] = None
     previous_group_id: Optional[Any] = None
     previous_value: Optional[Any] = None
+    queue_name: Optional[Any] = None
     report_id: Optional[Any] = None
     reserved_numbers: Optional[Any] = None
     result: Optional[Any] = None
@@ -146,11 +148,14 @@ class AuditEventData(ApiModel):
     start_date: Optional[Any] = None
     start_time: Optional[Any] = None
     sub_type: Optional[Any] = None
+    subscription_id: Optional[Any] = None
+    subscription_operation: Optional[Any] = None
     success: Optional[Any] = None
     tags: Optional[Any] = None
     target_email: Optional[Any] = None
     target_group_id: Optional[Any] = None
     target_location_name: Optional[Any] = None
+    target_management_realm: Optional[Any] = None
     template_name: Optional[Any] = None
     template_type: Optional[Any] = None
     token_id: Optional[Any] = None

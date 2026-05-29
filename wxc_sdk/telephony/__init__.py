@@ -161,6 +161,7 @@ class NumberListPhoneNumber(ApiModel):
     elin_enabled: Optional[bool] = None
     location: IdAndName
     owner: Optional[NumberOwner] = None
+    is_reserved_number: Optional[bool] = None
 
 
 class NumberType(str, Enum):
@@ -184,6 +185,9 @@ class NumberDetails(ApiModel):
     #: Count of phone numbers of type `MOBILE_NUMBER` only without `PSTN_NUMBER` and extension.
     mobile_number: Optional[int] = None
     service_number: Optional[int] = None
+    available: Optional[int] = None
+    elin: Optional[int] = None
+    reserved_number: Optional[int] = None
 
 
 class UCMProfile(ApiModel):

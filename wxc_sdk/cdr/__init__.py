@@ -558,7 +558,7 @@ class CDR(ApiModel):
     #: consulted leg was transferred or conferenced into the customer call leg.
     #:
     #: If the value is set to "NA", the call leg is not associated with an agent consultative call.
-    wx_cc_consult_merge_status: Optional[str] = Field(alias='WxCC consult merge status', default=None)
+    wxcc_consult_merge_status: Optional[str] = Field(alias='WxCC consult merge status', default=None)
     #: When set, this is the Emergency Location Identification Number (ELIN) used for the emergency call or callback.
     #: The ELIN may be an ELIN from the location's pool (numbers the customer has configured as ELINs), or it may be
     #: the workspace's own number which was used as ECBN for the emergency call and treated as an ELIN.

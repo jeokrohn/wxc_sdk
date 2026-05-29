@@ -1,6 +1,7 @@
 """
 Unit test for numbers
 """
+
 import base64
 import random
 from dataclasses import dataclass, field
@@ -10,6 +11,8 @@ from tests.base import TestCaseWithLog, TestCaseWithUsers
 from tests.testutil import LocationInfo, available_tns, us_location_info
 from wxc_sdk.all_types import *
 from wxc_sdk.telephony import TelephonyType
+
+# mypy: disable-error-code="list-item"
 
 
 class TestNumbers(TestCaseWithLog):
@@ -22,15 +25,15 @@ class TestNumbers(TestCaseWithLog):
         print(f'Got {len(numbers)} numbers')
 
     def test_002_active(self):
-        numbers = list(self.api.telephony.phone_numbers(state='ACTIVE'))
+        numbers = list(self.api.telephony.phone_numbers(state=NumberState.active))
         print(f'Got {len(numbers)} active numbers')
 
     def test_003_extensions(self):
-        numbers = list(self.api.telephony.phone_numbers(number_type='EXTENSION'))
+        numbers = list(self.api.telephony.phone_numbers(number_type=NumberType.extension))
         print(f'Got {len(numbers)} extensions')
 
     def test_004_phone_numbers(self):
-        numbers = list(self.api.telephony.phone_numbers(number_type='NUMBER'))
+        numbers = list(self.api.telephony.phone_numbers(number_type=NumberType.number))
         print(f'Got {len(numbers)} TNs')
 
     def test_005_details(self):
@@ -53,7 +56,7 @@ class TestNumbers(TestCaseWithLog):
 class TestNumberConsistency(TestCaseWithUsers):
     def test_number_consistency(self):
         numbers = self.api.telephony.phone_numbers(owner_type=OwnerType.people)
-        locations = {loc.location_id:loc for loc in self.api.locations.list()}
+        locations = {loc.location_id: loc for loc in self.api.locations.list()}
         err = False
         for number in numbers:
             print(f'number: {number.phone_number}/{number.extension}')
@@ -69,8 +72,10 @@ class TestNumberConsistency(TestCaseWithUsers):
             number_location_id = number.location.id
             person = next(user for user in self.users if user.person_id == number.owner.owner_id)
             if person.location_id != number_location_id:
-                print(f'  - person location id ({base64.b64decode(person.location_id+"==").decode()}) does not match'
-                      f' number location id ({base64.b64decode(number_location_id+"==").decode()})')
+                print(
+                    f'  - person location id ({base64.b64decode(person.location_id + "==").decode()}) does not match'
+                    f' number location id ({base64.b64decode(number_location_id + "==").decode()})'
+                )
                 print(f'    Person: "{person.display_name}" in "{locations[person.location_id].name}"')
                 print(f'    Number location: "{locations[number_location_id].name}"')
 
@@ -85,8 +90,7 @@ class TestValidateExtensions(TestCaseWithLog):
         at = self.api.telephony
         extensions = set(n.extension for n in at.phone_numbers(number_type='EXTENSION'))
 
-        new_extensions = (extension for i in range(9000)
-                          if (extension := str(1000 + i)) not in extensions)
+        new_extensions = (extension for i in range(9000) if (extension := str(1000 + i)) not in extensions)
         to_validate = [next(new_extensions) for _ in range(20)]
         result = at.validate_extensions(extensions=to_validate)
         print(result)
@@ -96,8 +100,7 @@ class TestValidateExtensions(TestCaseWithLog):
         at = self.api.telephony
         extensions = set(n.extension for n in at.phone_numbers(number_type='EXTENSION'))
 
-        new_extensions = (extension for i in range(9000)
-                          if (extension := str(1000 + i)) not in extensions)
+        new_extensions = (extension for i in range(9000) if (extension := str(1000 + i)) not in extensions)
         to_validate = [next(new_extensions) for _ in range(20)]
         to_validate.extend(random.sample(list(extensions), 5))
         result = at.validate_extensions(extensions=to_validate)
@@ -108,8 +111,7 @@ class TestValidateExtensions(TestCaseWithLog):
         at = self.api.telephony
         extensions = set(n.extension for n in at.phone_numbers(number_type='EXTENSION'))
 
-        new_extensions = (extension for i in range(9000)
-                          if (extension := str(1000 + i)) not in extensions)
+        new_extensions = (extension for i in range(9000) if (extension := str(1000 + i)) not in extensions)
         to_validate = [next(new_extensions)] * 3
         result = at.validate_extensions(extensions=to_validate)
         print(result)
@@ -148,10 +150,17 @@ class TestValidatePhoneNumbers(TestCaseWithLog):
         self.assertEqual(ValidationStatus.ok, result.status)
         self.assertTrue(result.ok)
         self.assertEqual(1, len(result.phone_numbers))
-        self.assertEqual([ValidatePhoneNumberStatus(phone_number=number,
-                                                    state=ValidatePhoneNumberStatusState.available,
-                                                    toll_free_number=False, detail=[])],
-                         result.phone_numbers)
+        self.assertEqual(
+            [
+                ValidatePhoneNumberStatus(
+                    phone_number=number,
+                    state=ValidatePhoneNumberStatusState.available,
+                    toll_free_number=False,
+                    detail=[],
+                )
+            ],
+            result.phone_numbers,
+        )
 
     def test_002_duplicate(self):
         """
@@ -159,47 +168,66 @@ class TestValidatePhoneNumbers(TestCaseWithLog):
         """
         number = self.target.main_number
         result = self.api.telephony.validate_phone_numbers(phone_numbers=[number])
-        self.assertEqual(ValidatePhoneNumbersResponse(
-            status=ValidationStatus.errors,
-            phone_numbers=[ValidatePhoneNumberStatus(
-                phone_number=number,
-                state=ValidatePhoneNumberStatusState.duplicate,
-                toll_free_number=False,
-                detail=[f'[Error 8363] DN is in use : {number}'])]),
-            result)
+        self.assertEqual(
+            ValidatePhoneNumbersResponse(
+                status=ValidationStatus.errors,
+                phone_numbers=[
+                    ValidatePhoneNumberStatus(
+                        phone_number=number,
+                        state=ValidatePhoneNumberStatusState.duplicate,
+                        toll_free_number=False,
+                        detail=[f'[Error 8363] DN is in use : {number}'],
+                    )
+                ],
+            ),
+            result,
+        )
 
     def test_003_duplicate_in_list_available(self):
         """
         Validate duplicate number in list
         """
         result = self.api.telephony.validate_phone_numbers(phone_numbers=[self.available, self.available])
-        self.assertEqual(ValidatePhoneNumbersResponse(
-            status=ValidationStatus.errors,
-            phone_numbers=[
-                ValidatePhoneNumberStatus(phone_number=self.available,
-                                          state=ValidatePhoneNumberStatusState.available,
-                                          toll_free_number=False,
-                                          detail=[]),
-                ValidatePhoneNumberStatus(phone_number=self.available,
-                                          state=ValidatePhoneNumberStatusState.duplicate_in_list,
-                                          toll_free_number=False,
-                                          detail=[f'[Error 8360] Duplicate DN in the request : {self.available}'])
-            ]),
-            result)
+        self.assertEqual(
+            ValidatePhoneNumbersResponse(
+                status=ValidationStatus.errors,
+                phone_numbers=[
+                    ValidatePhoneNumberStatus(
+                        phone_number=self.available,
+                        state=ValidatePhoneNumberStatusState.available,
+                        toll_free_number=False,
+                        detail=[],
+                    ),
+                    ValidatePhoneNumberStatus(
+                        phone_number=self.available,
+                        state=ValidatePhoneNumberStatusState.duplicate_in_list,
+                        toll_free_number=False,
+                        detail=[f'[Error 8360] Duplicate DN in the request : {self.available}'],
+                    ),
+                ],
+            ),
+            result,
+        )
 
     def test_004_invalid(self):
         """
         Validate an invalid number
         """
         result = self.api.telephony.validate_phone_numbers(phone_numbers=['+1800'])
-        self.assertEqual(ValidatePhoneNumbersResponse(
-            status=ValidationStatus.errors,
-            phone_numbers=[ValidatePhoneNumberStatus(
-                phone_number='+1800',
-                state=ValidatePhoneNumberStatusState.invalid,
-                toll_free_number=False,
-                detail=['[Error 8362] DN is invalid : +1800'])]),
-            result)
+        self.assertEqual(
+            ValidatePhoneNumbersResponse(
+                status=ValidationStatus.errors,
+                phone_numbers=[
+                    ValidatePhoneNumberStatus(
+                        phone_number='+1800',
+                        state=ValidatePhoneNumberStatusState.invalid,
+                        toll_free_number=False,
+                        detail=['[Error 8362] DN is invalid : +1800'],
+                    )
+                ],
+            ),
+            result,
+        )
 
     def test_006_unavailable(self):
         """
@@ -207,11 +235,17 @@ class TestValidatePhoneNumbers(TestCaseWithLog):
         """
         number = '+17207783411'
         result = self.api.telephony.validate_phone_numbers(phone_numbers=[number])
-        self.assertEqual(ValidatePhoneNumbersResponse(
-            status=ValidationStatus.errors,
-            phone_numbers=[ValidatePhoneNumberStatus(
-                phone_number=number,
-                state=ValidatePhoneNumberStatusState.unavailable,
-                toll_free_number=False,
-                detail=[f'[Error 8361] DN is unavailable : {number}'])]),
-            result)
+        self.assertEqual(
+            ValidatePhoneNumbersResponse(
+                status=ValidationStatus.errors,
+                phone_numbers=[
+                    ValidatePhoneNumberStatus(
+                        phone_number=number,
+                        state=ValidatePhoneNumberStatusState.unavailable,
+                        toll_free_number=False,
+                        detail=[f'[Error 8361] DN is unavailable : {number}'],
+                    )
+                ],
+            ),
+            result,
+        )

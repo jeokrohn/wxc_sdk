@@ -50,6 +50,7 @@ class RecordingSession(ApiModel):
 class RecordingPartyActor(ApiModel):
     id: Optional[str] = None
     type: Optional[str] = None
+    email: Optional[str] = None
 
 
 class RecordingParty(ApiModel):
