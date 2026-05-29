@@ -72,6 +72,8 @@ class Device(ApiModel):
     calling_device_id: Optional[str] = None
     #: A unique identifier for the device specifically for use with Webex Devices APIs. May be null.
     webex_device_id: Optional[str] = None
+    #: A persistent unique identifier for the device. Org based and persistent across federation migrations.
+    device_id: Optional[str] = None
     #: A friendly name for the device.
     display_name: Optional[str] = None
     #: The placeId field has been deprecated. Please use workspaceId instead.

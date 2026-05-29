@@ -54,27 +54,29 @@ class Device(ApiModel):
     calling_device_id: Optional[str] = None
     #: A unique identifier for the device specifically for use with Webex Devices APIs. May be null.
     webex_device_id: Optional[str] = None
+    #: A persistent unique identifier for the device. Org based and persistent across federation migrations.
+    p_device_id: Optional[str] = Field(None, alias='device_id')
     #: A friendly name for the device.
-    display_name: str
+    display_name: Optional[str] = None
     #: The workspace associated with the device.
     workspace_id: Optional[str] = None
     #: The person associated with the device.
     person_id: Optional[str] = None
     #: The organization associated with the device
-    org_id: str
+    org_id: Optional[str] = None
     #: The capabilities of the device.
-    capabilities: list[str]
+    capabilities: Optional[list[str]] = None
     #: The permissions the user has for this device. For example, xapi means this user is entitled to using the xapi
     #: against this device.
-    permissions: list[str]
+    permissions: Optional[list[str]] = None
     #: The connection status of the device.
     connection_status: Optional[ConnectionStatus] = None
     #: The product name. A display friendly version of the device's model.
-    product: str
+    product: Optional[str] = None
     #: The product type.
-    product_type: ProductType = Field(alias='type')
+    product_type: ProductType | None = Field(None, alias='type')
     #: Tags assigned to the device.
-    tags: list[str]
+    tags: Optional[list[str]] = None
     #: The current IP address of the device.
     ip: Optional[str] = None
     #: The current network connectivity for the device.
@@ -84,7 +86,7 @@ class Device(ApiModel):
     #: The primary SIP address to dial this device.
     primary_sip_url: Optional[str] = None
     #: All SIP addresses to dial this device.
-    sip_urls: list[Any]
+    sip_urls: Optional[list[Any]] = None
     error_codes: Optional[list[Any]] = None
     #: Serial number for the device.
     serial: Optional[str] = None
