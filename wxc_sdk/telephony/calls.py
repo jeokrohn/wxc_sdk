@@ -90,7 +90,7 @@ class TelephonyParty(ApiModel):
     name: Optional[str] = None
     #: The party's number. Only present when the number is available and privacy is not enabled. The number can be
     #: digits or a URI. Some examples for number include: 1234, 2223334444, +12223334444, \*73, user@company.domain
-    number: str
+    number: Optional[str] = None
     #: The party's person ID. Only present when the person ID is available and privacy is not enabled.
     person_id: Optional[str] = None
     #: The party's place ID. Only present when the place ID is available and privacy is not enabled.
