@@ -1,6 +1,6 @@
-from typing import Optional
+from typing import Any, Optional
 
-from wxc_sdk.base import ApiModel
+from wxc_sdk.base import ApiModel, E164Number
 from wxc_sdk.common.selective import SelectiveCrit, SelectiveCriteria
 from wxc_sdk.person_settings.common import PersonSettingsApiChild
 
@@ -14,7 +14,7 @@ class SequentialRingCriteria(SelectiveCriteria):
 
 class SequentialRingNumber(ApiModel):
     #: Phone number set as the sequential number.
-    phone_number: Optional[str] = None
+    phone_number: Optional[E164Number] = None
     #: When set to `true` the called party is required to press 1 on the keypad to receive the call.
     answer_confirmation_required_enabled: Optional[bool] = None
     #: The number of rings to the specified phone number before the call advances to the subsequent number in the
@@ -39,7 +39,7 @@ class SequentialRing(ApiModel):
     #: A list of criteria specifying conditions when sequential ringing is in effect.
     criteria: Optional[list[SelectiveCrit]] = None
 
-    def update(self) -> dict:
+    def update(self) -> dict[str, Any]:
         """
         data for update
 
