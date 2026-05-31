@@ -1,6 +1,7 @@
 """
 All tests around telephony devices
 """
+
 import asyncio
 import json
 import random
@@ -11,7 +12,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from itertools import chain, zip_longest
 from json import dumps, loads
-from typing import ClassVar
+from typing import Any, ClassVar
 from unittest import skip
 
 from tests.base import TestCaseWithLog, TestWithLocations, async_test
@@ -62,8 +63,8 @@ class DeviceSettings(TestWithLocations):
     async def test_002_location_level(self):
         locations = self.locations
         customizations = await asyncio.gather(
-            *[self.async_api.telephony.location.device_settings(location_id=loc.location_id)
-              for loc in locations])
+            *[self.async_api.telephony.location.device_settings(location_id=loc.location_id) for loc in locations]
+        )
         customizations: list[DeviceCustomization]
         print(f'Got {len(customizations)} location level device customization settings')
 
@@ -75,8 +76,9 @@ class UserDevices(TestCaseWithLog):
         get devices for all users
         """
         users = calling_users(api=self.api)
-        devices = await asyncio.gather(*[self.async_api.person_settings.devices(person_id=user.person_id)
-                                         for user in users])
+        devices = await asyncio.gather(
+            *[self.async_api.person_settings.devices(person_id=user.person_id) for user in users]
+        )
         devices: list[TelephonyDevice]
         print(f'Got devices for {len(devices)} users')
 
@@ -87,8 +89,7 @@ class UserDevices(TestCaseWithLog):
         """
         users = calling_users(api=self.api)
         api = self.async_api.telephony.devices
-        device_counts = await asyncio.gather(*[api.user_devices_count(person_id=user.person_id)
-                                               for user in users])
+        device_counts = await asyncio.gather(*[api.user_devices_count(person_id=user.person_id) for user in users])
         print(f'Got device counts for {len(device_counts)} users')
         for user, device_count in zip(users, device_counts):
             user: Person
@@ -142,8 +143,7 @@ class ValidateMac(TestCaseWithLog):
         duplicate MAC address
         """
         # get mac addresses of existing devices
-        existing_macs = [mac for device in self.api.devices.list(product_type='phone')
-                         if (mac := device.mac)]
+        existing_macs = [mac for device in self.api.devices.list(product_type='phone') if (mac := device.mac)]
         if not existing_macs:
             self.skipTest('No existing device MAC addresses')
 
@@ -174,42 +174,46 @@ class ValidateMac(TestCaseWithLog):
             validation = await self.async_api.telephony.devices.validate_macs(macs=check_macs)
             if validation.status == ValidationStatus.ok:
                 return ''
-            return validation
+            return validation  # type: ignore[return-value]
 
         results = await asyncio.gather(*[scan_range(i) for i in range(256)])
 
     @skip('Takes too long')
     @async_test
     async def test_007_all_docker_macs(self):
-        def batches(seq: Iterable, batch_size: int):
+        def batches(seq: Iterable[Any], batch_size: int):
             it = iter(seq)
             itb = [it] * batch_size
             return zip_longest(*itb)
 
-        macs_to_check = (f'02423b{i:06x}' for i in range(0, 2 ** 24, 64))
-        tasks = [self.async_api.telephony.devices.validate_macs([m for m in batch if m])
-                 for batch in batches(macs_to_check, 200)]
-        results = await asyncio.gather(*tasks,
-                                       return_exceptions=True)
+        macs_to_check = (f'02423b{i:06x}' for i in range(0, 2**24, 64))
+        tasks = [
+            self.async_api.telephony.devices.validate_macs([m for m in batch if m])
+            for batch in batches(macs_to_check, 200)
+        ]
+        results = await asyncio.gather(*tasks, return_exceptions=True)
         results: list[MACValidationResponse]
-        nok = [result for result in results if
-               isinstance(result, MACValidationResponse) and result.status != ValidationStatus.ok]
+        nok = [
+            result
+            for result in results
+            if isinstance(result, MACValidationResponse) and result.status != ValidationStatus.ok
+        ]
         foo = 1
 
 
 class Details(TestCaseWithLog):
-
     @async_test
     async def test_details(self):
         """
         Get details for all devices
         """
-        devices = [d for d in self.api.devices.list()
-                   if d.product_type != ProductType.roomdesk]
+        devices = [
+            d for d in self.api.devices.list() if d.product_type != ProductType.roomdesk and d.device_id is not None
+        ]
         # get all details
-        details_list = await asyncio.gather(*[self.async_api.telephony.devices.details(device_id=d.device_id)
-                                              for d in devices],
-                                            return_exceptions=True)
+        details_list = await asyncio.gather(
+            *[self.async_api.telephony.devices.details(device_id=d.device_id) for d in devices], return_exceptions=True
+        )
         err = None
         for device, details in zip(devices, details_list):
             device: Device
@@ -220,7 +224,6 @@ class Details(TestCaseWithLog):
 
 
 class UserAndWorkspaceDeviceSettings(TestCaseWithLog):
-
     @async_test
     async def test_get_person_settings(self):
         """
@@ -229,9 +232,9 @@ class UserAndWorkspaceDeviceSettings(TestCaseWithLog):
         with self.no_log():
             users = calling_users(api=self.api)
         settings_list = await asyncio.gather(
-            *[self.async_api.telephony.devices.get_person_device_settings(person_id=user.person_id)
-              for user in users],
-            return_exceptions=True)
+            *[self.async_api.telephony.devices.get_person_device_settings(person_id=user.person_id) for user in users],
+            return_exceptions=True,
+        )
         err = None
         for user, settings in zip(users, settings_list):
             user: Person
@@ -266,14 +269,20 @@ class UserAndWorkspaceDeviceSettings(TestCaseWithLog):
         Get device settings for all calling workspoces
         """
         with self.no_log():
-            workspaces = [ws for ws in self.api.workspaces.list()
-                          if ws.calling and ws.calling.type and ws.calling.type == CallingType.webex]
+            workspaces = [
+                ws
+                for ws in self.api.workspaces.list()
+                if ws.calling and ws.calling.type and ws.calling.type == CallingType.webex
+            ]
         if not workspaces:
             self.skipTest('No calling workspaces to test with')
         settings_list = await asyncio.gather(
-            *[self.async_api.telephony.devices.get_workspace_device_settings(workspace_id=ws.workspace_id)
-              for ws in workspaces],
-            return_exceptions=True)
+            *[
+                self.async_api.telephony.devices.get_workspace_device_settings(workspace_id=ws.workspace_id)
+                for ws in workspaces
+            ],
+            return_exceptions=True,
+        )
         err = None
         for workspace, settings in zip(workspaces, settings_list):
             workspace: Workspace
@@ -288,8 +297,11 @@ class UserAndWorkspaceDeviceSettings(TestCaseWithLog):
         Update device settings for a random workspace
         """
         with self.no_log():
-            workspaces = [ws for ws in self.api.workspaces.list()
-                          if ws.calling and ws.calling.type and ws.calling.type == CallingType.webex]
+            workspaces = [
+                ws
+                for ws in self.api.workspaces.list()
+                if ws.calling and ws.calling.type and ws.calling.type == CallingType.webex
+            ]
         if not workspaces:
             self.skipTest('No calling workspaces to test with')
 
@@ -308,21 +320,28 @@ class UserAndWorkspaceDeviceSettings(TestCaseWithLog):
 
 
 class TestDeviceLayout(TestCaseWithLog):
-
     @async_test
     async def test_get_device_layouts(self):
         """
         Get device layouts for all devices
         """
         with self.no_log():
-            devices = [d for d in self.api.devices.list()
-                       if d.product_type != ProductType.roomdesk and d.managed_by == DeviceManagedBy.cisco]
+            devices = [
+                d
+                for d in self.api.devices.list()
+                if (
+                    d.product_type != ProductType.roomdesk
+                    and d.managed_by == DeviceManagedBy.cisco
+                    and d.device_id is not None
+                )
+            ]
         if not devices:
             self.skipTest('No devices')
         # get all layouts
-        layout_list = await asyncio.gather(*[self.async_api.telephony.devices.get_device_layout(device_id=d.device_id)
-                                             for d in devices],
-                                           return_exceptions=True)
+        layout_list = await asyncio.gather(
+            *[self.async_api.telephony.devices.get_device_layout(device_id=d.device_id) for d in devices],
+            return_exceptions=True,
+        )
         err = None
         for device, layout in zip(devices, layout_list):
             device: Device
@@ -333,11 +352,14 @@ class TestDeviceLayout(TestCaseWithLog):
             layout: DeviceLayout
             if layout.layout_mode == LayoutMode.custom:
                 print(f'Layout for {device.display_name}')
-                print('\n'.join(f'  {line}'
-                                for line in json.dumps(layout.model_dump(mode='json',
-                                                                         by_alias=True,
-                                                                         exclude_none=True),
-                                                       indent=2).splitlines()))
+                print(
+                    '\n'.join(
+                        f'  {line}'
+                        for line in json.dumps(
+                            layout.model_dump(mode='json', by_alias=True, exclude_none=True), indent=2
+                        ).splitlines()
+                    )
+                )
         if err:
             raise err
 
@@ -358,9 +380,9 @@ class TestDeviceLayout(TestCaseWithLog):
                 print(f'creating temp MPP with mac {mac} for "{target_user.display_name}"')
 
             # add device by MAC
-            result = self.api.devices.create_by_mac_address(mac=mac,
-                                                            person_id=target_user.person_id,
-                                                            model='DMS Cisco 8851')
+            result = self.api.devices.create_by_mac_address(
+                mac=mac, person_id=target_user.person_id, model='DMS Cisco 8851'
+            )
             try:
                 yield result
             finally:
@@ -370,14 +392,13 @@ class TestDeviceLayout(TestCaseWithLog):
         with temp_phone() as device:
             device: Device
             api = self.api.telephony.devices
-            line_keys = [ProgrammableLineKey(line_key_index=i, line_key_type=LineKeyType.open)
-                         for i in range(1, 11)]
+            line_keys = [ProgrammableLineKey(line_key_index=i, line_key_type=LineKeyType.open) for i in range(1, 11)]
             line_keys[0].line_key_type = LineKeyType.primary_line
-            line_keys[1] = ProgrammableLineKey(line_key_index=2, line_key_type=LineKeyType.speed_dial,
-                                               line_key_label='6000', line_key_value='6000')
+            line_keys[1] = ProgrammableLineKey(
+                line_key_index=2, line_key_type=LineKeyType.speed_dial, line_key_label='6000', line_key_value='6000'
+            )
             new_layout = DeviceLayout(layout_mode=LayoutMode.custom, line_keys=line_keys)
-            api.modify_device_layout(device_id=device.device_id,
-                                     layout=new_layout)
+            api.modify_device_layout(device_id=device.device_id, layout=new_layout)
             after = api.get_device_layout(device_id=device.device_id)
             self.assertEqual(new_layout.layout_mode, after.layout_mode)
             self.assertEqual(new_layout.line_keys, after.line_keys)
@@ -392,8 +413,7 @@ class TestDeviceLayout(TestCaseWithLog):
         api = self.api.telephony.devices
         layout = api.get_device_layout(device_id=device.device_id)
         new_layout = DeviceLayout(layout_mode=LayoutMode.default)
-        api.modify_device_layout(device_id=device.device_id,
-                                 layout=new_layout)
+        api.modify_device_layout(device_id=device.device_id, layout=new_layout)
         after = api.get_device_layout(device_id=device.device_id)
         self.assertEqual(new_layout.layout_mode, after.layout_mode)
         self.assertIsNone(after.line_keys)
@@ -402,27 +422,31 @@ class TestDeviceLayout(TestCaseWithLog):
 
 
 class Members(TestCaseWithLog):
-
     @TestCaseWithLog.async_test
     async def test_001_get_members_all_devices(self):
         """
         Get members for all devices
         """
         # get all MPP devices
-        phones = [p for p in self.api.devices.list(product_type='phone')
-                  if p.product_type == 'phone']
+        phones = [
+            p
+            for p in self.api.devices.list(product_type='phone')
+            if p.product_type == 'phone' and p.device_id is not None
+        ]
 
         # get members for all devices
-        r = await asyncio.gather(*[self.async_api.telephony.devices.members(device_id=d.device_id) for d in phones],
-                                 return_exceptions=True)
+        r = await asyncio.gather(
+            *[self.async_api.telephony.devices.members(device_id=d.device_id) for d in phones], return_exceptions=True
+        )
 
         # TODO: figure out new test now, as the devices API supports MPPs
         raise NotImplementedError
         with self.no_log():
             users: dict[str, Person] = {user.person_id: user for user in calling_users(api=self.api)}
             # noinspection PyTypeChecker
-            person_devices_responses = await asyncio.gather(*[self.async_api.person_settings.devices(person_id=user_id)
-                                                              for user_id in users])
+            person_devices_responses = await asyncio.gather(
+                *[self.async_api.person_settings.devices(person_id=user_id) for user_id in users]
+            )
         person_devices_responses: list[DeviceList]
 
         # dict of device_id sets by user id
@@ -442,8 +466,9 @@ class Members(TestCaseWithLog):
 
         # now get members for all these devices
         # noinspection PyTypeChecker
-        members_list = await asyncio.gather(*[self.async_api.telephony.devices.members(device_id=device_id)
-                                              for device_id in devices])
+        members_list = await asyncio.gather(
+            *[self.async_api.telephony.devices.members(device_id=device_id) for device_id in devices]
+        )
         members_list: list[DeviceMembersResponse]
 
         # verify that the member lists are consistent
@@ -456,12 +481,16 @@ class Members(TestCaseWithLog):
                 try:
                     self.assertTrue(device_id in devices_current_user)
                 except AssertionError:
-                    print(f'Looking as device "{device.model}({device.mac})", member "{user.display_name}": '
-                          f'device not in device list of user')
+                    print(
+                        f'Looking as device "{device.model}({device.mac})", member "{user.display_name}": '
+                        f'device not in device list of user'
+                    )
                     error = True
                 else:
-                    print(f'Looking as device "{device.model}({device.mac})", member "{user.display_name}": '
-                          f'device in device list of user')
+                    print(
+                        f'Looking as device "{device.model}({device.mac})", member "{user.display_name}": '
+                        f'device in device list of user'
+                    )
         self.assertFalse(error)
 
     @TestCaseWithLog.async_test
@@ -472,8 +501,9 @@ class Members(TestCaseWithLog):
         # TODO: rewrite now that devices API includes MPPs
         with self.no_log():
             users: dict[str, Person] = {user.person_id: user for user in calling_users(api=self.api)}
-            person_devices_responses = await asyncio.gather(*[self.async_api.person_settings.devices(person_id=user_id)
-                                                              for user_id in users])
+            person_devices_responses = await asyncio.gather(
+                *[self.async_api.person_settings.devices(person_id=user_id) for user_id in users]
+            )
 
         # dict of devices by device id
         devices: dict[str, TelephonyDevice] = dict()
@@ -485,25 +515,33 @@ class Members(TestCaseWithLog):
         if not devices:
             self.skipTest('No devices belonging to users?')
         # list of users and their primary devices
-        users_and_device = [(user, primary)
-                            for user, person_devices_response in zip(users.values(), person_devices_responses)
-                            if (primary := next((dev for dev in person_devices_response.devices
-                                                 if dev.primary_owner),
-                                                None)) is not None]
+        users_and_device = [
+            (user, primary)
+            for user, person_devices_response in zip(users.values(), person_devices_responses)
+            if (primary := next((dev for dev in person_devices_response.devices if dev.primary_owner), None))
+            is not None
+        ]
 
         users_and_device: list[tuple[Person, TelephonyDevice]]
         # get calling details for users (we need the location id)
         with self.no_log():
-            user_details = await asyncio.gather(*[self.async_api.people.details(person_id=user.person_id,
-                                                                                calling_data=True)
-                                                  for user, _ in users_and_device])
+            user_details = await asyncio.gather(
+                *[
+                    self.async_api.people.details(person_id=user.person_id, calling_data=True)
+                    for user, _ in users_and_device
+                ]
+            )
         users_and_device = [(user, primary) for user, (_, primary) in zip(user_details, users_and_device)]
 
         # get list of available members for each device
         available = await asyncio.gather(
-            *[self.async_api.telephony.devices.available_members(device_id=device.device_id,
-                                                                 location_id=user.location_id)
-              for user, device in users_and_device])
+            *[
+                self.async_api.telephony.devices.available_members(
+                    device_id=device.device_id, location_id=user.location_id
+                )
+                for user, device in users_and_device
+            ]
+        )
         # TODO: add some validation and/or output
         foo = 1
 
@@ -530,8 +568,8 @@ class TestsWithDevices(TestCaseWithLog):
 
                 # noinspection PyTypeChecker
                 person_devices_responses = await asyncio.gather(
-                    *[api.person_settings.devices(person_id=user.person_id)
-                      for user in users])
+                    *[api.person_settings.devices(person_id=user.person_id) for user in users]
+                )
                 person_devices_responses: list[DeviceList]
 
                 # get list of unique devices
@@ -545,14 +583,19 @@ class TestsWithDevices(TestCaseWithLog):
                 cls.devices = devices
 
                 # get user ids of all owners
-                owner_ids = [owner_id for device in devices
-                             if (owner_id := device.owner.owner_id) and device.owner.owner_type == UserType.people]
+                owner_ids = [
+                    owner_id
+                    for device in devices
+                    if (owner_id := device.owner.owner_id) and device.owner.owner_type == UserType.people
+                ]
 
                 # get telephony details for owners
-                cls.device_owners = {user.person_id: user
-                                     for user in await asyncio.gather(*[api.people.details(person_id=oid,
-                                                                                           calling_data=True)
-                                                                        for oid in owner_ids])}
+                cls.device_owners = {
+                    user.person_id: user
+                    for user in await asyncio.gather(
+                        *[api.people.details(person_id=oid, calling_data=True) for oid in owner_ids]
+                    )
+                }
             return
 
         super().setUpClass()
@@ -584,8 +627,9 @@ class TestAddMember(TestsWithDevices):
             """
 
             def eq_json(dm: DeviceMember) -> str:
-                return dm.model_dump_json(exclude={'host_ip', 'remote_ip', 'first_name', 'last_name', 'phone_number',
-                                                   'extension'})
+                return dm.model_dump_json(
+                    exclude={'host_ip', 'remote_ip', 'first_name', 'last_name', 'phone_number', 'extension'}
+                )
 
             return eq_json(a) == eq_json(b)
 
@@ -593,22 +637,25 @@ class TestAddMember(TestsWithDevices):
         with self.no_log():
             # noinspection PyTypeChecker
             available_members = await asyncio.gather(
-                *[self.async_api.telephony.devices.available_members(
-                    device_id=device.device_id,
-                    location_id=self.device_owners[device.owner.owner_id].location_id)
-                    for device in self.devices])
+                *[
+                    self.async_api.telephony.devices.available_members(
+                        device_id=device.device_id, location_id=self.device_owners[device.owner.owner_id].location_id
+                    )
+                    for device in self.devices
+                ]
+            )
         available_members: list[list[AvailableMember]]
 
         # pick a device and available members
         if False:
             # statically pick a fixed test phone
-            device, available = next(((d, a) for d, a in zip(self.devices, available_members)
-                                      if d.mac == '00BF7771EB27'), (None, None))
+            device, available = next(
+                ((d, a) for d, a in zip(self.devices, available_members) if d.mac == '00BF7771EB27'), (None, None)
+            )
             self.assertIsNotNone(device)
         else:
             try:
-                device, available = random.choice([(d, a) for d, a in zip(self.devices, available_members)
-                                                   if a])
+                device, available = random.choice([(d, a) for d, a in zip(self.devices, available_members) if a])
             except IndexError:
                 self.skipTest('No device with available members')
         device: TelephonyDevice
@@ -621,11 +668,12 @@ class TestAddMember(TestsWithDevices):
         new_member: AvailableMember = random.choice(available)
         members.append(new_member)
 
-        print(f'Adding new member "{new_member.first_name} {new_member.last_name}" to device {device.model} of '
-              f'"{device.owner.first_name} {device.owner.last_name}"')
+        print(
+            f'Adding new member "{new_member.first_name} {new_member.last_name}" to device {device.model} of '
+            f'"{device.owner.first_name} {device.owner.last_name}"'
+        )
         try:
-            await self.async_api.telephony.devices.update_members(device_id=device.device_id,
-                                                                  members=members)
+            await self.async_api.telephony.devices.update_members(device_id=device.device_id, members=members)
             await self.async_api.telephony.devices.apply_changes(device_id=device.device_id)
 
             after_members = (await self.async_api.telephony.devices.members(device_id=device.device_id)).members
@@ -633,8 +681,7 @@ class TestAddMember(TestsWithDevices):
             self.assertEqual(new_member.member_id, after_members[-1].member_id)
         finally:
             members = members[:-1]
-            await self.async_api.telephony.devices.update_members(device_id=device.device_id,
-                                                                  members=members)
+            await self.async_api.telephony.devices.update_members(device_id=device.device_id, members=members)
             await self.async_api.telephony.devices.apply_changes(device_id=device.device_id)
 
             members_restored = (await self.async_api.telephony.devices.members(device_id=device.device_id)).members
@@ -643,14 +690,14 @@ class TestAddMember(TestsWithDevices):
 
 
 class TestDeviceSettings(TestsWithDevices):
-
     @TestsWithDevices.async_test
     async def test_001_get_device_settings(self):
         # device settings can only be read for primary devices
         devices = [device for device in self.devices if device.device_type == PrimaryOrShared.primary]
-        tasks = [self.async_api.telephony.devices.device_settings(device_id=device.device_id,
-                                                                  device_model=device.model)
-                 for device in devices]
+        tasks = [
+            self.async_api.telephony.devices.device_settings(device_id=device.device_id, device_model=device.model)
+            for device in devices
+        ]
         settings = await asyncio.gather(*tasks, return_exceptions=True)
         err = None
         for device, setting in zip(self.devices, settings):
@@ -671,38 +718,43 @@ class TestDeviceSettings(TestsWithDevices):
         with self.no_log():
             # noinspection PyTypeChecker
             settings = await asyncio.gather(
-                *[self.async_api.telephony.devices.device_settings(device_id=device.device_id,
-                                                                   device_model=device.model)
-                  for device in devices])
+                *[
+                    self.async_api.telephony.devices.device_settings(
+                        device_id=device.device_id, device_model=device.model
+                    )
+                    for device in devices
+                ]
+            )
         settings: list[DeviceCustomization]
         # pick a device
-        mpps = [device for device, setting in zip(devices, settings)
-                if setting.customizations.mpp]
+        mpps = [device for device, setting in zip(devices, settings) if setting.customizations.mpp]
         if not mpps:
             self.skipTest('Need at least one MPP to run the test')
         target_device: TelephonyDevice = random.choice(mpps)
 
         # get customization for target device
-        before = self.api.telephony.devices.device_settings(device_id=target_device.device_id,
-                                                            device_model=target_device.model)
+        before = self.api.telephony.devices.device_settings(
+            device_id=target_device.device_id, device_model=target_device.model
+        )
         print(f'Updating display name format for {target_device.mac}')
         update = before.model_copy(deep=True)
         update.customizations.mpp.display_name_format = DisplayNameSelection.person_last_then_first_name
         update.custom_enabled = True
-        self.api.telephony.devices.update_device_settings(device_id=target_device.device_id,
-                                                          device_model=target_device.model,
-                                                          customization=update)
+        self.api.telephony.devices.update_device_settings(
+            device_id=target_device.device_id, device_model=target_device.model, customization=update
+        )
         self.api.telephony.devices.apply_changes(device_id=target_device.device_id)
         try:
-            after = self.api.telephony.devices.device_settings(device_id=target_device.device_id,
-                                                               device_model=target_device.model)
+            after = self.api.telephony.devices.device_settings(
+                device_id=target_device.device_id, device_model=target_device.model
+            )
             self.assertTrue(after.custom_enabled)
             after.last_update_time = before.last_update_time
             self.assertEqual(update, after)
         finally:
-            self.api.telephony.devices.update_device_settings(device_id=target_device.device_id,
-                                                              device_model=target_device.model,
-                                                              customization=before)
+            self.api.telephony.devices.update_device_settings(
+                device_id=target_device.device_id, device_model=target_device.model, customization=before
+            )
             self.api.telephony.devices.apply_changes(device_id=target_device.device_id)
 
     @TestsWithDevices.async_test
@@ -715,29 +767,38 @@ class TestDeviceSettings(TestsWithDevices):
         with self.no_log():
             # noinspection PyTypeChecker
             settings = await asyncio.gather(
-                *[self.async_api.telephony.devices.device_settings(device_id=device.device_id,
-                                                                   device_model=device.model)
-                  for device in devices])
+                *[
+                    self.async_api.telephony.devices.device_settings(
+                        device_id=device.device_id, device_model=device.model
+                    )
+                    for device in devices
+                ]
+            )
         settings: list[DeviceCustomization]
 
-        devices_with_device_level_customization = [(device, setting)
-                                                   for device, setting in zip(self.devices, settings)
-                                                   if setting.custom_enabled]
+        devices_with_device_level_customization = [
+            (device, setting) for device, setting in zip(self.devices, settings) if setting.custom_enabled
+        ]
         print('Devices with device level customizations')
-        print('\n'.join(f'{device.model}: {device.mac}, {device.owner.first_name} {device.owner.last_name}'
-                        for device, _ in devices_with_device_level_customization))
+        print(
+            '\n'.join(
+                f'{device.model}: {device.mac}, {device.owner.first_name} {device.owner.last_name}'
+                for device, _ in devices_with_device_level_customization
+            )
+        )
 
 
 class Jobs(TestCaseWithLog):
-
     def monitor_job_execution(self, job: StartJobResponse):
         """
         monitor a job until its completion
         :return:
         """
         while True:
-            print(f'{job.instance_id} {job.target} {job.location_name} '
-                  f'{job.device_count} devices {job.latest_execution_status}')
+            print(
+                f'{job.instance_id} {job.target} {job.location_name} '
+                f'{job.device_count} devices {job.latest_execution_status}'
+            )
             for status in job.job_execution_status:
                 print(f'  created {status.created_time} start {status.start_time} end {status.end_time}')
                 for step in status.step_execution_statuses:
@@ -759,8 +820,7 @@ class Jobs(TestCaseWithLog):
         if not jobs:
             self.skipTest('No existing jobs')
         for job in jobs:
-            print(f'{job.instance_id} {job.target} {job.location_name} '
-                  f'{job.device_count} devices')
+            print(f'{job.instance_id} {job.target} {job.location_name} {job.device_count} devices')
             for status in job.job_execution_status:
                 print(f'  created {status.created_time} start {status.start_time} end {status.end_time}')
                 for step in status.step_execution_statuses:
@@ -774,8 +834,9 @@ class Jobs(TestCaseWithLog):
         jobs = list(self.api.devices.settings_jobs.list())
         if not jobs:
             self.skipTest('No existing jobs')
-        status = await asyncio.gather(*[self.async_api.telephony.jobs.device_settings.status(job_id=job.id)
-                                        for job in jobs])
+        status = await asyncio.gather(
+            *[self.async_api.telephony.jobs.device_settings.status(job_id=job.id) for job in jobs]
+        )
         print(f'Got status for {len(status)} jobs')
 
     @TestCaseWithLog.async_test
@@ -787,8 +848,7 @@ class Jobs(TestCaseWithLog):
         jobs = list(self.api.devices.settings_jobs.list())
         if not jobs:
             self.skipTest('No existing jobs')
-        status = await asyncio.gather(*[self.async_api.devices.settings_jobs.errors(job_id=job.id)
-                                        for job in jobs])
+        status = await asyncio.gather(*[self.async_api.devices.settings_jobs.errors(job_id=job.id) for job in jobs])
         print(f'Got status for {len(status)} jobs')
 
     def test_004_update_location_reset_to_org_settings(self):
@@ -808,8 +868,9 @@ class Jobs(TestCaseWithLog):
         print(f'Location level device customization enabled: {location_settings.custom_enabled}')
         new_settings = location_settings.model_copy(deep=True)
         new_settings.custom_enabled = False
-        job = self.api.telephony.jobs.device_settings.change(location_id=target_location.location_id,
-                                                             customization=new_settings)
+        job = self.api.telephony.jobs.device_settings.change(
+            location_id=target_location.location_id, customization=new_settings
+        )
         self.monitor_job_execution(job=job)
 
     def test_005_update_location_settings(self):
@@ -829,8 +890,9 @@ class Jobs(TestCaseWithLog):
         print(f'Location level device customization enabled: {location_settings.custom_enabled}')
         new_settings = location_settings.model_copy(deep=True)
         new_settings.custom_enabled = not new_settings.custom_enabled
-        job = self.api.telephony.jobs.device_settings.change(location_id=target_location.location_id,
-                                                             customization=new_settings)
+        job = self.api.telephony.jobs.device_settings.change(
+            location_id=target_location.location_id, customization=new_settings
+        )
         self.monitor_job_execution(job=job)
 
     def test_006_update_org_settings(self):
