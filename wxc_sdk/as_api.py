@@ -37334,7 +37334,7 @@ class AsVoicemailGroupsApi(AsApiChild, base='telephony/config/voicemailGroups'):
     API for voicemail groups
     """
 
-    def ep(self, location_id: str = None, path: str = None):
+    def ep(self, location_id: str = None, path: str = None):  # type: ignore[override]
         """
         :param location_id:
         :param path:

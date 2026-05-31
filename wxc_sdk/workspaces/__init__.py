@@ -227,7 +227,7 @@ class CapabilityMap(ApiModel):
     check_in: Optional[SupportAndConfiguredInfo] = None
     adhoc_booking: Optional[SupportAndConfiguredInfo] = None
     reverberation_time: Optional[SupportAndConfiguredInfo] = None
-    lighting_conditions: Optional[list[SupportAndConfiguredInfo]] = None
+    lighting_conditions: Optional[SupportAndConfiguredInfo] = None
 
 
 class Workspace(ApiModel):
@@ -319,6 +319,17 @@ class Workspace(ApiModel):
         :return: :class:`Workspace`
         """
         return Workspace(display_name=display_name)
+
+    @property
+    def is_hotdesking_only(self) -> bool:
+        return (
+            self.hotdesking_status == HotdeskingStatus.on
+            and self.calling is not None
+            and self.calling.type == CallingType.webex
+            and self.calling.webex_calling is not None
+            and self.calling.webex_calling.extension is None
+            and self.calling.webex_calling.phone_number is None
+        )
 
 
 class WorkspacesApi(ApiChild, base='workspaces'):

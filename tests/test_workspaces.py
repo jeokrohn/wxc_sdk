@@ -231,7 +231,9 @@ class TestCallerId(TestWithProfessionalWorkspace):
     async def test_get_all_caller_id_settings(self):
         wsa = self.api.workspaces
         cia = self.async_api.workspace_settings.caller_id
-        targets = [ws for ws in wsa.list() if ws.calling and ws.calling.type == CallingType.webex]
+        targets = [
+            ws for ws in wsa.list() if ws.calling and ws.calling.type == CallingType.webex and not ws.is_hotdesking_only
+        ]
         if not targets:
             self.skipTest('Need some WxC enabled workspaces to run this test')
 
