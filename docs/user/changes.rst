@@ -1,6 +1,16 @@
 Release history
 ===============
 
+1.36.0
+------
+
+- feat: SequentialRingNumber.phone_number normalized to +E.164
+- feat: new property Workspace.is_hotdesking_only
+- feat: new attribute Device.p_device_id
+- feat: new enum OwnerType.ai_receptionist
+- fix: TelephonyParty.number has to be optional
+- fix: VoicemailGroupDetail.for_update/for_create have to use aliases in serialized data
+
 1.35.0
 ------
 - feat: new method api.person_settings.get_calling_services, new apis (api.person_settings.hotdesking, api.person_settings.sim_ring, api.person_settings.anon_calls)
