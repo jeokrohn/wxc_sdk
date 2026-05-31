@@ -1,3 +1,17 @@
+## 1.36.0 (2026-05-31)
+
+### Feat
+
+- SequentialRingNumber.phone_number normalized to +E.164
+- new property Workspace.is_hotdesking_only
+- new attribute Device.p_device_id
+- new enum OwnerType.ai_receptionist
+
+### Fix
+
+- TelephonyParty.number has to be optional
+- VoicemailGroupDetail.for_update/for_create have to use aliases in serialized data
+
 ## 1.35.0 (2026-05-26)
 
 ### Feat
