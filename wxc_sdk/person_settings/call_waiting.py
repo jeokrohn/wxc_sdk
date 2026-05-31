@@ -2,8 +2,6 @@
 Call waiting API
 """
 
-import json
-
 from .common import PersonSettingsApiChild
 
 __all__ = ['CallWaitingApi']
@@ -41,7 +39,7 @@ class CallWaitingApi(PersonSettingsApiChild):
         ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         data = self.get(ep, params=params)
-        return data['enabled']
+        return data['enabled']  # type: ignore[return-value]
 
     def configure(self, entity_id: str, enabled: bool, org_id: str = None):
         """
@@ -65,5 +63,4 @@ class CallWaitingApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
-        data = json.dumps({'enabled': enabled})
-        self.put(ep, params=params, json=data)
+        self.put(ep, params=params, json={'enabled': enabled})

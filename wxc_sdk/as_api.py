@@ -14131,7 +14131,7 @@ class AsCallWaitingApi(AsPersonSettingsApiChild):
         ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.get(ep, params=params)
-        return data['enabled']
+        return data['enabled']  # type: ignore[return-value]
 
     async def configure(self, entity_id: str, enabled: bool, org_id: str = None):
         """
@@ -14155,8 +14155,7 @@ class AsCallWaitingApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
-        data = json.dumps({'enabled': enabled})
-        await self.put(ep, params=params, json=data)
+        await self.put(ep, params=params, json={'enabled': enabled})
 
 
 class AsCallerIdApi(AsPersonSettingsApiChild):
@@ -15373,7 +15372,7 @@ class AsHotelingApi(AsPersonSettingsApiChild):
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         data = await self.get(ep, params=params)
-        return data['enabled']
+        return data['enabled']  # type: ignore[return-value]
 
     async def configure(self, person_id: str, enabled: bool, org_id: str = None):
         """
@@ -15396,8 +15395,7 @@ class AsHotelingApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        data = json.dumps({'enabled': enabled})
-        await self.put(ep, params=params, json=data)
+        await self.put(ep, params=params, json={'enabled': enabled})
 
 
 class AsIncomingPermissionsApi(AsPersonSettingsApiChild):

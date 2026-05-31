@@ -2,8 +2,6 @@
 Hoteling API
 """
 
-import json
-
 from .common import PersonSettingsApiChild
 
 __all__ = ['HotelingApi']
@@ -40,7 +38,7 @@ class HotelingApi(PersonSettingsApiChild):
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
         data = self.get(ep, params=params)
-        return data['enabled']
+        return data['enabled']  # type: ignore[return-value]
 
     def configure(self, person_id: str, enabled: bool, org_id: str = None):
         """
@@ -63,5 +61,4 @@ class HotelingApi(PersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=person_id)
         params = org_id and {'orgId': org_id} or None
-        data = json.dumps({'enabled': enabled})
-        self.put(ep, params=params, json=data)
+        self.put(ep, params=params, json={'enabled': enabled})
