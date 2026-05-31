@@ -4,7 +4,7 @@ Voicemail groups API
 
 import builtins
 from collections.abc import Generator
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import Field
 
@@ -132,17 +132,18 @@ class VoicemailGroupDetail(ApiModel):
             last_name=last_name,
             passcode=passcode,
             language_code=language_code,
-            message_storage=VoicemailMessageStorage(storage_type=StorageType.internal),
+            message_storage=VoicemailMessageStorage(storage_type=StorageType.internal),  # type: ignore[arg-type]
             notifications=VoicemailNotifications(enabled=False),
             fax_message=VoicemailFax(enabled=False),
             transfer_to_number=VoicemailTransferToNumber(enabled=False),
             email_copy_of_message=VoicemailCopyOfMessage(enabled=False),
         )
 
-    def for_create(self) -> dict:
+    def for_create(self) -> dict[str, Any]:
         return self.model_dump(
             mode='json',
             exclude_unset=True,
+            by_alias=True,
             include={
                 'name',
                 'phone_number',
@@ -159,10 +160,11 @@ class VoicemailGroupDetail(ApiModel):
             },
         )
 
-    def for_update(self) -> dict:
+    def for_update(self) -> dict[str, Any]:
         return self.model_dump(
             mode='json',
             exclude_unset=True,
+            by_alias=True,
             include={
                 'name',
                 'phone_number',
@@ -188,7 +190,7 @@ class VoicemailGroupsApi(ApiChild, base='telephony/config/voicemailGroups'):
     API for voicemail groups
     """
 
-    def ep(self, location_id: str = None, path: str = None):
+    def ep(self, location_id: str = None, path: str = None):  # type: ignore[override]
         """
         :param location_id:
         :param path:
