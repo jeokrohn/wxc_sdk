@@ -31,7 +31,9 @@ from wxc_sdk.telephony import (
     TestCallRoutingResult,
 )
 from wxc_sdk.telephony.virtual_line import VirtualLine
-from wxc_sdk.workspaces import CallingType, HotdeskingStatus, Workspace
+from wxc_sdk.workspaces import CallingType, Workspace
+
+# mypy: disable-error-code="call-overload"
 
 
 class TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly(TestLocationsUsersWorkspacesVirtualLines):
@@ -44,18 +46,7 @@ class TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly(TestLocationsUsersWo
     def setUpClass(cls) -> None:
         super().setUpClass()
         # filter out hotdesk-only workspaces
-        cls.workspaces = [
-            ws
-            for ws in cls.workspaces
-            if not (
-                ws.hotdesking_status == HotdeskingStatus.on
-                and ws.calling
-                and ws.calling.type == CallingType.webex
-                and ws.calling.webex_calling
-                and ws.calling.webex_calling.extension is None
-                and ws.calling.webex_calling.phone_number is None
-            )
-        ]
+        cls.workspaces = [ws for ws in cls.workspaces if not ws.is_hotdesking_only]
 
 
 class TestOutgoingPermissions(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
@@ -229,7 +220,7 @@ class TestAccessCodes(TestLocationsUsersWorkspacesVirtualLinesWOHotDeskOnly):
         if for_location:
             self.api.telephony.access_codes.delete_codes(location_id=entity_id, access_codes=[new_code])
         else:
-            api.access_codes.modify(entity_id=entity_id, delete_codes=[created_code])
+            api.access_codes.modify(entity_id=entity_id, delete_codes=[created_code])  # type: ignore[list-item]
         codes_after = reader()
         created_code = next((ac for ac in codes_after if ac.code == new_code), None)
         self.assertIsNone(created_code, 'access code still there')

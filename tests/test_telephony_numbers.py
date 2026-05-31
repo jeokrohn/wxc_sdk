@@ -90,7 +90,7 @@ class TestValidateExtensions(TestCaseWithLog):
         at = self.api.telephony
         extensions = set(n.extension for n in at.phone_numbers(number_type='EXTENSION'))
 
-        new_extensions = (extension for i in range(9000) if (extension := str(1000 + i)) not in extensions)
+        new_extensions = (extension for i in range(9000) if (extension := str(2000 + i)) not in extensions)
         to_validate = [next(new_extensions) for _ in range(20)]
         result = at.validate_extensions(extensions=to_validate)
         print(result)
@@ -100,7 +100,7 @@ class TestValidateExtensions(TestCaseWithLog):
         at = self.api.telephony
         extensions = set(n.extension for n in at.phone_numbers(number_type='EXTENSION'))
 
-        new_extensions = (extension for i in range(9000) if (extension := str(1000 + i)) not in extensions)
+        new_extensions = (extension for i in range(9000) if (extension := str(2000 + i)) not in extensions)
         to_validate = [next(new_extensions) for _ in range(20)]
         to_validate.extend(random.sample(list(extensions), 5))
         result = at.validate_extensions(extensions=to_validate)

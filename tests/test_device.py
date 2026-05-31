@@ -159,7 +159,7 @@ class TestDevice(TestCaseWithLog):
         if not devices:
             self.skipTest('No devices')
         details = await asyncio.gather(
-            *[self.async_api.devices.details(device_id=device.device_id) for device in devices]
+            *[self.async_api.devices.details(device_id=device.device_id) for device in devices if device.device_id]
         )
         print(json.dumps(TypeAdapter(list[Device]).dump_python(details, mode='json', by_alias=True), indent=2))
         print(f'Got details for {len(details)} devices')
@@ -189,7 +189,7 @@ class TestDevice(TestCaseWithLog):
     @contextmanager
     def device_for_tag_test(self) -> Device:
         with self.no_log():
-            devices = list(self.api.devices.list())
+            devices = [d for d in self.api.devices.list() if d.device_id]
         if not devices:
             self.skipTest('No devices')
         target = choice(devices)
@@ -306,6 +306,7 @@ class CreateDevice(TestWithLocations):
         """
         model = 'DMS Cisco 8851'
         target = self.get_or_create_calling_workspace_wo_devices(supported_devices=WorkspaceSupportedDevices.phones)
+        print(f'Workspace "{target.display_name}"')
         ac_result = self.api.devices.activation_code(workspace_id=target.workspace_id, model=model)
         print(json.dumps(json.loads(ac_result.model_dump_json()), indent=2))
         print(
