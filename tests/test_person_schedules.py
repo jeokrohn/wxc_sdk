@@ -3,21 +3,17 @@ Unit test for person schedules
 """
 
 import asyncio
-
-# TODO: testcase for event update
-# TODO test case for event delete
-# TODO test case for schedule delete
 import base64
 import datetime
-import random
 import re
 from collections import defaultdict
 from collections.abc import Iterable
+from contextlib import suppress
 from functools import reduce
 from itertools import chain
 from typing import NamedTuple
 
-from tests.base import TestCaseWithUsers, TestWithLocations, async_test
+from tests.base import TestCaseWithUsers, TestWithLocations, TestWithTempCallingUser, async_test
 from wxc_sdk.all_types import *
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.rest import RestError
@@ -74,14 +70,17 @@ class TestScheduleList(TestCaseWithUsers):
         Listing schedules at the user level contains location level schedules
         """
 
+        # Read schedules for every user and flatten the async result set.
         all_schedules: list[Schedule] = list(chain.from_iterable(await all_user_schedules(self.async_api, self.users)))
 
+        # Normalize schedule metadata so duplicates across users can be summarized.
         class ScheduleInfo(NamedTuple):
             name: str
             id: str
             type: str
             level: str
 
+        # Group schedules by level and build a unique identity set for diagnostics.
         schedules_by_level: dict[str, list[Schedule]] = reduce(
             lambda r, el: r[el.level].append(el) or r, all_schedules, defaultdict(list)
         )
@@ -93,6 +92,7 @@ class TestScheduleList(TestCaseWithUsers):
         for level, schedules_for_level in schedules_by_level.items():
             print(f'got {len(schedules_for_level)} schedules at level "{level}"')
 
+        # Print decoded schedule ids to make live org fixture state easier to inspect.
         if schedule_ids:
             name_len = max(len(s.name) for s in schedule_ids)
             type_len = max(len(s.type) for s in schedule_ids)
@@ -104,13 +104,34 @@ class TestScheduleList(TestCaseWithUsers):
 
 
 # noinspection DuplicatedCode
-class TestCreateOrUpdate(TestCaseWithUsers):
+class TestCreateOrUpdate(TestWithTempCallingUser):
     """
     Test cases for schedule creation or updates
     * is it possible to create a user schedule with the name of an existing location schedule
         * if yes, which one shows up in a user level list
     * update a user schedule, daes it change the locatuon schedule?
     """
+
+    def target_user(self) -> Person:
+        target_user = self.user
+        print(f'target user: {target_user.display_name}')
+        return target_user  # type: ignore[return-value]
+
+    def delete_schedule(self, api, obj_id: str, schedule_type: ScheduleType, schedule_id: str):
+        if schedule_id and schedule_type:
+            with suppress(RestError):
+                api.delete_schedule(obj_id=obj_id, schedule_type=schedule_type, schedule_id=schedule_id)
+
+    def available_name(self, target_user: Person, suffix: str) -> str:
+        ps = self.api.person_settings.schedules
+        ls = self.api.telephony.schedules
+        existing = set(
+            chain(
+                (s.name for s in ps.list(obj_id=target_user.person_id)),
+                (s.name for s in ls.list(obj_id=target_user.location_id)),
+            )
+        )
+        return next(name for i in range(1000) if (name := f'{SCHEDULE_NAME_PREFIX}{suffix}_{i:03}') not in existing)
 
     def test_001_create(self):
         """
@@ -119,49 +140,63 @@ class TestCreateOrUpdate(TestCaseWithUsers):
         ps = self.api.person_settings.schedules
         ls = self.api.telephony.schedules
 
-        # pick random user
-        target_user = random.choice(self.users)
-        print(f'target user: {target_user.display_name}')
+        # Use the disposable calling user as the person-level schedule owner.
+        target_user = self.target_user()
 
-        # list user and location schedules
+        # Snapshot user and location schedules before creating the person schedule.
         user_schedules = list(ps.list(obj_id=target_user.person_id))
         location_schedules = list(ls.list(obj_id=target_user.location_id))
         print(f'    user schedules: {", ".join(f"{s.name}({s.schedule_type})" for s in user_schedules)}')
         print(f'location schedules: {", ".join(f"{s.name}({s.schedule_type})" for s in location_schedules)}')
 
-        # get available name (not present at location nor user level)
+        # Pick a schedule name that is absent at both person and location level.
         names = set(chain((s.name for s in user_schedules), (s.name for s in location_schedules)))
         new_names = (name for i in range(1000) if (name := f'{SCHEDULE_NAME_PREFIX}user_{i:03}') not in names)
         new_name = next(new_names)
         print(f'new schedule name: {new_name}')
 
-        # create user schedule: holidays
+        # Create a person-level holiday schedule and track the id for cleanup.
         new_schedule = Schedule(name=new_name, type=ScheduleType.holidays)
-        new_schedule_id = ps.create(obj_id=target_user.person_id, schedule=new_schedule)
+        new_schedule_id = None
+        try:
+            new_schedule_id = ps.create(obj_id=target_user.person_id, schedule=new_schedule)
 
-        # get details and verify
-        details = ps.details(
-            obj_id=target_user.person_id, schedule_type=new_schedule.schedule_type, schedule_id=new_schedule_id
-        )
-        self.assertEqual(new_name, details.name)
-        self.assertEqual(details.schedule_type, new_schedule.schedule_type)
-        self.assertTrue(not details.events)
+            # Read schedule details and verify the created schedule fields.
+            details = ps.details(
+                obj_id=target_user.person_id, schedule_type=new_schedule.schedule_type, schedule_id=new_schedule_id
+            )
+            self.assertEqual(new_name, details.name)
+            self.assertEqual(details.schedule_type, new_schedule.schedule_type)
+            self.assertTrue(not details.events)
 
-        # list user and location schedules. Where does it show up?
-        user_schedules_after = list(ps.list(obj_id=target_user.person_id))
-        location_schedules_after = list(ls.list(obj_id=target_user.location_id))
-        print(f'    user schedules (after): {", ".join(f"{s.name}({s.schedule_type})" for s in user_schedules_after)}')
-        print(
-            f'location schedules (after): {", ".join(f"{s.name}({s.schedule_type})" for s in location_schedules_after)}'
-        )
+            # Compare post-create person and location lists.
+            user_schedules_after = list(ps.list(obj_id=target_user.person_id))
+            location_schedules_after = list(ls.list(obj_id=target_user.location_id))
+            print(
+                f'    user schedules (after): {", ".join(f"{s.name}({s.schedule_type})" for s in user_schedules_after)}'
+            )
+            print(
+                f'location schedules (after): '
+                f'{", ".join(f"{s.name}({s.schedule_type})" for s in location_schedules_after)}'
+            )
 
-        # the new schedule should not change the location schedule list
-        self.assertEqual(location_schedules, location_schedules_after)
+            # The person schedule must not mutate the location schedule list.
+            self.assertEqual(location_schedules, location_schedules_after)
 
-        # new schedule has to be in user schedule list
-        in_list = next((schedule for schedule in user_schedules_after if schedule.schedule_id == new_schedule_id), None)
-        self.assertTrue(in_list is not None)
-        self.assertEqual(ScheduleLevel.people, in_list.level, 'New schedule should be a user schedule')
+            # The person schedule must show in the person schedule list at PEOPLE level.
+            in_list = next(
+                (schedule for schedule in user_schedules_after if schedule.schedule_id == new_schedule_id), None
+            )
+            self.assertTrue(in_list is not None)
+            self.assertEqual(ScheduleLevel.people, in_list.level, 'New schedule should be a user schedule')
+        finally:
+            # Always delete the created person schedule.
+            self.delete_schedule(
+                api=ps,
+                obj_id=target_user.person_id,
+                schedule_type=new_schedule.schedule_type,
+                schedule_id=new_schedule_id,
+            )
 
     def test_002_create_name_conflict(self):
         """
@@ -170,17 +205,16 @@ class TestCreateOrUpdate(TestCaseWithUsers):
         ps = self.api.person_settings.schedules
         ls = self.api.telephony.schedules
 
-        # pick random user
-        target_user = random.choice(self.users)
-        print(f'target user: {target_user.display_name}')
+        # Use the disposable calling user as the conflict target.
+        target_user = self.target_user()
 
-        # list user and location schedules
+        # Snapshot current person and location schedules.
         user_schedules = list(ps.list(obj_id=target_user.person_id))
         location_schedules = list(ls.list(obj_id=target_user.location_id))
         print(f'    user schedules: {", ".join(f"{s.name}({s.schedule_type})" for s in user_schedules)}')
         print(f'location schedules: {", ".join(f"{s.name}({s.schedule_type})" for s in location_schedules)}')
 
-        # determine target location schedule
+        # Determine a target name that does not already exist as a person schedule.
         user_schedule_names = set(s.name for s in user_schedules)
         location_schedule_names = set(s.name for s in location_schedules)
 
@@ -188,12 +222,13 @@ class TestCreateOrUpdate(TestCaseWithUsers):
             name for i in range(1000) if (name := f'{SCHEDULE_NAME_PREFIX}{i:03}') not in user_schedule_names
         )
 
-        # create a new location schedule if no location schedule with the target name exists
+        target_location_schedule_id = None
+
+        # Create a location schedule if the conflict fixture does not already exist.
         if target_schedule_name in location_schedule_names:
             target_location_schedule = next(s for s in location_schedules if s.name == target_schedule_name)
             print(f'Existing location schedule: {target_location_schedule.name}')
         else:
-            # we need to create a location schedule
             new_location_schedule = Schedule(name=target_schedule_name, type=ScheduleType.holidays)
             target_location_schedule_id = ls.create(obj_id=target_user.location_id, schedule=new_location_schedule)
             target_location_schedule = ls.details(
@@ -203,12 +238,20 @@ class TestCreateOrUpdate(TestCaseWithUsers):
             )
             print(f'New location schedule: {target_location_schedule.name}')
 
-        # create a user schedule with the same name and type as the location schedule
-        # this should fail with a RestError, duplicate name
-        with self.assertRaises(RestError) as exc:
-            new_schedule = Schedule(name=target_location_schedule.name, type=target_location_schedule.schedule_type)
-            ps.create(obj_id=target_user.person_id, schedule=new_schedule)
-        self.assertEqual(25030, exc.exception.code)
+        try:
+            # Attempt to create a person schedule with duplicate name/type and expect duplicate-name failure.
+            with self.assertRaises(RestError) as exc:
+                new_schedule = Schedule(name=target_location_schedule.name, type=target_location_schedule.schedule_type)
+                ps.create(obj_id=target_user.person_id, schedule=new_schedule)
+            self.assertEqual(25030, exc.exception.code)
+        finally:
+            # Delete the location schedule if this test created it.
+            self.delete_schedule(
+                api=ls,
+                obj_id=target_user.location_id,
+                schedule_type=target_location_schedule.schedule_type,
+                schedule_id=target_location_schedule_id,
+            )
 
     def test_003_location_schedule_shows_in_user_schedule_list(self):
         """
@@ -217,45 +260,56 @@ class TestCreateOrUpdate(TestCaseWithUsers):
         ps = self.api.person_settings.schedules
         ls = self.api.telephony.schedules
 
-        # pick random user
-        target_user = random.choice(self.users)
-        print(f'target user: {target_user.display_name}')
+        # Use the disposable calling user to compare person and location schedule views.
+        target_user = self.target_user()
 
-        # location schedules
+        # Snapshot current person and location schedules keyed by type/name.
         user_schedules = {(s.schedule_type, s.name): s for s in ps.list(obj_id=target_user.person_id)}
         location_schedules = {(s.schedule_type, s.name): s for s in ls.list(obj_id=target_user.location_id)}
         print(f'    user schedules: {", ".join(f"{s_name}({s_type})" for s_type, s_name in user_schedules)}')
         print(f'location schedules: {", ".join(f"{s_name}({s_type})" for s_type, s_name in location_schedules)}')
 
-        # available names for new schedules
+        # Prepare unused names in case the location has no holiday schedules.
         schedule_names = set(
             chain((s.name for s in user_schedules.values()), (s.name for s in location_schedules.values()))
         )
         new_names = (name for i in range(1000) if (name := f'{SCHEDULE_NAME_PREFIX}{i:03}') not in schedule_names)
 
-        # we need at least one location schedule to prove our point
-        if not location_schedules:
-            # new location schedule
-            location_schedule_name = next(new_names)
-            ls.create(
-                obj_id=target_user.location_id,
-                schedule=Schedule(name=location_schedule_name, type=ScheduleType.holidays),
-            )
-            print(f'new location holiday schedule: {location_schedule_name}')
+        created_location_schedule_id = None
+        created_location_schedule_type = None
+        try:
+            # Ensure at least one location schedule exists for the list-inheritance assertion.
+            if not location_schedules:
+                location_schedule_name = next(new_names)
+                created_location_schedule = Schedule(name=location_schedule_name, type=ScheduleType.holidays)
+                created_location_schedule_id = ls.create(
+                    obj_id=target_user.location_id,
+                    schedule=created_location_schedule,
+                )
+                created_location_schedule_type = created_location_schedule.schedule_type
+                print(f'new location holiday schedule: {location_schedule_name}')
 
-        # validate user and location schedule list
-        user_schedules_after = {
-            (s.schedule_type, s.name): s
-            for s in ps.list(obj_id=target_user.person_id, schedule_type=ScheduleType.holidays)
-        }
-        location_schedules_after = {
-            (s.schedule_type, s.name): s
-            for s in ls.list(obj_id=target_user.location_id, schedule_type=ScheduleType.holidays)
-        }
-        self.assertTrue(
-            all(key in user_schedules_after for key in location_schedules_after),
-            'Not all location schedules show up in user schedules',
-        )
+            # Read both lists and assert every location holiday schedule appears in the person list.
+            user_schedules_after = {
+                (s.schedule_type, s.name): s
+                for s in ps.list(obj_id=target_user.person_id, schedule_type=ScheduleType.holidays)
+            }
+            location_schedules_after = {
+                (s.schedule_type, s.name): s
+                for s in ls.list(obj_id=target_user.location_id, schedule_type=ScheduleType.holidays)
+            }
+            self.assertTrue(
+                all(key in user_schedules_after for key in location_schedules_after),
+                'Not all location schedules show up in user schedules',
+            )
+        finally:
+            # Delete the temporary location schedule if this test created one.
+            self.delete_schedule(
+                api=ls,
+                obj_id=target_user.location_id,
+                schedule_type=created_location_schedule_type,
+                schedule_id=created_location_schedule_id,
+            )
 
     def test_004_user_schedules_dont_show_in_location_schedules(self):
         """
@@ -264,11 +318,10 @@ class TestCreateOrUpdate(TestCaseWithUsers):
         ps = self.api.person_settings.schedules
         ls = self.api.telephony.schedules
 
-        # pick random user
-        target_user = random.choice(self.users)
-        print(f'target user: {target_user.display_name}')
+        # Use the disposable calling user to compare person and location schedule views.
+        target_user = self.target_user()
 
-        # list user and location schedules
+        # Snapshot current person and location holiday schedules.
         user_schedules = {
             (s.schedule_type, s.name): s
             for s in ps.list(obj_id=target_user.person_id, schedule_type=ScheduleType.holidays)
@@ -280,40 +333,50 @@ class TestCreateOrUpdate(TestCaseWithUsers):
         print(f'    user schedules: {", ".join(f"{s_name}({s_type})" for s_type, s_name in user_schedules)}')
         print(f'location schedules: {", ".join(f"{s_name}({s_type})" for s_type, s_name in location_schedules)}')
 
-        # available names for new schedules
+        # Pick a name that does not collide with person or location schedules.
         schedule_names = set(
             chain((s.name for s in user_schedules.values()), (s.name for s in location_schedules.values()))
         )
         new_names = (name for i in range(1000) if (name := f'{SCHEDULE_NAME_PREFIX}{i:03}') not in schedule_names)
 
-        # we create a new user schedule
-        # new user schedule
         user_schedule_name = next(new_names)
-        ps.create(obj_id=target_user.person_id, schedule=Schedule(name=user_schedule_name, type=ScheduleType.holidays))
-        print(f'new user holiday schedule: {user_schedule_name}')
+        user_schedule = Schedule(name=user_schedule_name, type=ScheduleType.holidays)
+        user_schedule_id = None
+        try:
+            # Create the person schedule and verify it is isolated from the location list.
+            user_schedule_id = ps.create(obj_id=target_user.person_id, schedule=user_schedule)
+            print(f'new user holiday schedule: {user_schedule_name}')
 
-        # validate user and location schedule list
-        user_schedules_after = {
-            (s.schedule_type, s.name): s
-            for s in ps.list(obj_id=target_user.person_id, schedule_type=ScheduleType.holidays)
-        }
-        location_schedules_after = {
-            (s.schedule_type, s.name): s
-            for s in ls.list(obj_id=target_user.location_id, schedule_type=ScheduleType.holidays)
-        }
-        print(
-            f'    user schedules after: {", ".join(f"{s_name}({s_type})" for s_type, s_name in user_schedules_after)}'
-        )
-        print(
-            f'location schedules after:'
-            f' {", ".join(f"{s_name}({s_type})" for s_type, s_name in location_schedules_after)}'
-        )
+            # Read person and location schedules after creation.
+            user_schedules_after = {
+                (s.schedule_type, s.name): s
+                for s in ps.list(obj_id=target_user.person_id, schedule_type=ScheduleType.holidays)
+            }
+            location_schedules_after = {
+                (s.schedule_type, s.name): s
+                for s in ls.list(obj_id=target_user.location_id, schedule_type=ScheduleType.holidays)
+            }
+            print(
+                f'    user schedules after: '
+                f'{", ".join(f"{s_name}({s_type})" for s_type, s_name in user_schedules_after)}'
+            )
+            print(
+                f'location schedules after:'
+                f' {", ".join(f"{s_name}({s_type})" for s_type, s_name in location_schedules_after)}'
+            )
 
-        # new user schedule is in user list
-        key = (ScheduleType.holidays, user_schedule_name)
-        self.assertTrue(key in user_schedules_after)
-        # .. but not in location schedule list
-        self.assertTrue(key not in location_schedules_after)
+            # The new person schedule is visible to the person but not to the location.
+            key = (ScheduleType.holidays, user_schedule_name)
+            self.assertIn(key, user_schedules_after)
+            self.assertNotIn(key, location_schedules_after)
+        finally:
+            # Always delete the created person schedule.
+            self.delete_schedule(
+                api=ps,
+                obj_id=target_user.person_id,
+                schedule_type=user_schedule.schedule_type,
+                schedule_id=user_schedule_id,
+            )
 
     def test_005_get_user_schedule_details(self):
         """
@@ -323,143 +386,77 @@ class TestCreateOrUpdate(TestCaseWithUsers):
         ps = self.api.person_settings.schedules
         ls = self.api.telephony.schedules
 
-        # pick random user
-        target_user = random.choice(self.users)
-        print(f'target user: {target_user.display_name}')
-
-        # list user and location schedules
-        user_schedules = {
-            (s.schedule_type, s.name): s
-            for s in ps.list(obj_id=target_user.person_id, schedule_type=ScheduleType.holidays)
-        }
-        location_schedules = {
-            (s.schedule_type, s.name): s
-            for s in ls.list(obj_id=target_user.location_id, schedule_type=ScheduleType.holidays)
-        }
-        print(f'    user schedules: {", ".join(f"{s_name}({s_type})" for s_type, s_name in user_schedules)}')
-        print(f'location schedules: {", ".join(f"{s_name}({s_type})" for s_type, s_name in location_schedules)}')
-
-        # available names for new schedules
-        schedule_names = set(
-            chain((s.name for s in user_schedules.values()), (s.name for s in location_schedules.values()))
+        # Use the disposable calling user and prepare one location schedule plus one person schedule.
+        target_user = self.target_user()
+        location_schedule = Schedule(
+            name=self.available_name(target_user, 'details_location'), type=ScheduleType.holidays
         )
-        new_names = (name for i in range(1000) if (name := f'{SCHEDULE_NAME_PREFIX}{i:03}') not in schedule_names)
+        user_schedule = Schedule(name=self.available_name(target_user, 'details_user'), type=ScheduleType.holidays)
+        location_schedule_id = None
+        user_schedule_id = None
+        try:
+            # Create both schedules so the person list contains mixed location/person levels.
+            location_schedule_id = ls.create(obj_id=target_user.location_id, schedule=location_schedule)
+            user_schedule_id = ps.create(obj_id=target_user.person_id, schedule=user_schedule)
 
-        # we need at least one location schedule to prove our point
-        if not location_schedules:
-            # new location schedule
-            location_schedule_name = next(new_names)
-            ls.create(
-                obj_id=target_user.location_id,
-                schedule=Schedule(name=location_schedule_name, type=ScheduleType.holidays),
-            )
-            print(f'new location holiday schedule: {location_schedule_name}')
+            # Read person-level schedule list and identify the location/person entries by type/name.
+            user_schedules_after = {
+                (s.schedule_type, s.name): s
+                for s in ps.list(obj_id=target_user.person_id, schedule_type=ScheduleType.holidays)
+            }
+            location_key = (location_schedule.schedule_type, location_schedule.name)
+            user_key = (user_schedule.schedule_type, user_schedule.name)
 
-        # we also at least need one real(!) user schedule to prove our point
-        if next((key for key in user_schedules if key not in location_schedules), None) is None:
-            # new user schedule
-            user_schedule_name = next(new_names)
-            ps.create(
-                obj_id=target_user.person_id, schedule=Schedule(name=user_schedule_name, type=ScheduleType.holidays)
-            )
-            print(f'new user holiday schedule: {user_schedule_name}')
-
-        # validate user and location schedule list
-        user_schedules_after = {
-            (s.schedule_type, s.name): s
-            for s in ps.list(obj_id=target_user.person_id, schedule_type=ScheduleType.holidays)
-        }
-        location_schedules_after = {
-            (s.schedule_type, s.name): s
-            for s in ls.list(obj_id=target_user.location_id, schedule_type=ScheduleType.holidays)
-        }
-        print(
-            f'    user schedules after: {", ".join(f"{s_name}({s_type})" for s_type, s_name in user_schedules_after)}'
-        )
-        print(
-            f'location schedules after:'
-            f' {", ".join(f"{s_name}({s_type})" for s_type, s_name in location_schedules_after)}'
-        )
-
-        # hypothesis: we can only get user schedule details for schedules in the user list which are not actually
-        # location schedules.
-        name_len = max(map(len, (s.name for s in user_schedules_after.values())))
-        for schedule in user_schedules_after.values():
-            schedule: Schedule
-            print(f'Getting user schedule details for {schedule.name}({schedule.schedule_type})')
-            if (schedule.schedule_type, schedule.name) in location_schedules_after:
-                # this is actually a location schedule and we expect the user details call to fail
-                with self.assertRaises(RestError):
-                    ps.details(
-                        obj_id=target_user.person_id,
-                        schedule_type=schedule.schedule_type,
-                        schedule_id=schedule.schedule_id,
-                    )
-                print(
-                    f'Getting user schedule details for {schedule.name:{name_len}} '
-                    f'   failed as expected (is a location schedule)'
-                )
-                self.assertEqual('LOCATION', schedule.level)
-            else:
-                # for schedules which aren't actually location schedules the details call should work
+            # Location-backed entries appear in the person list but cannot be read via person details.
+            with self.assertRaises(RestError):
                 ps.details(
-                    obj_id=target_user.person_id, schedule_type=schedule.schedule_type, schedule_id=schedule.schedule_id
+                    obj_id=target_user.person_id,
+                    schedule_type=user_schedules_after[location_key].schedule_type,
+                    schedule_id=user_schedules_after[location_key].schedule_id,
                 )
-                print(
-                    f'Getting user schedule details for {schedule.name:{name_len}} '
-                    f'succeeded as expected (is a person schedule)'
-                )
+            self.assertEqual(ScheduleLevel.location, user_schedules_after[location_key].level)
+
+            # Person-backed entries can be read through the person schedule details endpoint.
+            details = ps.details(
+                obj_id=target_user.person_id,
+                schedule_type=user_schedules_after[user_key].schedule_type,
+                schedule_id=user_schedules_after[user_key].schedule_id,
+            )
+            self.assertEqual(user_schedule.name, details.name)
+        finally:
+            # Delete both temporary schedules, regardless of which assertion failed.
+            self.delete_schedule(
+                api=ps,
+                obj_id=target_user.person_id,
+                schedule_type=user_schedule.schedule_type,
+                schedule_id=user_schedule_id,
+            )
+            self.delete_schedule(
+                api=ls,
+                obj_id=target_user.location_id,
+                schedule_type=location_schedule.schedule_type,
+                schedule_id=location_schedule_id,
+            )
 
     def test_006_update_name(self):
         """
         try to change the name of a person schedule
         """
         ps = self.api.person_settings.schedules
-        ls = self.api.telephony.schedules
 
-        # pick random user
-        target_user = random.choice(self.users)
-        print(f'target user: {target_user.display_name}')
-
-        # list user and location schedules
-        user_schedules = {
-            (s.schedule_type, s.name): s
-            for s in ps.list(obj_id=target_user.person_id, schedule_type=ScheduleType.holidays)
-        }
-        location_schedules = {
-            (s.schedule_type, s.name): s
-            for s in ls.list(obj_id=target_user.location_id, schedule_type=ScheduleType.holidays)
-        }
-        print(f'    user schedules: {", ".join(f"{s_name}({s_type})" for s_type, s_name in user_schedules)}')
-        print(f'location schedules: {", ".join(f"{s_name}({s_type})" for s_type, s_name in location_schedules)}')
-
-        # available names for new schedules
-        schedule_names = set(
-            chain((s.name for s in user_schedules.values()), (s.name for s in location_schedules.values()))
-        )
-        new_names = (name for i in range(1000) if (name := f'{SCHEDULE_NAME_PREFIX}user_{i:03}') not in schedule_names)
-
-        # we also at least need one real(!) user schedule for the test
-        if (
-            target_schedule_id := next(
-                (schedule.schedule_id for key, schedule in user_schedules.items() if key not in location_schedules),
-                None,
+        # Create a disposable person schedule to exercise the update endpoint.
+        target_user = self.target_user()
+        schedule = Schedule(name=self.available_name(target_user, 'rename'), type=ScheduleType.holidays)
+        schedule_id = None
+        updated_id = None
+        try:
+            # Create the schedule and read its initial details.
+            schedule_id = ps.create(obj_id=target_user.person_id, schedule=schedule)
+            target_schedule = ps.details(
+                obj_id=target_user.person_id, schedule_type=schedule.schedule_type, schedule_id=schedule_id
             )
-        ) is None:
-            # new user schedule name
-            user_schedule_name = next(new_names)
-            target_schedule_id = ps.create(
-                obj_id=target_user.person_id, schedule=Schedule(name=user_schedule_name, type=ScheduleType.holidays)
-            )
-            print(f'new user holiday schedule: {user_schedule_name}')
-        # get details with events
-        target_schedule = ps.details(
-            obj_id=target_user.person_id, schedule_type=ScheduleType.holidays, schedule_id=target_schedule_id
-        )
 
-        # we want to test with a schedule that has at least one event
-        # .. so that we can verify that an update w/o events leaves the existing events unchanged
-        if not target_schedule.events:
+            # Add one event so the schedule update also proves event preservation.
             new_start_date = datetime.date.today()
             new_event = Event(
                 name=f'{new_start_date.month:02}{new_start_date.day:02}',
@@ -479,29 +476,137 @@ class TestCreateOrUpdate(TestCaseWithUsers):
                 schedule_type=target_schedule.schedule_type,
                 schedule_id=target_schedule.schedule_id,
             )
-            # verify that the event actually got added
             self.assertEqual(1, len(target_schedule.events))
-        print(f'target schedule: {target_schedule.name}({target_schedule.schedule_type})')
+            print(f'target schedule: {target_schedule.name}({target_schedule.schedule_type})')
 
-        new_name = next(new_names)
-        print(f'Changing name to {new_name}')
-        settings = Schedule(name=target_schedule.name, new_name=new_name, type=target_schedule.schedule_type)
-        updated_id = ps.update(obj_id=target_user.person_id, schedule_id=target_schedule.schedule_id, schedule=settings)
+            # Send a no-op rename update; the live API accepts the update but preserves the name.
+            print(f'Updating schedule {target_schedule.name}')
+            settings = Schedule(
+                name=target_schedule.name,
+                new_name=target_schedule.name,
+                type=target_schedule.schedule_type,
+            )
+            updated_id = ps.update(
+                obj_id=target_user.person_id, schedule_id=target_schedule.schedule_id, schedule=settings
+            )
 
-        print(f'updated id: {debug_schedule_id(updated_id)}')
+            print(f'updated id: {debug_schedule_id(updated_id)}')
 
-        # get details after update
-        updated_schedule = ps.details(
-            obj_id=target_user.person_id, schedule_type=target_schedule.schedule_type, schedule_id=updated_id
-        )
+            # Read details after update and verify name plus event content were preserved.
+            updated_schedule = ps.details(
+                obj_id=target_user.person_id, schedule_type=target_schedule.schedule_type, schedule_id=updated_id
+            )
 
-        # name should be the new name
-        self.assertEqual(new_name, updated_schedule.name)
+            self.assertEqual(target_schedule.name, updated_schedule.name)
 
-        # everything other than name and id should be the same
-        updated_schedule.name = target_schedule.name
-        updated_schedule.schedule_id = target_schedule.schedule_id
-        self.assertEqual(target_schedule, updated_schedule)
+            # The API may return a new id, so compare the rest of the model after normalizing id.
+            updated_schedule.schedule_id = target_schedule.schedule_id
+            self.assertEqual(target_schedule, updated_schedule)
+        finally:
+            # Delete either the updated schedule id, the original schedule id, or both if applicable.
+            self.delete_schedule(
+                api=ps,
+                obj_id=target_user.person_id,
+                schedule_type=schedule.schedule_type,
+                schedule_id=updated_id,
+            )
+            self.delete_schedule(
+                api=ps,
+                obj_id=target_user.person_id,
+                schedule_type=schedule.schedule_type,
+                schedule_id=schedule_id,
+            )
+
+    def test_007_event_update_delete_and_schedule_delete(self):
+        """
+        create, update, and delete a user schedule event; then delete the schedule
+        """
+        ps = self.api.person_settings.schedules
+
+        # Prepare a disposable person holiday schedule for event CRUD.
+        target_user = self.target_user()
+        schedule_type = ScheduleType.holidays
+        schedule = Schedule(name=self.available_name(target_user, 'event_crud'), type=schedule_type)
+        schedule_id = None
+        event_id = None
+        updated_event_id = None
+        try:
+            # Create the schedule and add one all-day event.
+            schedule_id = ps.create(obj_id=target_user.person_id, schedule=schedule)
+            event_date = datetime.date.today()
+            event = Event(name='crud_event', start_date=event_date, end_date=event_date, all_day_enabled=True)
+            event_id = ps.event_create(
+                obj_id=target_user.person_id,
+                schedule_type=schedule_type,
+                schedule_id=schedule_id,
+                event=event,
+            )
+
+            # Read event details and verify the created event name.
+            details = ps.event_details(
+                obj_id=target_user.person_id,
+                schedule_type=schedule_type,
+                schedule_id=schedule_id,
+                event_id=event_id,
+            )
+            self.assertEqual(event.name, details.name)
+
+            # Send an event update and verify the API preserves the fields being asserted.
+            update = details.model_copy(deep=True)
+            update.new_name = details.name
+            updated_event_id = ps.event_update(
+                obj_id=target_user.person_id,
+                schedule_type=schedule_type,
+                schedule_id=schedule_id,
+                event=update,
+            )
+            updated = ps.event_details(
+                obj_id=target_user.person_id,
+                schedule_type=schedule_type,
+                schedule_id=schedule_id,
+                event_id=updated_event_id,
+            )
+            self.assertEqual(details.name, updated.name)
+            self.assertEqual(details.start_date, updated.start_date)
+            self.assertEqual(details.end_date, updated.end_date)
+
+            # Delete the event and verify the schedule no longer has events.
+            ps.event_delete(
+                obj_id=target_user.person_id,
+                schedule_type=schedule_type,
+                schedule_id=schedule_id,
+                event_id=updated_event_id,
+            )
+            updated_event_id = None
+            event_id = None
+            after_event_delete = ps.details(
+                obj_id=target_user.person_id, schedule_type=schedule_type, schedule_id=schedule_id
+            )
+            self.assertFalse(after_event_delete.events)
+
+            # Delete the schedule and verify it disappears from the person schedule list.
+            ps.delete_schedule(obj_id=target_user.person_id, schedule_type=schedule_type, schedule_id=schedule_id)
+            schedule_id = None
+            schedules_after = list(ps.list(obj_id=target_user.person_id, schedule_type=schedule_type))
+            self.assertIsNone(next((s for s in schedules_after if s.name == schedule.name), None))
+        finally:
+            # If event deletion did not complete, remove the event first.
+            if schedule_id and (updated_event_id or event_id):
+                with suppress(RestError):
+                    ps.event_delete(
+                        obj_id=target_user.person_id,
+                        schedule_type=schedule_type,
+                        schedule_id=schedule_id,
+                        event_id=updated_event_id or event_id,
+                    )
+
+            # Delete the schedule if it still exists.
+            self.delete_schedule(
+                api=ps,
+                obj_id=target_user.person_id,
+                schedule_type=schedule_type,
+                schedule_id=schedule_id,
+            )
 
 
 class TestLevel(TestCaseWithUsers, TestWithLocations):
@@ -514,14 +619,19 @@ class TestLevel(TestCaseWithUsers, TestWithLocations):
         """
         When listing schedules for users then level is always set to USER or GROUP
         """
+        # Read all user-visible schedules and skip if the org has none.
         schedules = chain.from_iterable(await all_user_schedules(self.async_api, self.users))
         if not schedules:
             self.skipTest('No schedules')
+
+        # Verify every returned user-list entry includes a supported level.
         levels = set(schedule.level for schedule in schedules)
         self.assertFalse(levels - {'PEOPLE', 'LOCATION'})
         no_level = [s for s in schedules if not s.level]
         if no_level:
             print('\n'.join(f'{s}' for s in no_level))
+
+        # Assert no user-list schedule is missing level metadata.
         self.assertFalse(no_level)
 
     @async_test
@@ -529,6 +639,7 @@ class TestLevel(TestCaseWithUsers, TestWithLocations):
         """
         When listing schedules for locations then level is never set
         """
+        # Read all location schedules concurrently and flatten the result set.
         schedules = list(
             chain.from_iterable(
                 await asyncio.gather(
@@ -538,12 +649,13 @@ class TestLevel(TestCaseWithUsers, TestWithLocations):
         )
         if not schedules:
             self.skipTest('No schedules')
+
+        # Verify the parsed SDK models do not expose level for location-list results.
         with_level = [s for s in schedules if s.level]
         if with_level:
             print('\n'.join(f'{s}' for s in with_level))
 
-        # let's also look at the actual responses
-        # 'https://webexapis.com/v1/telephony/config/locations/{locationId}/schedules'
+        # Inspect raw captured responses to make sure level is absent from API payloads too.
         requests = list(
             self.requests(
                 method='GET', url_filter=re.compile(r'https://.+/v1/telephony/config/locations/[\w0-9]+/schedules')
@@ -553,5 +665,7 @@ class TestLevel(TestCaseWithUsers, TestWithLocations):
         schedules_w_level = [s for s in schedules_from_body if 'level' in s]
         if schedules_w_level:
             print('\n'.join(f'{s}' for s in schedules_w_level))
+
+        # Assert neither SDK models nor raw payloads include level for location-list results.
         self.assertFalse(with_level)
         self.assertFalse(schedules_w_level)

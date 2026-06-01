@@ -8,6 +8,7 @@ import random
 from collections import defaultdict
 from collections.abc import Generator, Iterable
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import suppress
 from dataclasses import dataclass
 from datetime import date, timedelta
 from functools import reduce
@@ -103,7 +104,7 @@ def available_numbers(numbers: Iterable[str], seed: str = None) -> Generator[str
         numbers = []
         seed = seed or str(randint(1, 9) * 1000)
     tree = DigitTree.from_list(nodes=numbers)
-    return tree.available(seed=seed)
+    return tree.available(seed=seed)  # type: ignore[no-any-return]
 
 
 async def as_available_tns(*, as_api: AsWebexSimpleApi, tn_prefix: str, tns_requested: int = 1) -> list[str]:
@@ -278,7 +279,7 @@ def get_calling_license(*, api: WebexSimpleApi, prefer_basic: bool = True) -> Op
     licenses = [lic for lic in api.licenses.list() if lic.webex_calling and not lic.webex_calling_workspaces]
     licenses.sort(key=attrgetter('webex_calling_professional'), reverse=not prefer_basic)
     licence = next((lic for lic in licenses if lic.consumed_units < lic.total_units), None)
-    return licence and licence.license_id
+    return licence and licence.license_id  # type: ignore[return-value]
 
 
 def get_or_create_holiday_schedule(*, api: WebexSimpleApi, location_id: str) -> Schedule:
@@ -309,7 +310,11 @@ def get_or_create_holiday_schedule(*, api: WebexSimpleApi, location_id: str) -> 
             for holiday in holidays
             if holiday.date >= today and holiday.date.weekday() != 6
         )
-    schedule = Schedule(name='National Holidays', schedule_type=ScheduleType.holidays, events=events)
+    schedule = Schedule(
+        name='National Holidays',  # type: ignore[call-arg]
+        schedule_type=ScheduleType.holidays,
+        events=events,
+    )
     schedule_id = api.telephony.schedules.create(obj_id=location_id, schedule=schedule)
     return api.telephony.schedules.details(
         obj_id=location_id, schedule_type=ScheduleType.holidays, schedule_id=schedule_id
@@ -352,7 +357,7 @@ async def random_users(api: AsWebexSimpleApi, user_count: int = 1, inc: Union[In
         raise KeyError('BASE_EMAIL needs to be defined')
     util = RandomUserUtil(api=api, gmail_address=email)
     new_users = await util.get_new_users(number_of_users=user_count, inc=inc)
-    return new_users
+    return new_users  # type: ignore[no-any-return]
 
 
 def create_call_park_extension(*, api: WebexSimpleApi, location_id: str) -> str:
@@ -511,16 +516,25 @@ def create_calling_user(
         )
     )
 
-    api.licenses.assign_licenses_to_users(
-        person_id=new_user.person_id,
-        licenses=[
-            LicenseRequest(
-                id=calling_license_id,
-                properties=LicenseProperties(location_id=location_id, extension=extension, phone_number=phone_number),
-            )
-        ],
-    )
-    new_user = api.people.details(person_id=new_user.person_id, calling_data=True)
+    try:
+        api.licenses.assign_licenses_to_users(
+            person_id=new_user.person_id,
+            licenses=[
+                LicenseRequest(
+                    id=calling_license_id,
+                    properties=LicenseProperties(
+                        location_id=location_id,
+                        extension=extension,
+                        phone_number=phone_number,
+                    ),
+                )
+            ],
+        )
+        new_user = api.people.details(person_id=new_user.person_id, calling_data=True)
+    except Exception:
+        with suppress(Exception):
+            api.people.delete_person(person_id=new_user.person_id)
+        raise
     return new_user
 
 
@@ -567,6 +581,8 @@ def create_random_calling_user(
         calling_licenses.sort(key=attrgetter('name'), reverse=True)
 
         calling_license = next((lic for lic in calling_licenses if lic.consumed_units < lic.total_units), None)
+        if calling_license is None:
+            raise RuntimeError('No available Webex Calling Basic or Professional licenses')
         calling_license_id = calling_license.license_id
     return create_calling_user(
         api=api,

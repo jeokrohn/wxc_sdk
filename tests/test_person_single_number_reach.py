@@ -2,9 +2,8 @@ import asyncio
 import base64
 from concurrent.futures.thread import ThreadPoolExecutor
 from contextlib import contextmanager
-from random import choice
 
-from tests.base import TestCaseWithUsers, TestWithLocations, async_test
+from tests.base import TestWithTempCallingUser, async_test
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings.single_number_reach import SingleNumberReachNumber
 
@@ -18,36 +17,37 @@ def decoded_snr_number_id(snr_number_id: str):
     return f'{decoded}({decoded_id})'
 
 
-class TestSingleNumberReach(TestWithLocations, TestCaseWithUsers):
+class TestSingleNumberReach(TestWithTempCallingUser):
+    """
+    Stateful single number reach tests using a disposable calling user.
+    """
 
     @contextmanager
     def target_user(self, keep_log: bool = True):
         """
         get a target user and restore settings after tests
         """
-        target = choice(self.users)
+        # Use the disposable calling user and snapshot existing SNR numbers.
+        target = self.user
         print(f'Target user: {target.display_name}')
         api = self.api.person_settings.single_number_reach
         with self.no_log(keep_log):
             before = api.read(target.person_id)
             if before.numbers:
-                # delete existing SNR numbers
+                # Clear existing SNR numbers so the test body starts from a known state.
                 with ThreadPoolExecutor() as pool:
-                    # delete all existing numbers
-                    list(pool.map(lambda n: api.delete_snr(target.person_id, n.id),
-                                  before.numbers))
+                    list(pool.map(lambda n: api.delete_snr(target.person_id, n.id), before.numbers or []))
         try:
             yield target
         finally:
             with self.no_log(keep_log):
+                # Remove any SNR numbers created by the test body.
                 after = api.read(target.person_id)
                 with ThreadPoolExecutor() as pool:
-                    # delete all existing numbers
-                    list(pool.map(lambda n: api.delete_snr(target.person_id, n.id),
-                                  after.numbers))
-                    # re-create existing SNR numbers
-                    list(pool.map(lambda n: api.create_snr(target.person_id, n),
-                                  before.numbers))
+                    list(pool.map(lambda n: api.delete_snr(target.person_id, n.id), after.numbers or []))
+
+                    # Re-create the original SNR numbers to leave the user unchanged.
+                    list(pool.map(lambda n: api.create_snr(target.person_id, n), before.numbers or []))
         return
 
     @contextmanager
@@ -55,15 +55,11 @@ class TestSingleNumberReach(TestWithLocations, TestCaseWithUsers):
         """
         get a target user with SNR numbers and restore settings after tests
         """
+        # Start from a clean target user and create one enabled SNR number for the test body.
         with self.target_user(keep_log) as target:
             target: Person
-            # create a SNR number and enable it
             phone_number = '+4961967739764'
-            snr_number = SingleNumberReachNumber(
-                enabled=True,
-                phone_number=phone_number,
-                name='mobile'
-            )
+            snr_number = SingleNumberReachNumber(enabled=True, phone_number=phone_number, name='mobile')
             api = self.api.person_settings.single_number_reach
             with self.no_log(keep_log):
                 api.create_snr(target.person_id, snr_number)
@@ -75,9 +71,14 @@ class TestSingleNumberReach(TestWithLocations, TestCaseWithUsers):
         Get available phone numbers for all telephony locations
         """
         api = self.async_api.person_settings.single_number_reach
-        results = await asyncio.gather(*[api.available_phone_numbers(location_id=loc.location_id)
-                                         for loc in self.telephony_locations],
-                                       return_exceptions=True)
+
+        # Query available SNR phone numbers for all telephony locations concurrently.
+        results = await asyncio.gather(
+            *[api.available_phone_numbers(location_id=loc.location_id) for loc in self.telephony_locations],
+            return_exceptions=True,
+        )
+
+        # Print counts for successful locations and surface the first error, if any.
         err = None
         for location, result in zip(self.locations, results):
             if isinstance(result, Exception):
@@ -88,24 +89,15 @@ class TestSingleNumberReach(TestWithLocations, TestCaseWithUsers):
         if err:
             raise err
 
-    @async_test
-    async def test_read_settings(self):
+    def test_read_settings(self):
         """
-        Read settings for all calling users
+        Read settings for the temporary calling user
         """
-        api = self.async_api.person_settings.single_number_reach
-        results = await asyncio.gather(*[api.read(person_id=user.person_id)
-                                         for user in self.users],
-                                       return_exceptions=True)
-        err = None
-        for user, result in zip(self.users, results):
-            if isinstance(result, Exception):
-                print(f'Error reading settings for {user.display_name}: {result}')
-                err = err or result
-            else:
-                print(f'Settings for {user.display_name}: {result}')
-        if err:
-            raise err
+        api = self.api.person_settings.single_number_reach
+
+        # Read and print the disposable user's SNR settings for basic read coverage.
+        result = api.read(person_id=self.user.person_id)
+        print(f'Settings for {self.user.display_name}: {result}')
         return
 
     def test_enable_snr(self):
@@ -113,19 +105,21 @@ class TestSingleNumberReach(TestWithLocations, TestCaseWithUsers):
         Enable SNR for a user
         """
         api = self.api.person_settings.single_number_reach
+
+        # Use a clean disposable user so creating one number controls the enabled state.
         with self.target_user() as target:
             target: Person
-            # create a SNR number and enable it
+
+            # Create an enabled SNR number and verify it appears in settings.
             phone_number = '+4961967739764'
-            snr_number = SingleNumberReachNumber(
-                enabled=True,
-                phone_number=phone_number,
-                name='mobile'
-            )
+            snr_number = SingleNumberReachNumber(enabled=True, phone_number=phone_number, name='mobile')
             api.create_snr(target.person_id, snr_number)
             after = api.read(target.person_id)
-            self.assertIsNotNone(next((n for n in after.numbers if n.phone_number == phone_number), None),
-                                 'SNR number not present')
+            self.assertIsNotNone(
+                next((n for n in after.numbers if n.phone_number == phone_number), None), 'SNR number not present'
+            )
+
+            # Adding an enabled SNR number should enable the feature.
             self.assertTrue(after.enabled)
         return
 
@@ -134,12 +128,15 @@ class TestSingleNumberReach(TestWithLocations, TestCaseWithUsers):
         Disable SNR for a user by disabling a number
         """
         api = self.api.person_settings.single_number_reach
+
+        # Start with exactly one enabled SNR number.
         with self.target_user_with_snr() as target:
             target: Person
             before = api.read(target.person_id)
             self.assertTrue(before.enabled)
             self.assertEqual(len(before.numbers), 1)
-            # disable 1st SNR number
+
+            # Disable that number through a full update and verify the feature disables.
             snr_number = before.numbers[0]
             snr_number.enabled = False
             api.update_snr(target.person_id, snr_number)
@@ -154,12 +151,15 @@ class TestSingleNumberReach(TestWithLocations, TestCaseWithUsers):
         Disable SNR for a user by disabling a number using a partial update
         """
         api = self.api.person_settings.single_number_reach
+
+        # Start with exactly one enabled SNR number.
         with self.target_user_with_snr() as target:
             target: Person
             before = api.read(target.person_id)
             self.assertTrue(before.enabled)
             self.assertEqual(len(before.numbers), 1)
-            # disable 1st SNR number
+
+            # Build a partial update payload that only carries update-safe fields.
             snr_number = before.numbers[0]
             snr_number.enabled = False
             snr_update = SingleNumberReachNumber(
@@ -167,8 +167,11 @@ class TestSingleNumberReach(TestWithLocations, TestCaseWithUsers):
                     mode='json',
                     by_alias=True,
                     exclude_unset=True,
-                    exclude={'do_not_forward_calls_enabled', 'answer_confirmation_enabled',
-                             'name'}))
+                    exclude={'do_not_forward_calls_enabled', 'answer_confirmation_enabled', 'name'},
+                )
+            )
+
+            # Apply the partial update and verify the feature disables while the number remains.
             api.update_snr(target.person_id, snr_update)
             after = api.read(target.person_id)
             self.assertFalse(after.enabled)
@@ -180,19 +183,48 @@ class TestSingleNumberReach(TestWithLocations, TestCaseWithUsers):
         Change SNR number
         """
         api = self.api.person_settings.single_number_reach
+
+        # Start with exactly one enabled SNR number.
         with self.target_user_with_snr() as target:
             target: Person
             before = api.read(target.person_id)
             self.assertEqual(len(before.numbers), 1)
-            # change 1st SNR number
+
+            # Change the phone number and capture the newly returned SNR number id.
             snr_number = before.numbers[0]
             snr_number.phone_number = '+4961967739765'
             new_id = api.update_snr(target.person_id, snr_number)
             after = api.read(target.person_id)
+
+            # Verify the list still has one number and that it reflects the update.
             self.assertEqual(len(after.numbers), 1)
             self.assertEqual(after.numbers[0].phone_number, snr_number.phone_number)
             self.assertEqual(after.numbers[0].id, new_id)
-            # verify that the id has the encoded phone number
-            self.assertEqual(decoded_snr_number_id(after.numbers[0].id).split('(')[-1].strip(')'),
-                             snr_number.phone_number)
+
+            # Verify that the returned id encodes the updated phone number.
+            self.assertEqual(
+                decoded_snr_number_id(after.numbers[0].id).split('(')[-1].strip(')'), snr_number.phone_number
+            )
+        return
+
+    def test_delete_snr_number(self):
+        """
+        Delete an SNR number and verify it is gone.
+        """
+        api = self.api.person_settings.single_number_reach
+
+        # Start from a clean disposable user and create one temporary SNR number.
+        with self.target_user() as target:
+            target: Person
+            snr_number = SingleNumberReachNumber(enabled=True, phone_number='+4961967739764', name='mobile')
+            number_id = api.create_snr(target.person_id, snr_number)
+
+            # Verify the new number appears before exercising delete.
+            before_delete = api.read(target.person_id)
+            self.assertIsNotNone(next((n for n in before_delete.numbers if n.id == number_id), None))
+
+            # Delete the number and verify it is no longer returned.
+            api.delete_snr(target.person_id, number_id)
+            after_delete = api.read(target.person_id)
+            self.assertIsNone(next((n for n in after_delete.numbers if n.id == number_id), None))
         return

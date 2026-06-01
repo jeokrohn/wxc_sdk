@@ -19,13 +19,13 @@ import uuid
 from collections import Counter
 from collections.abc import Generator, Iterable
 from concurrent.futures import ThreadPoolExecutor
-from contextlib import asynccontextmanager, contextmanager
+from contextlib import asynccontextmanager, contextmanager, suppress
 from dataclasses import dataclass, field
 from datetime import datetime
 from functools import wraps
 from itertools import takewhile
 from typing import Any, ClassVar, Optional, Union
-from unittest import TestCase
+from unittest import SkipTest, TestCase
 
 import requests
 import yaml
@@ -41,7 +41,7 @@ from yaml.scanner import ScannerError
 
 load_dotenv()
 
-from tests.testutil import create_workspace_with_webex_calling
+from tests.testutil import create_random_calling_user, create_workspace_with_webex_calling
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.all_types import Person
 from wxc_sdk.as_api import AsWebexSimpleApi
@@ -57,6 +57,8 @@ from wxc_sdk.telephony.location import TelephonyLocation
 from wxc_sdk.telephony.virtual_line import VirtualLine
 from wxc_sdk.tokens import Tokens
 from wxc_sdk.workspaces import CallingType, Workspace, WorkspaceSupportedDevices
+
+# mypy: disable-error-code="type-arg,type-var"
 
 log = logging.getLogger(__name__)
 
@@ -74,6 +76,8 @@ __all__ = [
     'TestLocationsUsersWorkspacesVirtualLines',
     'TestWithTarget',
     'TestWithProfessionalWorkspace',
+    'TestWithTempCallingUser',
+    'TestWithTwoTempCallingUsers',
     'UserTokens',
     'TestWithRandomUserApi',
 ]
@@ -311,16 +315,16 @@ class LoggedRequest(BaseModel):
     response: str
     time_ms: float
     parsed_url: Optional[urllib.parse.ParseResult] = None
-    url_query: dict = Field(default_factory=dict)
-    url_dict: Optional[dict] = None  # groupdict() of match on url_filter if one was provided
+    url_query: dict[str, Any] = Field(default_factory=dict)
+    url_dict: Optional[dict[str, Any]] = None  # groupdict() of match on url_filter if one was provided
     #: request headers
-    headers: Optional[dict] = None
+    headers: Optional[dict[str, Any]] = None
     #: request body
-    request_body: Optional[Union[dict, str]] = None
+    request_body: Optional[Union[dict[str, Any], str]] = None
     #: response headers
-    response_headers: Optional[dict] = None
+    response_headers: Optional[dict[str, Any]] = None
     #: response body
-    response_body: Optional[Union[dict, str]] = None
+    response_body: Optional[Union[dict[str, Any], str]] = None
     record: logging.LogRecord
 
     # regular expressions to match on reqeust record
@@ -712,7 +716,7 @@ class TestWithLocations(TestCaseWithLog):
         """
         super().setUpClass()
 
-        async def get_calling_locations() -> list[Location]:
+        async def get_calling_locations() -> None:
             async with cls.as_webex_api(tokens=cls.tokens) as api:
                 locations = [loc for loc in await api.locations.list() if loc.address.country == 'US']
                 # figure out which locations are calling locations
@@ -952,6 +956,89 @@ class TestWithTarget(TestWithLocations):
 
 
 @dataclass(init=False, repr=False)
+class TestWithTempCallingUser(TestWithTarget):
+    """
+    Tests using a disposable Webex Calling user.
+    """
+
+    user: ClassVar[Optional[Person]] = None
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        """
+        Create a random calling user and use it as target.
+        """
+        super().setUpClass()
+        if not cls.telephony_locations:
+            return
+        location: TelephonyLocation = random.choice(cls.telephony_locations)
+        cls.location_id = location.location_id
+        try:
+            cls.user = create_random_calling_user(api=cls.api, location_id=location.location_id)
+        except Exception as e:
+            raise SkipTest(f'Could not create temporary calling user: {e}') from e
+        cls.target_id = cls.user.person_id
+        print(f'Created temporary calling user {cls.user.display_name} in location {location.name}')
+
+    @classmethod
+    def tearDownClass(cls):
+        """
+        Delete the temporary user.
+        """
+        try:
+            if cls.user is not None:
+                cls.api.people.delete_person(cls.user.person_id)
+                print(f'Deleted temporary calling user {cls.user.display_name}')
+        finally:
+            cls.user = None
+            cls.target_id = None
+            super().tearDownClass()
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.assertIsNotNone(self.user, 'No temporary calling user created')
+
+
+@dataclass(init=False, repr=False)
+class TestWithTwoTempCallingUsers(TestWithTempCallingUser):
+    """
+    Tests using two disposable Webex Calling users in the same location.
+    """
+
+    second_user: ClassVar[Optional[Person]] = None
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        super().setUpClass()
+        if cls.location_id is None:
+            return
+        try:
+            cls.second_user = create_random_calling_user(api=cls.api, location_id=cls.location_id)
+        except Exception as e:
+            with suppress(Exception):
+                if cls.user is not None:
+                    cls.api.people.delete_person(cls.user.person_id)
+            cls.user = None
+            cls.target_id = None
+            raise SkipTest(f'Could not create second temporary calling user: {e}') from e
+        print(f'Created second temporary calling user {cls.second_user.display_name}')
+
+    @classmethod
+    def tearDownClass(cls):
+        try:
+            if cls.second_user is not None:
+                cls.api.people.delete_person(cls.second_user.person_id)
+                print(f'Deleted second temporary calling user {cls.second_user.display_name}')
+        finally:
+            cls.second_user = None
+            super().tearDownClass()
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.assertIsNotNone(self.second_user, 'No second temporary calling user created')
+
+
+@dataclass(init=False, repr=False)
 class TestWithProfessionalWorkspace(TestWithTarget):
     """
     Tests for workspace settings using a temporary professional workspace
@@ -1120,7 +1207,7 @@ class UserTokens(TestCaseWithLog):
             tokens = cls.create_user_tokens(user_id=user_id)
             cls._token_cache[user_id] = tokens
             cls.write_user_cache()
-        return tokens
+        return tokens  # type: ignore[return-value]
 
     @classmethod
     def create_user_tokens(cls, user_id: str) -> Optional[Tokens]:
@@ -1234,14 +1321,14 @@ class UserTokens(TestCaseWithLog):
                 except Exception:
                     pass
                 log.warning('Authorization did not finish in time (60 seconds)')
-                return
+                return None
 
         # get the authorization code from the response
         code = result['code'][0]
         response_state = result['state'][0]
         if response_state != oauth_state:
             log.error('Authorization code from response does not match authorization code from request')
-            return
+            return None
 
         # get access tokens
         new_tokens = integration.tokens_from_code(code=code)
@@ -1267,7 +1354,7 @@ class TestWithRandomUserApi(UserTokens, TestCaseWithUsers):
         else:
             user: Person = random.choice(candidates)
         print(f'Using user {user.display_name} for testing')
-        return user
+        return user  # type: ignore[return-value]
 
     @contextmanager
     def user_api(self, user: Person):

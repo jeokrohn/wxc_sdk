@@ -5,12 +5,22 @@ from wxc_sdk.person_settings.hotdesking import HotDeskingMember
 
 
 class TestPersonHotDesking(TestCaseWithUsers):
+    """
+    Read and statefully update person hotdesking member assignments.
+    """
+
     @async_test
     async def test_available_members(self):
+        """
+        List available hotdesking member candidates for every calling user.
+        """
+        # Query all users concurrently to catch per-user availability issues.
         settings = await asyncio.gather(
             *[self.async_api.person_settings.hotdesking.available_members(person_id=u.person_id) for u in self.users],
             return_exceptions=True,
         )
+
+        # Surface any endpoint failure after printing the affected user.
         err = None
         for user, setting in zip(self.users, settings):
             if isinstance(setting, Exception):
@@ -20,10 +30,16 @@ class TestPersonHotDesking(TestCaseWithUsers):
 
     @async_test
     async def test_get_members(self):
+        """
+        List currently assigned hotdesking members for every calling user.
+        """
+        # Query all users concurrently for broad read coverage.
         settings = await asyncio.gather(
             *[self.async_api.person_settings.hotdesking.get_members(person_id=u.person_id) for u in self.users],
             return_exceptions=True,
         )
+
+        # Surface any endpoint failure after printing the affected user.
         err = None
         for user, setting in zip(self.users, settings):
             if isinstance(setting, Exception):
@@ -37,22 +53,17 @@ class TestPersonHotDesking(TestCaseWithUsers):
         """
         import random
 
-        # pick random user
+        # Pick a real calling user and snapshot existing members for later restore.
         user = random.choice(self.users)
         hotdesking_api = self.api.person_settings.hotdesking
 
-        # get current members
         original_members = hotdesking_api.get_members(person_id=user.person_id)
         print(f'User "{user.display_name}": current hotdesking members: {original_members}')
 
-        # get available members
+        # Find available members and exclude any that are already assigned.
         available = list(hotdesking_api.available_members(person_id=user.person_id))
         print(f'User "{user.display_name}": available members: {available}')
-
-        # get current member IDs to avoid re-adding
         current_member_ids = {m.id for m in (original_members.members or []) if m.id}
-
-        # pick a random available member that's not already assigned
         random.shuffle(available)
         candidate = next((m for m in available if m.id not in current_member_ids), None)
 
@@ -62,17 +73,16 @@ class TestPersonHotDesking(TestCaseWithUsers):
                 f'all available members are already assigned'
             )
         try:
+            # Add one candidate to validate the member-list add path.
             print(
                 f'Adding member "{candidate.first_name}/{candidate.last_name}/{candidate.member_type}" '
                 f'({candidate.id}) to "{user.display_name}"'
             )
-
-            # add member by updating the members list
             new_members = list(original_members.members or [])
             new_members.append(HotDeskingMember.from_available_member(candidate))
             hotdesking_api.update_members(person_id=user.person_id, members=new_members)
 
-            # get members and verify that member has been added
+            # Read back the list and verify the candidate was assigned.
             updated_members = hotdesking_api.get_members(person_id=user.person_id)
             updated_member_ids = {m.id for m in updated_members.members}
 
@@ -88,9 +98,8 @@ class TestPersonHotDesking(TestCaseWithUsers):
             )
 
         finally:
-            # restore previous members
+            # Always restore the original member list and verify no side effect remains.
             print(f'Restoring original hotdesking members for "{user.display_name}"')
-            try:
-                hotdesking_api.update_members(person_id=user.person_id, members=original_members.members or [])
-            except Exception as e:
-                print(f'Failed to restore hotdesking members for "{user.display_name}": {e}')
+            hotdesking_api.update_members(person_id=user.person_id, members=original_members.members or [])
+            restored_members = hotdesking_api.get_members(person_id=user.person_id)
+            self.assertEqual(original_members, restored_members)
