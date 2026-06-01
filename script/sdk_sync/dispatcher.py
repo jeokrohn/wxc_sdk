@@ -510,9 +510,10 @@ def _method_param_order_error(record: ChangeRecord, match: Match, sdk_text: str)
         ir = extract_from_text(sdk_text, str(match.sdk_path), is_sdk=False)
     except SyntaxError as exc:
         return f'semantic parameter order validation could not parse patched SDK file: {exc}'
-    if ir.api_class is None or ir.api_class.name != match.sdk_class:
+    api_class = ir.api_class_by_name(match.sdk_class)
+    if api_class is None:
         return f'semantic parameter order validation could not find SDK class {match.sdk_class}'
-    method = next((m for m in ir.api_class.methods if m.name == match.sdk_member), None)
+    method = next((m for m in api_class.methods if m.name == match.sdk_member), None)
     if method is None:
         return f'semantic parameter order validation could not find SDK method {match.sdk_member}'
     sdk_order = [p.name for p in method.params]

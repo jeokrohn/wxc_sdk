@@ -83,8 +83,8 @@ class _SDKIndex:
 
     The index walks every Python file under :data:`_SDK_ROOT`, parses it with
     :func:`~script.sdk_sync.ir.extract`, and keeps the resulting IRs in
-    memory. Lookups are linear in the number of modules (~30), which is fast
-    enough that we don't need secondary indexes.
+    memory. Lookups are linear in the number of modules/API classes, which is
+    fast enough that we don't need secondary indexes.
     """
 
     def __init__(self) -> None:
@@ -151,7 +151,7 @@ class _SDKIndex:
         return None
 
     def find_api_by_base(self, base: str) -> list[tuple[Path, ModuleIR, ApiClassIR]]:
-        """Return every SDK module whose API class declares the given ``base=``.
+        """Return every SDK API class declaring the given ``base=``.
 
         :param base: Value of the ``base=`` keyword on the stub's API class.
         :return: List of ``(path, module_ir, api_class_ir)`` triples; the list
@@ -159,8 +159,9 @@ class _SDKIndex:
         """
         out: list[tuple[Path, ModuleIR, ApiClassIR]] = []
         for ir in self.all():
-            if ir.api_class is not None and ir.api_class.base == base:
-                out.append((Path(ir.path), ir, ir.api_class))
+            for api_class in ir.iter_api_classes():
+                if api_class.base == base:
+                    out.append((Path(ir.path), ir, api_class))
         return out
 
     def find_api_with_endpoint(self, verb: str, ep_template: str) -> list[tuple[Path, ModuleIR, ApiClassIR, MethodIR]]:
@@ -174,11 +175,10 @@ class _SDKIndex:
         """
         out: list[tuple[Path, ModuleIR, ApiClassIR, MethodIR]] = []
         for ir in self.all():
-            if ir.api_class is None:
-                continue
-            for m in ir.api_class.methods:
-                if m.verb == verb and m.ep_template == ep_template:
-                    out.append((Path(ir.path), ir, ir.api_class, m))
+            for api_class in ir.iter_api_classes():
+                for m in api_class.methods:
+                    if m.verb == verb and m.ep_template == ep_template:
+                        out.append((Path(ir.path), ir, api_class, m))
         return out
 
 
@@ -565,11 +565,10 @@ def _gather_heuristic_candidates(
         # Fallback: any SDK method with the same verb. Wider but still cheap
         # at this codebase size.
         for sdk_ir in _index.all():
-            if sdk_ir.api_class is None:
-                continue
-            for sdk_m in sdk_ir.api_class.methods:
-                if sdk_m.verb == stub_method.verb:
-                    out.append((Path(sdk_ir.path), sdk_ir, sdk_ir.api_class, sdk_m))
+            for sdk_cls in sdk_ir.iter_api_classes():
+                for sdk_m in sdk_cls.methods:
+                    if sdk_m.verb == stub_method.verb:
+                        out.append((Path(sdk_ir.path), sdk_ir, sdk_cls, sdk_m))
     return out
 
 

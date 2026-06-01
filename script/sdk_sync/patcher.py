@@ -303,9 +303,10 @@ def _method_docstring_changed(match: Match, old_stub_doc: str | None, new_stub_d
     :return: Always a :class:`Punt`.
     """
     sdk_ir = match.sdk_module_ir
-    if sdk_ir.api_class is None or match.sdk_member is None:
+    api_class = sdk_ir.api_class_by_name(match.sdk_class)
+    if api_class is None or match.sdk_member is None:
         return Punt('SDK API class not located')
-    method = next((m for m in sdk_ir.api_class.methods if m.name == match.sdk_member), None)
+    method = next((m for m in api_class.methods if m.name == match.sdk_member), None)
     if method is None:
         return Punt(f'method {match.sdk_member} not in SDK class {match.sdk_class}')
     if method.docstring != old_stub_doc:

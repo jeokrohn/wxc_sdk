@@ -95,6 +95,32 @@ def test_api_method_endpoint_canonicalization() -> None:
     assert methods['create'].ep_template == 'foo/bar/new'
 
 
+def test_module_ir_retains_multiple_api_classes() -> None:
+    src = textwrap.dedent("""\
+    from wxc_sdk.api_child import ApiChild
+
+
+    class FirstApi(ApiChild, base='first'):
+        def list(self):
+            url = self.ep('items')
+            return super().get(url)
+
+
+    class SecondApi(ApiChild, base='second'):
+        def create(self):
+            url = self.ep('items')
+            return super().post(url)
+    """)
+    ir = extract_from_text(src, '<test>')
+
+    assert [api_class.name for api_class in ir.api_classes] == ['FirstApi', 'SecondApi']
+    assert ir.api_class is not None
+    assert ir.api_class.name == 'SecondApi'
+    assert ir.api_class_by_name('FirstApi') is not None
+    assert ir.method_by_key('get', 'first/items') is not None
+    assert ir.method_by_key('post', 'second/items') is not None
+
+
 def test_api_child_helper_bases_are_api_classes() -> None:
     plain_src = textwrap.dedent("""\
     from wxc_sdk.person_settings.common import PersonSettingsApiChild

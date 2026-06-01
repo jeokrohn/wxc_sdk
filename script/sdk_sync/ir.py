@@ -238,20 +238,26 @@ class ApiClassIR:
 class ModuleIR:
     """Top-level IR for a single Python module.
 
-    A stub or SDK module is expected to contain at most one API class; any
-    number of Pydantic models and enums may sit alongside it at module scope.
+    Generated stubs normally contain one API class. SDK modules may contain
+    multiple API classes plus any number of Pydantic models and enums at
+    module scope.
 
     :param path: Source path the IR was extracted from (informational; may be
         a placeholder like ``'<string>'`` when extracting from text).
     :param models: All Pydantic models found at module scope.
     :param enums: All enum classes found at module scope.
-    :param api_class: The API class if present, otherwise ``None``.
+    :param api_class: Legacy single API class view if present, otherwise
+        ``None``. When a module has multiple API classes, this retains the old
+        extractor behavior by pointing at the last one found.
     :param source_sha: SHA-1 of the source text; used as a cheap identity
         check (e.g. to detect that the file has not changed since the IR was
         extracted).
     :param source_text: The full source text, retained so the patcher can
         splice without re-reading from disk. Excluded from :func:`repr` to
         keep dataclass diagnostics readable.
+    :param api_classes: All API classes found at module scope, in source
+        order. Older test fixtures may leave this empty and rely on
+        ``api_class`` only.
     """
 
     path: str
@@ -260,6 +266,7 @@ class ModuleIR:
     api_class: ApiClassIR | None
     source_sha: str
     source_text: str = field(repr=False)
+    api_classes: tuple[ApiClassIR, ...] = ()
 
     def model_by_name(self, name: str) -> ModelIR | None:
         """Find a model by class name.
@@ -284,6 +291,29 @@ class ModuleIR:
                 return e
         return None
 
+    def iter_api_classes(self) -> tuple[ApiClassIR, ...]:
+        """Return every API class known for this module.
+
+        :return: API classes in source order. Falls back to the legacy
+            ``api_class`` slot for hand-built test IRs.
+        """
+        if self.api_classes:
+            return self.api_classes
+        if self.api_class is not None:
+            return (self.api_class,)
+        return ()
+
+    def api_class_by_name(self, name: str) -> ApiClassIR | None:
+        """Find an API class by class name.
+
+        :param name: API class name to locate.
+        :return: The matching :class:`ApiClassIR`, or ``None``.
+        """
+        for api_class in self.iter_api_classes():
+            if api_class.name == name:
+                return api_class
+        return None
+
     def method_by_key(self, verb: str, ep_template: str) -> MethodIR | None:
         """Look up the API method matching a canonical endpoint key.
 
@@ -293,11 +323,10 @@ class ModuleIR:
         :return: The matching :class:`MethodIR`, or ``None`` if the module has
             no API class or no method with that key.
         """
-        if self.api_class is None:
-            return None
-        for m in self.api_class.methods:
-            if m.verb == verb and m.ep_template == ep_template:
-                return m
+        for api_class in self.iter_api_classes():
+            for m in api_class.methods:
+                if m.verb == verb and m.ep_template == ep_template:
+                    return m
         return None
 
 
@@ -336,15 +365,15 @@ def extract_from_text(source: str, path: str = '<string>', is_sdk: bool = False)
         cannot reach (custom helpers like ``CQPolicyApi._ep``). Live-replay
         requires the SDK module to be importable; pass ``False`` for stubs and
         for historical revisions retrieved from ``git show``.
-    :return: A :class:`ModuleIR` with models, enums, optional API class, the
-        SHA-1 of the source, and the source text retained for the patcher.
+    :return: A :class:`ModuleIR` with models, enums, optional API classes,
+        the SHA-1 of the source, and the source text retained for the patcher.
     :raises SyntaxError: If ``source`` does not parse.
     """
     tree = ast.parse(source)
     source_lines = source.splitlines(keepends=False)
     models: list[ModelIR] = []
     enums: list[EnumIR] = []
-    api_class: ApiClassIR | None = None
+    api_classes: list[ApiClassIR] = []
     # Walk only top-level statements: stubs and SDK modules never nest API
     # classes or Pydantic models. Anything that isn't a class def is ignored.
     for node in tree.body:
@@ -356,9 +385,10 @@ def extract_from_text(source: str, path: str = '<string>', is_sdk: bool = False)
         elif kind == 'model':
             models.append(_extract_model(node, source_lines))
         elif kind == 'api':
-            api_class = _extract_api_class(node)
-    if is_sdk and api_class is not None:
-        api_class = _enrich_api_class_with_live_replay(api_class)
+            api_classes.append(_extract_api_class(node))
+    if is_sdk:
+        api_classes = [_enrich_api_class_with_live_replay(api_class) for api_class in api_classes]
+    api_class = api_classes[-1] if api_classes else None
     return ModuleIR(
         path=path,
         models=tuple(models),
@@ -366,6 +396,7 @@ def extract_from_text(source: str, path: str = '<string>', is_sdk: bool = False)
         api_class=api_class,
         source_sha=hashlib.sha1(source.encode('utf-8')).hexdigest(),
         source_text=source,
+        api_classes=tuple(api_classes),
     )
 
 
