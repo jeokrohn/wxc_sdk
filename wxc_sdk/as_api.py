@@ -1419,7 +1419,7 @@ class AsDeviceSettingsJobsApi(AsApiChild, base='telephony/config/jobs/devices/ca
         """
         url = self.ep()
         params = org_id and {'prgId': org_id} or None
-        body = {}
+        body: dict[str, Any] = {}
         if location_id:
             body['locationId'] = location_id
             body['locationCustomizationsEnabled'] = customization.custom_enabled
@@ -2413,7 +2413,7 @@ class AsApplyLineKeyTemplatesJobsApi(AsApiChild, base='telephony/config/jobs/dev
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['action'] = enum_str(action)
         if template_id is not None:
             body['templateId'] = template_id
@@ -2727,7 +2727,7 @@ class AsDisableCallingLocationJobsApi(AsApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['locationId'] = location_id
         if location_name is not None:
             body['locationName'] = location_name
@@ -2935,6 +2935,7 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         number_list: builtins.list[NumberItem],
         target_location_id: str = None,
         number_usage_type: str = None,
+        org_id: str = None,
     ) -> NumberJob:
         """
         Initiate Number Jobs
@@ -2976,8 +2977,13 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         :type target_location_id: str
         :param number_usage_type: Mandatory for `NUMBER_USAGE_CHANGE` operation. Indicates the number usage type.
         :type number_usage_type: str
+        :param org_id: Initiate a Manage Numbers job for this organization.
+        :type org_id: str
         :rtype: :class:`NumberJob`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
         body = dict()
         body['operation'] = operation
         if target_location_id is not None:
@@ -2988,23 +2994,30 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
             number_list, mode='json', by_alias=True, exclude_none=True
         )
         url = self.ep('manageNumbers')
-        data = await super().post(url=url, json=body)
+        data = await super().post(url=url, params=params, json=body)
         return NumberJob.model_validate(data)
 
-    async def status(self, job_id: str = None) -> NumberJob:
+    async def status(self, job_id: str = None, org_id: str = None) -> NumberJob:
         """
         Get Manage Numbers Job Status
 
         Returns the status and other details of the job.
+
+        Use this API to monitor a Manage Numbers job after it has been initiated.
 
         This API requires a full or read-only administrator auth token with a scope of
         spark-admin:telephony_config_read.
 
         :param job_id: Retrieve job details for this jobId.
         :type job_id: str
+        :param org_id: Retrieve job details for this organization.
+        :type org_id: str
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
         url = self.ep(f'manageNumbers/{job_id}')
-        data = await super().get(url=url)
+        data = await super().get(url=url, params=params)
         return NumberJob.model_validate(data)
 
     async def pause(self, job_id: str = None, org_id: str = None):
@@ -3012,6 +3025,8 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         Pause the Manage Numbers Job
 
         Pause the running Manage Numbers Job. A paused job can be resumed or abandoned.
+
+        Use this API when a Manage Numbers job must be temporarily stopped before completion.
 
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
 
@@ -3032,6 +3047,8 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
         Resume the Manage Numbers Job
 
         Resume the paused Manage Numbers Job. A paused job can be resumed or abandoned.
+
+        Use this API to continue processing a Manage Numbers job that was previously paused.
 
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
 
@@ -3066,7 +3083,7 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
 
     def errors_gen(self, job_id: str = None, org_id: str = None, **params) -> AsyncGenerator[JobErrorItem, None]:
         """
-        List Manage Numbers Job errors
+        List Manage Numbers Job Errors
 
         Lists all error details of Manage Numbers job. This will not list any errors if exitCode is COMPLETED. If the
         status is COMPLETED_WITH_ERRORS then this lists the cause of failures.
@@ -3101,7 +3118,7 @@ class AsManageNumbersJobsApi(AsApiChild, base='telephony/config/jobs/numbers'):
 
     async def errors(self, job_id: str = None, org_id: str = None, **params) -> builtins.list[JobErrorItem]:
         """
-        List Manage Numbers Job errors
+        List Manage Numbers Job Errors
 
         Lists all error details of Manage Numbers job. This will not list any errors if exitCode is COMPLETED. If the
         status is COMPLETED_WITH_ERRORS then this lists the cause of failures.
@@ -34207,7 +34224,7 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
 
     async def remove(self, location_id: str, phone_numbers: list[str], org_id: str = None):
         """
-        Remove phone numbers from a location
+        Remove Phone Numbers from a Location
 
         Remove the specified set of phone numbers from a location for an organization.
 
@@ -34248,7 +34265,7 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
         org_id: str = None,
     ) -> NumberAddResponse:
         """
-        Add Phone Numbers to a location
+        Add Phone Numbers to a Location
 
         Adds a specified set of phone numbers to a location for an organization. Phone numbers must follow the E.164
         format.
@@ -34337,7 +34354,7 @@ class AsLocationNumbersApi(AsApiChild, base='telephony/config/locations'):
         self, location_id: str, phone_numbers: list[str], action: NumbersRequestAction = None, org_id: str = None
     ):
         """
-        Manage Number State in a location
+        Manage Number State in a Location
 
         Activate or deactivate the specified set of phone numbers in a location for an organization.
 
@@ -37807,6 +37824,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         restricted_non_geo_numbers: bool = None,
         included_telephony_type: TelephonyType = None,
         service_number: bool = None,
+        reserved_number: bool = None,
         org_id: str = None,
         **params,
     ) -> AsyncGenerator[NumberListPhoneNumber, None]:
@@ -37864,6 +37882,13 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         :type included_telephony_type: TelephonyType
         :param service_number: Returns the list of service phone numbers.
         :type service_number: bool
+        :param reserved_number: Filters reserved phone numbers. When set to `true`, returns only reserved phone
+            numbers. When set to `false`, returns only non-reserved phone numbers. When omitted, no reserved-number
+            filter is applied. Reserved numbers cannot be assigned to people, features, or services. This parameter
+            cannot be used along with the `available` filter, whether `available` is set to `true` for available
+            numbers or `false` for assigned numbers; using both returns a `400` error. This parameter also cannot be
+            used along with the `assigned` filter; using both returns a `400` error.
+        :type reserved_number: bool
         :param org_id: List numbers for this organization.
         :type org_id: str
         :return: yields :class:`NumberListPhoneNumber` instances
@@ -37905,6 +37930,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         restricted_non_geo_numbers: bool = None,
         included_telephony_type: TelephonyType = None,
         service_number: bool = None,
+        reserved_number: bool = None,
         org_id: str = None,
         **params,
     ) -> builtins.list[NumberListPhoneNumber]:
@@ -37962,6 +37988,13 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         :type included_telephony_type: TelephonyType
         :param service_number: Returns the list of service phone numbers.
         :type service_number: bool
+        :param reserved_number: Filters reserved phone numbers. When set to `true`, returns only reserved phone
+            numbers. When set to `false`, returns only non-reserved phone numbers. When omitted, no reserved-number
+            filter is applied. Reserved numbers cannot be assigned to people, features, or services. This parameter
+            cannot be used along with the `available` filter, whether `available` is set to `true` for available
+            numbers or `false` for assigned numbers; using both returns a `400` error. This parameter also cannot be
+            used along with the `assigned` filter; using both returns a `400` error.
+        :type reserved_number: bool
         :param org_id: List numbers for this organization.
         :type org_id: str
         :return: yields :class:`NumberListPhoneNumber` instances
@@ -38026,7 +38059,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
 
     async def validate_phone_numbers(self, phone_numbers: list[str], org_id: str = None) -> ValidatePhoneNumbersResponse:
         """
-        Validate phone numbers
+        Validate Phone Numbers
 
         Validate the list of phone numbers in an organization. Each phone number's availability is indicated in the
         response.

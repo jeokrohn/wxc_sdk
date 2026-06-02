@@ -202,7 +202,7 @@ description of the operation. The method name is a link to the method documentat
         | Abandon the Manage Numbers Job
         | ``POST /telephony/config/jobs/numbers/manageNumbers/{job_id}/actions/abandon/invoke``
    * - :meth:`api.jobs.manage_numbers.errors <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.errors>`
-        | List Manage Numbers Job errors
+        | List Manage Numbers Job Errors
         | ``GET /telephony/config/jobs/numbers/manageNumbers/{job_id}/errors``
    * - :meth:`api.jobs.manage_numbers.initiate_job <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.initiate_job>`
         | Initiate Number Jobs
@@ -2467,7 +2467,7 @@ description of the operation. The method name is a link to the method documentat
         | Abandon the Manage Numbers Job
         | ``POST /telephony/config/jobs/numbers/manageNumbers/{job_id}/actions/abandon/invoke``
    * - :meth:`api.telephony.jobs.manage_numbers.errors <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.errors>`
-        | List Manage Numbers Job errors
+        | List Manage Numbers Job Errors
         | ``GET /telephony/config/jobs/numbers/manageNumbers/{job_id}/errors``
    * - :meth:`api.telephony.jobs.manage_numbers.initiate_job <wxc_sdk.telephony.jobs.ManageNumbersJobsApi.initiate_job>`
         | Initiate Number Jobs
@@ -2593,13 +2593,13 @@ description of the operation. The method name is a link to the method documentat
         | Update Music On Hold
         | ``PUT /telephony/config/locations/{location_id}/musicOnHold``
    * - :meth:`api.telephony.location.number.add <wxc_sdk.telephony.location.numbers.LocationNumbersApi.add>`
-        | Add Phone Numbers to a location
+        | Add Phone Numbers to a Location
         | ``POST /telephony/config/locations/{location_id}/numbers``
    * - :meth:`api.telephony.location.number.manage_number_state <wxc_sdk.telephony.location.numbers.LocationNumbersApi.manage_number_state>`
-        | Manage Number State in a location
+        | Manage Number State in a Location
         | ``PUT /telephony/config/locations/{location_id}/numbers``
    * - :meth:`api.telephony.location.number.remove <wxc_sdk.telephony.location.numbers.LocationNumbersApi.remove>`
-        | Remove phone numbers from a location
+        | Remove Phone Numbers from a Location
         | ``DELETE /telephony/config/locations/{location_id}/numbers``
    * - :meth:`api.telephony.location.permissions_out.configure <wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.configure>`
         | Configure Outgoing Calling Permissions Settings
@@ -2746,13 +2746,13 @@ description of the operation. The method name is a link to the method documentat
         | Update Music On Hold
         | ``PUT /telephony/config/locations/{location_id}/musicOnHold``
    * - :meth:`api.telephony.locations.number.add <wxc_sdk.telephony.location.numbers.LocationNumbersApi.add>`
-        | Add Phone Numbers to a location
+        | Add Phone Numbers to a Location
         | ``POST /telephony/config/locations/{location_id}/numbers``
    * - :meth:`api.telephony.locations.number.manage_number_state <wxc_sdk.telephony.location.numbers.LocationNumbersApi.manage_number_state>`
-        | Manage Number State in a location
+        | Manage Number State in a Location
         | ``PUT /telephony/config/locations/{location_id}/numbers``
    * - :meth:`api.telephony.locations.number.remove <wxc_sdk.telephony.location.numbers.LocationNumbersApi.remove>`
-        | Remove phone numbers from a location
+        | Remove Phone Numbers from a Location
         | ``DELETE /telephony/config/locations/{location_id}/numbers``
    * - :meth:`api.telephony.locations.permissions_out.configure <wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.configure>`
         | Configure Outgoing Calling Permissions Settings
@@ -3208,7 +3208,7 @@ description of the operation. The method name is a link to the method documentat
         | Validate the List of Extensions
         | ``POST /telephony/config/actions/validateExtensions/invoke``
    * - :meth:`api.telephony.validate_phone_numbers <wxc_sdk.telephony.TelephonyApi.validate_phone_numbers>`
-        | Validate phone numbers
+        | Validate Phone Numbers
         | ``POST /telephony/config/actions/validateNumbers/invoke``
    * - :meth:`api.telephony.virtual_extensions.create_extension <wxc_sdk.telephony.virtual_extensions.VirtualExtensionsApi.create_extension>`
         | Create a Virtual Extension

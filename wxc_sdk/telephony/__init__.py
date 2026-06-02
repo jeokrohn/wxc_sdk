@@ -158,10 +158,16 @@ class NumberListPhoneNumber(ApiModel):
     routing_profile: Optional[str] = None
     #: If `true`, the phone number is a service number; otherwise, it is a standard number.
     is_service_number: Optional[bool] = None
+    #: If `true`, the phone number is used as an Emergency Location Identification Number (ELIN) for callback
+    # purposes when an emergency call is made.
     elin_enabled: Optional[bool] = None
-    location: IdAndName
-    owner: Optional[NumberOwner] = None
+    #: Flag to indicate if the number is a reserved number. Reserved numbers cannot be assigned to people, features, or
+    #: services.
     is_reserved_number: Optional[bool] = None
+    #: Location information where the phone number exists.
+    location: IdAndName
+    #: Owner information for the phone number (person, workspace, or feature to which the number is assigned).
+    owner: Optional[NumberOwner] = None
 
 
 class NumberType(str, Enum):
@@ -746,6 +752,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         restricted_non_geo_numbers: bool = None,
         included_telephony_type: TelephonyType = None,
         service_number: bool = None,
+        reserved_number: bool = None,
         org_id: str = None,
         **params,
     ) -> Generator[NumberListPhoneNumber, None, None]:
@@ -803,6 +810,13 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         :type included_telephony_type: TelephonyType
         :param service_number: Returns the list of service phone numbers.
         :type service_number: bool
+        :param reserved_number: Filters reserved phone numbers. When set to `true`, returns only reserved phone
+            numbers. When set to `false`, returns only non-reserved phone numbers. When omitted, no reserved-number
+            filter is applied. Reserved numbers cannot be assigned to people, features, or services. This parameter
+            cannot be used along with the `available` filter, whether `available` is set to `true` for available
+            numbers or `false` for assigned numbers; using both returns a `400` error. This parameter also cannot be
+            used along with the `assigned` filter; using both returns a `400` error.
+        :type reserved_number: bool
         :param org_id: List numbers for this organization.
         :type org_id: str
         :return: yields :class:`NumberListPhoneNumber` instances
@@ -867,7 +881,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
 
     def validate_phone_numbers(self, phone_numbers: list[str], org_id: str = None) -> ValidatePhoneNumbersResponse:
         """
-        Validate phone numbers
+        Validate Phone Numbers
 
         Validate the list of phone numbers in an organization. Each phone number's availability is indicated in the
         response.

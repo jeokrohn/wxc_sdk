@@ -7,7 +7,7 @@ import json
 from collections.abc import Generator
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 from pydantic import Field, TypeAdapter
 
@@ -127,9 +127,9 @@ class StartJobResponse(ApiModel):
     tracking_id: str
     #: Unique identifier to identify which user has run the job.
     source_user_id: str
-    #: Unique identifier to identify the customer who has run the job.
+    #: Unique identifier of the organization that initiated the job.
     source_customer_id: str
-    #: Unique identifier to identify the customer for which the job was run.
+    #: Unique identifier of the organization for which the job was run.
     target_customer_id: str
     #: Unique identifier to identify the instance of the job.
     instance_id: int
@@ -224,7 +224,7 @@ class DeviceSettingsJobsApi(ApiChild, base='telephony/config/jobs/devices/callDe
         """
         url = self.ep()
         params = org_id and {'prgId': org_id} or None
-        body = {}
+        body: dict[str, Any] = {}
         if location_id:
             body['locationId'] = location_id
             body['locationCustomizationsEnabled'] = customization.custom_enabled
@@ -392,6 +392,7 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
         number_list: builtins.list[NumberItem],
         target_location_id: str = None,
         number_usage_type: str = None,
+        org_id: str = None,
     ) -> NumberJob:
         """
         Initiate Number Jobs
@@ -433,8 +434,13 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
         :type target_location_id: str
         :param number_usage_type: Mandatory for `NUMBER_USAGE_CHANGE` operation. Indicates the number usage type.
         :type number_usage_type: str
+        :param org_id: Initiate a Manage Numbers job for this organization.
+        :type org_id: str
         :rtype: :class:`NumberJob`
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
         body = dict()
         body['operation'] = operation
         if target_location_id is not None:
@@ -445,23 +451,30 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
             number_list, mode='json', by_alias=True, exclude_none=True
         )
         url = self.ep('manageNumbers')
-        data = super().post(url=url, json=body)
+        data = super().post(url=url, params=params, json=body)
         return NumberJob.model_validate(data)
 
-    def status(self, job_id: str = None) -> NumberJob:
+    def status(self, job_id: str = None, org_id: str = None) -> NumberJob:
         """
         Get Manage Numbers Job Status
 
         Returns the status and other details of the job.
+
+        Use this API to monitor a Manage Numbers job after it has been initiated.
 
         This API requires a full or read-only administrator auth token with a scope of
         spark-admin:telephony_config_read.
 
         :param job_id: Retrieve job details for this jobId.
         :type job_id: str
+        :param org_id: Retrieve job details for this organization.
+        :type org_id: str
         """
+        params = {}
+        if org_id is not None:
+            params['orgId'] = org_id
         url = self.ep(f'manageNumbers/{job_id}')
-        data = super().get(url=url)
+        data = super().get(url=url, params=params)
         return NumberJob.model_validate(data)
 
     def pause(self, job_id: str = None, org_id: str = None):
@@ -469,6 +482,8 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
         Pause the Manage Numbers Job
 
         Pause the running Manage Numbers Job. A paused job can be resumed or abandoned.
+
+        Use this API when a Manage Numbers job must be temporarily stopped before completion.
 
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
 
@@ -489,6 +504,8 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
         Resume the Manage Numbers Job
 
         Resume the paused Manage Numbers Job. A paused job can be resumed or abandoned.
+
+        Use this API to continue processing a Manage Numbers job that was previously paused.
 
         This API requires a full administrator auth token with a scope of spark-admin:telephony_config_write.
 
@@ -523,7 +540,7 @@ class ManageNumbersJobsApi(ApiChild, base='telephony/config/jobs/numbers'):
 
     def errors(self, job_id: str = None, org_id: str = None, **params) -> Generator[JobErrorItem, None, None]:
         """
-        List Manage Numbers Job errors
+        List Manage Numbers Job Errors
 
         Lists all error details of Manage Numbers job. This will not list any errors if exitCode is COMPLETED. If the
         status is COMPLETED_WITH_ERRORS then this lists the cause of failures.
@@ -652,7 +669,7 @@ class ApplyLineKeyTemplatesJobsApi(ApiChild, base='telephony/config/jobs/devices
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['action'] = enum_str(action)
         if template_id is not None:
             body['templateId'] = template_id
@@ -1602,7 +1619,7 @@ class ActivationEmailJobDetail(StartJobResponse):
     #: Indicates if the org allows admin invite emails to be sent.
     allow_admin_invite_emails: Optional[bool] = None
     #: Summary of statuses.
-    counts: Optional[ActivationEmailCounts] = None
+    counts: Optional[ActivationEmailCounts] = None  # type: ignore[assignment]
 
 
 class SendActivationEmailApi(ApiChild, base='identity/organizations'):
@@ -1806,7 +1823,7 @@ class DisableCallingLocationCounts(ApiModel):
 
 class DisableCallingLocationJobStatus(StartJobResponse):
     #: Counts of processed accounts during disable calling location operation.
-    counts: Optional[DisableCallingLocationCounts] = None
+    counts: Optional[DisableCallingLocationCounts] = None  # type: ignore[assignment]
 
 
 class DisableCallingLocationJobsApi(ApiChild, base='telephony/config'):
@@ -1857,7 +1874,7 @@ class DisableCallingLocationJobsApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['locationId'] = location_id
         if location_name is not None:
             body['locationName'] = location_name

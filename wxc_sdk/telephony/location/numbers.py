@@ -7,6 +7,8 @@ from ...base import ApiModel, enum_str
 from ...base import SafeEnum as Enum
 from ...common import NumberState
 
+# mypy: disable-error-code="assignment,arg-type"
+
 __all__ = [
     'TelephoneNumberType',
     'NumberUsageType',
@@ -75,7 +77,7 @@ class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
 
     def remove(self, location_id: str, phone_numbers: list[str], org_id: str = None):
         """
-        Remove phone numbers from a location
+        Remove Phone Numbers from a Location
 
         Remove the specified set of phone numbers from a location for an organization.
 
@@ -116,7 +118,7 @@ class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
         org_id: str = None,
     ) -> NumberAddResponse:
         """
-        Add Phone Numbers to a location
+        Add Phone Numbers to a Location
 
         Adds a specified set of phone numbers to a location for an organization. Phone numbers must follow the E.164
         format.
@@ -205,7 +207,7 @@ class LocationNumbersApi(ApiChild, base='telephony/config/locations'):
         self, location_id: str, phone_numbers: list[str], action: NumbersRequestAction = None, org_id: str = None
     ):
         """
-        Manage Number State in a location
+        Manage Number State in a Location
 
         Activate or deactivate the specified set of phone numbers in a location for an organization.
 
