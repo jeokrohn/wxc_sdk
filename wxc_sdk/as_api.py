@@ -20221,6 +20221,10 @@ class AsSCIM2UsersApi(AsScimApiChild, base='identity/scim'):
         Should you wish to replace or change some attributes as opposed to all attributes please refer to the SCIM
         PATCH operation https://developer.webex.com/docs/api/v1/scim2-user/update-a-user-with-patch .
 
+        **NOTE**:
+
+        Once a user's role or managed roles are changed, all tokens associated with that user will be invalidated.
+
         :param org_id: Webex Identity assigned organization identifier for user's organization.
         :type org_id: str
         :param user: user to be updates
@@ -20333,6 +20337,10 @@ class AsSCIM2UsersApi(AsScimApiChild, base='identity/scim'):
           attribute's sub-attributes, the matching records are removed.  Sub-attributes whose values have been removed
           will be considered unassigned.  If the complex multi-valued attribute has no remaining records, the attribute
           will be considered unassigned.
+
+        **NOTE**:
+
+        Once a user's role or managed roles are changed, all tokens associated with that user will be invalidated.
 
         :param org_id: Webex Identity assigned organization identifier for user's organization.
         :type org_id: str

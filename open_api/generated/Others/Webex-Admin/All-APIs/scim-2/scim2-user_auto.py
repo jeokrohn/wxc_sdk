@@ -983,6 +983,12 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
 
         2. Webex Site Admin
 
+        <br/>
+
+        **NOTE**:
+
+        Once a user's role or managed roles are changed, all tokens associated with that user will be invalidated.
+
         :param org_id: Webex Identity assigned organization identifier for user's organization.
         :type org_id: str
         :param user_id: Webex Identity assigned user identifier.
@@ -1056,6 +1062,12 @@ class SCIM2UsersApi(ApiChild, base='identity/scim'):
         specified in the request body will replace all existing attributes for the `userId` specified in the URL.
         Should you wish to replace or change some attributes as opposed to all attributes please refer to the SCIM
         PATCH operation https://developer.webex.com/docs/api/v1/scim2-user/update-a-user-with-patch.
+
+        <br/>
+
+        **NOTE**:
+
+        Once a user's role or managed roles are changed, all tokens associated with that user will be invalidated.
 
         :param org_id: Webex Identity assigned organization identifier for user's organization.
         :type org_id: str
