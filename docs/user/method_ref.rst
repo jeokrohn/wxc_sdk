@@ -1573,19 +1573,19 @@ description of the operation. The method name is a link to the method documentat
         | Scheduled maintenances are planned outages, upgrades, or general notices that you're working on
         | ``GET https://status.webex.com/upcoming-scheduled-maintenances.json``
    * - :meth:`api.team_memberships.create <wxc_sdk.team_memberships.TeamMembershipsApi.create>`
-        | Add someone to a team by Person ID or email address, optionally making them a moderator
+        | Create a Team Membership
         | ``POST /team/memberships``
    * - :meth:`api.team_memberships.delete <wxc_sdk.team_memberships.TeamMembershipsApi.delete>`
-        | Deletes a team membership, by ID
+        | Delete a Team Membership
         | ``DELETE /team/memberships/{membership_id}``
    * - :meth:`api.team_memberships.details <wxc_sdk.team_memberships.TeamMembershipsApi.details>`
-        | Shows details for a team membership, by ID
+        | Get Team Membership Details
         | ``GET /team/memberships/{membership_id}``
    * - :meth:`api.team_memberships.list <wxc_sdk.team_memberships.TeamMembershipsApi.list>`
-        | Lists all team memberships for a given team, specified by the teamId query parameter
+        | List Team Memberships
         | ``GET /team/memberships``
    * - :meth:`api.team_memberships.membership <wxc_sdk.team_memberships.TeamMembershipsApi.membership>`
-        | Updates a team membership, by ID
+        | Update a Team Membership
         | ``PUT /team/memberships/{membership_id}``
    * - :meth:`api.teams.create <wxc_sdk.teams.TeamsApi.create>`
         | Creates a team
