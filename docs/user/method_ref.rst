@@ -1492,20 +1492,17 @@ description of the operation. The method name is a link to the method documentat
         | Updates the content URL of the specified Room Tab ID
         | ``PUT /room/tabs/{tab_id}``
    * - :meth:`api.rooms.create <wxc_sdk.rooms.RoomsApi.create>`
-        | Creates a room
+        | Create a Room
         | ``POST /rooms``
    * - :meth:`api.rooms.delete <wxc_sdk.rooms.RoomsApi.delete>`
-        | Deletes a room, by ID
+        | Delete a Room
         | ``DELETE /rooms/{room_id}``
    * - :meth:`api.rooms.details <wxc_sdk.rooms.RoomsApi.details>`
-        | Shows details for a room, by ID
+        | Get Room Details
         | ``GET /rooms/{room_id}``
    * - :meth:`api.rooms.list <wxc_sdk.rooms.RoomsApi.list>`
         | List rooms
         | ``GET /rooms``
-   * - :meth:`api.rooms.meeting_details <wxc_sdk.rooms.RoomsApi.meeting_details>`
-        | The meetingInfo API is deprecated and will be EOL on Jan 31, 2025
-        | ``GET /rooms/{room_id}/meetingInfo``
    * - :meth:`api.rooms.update <wxc_sdk.rooms.RoomsApi.update>`
         | Updates details for a room, by ID
         | ``PUT /rooms/{id}``

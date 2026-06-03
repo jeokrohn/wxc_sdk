@@ -19029,10 +19029,10 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         team_id: str = None,
         type_: RoomType = None,
         org_public_spaces: bool = None,
-        from_: datetime = None,
-        to_: datetime = None,
+        from_: Union[str, datetime] = None,
+        to_: Union[str, datetime] = None,
         sort_by: str = None,
-        **params,
+        **params: Any,
     ) -> AsyncGenerator[Room, None]:
         """
         List rooms.
@@ -19058,12 +19058,13 @@ class AsRoomsApi(AsApiChild, base='rooms'):
             by the madePublic timestamp.
         :type org_public_spaces: bool
         :param from_: Filters rooms, that were made public after this time. See madePublic timestamp
-        :type from_: datetime
+        :type from_: Union[str, datetime]
         :param to_: Filters rooms, that were made public before this time. See maePublic timestamp
-        :type to_: datetime
+        :type to_: Union[str, datetime]
         :param sort_by: Sort results.
             Possible values: id, lastactivity, created
         :type sort_by: str
+        :return: Generator yielding :class:`Room` instances
         """
         if team_id is not None:
             params['teamId'] = team_id
@@ -19074,8 +19075,12 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         if org_public_spaces is not None:
             params['orgPublicSpaces'] = org_public_spaces
         if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
             params['from'] = dt_iso_str(from_)
         if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
             params['to'] = dt_iso_str(to_)
         url = self.ep()
         # noinspection PyTypeChecker
@@ -19086,10 +19091,10 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         team_id: str = None,
         type_: RoomType = None,
         org_public_spaces: bool = None,
-        from_: datetime = None,
-        to_: datetime = None,
+        from_: Union[str, datetime] = None,
+        to_: Union[str, datetime] = None,
         sort_by: str = None,
-        **params,
+        **params: Any,
     ) -> builtins.list[Room]:
         """
         List rooms.
@@ -19115,12 +19120,13 @@ class AsRoomsApi(AsApiChild, base='rooms'):
             by the madePublic timestamp.
         :type org_public_spaces: bool
         :param from_: Filters rooms, that were made public after this time. See madePublic timestamp
-        :type from_: datetime
+        :type from_: Union[str, datetime]
         :param to_: Filters rooms, that were made public before this time. See maePublic timestamp
-        :type to_: datetime
+        :type to_: Union[str, datetime]
         :param sort_by: Sort results.
             Possible values: id, lastactivity, created
         :type sort_by: str
+        :return: Generator yielding :class:`Room` instances
         """
         if team_id is not None:
             params['teamId'] = team_id
@@ -19131,8 +19137,12 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         if org_public_spaces is not None:
             params['orgPublicSpaces'] = org_public_spaces
         if from_ is not None:
+            if isinstance(from_, str):
+                from_ = isoparse(from_)
             params['from'] = dt_iso_str(from_)
         if to_ is not None:
+            if isinstance(to_, str):
+                to_ = isoparse(to_)
             params['to'] = dt_iso_str(to_)
         url = self.ep()
         # noinspection PyTypeChecker
@@ -19149,21 +19159,25 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         is_announcement_only: bool = None,
     ) -> Room:
         """
-        Creates a room. The authenticated user is automatically added as a member of the room. See the Memberships
-        API to learn how to add more people to the room.
+        Create a Room
 
-        To create a 1:1 room, use the Create Messages endpoint to send a message directly to another person by using
-        the toPersonId or toPersonEmail parameters.
+        Creates a room. The authenticated user is automatically added as a member of the room. See the `Memberships API
+        <https://developer.webex.com/docs/api/v1/memberships>`_
+        to learn how to add more people to the room.
+
+        To create a 1:1 room, use the `Create Messages
+        <https://developer.webex.com/docs/api/v1/messages/create-a-message>`_ endpoint to send a message directly to
+        another person by using the `toPersonId` or `toPersonEmail` parameters.
+
         Bots are not able to create and simultaneously classify a room. A bot may update a space classification after
         a person of the same owning organization joined the space as the first human user.
-
         A space can only be put into announcement mode when it is locked.
 
         :param title: A user-friendly name for the room.
         :type title: str
         :param team_id: The ID for the team with which this room is associated.
         :type team_id: str
-        :param classification_id: The classificationId for the room.
+        :param classification_id: The `classificationId` for the room.
         :type classification_id: str
         :param is_locked: Set the space as locked/moderated and the creator becomes a moderator
         :type is_locked: bool
@@ -19174,8 +19188,9 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         :type description: str
         :param is_announcement_only: Sets the space into announcement Mode.
         :type is_announcement_only: bool
+        :rtype: :class:`Room`
         """
-        body = {}
+        body: dict[str, Any] = {}
         if title is not None:
             body['title'] = title
         if team_id is not None:
@@ -19196,35 +19211,24 @@ class AsRoomsApi(AsApiChild, base='rooms'):
 
     async def details(self, room_id: str) -> Room:
         """
+        Get Room Details
+
         Shows details for a room, by ID.
-        The title of the room for 1:1 rooms will be the display name of the other person.
-        Specify the room ID in the roomId parameter in the URI.
+
+        The `title` of the room for 1:1 rooms will be the display name of the other person. When a Compliance Officer
+        lists 1:1 rooms, the "other" person cannot be determined. This means that the room's title may not be filled
+        in and instead shows "Empty Title". Please use the `memberships API
+        <https://developer.webex.com/docs/api/v1/memberships>`_ to list the other person in the space.
+
+        Specify the room ID in the `roomId` parameter in the URI.
 
         :param room_id: The unique identifier for the room.
         :type room_id: str
+        :rtype: :class:`Room`
         """
         url = self.ep(f'{room_id}')
         data = await super().get(url=url)
         return Room.model_validate(data)
-
-    async def meeting_details(self, room_id: str) -> GetRoomMeetingDetailsResponse:
-        """
-
-        The meetingInfo API is deprecated and will be EOL on Jan 31, 2025. Meetings in the WSMP must be scheduled and
-        licensed via the meetings backend.
-        The `Create a Meeting
-        <https://developer.webex.com/docs/api/v1/meetings/create-a-meeting>`_ endpoint will provide the SIP address for
-        the meeting to call.
-
-        Shows Webex meeting details for a room such as the SIP address, meeting URL, toll-free and toll dial-in numbers.
-        Specify the room ID in the roomId parameter in the URI.
-
-        :param room_id: The unique identifier for the room.
-        :type room_id: str
-        """
-        url = self.ep(f'{room_id}/meetingInfo')
-        data = await super().get(url=url)
-        return GetRoomMeetingDetailsResponse.model_validate(data)
 
     async def update(self, update: Room) -> Room:
         """
@@ -19246,21 +19250,12 @@ class AsRoomsApi(AsApiChild, base='rooms'):
         space moderators must be team members for successful operation execution.
 
         :update: update to apply. ID and title have to be set. Only can update:
-
-            * title: str: A user-friendly name for the room.
-            * classification_id: str: The classificationId for the room.
-            * team_id: str: The teamId to which this space should be assigned. Only unowned spaces can be assigned
-              to a team. Assignment between teams is unsupported.
-            * is_locked: bool: Set the space as locked/moderated and the creator becomes a moderator
-            * is_public: The room is public and therefore discoverable within the org. Anyone can find and join that
-              room. When `true` the `description` must be filled in.
-            * description: The description of the space.
-            * is_announcement_only: bool: Sets the space into announcement mode or clears the anouncement Mode (false)
-            * is_read_only: bool: A compliance officer can set a direct room as read-only, which will disallow any
-              new information exchanges in this space, while maintaining historical data.
+        :rtype: :class:`Room`
         """
-        update: Room
-        data = update.model_dump_json(
+        data = update.model_dump(
+            mode='json',
+            by_alias=True,
+            exclude_none=True,
             include={
                 'title',
                 'classification_id',
@@ -19270,24 +19265,31 @@ class AsRoomsApi(AsApiChild, base='rooms'):
                 'description',
                 'is_announcement_only',
                 'is_read_only',
-            }
+            },
         )
         if update.id is None:
             raise ValueError('ID has to be set')
         url = self.ep(f'{update.id}')
-        data = await super().put(url=url, data=data)
+        data = await super().put(url=url, json=data)  # type: ignore[assignment]
         return Room.model_validate(data)
 
-    async def delete(self, room_id: str):
+    async def delete(self, room_id: str) -> None:  # type: ignore[override]
         """
+        Delete a Room
+
         Deletes a room, by ID. Deleted rooms cannot be recovered.
         As a security measure to prevent accidental deletion, when a non moderator deletes the room they are removed
         from the room instead.
+
         Deleting a room that is part of a team will archive the room instead.
-        Specify the room ID in the roomId parameter in the URI.
+
+        A Compliance Officer has no special privileges, i.e. they cannot delete rooms they are not part of.
+
+        Specify the room ID in the `roomId` parameter in the URI.
 
         :param room_id: The unique identifier for the room.
         :type room_id: str
+        :rtype: None
         """
         url = self.ep(f'{room_id}')
         await super().delete(url=url)

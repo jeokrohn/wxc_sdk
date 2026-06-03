@@ -146,7 +146,7 @@ from wxc_sdk.person_settings.single_number_reach import SingleNumberReach, Singl
 from wxc_sdk.person_settings.voicemail import UnansweredCalls, VoicemailEnabledWithGreeting, VoicemailSettings
 from wxc_sdk.reports import CallingCDR, Report, ReportTemplate, ValidationRules
 from wxc_sdk.room_tabs import RoomTab
-from wxc_sdk.rooms import GetRoomMeetingDetailsResponse, Room
+from wxc_sdk.rooms import Room
 from wxc_sdk.scim.bulk import BulkErrorResponse, BulkMethod, BulkOperation, BulkResponse, BulkResponseOperation, \
     ResponseError
 from wxc_sdk.scim.groups import GroupMemberObject, GroupMemberResponse, GroupMeta, ManagedBy, \
@@ -363,15 +363,15 @@ __all__ = ['AcdCustomization', 'Action', 'ActionToBePerformed', 'ActionToBePerfo
            'FeatureMode', 'FeatureModeForwardTo', 'FeatureReference', 'FeatureSelector', 'FeatureType', 'Floor',
            'ForcedForward', 'ForwardCallsTo', 'ForwardFromSelection', 'ForwardOperatingModes', 'ForwardTo',
            'ForwardToSelection', 'ForwardingRule', 'ForwardingRuleDetails', 'ForwardingSetting',
-           'GetMeetingSurveyResponse', 'GetRoomMeetingDetailsResponse', 'Greeting', 'Group', 'GroupMember',
-           'GroupMemberObject', 'GroupMemberResponse', 'GroupMeta', 'Guest', 'GuestCallingNumber',
-           'GuestCallingSettings', 'HGCallPolicies', 'HGandCQ', 'Handset', 'HistoryType', 'HolidayService',
-           'HostedFeatureDestination', 'HostedUserDestination', 'HotDesk', 'HotDeskingAvailableMember',
-           'HotDeskingMember', 'HotDeskingMembers', 'HotDeskingVoicePortalSetting', 'HotdeskingStatus', 'Hoteling',
-           'HotelingGuestSettings', 'HttpProxy', 'HttpProxyMode', 'HuntGroup', 'IdAndAction', 'IdAndName', 'IdOnly',
-           'InProgressDevice', 'Incident', 'IncidentUpdate', 'IncomingPermissions', 'InitiateMoveNumberJobsBody',
-           'InputMode', 'InterceptAnnouncements', 'InterceptNumber', 'InterceptSetting', 'InterceptSettingIncoming',
-           'InterceptSettingOutgoing', 'InterceptTypeIncoming', 'InterceptTypeOutgoing', 'InternalDialing',
+           'GetMeetingSurveyResponse', 'Greeting', 'Group', 'GroupMember', 'GroupMemberObject', 'GroupMemberResponse',
+           'GroupMeta', 'Guest', 'GuestCallingNumber', 'GuestCallingSettings', 'HGCallPolicies', 'HGandCQ', 'Handset',
+           'HistoryType', 'HolidayService', 'HostedFeatureDestination', 'HostedUserDestination', 'HotDesk',
+           'HotDeskingAvailableMember', 'HotDeskingMember', 'HotDeskingMembers', 'HotDeskingVoicePortalSetting',
+           'HotdeskingStatus', 'Hoteling', 'HotelingGuestSettings', 'HttpProxy', 'HttpProxyMode', 'HuntGroup',
+           'IdAndAction', 'IdAndName', 'IdOnly', 'InProgressDevice', 'Incident', 'IncidentUpdate',
+           'IncomingPermissions', 'InitiateMoveNumberJobsBody', 'InputMode', 'InterceptAnnouncements',
+           'InterceptNumber', 'InterceptSetting', 'InterceptSettingIncoming', 'InterceptSettingOutgoing',
+           'InterceptTypeIncoming', 'InterceptTypeOutgoing', 'InternalDialing',
            'InterpreterForSimultaneousInterpretation', 'Invitee', 'InviteeForCreateMeeting', 'JobError',
            'JobErrorItem', 'JobErrorMessage', 'JobExecutionStatus', 'JoinMeetingBody', 'JoinMeetingResponse',
            'KemKey', 'KemModuleType', 'LargeOrgStatus', 'LayoutMode', 'License', 'LicenseProperties',
