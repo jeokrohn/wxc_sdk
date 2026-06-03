@@ -889,19 +889,19 @@ description of the operation. The method name is a link to the method documentat
         | Updates simultaneous interpretation options of a meeting with a specified meeting ID
         | ``PUT /meetings/{meeting_id}/simultaneousInterpretation``
    * - :meth:`api.membership.create <wxc_sdk.memberships.MembershipApi.create>`
-        | Add someone to a room by Person ID or email address, optionally making them a moderator
+        | Create a Membership
         | ``POST /memberships``
    * - :meth:`api.membership.delete <wxc_sdk.memberships.MembershipApi.delete>`
         | Deletes a membership by ID
         | ``DELETE /memberships/{membership_id}``
    * - :meth:`api.membership.details <wxc_sdk.memberships.MembershipApi.details>`
-        | Get details for a membership by ID
+        | Get Membership Details
         | ``GET /memberships/{membership_id}``
    * - :meth:`api.membership.list <wxc_sdk.memberships.MembershipApi.list>`
         | Lists all room memberships
         | ``GET /memberships``
    * - :meth:`api.membership.update <wxc_sdk.memberships.MembershipApi.update>`
-        | Updates properties for a membership by ID
+        | Update a Membership
         | ``PUT /memberships/{id}``
    * - :meth:`api.messages.create <wxc_sdk.messages.MessagesApi.create>`
         | Post a plain text, rich text or html message, and optionally, a file attachment, to a room

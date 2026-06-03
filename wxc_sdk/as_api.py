@@ -11574,6 +11574,9 @@ class AsMembershipApi(AsApiChild, base='memberships'):
         is a team member but not a direct participant of the space.
         Use either personId or personEmail to filter the results. The roomId parameter is required when using these
         parameters.
+        When the requester is a compliance officer, they can query by personId or personEmail without specifying a
+        roomId. The response will include all memberships for the user where a space is owned by an org to which the
+        user belongs.
         Long result sets will be split into pages.
 
         :param room_id: List memberships associated with a room, by ID.
@@ -11584,6 +11587,7 @@ class AsMembershipApi(AsApiChild, base='memberships'):
         :param person_email: List memberships associated with a person, by email address. The roomId parameter
             is required when using this parameter.
         :type person_email: str
+        :return: Generator yielding :class:`Membership` instances
         """
         if room_id is not None:
             params['roomId'] = room_id
@@ -11606,6 +11610,9 @@ class AsMembershipApi(AsApiChild, base='memberships'):
         is a team member but not a direct participant of the space.
         Use either personId or personEmail to filter the results. The roomId parameter is required when using these
         parameters.
+        When the requester is a compliance officer, they can query by personId or personEmail without specifying a
+        roomId. The response will include all memberships for the user where a space is owned by an org to which the
+        user belongs.
         Long result sets will be split into pages.
 
         :param room_id: List memberships associated with a room, by ID.
@@ -11616,6 +11623,7 @@ class AsMembershipApi(AsApiChild, base='memberships'):
         :param person_email: List memberships associated with a person, by email address. The roomId parameter
             is required when using this parameter.
         :type person_email: str
+        :return: Generator yielding :class:`Membership` instances
         """
         if room_id is not None:
             params['roomId'] = room_id
@@ -11631,7 +11639,10 @@ class AsMembershipApi(AsApiChild, base='memberships'):
         self, room_id: str, person_id: str = None, person_email: str = None, is_moderator: bool = None
     ) -> Membership:
         """
-        Add someone to a room by Person ID or email address, optionally making them a moderator.
+        Create a Membership
+
+        Add someone to a room by Person ID or email address, optionally making them a moderator. Compliance Officers
+        cannot add people to empty (team) spaces.
 
         :param room_id: The room ID.
         :type room_id: str
@@ -11641,8 +11652,9 @@ class AsMembershipApi(AsApiChild, base='memberships'):
         :type person_email: str
         :param is_moderator: Whether or not the participant is a room moderator.
         :type is_moderator: bool
+        :rtype: :class:`Membership`
         """
-        body = {}
+        body: dict[str, Any] = {}
         if room_id is not None:
             body['roomId'] = room_id
         if person_id is not None:
@@ -11657,11 +11669,15 @@ class AsMembershipApi(AsApiChild, base='memberships'):
 
     async def details(self, membership_id: str) -> Membership:
         """
+        Get Membership Details
+
         Get details for a membership by ID.
-        Specify the membership ID in the membershipId URI parameter.
+
+        Specify the membership ID in the `membershipId` URI parameter.
 
         :param membership_id: The unique identifier for the membership.
         :type membership_id: str
+        :rtype: :class:`Membership`
         """
         url = self.ep(f'{membership_id}')
         data = await super().get(url=url)
@@ -11669,26 +11685,22 @@ class AsMembershipApi(AsApiChild, base='memberships'):
 
     async def update(self, update: Membership) -> Membership:
         """
-        Updates properties for a membership by ID
+        Update a Membership
+
+        Updates properties for a membership by ID.
 
         :param update: new settings; ID has to be set in update.
-
-            These can be updated:
-                is_moderator: bool: Whether or not the participant is a room moderator.
-
-                is_room_hidden: bool: When set to true, hides direct spaces in the teams client. Any new message will
-                make the room visible again.
-        :type update: Membership
+        :rtype: :class:`Membership`
 
         """
         if update.id is None:
             raise ValueError('ID has to be set')
         data = update.update()
         url = self.ep(f'{update.id}')
-        data = await super().put(url=url, json=data)
+        data = await super().put(url=url, json=data)  # type: ignore[assignment]
         return Membership.model_validate(data)
 
-    async def delete(self, membership_id: str):
+    async def delete(self, membership_id: str) -> None:  # type: ignore[override]
         """
         Deletes a membership by ID.
         Specify the membership ID in the membershipId URI parameter.
