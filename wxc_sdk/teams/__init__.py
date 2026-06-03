@@ -4,7 +4,7 @@ Teams API
 
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Any, Optional
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
@@ -19,6 +19,8 @@ class Team(ApiModel):
     name: Optional[str] = None
     #: id of the creator
     creator_id: Optional[str] = None
+    #: The teams description.
+    description: Optional[str] = None
     #: The date and time the team was created.
     created: Optional[datetime] = None
 
@@ -32,14 +34,14 @@ class TeamsApi(ApiChild, base='teams'):
     To manage team rooms see the Rooms API.
     """
 
-    def list(self) -> Generator[Team, None, None]:
+    def list(self, **params: Any) -> Generator[Team, None, None]:
         """
         Lists teams to which the authenticated user belongs.
         """
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=Team)
+        return self.session.follow_pagination(url=url, model=Team, params=params)
 
-    def create(self, name: str) -> Team:
+    def create(self, name: str, description: str = None) -> Team:
         """
         Creates a team.
         The authenticated user is automatically added as a member of the team. See the Team Memberships API to learn
@@ -47,10 +49,14 @@ class TeamsApi(ApiChild, base='teams'):
 
         :param name: A user-friendly name for the team.
         :type name: str
+        :param description: The teams description.
+        :type description: str
         """
         body = {}
         if name is not None:
             body['name'] = name
+        if description is not None:
+            body['description'] = description
         url = self.ep()
         data = super().post(url=url, json=body)
         return Team.model_validate(data)
@@ -67,7 +73,7 @@ class TeamsApi(ApiChild, base='teams'):
         data = super().get(url=url)
         return Team.model_validate(data)
 
-    def update(self, team_id: str, name: str) -> Team:
+    def update(self, team_id: str, name: str, description: str = None) -> Team:
         """
         Updates details for a team, by ID.
         Specify the team ID in the teamId parameter in the URI.
@@ -76,13 +82,17 @@ class TeamsApi(ApiChild, base='teams'):
         :type team_id: str
         :param name: A user-friendly name for the team.
         :type name: str
+        :param description: The teams description.
+        :type description: str
         """
         body = {'name': name}
+        if description is not None:
+            body['description'] = description
         url = self.ep(f'{team_id}')
         data = super().put(url=url, json=body)
         return Team.model_validate(data)
 
-    def delete(self, team_id: str):
+    def delete(self, team_id: str) -> None:  # type: ignore[override]
         """
         Deletes a team, by ID.
         Specify the team ID in the teamId parameter in the URI.

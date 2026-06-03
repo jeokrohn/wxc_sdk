@@ -20642,21 +20642,21 @@ class AsTeamsApi(AsApiChild, base='teams'):
     To manage team rooms see the Rooms API.
     """
 
-    def list_gen(self) -> AsyncGenerator[Team, None]:
+    def list_gen(self, **params: Any) -> AsyncGenerator[Team, None]:
         """
         Lists teams to which the authenticated user belongs.
         """
         url = self.ep()
-        return self.session.follow_pagination(url=url, model=Team)
+        return self.session.follow_pagination(url=url, model=Team, params=params)
 
-    async def list(self) -> builtins.list[Team]:
+    async def list(self, **params: Any) -> builtins.list[Team]:
         """
         Lists teams to which the authenticated user belongs.
         """
         url = self.ep()
-        return [o async for o in self.session.follow_pagination(url=url, model=Team)]
+        return [o async for o in self.session.follow_pagination(url=url, model=Team, params=params)]
 
-    async def create(self, name: str) -> Team:
+    async def create(self, name: str, description: str = None) -> Team:
         """
         Creates a team.
         The authenticated user is automatically added as a member of the team. See the Team Memberships API to learn
@@ -20664,10 +20664,14 @@ class AsTeamsApi(AsApiChild, base='teams'):
 
         :param name: A user-friendly name for the team.
         :type name: str
+        :param description: The teams description.
+        :type description: str
         """
         body = {}
         if name is not None:
             body['name'] = name
+        if description is not None:
+            body['description'] = description
         url = self.ep()
         data = await super().post(url=url, json=body)
         return Team.model_validate(data)
@@ -20684,7 +20688,7 @@ class AsTeamsApi(AsApiChild, base='teams'):
         data = await super().get(url=url)
         return Team.model_validate(data)
 
-    async def update(self, team_id: str, name: str) -> Team:
+    async def update(self, team_id: str, name: str, description: str = None) -> Team:
         """
         Updates details for a team, by ID.
         Specify the team ID in the teamId parameter in the URI.
@@ -20693,13 +20697,17 @@ class AsTeamsApi(AsApiChild, base='teams'):
         :type team_id: str
         :param name: A user-friendly name for the team.
         :type name: str
+        :param description: The teams description.
+        :type description: str
         """
         body = {'name': name}
+        if description is not None:
+            body['description'] = description
         url = self.ep(f'{team_id}')
         data = await super().put(url=url, json=body)
         return Team.model_validate(data)
 
-    async def delete(self, team_id: str):
+    async def delete(self, team_id: str) -> None:  # type: ignore[override]
         """
         Deletes a team, by ID.
         Specify the team ID in the teamId parameter in the URI.
