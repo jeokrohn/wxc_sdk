@@ -4,6 +4,7 @@
 | --- | --- | --- | --- |
 | `api.admin_audit.list_event_categories` | `GET` | `/adminAudit/eventCategories` | List Admin Audit Event Categories |
 | `api.admin_audit.list_events` | `GET` | `/adminAudit/events` | List Admin Audit Events |
+| `api.attachment_actions.create` | `POST` | `/attachment/actions` | Create an Attachment Action |
 | `api.attachment_actions.details` | `GET` | `/attachment/actions/{action_id}` | Shows details for a attachment action, by ID. |
 | `api.authorizations.delete` | `DELETE` | `/authorizations/{authorization_id}` | Deletes an authorization, by authorization ID or client ID and org ID. |
 | `api.authorizations.get_token_expiration_status` | `GET` | `/authorizations/tokenExpiry` | Get expiration status for a token |
@@ -21,7 +22,7 @@
 | `api.device_configurations.list` | `GET` | `/deviceConfigurations` | Lists all device configurations associated with the given device ID. Administrators can list configurations |
 | `api.device_configurations.update` | `PATCH` | `/deviceConfigurations` | Update Device Configurations |
 | `api.devices.activation_code` | `POST` | `/devices/activationCode` | Create a Device Activation Code |
-| `api.devices.create_by_mac_address` | `POST` | `/devices` | Create a phone by it's MAC address in a specific workspace or for a person. |
+| `api.devices.create_by_mac_address` | `POST` | `/devices` | Create a Device by MAC Address |
 | `api.devices.delete` | `DELETE` | `/devices/{device_id}` | Delete a Device |
 | `api.devices.details` | `GET` | `/devices/{device_id}` | Get Device Details |
 | `api.devices.list` | `GET` | `/devices` | List Devices |
@@ -33,11 +34,11 @@
 | `api.events.details` | `GET` | `/events/{event_id}` | Shows details for an event, by event ID. |
 | `api.events.list` | `GET` | `/events` | List events in your organization. Several query parameters are available to filter the response. |
 | `api.groups.create` | `POST` | `/groups` | Create a new group using the provided settings. Only display_name is mandatory |
-| `api.groups.delete_group` | `DELETE` | `/groups/{group_id}` | Delete a group |
-| `api.groups.details` | `GET` | `/groups/{group_id}` | Get group details |
+| `api.groups.delete_group` | `DELETE` | `/groups/{group_id}` | Delete a Group |
+| `api.groups.details` | `GET` | `/groups/{group_id}` | Get Group Details |
 | `api.groups.list` | `GET` | `/groups` | List groups in your organization. |
 | `api.groups.members` | `GET` | `/groups/{group_id}/Members` | Query members of a group |
-| `api.groups.update` | `PATCH` | `/groups/{group_id}` | update group information. |
+| `api.groups.update` | `PATCH` | `/groups/{group_id}` | Update a Group |
 | `api.guests.create` | `POST` | `/guests/token` | Create a Guest |
 | `api.guests.guest_count` | `GET` | `/guests/count` | Get Guest Count |
 | `api.jobs.activation_emails.errors` | `GET` | `/identity/organizations/{org_id}/jobs/sendActivationEmails/{job_id}/errors` | Get Bulk Activation Email Resend Job Errors |
@@ -65,7 +66,7 @@
 | `api.jobs.dynamic_device_settings.status` | `GET` | `/telephony/config/jobs/devices/dynamicDeviceSettings/{job_id}` | Get Device Dynamic Settings Job Status |
 | `api.jobs.dynamic_device_settings.update_across_org_or_location` | `POST` | `/telephony/config/jobs/devices/dynamicDeviceSettings` | Updates dynamic Device Settings Across Organization Or Location |
 | `api.jobs.manage_numbers.abandon` | `POST` | `/telephony/config/jobs/numbers/manageNumbers/{job_id}/actions/abandon/invoke` | Abandon the Manage Numbers Job. |
-| `api.jobs.manage_numbers.errors` | `GET` | `/telephony/config/jobs/numbers/manageNumbers/{job_id}/errors` | List Manage Numbers Job errors |
+| `api.jobs.manage_numbers.errors` | `GET` | `/telephony/config/jobs/numbers/manageNumbers/{job_id}/errors` | List Manage Numbers Job Errors |
 | `api.jobs.manage_numbers.initiate_job` | `POST` | `/telephony/config/jobs/numbers/manageNumbers` | Initiate Number Jobs |
 | `api.jobs.manage_numbers.list` | `GET` | `/telephony/config/jobs/numbers/manageNumbers` | List Manage Numbers Jobs |
 | `api.jobs.manage_numbers.pause` | `POST` | `/telephony/config/jobs/numbers/manageNumbers/{job_id}/actions/pause/invoke` | Pause the Manage Numbers Job |
@@ -130,6 +131,11 @@
 | `api.me.caller_id.settings` | `GET` | `/telephony/config/people/me/settings/callerId` | Get My Caller ID Settings |
 | `api.me.caller_id.update` | `PUT` | `/telephony/config/people/me/settings/callerId` | Modify My Caller ID Settings |
 | `api.me.calling_services_list` | `GET` | `/telephony/config/people/me/settings/services` | Get My Calling Services List |
+| `api.me.calls.answer` | `POST` | `/telephony/calls/members/me/answer` | Answer |
+| `api.me.calls.call_details` | `GET` | `/telephony/calls/members/me/calls/{call_id}` | Get Call Details |
+| `api.me.calls.dial` | `POST` | `/telephony/calls/members/me/dial` | Dial |
+| `api.me.calls.hangup` | `POST` | `/telephony/calls/members/me/hangup` | Hangup |
+| `api.me.calls.list_calls` | `GET` | `/telephony/calls/members/me/calls` | List Calls |
 | `api.me.contact_center_extensions` | `GET` | `/telephony/config/people/me` | Read the Contact Center Extensions |
 | `api.me.country_telephony_config_requirements` | `GET` | `/telephony/config/people/me/countries/{country_code}` | Retrieve country-specific telephony configuration requirements |
 | `api.me.details` | `GET` | `/telephony/config/people/me` | Get My Own Details |
@@ -162,6 +168,9 @@
 | `api.me.go_override.get` | `GET` | `/telephony/config/people/me/settings/webexGoOverride` | Get My WebexGoOverride Settings |
 | `api.me.go_override.update` | `PUT` | `/telephony/config/people/me/settings/webexGoOverride` | Modify My WebexGoOverride Settings |
 | `api.me.guest_calling_numbers` | `GET` | `/telephony/config/people/me/settings/guestCalling/numbers` | Retrieve My Guest Calling Numbers |
+| `api.me.hoteling.get_available_hosts` | `GET` | `/telephony/config/people/me/settings/hoteling/availableHosts` | Get Available Hoteling Hosts |
+| `api.me.hoteling.get_guest_settings` | `GET` | `/telephony/config/people/me/settings/hoteling/guest` | Get Hoteling Guest Settings |
+| `api.me.hoteling.update_guest_settings` | `PUT` | `/telephony/config/people/me/settings/hoteling/guest` | Update Hoteling Guest Settings |
 | `api.me.mode_management.extend_mode` | `POST` | `/telephony/config/people/me/settings/modeManagement/features/{feature_id}/actions/extendMode/invoke` | Extend Current Operating Mode Duration |
 | `api.me.mode_management.feature_get` | `GET` | `/telephony/config/people/me/settings/modeManagement/features/{feature_id}` | Get Mode Management Feature |
 | `api.me.mode_management.get_common_modes` | `GET` | `/telephony/config/people/me/settings/modeManagement/features/commonModes` | Get Common Modes |
@@ -172,7 +181,7 @@
 | `api.me.mode_management.switch_mode_multiple_features` | `POST` | `/telephony/config/people/me/settings/modeManagement/features/actions/switchMode/invoke` | Switch Mode for Multiple Features |
 | `api.me.mode_management.switch_to_normal_operation` | `POST` | `/telephony/config/people/me/settings/modeManagement/features/{feature_id}/actions/switchToNormalOperation/invoke` | Switch to Normal Operation |
 | `api.me.monitoring_settings` | `GET` | `/telephony/config/people/me/settings/monitoring` | Get My Monitoring Settings |
-| `api.me.personal_assistant.get` | `GET` | `/telephony/config/people/me/settings/personalAssistant` | Get My Personal Assistant |
+| `api.me.personal_assistant.get` | `GET` | `/telephony/config/people/me/settings/personalAssistant` | Get Personal Assistant Settings |
 | `api.me.personal_assistant.update` | `PUT` | `/telephony/config/people/me/settings/personalAssistant` | Modify My Personal Assistant |
 | `api.me.priority_alert.criteria_create` | `POST` | `/telephony/config/people/me/settings/priorityAlert/criteria` | Add a Priority Alert Criteria |
 | `api.me.priority_alert.criteria_delete` | `DELETE` | `/telephony/config/people/me/settings/priorityAlert/criteria/{criteria_id}` | Delete a Priority Alert Criteria |
@@ -205,7 +214,7 @@
 | `api.me.selective_forward.update` | `PUT` | `/telephony/config/people/me/settings/selectiveForward` | Modify Selective Call Forward Settings for User |
 | `api.me.selective_reject.criteria_create` | `POST` | `/telephony/config/people/me/settings/selectiveReject/criteria` | Add User Selective Call Reject Criteria |
 | `api.me.selective_reject.criteria_delete` | `DELETE` | `/telephony/config/people/me/settings/selectiveReject/criteria/{criteria_id}` | Delete a Selective Call Reject Criteria |
-| `api.me.selective_reject.criteria_get` | `GET` | `/telephony/config/people/me/settings/selectiveReject/criteria/{id}` | Get Selective Call Reject Criteria Settings for User |
+| `api.me.selective_reject.criteria_get` | `GET` | `/telephony/config/people/me/settings/selectiveReject/criteria/{criteria_id}` | Get Selective Call Reject Criteria Settings for User |
 | `api.me.selective_reject.criteria_update` | `PUT` | `/telephony/config/people/me/settings/selectiveReject/criteria/{criteria_id}` | Modify a Selective Call Reject Criteria |
 | `api.me.selective_reject.get` | `GET` | `/telephony/config/people/me/settings/selectiveReject` | Get Selective Call Reject Settings for User |
 | `api.me.selective_reject.update` | `PUT` | `/telephony/config/people/me/settings/selectiveReject` | Modify Selective Call Reject Settings for User |
@@ -227,7 +236,9 @@
 | `api.me.snr.update` | `PUT` | `/telephony/config/people/me/settings/singleNumberReach` | Update User's Single Number Reach Settings |
 | `api.me.snr.update_snr` | `PUT` | `/telephony/config/people/me/settings/singleNumberReach/numbers/{phone_number_id}` | Modify User's Single Number Reach Contact Settings |
 | `api.me.voicemail.configure` | `PUT` | `/telephony/config/people/me/settings/voicemail` | Configure Voicemail Settings for a Person |
+| `api.me.voicemail.get_voicemail_rules` | `GET` | `/telephony/config/people/me/voicemail/rules` | Get Person's Voicemail Rules |
 | `api.me.voicemail.settings` | `GET` | `/telephony/config/people/me/settings/voicemail` | Read Voicemail Settings for a Person |
+| `api.me.voicemail.update_pin` | `PUT` | `/telephony/config/people/me/voicemail/pin` | Update Voicemail PIN |
 | `api.meetings.chats.delete` | `DELETE` | `/meetings/postMeetingChats` | Deletes the meeting chats of a finished meeting instance specified by meetingId. |
 | `api.meetings.chats.list` | `GET` | `/meetings/postMeetingChats` | Lists the meeting chats of a finished meeting instance specified by meetingId. You can set a maximum number |
 | `api.meetings.closed_captions.download_snippets` | `GET` | `/meetingClosedCaptions/{closed_caption_id}/download` | Download meeting closed caption snippets from the meeting closed caption specified by closedCaptionId formatted |
@@ -314,6 +325,8 @@
 | `api.person_settings.agent_caller_id.available_caller_ids` | `GET` | `/telephony/config/people/{entity_id}/agent/availableCallerIds` | Retrieve Agent's List of Available Caller IDs |
 | `api.person_settings.agent_caller_id.configure` | `PUT` | `/telephony/config/people/{entity_id}/agent/callerId` | Modify Agent's Caller ID Information. |
 | `api.person_settings.agent_caller_id.read` | `GET` | `/telephony/config/people/{entity_id}/agent/callerId` | Retrieve Agent's Caller ID Information |
+| `api.person_settings.anon_calls.configure` | `PUT` | `/telephony/config/people/{entity_id}/anonymousCallReject` | Modify Anonymous Call Settings for an entity. |
+| `api.person_settings.anon_calls.read` | `GET` | `/telephony/config/people/{entity_id}/anonymousCallReject` | Retrieve Anonymous Call Settings for an entity. |
 | `api.person_settings.app_shared_line.get_members` | `GET` | `/telephony/config/people/{person_id}/applications/members` | Get Shared-Line Appearance Members |
 | `api.person_settings.app_shared_line.members_count` | `GET` | `/telephony/config/people/{person_id}/applications/availableMembers/count` | Get Count of Shared-Line Appearance Members |
 | `api.person_settings.app_shared_line.search_members` | `GET` | `/telephony/config/people/{person_id}/applications/availableMembers` | Search Shared-Line Appearance Members |
@@ -377,12 +390,18 @@
 | `api.person_settings.feature_access.update_default` | `PUT` | `/telephony/config/people/settings/permissions` | Update Default Person Feature Access Configuration |
 | `api.person_settings.forwarding.configure` | `PUT` | `/people/{entity_id}/features/callForwarding` | Configure an Entity's Call Forwarding Settings |
 | `api.person_settings.forwarding.read` | `GET` | `/people/{entity_id}/features/callForwarding` | Retrieve an entity's Call Forwarding Settings |
+| `api.person_settings.get` | `GET` | `/telephony/config/people/{person_id}` | Get Timezone and Announcement Language Settings of a Person |
 | `api.person_settings.get_call_captions_settings` | `GET` | `/telephony/config/people/{person_id}/callCaptions` | Get the user call captions settings |
+| `api.person_settings.get_calling_services` | `GET` | `/telephony/config/people/{person_id}/services` | List Enabled Calling Services for a Person |
+| `api.person_settings.hotdesking.available_members` | `GET` | `/telephony/config/people/{person_id}/features/hotDesking/availableMembers` | Search Available Hot Desking Members |
+| `api.person_settings.hotdesking.get_members` | `GET` | `/telephony/config/people/{person_id}/features/hotDesking/members` | Get Hot Desking Members |
+| `api.person_settings.hotdesking.update_members` | `GET` | `/telephony/config/people/{person_id}/features/hotDesking/members` | Update Hot Desking Members |
 | `api.person_settings.hoteling.configure` | `PUT` | `/people/{person_id}/features/hoteling` | Configure Hoteling Settings for a Person |
 | `api.person_settings.hoteling.read` | `GET` | `/people/{person_id}/features/hoteling` | Read Hoteling Settings for a Person |
 | `api.person_settings.mode_management.assign_features` | `PUT` | `/telephony/config/people/{person_id}/modeManagement/features` | Assign a List of Features to a User for Mode Management. |
 | `api.person_settings.mode_management.assigned_features` | `GET` | `/telephony/config/people/{person_id}/modeManagement/features` | Retrieve the List of Features Assigned to a User for Mode Management. |
 | `api.person_settings.mode_management.available_features` | `GET` | `/telephony/config/people/{person_id}/modeManagement/availableFeatures` | Retrieve the List of Available Features. |
+| `api.person_settings.modify` | `PUT` | `/telephony/config/people/{person_id}` | Update Timezone and Announcement Language Settings of a Person |
 | `api.person_settings.modify_hoteling_settings_primary_devices` | `PUT` | `/telephony/config/people/{person_id}/devices/settings/hoteling` | Modify Hoteling Settings for a Person's Primary Devices |
 | `api.person_settings.monitoring.configure` | `PUT` | `/people/{entity_id}/features/monitoring` | Modify an entity's Monitoring Settings |
 | `api.person_settings.monitoring.read` | `GET` | `/people/{entity_id}/features/monitoring` | Retrieve an entity's Monitoring Settings |
@@ -447,6 +466,12 @@
 | `api.person_settings.selective_reject.delete_criteria` | `DELETE` | `/telephony/config/people/{entity_id}/selectiveReject/criteria/{id}` | Delete Selective Reject Criteria for an entity |
 | `api.person_settings.selective_reject.read` | `GET` | `/telephony/config/people/{entity_id}/selectiveReject` | Retrieve Selective Reject Settings for an entity. |
 | `api.person_settings.selective_reject.read_criteria` | `GET` | `/telephony/config/people/{entity_id}/selectiveReject/criteria/{id}` | Retrieve Selective Reject Criteria for an entity |
+| `api.person_settings.sim_ring.configure` | `PUT` | `/telephony/config/people/{entity_id}/simultaneousRing` | Modify Simultaneous Ring Settings for an entity. |
+| `api.person_settings.sim_ring.configure_criteria` | `PUT` | `/telephony/config/people/{entity_id}/simultaneousRing/criteria/{id}` | Modify Simultaneous Ring Criteria for an entity |
+| `api.person_settings.sim_ring.create_criteria` | `POST` | `/telephony/config/people/{entity_id}/simultaneousRing/criteria` | Create Simultaneous Ring Criteria for an entity |
+| `api.person_settings.sim_ring.delete_criteria` | `DELETE` | `/telephony/config/people/{entity_id}/simultaneousRing/criteria/{id}` | Delete Simultaneous Ring Criteria for an entity |
+| `api.person_settings.sim_ring.read` | `GET` | `/telephony/config/people/{entity_id}/simultaneousRing` | Retrieve Simultaneous Ring Settings for an entity. |
+| `api.person_settings.sim_ring.read_criteria` | `GET` | `/telephony/config/people/{entity_id}/simultaneousRing/criteria/{id}` | Retrieve Simultaneous Ring Criteria for an entity |
 | `api.person_settings.single_number_reach.available_phone_numbers` | `GET` | `/telephony/config/locations/{location_id}/singleNumberReach/availableNumbers` | Get Single Number Reach Primary Available Phone Numbers |
 | `api.person_settings.single_number_reach.create_snr` | `POST` | `/telephony/config/people/{person_id}/singleNumberReach/numbers` | Create Single Number Reach For a Person |
 | `api.person_settings.single_number_reach.delete_snr` | `DELETE` | `/telephony/config/people/{person_id}/singleNumberReach/numbers/{id}` | Delete A Single Number Reach Number |
@@ -515,7 +540,7 @@
 | `api.telephony.access_codes.read` | `GET` | `/telephony/config/locations/{location_id}/outgoingPermission/accessCodes` | Get Outgoing Permission Location Access Code |
 | `api.telephony.announcements_repo.delete` | `DELETE` | `/telephony/config/announcements/{announcement_id}` | Delete an announcement greeting. |
 | `api.telephony.announcements_repo.details` | `GET` | `/telephony/config/announcements/{announcement_id}` | Fetch details of a binary announcement greeting at the organization or location level |
-| `api.telephony.announcements_repo.list` | `GET` | `/telephony/config/announcements` | Fetch list of announcement greetings on location and organization level |
+| `api.telephony.announcements_repo.list` | `GET` | `/telephony/config/announcements` | List Announcements |
 | `api.telephony.announcements_repo.modify` | `PUT` | `/telephony/config/announcements/{announcement_id}` | Modify a binary announcement greeting at organization or location level |
 | `api.telephony.announcements_repo.upload_announcement` | `POST` | `/telephony/config/announcements` | Upload a binary announcement greeting at organization or location level |
 | `api.telephony.announcements_repo.usage` | `GET` | `/telephony/config/announcements/usage` | Fetch repository usage for announcements for an organization or location |
@@ -523,13 +548,13 @@
 | `api.telephony.auto_attendant.call_forward_available_phone_numbers` | `GET` | `/telephony/config/locations/{location_id}/autoAttendants/callForwarding/availableNumbers` | Get Auto Attendant Call Forward Available Phone Numbers |
 | `api.telephony.auto_attendant.create` | `POST` | `/telephony/config/locations/{location_id}/autoAttendants` | Create an Auto Attendant |
 | `api.telephony.auto_attendant.delete_announcement_file` | `DELETE` | `/telephony/config/locations/{location_id}/autoAttendants/{auto_attendant_id}/announcements/{file_name}` | Delete an Auto Attendant Announcement File |
-| `api.telephony.auto_attendant.delete_auto_attendant` | `DELETE` | `/telephony/config/locations/{location_id}/autoAttendants/{auto_attendant_id}` | elete the designated Auto Attendant. |
+| `api.telephony.auto_attendant.delete_auto_attendant` | `DELETE` | `/telephony/config/locations/{location_id}/autoAttendants/{auto_attendant_id}` | Delete an Auto Attendant |
 | `api.telephony.auto_attendant.details` | `GET` | `/telephony/config/locations/{location_id}/autoAttendants/{auto_attendant_id}` | Get Details for an Auto Attendant |
-| `api.telephony.auto_attendant.forwarding.call_forwarding_rule` | `GET` | `/telephony/config/locations/{location_id}/autoAttendants/{feature_id}/callForwarding/selectiveRules/{rule_id}` | Retrieve a Selective Call Forwarding Rule's settings for the designated Call Queue. |
-| `api.telephony.auto_attendant.forwarding.create_call_forwarding_rule` | `POST` | `/telephony/config/locations/{location_id}/autoAttendants/{feature_id}/callForwarding/selectiveRules` | Create a Selective Call Forwarding Rule feature |
-| `api.telephony.auto_attendant.forwarding.delete_call_forwarding_rule` | `DELETE` | `/telephony/config/locations/{location_id}/autoAttendants/{feature_id}/callForwarding/selectiveRules/{rule_id}` | Delete a Selective Call Forwarding Rule for the designated feature. |
-| `api.telephony.auto_attendant.forwarding.settings` | `GET` | `/telephony/config/locations/{location_id}/autoAttendants/{feature_id}/callForwarding` | Retrieve Call Forwarding settings for the designated feature including the list of call |
-| `api.telephony.auto_attendant.forwarding.switch_mode_for_call_forwarding` | `POST` | `/telephony/config/locations/{location_id}/autoAttendants/{feature_id}/callForwarding/actions/switchMode/invoke` | Switch Mode for Call Forwarding Settings for an entity |
+| `api.telephony.auto_attendant.forwarding.call_forwarding_rule` | `GET` | `/telephony/config/locations/{location_id}/autoAttendants/{feature_id}/callForwarding/selectiveRules/{rule_id}` | Retrieve a Selective Call Forwarding Rule's settings for the designated feature. |
+| `api.telephony.auto_attendant.forwarding.create_call_forwarding_rule` | `POST` | `/telephony/config/locations/{location_id}/autoAttendants/{feature_id}/callForwarding/selectiveRules` | Create a Selective Call Forwarding Rule for a feature |
+| `api.telephony.auto_attendant.forwarding.delete_call_forwarding_rule` | `DELETE` | `/telephony/config/locations/{location_id}/autoAttendants/{feature_id}/callForwarding/selectiveRules/{rule_id}` | Delete a Selective Call Forwarding Rule for the designated feature, including hunt groups. |
+| `api.telephony.auto_attendant.forwarding.settings` | `GET` | `/telephony/config/locations/{location_id}/autoAttendants/{feature_id}/callForwarding` | Retrieve Call Forwarding settings for the designated feature including the list of call forwarding rules. |
+| `api.telephony.auto_attendant.forwarding.switch_mode_for_call_forwarding` | `POST` | `/telephony/config/locations/{location_id}/autoAttendants/{feature_id}/callForwarding/actions/switchMode/invoke` | Switch Mode for Call Forwarding Settings for a feature, including auto attendants |
 | `api.telephony.auto_attendant.forwarding.update` | `PUT` | `/telephony/config/locations/{location_id}/autoAttendants/{feature_id}/callForwarding` | Update Call Forwarding Settings for a feature |
 | `api.telephony.auto_attendant.forwarding.update_call_forwarding_rule` | `PUT` | `/telephony/config/locations/{location_id}/autoAttendants/{feature_id}/callForwarding/selectiveRules/{rule_id}` | Update a Selective Call Forwarding Rule's settings for the designated feature. |
 | `api.telephony.auto_attendant.list` | `GET` | `/telephony/config/autoAttendants` | Read the List of Auto Attendants |
@@ -582,24 +607,32 @@
 | `api.telephony.callpark_extension.details` | `GET` | `/telephony/config/locations/{location_id}/callParkExtensions/{cpe_id}` | Get Details for a Call Park Extension |
 | `api.telephony.callpark_extension.list` | `GET` | `/telephony/config/callParkExtensions` | Read the List of Call Park Extensions |
 | `api.telephony.callpark_extension.update` | `PUT` | `/telephony/config/locations/{location_id}/callParkExtensions/{cpe_id}` | Update a Call Park Extension |
-| `api.telephony.callqueue.agents.details` | `GET` | `/telephony/config/queues/agents/{id}` | Get Details for a Call Queue Agent |
-| `api.telephony.callqueue.agents.list` | `GET` | `/telephony/config/queues/agents` | Read the List of Call Queue Agents |
-| `api.telephony.callqueue.agents.update_call_queue_settings` | `PUT` | `/telephony/config/queues/agents/{id}/settings` | Update an Agent's Settings of One or More Call Queues |
+| `api.telephony.callqueue.agents.details` | `GET` | `/telephony/config/queues/agents/{id}` | Get Details for a Call Queue Agent with Customer Assist |
+| `api.telephony.callqueue.agents.list` | `GET` | `/telephony/config/queues/agents` | Read the List of Call Queue Agents with Customer Assist |
+| `api.telephony.callqueue.agents.update_call_queue_settings` | `PUT` | `/telephony/config/queues/agents/{id}/settings` | Update an Agent's Settings of One or More Call Queues with Customer Assist |
 | `api.telephony.callqueue.alternate_available_phone_numbers` | `GET` | `/telephony/config/locations/{location_id}/queues/alternate/availableNumbers` | Get Call Queue Alternate Available Phone Numbers |
 | `api.telephony.callqueue.available_agents` | `GET` | `/telephony/config/queues/agents/availableAgents` | Get Call Queue Available Agents |
 | `api.telephony.callqueue.call_forward_available_phone_numbers` | `GET` | `/telephony/config/locations/{location_id}/queues/callForwarding/availableNumbers` | Get Call Queue Call Forward Available Phone Numbers |
 | `api.telephony.callqueue.create` | `POST` | `/telephony/config/locations/{location_id}/queues` | Create a Call Queue |
 | `api.telephony.callqueue.delete_queue` | `DELETE` | `/telephony/config/locations/{location_id}/queues/{queue_id}` | Delete a Call Queue |
-| `api.telephony.callqueue.details` | `GET` | `/telephony/config/locations/{location_id}/queues/{queue_id}` | Get Details for a Call Queue |
-| `api.telephony.callqueue.forwarding.call_forwarding_rule` | `GET` | `/telephony/config/locations/{location_id}/queues/{feature_id}/callForwarding/selectiveRules/{rule_id}` | Retrieve a Selective Call Forwarding Rule's settings for the designated Call Queue. |
-| `api.telephony.callqueue.forwarding.create_call_forwarding_rule` | `POST` | `/telephony/config/locations/{location_id}/queues/{feature_id}/callForwarding/selectiveRules` | Create a Selective Call Forwarding Rule feature |
-| `api.telephony.callqueue.forwarding.delete_call_forwarding_rule` | `DELETE` | `/telephony/config/locations/{location_id}/queues/{feature_id}/callForwarding/selectiveRules/{rule_id}` | Delete a Selective Call Forwarding Rule for the designated feature. |
-| `api.telephony.callqueue.forwarding.settings` | `GET` | `/telephony/config/locations/{location_id}/queues/{feature_id}/callForwarding` | Retrieve Call Forwarding settings for the designated feature including the list of call |
-| `api.telephony.callqueue.forwarding.switch_mode_for_call_forwarding` | `POST` | `/telephony/config/locations/{location_id}/queues/{feature_id}/callForwarding/actions/switchMode/invoke` | Switch Mode for Call Forwarding Settings for an entity |
+| `api.telephony.callqueue.details` | `GET` | `/telephony/config/locations/{location_id}/queues/{queue_id}` | Get Details for a Call Queue with Customer Assist |
+| `api.telephony.callqueue.forwarding.call_forwarding_rule` | `GET` | `/telephony/config/locations/{location_id}/queues/{feature_id}/callForwarding/selectiveRules/{rule_id}` | Retrieve a Selective Call Forwarding Rule's settings for the designated feature. |
+| `api.telephony.callqueue.forwarding.create_call_forwarding_rule` | `POST` | `/telephony/config/locations/{location_id}/queues/{feature_id}/callForwarding/selectiveRules` | Create a Selective Call Forwarding Rule for a feature |
+| `api.telephony.callqueue.forwarding.delete_call_forwarding_rule` | `DELETE` | `/telephony/config/locations/{location_id}/queues/{feature_id}/callForwarding/selectiveRules/{rule_id}` | Delete a Selective Call Forwarding Rule for the designated feature, including hunt groups. |
+| `api.telephony.callqueue.forwarding.settings` | `GET` | `/telephony/config/locations/{location_id}/queues/{feature_id}/callForwarding` | Retrieve Call Forwarding settings for the designated feature including the list of call forwarding rules. |
+| `api.telephony.callqueue.forwarding.switch_mode_for_call_forwarding` | `POST` | `/telephony/config/locations/{location_id}/queues/{feature_id}/callForwarding/actions/switchMode/invoke` | Switch Mode for Call Forwarding Settings for a feature, including auto attendants |
 | `api.telephony.callqueue.forwarding.update` | `PUT` | `/telephony/config/locations/{location_id}/queues/{feature_id}/callForwarding` | Update Call Forwarding Settings for a feature |
 | `api.telephony.callqueue.forwarding.update_call_forwarding_rule` | `PUT` | `/telephony/config/locations/{location_id}/queues/{feature_id}/callForwarding/selectiveRules/{rule_id}` | Update a Selective Call Forwarding Rule's settings for the designated feature. |
 | `api.telephony.callqueue.get_call_queue_settings` | `GET` | `/telephony/config/queues/settings` | Get Call Queue Settings |
-| `api.telephony.callqueue.list` | `GET` | `/telephony/config/queues` | Read the List of Call Queues |
+| `api.telephony.callqueue.list` | `GET` | `/telephony/config/queues` | Read the List of Call Queues with Customer Assist |
+| `api.telephony.callqueue.policy.forced_forward_details` | `GET` | `/telephony/config/locations/{location_id}/queues/{queue_id}/forcedForward` | Get Details for a Call Queue Forced Forward |
+| `api.telephony.callqueue.policy.forced_forward_update` | `PUT` | `/telephony/config/locations/{location_id}/queues/{queue_id}/forcedForward` | Update a Call Queue Forced Forward service |
+| `api.telephony.callqueue.policy.holiday_service_details` | `GET` | `/telephony/config/locations/{location_id}/queues/{queue_id}/holidayService` | Get Details for a Call Queue Holiday Service |
+| `api.telephony.callqueue.policy.holiday_service_update` | `PUT` | `/telephony/config/locations/{location_id}/queues/{queue_id}/holidayService` | Update a Call Queue Holiday Service |
+| `api.telephony.callqueue.policy.night_service_detail` | `GET` | `/telephony/config/locations/{location_id}/queues/{queue_id}/nightService` | Get Details for a Call Queue Night Service |
+| `api.telephony.callqueue.policy.night_service_update` | `PUT` | `/telephony/config/locations/{location_id}/queues/{queue_id}/nightService` | Update a Call Queue Night Service |
+| `api.telephony.callqueue.policy.stranded_calls_details` | `GET` | `/telephony/config/locations/{location_id}/queues/{queue_id}/strandedCalls` | Get Details for a Call Queue Stranded Calls |
+| `api.telephony.callqueue.policy.stranded_calls_update` | `PUT` | `/telephony/config/locations/{location_id}/queues/{queue_id}/strandedCalls` | Update a Call Queue Stranded Calls service |
 | `api.telephony.callqueue.primary_available_phone_numbers` | `GET` | `/telephony/config/locations/{location_id}/queues/availableNumbers` | Get Call Queue Primary Available Phone Numbers |
 | `api.telephony.callqueue.update` | `PUT` | `/telephony/config/locations/{location_id}/queues/{queue_id}` | Update a Call Queue |
 | `api.telephony.callqueue.update_call_queue_settings` | `PUT` | `/telephony/config/queues/settings` | Update Call Queue Settings |
@@ -639,7 +672,7 @@
 | `api.telephony.conference.undeafen_participant` | `POST` | `/telephony/conference/undeafen` | Undeafen Participant |
 | `api.telephony.conference.unmute` | `POST` | `/telephony/conference/unmute` | Unmute |
 | `api.telephony.create_a_call_token` | `POST` | `/telephony/click2call/callToken` | Create a call token |
-| `api.telephony.cx_essentials.available_agents` | `GET` | `/telephony/config/locations/{location_id}/cxEssentials/agents/availableAgents` | Get List of available agents for Customer Experience Essentials |
+| `api.telephony.cx_essentials.available_agents` | `GET` | `/telephony/config/locations/{location_id}/cxEssentials/agents/availableAgents` | List Available Agents |
 | `api.telephony.cx_essentials.callqueue_recording.configure` | `PUT` | `/telephony/config/locations/{location_id}/queues/{queue_id}/cxEssentials/callRecordings` | Configure Queue Call Recording Settings for a Queue |
 | `api.telephony.cx_essentials.callqueue_recording.read` | `GET` | `/telephony/config/locations/{location_id}/queues/{queue_id}/cxEssentials/callRecordings` | Read Queue Call Recording Settings for a Queue |
 | `api.telephony.cx_essentials.get_screen_pop_configuration` | `GET` | `/telephony/config/locations/{location_id}/queues/{queue_id}/cxEssentials/screenPop` | Get Screen Pop configuration for a Call Queue in a Location |
@@ -736,6 +769,7 @@
 | `api.telephony.emergency_services.update_org_compliance_status` | `PUT` | `/telephony/config/redSky/status` | Update the Organization RedSky Account's Compliance Status |
 | `api.telephony.emergency_services.update_service_settings` | `PUT` | `/telephony/config/redSky/serviceSettings` | Update RedSky Service Settings |
 | `api.telephony.get_call_captions_settings` | `GET` | `/telephony/config/callCaptions` | Get the organization call captions settings |
+| `api.telephony.get_country_configuration` | `GET` | `/telephony/config/countries/{country_code}` | Get Country Calling Configuration |
 | `api.telephony.get_large_organization_status` | `GET` | `/telephony/config/largeOrgStatus` | Get Large Organization Status |
 | `api.telephony.guest_calling.available_members` | `GET` | `/telephony/config/guestCalling/availableMembers` | Read the Click-to-call Available Members |
 | `api.telephony.guest_calling.members` | `GET` | `/telephony/config/guestCalling/members` | Read the Click-to-call Members |
@@ -752,11 +786,11 @@
 | `api.telephony.huntgroup.delete_huntgroup` | `DELETE` | `/telephony/config/locations/{location_id}/huntGroups/{huntgroup_id}` | Delete a Hunt Group |
 | `api.telephony.huntgroup.details` | `GET` | `/telephony/config/locations/{location_id}/huntGroups/{huntgroup_id}` | Get Details for a Hunt Group |
 | `api.telephony.huntgroup.forward_available_phone_numbers` | `GET` | `/telephony/config/locations/{location_id}/huntGroups/callForwarding/availableNumbers` | Get Hunt Group Call Forward Available Phone Numbers |
-| `api.telephony.huntgroup.forwarding.call_forwarding_rule` | `GET` | `/telephony/config/locations/{location_id}/huntGroups/{feature_id}/callForwarding/selectiveRules/{rule_id}` | Retrieve a Selective Call Forwarding Rule's settings for the designated Call Queue. |
-| `api.telephony.huntgroup.forwarding.create_call_forwarding_rule` | `POST` | `/telephony/config/locations/{location_id}/huntGroups/{feature_id}/callForwarding/selectiveRules` | Create a Selective Call Forwarding Rule feature |
-| `api.telephony.huntgroup.forwarding.delete_call_forwarding_rule` | `DELETE` | `/telephony/config/locations/{location_id}/huntGroups/{feature_id}/callForwarding/selectiveRules/{rule_id}` | Delete a Selective Call Forwarding Rule for the designated feature. |
-| `api.telephony.huntgroup.forwarding.settings` | `GET` | `/telephony/config/locations/{location_id}/huntGroups/{feature_id}/callForwarding` | Retrieve Call Forwarding settings for the designated feature including the list of call |
-| `api.telephony.huntgroup.forwarding.switch_mode_for_call_forwarding` | `POST` | `/telephony/config/locations/{location_id}/huntGroups/{feature_id}/callForwarding/actions/switchMode/invoke` | Switch Mode for Call Forwarding Settings for an entity |
+| `api.telephony.huntgroup.forwarding.call_forwarding_rule` | `GET` | `/telephony/config/locations/{location_id}/huntGroups/{feature_id}/callForwarding/selectiveRules/{rule_id}` | Retrieve a Selective Call Forwarding Rule's settings for the designated feature. |
+| `api.telephony.huntgroup.forwarding.create_call_forwarding_rule` | `POST` | `/telephony/config/locations/{location_id}/huntGroups/{feature_id}/callForwarding/selectiveRules` | Create a Selective Call Forwarding Rule for a feature |
+| `api.telephony.huntgroup.forwarding.delete_call_forwarding_rule` | `DELETE` | `/telephony/config/locations/{location_id}/huntGroups/{feature_id}/callForwarding/selectiveRules/{rule_id}` | Delete a Selective Call Forwarding Rule for the designated feature, including hunt groups. |
+| `api.telephony.huntgroup.forwarding.settings` | `GET` | `/telephony/config/locations/{location_id}/huntGroups/{feature_id}/callForwarding` | Retrieve Call Forwarding settings for the designated feature including the list of call forwarding rules. |
+| `api.telephony.huntgroup.forwarding.switch_mode_for_call_forwarding` | `POST` | `/telephony/config/locations/{location_id}/huntGroups/{feature_id}/callForwarding/actions/switchMode/invoke` | Switch Mode for Call Forwarding Settings for a feature, including auto attendants |
 | `api.telephony.huntgroup.forwarding.update` | `PUT` | `/telephony/config/locations/{location_id}/huntGroups/{feature_id}/callForwarding` | Update Call Forwarding Settings for a feature |
 | `api.telephony.huntgroup.forwarding.update_call_forwarding_rule` | `PUT` | `/telephony/config/locations/{location_id}/huntGroups/{feature_id}/callForwarding/selectiveRules/{rule_id}` | Update a Selective Call Forwarding Rule's settings for the designated feature. |
 | `api.telephony.huntgroup.list` | `GET` | `/telephony/config/huntGroups` | Read the List of Hunt Groups |
@@ -787,7 +821,7 @@
 | `api.telephony.jobs.dynamic_device_settings.status` | `GET` | `/telephony/config/jobs/devices/dynamicDeviceSettings/{job_id}` | Get Device Dynamic Settings Job Status |
 | `api.telephony.jobs.dynamic_device_settings.update_across_org_or_location` | `POST` | `/telephony/config/jobs/devices/dynamicDeviceSettings` | Updates dynamic Device Settings Across Organization Or Location |
 | `api.telephony.jobs.manage_numbers.abandon` | `POST` | `/telephony/config/jobs/numbers/manageNumbers/{job_id}/actions/abandon/invoke` | Abandon the Manage Numbers Job. |
-| `api.telephony.jobs.manage_numbers.errors` | `GET` | `/telephony/config/jobs/numbers/manageNumbers/{job_id}/errors` | List Manage Numbers Job errors |
+| `api.telephony.jobs.manage_numbers.errors` | `GET` | `/telephony/config/jobs/numbers/manageNumbers/{job_id}/errors` | List Manage Numbers Job Errors |
 | `api.telephony.jobs.manage_numbers.initiate_job` | `POST` | `/telephony/config/jobs/numbers/manageNumbers` | Initiate Number Jobs |
 | `api.telephony.jobs.manage_numbers.list` | `GET` | `/telephony/config/jobs/numbers/manageNumbers` | List Manage Numbers Jobs |
 | `api.telephony.jobs.manage_numbers.pause` | `POST` | `/telephony/config/jobs/numbers/manageNumbers/{job_id}/actions/pause/invoke` | Pause the Manage Numbers Job |
@@ -829,9 +863,9 @@
 | `api.telephony.location.modify_receptionist_contact_directory` | `PUT` | `/telephony/config/locations/{location_id}/receptionistContacts/directories/{directory_id}` | Modify a Receptionist Contact Directory |
 | `api.telephony.location.moh.read` | `GET` | `/telephony/config/locations/{location_id}/musicOnHold` | Get Music On Hold |
 | `api.telephony.location.moh.update` | `PUT` | `/telephony/config/locations/{location_id}/musicOnHold` | Update Music On Hold |
-| `api.telephony.location.number.add` | `POST` | `/telephony/config/locations/{location_id}/numbers` | Add Phone Numbers to a location |
-| `api.telephony.location.number.manage_number_state` | `PUT` | `/telephony/config/locations/{location_id}/numbers` | Manage Number State in a location |
-| `api.telephony.location.number.remove` | `DELETE` | `/telephony/config/locations/{location_id}/numbers` | Remove phone numbers from a location |
+| `api.telephony.location.number.add` | `POST` | `/telephony/config/locations/{location_id}/numbers` | Add Phone Numbers to a Location |
+| `api.telephony.location.number.manage_number_state` | `PUT` | `/telephony/config/locations/{location_id}/numbers` | Manage Number State in a Location |
+| `api.telephony.location.number.remove` | `DELETE` | `/telephony/config/locations/{location_id}/numbers` | Remove Phone Numbers from a Location |
 | `api.telephony.location.permissions_out.configure` | `PUT` | `/telephony/config/locations/{entity_id}/outgoingPermission` | Configure Outgoing Calling Permissions Settings |
 | `api.telephony.location.permissions_out.digit_patterns.create` | `POST` | `/telephony/config/locations/{entity_id}/outgoingPermission/digitPatterns` | Create Digit Patterns |
 | `api.telephony.location.permissions_out.digit_patterns.delete` | `DELETE` | `/telephony/config/locations/{entity_id}/outgoingPermission/digitPatterns/{digit_pattern_id}` | Delete a Digit Pattern |
@@ -880,9 +914,9 @@
 | `api.telephony.locations.modify_receptionist_contact_directory` | `PUT` | `/telephony/config/locations/{location_id}/receptionistContacts/directories/{directory_id}` | Modify a Receptionist Contact Directory |
 | `api.telephony.locations.moh.read` | `GET` | `/telephony/config/locations/{location_id}/musicOnHold` | Get Music On Hold |
 | `api.telephony.locations.moh.update` | `PUT` | `/telephony/config/locations/{location_id}/musicOnHold` | Update Music On Hold |
-| `api.telephony.locations.number.add` | `POST` | `/telephony/config/locations/{location_id}/numbers` | Add Phone Numbers to a location |
-| `api.telephony.locations.number.manage_number_state` | `PUT` | `/telephony/config/locations/{location_id}/numbers` | Manage Number State in a location |
-| `api.telephony.locations.number.remove` | `DELETE` | `/telephony/config/locations/{location_id}/numbers` | Remove phone numbers from a location |
+| `api.telephony.locations.number.add` | `POST` | `/telephony/config/locations/{location_id}/numbers` | Add Phone Numbers to a Location |
+| `api.telephony.locations.number.manage_number_state` | `PUT` | `/telephony/config/locations/{location_id}/numbers` | Manage Number State in a Location |
+| `api.telephony.locations.number.remove` | `DELETE` | `/telephony/config/locations/{location_id}/numbers` | Remove Phone Numbers from a Location |
 | `api.telephony.locations.permissions_out.configure` | `PUT` | `/telephony/config/locations/{entity_id}/outgoingPermission` | Configure Outgoing Calling Permissions Settings |
 | `api.telephony.locations.permissions_out.digit_patterns.create` | `POST` | `/telephony/config/locations/{entity_id}/outgoingPermission/digitPatterns` | Create Digit Patterns |
 | `api.telephony.locations.permissions_out.digit_patterns.delete` | `DELETE` | `/telephony/config/locations/{entity_id}/outgoingPermission/digitPatterns/{digit_pattern_id}` | Delete a Digit Pattern |
@@ -1017,20 +1051,24 @@
 | `api.telephony.schedules.list` | `GET` | `/telephony/config/locations/{obj_id}/schedules` | List of schedules for a person or location |
 | `api.telephony.schedules.update` | `PUT` | `/telephony/config/locations/{obj_id}/schedules/{schedule_type}/{schedule_id}` | Update a schedule |
 | `api.telephony.supervisors.assign_unassign_agents` | `PUT` | `/telephony/config/supervisors/{supervisor_id}` | Assign or Unassign Agents to Supervisor |
-| `api.telephony.supervisors.available_agents` | `GET` | `/telephony/config/supervisors/availableAgents` | List Available Agents |
-| `api.telephony.supervisors.available_supervisors` | `GET` | `/telephony/config/supervisors/availableSupervisors` | List Available Supervisors |
-| `api.telephony.supervisors.create` | `POST` | `/telephony/config/supervisors` | Create a Supervisor |
-| `api.telephony.supervisors.delete` | `DELETE` | `/telephony/config/supervisors/{supervisor_id}` | Delete A Supervisor |
-| `api.telephony.supervisors.delete_bulk` | `DELETE` | `/telephony/config/supervisors` | Delete Bulk supervisors |
+| `api.telephony.supervisors.available_agents` | `GET` | `/telephony/config/supervisors/availableAgents` | List Available Agents with Customer Assist |
+| `api.telephony.supervisors.available_supervisors` | `GET` | `/telephony/config/supervisors/availableSupervisors` | List Available Supervisors with Customer Assist |
+| `api.telephony.supervisors.create` | `POST` | `/telephony/config/supervisors` | Create a Supervisor with Customer Assist |
+| `api.telephony.supervisors.delete` | `DELETE` | `/telephony/config/supervisors/{supervisor_id}` | Delete a Supervisor |
+| `api.telephony.supervisors.delete_bulk` | `DELETE` | `/telephony/config/supervisors` | Delete Bulk Supervisors |
 | `api.telephony.supervisors.details` | `GET` | `/telephony/config/supervisors/{supervisor_id}` | GET Supervisor Details |
-| `api.telephony.supervisors.list` | `GET` | `/telephony/config/supervisors` | Get List of Supervisors |
+| `api.telephony.supervisors.list` | `GET` | `/telephony/config/supervisors` | Get List of Supervisors with Customer Assist |
 | `api.telephony.supported_devices` | `GET` | `/telephony/config/supportedDevices` | Read the List of Supported Devices |
 | `api.telephony.test_call_routing` | `POST` | `/telephony/config/actions/testCallRouting/invoke` | Test Call Routing |
+| `api.telephony.text_to_speech.generate` | `POST` | `/telephony/config/textToSpeech/actions/generate/invoke` | Generate a Text-to-Speech Prompt |
+| `api.telephony.text_to_speech.status` | `GET` | `/telephony/config/textToSpeech/{tts_id}` | Get Text-to-Speech Generation Status |
+| `api.telephony.text_to_speech.usage` | `GET` | `/telephony/config/textToSpeech/usage` | Get Text-to-Speech Usage |
+| `api.telephony.text_to_speech.voices` | `GET` | `/telephony/config/textToSpeech/voices` | List Text-to-Speech Voices |
 | `api.telephony.ucm_profiles` | `GET` | `/telephony/config/callingProfiles` | Read the List of UC Manager Profiles |
 | `api.telephony.update_call_captions_settings` | `PUT` | `/telephony/config/callCaptions` | Update the organization call captions settings |
 | `api.telephony.update_moh` | `PUT` | `/telephony/config/moh/settings` | Update the organization Music on Hold configuration |
 | `api.telephony.validate_extensions` | `POST` | `/telephony/config/actions/validateExtensions/invoke` | Validate the List of Extensions |
-| `api.telephony.validate_phone_numbers` | `POST` | `/telephony/config/actions/validateNumbers/invoke` | Validate phone numbers |
+| `api.telephony.validate_phone_numbers` | `POST` | `/telephony/config/actions/validateNumbers/invoke` | Validate Phone Numbers |
 | `api.telephony.virtual_extensions.create_extension` | `POST` | `/telephony/config/virtualExtensions` | Create a Virtual Extension |
 | `api.telephony.virtual_extensions.create_range` | `POST` | `/telephony/config/virtualExtensionRanges` | Create a Virtual Extension Range |
 | `api.telephony.virtual_extensions.delete_extension` | `DELETE` | `/telephony/config/virtualExtensions/{extension_id}` | Delete a Virtual Extension |
@@ -1170,8 +1208,8 @@
 | `api.workspace_settings.caller_id.configure` | `PUT` | `/workspaces/{entity_id}/features/callerId` | Configure a Caller ID Settings |
 | `api.workspace_settings.caller_id.configure_settings` | `PUT` | `/workspaces/{entity_id}/features/callerId` | Configure a Caller ID Settings |
 | `api.workspace_settings.caller_id.read` | `GET` | `/workspaces/{entity_id}/features/callerId` | Retrieve Caller ID Settings |
-| `api.workspace_settings.devices.list` | `GET` | `/telephony/config/workspaces/{workspace_id}/devices` | Get all devices for a workspace. |
-| `api.workspace_settings.devices.list_and_counts` | `GET` | `/telephony/config/workspaces/{workspace_id}/devices` | Get all devices for a workspace. |
+| `api.workspace_settings.devices.list` | `GET` | `/telephony/config/workspaces/{workspace_id}/devices` | Get Workspace Devices |
+| `api.workspace_settings.devices.list_and_counts` | `GET` | `/telephony/config/workspaces/{workspace_id}/devices` | Get Workspace Devices |
 | `api.workspace_settings.devices.modify_hoteling` | `PUT` | `/telephony/config/workspaces/{workspace_id}/devices` | Modify devices for a workspace. |
 | `api.workspace_settings.dnd.configure` | `PUT` | `/telephony/config/workspaces/{entity_id}/doNotDisturb` | Configure Do Not Disturb Settings for an entity |
 | `api.workspace_settings.dnd.read` | `GET` | `/telephony/config/workspaces/{entity_id}/doNotDisturb` | Read Do Not Disturb Settings for an entity |

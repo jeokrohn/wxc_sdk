@@ -119,6 +119,9 @@ exclude = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = [
+    "live_endpoint: broad live endpoint coverage that requires RUN_LIVE_ENDPOINT_TESTS=1 and configured Webex tokens",
+]
 
 [tool.ruff]
 line-length = 120
@@ -203,7 +206,6 @@ disable_error_code = [
     "no-untyped-def", "union-attr", "arg-type", "import-untyped", "assignment", "index", "no-untyped-call",
     "no-redef", "operator", "misc", "attr-defined", "str-bytes-safe", "func-returns-value", "var-annotated"
 ]
-
 
 
 
