@@ -80,12 +80,13 @@ __all__ = [
     'TestWithTwoTempCallingUsers',
     'UserTokens',
     'TestWithRandomUserApi',
+    'AdminIntegration',
 ]
 
 SKIP_TESTS_WITH_EXISTING_LOGS = False
 
 
-def gather(mapping: Iterable[Any], return_exceptions: bool = False) -> Generator[Union[Any, Exception]]:
+def gather(mapping: Iterable[Any], return_exceptions: bool = False) -> Generator[Any | Exception]:
     """
     Gather results from a threading.map() call;  similar to asyncio.gather
     :param mapping: result of a threading.map() call
@@ -320,11 +321,11 @@ class LoggedRequest(BaseModel):
     #: request headers
     headers: Optional[dict[str, Any]] = None
     #: request body
-    request_body: Optional[Union[dict[str, Any], str]] = None
+    request_body: Optional[dict[str, Any] | str] = None
     #: response headers
     response_headers: Optional[dict[str, Any]] = None
     #: response body
-    response_body: Optional[Union[dict[str, Any], str]] = None
+    response_body: Optional[dict[str, Any] | str] = None
     record: logging.LogRecord
 
     # regular expressions to match on reqeust record
@@ -729,8 +730,12 @@ class TestWithLocations(TestCaseWithLog):
                 raise validation_error
 
             # the calling locations are the ones for which we can actually get calling details
-            result = [(loc, detail) for loc, detail in zip(locations, details) if not isinstance(detail, Exception)]
-            cls.locations, cls.telephony_locations = list(zip(*result))
+            result = [
+                (loc, detail)
+                for loc, detail in zip(locations, details, strict=False)
+                if not isinstance(detail, Exception)
+            ]
+            cls.locations, cls.telephony_locations = list(zip(*result, strict=False))
             return
 
         if cls.api is None:
