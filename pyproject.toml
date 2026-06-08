@@ -3,7 +3,7 @@ name = "wxc_sdk"
 version = "1.36.0"
 description = "SDK for Webex APIs with special focus on Webex Calling specific endpoints"
 authors = [{ name = "Johannes Krohn", email = "jkrohn@cisco.com" }]
-requires-python = ">=3.9,<3.14"
+requires-python = ">=3.11,<3.14"
 readme = "README.rst"
 license = "MIT"
 maintainers = [{ name = "Johannes Krohn", email = "jkrohn@cisco.com" }]
@@ -92,6 +92,7 @@ dev = [
     "types-requests>=2.32.4.20260107",
     "lxml-stubs>=0.5.1",
     "types-pyyaml>=6.0.12.20250915",
+    "webex-kms-sdk>=0.3.0",
 ]
 
 [tool.uv]

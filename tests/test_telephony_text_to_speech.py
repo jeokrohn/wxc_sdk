@@ -1,7 +1,10 @@
 import json
+from pathlib import Path
 from time import sleep
 
+from jwcrypto.jwe import JWE
 from pydantic import TypeAdapter
+from webex_kms_sdk import ThreadedWebexClient
 
 from tests.base import TestCaseWithLog
 from wxc_sdk.telephony import AnnouncementLanguage
@@ -28,6 +31,9 @@ class TestTTS(TestCaseWithLog):
         )
 
     def test_generate(self):
+        """
+        Generate a TTS prompt, poll for completion, download the encrypted prompt, decrypt it, and write to a WAV file.
+        """
         api = self.api.telephony.text_to_speech
         voices = api.voices()
         voice = voices[0].id
@@ -45,4 +51,27 @@ class TestTTS(TestCaseWithLog):
                 continue
             break
         print(f'Usage after: {usage}')
+        kms_uri = status.kms_key_uri
+        prompt_url = status.prompt_url
+
+        # download encrypted file (JWE token)
+        with self.api.session.get(prompt_url, headers={'Authorization': f'Bearer {self.api.access_token}'}) as resp:
+            resp.raise_for_status()
+            prompt = resp.text
+
+        # get encryption key from KMS
+        with ThreadedWebexClient(self.api.access_token) as client:
+            key = client.get_key(kms_uri)
+        print(f'got encryption key: {key}')
+
+        # deserialize and decrypt JWE token
+        jwe = JWE()
+        jose_key = key.jwk.jwcrypto_key()
+        jwe.deserialize(prompt, jose_key)
+
+        # write WAV file
+        wav_path = Path(__file__).parent / 'prompt.wav'
+        with open(wav_path, 'wb') as f:
+            f.write(jwe.payload)
+        print(f'Wrote prompt to: {wav_path}')
         return

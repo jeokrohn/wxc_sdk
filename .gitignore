@@ -186,3 +186,4 @@ cython_debug/
 /script/sdk_sync/.rejected/
 /user_tokens.yml
 /.claude/settings.local.json
+/tests/prompt.wav
