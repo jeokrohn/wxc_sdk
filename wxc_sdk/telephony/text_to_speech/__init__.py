@@ -154,13 +154,18 @@ class TextToSpeechApi(ApiChild, base='telephony/config'):
 
         To preview the audio prompt:
 
-        1. Download the KMS key - use the Webex Node.js SDK and provide `kmsKeyUri` to download the key from KMS.
+        1. Download the KMS key - use https://pypi.org/project/webex-kms-sdk/ and provide `kmsKeyUri` to download the
+           key from KMS.
 
         2. Download the encrypted audio - The encrypted audio file content is stored in cloud and can be retrieved
         using `promptURL`.
 
-        3. Decrypt the audio content - Use the jose library to decrypt the content downloaded from `promptUrl` using
-        the downloaded key.
+        3. Decrypt the audio content - Use the `jwcrypto <https://pypi.org/project/jwcrypto/>`_ library to decrypt
+        the content downloaded from `promptUrl` using the downloaded key.
+
+        See the `test_generate unit test
+        <https://github.com/jeokrohn/wxc_sdk/blob/13a2e0499c064404856eb4e5c4cadcecb1b19f37/tests
+        /test_telephony_text_to_speech.py#L33>`_ for a complete example.
 
         Text-to-speech (TTS) efficiently generates prompts, greetings, and announcements by converting written text
         into synthesized audio using the specified voice. The generated audio functions like a recorded WAV file,

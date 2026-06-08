@@ -141,7 +141,7 @@ exclude = [
 quote-style = "single"
 
 [tool.ruff.lint]
-ignore = ["E741", 'C901']
+ignore = ["E741", 'C901', 'UP045']
 select = [
     "E", # pycodestyle errors (flake8 core)
     "W", # pycodestyle warnings (flake8 core)
