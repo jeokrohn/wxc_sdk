@@ -7,21 +7,23 @@ from wxc_sdk.cdr import CDR, CDRCallType, CDRClientType, CDRDirection, CDROrigin
     CDRRelatedReason, CDRUserType
 from wxc_sdk.common import AcdCustomization, AlternateNumber, AnnAudioFile, AnnouncementLevel, \
     ApplyLineKeyTemplateAction, AssignedDectNetwork, AtaCustomization, AtaDtmfMethod, AtaDtmfMode, \
-    AudioCodecPriority, AuthCode, AuthCodeLevel, Background, BackgroundImageColor, BackgroundSelection, \
-    BacklightTimer, BacklightTimer68XX78XX, BluetoothMode, BluetoothSetting, CallForwardExpandedSoftKey, \
-    CallHistoryMethod, CallParkExtension, CodeAndName, CommonDeviceCustomization, Customer, DectCustomization, \
-    DeviceCustomization, DeviceCustomizations, DevicePlatform, DeviceType, DialPatternStatus, DialPatternValidate, \
+    AudioCodecPriority, AudioSource, AuthCode, AuthCodeLevel, Background, BackgroundImageColor, \
+    BackgroundSelection, BacklightTimer, BacklightTimer68XX78XX, BluetoothMode, BluetoothSetting, \
+    CallForwardExpandedSoftKey, CallHistoryMethod, CallParkExtension, CodeAndName, ComfortMessageBypass, \
+    ComfortMessageSetting, CommonDeviceCustomization, Customer, DectCustomization, DeviceCustomization, \
+    DeviceCustomizations, DevicePlatform, DeviceType, DialPatternStatus, DialPatternValidate, \
     DirectLineCallerIdName, DirectLineCallerIdNameSelection, DirectoryMethod, DisplayCallqueueAgentSoftkey, \
     DisplayNameSelection, EnabledAndValue, EnhancedMulticast, Greeting, HttpProxy, HttpProxyMode, IdAndName, \
     IdOnly, LineKeyLabelSelection, LineKeyLedPattern, LinkRelation, LoggingLevel, MaintenanceMode, MeGroupMember, \
-    MeGroupSettings, MediaFile, MediaFileType, MonitoredMember, MppCustomization, Multicast, NoiseCancellation, \
-    NumberOwner, NumberState, OwnerType, PatternAction, PersonPlaceAgent, PhoneLanguage, PrimaryOrSecondary, \
-    PrimaryOrShared, PskObject, RingPattern, RoomType, RouteIdentity, RouteType, SetOrClear, SoftKeyLayout, \
-    SoftKeyMenu, StorageType, UsageType, UsbPortsObject, UserBase, UserLicenseType, UserNumber, UserType, \
-    ValidateExtensionStatus, ValidateExtensionStatusState, ValidateExtensionsResponse, ValidatePhoneNumberStatus, \
-    ValidatePhoneNumberStatusState, ValidatePhoneNumbersResponse, ValidationStatus, VlanSetting, \
-    VoicemailCopyOfMessage, VoicemailEnabled, VoicemailFax, VoicemailMessageStorage, VoicemailNotifications, \
-    VoicemailTransferToNumber, VolumeSettings, WifiAuthenticationMethod, WifiCustomization, WifiNetwork
+    MeGroupSettings, MediaFile, MediaFileType, MohMessageSetting, MonitoredMember, MppCustomization, Multicast, \
+    NoiseCancellation, NumberOwner, NumberState, OwnerType, PatternAction, PersonPlaceAgent, PhoneLanguage, \
+    PrimaryOrSecondary, PrimaryOrShared, PskObject, RingPattern, RoomType, RouteIdentity, RouteType, SetOrClear, \
+    SoftKeyLayout, SoftKeyMenu, StorageType, UsageType, UsbPortsObject, UserBase, UserLicenseType, UserNumber, \
+    UserType, ValidateExtensionStatus, ValidateExtensionStatusState, ValidateExtensionsResponse, \
+    ValidatePhoneNumberStatus, ValidatePhoneNumberStatusState, ValidatePhoneNumbersResponse, ValidationStatus, \
+    VlanSetting, VoicemailCopyOfMessage, VoicemailEnabled, VoicemailFax, VoicemailMessageStorage, \
+    VoicemailNotifications, VoicemailTransferToNumber, VolumeSettings, WaitMessageSetting, WaitMode, \
+    WelcomeMessageSetting, WifiAuthenticationMethod, WifiCustomization, WifiNetwork
 from wxc_sdk.common.schedules import Event, RecurWeekly, RecurYearlyByDate, RecurYearlyByDay, Recurrence, \
     Schedule, ScheduleApiBase, ScheduleDay, ScheduleLevel, ScheduleMonth, ScheduleType, ScheduleTypeOrStr, \
     ScheduleWeek
@@ -182,13 +184,12 @@ from wxc_sdk.telephony.caller_reputation import CallerReputationProviderProvider
 from wxc_sdk.telephony.callpark import AvailableRecallHuntGroup, CallPark, CallParkRecall, CallParkSettings, \
     LocationCallParkSettings, RecallHuntGroup
 from wxc_sdk.telephony.callpickup import CallPickup, PickupNotificationType
-from wxc_sdk.telephony.callqueue import AudioSource, AvailableAgent, CQRoutingType, CallBounce, CallQueue, \
-    CallQueueCallPolicies, CallQueueSettings, ComfortMessageBypass, ComfortMessageSetting, DistinctiveRing, \
-    MohMessageSetting, OverflowAction, OverflowSetting, QueueSettings, WaitMessageSetting, WaitMode, \
-    WelcomeMessageSetting
+from wxc_sdk.telephony.callqueue import AvailableAgent, CQRoutingType, CallBounce, CallQueue, \
+    CallQueueCallPolicies, CallQueueSettings, DistinctiveRing, OverflowAction, OverflowSetting, QueueSettings
 from wxc_sdk.telephony.callqueue.agents import AgentCallQueueSetting, CallQueueAgent, CallQueueAgentDetail, \
     CallQueueAgentQueue
 from wxc_sdk.telephony.callqueue.announcement import Announcement
+from wxc_sdk.telephony.callqueue.dnis import Dnis, DnisAnnouncements, DnisSettings
 from wxc_sdk.telephony.callqueue.policies import AnnouncementMode, CPActionType, CQHolidaySchedule, ForcedForward, \
     HolidayService, NightService, StrandedCalls, StrandedCallsAction
 from wxc_sdk.telephony.calls import CallHistoryRecord, CallInfo, CallState, CallType, DialResponse, \
@@ -348,17 +349,18 @@ __all__ = ['AcdCustomization', 'Action', 'ActionToBePerformed', 'ActionToBePerfo
            'DialPlan', 'DialResponse', 'Dialing', 'DifferentHoursDaily', 'DigitPattern', 'DigitPatterns',
            'DirectLineCallerIdName', 'DirectLineCallerIdNameSelection', 'DirectoryMethod',
            'DisableCallingLocationCounts', 'DisableCallingLocationJobStatus', 'DisplayCallqueueAgentSoftkey',
-           'DisplayNameSelection', 'DistinctiveRing', 'DynamicSettingsGroups', 'DynamicSettingsUpdateJobItem',
-           'E164Number', 'ECBNDefault', 'ECBNDependencies', 'ECBNEffectiveLevel', 'ECBNLocationEffectiveLevel',
-           'ECBNLocationMember', 'ECBNQuality', 'ECBNSelection', 'EmailObject', 'EmailObjectType', 'EmailType',
-           'EmergencyAddress', 'EmergencyDestination', 'EnabledAndNumberOfDays', 'EnabledAndValue', 'EndpointStatus',
-           'EndpointType', 'EnhancedMulticast', 'EnterpriseUser', 'EntryAndExitTone', 'Event', 'EventData',
-           'EventResource', 'EventType', 'ExceptionType', 'ExecAlert', 'ExecAlertClidNameMode',
-           'ExecAlertClidPhoneNumberMode', 'ExecAlertRolloverAction', 'ExecAlertingMode', 'ExecAssistantType',
-           'ExecCallFilterType', 'ExecCallFiltering', 'ExecCallFilteringCriteria', 'ExecCallFilteringCriteriaItem',
-           'ExecCallFilteringScheduleLevel', 'ExecCallFilteringToNumber', 'ExecOrAssistant', 'ExecScreening',
-           'ExecScreeningAlertType', 'ExecuteCommandResponse', 'ExpirePasscode', 'ExternalCallerIdNamePolicy',
-           'ExternalTransfer', 'ExternalVoicemailMwiAction', 'FailedAttempts', 'FailureBehavior', 'FeatureAccessCode',
+           'DisplayNameSelection', 'DistinctiveRing', 'Dnis', 'DnisAnnouncements', 'DnisSettings',
+           'DynamicSettingsGroups', 'DynamicSettingsUpdateJobItem', 'E164Number', 'ECBNDefault', 'ECBNDependencies',
+           'ECBNEffectiveLevel', 'ECBNLocationEffectiveLevel', 'ECBNLocationMember', 'ECBNQuality', 'ECBNSelection',
+           'EmailObject', 'EmailObjectType', 'EmailType', 'EmergencyAddress', 'EmergencyDestination',
+           'EnabledAndNumberOfDays', 'EnabledAndValue', 'EndpointStatus', 'EndpointType', 'EnhancedMulticast',
+           'EnterpriseUser', 'EntryAndExitTone', 'Event', 'EventData', 'EventResource', 'EventType', 'ExceptionType',
+           'ExecAlert', 'ExecAlertClidNameMode', 'ExecAlertClidPhoneNumberMode', 'ExecAlertRolloverAction',
+           'ExecAlertingMode', 'ExecAssistantType', 'ExecCallFilterType', 'ExecCallFiltering',
+           'ExecCallFilteringCriteria', 'ExecCallFilteringCriteriaItem', 'ExecCallFilteringScheduleLevel',
+           'ExecCallFilteringToNumber', 'ExecOrAssistant', 'ExecScreening', 'ExecScreeningAlertType',
+           'ExecuteCommandResponse', 'ExpirePasscode', 'ExternalCallerIdNamePolicy', 'ExternalTransfer',
+           'ExternalVoicemailMwiAction', 'FailedAttempts', 'FailureBehavior', 'FeatureAccessCode',
            'FeatureAccessCodeDestination', 'FeatureAccessLevel', 'FeatureAccessSettings', 'FeatureDetail',
            'FeatureMode', 'FeatureModeForwardTo', 'FeatureReference', 'FeatureSelector', 'FeatureType', 'Floor',
            'ForcedForward', 'ForwardCallsTo', 'ForwardFromSelection', 'ForwardOperatingModes', 'ForwardTo',

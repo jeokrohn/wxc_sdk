@@ -3,7 +3,7 @@ Common date types and APIs
 """
 
 from datetime import datetime
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
 from pydantic import Field, field_validator, model_validator
 
@@ -109,6 +109,13 @@ __all__ = [
     'DirectLineCallerIdName',
     'DirectLineCallerIdNameSelection',
     'CodeAndName',
+    'AudioSource',
+    'ComfortMessageBypass',
+    'ComfortMessageSetting',
+    'MohMessageSetting',
+    'WaitMessageSetting',
+    'WelcomeMessageSetting',
+    'WaitMode',
 ]
 
 
@@ -199,6 +206,7 @@ class Greeting(str, Enum):
     custom = 'CUSTOM'
     #: A System default message will be placed when incoming calls are intercepted.
     default = 'DEFAULT'
+    playlist = 'PLAYLIST'
 
 
 class UserNumber(ApiModel):
@@ -254,7 +262,7 @@ class MonitoredMember(ApiModel):
     #: The list of phone numbers of the monitored person or place.
     numbers: Optional[list[UserNumber]] = None
     # location can be either a location name or an id and name instance
-    location: Optional[Union[str, IdAndName]] = None
+    location: Optional[str | IdAndName] = None
 
     @property
     def ci_member_id(self) -> Optional[str]:
@@ -1140,7 +1148,7 @@ class DeviceCustomization(ApiModel):
 
     @field_validator('last_update_time', mode='before')
     @classmethod
-    def update_time(cls, v: Any) -> Union[Any, datetime]:
+    def update_time(cls, v: Any) -> Any | datetime:
         """
 
         :meta private:
@@ -1227,6 +1235,100 @@ class AnnAudioFile(ApiModel):
     level: Optional[AnnouncementLevel] = None
     #: Indicates whether the announcement is text-to-speech.
     is_text_to_speech: Optional[bool] = None
+
+
+class AudioSource(ApiModel):
+    #: Enable media on hold for queued calls.
+    enabled: bool = Field(default=True)
+    #: Indicates how to handle new calls when the queue is full.
+    greeting: Greeting = Field(default=Greeting.default)  # type: ignore[assignment]
+    #: Array of announcement files to be played as `mohMessage` greetings. These files are from the list of
+    #: announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is
+    #: mandatory, and the maximum is 4.
+    audio_announcement_files: list[AnnAudioFile] = Field(default_factory=list)
+    #: Identifier of the playlist used for this MOH source.
+    audio_playlist_id: Optional[str] = None
+    #: Audio playlist name.
+    audio_playlist_name: Optional[str] = None
+
+
+class WelcomeMessageSetting(AudioSource):
+    always_enabled: bool = Field(default=False)
+
+
+class ComfortMessageSetting(AudioSource):
+    #: The interval in seconds between each repetition of the comfort message played to queued users. The minimum time
+    #: is 10 seconds.The maximum time is 600 seconds.
+    time_between_messages: int = Field(default=10)
+
+    @staticmethod
+    def default() -> 'ComfortMessageSetting':
+        return ComfortMessageSetting(enabled=False)
+
+
+class MohMessageSetting(ApiModel):
+    normal_source: AudioSource
+    alternate_source: AudioSource
+
+    @staticmethod
+    def default() -> 'MohMessageSetting':
+        return MohMessageSetting(normal_source=AudioSource(enabled=True), alternate_source=AudioSource(enabled=False))
+
+
+class ComfortMessageBypass(AudioSource):
+    """
+    Comfort message bypass settings
+    """
+
+    call_waiting_age_threshold: int = Field(default=30)
+    play_announcement_after_ringing: bool = Field(default=False)
+    ring_time_before_playing_announcement: int = Field(default=10)
+
+
+class WaitMode(str, Enum):
+    #: Announce the waiting time.
+    time = 'TIME'
+    #: Announce queue position.
+    position = 'POSITION'
+
+
+class WaitMessageSetting(ApiModel):
+    #: If enabled play Wait Message.
+    enabled: Optional[bool] = None
+    #: Estimated wait message operating mode. Supported values TIME and POSITION.
+    wait_mode: Optional[WaitMode] = None
+    #: The number of minutes for which the estimated wait is played. The minimum time is 10 minutes. The maximum time
+    #: is 100 minutes.
+    handling_time: Optional[int] = None
+    #: The default number of call handling minutes. The minimum time is 1 minutes, The maximum time is 100 minutes.
+    default_handling_time: Optional[int] = None
+    #: The number of the position for which the estimated wait is played. The minimum positions are 10, The maximum
+    #: positions are 100.
+    queue_position: Optional[int] = None
+    #: Play time / Play position High Volume.
+    high_volume_message_enabled: Optional[bool] = None
+    #: The number of estimated waiting times in seconds. The minimum time is 10 seconds. The maximum time is 600
+    #: seconds.
+    estimated_waiting_time: Optional[int] = None
+    #: Callback options enabled/disabled. Default value is false.
+    callback_option_enabled: Optional[bool] = None
+    #: The minimum estimated callback times in minutes. The default value is 30.
+    minimum_estimated_callback_time: Optional[int] = None
+    #: The international numbers for callback is enabled/disabled. The default value is false.
+    international_callback_enabled: Optional[bool] = None
+    #: Play updated estimated wait message.
+    play_updated_estimated_wait_message: Optional[bool] = None
+
+    @staticmethod
+    def default():
+        return WaitMessageSetting(
+            enabled=False,
+            wait_mode=WaitMode.position,  # type: ignore[arg-type]
+            handling_time=100,
+            queue_position=100,
+            high_volume_message_enabled=False,
+            default_handling_time=5,
+        )
 
 
 class OwnerType(str, Enum):

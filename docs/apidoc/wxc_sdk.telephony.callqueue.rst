@@ -13,6 +13,7 @@ Subpackages
    :maxdepth: 4
 
    wxc_sdk.telephony.callqueue.agents
+   wxc_sdk.telephony.callqueue.dnis
 
 Submodules
 ----------

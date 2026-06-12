@@ -8,13 +8,27 @@ from pydantic import Field
 from ...api_child import ApiChild
 from ...base import ApiModel
 from ...base import SafeEnum as Enum
-from ...common import AnnAudioFile, Greeting, IdAndName, RingPattern, UserNumber, UserType
+from ...common import (
+    AnnAudioFile,
+    AudioSource,
+    ComfortMessageBypass,
+    ComfortMessageSetting,
+    Greeting,
+    IdAndName,
+    MohMessageSetting,
+    RingPattern,
+    UserNumber,
+    UserType,
+    WaitMessageSetting,
+    WelcomeMessageSetting,
+)
 from ...person_settings.available_numbers import AvailableNumber
 from ...rest import RestSession
 from ..forwarding import FeatureSelector, ForwardingApi
 from ..hg_and_cq import Agent, HGandCQ, Policy
 from .agents import CallQueueAgentsApi
 from .announcement import AnnouncementApi
+from .dnis import CallQueueDnisApi
 from .policies import CQPolicyApi
 
 __all__ = [
@@ -23,13 +37,6 @@ __all__ = [
     'CallQueueCallPolicies',
     'OverflowAction',
     'OverflowSetting',
-    'WaitMode',
-    'WaitMessageSetting',
-    'AudioSource',
-    'WelcomeMessageSetting',
-    'ComfortMessageSetting',
-    'MohMessageSetting',
-    'ComfortMessageBypass',
     'QueueSettings',
     'CallQueue',
     'CallQueueApi',
@@ -193,98 +200,6 @@ class OverflowSetting(ApiModel):
             greeting=Greeting.default,
             audio_announcement_files=list(),
         )
-
-
-class WaitMode(str, Enum):
-    #: Announce the waiting time.
-    time = 'TIME'
-    #: Announce queue position.
-    position = 'POSITION'
-
-
-class WaitMessageSetting(ApiModel):
-    #: If enabled play Wait Message.
-    enabled: Optional[bool] = None
-    #: Estimated wait message operating mode. Supported values TIME and POSITION.
-    wait_mode: Optional[WaitMode] = None
-    #: The number of minutes for which the estimated wait is played. The minimum time is 10 minutes. The maximum time
-    #: is 100 minutes.
-    handling_time: Optional[int] = None
-    #: The default number of call handling minutes. The minimum time is 1 minutes, The maximum time is 100 minutes.
-    default_handling_time: Optional[int] = None
-    #: The number of the position for which the estimated wait is played. The minimum positions are 10, The maximum
-    #: positions are 100.
-    queue_position: Optional[int] = None
-    #: Play time / Play position High Volume.
-    high_volume_message_enabled: Optional[bool] = None
-    #: The number of estimated waiting times in seconds. The minimum time is 10 seconds. The maximum time is 600
-    #: seconds.
-    estimated_waiting_time: Optional[int] = None
-    #: Callback options enabled/disabled. Default value is false.
-    callback_option_enabled: Optional[bool] = None
-    #: The minimum estimated callback times in minutes. The default value is 30.
-    minimum_estimated_callback_time: Optional[int] = None
-    #: The international numbers for callback is enabled/disabled. The default value is false.
-    international_callback_enabled: Optional[bool] = None
-    #: Play updated estimated wait message.
-    play_updated_estimated_wait_message: Optional[bool] = None
-
-    @staticmethod
-    def default():
-        return WaitMessageSetting(
-            enabled=False,
-            wait_mode=WaitMode.position,
-            handling_time=100,
-            queue_position=100,
-            high_volume_message_enabled=False,
-            default_handling_time=5,
-        )
-
-
-class AudioSource(ApiModel):
-    #: Enable media on hold for queued calls.
-    enabled: bool = Field(default=True)
-    #: Indicates how to handle new calls when the queue is full.
-    greeting: Greeting = Field(default=Greeting.default)
-    #: Array of announcement files to be played as `mohMessage` greetings. These files are from the list of
-    #: announcement files associated with this call queue. For `CUSTOM` announcement, a minimum of 1 file is
-    #: mandatory, and the maximum is 4.
-    audio_announcement_files: list[AnnAudioFile] = Field(default_factory=list)
-    #: Identifier of the playlist used for this MOH source.
-    audio_playlist_id: Optional[str] = None
-
-
-class WelcomeMessageSetting(AudioSource):
-    always_enabled: bool = Field(default=False)
-
-
-class ComfortMessageSetting(AudioSource):
-    #: The interval in seconds between each repetition of the comfort message played to queued users. The minimum time
-    #: is 10 seconds.The maximum time is 600 seconds.
-    time_between_messages: int = Field(default=10)
-
-    @staticmethod
-    def default() -> 'ComfortMessageSetting':
-        return ComfortMessageSetting(enabled=False)
-
-
-class MohMessageSetting(ApiModel):
-    normal_source: AudioSource
-    alternate_source: AudioSource
-
-    @staticmethod
-    def default() -> 'MohMessageSetting':
-        return MohMessageSetting(normal_source=AudioSource(enabled=True), alternate_source=AudioSource(enabled=False))
-
-
-class ComfortMessageBypass(AudioSource):
-    """
-    Comfort message bypass settings
-    """
-
-    call_waiting_age_threshold: int = Field(default=30)
-    play_announcement_after_ringing: bool = Field(default=False)
-    ring_time_before_playing_announcement: int = Field(default=10)
 
 
 class QueueSettings(ApiModel):
@@ -488,23 +403,30 @@ class AvailableAgent(ApiModel):
 @dataclass(init=False, repr=False)
 class CallQueueApi(ApiChild, base=''):
     """
-    Features:  Call Queue
+    Features: Call Queue
 
     Features: Call Queue supports reading and writing of Webex Calling Call Queue settings for a specific organization.
 
     Supervisors are users who manage agents and who perform functions including monitoring, coaching, and more.
 
-    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope
-    of `spark-admin:telephony_config_read`.
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
 
-    Modifying these organization settings requires a full administrator auth token with a scope
-    of `spark-admin:telephony_config_write`.
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
 
-    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
-    query parameter.
+    A partner administrator can retrieve or change settings in another organization using the optional `orgId` query
+    parameter.
+
+    DNIS (Dialed Number Identification Service) allows call queues to distinguish between primary and alternate numbers
+    when delivering calls to agents. Each DNIS entry can have its own name, phone number, extension, ring pattern, and
+    custom announcement settings.
+
+    The maximum number of DNIS entries per call queue is 100.
     """
 
     agents: CallQueueAgentsApi
+    dnis: CallQueueDnisApi
     forwarding: ForwardingApi
     announcement: AnnouncementApi
     policy: CQPolicyApi
@@ -512,6 +434,7 @@ class CallQueueApi(ApiChild, base=''):
     def __init__(self, session: RestSession):
         super().__init__(session=session)
         self.agents = CallQueueAgentsApi(session=session)
+        self.dnis = CallQueueDnisApi(session=session)
         self.forwarding = ForwardingApi(session=session, feature_selector=FeatureSelector.queues)
         self.announcement = AnnouncementApi(session=session)
         self.policy = CQPolicyApi(session=session)

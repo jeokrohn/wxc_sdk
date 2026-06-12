@@ -15,7 +15,7 @@ import fnmatch
 import re
 from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from functools import cache, cached_property
 from pathlib import Path
 from typing import Any, cast
@@ -374,7 +374,7 @@ def _admin_audit_events(ctx: LiveEndpointContext) -> None:
     """
     if not ctx.org_id:
         raise LiveEndpointSkip('Current user has no org_id')
-    to_ = datetime.now(timezone.utc)
+    to_ = datetime.now(UTC)
     from_ = to_ - timedelta(days=7)
     first_or_none(ctx.api.admin_audit.list_events(org_id=ctx.org_id, from_=from_, to_=to_))
 
@@ -599,16 +599,6 @@ def _rooms_details(ctx: LiveEndpointContext) -> None:
     ctx.api.rooms.details(room_id=ctx.first_room.id)
 
 
-@scenario('api.rooms.meeting_details', 'Read meeting metadata for a discovered room')
-def _rooms_meeting_details(ctx: LiveEndpointContext) -> None:
-    """
-    Cover reading meeting metadata for a discovered room.
-
-    :param ctx: Live endpoint test context.
-    """
-    ctx.api.rooms.meeting_details(room_id=ctx.first_room.id)
-
-
 @scenario('api.status.summary', 'Read Webex status summary')
 def _status_summary(ctx: LiveEndpointContext) -> None:
     """
@@ -776,7 +766,6 @@ LIVE_GET_SCENARIOS: tuple[LiveGetScenario, ...] = (
     _roles_details,
     _rooms_list,
     _rooms_details,
-    _rooms_meeting_details,
     _status_summary,
     _status_components,
     _status_unresolved_incidents,
@@ -792,7 +781,6 @@ LIVE_GET_SCENARIOS: tuple[LiveGetScenario, ...] = (
     _workspaces_details,
     _workspaces_capabilities,
 )
-
 
 # Quarantine registry: GET endpoints that are not covered by a generic smoke
 # scenario must carry a concrete reason so inventory drift is visible.

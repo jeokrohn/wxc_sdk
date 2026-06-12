@@ -1848,6 +1848,39 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.telephony.callqueue.details <wxc_sdk.telephony.callqueue.CallQueueApi.details>`
         | Get Details for a Call Queue with Customer Assist
         | ``GET /telephony/config/locations/{location_id}/queues/{queue_id}``
+   * - :meth:`api.telephony.callqueue.dnis.available_phone_numbers <wxc_sdk.telephony.callqueue.dnis.CallQueueDnisApi.available_phone_numbers>`
+        | Get Available Phone Numbers for DNIS
+        | ``GET /telephony/config/locations/{location_id}/queues/dnis/availableNumbers``
+   * - :meth:`api.telephony.callqueue.dnis.bulk_delete <wxc_sdk.telephony.callqueue.dnis.CallQueueDnisApi.bulk_delete>`
+        | Bulk Delete DNIS for a Call Queue
+        | ``DELETE /telephony/config/locations/{location_id}/queues/{queue_id}/dnis``
+   * - :meth:`api.telephony.callqueue.dnis.create <wxc_sdk.telephony.callqueue.dnis.CallQueueDnisApi.create>`
+        | Create a DNIS for a Call Queue
+        | ``POST /telephony/config/locations/{location_id}/queues/{queue_id}/dnis``
+   * - :meth:`api.telephony.callqueue.dnis.delete <wxc_sdk.telephony.callqueue.dnis.CallQueueDnisApi.delete>`
+        | Delete a DNIS for a Call Queue
+        | ``DELETE /telephony/config/locations/{location_id}/queues/{queue_id}/dnis/{dnis_id}``
+   * - :meth:`api.telephony.callqueue.dnis.details <wxc_sdk.telephony.callqueue.dnis.CallQueueDnisApi.details>`
+        | Get a DNIS for a Call Queue
+        | ``GET /telephony/config/locations/{location_id}/queues/{queue_id}/dnis/{dnis_id}``
+   * - :meth:`api.telephony.callqueue.dnis.get_announcements <wxc_sdk.telephony.callqueue.dnis.CallQueueDnisApi.get_announcements>`
+        | Get DNIS Announcements for a Call Queue
+        | ``GET /telephony/config/locations/{location_id}/queues/{queue_id}/dnis/{dnis_id}/announcements``
+   * - :meth:`api.telephony.callqueue.dnis.get_settings <wxc_sdk.telephony.callqueue.dnis.CallQueueDnisApi.get_settings>`
+        | Get DNIS Settings for a Call Queue
+        | ``GET /telephony/config/locations/{location_id}/queues/{queue_id}/dnis/settings``
+   * - :meth:`api.telephony.callqueue.dnis.list <wxc_sdk.telephony.callqueue.dnis.CallQueueDnisApi.list>`
+        | Get List of DNIS for a Call Queue
+        | ``GET /telephony/config/locations/{location_id}/queues/{queue_id}/dnis``
+   * - :meth:`api.telephony.callqueue.dnis.modify <wxc_sdk.telephony.callqueue.dnis.CallQueueDnisApi.modify>`
+        | Modify a DNIS for a Call Queue
+        | ``PUT /telephony/config/locations/{location_id}/queues/{queue_id}/dnis/{dnis_id}``
+   * - :meth:`api.telephony.callqueue.dnis.modify_announcements <wxc_sdk.telephony.callqueue.dnis.CallQueueDnisApi.modify_announcements>`
+        | Modify DNIS Announcements for a Call Queue
+        | ``PUT /telephony/config/locations/{location_id}/queues/{queue_id}/dnis/{dnis_id}/announcements``
+   * - :meth:`api.telephony.callqueue.dnis.modify_settings <wxc_sdk.telephony.callqueue.dnis.CallQueueDnisApi.modify_settings>`
+        | Modify DNIS Settings for a Call Queue
+        | ``PUT /telephony/config/locations/{location_id}/queues/{queue_id}/dnis/settings``
    * - :meth:`api.telephony.callqueue.forwarding.call_forwarding_rule <wxc_sdk.telephony.forwarding.ForwardingApi.call_forwarding_rule>`
         | Retrieve a Selective Call Forwarding Rule's settings for the designated feature
         | ``GET /telephony/config/locations/{location_id}/queues/{feature_id}/callForwarding/selectiveRules/{rule_id}``

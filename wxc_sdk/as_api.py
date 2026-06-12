@@ -36,34 +36,34 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsApplyLineKeyTemplatesJobsApi', 'AsAttachmentActionsApi', 'AsAuthorizationsApi', 'AsAutoAttendantApi',
            'AsAvailableNumbersApi', 'AsBargeApi', 'AsCQPolicyApi', 'AsCallBridgeApi', 'AsCallControlsMembersApi',
            'AsCallInterceptApi', 'AsCallParkApi', 'AsCallPickupApi', 'AsCallPolicyApi', 'AsCallQueueAgentsApi',
-           'AsCallQueueApi', 'AsCallRecordingApi', 'AsCallRecordingJobsApi', 'AsCallRecordingSettingsApi',
-           'AsCallRoutingApi', 'AsCallWaitingApi', 'AsCallerIdApi', 'AsCallerReputationProviderApi',
-           'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi', 'AsConferenceControlsApi',
-           'AsConvergedRecordingsApi', 'AsCustomerExperienceEssentialsApi', 'AsDECTDevicesApi', 'AsDetailedCDRApi',
-           'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDevicesDynamicSettingsApi',
-           'AsDialPlanApi', 'AsDigitPatternsApi', 'AsDisableCallingLocationJobsApi', 'AsDndApi', 'AsECBNApi',
-           'AsEmergencyAddressApi', 'AsEventsApi', 'AsExecAssistantApi', 'AsExecutiveSettingsApi',
-           'AsFeatureAccessApi', 'AsFeatureSelector', 'AsForwardingApi', 'AsGoOverrideApi', 'AsGroupsApi',
-           'AsGuestCallingApi', 'AsGuestManagementApi', 'AsHotDeskApi', 'AsHotDeskingApi',
-           'AsHotDeskingSigninViaVoicePortalApi', 'AsHotelingApi', 'AsHuntGroupApi', 'AsIncomingPermissionsApi',
-           'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi', 'AsLocationAccessCodesApi',
-           'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi', 'AsLocationNumbersApi',
-           'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMSTeamsSettingApi', 'AsManageNumbersJobsApi',
-           'AsMeAnonCallsApi', 'AsMeBargeApi', 'AsMeCallBlockApi', 'AsMeCallCenterApi', 'AsMeCallControlApi',
-           'AsMeCallNotifyApi', 'AsMeCallParkApi', 'AsMeCallPickupApi', 'AsMeCallPoliciesApi', 'AsMeCallWaitingApi',
-           'AsMeCallerIdApi', 'AsMeDNDApi', 'AsMeEndpointsApi', 'AsMeExecutiveApi', 'AsMeForwardingApi',
-           'AsMeHotelingApi', 'AsMeModeManagementApi', 'AsMePersonalAssistantApi', 'AsMePriorityAlertApi',
-           'AsMeRecordingApi', 'AsMeSNRApi', 'AsMeSchedulesApi', 'AsMeSelectiveAcceptApi', 'AsMeSelectiveForwardApi',
-           'AsMeSelectiveRejectApi', 'AsMeSequentialRingApi', 'AsMeSettingsApi', 'AsMeSimRingApi', 'AsMeVoicemailApi',
-           'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
-           'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi',
-           'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsModeManagementApi', 'AsMonitoringApi',
-           'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOperatingModesApi',
-           'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi', 'AsOrganisationAccessCodesApi',
-           'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOrganizationContactsApi',
-           'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi',
-           'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPersonalAssistantApi', 'AsPlayListApi',
-           'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
+           'AsCallQueueApi', 'AsCallQueueDnisApi', 'AsCallRecordingApi', 'AsCallRecordingJobsApi',
+           'AsCallRecordingSettingsApi', 'AsCallRoutingApi', 'AsCallWaitingApi', 'AsCallerIdApi',
+           'AsCallerReputationProviderApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi',
+           'AsConferenceControlsApi', 'AsConvergedRecordingsApi', 'AsCustomerExperienceEssentialsApi',
+           'AsDECTDevicesApi', 'AsDetailedCDRApi', 'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi',
+           'AsDevicesApi', 'AsDevicesDynamicSettingsApi', 'AsDialPlanApi', 'AsDigitPatternsApi',
+           'AsDisableCallingLocationJobsApi', 'AsDndApi', 'AsECBNApi', 'AsEmergencyAddressApi', 'AsEventsApi',
+           'AsExecAssistantApi', 'AsExecutiveSettingsApi', 'AsFeatureAccessApi', 'AsFeatureSelector',
+           'AsForwardingApi', 'AsGoOverrideApi', 'AsGroupsApi', 'AsGuestCallingApi', 'AsGuestManagementApi',
+           'AsHotDeskApi', 'AsHotDeskingApi', 'AsHotDeskingSigninViaVoicePortalApi', 'AsHotelingApi',
+           'AsHuntGroupApi', 'AsIncomingPermissionsApi', 'AsInternalDialingApi', 'AsJobsApi', 'AsLicensesApi',
+           'AsLocationAccessCodesApi', 'AsLocationEmergencyServicesApi', 'AsLocationInterceptApi', 'AsLocationMoHApi',
+           'AsLocationNumbersApi', 'AsLocationVoicemailSettingsApi', 'AsLocationsApi', 'AsMSTeamsSettingApi',
+           'AsManageNumbersJobsApi', 'AsMeAnonCallsApi', 'AsMeBargeApi', 'AsMeCallBlockApi', 'AsMeCallCenterApi',
+           'AsMeCallControlApi', 'AsMeCallNotifyApi', 'AsMeCallParkApi', 'AsMeCallPickupApi', 'AsMeCallPoliciesApi',
+           'AsMeCallWaitingApi', 'AsMeCallerIdApi', 'AsMeDNDApi', 'AsMeEndpointsApi', 'AsMeExecutiveApi',
+           'AsMeForwardingApi', 'AsMeHotelingApi', 'AsMeModeManagementApi', 'AsMePersonalAssistantApi',
+           'AsMePriorityAlertApi', 'AsMeRecordingApi', 'AsMeSNRApi', 'AsMeSchedulesApi', 'AsMeSelectiveAcceptApi',
+           'AsMeSelectiveForwardApi', 'AsMeSelectiveRejectApi', 'AsMeSequentialRingApi', 'AsMeSettingsApi',
+           'AsMeSimRingApi', 'AsMeVoicemailApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi',
+           'AsMeetingInviteesApi', 'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi',
+           'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi',
+           'AsModeManagementApi', 'AsMonitoringApi', 'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi',
+           'AsOperatingModesApi', 'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi',
+           'AsOrganisationAccessCodesApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi',
+           'AsOrganizationContactsApi', 'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi',
+           'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPersonalAssistantApi',
+           'AsPlayListApi', 'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
            'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsQueueCallRecordingSettingsApi',
            'AsRebuildPhonesJobsApi', 'AsReceptionistApi', 'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi',
            'AsReportsApi', 'AsRestSession', 'AsRolesApi', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi',
@@ -23244,25 +23244,398 @@ class AsCallQueueAgentsApi(AsApiChild, base='telephony/config/queues/agents'):
         await super().put(url, params=params, json=body)
 
 
+class AsCallQueueDnisApi(AsApiChild, base='telephony/config'):
+    def available_phone_numbers_gen(
+        self, location_id: str, phone_number: str = None, org_id: str = None, **params: Any
+    ) -> AsyncGenerator[AvailableNumber, None]:
+        """
+        Get Available Phone Numbers for DNIS
+
+        Get the list of available phone numbers that can be assigned to a DNIS for call queues at a location.
+
+        Retrieving available numbers requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: The location ID.
+        :type location_id: str
+        :param phone_number: Filter by phone number.
+        :type phone_number: str
+        :param org_id: The organization ID of the customer.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        url = self.ep(f'locations/{location_id}/queues/dnis/availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def available_phone_numbers(
+        self, location_id: str, phone_number: str = None, org_id: str = None, **params: Any
+    ) -> builtins.list[AvailableNumber]:
+        """
+        Get Available Phone Numbers for DNIS
+
+        Get the list of available phone numbers that can be assigned to a DNIS for call queues at a location.
+
+        Retrieving available numbers requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: The location ID.
+        :type location_id: str
+        :param phone_number: Filter by phone number.
+        :type phone_number: str
+        :param org_id: The organization ID of the customer.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        url = self.ep(f'locations/{location_id}/queues/dnis/availableNumbers')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
+
+    async def bulk_delete(self, location_id: str, queue_id: str, items: list[str], org_id: str = None) -> None:
+        """
+        Bulk Delete DNIS for a Call Queue
+
+        Bulk delete a list of DNIS (Dialed Number Identification Service) entries for a call queue.
+
+        A maximum of 99 DNIS entries can be deleted in a single request.
+
+        Deleting DNIS entries requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: The location ID where the call queue exists.
+        :type location_id: str
+        :param queue_id: The call queue ID.
+        :type queue_id: str
+        :param items: Array of DNIS IDs to be deleted.
+        :type items: list[str]
+        :param org_id: The organization ID of the customer.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        body['items'] = items
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/dnis')
+        await super().delete(url, params=params, json=body)
+
+    async def list(self, location_id: str, queue_id: str, org_id: str = None) -> builtins.list[Dnis]:
+        """
+        Get List of DNIS for a Call Queue
+
+        Get the list of DNIS (Dialed Number Identification Service) entries for a call queue.
+
+        DNIS allows call queues to distinguish between primary and alternate numbers when delivering calls to agents.
+        Each DNIS entry can have its own name, phone number, extension, ring pattern, and custom announcement
+        settings.
+
+        The maximum number of DNIS entries per call queue is 100.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: The location ID where the call queue exists.
+        :type location_id: str
+        :param queue_id: The call queue ID.
+        :type queue_id: str
+        :param org_id: The organization ID of the customer.
+        :type org_id: str
+        :rtype: list[Dnis]
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/dnis')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[Dnis]).validate_python(data['dnisList'])
+        return r
+
+    async def create(
+        self,
+        location_id: str,
+        queue_id: str,
+        name: str,
+        ring_pattern: RingPattern,
+        phone_number: str = None,
+        extension: str = None,
+        org_id: str = None,
+    ) -> str:
+        """
+        Create a DNIS for a Call Queue
+
+        Create a new DNIS (Dialed Number Identification Service) entry for a call queue.
+
+        DNIS allows call queues to distinguish between primary and alternate numbers when delivering calls to agents.
+
+        The maximum number of DNIS entries per call queue is 100. Either `phoneNumber` or `extension` is required.
+
+        Creating a DNIS requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: The location ID where the call queue exists.
+        :type location_id: str
+        :param queue_id: The call queue ID.
+        :type queue_id: str
+        :param name: Name of the DNIS. Must be unique across the call queue.
+        :type name: str
+        :param ring_pattern: Ring pattern of the DNIS.
+        :type ring_pattern: RingPattern
+        :param phone_number: Phone number of the DNIS. Must be a valid phone number from the same location. Either
+            phoneNumber or extension is required.
+        :type phone_number: str
+        :param extension: Extension of the DNIS. Either phoneNumber or extension is required.
+        :type extension: str
+        :param org_id: The organization ID of the customer.
+        :type org_id: str
+        :rtype: str
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        body['name'] = name
+        if phone_number is not None:
+            body['phoneNumber'] = phone_number
+        if extension is not None:
+            body['extension'] = extension
+        body['ringPattern'] = enum_str(ring_pattern)
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/dnis')
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    async def get_settings(self, location_id: str, queue_id: str, org_id: str = None) -> DnisSettings:
+        """
+        Get DNIS Settings for a Call Queue
+
+        Get DNIS (Dialed Number Identification Service) settings for a call queue.
+
+        Retrieving DNIS settings requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: The location ID where the call queue exists.
+        :type location_id: str
+        :param queue_id: The call queue ID.
+        :type queue_id: str
+        :param org_id: The organization ID of the customer.
+        :type org_id: str
+        :rtype: :class:`DnisSettings`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/dnis/settings')
+        data = await super().get(url, params=params)
+        r = DnisSettings.model_validate(data)
+        return r
+
+    async def modify_settings(self, location_id: str, queue_id: str, settings: DnisSettings, org_id: str = None) -> None:
+        """
+        Modify DNIS Settings for a Call Queue
+
+        Modify DNIS (Dialed Number Identification Service) settings for a call queue.
+
+        Modifying DNIS settings requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: The location ID where the call queue exists.
+        :type location_id: str
+        :param queue_id: The call queue ID.
+        :type queue_id: str
+        :param settings: DNIS settings for this call queue.
+        :type settings: :class:`DnisSettings`
+        :param org_id: The organization ID of the customer.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.model_dump(mode='json', by_alias=True, exclude_none=True)
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/dnis/settings')
+        await super().put(url, params=params, json=body)
+
+    async def delete(  # type: ignore[override]
+        self,
+        location_id: str,
+        queue_id: str,
+        dnis_id: str,
+        org_id: str = None,
+    ) -> None:
+        """
+        Delete a DNIS for a Call Queue
+
+        Delete a DNIS (Dialed Number Identification Service) entry for a call queue.
+
+        Deleting a DNIS requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: The location ID where the call queue exists.
+        :type location_id: str
+        :param queue_id: The call queue ID.
+        :type queue_id: str
+        :param dnis_id: The DNIS ID.
+        :type dnis_id: str
+        :param org_id: The organization ID of the customer.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/dnis/{dnis_id}')
+        await super().delete(url, params=params)
+
+    async def details(self, location_id: str, queue_id: str, dnis_id: str, org_id: str = None) -> Dnis:
+        """
+        Get a DNIS for a Call Queue
+
+        Get details of a specific DNIS (Dialed Number Identification Service) entry for a call queue.
+
+        Retrieving DNIS details requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: The location ID where the call queue exists.
+        :type location_id: str
+        :param queue_id: The call queue ID.
+        :type queue_id: str
+        :param dnis_id: The DNIS ID.
+        :type dnis_id: str
+        :param org_id: The organization ID of the customer.
+        :type org_id: str
+        :rtype: :class:`Dnis`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/dnis/{dnis_id}')
+        data = await super().get(url, params=params)
+        r = Dnis.model_validate(data)
+        return r
+
+    async def modify(self, location_id: str, queue_id: str, dnis_id: str, settings: Dnis, org_id: str = None) -> None:
+        """
+        Modify a DNIS for a Call Queue
+
+        Modify a DNIS (Dialed Number Identification Service) entry for a call queue.
+
+        To remove a phone number or extension from the DNIS, set the field to `null`.
+
+        Modifying a DNIS requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: The location ID where the call queue exists.
+        :type location_id: str
+        :param queue_id: The call queue ID.
+        :type queue_id: str
+        :param dnis_id: The DNIS ID.
+        :type dnis_id: str
+        :param settings: Settings for the DNIS.
+        :type settings: :class:`Dnis`
+        :param org_id: The organization ID of the customer.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/dnis/{dnis_id}')
+        await super().put(url, params=params, json=body)
+
+    async def get_announcements(self, location_id: str, queue_id: str, dnis_id: str, org_id: str = None) -> DnisAnnouncements:
+        """
+        Get DNIS Announcements for a Call Queue
+
+        Get the announcement settings for a specific DNIS (Dialed Number Identification Service) entry in a call queue.
+
+        This includes welcome message, comfort message, music on hold, wait message, and whisper message settings.
+
+        Retrieving DNIS announcements requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: The location ID where the call queue exists.
+        :type location_id: str
+        :param queue_id: The call queue ID.
+        :type queue_id: str
+        :param dnis_id: The DNIS ID.
+        :type dnis_id: str
+        :param org_id: The organization ID of the customer.
+        :type org_id: str
+        :rtype: :class:`DnisAnnouncements`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/dnis/{dnis_id}/announcements')
+        data = await super().get(url, params=params)
+        r = DnisAnnouncements.model_validate(data)
+        return r
+
+    async def modify_announcements(
+        self, location_id: str, queue_id: str, dnis_id: str, settings: DnisAnnouncements, org_id: str = None
+    ) -> None:
+        """
+        Modify DNIS Announcements for a Call Queue
+
+        Modify the announcement settings for a specific DNIS (Dialed Number Identification Service) entry in a call
+        queue.
+
+        This includes welcome message, comfort message, music on hold, wait message, and whisper message settings.
+
+        Modifying DNIS announcements requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: The location ID where the call queue exists.
+        :type location_id: str
+        :param queue_id: The call queue ID.
+        :type queue_id: str
+        :param dnis_id: The DNIS ID.
+        :type dnis_id: str
+        :param settings: Announcement settings for the DNIS.
+        :type settings: :class:`DnisAnnouncements`
+        :param org_id: The organization ID of the customer.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/dnis/{dnis_id}/announcements')
+        await super().put(url, params=params, json=body)
+
+
 class AsCallQueueApi(AsApiChild, base=''):
     """
-    Features:  Call Queue
+    Features: Call Queue
 
     Features: Call Queue supports reading and writing of Webex Calling Call Queue settings for a specific organization.
 
     Supervisors are users who manage agents and who perform functions including monitoring, coaching, and more.
 
-    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope
-    of `spark-admin:telephony_config_read`.
+    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
 
-    Modifying these organization settings requires a full administrator auth token with a scope
-    of `spark-admin:telephony_config_write`.
+    Modifying these organization settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
 
-    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
-    query parameter.
+    A partner administrator can retrieve or change settings in another organization using the optional `orgId` query
+    parameter.
+
+    DNIS (Dialed Number Identification Service) allows call queues to distinguish between primary and alternate numbers
+    when delivering calls to agents. Each DNIS entry can have its own name, phone number, extension, ring pattern, and
+    custom announcement settings.
+
+    The maximum number of DNIS entries per call queue is 100.
     """
 
     agents: AsCallQueueAgentsApi
+    dnis: AsCallQueueDnisApi
     forwarding: AsForwardingApi
     announcement: AsAnnouncementApi
     policy: AsCQPolicyApi
@@ -23270,6 +23643,7 @@ class AsCallQueueApi(AsApiChild, base=''):
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
         self.agents = AsCallQueueAgentsApi(session=session)
+        self.dnis = AsCallQueueDnisApi(session=session)
         self.forwarding = AsForwardingApi(session=session, feature_selector=AsFeatureSelector.queues)
         self.announcement = AsAnnouncementApi(session=session)
         self.policy = AsCQPolicyApi(session=session)

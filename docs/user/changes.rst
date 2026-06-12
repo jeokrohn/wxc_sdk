@@ -1,6 +1,8 @@
 Release history
 ===============
 
+- feat: new api api.telephony.callqueue.dnis (call queue DNIS settings)
+
 1.36.0
 ------
 

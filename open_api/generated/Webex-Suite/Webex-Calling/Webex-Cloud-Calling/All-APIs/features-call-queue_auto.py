@@ -13,11 +13,12 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __all__ = ['AgentAction', 'AlternateNumbersWithPattern', 'AnnouncementAudioFile', 'AnnouncementAudioFileLevel',
-           'AudioAnnouncementFileFeatureGetObject', 'AudioAnnouncementFileFeatureGetObjectMediaFileType',
-           'AudioAnnouncementFileFeatureObject', 'AvailableAgentListObject', 'AvailableAgentObject',
-           'AvailableSupervisorsListObject', 'CallForwardRulesGet', 'CallForwardRulesSet',
-           'CallForwardSettingsGetCallForwarding', 'CallForwardSettingsGetCallForwardingAlways',
-           'CallForwardSettingsGetCallForwardingOperatingModes',
+           'AudioAnnouncementFile', 'AudioAnnouncementFileFeatureGetObject',
+           'AudioAnnouncementFileFeatureGetObjectMediaFileType', 'AudioAnnouncementFileFeatureObject',
+           'AudioAnnouncementFileMediaFileType', 'AudioAnnouncementFileModify', 'AvailableAgentListObject',
+           'AvailableAgentObject', 'AvailablePhoneNumber', 'AvailableSupervisorsListObject', 'CallForwardRulesGet',
+           'CallForwardRulesSet', 'CallForwardSettingsGetCallForwarding',
+           'CallForwardSettingsGetCallForwardingAlways', 'CallForwardSettingsGetCallForwardingOperatingModes',
            'CallForwardSettingsGetCallForwardingOperatingModesExceptionType', 'CallForwardingNumbers',
            'CallForwardingNumbersType', 'CallQueueCallForwardAvailableNumberObject',
            'CallQueueCallForwardAvailableNumberObjectOwner', 'CallQueueHolidaySchedulesObject',
@@ -32,9 +33,14 @@ __all__ = ['AgentAction', 'AlternateNumbersWithPattern', 'AnnouncementAudioFile'
            'CallQueueSettingsGet', 'CreateCallQueueObjectCallingLineIdPolicy', 'CreateForwardingRuleObjectCallsFrom',
            'CreateForwardingRuleObjectCallsFromCustomNumbers', 'CreateForwardingRuleObjectCallsFromSelection',
            'CreateForwardingRuleObjectCallsTo', 'CreateForwardingRuleObjectForwardTo',
-           'CreateForwardingRuleObjectForwardToSelection', 'DirectLineCallerIdNameObject', 'FeaturesCallQueueApi',
-           'GetAnnouncementFileInfo', 'GetCallQueueAgentObject', 'GetCallQueueAgentObjectAgent',
-           'GetCallQueueAgentObjectQueuesItem', 'GetCallQueueCallPolicyObject',
+           'CreateForwardingRuleObjectForwardToSelection', 'DirectLineCallerIdNameObject', 'DnisAnnouncementsGet',
+           'DnisAnnouncementsGetComfortMessage', 'DnisAnnouncementsGetComfortMessageBypass',
+           'DnisAnnouncementsGetMohMessage', 'DnisAnnouncementsGetWelcomeMessage',
+           'DnisAnnouncementsGetWhisperMessage', 'DnisAnnouncementsModifyComfortMessage',
+           'DnisAnnouncementsModifyComfortMessageBypass', 'DnisAnnouncementsModifyMohMessage',
+           'DnisAnnouncementsModifyWelcomeMessage', 'DnisAnnouncementsModifyWhisperMessage', 'DnisObject',
+           'DnisSettings', 'FeaturesCallQueueApi', 'GetAnnouncementFileInfo', 'GetCallQueueAgentObject',
+           'GetCallQueueAgentObjectAgent', 'GetCallQueueAgentObjectQueuesItem', 'GetCallQueueCallPolicyObject',
            'GetCallQueueCallPolicyObjectCallBounce', 'GetCallQueueCallPolicyObjectDistinctiveRing',
            'GetCallQueueEssentialsCallPolicyObject', 'GetCallQueueEssentialsObject',
            'GetCallQueueForcedForwardObject', 'GetCallQueueHolidayObject', 'GetCallQueueHolidayObjectAction',
@@ -47,9 +53,10 @@ __all__ = ['AgentAction', 'AlternateNumbersWithPattern', 'AnnouncementAudioFile'
            'MediaType', 'ModesGet', 'ModesGetForwardTo', 'ModesGetForwardToDefaultForwardToSelection', 'ModesGetType',
            'ModesPatch', 'ModesPatchForwardTo', 'ModifyAgentsForCallQueueObjectSettingsItem',
            'ModifyCallForwardingObjectCallForwarding', 'ModifyCallForwardingObjectCallForwardingOperatingModes',
-           'ModifyPersonPlaceVirtualLineCallQueueObject', 'NumberOwnerType',
-           'PostPersonPlaceVirtualLineCallQueueObject', 'PostPersonPlaceVirtualLineSupervisorObject',
-           'PutPersonPlaceVirtualLineAgentObject', 'RingPatternObject', 'STATE', 'SelectionObject', 'TelephonyType']
+           'ModifyPersonPlaceVirtualLineCallQueueObject', 'MohMessageSource', 'MohMessageSourceGreeting',
+           'MohMessageSourceModify', 'NumberOwnerType', 'PostPersonPlaceVirtualLineCallQueueObject',
+           'PostPersonPlaceVirtualLineSupervisorObject', 'PutPersonPlaceVirtualLineAgentObject', 'RingPatternObject',
+           'STATE', 'SelectionObject', 'TelephonyType']
 
 
 class RingPatternObject(str, Enum):
@@ -1260,6 +1267,217 @@ class GetCallQueueEssentialsObject(ApiModel):
     dial_by_name: Optional[str] = None
 
 
+class AvailablePhoneNumber(ApiModel):
+    #: The phone number.
+    phone_number: Optional[str] = None
+    #: Defines whether the number is active or not.
+    state: Optional[STATE] = None
+    #: Flag to indicate if the number is used as location main number.
+    is_main_number: Optional[bool] = None
+    #: Define type of number. Currently API supports only PSTN_NUMBER.
+    telephony_type: Optional[str] = None
+    #: Flag to indicate if the number is toll free.
+    toll_free_number: Optional[bool] = None
+    #: Flag to indicate if the number is a Service Number.
+    is_service_number: Optional[bool] = None
+
+
+class DnisObject(ApiModel):
+    #: Unique identifier for the DNIS.
+    id: Optional[str] = None
+    #: Name of the DNIS.
+    name: Optional[str] = None
+    #: Phone number of the DNIS.
+    phone_number: Optional[str] = None
+    #: Extension of the DNIS.
+    extension: Optional[str] = None
+    #: Routing prefix (location dialing code) of the DNIS.
+    routing_prefix: Optional[str] = None
+    #: Enterprise Significant Number (ESN) of the DNIS.
+    esn: Optional[str] = None
+    #: Ring pattern of the DNIS.
+    ring_pattern: Optional[RingPatternObject] = None
+    #: Use custom announcement settings for the DNIS. Enable custom announcement settings using Modify DNIS API. Modify
+    #: custom announcement settings using Modify DNIS announcements API.
+    custom_dnis_announcement_settings_enabled: Optional[bool] = None
+
+
+class DnisSettings(ApiModel):
+    #: Whether distinctive ringing is enabled for the queue.
+    distinctive_ringing_enabled: Optional[bool] = None
+    #: Whether the DNIS name and number is displayed to agents.
+    display_dnis_name_and_number_enabled: Optional[bool] = None
+
+
+class AudioAnnouncementFileMediaFileType(str, Enum):
+    wav = 'WAV'
+
+
+class AudioAnnouncementFile(ApiModel):
+    #: Announcement file ID.
+    id: Optional[str] = None
+    #: Name of the announcement file.
+    file_name: Optional[str] = None
+    #: Media file type of the announcement.
+    media_file_type: Optional[AudioAnnouncementFileMediaFileType] = None
+    #: Level at which the announcement is defined.
+    level: Optional[AnnouncementAudioFileLevel] = None
+    #: Whether the file is a text-to-speech file.
+    is_text_to_speech: Optional[bool] = None
+
+
+class MohMessageSourceGreeting(str, Enum):
+    default = 'DEFAULT'
+    custom = 'CUSTOM'
+    playlist = 'PLAYLIST'
+
+
+class MohMessageSource(ApiModel):
+    #: Whether the source is enabled.
+    enabled: Optional[bool] = None
+    #: The greeting type.
+    greeting: Optional[MohMessageSourceGreeting] = None
+    #: List of audio announcement files.
+    audio_announcement_files: Optional[list[AudioAnnouncementFile]] = None
+    #: Audio playlist ID.
+    audio_playlist_id: Optional[str] = None
+    #: Audio playlist name.
+    audio_playlist_name: Optional[str] = None
+
+
+class AudioAnnouncementFileModify(ApiModel):
+    #: Announcement file ID.
+    id: Optional[str] = None
+    #: Name of the announcement file.
+    file_name: Optional[str] = None
+    #: Media file type of the announcement.
+    media_file_type: Optional[AudioAnnouncementFileMediaFileType] = None
+    #: Level at which the announcement is defined.
+    level: Optional[AnnouncementAudioFileLevel] = None
+
+
+class MohMessageSourceModify(ApiModel):
+    #: Whether the source is enabled.
+    enabled: Optional[bool] = None
+    #: The greeting type.
+    greeting: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
+    #: List of audio announcement files.
+    audio_announcement_files: Optional[list[AudioAnnouncementFileModify]] = None
+    #: Audio playlist ID.
+    audio_playlist_id: Optional[str] = None
+
+
+class DnisAnnouncementsGetWelcomeMessage(ApiModel):
+    #: Whether the welcome message is enabled.
+    enabled: Optional[bool] = None
+    #: Whether to always play the welcome message.
+    always_enabled: Optional[bool] = None
+    #: The greeting type.
+    greeting: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
+    #: List of audio announcement files.
+    audio_announcement_files: Optional[list[AudioAnnouncementFile]] = None
+
+
+class DnisAnnouncementsGetComfortMessage(ApiModel):
+    #: Whether the comfort message is enabled.
+    enabled: Optional[bool] = None
+    #: Time between comfort messages in seconds.
+    time_between_messages: Optional[int] = None
+    #: The greeting type.
+    greeting: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
+    #: List of audio announcement files.
+    audio_announcement_files: Optional[list[AudioAnnouncementFile]] = None
+
+
+class DnisAnnouncementsGetComfortMessageBypass(ApiModel):
+    #: Whether the comfort message bypass is enabled.
+    enabled: Optional[bool] = None
+    #: Call waiting age threshold in seconds.
+    call_waiting_age_threshold: Optional[int] = None
+    #: The greeting type.
+    greeting: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
+    #: List of audio announcement files.
+    audio_announcement_files: Optional[list[AudioAnnouncementFile]] = None
+
+
+class DnisAnnouncementsGetMohMessage(ApiModel):
+    normal_source: Optional[MohMessageSource] = None
+    alternate_source: Optional[MohMessageSource] = None
+
+
+class DnisAnnouncementsGetWhisperMessage(ApiModel):
+    #: Whether the whisper message is enabled.
+    enabled: Optional[bool] = None
+    #: The greeting type.
+    greeting: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
+    #: List of audio announcement files.
+    audio_announcement_files: Optional[list[AudioAnnouncementFile]] = None
+
+
+class DnisAnnouncementsGet(ApiModel):
+    #: Whether custom DNIS announcement settings are enabled for this DNIS.
+    custom_dnis_announcement_settings_enabled: Optional[bool] = None
+    #: Welcome message settings.
+    welcome_message: Optional[DnisAnnouncementsGetWelcomeMessage] = None
+    #: Comfort message settings.
+    comfort_message: Optional[DnisAnnouncementsGetComfortMessage] = None
+    #: Comfort message bypass settings.
+    comfort_message_bypass: Optional[DnisAnnouncementsGetComfortMessageBypass] = None
+    #: Music on hold message settings.
+    moh_message: Optional[DnisAnnouncementsGetMohMessage] = None
+    #: Wait message settings.
+    wait_message: Optional[CallQueueQueueSettingsGetObjectWaitMessage] = None
+    #: Whisper message settings.
+    whisper_message: Optional[DnisAnnouncementsGetWhisperMessage] = None
+
+
+class DnisAnnouncementsModifyWelcomeMessage(ApiModel):
+    #: Whether the welcome message is enabled.
+    enabled: Optional[bool] = None
+    #: Whether to always play the welcome message.
+    always_enabled: Optional[bool] = None
+    #: The greeting type.
+    greeting: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
+    #: List of audio announcement files.
+    audio_announcement_files: Optional[list[AudioAnnouncementFileModify]] = None
+
+
+class DnisAnnouncementsModifyComfortMessage(ApiModel):
+    #: Whether the comfort message is enabled.
+    enabled: Optional[bool] = None
+    #: Time between comfort messages in seconds.
+    time_between_messages: Optional[int] = None
+    #: The greeting type.
+    greeting: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
+    #: List of audio announcement files.
+    audio_announcement_files: Optional[list[AudioAnnouncementFileModify]] = None
+
+
+class DnisAnnouncementsModifyComfortMessageBypass(ApiModel):
+    #: Whether the comfort message bypass is enabled.
+    enabled: Optional[bool] = None
+    #: Minimum call waiting age in seconds before bypass plays.
+    call_waiting_age_threshold: Optional[int] = None
+    #: The greeting type.
+    greeting: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
+    #: List of audio announcement files.
+    audio_announcement_files: Optional[list[AudioAnnouncementFileModify]] = None
+
+
+class DnisAnnouncementsModifyMohMessage(ApiModel):
+    normal_source: Optional[MohMessageSourceModify] = None
+    alternate_source: Optional[MohMessageSourceModify] = None
+
+
+class DnisAnnouncementsModifyWhisperMessage(ApiModel):
+    #: Whether the whisper message is enabled.
+    enabled: Optional[bool] = None
+    #: The greeting type.
+    greeting: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
+    #: List of audio announcement files.
+    audio_announcement_files: Optional[list[AudioAnnouncementFileModify]] = None
+
+
 class GetCallQueueSupervisorResponse(ApiModel):
     #: unique identifier of the supervisor
     id: Optional[str] = None
@@ -1283,6 +1501,12 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
     
     A partner administrator can retrieve or change settings in another organization using the optional `orgId` query
     parameter.
+    
+    DNIS (Dialed Number Identification Service) allows call queues to distinguish between primary and alternate numbers
+    when delivering calls to agents. Each DNIS entry can have its own name, phone number, extension, ring pattern, and
+    custom announcement settings.
+    
+    The maximum number of DNIS entries per call queue is 100.
     """
 
     def create_call_queue(self, location_id: str, name: str, call_policies: GetCallQueueCallPolicyObject,
@@ -1508,6 +1732,31 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             params['extension'] = extension
         url = self.ep(f'locations/{location_id}/queues/callForwarding/availableNumbers')
         return self.session.follow_pagination(url=url, model=CallQueueCallForwardAvailableNumberObject, item_key='phoneNumbers', params=params)
+
+    def get_available_phone_numbers_for_dnis(self, location_id: str, phone_number: str = None, org_id: str = None,
+                                             **params: Any) -> Generator[AvailablePhoneNumber, None, None]:
+        """
+        Get Available Phone Numbers for DNIS
+
+        Get the list of available phone numbers that can be assigned to a DNIS for call queues at a location.
+
+        Retrieving available numbers requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: The location ID.
+        :type location_id: str
+        :param phone_number: Filter by phone number.
+        :type phone_number: str
+        :param org_id: The organization ID of the customer.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailablePhoneNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        url = self.ep(f'locations/{location_id}/queues/dnis/availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailablePhoneNumber, item_key='phoneNumbers', params=params)
 
     def delete_call_queue(self, location_id: str, queue_id: str, org_id: str = None) -> None:
         """
@@ -2068,6 +2317,372 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         data = super().put(url, params=params, json=body)
         r = data['id']
         return r
+
+    def bulk_delete_dnis_for_acall_queue(self, location_id: str, queue_id: str, items: list[str],
+                                         org_id: str = None) -> None:
+        """
+        Bulk Delete DNIS for a Call Queue
+
+        Bulk delete a list of DNIS (Dialed Number Identification Service) entries for a call queue.
+
+        A maximum of 99 DNIS entries can be deleted in a single request.
+
+        Deleting DNIS entries requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: The location ID where the call queue exists.
+        :type location_id: str
+        :param queue_id: The call queue ID.
+        :type queue_id: str
+        :param items: Array of DNIS IDs to be deleted.
+        :type items: list[str]
+        :param org_id: The organization ID of the customer.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        body['items'] = items
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/dnis')
+        super().delete(url, params=params, json=body)
+
+    def get_list_of_dnis_for_acall_queue(self, location_id: str, queue_id: str,
+                                         org_id: str = None) -> builtins.list[DnisObject]:
+        """
+        Get List of DNIS for a Call Queue
+
+        Get the list of DNIS (Dialed Number Identification Service) entries for a call queue.
+
+        DNIS allows call queues to distinguish between primary and alternate numbers when delivering calls to agents.
+        Each DNIS entry can have its own name, phone number, extension, ring pattern, and custom announcement
+        settings.
+
+        The maximum number of DNIS entries per call queue is 100.
+
+        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: The location ID where the call queue exists.
+        :type location_id: str
+        :param queue_id: The call queue ID.
+        :type queue_id: str
+        :param org_id: The organization ID of the customer.
+        :type org_id: str
+        :rtype: list[DnisObject]
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/dnis')
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[DnisObject]).validate_python(data['dnisList'])
+        return r
+
+    def create_adnis_for_acall_queue(self, location_id: str, queue_id: str, name: str, ring_pattern: RingPatternObject,
+                                     phone_number: str = None, extension: str = None, org_id: str = None) -> str:
+        """
+        Create a DNIS for a Call Queue
+
+        Create a new DNIS (Dialed Number Identification Service) entry for a call queue.
+
+        DNIS allows call queues to distinguish between primary and alternate numbers when delivering calls to agents.
+
+        The maximum number of DNIS entries per call queue is 100. Either `phoneNumber` or `extension` is required.
+
+        Creating a DNIS requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: The location ID where the call queue exists.
+        :type location_id: str
+        :param queue_id: The call queue ID.
+        :type queue_id: str
+        :param name: Name of the DNIS. Must be unique across the call queue.
+        :type name: str
+        :param ring_pattern: Ring pattern of the DNIS.
+        :type ring_pattern: RingPatternObject
+        :param phone_number: Phone number of the DNIS. Must be a valid phone number from the same location. Either
+            phoneNumber or extension is required.
+        :type phone_number: str
+        :param extension: Extension of the DNIS. Either phoneNumber or extension is required.
+        :type extension: str
+        :param org_id: The organization ID of the customer.
+        :type org_id: str
+        :rtype: str
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        body['name'] = name
+        if phone_number is not None:
+            body['phoneNumber'] = phone_number
+        if extension is not None:
+            body['extension'] = extension
+        body['ringPattern'] = enum_str(ring_pattern)
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/dnis')
+        data = super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    def get_dnis_settings_for_acall_queue(self, location_id: str, queue_id: str, org_id: str = None) -> DnisSettings:
+        """
+        Get DNIS Settings for a Call Queue
+
+        Get DNIS (Dialed Number Identification Service) settings for a call queue.
+
+        Retrieving DNIS settings requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: The location ID where the call queue exists.
+        :type location_id: str
+        :param queue_id: The call queue ID.
+        :type queue_id: str
+        :param org_id: The organization ID of the customer.
+        :type org_id: str
+        :rtype: :class:`DnisSettings`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/dnis/settings')
+        data = super().get(url, params=params)
+        r = DnisSettings.model_validate(data)
+        return r
+
+    def modify_dnis_settings_for_acall_queue(self, location_id: str, queue_id: str,
+                                             distinctive_ringing_enabled: bool = None,
+                                             display_dnis_name_and_number_enabled: bool = None,
+                                             org_id: str = None) -> None:
+        """
+        Modify DNIS Settings for a Call Queue
+
+        Modify DNIS (Dialed Number Identification Service) settings for a call queue.
+
+        Modifying DNIS settings requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: The location ID where the call queue exists.
+        :type location_id: str
+        :param queue_id: The call queue ID.
+        :type queue_id: str
+        :param distinctive_ringing_enabled: Whether distinctive ringing is enabled for the queue.
+        :type distinctive_ringing_enabled: bool
+        :param display_dnis_name_and_number_enabled: Whether the DNIS name and number is displayed to agents.
+        :type display_dnis_name_and_number_enabled: bool
+        :param org_id: The organization ID of the customer.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        if distinctive_ringing_enabled is not None:
+            body['distinctiveRingingEnabled'] = distinctive_ringing_enabled
+        if display_dnis_name_and_number_enabled is not None:
+            body['displayDnisNameAndNumberEnabled'] = display_dnis_name_and_number_enabled
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/dnis/settings')
+        super().put(url, params=params, json=body)
+
+    def delete_adnis_for_acall_queue(self, location_id: str, queue_id: str, dnis_id: str, org_id: str = None) -> None:
+        """
+        Delete a DNIS for a Call Queue
+
+        Delete a DNIS (Dialed Number Identification Service) entry for a call queue.
+
+        Deleting a DNIS requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: The location ID where the call queue exists.
+        :type location_id: str
+        :param queue_id: The call queue ID.
+        :type queue_id: str
+        :param dnis_id: The DNIS ID.
+        :type dnis_id: str
+        :param org_id: The organization ID of the customer.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/dnis/{dnis_id}')
+        super().delete(url, params=params)
+
+    def get_adnis_for_acall_queue(self, location_id: str, queue_id: str, dnis_id: str,
+                                  org_id: str = None) -> DnisObject:
+        """
+        Get a DNIS for a Call Queue
+
+        Get details of a specific DNIS (Dialed Number Identification Service) entry for a call queue.
+
+        Retrieving DNIS details requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: The location ID where the call queue exists.
+        :type location_id: str
+        :param queue_id: The call queue ID.
+        :type queue_id: str
+        :param dnis_id: The DNIS ID.
+        :type dnis_id: str
+        :param org_id: The organization ID of the customer.
+        :type org_id: str
+        :rtype: :class:`DnisObject`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/dnis/{dnis_id}')
+        data = super().get(url, params=params)
+        r = DnisObject.model_validate(data)
+        return r
+
+    def modify_adnis_for_acall_queue(self, location_id: str, queue_id: str, dnis_id: str, name: str = None,
+                                     phone_number: str = None, extension: str = None,
+                                     ring_pattern: RingPatternObject = None,
+                                     custom_dnis_announcement_settings_enabled: bool = None,
+                                     org_id: str = None) -> None:
+        """
+        Modify a DNIS for a Call Queue
+
+        Modify a DNIS (Dialed Number Identification Service) entry for a call queue.
+
+        To remove a phone number or extension from the DNIS, set the field to `null`.
+
+        Modifying a DNIS requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: The location ID where the call queue exists.
+        :type location_id: str
+        :param queue_id: The call queue ID.
+        :type queue_id: str
+        :param dnis_id: The DNIS ID.
+        :type dnis_id: str
+        :param name: Name of the DNIS. Must be unique across the call queue.
+        :type name: str
+        :param phone_number: Phone number of the DNIS. Set to `null` to remove the phone number.
+        :type phone_number: str
+        :param extension: Extension of the DNIS. Set to `null` to remove the extension.
+        :type extension: str
+        :param ring_pattern: Ring pattern of the DNIS.
+        :type ring_pattern: RingPatternObject
+        :param custom_dnis_announcement_settings_enabled: Use custom announcement settings for the DNIS.
+        :type custom_dnis_announcement_settings_enabled: bool
+        :param org_id: The organization ID of the customer.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        if name is not None:
+            body['name'] = name
+        if phone_number is not None:
+            body['phoneNumber'] = phone_number
+        if extension is not None:
+            body['extension'] = extension
+        if ring_pattern is not None:
+            body['ringPattern'] = enum_str(ring_pattern)
+        if custom_dnis_announcement_settings_enabled is not None:
+            body['customDnisAnnouncementSettingsEnabled'] = custom_dnis_announcement_settings_enabled
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/dnis/{dnis_id}')
+        super().put(url, params=params, json=body)
+
+    def get_dnis_announcements_for_acall_queue(self, location_id: str, queue_id: str, dnis_id: str,
+                                               org_id: str = None) -> DnisAnnouncementsGet:
+        """
+        Get DNIS Announcements for a Call Queue
+
+        Get the announcement settings for a specific DNIS (Dialed Number Identification Service) entry in a call queue.
+
+        This includes welcome message, comfort message, music on hold, wait message, and whisper message settings.
+
+        Retrieving DNIS announcements requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: The location ID where the call queue exists.
+        :type location_id: str
+        :param queue_id: The call queue ID.
+        :type queue_id: str
+        :param dnis_id: The DNIS ID.
+        :type dnis_id: str
+        :param org_id: The organization ID of the customer.
+        :type org_id: str
+        :rtype: :class:`DnisAnnouncementsGet`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/dnis/{dnis_id}/announcements')
+        data = super().get(url, params=params)
+        r = DnisAnnouncementsGet.model_validate(data)
+        return r
+
+    def modify_dnis_announcements_for_acall_queue(self, location_id: str, queue_id: str, dnis_id: str,
+                                                  custom_dnis_announcement_settings_enabled: bool = None,
+                                                  welcome_message: DnisAnnouncementsModifyWelcomeMessage = None,
+                                                  comfort_message: DnisAnnouncementsModifyComfortMessage = None,
+                                                  comfort_message_bypass: DnisAnnouncementsModifyComfortMessageBypass = None,
+                                                  moh_message: DnisAnnouncementsModifyMohMessage = None,
+                                                  wait_message: CallQueueQueueSettingsGetObjectWaitMessage = None,
+                                                  whisper_message: DnisAnnouncementsModifyWhisperMessage = None,
+                                                  org_id: str = None) -> None:
+        """
+        Modify DNIS Announcements for a Call Queue
+
+        Modify the announcement settings for a specific DNIS (Dialed Number Identification Service) entry in a call
+        queue.
+
+        This includes welcome message, comfort message, music on hold, wait message, and whisper message settings.
+
+        Modifying DNIS announcements requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: The location ID where the call queue exists.
+        :type location_id: str
+        :param queue_id: The call queue ID.
+        :type queue_id: str
+        :param dnis_id: The DNIS ID.
+        :type dnis_id: str
+        :param custom_dnis_announcement_settings_enabled: Whether custom DNIS announcement settings are enabled for
+            this DNIS.
+        :type custom_dnis_announcement_settings_enabled: bool
+        :param welcome_message: Welcome message settings.
+        :type welcome_message: DnisAnnouncementsModifyWelcomeMessage
+        :param comfort_message: Comfort message settings.
+        :type comfort_message: DnisAnnouncementsModifyComfortMessage
+        :param comfort_message_bypass: Comfort message bypass settings.
+        :type comfort_message_bypass: DnisAnnouncementsModifyComfortMessageBypass
+        :param moh_message: Music on hold message settings.
+        :type moh_message: DnisAnnouncementsModifyMohMessage
+        :param wait_message: Wait message settings.
+        :type wait_message: CallQueueQueueSettingsGetObjectWaitMessage
+        :param whisper_message: Whisper message settings.
+        :type whisper_message: DnisAnnouncementsModifyWhisperMessage
+        :param org_id: The organization ID of the customer.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        if custom_dnis_announcement_settings_enabled is not None:
+            body['customDnisAnnouncementSettingsEnabled'] = custom_dnis_announcement_settings_enabled
+        if welcome_message is not None:
+            body['welcomeMessage'] = welcome_message.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if comfort_message is not None:
+            body['comfortMessage'] = comfort_message.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if comfort_message_bypass is not None:
+            body['comfortMessageBypass'] = comfort_message_bypass.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if moh_message is not None:
+            body['mohMessage'] = moh_message.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if wait_message is not None:
+            body['waitMessage'] = wait_message.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if whisper_message is not None:
+            body['whisperMessage'] = whisper_message.model_dump(mode='json', by_alias=True, exclude_none=True)
+        url = self.ep(f'locations/{location_id}/queues/{queue_id}/dnis/{dnis_id}/announcements')
+        super().put(url, params=params, json=body)
 
     def get_call_queue_forced_forward(self, location_id: str, queue_id: str,
                                       org_id: str = None) -> GetCallQueueForcedForwardObject:
