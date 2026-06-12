@@ -2,7 +2,14 @@
 # /// script
 # requires-python = ">=3.11,<3.14"
 # dependencies = [
-#     "pydantic"
+#     "pydantic>=2.0.0,<3",
+#     "requests>=2.27.1,<3",
+#     "requests-toolbelt>=1.0.0,<2",
+#     "pytz",
+#     "aiohttp>=3.8.1,<4",
+#     "python-dateutil>=2.8.2,<3",
+#     "aenum>=3.1.11,<4",
+#     "PyYAML~=6.0",
 # ]
 # ///
 """
@@ -30,6 +37,8 @@ Options
   --no-cluster           List similar pairs flat instead of clustering them
 """
 
+from __future__ import annotations
+
 import argparse
 import inspect
 import json
@@ -40,18 +49,19 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from itertools import combinations
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-import pydantic
+if TYPE_CHECKING:
+    import pydantic
 
-# we need to add the parent dir into sys.path so that the import of wxc_sdk can be resolved locally
+# Legacy mode introspects the installed/local SDK at runtime. The repository
+# root is added here so that local sources win over any globally installed SDK.
 p_dir = str(Path(__file__).parent.parent)
-print(f'inserting parent dir {p_dir} into sys.path')
 sys.path.insert(0, p_dir)
-print(sys.path)
-print()
 
-from wxc_sdk.base import ApiModel
+# Generated-file mode is source-only and import-safe; the heavy SDK imports
+# remain lazy inside legacy functions so this mode can run with fewer deps.
+from script.generated_model_equivalents import analyse_generated_file, render_generated_json, render_generated_text
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Type canonicalisation & pretty-printing
@@ -59,7 +69,15 @@ from wxc_sdk.base import ApiModel
 
 
 def canonical_type(ann: Any, depth: int = 0) -> object:
-    """Return a hashable, comparable representation of a type annotation."""
+    """Return a hashable, comparable representation of a type annotation.
+
+    :param ann: Python type annotation to normalize.
+    :type ann: Any
+    :param depth: Recursion depth guard for nested annotations.
+    :type depth: int
+    :return: Hashable canonical representation of the annotation.
+    :rtype: object
+    """
     if depth > 10:
         return str(ann)
 
@@ -98,7 +116,15 @@ def canonical_type(ann: Any, depth: int = 0) -> object:
 
 
 def pretty_type(ann: Any, depth: int = 0) -> str:
-    """Human-readable type string: Optional[X], List[X], etc."""
+    """Return a human-readable type string.
+
+    :param ann: Python type annotation to format.
+    :type ann: Any
+    :param depth: Recursion depth guard for nested annotations.
+    :type depth: int
+    :return: Display string such as ``Optional[X]`` or ``List[X]``.
+    :rtype: str
+    """
     if depth > 10:
         return str(ann)
 
@@ -140,6 +166,15 @@ def pretty_type(ann: Any, depth: int = 0) -> str:
 
 
 def types_equivalent(a: Any, b: Any) -> bool:
+    """Return whether two runtime annotations are canonically equivalent.
+
+    :param a: First Python type annotation.
+    :type a: Any
+    :param b: Second Python type annotation.
+    :type b: Any
+    :return: ``True`` when both annotations normalize to the same signature.
+    :rtype: bool
+    """
     return canonical_type(a) == canonical_type(b)
 
 
@@ -150,6 +185,8 @@ def types_equivalent(a: Any, b: Any) -> bool:
 
 @dataclass
 class ModelInfo:
+    """Runtime Pydantic model metadata used by the legacy report."""
+
     name: str
     cls: type[pydantic.BaseModel]
     source_file: str
@@ -159,17 +196,36 @@ class ModelInfo:
     canonical_sig: tuple[tuple[str, str], ...]  # sorted (field_name, canonical_type_str)
 
     # Filled in during inheritance analysis
-    parent_model: 'ModelInfo | None' = field(default=None, compare=False, repr=False)
-    child_models: list['ModelInfo'] = field(default_factory=list, compare=False, repr=False)
+    parent_model: ModelInfo | None = field(default=None, compare=False, repr=False)
+    child_models: list[ModelInfo] = field(default_factory=list, compare=False, repr=False)
 
     def __hash__(self) -> int:
+        """Return an identity-based hash for the wrapped class.
+
+        :return: Hash derived from the runtime model class identity.
+        :rtype: int
+        """
         return hash(id(self.cls))
 
     def __eq__(self, other: object) -> bool:
+        """Return whether two model infos wrap the same runtime class.
+
+        :param other: Object to compare with this model info.
+        :type other: object
+        :return: ``True`` when both records wrap the same class object.
+        :rtype: bool
+        """
         return isinstance(other, ModelInfo) and self.cls is other.cls
 
 
 def get_source_file(cls: type[pydantic.BaseModel]) -> str:
+    """Return a readable source path for a Pydantic model class.
+
+    :param cls: Runtime Pydantic model class.
+    :type cls: type[pydantic.BaseModel]
+    :return: Repository-relative SDK path when possible.
+    :rtype: str
+    """
     try:
         f = inspect.getfile(cls)
         parts = Path(f).parts
@@ -183,6 +239,15 @@ def get_source_file(cls: type[pydantic.BaseModel]) -> str:
 
 
 def collect_models(min_fields: int = 3) -> list[ModelInfo]:
+    """Collect exported SDK Pydantic models for the legacy report.
+
+    :param min_fields: Minimum number of model fields required for inclusion.
+    :type min_fields: int
+    :return: Runtime model metadata records.
+    :rtype: list[ModelInfo]
+    """
+    import pydantic
+
     from wxc_sdk import all_types
 
     models: list[ModelInfo] = []
@@ -220,7 +285,17 @@ def collect_models(min_fields: int = 3) -> list[ModelInfo]:
 
 
 def build_inheritance(models: list[ModelInfo]) -> list[ModelInfo]:
-    """Attach .parent_model / .child_models for non-trivial inheritance."""
+    """Attach parent and child model links for non-trivial inheritance.
+
+    :param models: Runtime model metadata records.
+    :type models: list[ModelInfo]
+    :return: The same model records with inheritance links populated.
+    :rtype: list[ModelInfo]
+    """
+    import pydantic
+
+    from wxc_sdk.base import ApiModel
+
     cls_to_info: dict[type, ModelInfo] = {m.cls: m for m in models}
     base_classes = {pydantic.BaseModel, ApiModel, object}
 
@@ -244,15 +319,31 @@ def build_inheritance(models: list[ModelInfo]) -> list[ModelInfo]:
 
 @dataclass
 class FieldDiff:
+    """Field-level difference between two runtime SDK models."""
+
     only_in_a: list[str]
     only_in_b: list[str]
     type_differs: list[tuple[str, str, str]]  # (field_name, pretty_type_a, pretty_type_b)
 
     def total(self) -> int:
+        """Return the total number of field and type differences.
+
+        :return: Difference count.
+        :rtype: int
+        """
         return len(self.only_in_a) + len(self.only_in_b) + len(self.type_differs)
 
 
 def compute_diff(a: ModelInfo, b: ModelInfo) -> FieldDiff:
+    """Compute field-name and type differences between two models.
+
+    :param a: First runtime model record.
+    :type a: ModelInfo
+    :param b: Second runtime model record.
+    :type b: ModelInfo
+    :return: Field difference record.
+    :rtype: FieldDiff
+    """
     only_a = sorted(a.field_names - b.field_names)
     only_b = sorted(b.field_names - a.field_names)
     common = a.field_names & b.field_names
@@ -271,16 +362,39 @@ def compute_diff(a: ModelInfo, b: ModelInfo) -> FieldDiff:
 
 
 class UnionFind:
+    """Small disjoint-set helper used to cluster similar model pairs."""
+
     def __init__(self) -> None:
+        """Initialize an empty union-find structure.
+
+        :return: ``None``.
+        :rtype: None
+        """
         self._parent: dict[str, str] = {}
 
     def find(self, x: str) -> str:
+        """Return the canonical representative for a value.
+
+        :param x: Value to look up.
+        :type x: str
+        :return: Representative value for ``x``.
+        :rtype: str
+        """
         self._parent.setdefault(x, x)
         if self._parent[x] != x:
             self._parent[x] = self.find(self._parent[x])
         return self._parent[x]
 
     def union(self, x: str, y: str) -> None:
+        """Merge the sets containing two values.
+
+        :param x: First value.
+        :type x: str
+        :param y: Second value.
+        :type y: str
+        :return: ``None``.
+        :rtype: None
+        """
         self._parent[self.find(x)] = self.find(y)
 
 
@@ -291,31 +405,49 @@ class UnionFind:
 
 @dataclass
 class EquivalentGroup:
+    """Runtime models that have identical legacy signatures."""
+
     models: list[ModelInfo]
     fields: frozenset[str]
 
 
 @dataclass
 class SimilarPair:
+    """Two runtime models whose differences are within the threshold."""
+
     a: ModelInfo
     b: ModelInfo
     diff: FieldDiff
 
     def total(self) -> int:
+        """Return the total difference count for this similar pair.
+
+        :return: Field and type difference count.
+        :rtype: int
+        """
         return self.diff.total()
 
 
 @dataclass
 class SimilarCluster:
+    """Connected component of similar model pairs."""
+
     members: list[ModelInfo]
     pairs: list[SimilarPair]
 
     def max_diff(self) -> int:
+        """Return the largest pairwise difference in the cluster.
+
+        :return: Maximum difference count.
+        :rtype: int
+        """
         return max((p.total() for p in self.pairs), default=0)
 
 
 @dataclass
 class InheritanceEntry:
+    """Parent-child model relationship for the inheritance section."""
+
     child: ModelInfo
     parent: ModelInfo
     added_fields: list[str]
@@ -332,7 +464,22 @@ def analyse(
     include_subclasses: bool,
     cluster: bool,
 ) -> tuple[list[EquivalentGroup], list[SimilarCluster]]:
+    """Analyze runtime SDK models for equivalence and similarity.
 
+    :param models: Runtime model records to compare.
+    :type models: list[ModelInfo]
+    :param max_diff: Maximum difference count for a similar pair.
+    :type max_diff: int
+    :param include_subclasses: Whether subclass-parent pairs can be similar.
+    :type include_subclasses: bool
+    :param cluster: Whether to group similar pairs into connected components.
+    :type cluster: bool
+    :return: Equivalent groups and similar clusters.
+    :rtype: tuple[list[EquivalentGroup], list[SimilarCluster]]
+    """
+
+    # Equivalent groups use the full legacy signature: field names and
+    # canonicalized runtime annotations.
     # ── Equivalent groups ─────────────────────────────────────────────────
     sig_buckets: dict[tuple[tuple[str, str], ...], list[ModelInfo]] = defaultdict(list)
     for m in models:
@@ -354,6 +501,8 @@ def analyse(
             if m.parent_model is not None:
                 subclass_pairs.add(frozenset({m.name, m.parent_model.name}))
 
+    # Similarity is deliberately looser than equivalence and is used as a
+    # discovery aid, not as a consolidation recommendation by itself.
     # ── Similar pairs ─────────────────────────────────────────────────────
     similar_pairs: list[SimilarPair] = []
 
@@ -372,6 +521,8 @@ def analyse(
 
     similar_pairs.sort(key=lambda p: (p.total(), p.a.name, p.b.name))
 
+    # Pair clustering makes large similarity neighborhoods easier to read in
+    # the legacy report.
     # ── Cluster ───────────────────────────────────────────────────────────
     if not cluster:
         clusters = [SimilarCluster([p.a, p.b], [p]) for p in similar_pairs]
@@ -409,6 +560,13 @@ def analyse(
 
 
 def collect_inheritance_entries(models: list[ModelInfo]) -> list[InheritanceEntry]:
+    """Collect parent-child inheritance report rows.
+
+    :param models: Runtime model records with inheritance links populated.
+    :type models: list[ModelInfo]
+    :return: Sorted inheritance entries.
+    :rtype: list[InheritanceEntry]
+    """
     entries = []
     for m in models:
         if m.parent_model is None:
@@ -432,6 +590,23 @@ def render_text(
     max_diff: int,
     min_fields: int,
 ) -> str:
+    """Render the legacy SDK-wide report as plain text.
+
+    :param models: Runtime model records included in the report.
+    :type models: list[ModelInfo]
+    :param equiv_groups: Equivalent model groups.
+    :type equiv_groups: list[EquivalentGroup]
+    :param clusters: Similar model clusters.
+    :type clusters: list[SimilarCluster]
+    :param inheritance: Inheritance entries.
+    :type inheritance: list[InheritanceEntry]
+    :param max_diff: Similarity threshold used for the report.
+    :type max_diff: int
+    :param min_fields: Minimum field count used for collection.
+    :type min_fields: int
+    :return: Human-readable report text.
+    :rtype: str
+    """
 
     lines: list[str] = []
     w = lines.append
@@ -563,7 +738,28 @@ def render_json(
     clusters: list[SimilarCluster],
     inheritance: list[InheritanceEntry],
 ) -> str:
+    """Render the legacy SDK-wide report as JSON.
+
+    :param models: Runtime model records included in the report.
+    :type models: list[ModelInfo]
+    :param equiv_groups: Equivalent model groups.
+    :type equiv_groups: list[EquivalentGroup]
+    :param clusters: Similar model clusters.
+    :type clusters: list[SimilarCluster]
+    :param inheritance: Inheritance entries.
+    :type inheritance: list[InheritanceEntry]
+    :return: Pretty-printed JSON report.
+    :rtype: str
+    """
+
     def mref(m: ModelInfo) -> dict[str, str]:
+        """Return a JSON-compatible reference for a runtime model.
+
+        :param m: Runtime model metadata.
+        :type m: ModelInfo
+        :return: JSON-compatible model reference.
+        :rtype: dict[str, str]
+        """
         return {'name': m.name, 'source': m.source_file}
 
     out = {
@@ -619,23 +815,74 @@ def render_json(
 # ══════════════════════════════════════════════════════════════════════════════
 
 
-def parse_args() -> Namespace:
+def parse_args(argv: list[str] | None = None) -> Namespace:
+    """Parse command-line arguments and validate selected mode.
+
+    :param argv: Optional argument list for tests; defaults to ``sys.argv``.
+    :type argv: list[str] | None
+    :return: Parsed command-line namespace.
+    :rtype: argparse.Namespace
+    """
     p = argparse.ArgumentParser(
-        description='Find equivalent and similar Pydantic models in wxc_sdk',
+        description='Find equivalent/similar Pydantic models in wxc_sdk or compare one generated file to the SDK',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
     )
+    p.add_argument('generated_file', nargs='?', help='Auto-generated Python source to compare to SDK models')
     p.add_argument('--max-diff', type=int, default=3, help="Max field differences for 'similar' (default: 3)")
     p.add_argument('--min-fields', type=int, default=3, help='Ignore models with fewer than N fields (default: 3)')
     p.add_argument('--output', '-o', help='Write report to FILE (default: stdout)')
     p.add_argument('--format', choices=['text', 'json'], default='text', help='Output format (default: text)')
     p.add_argument('--include-subclasses', action='store_true', help='Include subclass pairs in similar section')
     p.add_argument('--no-cluster', action='store_true', help='List pairs flat instead of clustering')
-    return p.parse_args()
+    p.add_argument('--sdk-root', help='SDK package root for generated-file mode (default: wxc_sdk)')
+    p.add_argument('--added-only', action='store_true', help='Only analyze generated models added since --base-ref')
+    p.add_argument('--base-ref', help='Git base ref for --added-only in generated-file mode (default: HEAD)')
+    args = p.parse_args(argv)
+
+    # The optional positional generated file is the mode selector. Legacy mode
+    # must keep its original no-argument behavior, while generated-only flags
+    # fail fast unless that positional path is present.
+    if args.generated_file is None:
+        generated_only_flags = []
+        if args.added_only:
+            generated_only_flags.append('--added-only')
+        if args.base_ref is not None:
+            generated_only_flags.append('--base-ref')
+        if args.sdk_root is not None:
+            generated_only_flags.append('--sdk-root')
+        if generated_only_flags:
+            joined_flags = ', '.join(generated_only_flags)
+            p.error(f'{joined_flags} require generated_file')
+    else:
+        args.sdk_root = args.sdk_root or 'wxc_sdk'
+        args.base_ref = args.base_ref or 'HEAD'
+
+    return args
 
 
 def main() -> None:
+    """Run either the legacy SDK-wide report or generated-file mode.
+
+    :return: ``None``.
+    :rtype: None
+    """
     args = parse_args()
+
+    if args.generated_file:
+        result = analyse_generated_file(
+            generated_file=Path(args.generated_file),
+            sdk_root=Path(args.sdk_root),
+            added_only=args.added_only,
+            base_ref=args.base_ref,
+        )
+        report = render_generated_json(result) if args.format == 'json' else render_generated_text(result)
+        if args.output:
+            Path(args.output).write_text(report)
+            print(f'Report written to {args.output}', file=sys.stderr)
+        else:
+            print(report)
+        return
 
     print('Collecting models…', file=sys.stderr)
     models = collect_models(min_fields=args.min_fields)
