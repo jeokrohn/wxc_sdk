@@ -16,8 +16,14 @@ __all__ = ['CallRecordingJobStatus', 'CallRecordingLocationVendorsResponse', 'Ca
            'CallRecordingVendors', 'CallRecordingVendorsList', 'CountObject', 'ErrorMessageObject', 'ErrorObject',
            'FailureBehavior', 'FeaturesCallRecordingApi', 'GetCallRecordingObject',
            'GetCallRecordingObjectOrganization', 'GetCallRecordingTermsOfServiceObject',
-           'GetComplianceAnnouncementObject', 'GetOrgComplianceAnnouncementObject', 'ItemObject',
-           'JobExecutionStatusObject', 'LatestExecutionStatus', 'MemberType', 'Members', 'Regions',
+           'GetComplianceAnnouncementObject', 'GetComplianceAnnouncementObjectCustomComplianceAnnouncement',
+           'GetComplianceAnnouncementObjectCustomComplianceAnnouncementAudioAnnouncementFile',
+           'GetComplianceAnnouncementObjectCustomComplianceAnnouncementAudioAnnouncementFileLevel',
+           'GetComplianceAnnouncementObjectCustomComplianceAnnouncementAudioAnnouncementFileMediaFileType',
+           'GetComplianceAnnouncementObjectCustomComplianceAnnouncementType',
+           'GetLocationCallRecordingAnnouncementObject', 'GetOrgCallRecordingAnnouncementObject',
+           'GetOrgComplianceAnnouncementObject', 'ItemObject', 'JobExecutionStatusObject', 'LatestExecutionStatus',
+           'MemberType', 'Members', 'ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement', 'Regions',
            'StepExecutionStatusesObject', 'UserLicenseType', 'Vendor']
 
 
@@ -56,6 +62,40 @@ class GetCallRecordingTermsOfServiceObject(ApiModel):
     terms_of_service_url: Optional[str] = None
 
 
+class GetComplianceAnnouncementObjectCustomComplianceAnnouncementType(str, Enum):
+    custom = 'CUSTOM'
+    default = 'DEFAULT'
+
+
+class GetComplianceAnnouncementObjectCustomComplianceAnnouncementAudioAnnouncementFileMediaFileType(str, Enum):
+    wav = 'WAV'
+
+
+class GetComplianceAnnouncementObjectCustomComplianceAnnouncementAudioAnnouncementFileLevel(str, Enum):
+    organization = 'ORGANIZATION'
+    location = 'LOCATION'
+
+
+class GetComplianceAnnouncementObjectCustomComplianceAnnouncementAudioAnnouncementFile(ApiModel):
+    #: Unique identifier for the custom audio announcement file.
+    id: Optional[str] = None
+    #: The original file name of the uploaded custom audio announcement.
+    file_name: Optional[str] = None
+    #: Type of the announcement file. Type is an enum with supported values WAV
+    media_file_type: Optional[GetComplianceAnnouncementObjectCustomComplianceAnnouncementAudioAnnouncementFileMediaFileType] = None
+    #: Announcement audio file level.
+    level: Optional[GetComplianceAnnouncementObjectCustomComplianceAnnouncementAudioAnnouncementFileLevel] = None
+    #: Indicates if the announcement is created by TTS.
+    is_text_to_speech: Optional[bool] = None
+
+
+class GetComplianceAnnouncementObjectCustomComplianceAnnouncement(ApiModel):
+    #: Type of compliance announcement to be played. Type is an enum with supported values CUSTOM | DEFAULT. CUSTOM is
+    #: used to play a custom announcement file. DEFAULT is used to play the default system announcement file.
+    type: Optional[GetComplianceAnnouncementObjectCustomComplianceAnnouncementType] = None
+    audio_announcement_file: Optional[GetComplianceAnnouncementObjectCustomComplianceAnnouncementAudioAnnouncementFile] = None
+
+
 class GetComplianceAnnouncementObject(ApiModel):
     #: Flag to indicate whether the call recording START/STOP announcement is played to an inbound caller.
     inbound_pstncalls_enabled: Optional[bool] = Field(alias='inboundPSTNCallsEnabled', default=None)
@@ -67,6 +107,12 @@ class GetComplianceAnnouncementObject(ApiModel):
     outbound_pstncalls_delay_enabled: Optional[bool] = Field(alias='outboundPSTNCallsDelayEnabled', default=None)
     #: Number of seconds to wait before playing the compliance announcement.
     delay_in_seconds: Optional[int] = None
+    #: Flag to indicate whether to use the organization level custom compliance announcement. If this flag is set to
+    #: true, takes the organization's announcement setting. If this flag is set to false, takes the location's custom
+    #: announcement.
+    use_org_level_announcement_enabled: Optional[bool] = None
+    #: Custom compliance announcement settings.
+    custom_compliance_announcement: Optional[GetComplianceAnnouncementObjectCustomComplianceAnnouncement] = None
 
 
 class GetOrgComplianceAnnouncementObject(ApiModel):
@@ -78,6 +124,19 @@ class GetOrgComplianceAnnouncementObject(ApiModel):
     outbound_pstncalls_delay_enabled: Optional[bool] = Field(alias='outboundPSTNCallsDelayEnabled', default=None)
     #: Number of seconds to wait before playing the compliance announcement.
     delay_in_seconds: Optional[int] = None
+    #: Flag to indicate whether to use the custom compliance announcement. If true it uses the organization's custom
+    #: compliance announcement file, and if false default compliance announcement used.
+    use_custom_announcement_enabled: Optional[bool] = None
+    #: The custom audio announcement file to be played.
+    audio_announcement_file: Optional[GetComplianceAnnouncementObjectCustomComplianceAnnouncementAudioAnnouncementFile] = None
+
+
+class ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement(ApiModel):
+    #: Type of compliance announcement to be played. Type is an enum with supported values CUSTOM | DEFAULT. CUSTOM is
+    #: used to play a custom announcement file. DEFAULT is used to play the default system announcement file.
+    type: Optional[GetComplianceAnnouncementObjectCustomComplianceAnnouncementType] = None
+    #: Unique identifier for the custom audio announcement file.
+    audio_announcement_file_id: Optional[str] = None
 
 
 class Regions(ApiModel):
@@ -86,7 +145,7 @@ class Regions(ApiModel):
     #: Name of the region.
     name: Optional[str] = None
     #: Enabled by default.
-    default_enabled: Optional[str] = None
+    default_enabled: Optional[bool] = None
 
 
 class MemberType(str, Enum):
@@ -275,6 +334,7 @@ class CallRecordingJobStatus(ApiModel):
 class ErrorMessageObject(ApiModel):
     #: Error message.
     description: Optional[str] = None
+    #: Machine-readable error code identifying the failure type.
     code: Optional[str] = None
     #: Error messages describing the location ID in which the error occurs. For a move operation, this is the target
     #: location ID.
@@ -315,6 +375,41 @@ class CallRecordingVendorsList(ApiModel):
     storage_region: Optional[str] = None
     #: Call recording failure behavior.
     failure_behavior: Optional[FailureBehavior] = None
+
+
+class GetOrgCallRecordingAnnouncementObject(ApiModel):
+    #: The start announcement settings for this organization.
+    start: Optional[GetComplianceAnnouncementObjectCustomComplianceAnnouncement] = None
+    #: The stop announcement settings for this organization.
+    stop: Optional[GetComplianceAnnouncementObjectCustomComplianceAnnouncement] = None
+    #: The pause announcement settings for this organization.
+    pause: Optional[GetComplianceAnnouncementObjectCustomComplianceAnnouncement] = None
+    #: The resume announcement settings for this organization.
+    resume: Optional[GetComplianceAnnouncementObjectCustomComplianceAnnouncement] = None
+    #: The failure proceed with call announcement settings for this organization.
+    failure_proceed_with_call: Optional[GetComplianceAnnouncementObjectCustomComplianceAnnouncement] = None
+    #: The failure end with call announcement settings for this organization.
+    failure_end_with_call: Optional[GetComplianceAnnouncementObjectCustomComplianceAnnouncement] = None
+
+
+class GetLocationCallRecordingAnnouncementObject(ApiModel):
+    #: Flag to indicate whether to use the organization level call recording announcement settings. If the flag is set
+    #: to true, indicates that the callRecordingAnnouncementSelection setting is inherited from the organization-level
+    #: configuration. If the flag is set to false, indicates that the callRecordingAnnouncementSelection setting is
+    #: customized at the location level.
+    use_org_level_announcement_enabled: Optional[bool] = None
+    #: The start announcement settings for this location.
+    start: Optional[GetComplianceAnnouncementObjectCustomComplianceAnnouncement] = None
+    #: The stop announcement settings for this location.
+    stop: Optional[GetComplianceAnnouncementObjectCustomComplianceAnnouncement] = None
+    #: The pause announcement settings for this location.
+    pause: Optional[GetComplianceAnnouncementObjectCustomComplianceAnnouncement] = None
+    #: The resume announcement settings for this location.
+    resume: Optional[GetComplianceAnnouncementObjectCustomComplianceAnnouncement] = None
+    #: The failure proceed with call announcement settings for this location.
+    failure_proceed_with_call: Optional[GetComplianceAnnouncementObjectCustomComplianceAnnouncement] = None
+    #: The failure end with call announcement settings for this location.
+    failure_end_with_call: Optional[GetComplianceAnnouncementObjectCustomComplianceAnnouncement] = None
 
 
 class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
@@ -390,6 +485,85 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         url = self.ep('callRecording')
         super().put(url, params=params, json=body)
 
+    def get_organization_call_recording_announcement_settings(self,
+                                                              org_id: str = None) -> GetOrgCallRecordingAnnouncementObject:
+        """
+        Get Organization Call Recording Announcement Settings
+
+        Retrieve the organization call recording announcements setting.
+
+        The call recording Announcement feature interacts with the Call Recording feature, specifically with the
+        playback of the start/stop announcement. When the compliance announcement is played to the PSTN party, and the
+        PSTN party is connected to a party with call recording enabled, then the start/stop announcement is inhibited.
+
+        Retrieving organization compliance announcement setting requires a full or read-only administrator auth token
+        with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve call recording announcements setting from this organization.
+        :type org_id: str
+        :rtype: :class:`GetOrgCallRecordingAnnouncementObject`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('callRecording/announcements')
+        data = super().get(url, params=params)
+        r = GetOrgCallRecordingAnnouncementObject.model_validate(data)
+        return r
+
+    def update_organization_call_recording_announcement_settings(self,
+                                                                 start: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement = None,
+                                                                 stop: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement = None,
+                                                                 pause: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement = None,
+                                                                 resume: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement = None,
+                                                                 failure_end_with_call: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement = None,
+                                                                 failure_proceed_with_call: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement = None,
+                                                                 org_id: str = None) -> None:
+        """
+        Update Organization Call Recording Announcement Settings.
+
+        The Compliance Announcement feature interacts with the Call Recording feature, specifically with the playback
+        of the start/stop announcement. When the compliance announcement is played to the PSTN party, and the PSTN
+        party is connected to a party with call recording enabled, then the start/stop announcement is inhibited.
+
+        Updating the organization compliance announcement requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param start: The start announcement settings for this organization.
+        :type start: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement
+        :param stop: The stop announcement settings for this organization.
+        :type stop: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement
+        :param pause: The pause announcement settings for this organization.
+        :type pause: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement
+        :param resume: The resume announcement settings for this organization.
+        :type resume: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement
+        :param failure_end_with_call: The failure end with call announcement settings for this organization.
+        :type failure_end_with_call: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement
+        :param failure_proceed_with_call: The failure proceed with call announcement settings for this organization.
+        :type failure_proceed_with_call: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement
+        :param org_id: Update the call recording announcements setting from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        if start is not None:
+            body['start'] = start.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if stop is not None:
+            body['stop'] = stop.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if pause is not None:
+            body['pause'] = pause.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if resume is not None:
+            body['resume'] = resume.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if failure_end_with_call is not None:
+            body['failureEndWithCall'] = failure_end_with_call.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if failure_proceed_with_call is not None:
+            body['failureProceedWithCall'] = failure_proceed_with_call.model_dump(mode='json', by_alias=True, exclude_none=True)
+        url = self.ep('callRecording/announcements')
+        super().put(url, params=params, json=body)
+
     def get_details_for_the_organization_compliance_announcement_setting(self,
                                                                          org_id: str = None) -> GetOrgComplianceAnnouncementObject:
         """
@@ -419,7 +593,10 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
     def update_the_organization_compliance_announcement(self, inbound_pstncalls_enabled: bool = None,
                                                         outbound_pstncalls_enabled: bool = None,
                                                         outbound_pstncalls_delay_enabled: bool = None,
-                                                        delay_in_seconds: int = None, org_id: str = None) -> None:
+                                                        delay_in_seconds: int = None,
+                                                        use_custom_announcement_enabled: bool = None,
+                                                        audio_announcement_file_id: str = None,
+                                                        org_id: str = None) -> None:
         """
         Update the organization compliance announcement.
 
@@ -441,6 +618,12 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type outbound_pstncalls_delay_enabled: bool
         :param delay_in_seconds: Number of seconds to wait before playing the compliance announcement.
         :type delay_in_seconds: int
+        :param use_custom_announcement_enabled: Flag to indicate whether to use the custom compliance announcement. If
+            true it uses the organization's custom compliance announcement file, and if false default compliance
+            announcement used.
+        :type use_custom_announcement_enabled: bool
+        :param audio_announcement_file_id: Unique identifier for the custom audio announcement file.
+        :type audio_announcement_file_id: str
         :param org_id: Update the compliance announcement setting from this organization.
         :type org_id: str
         :rtype: None
@@ -457,6 +640,10 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
             body['outboundPSTNCallsDelayEnabled'] = outbound_pstncalls_delay_enabled
         if delay_in_seconds is not None:
             body['delayInSeconds'] = delay_in_seconds
+        if use_custom_announcement_enabled is not None:
+            body['useCustomAnnouncementEnabled'] = use_custom_announcement_enabled
+        if audio_announcement_file_id is not None:
+            body['audioAnnouncementFileId'] = audio_announcement_file_id
         url = self.ep('callRecording/complianceAnnouncement')
         super().put(url, params=params, json=body)
 
@@ -663,7 +850,7 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         url = self.ep('jobs/callRecording')
         return self.session.follow_pagination(url=url, model=CallRecordingJobStatus, item_key='items', params=params)
 
-    def get_the_job_status_of_a_call_recording_job(self, job_id: str, org_id: str = None) -> CallRecordingJobStatus:
+    def get_the_job_status_of_acall_recording_job(self, job_id: str, org_id: str = None) -> CallRecordingJobStatus:
         """
         Get the Job Status of a Call Recording Job
 
@@ -689,8 +876,8 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         r = CallRecordingJobStatus.model_validate(data)
         return r
 
-    def get_job_errors_for_a_call_recording_job(self, job_id: str, org_id: str = None,
-                                                **params: Any) -> Generator[ItemObject, None, None]:
+    def get_job_errors_for_acall_recording_job(self, job_id: str, org_id: str = None,
+                                               **params: Any) -> Generator[ItemObject, None, None]:
         """
         Get Job Errors for a Call Recording Job
 
@@ -713,8 +900,100 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         url = self.ep(f'jobs/callRecording/{job_id}/errors')
         return self.session.follow_pagination(url=url, model=ItemObject, item_key='items', params=params)
 
-    def get_details_for_the_location_compliance_announcement_setting(self, location_id: str,
-                                                                     org_id: str = None) -> GetComplianceAnnouncementObject:
+    def get_location_call_recording_announcement_settings(self, location_id: str,
+                                                          org_id: str = None) -> GetLocationCallRecordingAnnouncementObject:
+        """
+        Get Location Call Recording Announcement Settings
+
+        Retrieve the location call recording announcements setting.
+
+        The Compliance Announcement feature interacts with the Call Recording feature, specifically with the playback
+        of the start/stop announcement. When the compliance announcement is played to the PSTN party, and the PSTN
+        party is connected to a party with call recording enabled, then the start/stop announcement is inhibited.
+
+        Retrieving location compliance announcement setting requires a full or read-only administrator auth token with
+        a scope of `spark-admin:telephony_config_read`.
+
+        :param location_id: Retrieve compliance announcement settings for this location.
+        :type location_id: str
+        :param org_id: Retrieve compliance announcement setting from this organization.
+        :type org_id: str
+        :rtype: :class:`GetLocationCallRecordingAnnouncementObject`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/callRecording/announcements')
+        data = super().get(url, params=params)
+        r = GetLocationCallRecordingAnnouncementObject.model_validate(data)
+        return r
+
+    def update_location_call_recording_announcement_settings(self, location_id: str,
+                                                             use_org_level_announcement_enabled: bool = None,
+                                                             start: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement = None,
+                                                             stop: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement = None,
+                                                             pause: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement = None,
+                                                             resume: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement = None,
+                                                             failure_end_with_call: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement = None,
+                                                             failure_proceed_with_call: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement = None,
+                                                             org_id: str = None) -> None:
+        """
+        Update Location Call Recording Announcement Settings.
+
+        The Compliance Announcement feature interacts with the Call Recording feature, specifically with the playback
+        of the start/stop announcement. When the compliance announcement is played to the PSTN party, and the PSTN
+        party is connected to a party with call recording enabled, then the start/stop announcement is inhibited.
+
+        Updating the location compliance announcement requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Update the call recording announcements setting for this location.
+        :type location_id: str
+        :param use_org_level_announcement_enabled: Flag to indicate whether to use the organization level call
+            recording announcement settings. If the flag is set to true, indicates that the
+            callRecordingAnnouncementSelection setting is inherited from the organization-level configuration. If the
+            flag is set to false, indicates that the callRecordingAnnouncementSelection setting is customized at the
+            location level.
+        :type use_org_level_announcement_enabled: bool
+        :param start: The start announcement settings for this location.
+        :type start: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement
+        :param stop: The stop announcement settings for this location.
+        :type stop: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement
+        :param pause: The pause announcement settings for this location.
+        :type pause: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement
+        :param resume: The resume announcement settings for this location.
+        :type resume: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement
+        :param failure_end_with_call: The failure end with call announcement settings for this location.
+        :type failure_end_with_call: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement
+        :param failure_proceed_with_call: The failure proceed with call announcement settings for this location.
+        :type failure_proceed_with_call: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement
+        :param org_id: Update the call recording announcements setting from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        if use_org_level_announcement_enabled is not None:
+            body['useOrgLevelAnnouncementEnabled'] = use_org_level_announcement_enabled
+        if start is not None:
+            body['start'] = start.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if stop is not None:
+            body['stop'] = stop.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if pause is not None:
+            body['pause'] = pause.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if resume is not None:
+            body['resume'] = resume.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if failure_end_with_call is not None:
+            body['failureEndWithCall'] = failure_end_with_call.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if failure_proceed_with_call is not None:
+            body['failureProceedWithCall'] = failure_proceed_with_call.model_dump(mode='json', by_alias=True, exclude_none=True)
+        url = self.ep(f'locations/{location_id}/callRecording/announcements')
+        super().put(url, params=params, json=body)
+
+    def get_details_of_call_recording_compliance_announcement_for_the_location(self, location_id: str,
+                                                                               org_id: str = None) -> GetComplianceAnnouncementObject:
         """
         Get details for the Location Compliance Announcement Setting
 
@@ -741,11 +1020,15 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         r = GetComplianceAnnouncementObject.model_validate(data)
         return r
 
-    def update_the_location_compliance_announcement(self, location_id: str, inbound_pstncalls_enabled: bool = None,
-                                                    use_org_settings_enabled: bool = None,
-                                                    outbound_pstncalls_enabled: bool = None,
-                                                    outbound_pstncalls_delay_enabled: bool = None,
-                                                    delay_in_seconds: int = None, org_id: str = None) -> None:
+    def update_call_recording_compliance_announcement_for_the_location(self, location_id: str,
+                                                                       inbound_pstncalls_enabled: bool = None,
+                                                                       use_org_settings_enabled: bool = None,
+                                                                       outbound_pstncalls_enabled: bool = None,
+                                                                       outbound_pstncalls_delay_enabled: bool = None,
+                                                                       delay_in_seconds: int = None,
+                                                                       use_org_level_announcement_enabled: bool = None,
+                                                                       custom_compliance_announcement: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement = None,
+                                                                       org_id: str = None) -> None:
         """
         Update the location compliance announcement.
 
@@ -772,6 +1055,12 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type outbound_pstncalls_delay_enabled: bool
         :param delay_in_seconds: Number of seconds to wait before playing the compliance announcement.
         :type delay_in_seconds: int
+        :param use_org_level_announcement_enabled: Flag to indicate whether to use the organization level custom
+            compliance announcement. If this flag is set to true, takes the organization's announcement setting. If
+            this flag is set to false, takes the location's custom announcement.
+        :type use_org_level_announcement_enabled: bool
+        :param custom_compliance_announcement: Custom compliance announcement settings.
+        :type custom_compliance_announcement: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement
         :param org_id: Update the compliance announcement setting from this organization.
         :type org_id: str
         :rtype: None
@@ -790,15 +1079,18 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
             body['outboundPSTNCallsDelayEnabled'] = outbound_pstncalls_delay_enabled
         if delay_in_seconds is not None:
             body['delayInSeconds'] = delay_in_seconds
+        if use_org_level_announcement_enabled is not None:
+            body['useOrgLevelAnnouncementEnabled'] = use_org_level_announcement_enabled
+        if custom_compliance_announcement is not None:
+            body['customComplianceAnnouncement'] = custom_compliance_announcement.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/callRecording/complianceAnnouncement')
         super().put(url, params=params, json=body)
 
-    def set_call_recording_vendor_for_a_location(self, location_id: str, id: str = None,
-                                                 org_default_enabled: bool = None, storage_region: str = None,
-                                                 org_storage_region_enabled: bool = None,
-                                                 failure_behavior: FailureBehavior = None,
-                                                 org_failure_behavior_enabled: bool = None,
-                                                 org_id: str = None) -> str:
+    def set_call_recording_vendor_for_alocation(self, location_id: str, id: str = None,
+                                                org_default_enabled: bool = None, storage_region: str = None,
+                                                org_storage_region_enabled: bool = None,
+                                                failure_behavior: FailureBehavior = None,
+                                                org_failure_behavior_enabled: bool = None, org_id: str = None) -> str:
         """
         Set Call Recording Vendor for a Location
 
@@ -850,9 +1142,9 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         r = data['jobId']
         return r
 
-    def get_call_recording_vendor_users_for_a_location(self, location_id: str, max_: int = None, start: int = None,
-                                                       standard_user_only: bool = None,
-                                                       org_id: str = None) -> CallRecordingVendorUsersResponse:
+    def get_call_recording_vendor_users_for_alocation(self, location_id: str, max_: int = None, start: int = None,
+                                                      standard_user_only: bool = None,
+                                                      org_id: str = None) -> CallRecordingVendorUsersResponse:
         """
         Get Call Recording Vendor Users for a Location
 

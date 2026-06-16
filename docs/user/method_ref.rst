@@ -1725,6 +1725,9 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.telephony.call_recording.read_location_compliance_announcement <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.read_location_compliance_announcement>`
         | Get details for the Location Compliance Announcement Setting
         | ``GET /telephony/config/locations/{location_id}/callRecording/complianceAnnouncement``
+   * - :meth:`api.telephony.call_recording.read_org_call_recording_announcement <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.read_org_call_recording_announcement>`
+        | Get Organization Call Recording Announcement Settings
+        | ``GET /telephony/config/callRecording/announcements``
    * - :meth:`api.telephony.call_recording.read_org_compliance_announcement <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.read_org_compliance_announcement>`
         | Get details for the organization Compliance Announcement Setting
         | ``GET /telephony/config/callRecording/complianceAnnouncement``
@@ -1743,6 +1746,9 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.telephony.call_recording.update_location_compliance_announcement <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.update_location_compliance_announcement>`
         | Update the location compliance announcement
         | ``PUT /telephony/config/locations/{location_id}/callRecording/complianceAnnouncement``
+   * - :meth:`api.telephony.call_recording.update_org_call_recording_announcement <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.update_org_call_recording_announcement>`
+        | Update Organization Call Recording Announcement Settings
+        | ``PUT /telephony/config/callRecording/announcements``
    * - :meth:`api.telephony.call_recording.update_org_compliance_announcement <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.update_org_compliance_announcement>`
         | Update the organization compliance announcement
         | ``PUT /telephony/config/callRecording/complianceAnnouncement``

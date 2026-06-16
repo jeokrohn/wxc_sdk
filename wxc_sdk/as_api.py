@@ -24522,10 +24522,60 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
         url = self.ep(f'callRecording/vendors/{vendor_id}/termsOfService')
         await super().put(url, params=params, json=body)
 
+    async def read_org_call_recording_announcement(self, org_id: str = None) -> BaseCallRecordingAnnouncement:
+        """
+        Get Organization Call Recording Announcement Settings
+
+        Retrieve the organization call recording announcements setting.
+
+        The call recording Announcement feature interacts with the Call Recording feature, specifically with the
+        playback of the start/stop announcement. When the compliance announcement is played to the PSTN party, and the
+        PSTN party is connected to a party with call recording enabled, then the start/stop announcement is inhibited.
+
+        Retrieving organization compliance announcement setting requires a full or read-only administrator auth token
+        with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve call recording announcements setting from this organization.
+        :type org_id: str
+        :rtype: :class:`CallRecordingAnnouncements`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('callRecording/announcements')
+        data = await super().get(url, params=params)
+        r = BaseCallRecordingAnnouncement.model_validate(data)
+        return r
+
+    async def update_org_call_recording_announcement(
+        self, settings: BaseCallRecordingAnnouncement, org_id: str = None
+    ) -> None:
+        """
+        Update Organization Call Recording Announcement Settings.
+
+        The Compliance Announcement feature interacts with the Call Recording feature, specifically with the playback
+        of the start/stop announcement. When the compliance announcement is played to the PSTN party, and the PSTN
+        party is connected to a party with call recording enabled, then the start/stop announcement is inhibited.
+
+        Updating the organization compliance announcement requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param settings: Update compliance announcement settings for this organization.
+        :type settings: BaseCallRecordingAnnouncement
+        :param org_id: Update the call recording announcements setting from this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.ep('callRecording/announcements')
+        await super().put(url, params=params, json=body)
+
     async def read_org_compliance_announcement(self, org_id: str = None) -> OrgComplianceAnnouncement:
         """
         Get details for the organization Compliance Announcement Setting
-
 
         Retrieve the organization compliance announcement settings.
 
@@ -24548,9 +24598,13 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
         r = OrgComplianceAnnouncement.model_validate(data)
         return r
 
-    async def update_org_compliance_announcement(self, settings: OrgComplianceAnnouncement, org_id: str = None):
+    async def update_org_compliance_announcement(
+        self,
+        settings: OrgComplianceAnnouncement,
+        org_id: str = None,
+    ):
         """
-        Update the organization compliance announcement
+        Update the organization compliance announcement.
 
         The Compliance Announcement feature interacts with the Call Recording feature, specifically with the playback
         of the start/stop announcement. When the compliance announcement is played to the PSTN party, and the PSTN
@@ -24568,7 +24622,7 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = settings.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body = settings.update()
         url = self.ep('callRecording/complianceAnnouncement')
         await super().put(url, params=params, json=body)
 
@@ -24602,10 +24656,13 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
         return r
 
     async def update_location_compliance_announcement(
-        self, location_id: str, settings: LocationComplianceAnnouncement, org_id: str = None
-    ):
+        self,
+        location_id: str,
+        settings: LocationComplianceAnnouncement,
+        org_id: str = None,
+    ) -> None:
         """
-        Update the location compliance announcement
+        Update the location compliance announcement.
 
         The Compliance Announcement feature interacts with the Call Recording feature, specifically with the playback
         of the start/stop announcement. When the compliance announcement is played to the PSTN party, and the PSTN
@@ -24625,7 +24682,7 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = settings.model_dump(mode='json', by_alias=True, exclude_none=True)
+        body = settings.update()
         url = self.ep(f'locations/{location_id}/callRecording/complianceAnnouncement')
         await super().put(url, params=params, json=body)
 
@@ -24722,7 +24779,7 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
         Set Call Recording Vendor for a Location
 
         Assign a call recording vendor to a location of an organization. Response will be `204` if the changes can be
-        applied immediatley otherwise `200` with a job ID is returned.
+        applied immediately otherwise `200` with a job ID is returned.
 
         The Call Recording feature supports multiple third-party call recording providers, or vendors, to capture and
         manage call recordings. An organization is configured with an overall provider, but locations can be
@@ -24751,7 +24808,7 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if id is not None:
             body['id'] = id
         if org_default_enabled is not None:
@@ -24796,7 +24853,13 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
         return r
 
     def list_location_users_gen(
-        self, location_id: str, standard_user_only: bool = None, org_id: str = None, **params
+        self,
+        location_id: str,
+        max_: int = None,
+        start: int = None,
+        standard_user_only: bool = None,
+        org_id: str = None,
+        **params,
     ) -> AsyncGenerator[RecordingUser, None]:
         """
         Get Call Recording Vendor Users for a Location
@@ -24812,6 +24875,10 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
 
         :param location_id: Retrieve vendor users for this location.
         :type location_id: str
+        :param max_: Limit the number of vendor users returned to this maximum count. The default is 2000.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects. The default is 0.
+        :type start: int
         :param standard_user_only: If true, results only include Webex Calling standard users.
         :type standard_user_only: bool
         :param org_id: Retrieve vendor users for this organization.
@@ -24819,13 +24886,23 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
         """
         if org_id is not None:
             params['orgId'] = org_id
+        if max_ is not None:
+            params['max'] = max_
+        if start is not None:
+            params['start'] = start
         if standard_user_only is not None:
             params['standardUserOnly'] = str(standard_user_only).lower()
         url = self.ep(f'locations/{location_id}/callRecording/vendorUsers')
         return self.session.follow_pagination(url=url, model=RecordingUser, params=params, item_key='members')
 
     async def list_location_users(
-        self, location_id: str, standard_user_only: bool = None, org_id: str = None, **params
+        self,
+        location_id: str,
+        max_: int = None,
+        start: int = None,
+        standard_user_only: bool = None,
+        org_id: str = None,
+        **params,
     ) -> builtins.list[RecordingUser]:
         """
         Get Call Recording Vendor Users for a Location
@@ -24841,6 +24918,10 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
 
         :param location_id: Retrieve vendor users for this location.
         :type location_id: str
+        :param max_: Limit the number of vendor users returned to this maximum count. The default is 2000.
+        :type max_: int
+        :param start: Start at the zero-based offset in the list of matching objects. The default is 0.
+        :type start: int
         :param standard_user_only: If true, results only include Webex Calling standard users.
         :type standard_user_only: bool
         :param org_id: Retrieve vendor users for this organization.
@@ -24848,6 +24929,10 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
         """
         if org_id is not None:
             params['orgId'] = org_id
+        if max_ is not None:
+            params['max'] = max_
+        if start is not None:
+            params['start'] = start
         if standard_user_only is not None:
             params['standardUserOnly'] = str(standard_user_only).lower()
         url = self.ep(f'locations/{location_id}/callRecording/vendorUsers')

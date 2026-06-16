@@ -21,6 +21,7 @@ __all__ = [
     'StartStopAnnouncement',
     'CallRecordingAccessSettings',
     'PostCallRecordingSettings',
+    'BaseCallRecordingAnnouncement',
     'CallRecordingAnnouncement',
     'CallRecordingAnnouncements',
     'CallRecordingApi',
@@ -114,18 +115,16 @@ class CallRecordingAnnouncement(ApiModel):
 
         :meta private:
         """
-        data = self.model_dump(mode='json', by_alias=True, exclude_unset=True)
+        data = self.model_dump(mode='json', by_alias=True, exclude_unset=True, exclude={'audio_announcement_file'})
         # update only has announcement file ID
-        if self.audio_announcement_file:
-            data.pop('audioAnnouncementFile')
-            data['audioAnnouncementFileId'] = self.audio_announcement_file.id
+        if af := self.audio_announcement_file:
+            if af.id is None:
+                raise ValueError('Audio announcement file must have an ID for update')
+            data['audioAnnouncementFileId'] = af.id
         return data
 
 
-class CallRecordingAnnouncements(ApiModel):
-    #: When `true`, the location level custom announcement settings are used. When `false`, queue custom announcement
-    #: settings are used.
-    use_location_level_enabled: Optional[bool] = None
+class BaseCallRecordingAnnouncement(ApiModel):
     #: The start announcement settings for this queue.
     start: Optional[CallRecordingAnnouncement] = None
     #: The stop announcement settings for this queue.
@@ -150,6 +149,12 @@ class CallRecordingAnnouncements(ApiModel):
             if v := getattr(self, attr):
                 data[to_camel(attr)] = v.update()
         return data
+
+
+class CallRecordingAnnouncements(BaseCallRecordingAnnouncement):
+    #: When `true`, the location level custom announcement settings are used. When `false`, queue custom announcement
+    #: settings are used.
+    use_location_level_enabled: Optional[bool] = None
 
 
 class CallRecordingSetting(ApiModel):
