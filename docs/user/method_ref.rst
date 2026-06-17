@@ -1215,6 +1215,12 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.person_settings.monitoring.configure <wxc_sdk.person_settings.monitoring.MonitoringApi.configure>`
         | Modify an entity's Monitoring Settings
         | ``PUT /people/{entity_id}/features/monitoring``
+   * - :meth:`api.person_settings.monitoring.get_available_members_for_monitoring <wxc_sdk.person_settings.monitoring.MonitoringApi.get_available_members_for_monitoring>`
+        | Get Available Members for Person or Workspace monitoring
+        | ``GET /telephony/config/people/{entity_id}/monitoring/availableMembers``
+   * - :meth:`api.person_settings.monitoring.get_available_speed_dials_for_monitoring <wxc_sdk.person_settings.monitoring.MonitoringApi.get_available_speed_dials_for_monitoring>`
+        | Get Available Speed Dials for Person or Workspace Monitoring
+        | ``GET /telephony/config/people/{entity_id}/monitoring/speedDials/availableMembers``
    * - :meth:`api.person_settings.monitoring.read <wxc_sdk.person_settings.monitoring.MonitoringApi.read>`
         | Retrieve an entity's Monitoring Settings
         | ``GET /people/{entity_id}/features/monitoring``
@@ -3696,6 +3702,12 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.workspace_settings.monitoring.configure <wxc_sdk.person_settings.monitoring.MonitoringApi.configure>`
         | Modify an entity's Monitoring Settings
         | ``PUT /workspaces/{entity_id}/features/monitoring``
+   * - :meth:`api.workspace_settings.monitoring.get_available_members_for_monitoring <wxc_sdk.person_settings.monitoring.MonitoringApi.get_available_members_for_monitoring>`
+        | Get Available Members for Person or Workspace monitoring
+        | ``GET /telephony/config/workspaces/{entity_id}/monitoring/availableMembers``
+   * - :meth:`api.workspace_settings.monitoring.get_available_speed_dials_for_monitoring <wxc_sdk.person_settings.monitoring.MonitoringApi.get_available_speed_dials_for_monitoring>`
+        | Get Available Speed Dials for Person or Workspace Monitoring
+        | ``GET /telephony/config/workspaces/{entity_id}/monitoring/speedDials/availableMembers``
    * - :meth:`api.workspace_settings.monitoring.read <wxc_sdk.person_settings.monitoring.MonitoringApi.read>`
         | Retrieve an entity's Monitoring Settings
         | ``GET /workspaces/{entity_id}/features/monitoring``

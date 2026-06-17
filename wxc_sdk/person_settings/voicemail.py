@@ -4,7 +4,7 @@ Voicemail API
 
 import os
 from io import BufferedReader
-from typing import Optional, Union
+from typing import Any, Optional
 
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 
@@ -59,7 +59,7 @@ class VoicemailSettings(ApiModel):
     send_all_calls: Optional[VoicemailEnabled] = None
     #: Settings for sending calls to voicemail when the line is busy.
     send_busy_calls: Optional[VoicemailEnabledWithGreeting] = None
-    #: Settings for sending calls to voicemail when call is unanswered
+    #: Settings for sending unanswered calls to voicemail.
     send_unanswered_calls: Optional[UnansweredCalls] = None
     #: Settings for notifications when there are any new voicemails.
     notifications: Optional[VoicemailNotifications] = None
@@ -67,9 +67,9 @@ class VoicemailSettings(ApiModel):
     transfer_to_number: Optional[VoicemailTransferToNumber] = None
     #: Settings for sending a copy of new voicemail message audio via email.
     email_copy_of_message: Optional[VoicemailCopyOfMessage] = None
-    #: Settings for message storage
+    #: Settings for voicemail message storage.
     message_storage: Optional[VoicemailMessageStorage] = None
-    #: Fax message settings
+    #: Settings for sending fax messages for new voicemails.
     fax_message: Optional[VoicemailFax] = None
     voice_message_forwarding_enabled: Optional[bool] = None
 
@@ -84,17 +84,21 @@ class VoicemailSettings(ApiModel):
         return VoicemailSettings(
             enabled=True,
             send_all_calls=VoicemailEnabled(enabled=False),
-            send_busy_calls=VoicemailEnabledWithGreeting(enabled=False, greeting=Greeting.default),
-            send_unanswered_calls=UnansweredCalls(enabled=True, greeting=Greeting.default, number_of_rings=3),
+            send_busy_calls=VoicemailEnabledWithGreeting(enabled=False, greeting=Greeting.default),  # type: ignore[arg-type]
+            send_unanswered_calls=UnansweredCalls(
+                enabled=True,
+                greeting=Greeting.default,  # type: ignore[arg-type]
+                number_of_rings=3,
+            ),
             notifications=VoicemailNotifications(enabled=False),
             transfer_to_number=VoicemailTransferToNumber(enabled=False),
             email_copy_of_message=VoicemailCopyOfMessage(enabled=False),
-            message_storage=VoicemailMessageStorage(mwi_enabled=True, storage_type=StorageType.internal),
+            message_storage=VoicemailMessageStorage(mwi_enabled=True, storage_type=StorageType.internal),  # type: ignore[arg-type]
             fax_message=VoicemailFax(enabled=False),
             voice_message_forwarding_enabled=False,
         )
 
-    def update(self) -> dict:
+    def update(self) -> dict[str, Any]:
         """
         data for update
 
@@ -172,7 +176,7 @@ class VoicemailApi(PersonSettingsApiChild):
         self,
         *,
         entity_id: str,
-        content: Union[BufferedReader, str],
+        content: BufferedReader | str,
         upload_as: str = None,
         org_id: str = None,
         greeting_key: str,
@@ -212,7 +216,7 @@ class VoicemailApi(PersonSettingsApiChild):
                 content.close()
 
     def configure_busy_greeting(
-        self, entity_id: str, content: Union[BufferedReader, str], upload_as: str = None, org_id: str = None
+        self, entity_id: str, content: BufferedReader | str, upload_as: str = None, org_id: str = None
     ):
         """
         Configure Busy Voicemail Greeting for an entity
@@ -239,7 +243,7 @@ class VoicemailApi(PersonSettingsApiChild):
         )
 
     def configure_no_answer_greeting(
-        self, entity_id: str, content: Union[BufferedReader, str], upload_as: str = None, org_id: str = None
+        self, entity_id: str, content: BufferedReader | str, upload_as: str = None, org_id: str = None
     ):
         """
         Configure No Answer Voicemail Greeting for an entity

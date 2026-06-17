@@ -12,14 +12,16 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['Action', 'AuthorizationCode', 'CLIDPolicySelection', 'CallForwardingAlwaysGet', 'CallForwardingBusyGet',
-           'CallForwardingNoAnswerGet', 'CallForwardingPlaceSettingGet', 'CallingPermission',
+__all__ = ['Action', 'AuthorizationCode', 'AvailableMemberObject', 'CLIDPolicySelection', 'CallForwardingAlwaysGet',
+           'CallForwardingBusyGet', 'CallForwardingNoAnswerGet', 'CallForwardingPlaceSettingGet', 'CallingPermission',
            'CallingPermissionAction', 'CallingPermissionCallType', 'DirectLineCallerIdNameObject',
            'InterceptAnnouncementsGet', 'InterceptAnnouncementsGetGreeting', 'InterceptAnnouncementsPatch',
            'InterceptGet', 'InterceptIncomingGet', 'InterceptIncomingGetType', 'InterceptIncomingPatch',
-           'InterceptNumberGet', 'InterceptOutGoingGet', 'InterceptOutGoingGetType', 'ModifyCallingPermission',
-           'ModifyPlaceCallForwardSettings', 'ModifyPlaceCallerIdGetExternalCallerIdNamePolicy',
-           'MonitoredElementCallParkExtension', 'MonitoredElementItem', 'MonitoredElementUser',
+           'InterceptNumberGet', 'InterceptOutGoingGet', 'InterceptOutGoingGetType', 'LocationObject',
+           'ModifyCallingPermission', 'ModifyPlaceCallForwardSettings',
+           'ModifyPlaceCallerIdGetExternalCallerIdNamePolicy', 'MonitoredElementCallParkExtension',
+           'MonitoredElementItem', 'MonitoredElementItemPatch', 'MonitoredElementItemPatchType',
+           'MonitoredElementSpeedDial', 'MonitoredElementSpeedDialType', 'MonitoredElementUser',
            'MonitoredElementUserType', 'PhoneNumber', 'PlaceCallerIdGet', 'PlaceGetNumbersResponse', 'RingPattern',
            'SelectionObject', 'TransferNumberGet', 'UserInboundPermissionGet',
            'UserInboundPermissionGetExternalTransfer', 'UserMonitoringGet', 'UserNumberItem',
@@ -283,6 +285,8 @@ class MonitoredElementCallParkExtension(ApiModel):
     location: Optional[str] = None
     #: ID of location for call park extension.
     location_id: Optional[str] = None
+    #: Customizable line key label for monitored call park extension.
+    line_key_label: Optional[str] = None
 
 
 class MonitoredElementUserType(str, Enum):
@@ -308,23 +312,51 @@ class UserNumberItem(ApiModel):
 
 
 class MonitoredElementUser(ApiModel):
-    #: ID of person or workspace.
+    #: The identifier of the monitored person or workspace.
     id: Optional[str] = None
-    #: First name of person or workspace.
+    #: The first name of the monitored person, place, or virtual line.
     first_name: Optional[str] = None
-    #: Last name of person or workspace.
+    #: The last name of the monitored person, place, or virtual line.
     last_name: Optional[str] = None
-    #: Display name of person or workspace.
+    #: The display name of the monitored person, place, or virtual line.
     display_name: Optional[str] = None
-    #: Type of the person or workspace.
+    #: The type of the monitored person, place, or virtual line.
     type: Optional[MonitoredElementUserType] = None
-    #: Email of the person or workspace.
+    #: The email address of the monitored person, place, or virtual line.
     email: Optional[str] = None
-    #: The list of phone numbers containing only the primary number for the monitored person, workspace.
+    #: The list of phone numbers of the monitored person, place, or virtual line.
     numbers: Optional[list[UserNumberItem]] = None
-    #: Name of location for call park.
+    #: The location name where the line is.
     location: Optional[str] = None
-    #: ID of the location for call park.
+    #: The ID for the location.
+    location_id: Optional[str] = None
+    #: Customizable line key label for monitored member.
+    line_key_label: Optional[str] = None
+
+
+class MonitoredElementSpeedDialType(str, Enum):
+    #: Object is a user.
+    people = 'PEOPLE'
+    #: Object is a workspace.
+    place = 'PLACE'
+    #: Object is a virtual line.
+    virtual_line = 'VIRTUAL_LINE'
+
+
+class MonitoredElementSpeedDial(ApiModel):
+    #: The identifier of the speed dial.
+    id: Optional[str] = None
+    #: The display name of the speed dial.
+    display_name: Optional[str] = None
+    #: The type of the speed dial.
+    type: Optional[MonitoredElementSpeedDialType] = None
+    #: Customizable line key label for speed dial.
+    line_key_label: Optional[str] = None
+    #: The phone number of the speed dial.
+    phone_number: Optional[str] = None
+    #: The location name where the speed dial is.
+    location: Optional[str] = None
+    #: The ID for the location.
     location_id: Optional[str] = None
 
 
@@ -333,6 +365,8 @@ class MonitoredElementItem(ApiModel):
     callparkextension: Optional[MonitoredElementCallParkExtension] = None
     #: Monitored member for this workspace.
     member: Optional[MonitoredElementUser] = None
+    #: Monitored Speed Dial.
+    speed_dial: Optional[MonitoredElementSpeedDial] = None
 
 
 class PlaceCallerIdGet(ApiModel):
@@ -404,8 +438,10 @@ class UserInboundPermissionGet(ApiModel):
 class UserMonitoringGet(ApiModel):
     #: Call park notification enabled or disabled.
     call_park_notification_enabled: Optional[bool] = None
+    #: Number of available entries for monitoring.
+    available_entries_count: Optional[int] = None
     #: Monitored element items.
-    monitored_elements: Optional[MonitoredElementItem] = None
+    monitored_elements: Optional[list[MonitoredElementItem]] = None
 
 
 class UserOutgoingPermissionGet(ApiModel):
@@ -457,7 +493,53 @@ class PlaceGetNumbersResponse(ApiModel):
     phone_numbers: Optional[list[PhoneNumber]] = None
 
 
-class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
+class LocationObject(ApiModel):
+    #: The ID of the location.
+    id: Optional[str] = None
+    #: The name of the location.
+    name: Optional[str] = None
+
+
+class AvailableMemberObject(ApiModel):
+    #: The identifier of the available member.
+    id: Optional[str] = None
+    #: The first name of the available member.
+    first_name: Optional[str] = None
+    #: The last name of the available member.
+    last_name: Optional[str] = None
+    #: The display name of the available member.
+    display_name: Optional[str] = None
+    #: The phone number of the available member.
+    phone_number: Optional[str] = None
+    #: The extension of the available member.
+    extension: Optional[str] = None
+    #: The type of the available member.
+    type: Optional[MonitoredElementSpeedDialType] = None
+    #: The location of the available member.
+    location: Optional[LocationObject] = None
+
+
+class MonitoredElementItemPatchType(str, Enum):
+    #: Monitored element is a person, place, or virtual line.
+    member = 'MEMBER'
+    #: Monitored element is a call park extension.
+    call_park_extension = 'CALL_PARK_EXTENSION'
+    #: Monitored element is a speed dial.
+    speed_dial = 'SPEED_DIAL'
+
+
+class MonitoredElementItemPatch(ApiModel):
+    #: The identifier of the monitored element.
+    id: Optional[str] = None
+    #: The type of the monitored element.
+    type: Optional[MonitoredElementItemPatchType] = None
+    #: Customizable line key label for speed dial.
+    line_key_label: Optional[str] = None
+    #: Phone number for the speed dial.
+    phone_number: Optional[str] = None
+
+
+class WorkspaceCallSettings12Api(ApiChild, base=''):
     """
     Workspace Call Settings (1/2)
     
@@ -479,6 +561,90 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
     
     **NOTE**: Hot Desk Only workspace does not support any calling settings.
     """
+
+    def get_available_members_for_workspace_monitoring(self, workspace_id: str, location_id: str = None,
+                                                       member_name: str = None, phone_number: str = None,
+                                                       order: list[str] = None, org_id: str = None,
+                                                       **params: Any) -> Generator[AvailableMemberObject, None, None]:
+        """
+        Get Available Members for Workspace Monitoring
+
+        Get available members for workspace monitoring. This API allows administrators to retrieve a list of members
+        that can be added to the monitoring list for a specific workspace.
+
+        This API requires a full, user, or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param workspace_id: Unique identifier for the workspace.
+        :type workspace_id: str
+        :param location_id: Search for the available members in the location ID.
+        :type location_id: str
+        :param member_name: Search for available members by name.
+        :type member_name: str
+        :param phone_number: Search for available members by number or extension.
+        :type phone_number: str
+        :param order: Sort response based on `firstName` or `lastName` with sort direction `asc` or `desc`.
+        :type order: list[str]
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access the API.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableMemberObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if member_name is not None:
+            params['memberName'] = member_name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = ','.join(order)
+        url = self.ep(f'telephony/config/workspaces/{workspace_id}/monitoring/availableMembers')
+        return self.session.follow_pagination(url=url, model=AvailableMemberObject, item_key='members', params=params)
+
+    def get_available_speed_dials_for_workspace_monitoring(self, workspace_id: str, location_id: str = None,
+                                                           member_name: str = None, phone_number: str = None,
+                                                           order: list[str] = None, org_id: str = None,
+                                                           **params: Any) -> Generator[AvailableMemberObject, None, None]:
+        """
+        Get Available Speed Dials for Workspace Monitoring
+
+        Get available speed dials for Workspace monitoring configuration. This API allows administrators to retrieve a
+        list of members that can be added as speed dials for monitoring a specific workspace.
+
+        This API requires a full, user, or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param workspace_id: Unique identifier for the workspace.
+        :type workspace_id: str
+        :param location_id: Search for the available speed dials in the location ID.
+        :type location_id: str
+        :param member_name: Search for available members by name.
+        :type member_name: str
+        :param phone_number: Search for available members by number or extension.
+        :type phone_number: str
+        :param order: Sort response based on `firstName` or `lastName` with sort direction `asc` or `desc`.
+        :type order: list[str]
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access the API.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableMemberObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if member_name is not None:
+            params['memberName'] = member_name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = ','.join(order)
+        url = self.ep(f'telephony/config/workspaces/{workspace_id}/monitoring/speedDials/availableMembers')
+        return self.session.follow_pagination(url=url, model=AvailableMemberObject, item_key='members', params=params)
 
     def retrieve_call_forwarding_settings_for_a_workspace(self, workspace_id: str,
                                                           org_id: str = None) -> ModifyPlaceCallForwardSettings:
@@ -513,7 +679,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/callForwarding')
+        url = self.ep(f'workspaces/{workspace_id}/features/callForwarding')
         data = super().get(url, params=params)
         r = ModifyPlaceCallForwardSettings.model_validate(data)
         return r
@@ -562,7 +728,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         body: dict[str, Any] = dict()
         body['callForwarding'] = call_forwarding.model_dump(mode='json', by_alias=True, exclude_none=True)
         body['businessContinuity'] = business_continuity.model_dump(mode='json', by_alias=True, exclude_none=True)
-        url = self.ep(f'{workspace_id}/features/callForwarding')
+        url = self.ep(f'workspaces/{workspace_id}/features/callForwarding')
         super().put(url, params=params, json=body)
 
     def retrieve_call_waiting_settings_for_a_workspace(self, workspace_id: str, org_id: str = None) -> bool:
@@ -587,7 +753,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/callWaiting')
+        url = self.ep(f'workspaces/{workspace_id}/features/callWaiting')
         data = super().get(url, params=params)
         r = data['enabled']
         return r
@@ -620,7 +786,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         body: dict[str, Any] = dict()
         if enabled is not None:
             body['enabled'] = enabled
-        url = self.ep(f'{workspace_id}/features/callWaiting')
+        url = self.ep(f'workspaces/{workspace_id}/features/callWaiting')
         super().put(url, params=params, json=body)
 
     def read_caller_id_settings_for_a_workspace(self, workspace_id: str, org_id: str = None) -> PlaceCallerIdGet:
@@ -646,7 +812,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/callerId')
+        url = self.ep(f'workspaces/{workspace_id}/features/callerId')
         data = super().get(url, params=params)
         r = PlaceCallerIdGet.model_validate(data)
         return r
@@ -731,7 +897,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
             body['directLineCallerIdName'] = direct_line_caller_id_name.model_dump(mode='json', by_alias=True, exclude_none=True)
         if dial_by_name is not None:
             body['dialByName'] = dial_by_name
-        url = self.ep(f'{workspace_id}/features/callerId')
+        url = self.ep(f'workspaces/{workspace_id}/features/callerId')
         super().put(url, params=params, json=body)
 
     def retrieve_incoming_permission_settings_for_a_workspace(self, workspace_id: str,
@@ -757,7 +923,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/incomingPermission')
+        url = self.ep(f'workspaces/{workspace_id}/features/incomingPermission')
         data = super().get(url, params=params)
         r = UserInboundPermissionGet.model_validate(data)
         return r
@@ -805,7 +971,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
             body['internalCallsEnabled'] = internal_calls_enabled
         if collect_calls_enabled is not None:
             body['collectCallsEnabled'] = collect_calls_enabled
-        url = self.ep(f'{workspace_id}/features/incomingPermission')
+        url = self.ep(f'workspaces/{workspace_id}/features/incomingPermission')
         super().put(url, params=params, json=body)
 
     def read_call_intercept_settings_for_a_workspace(self, workspace_id: str, org_id: str = None) -> InterceptGet:
@@ -834,7 +1000,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/intercept')
+        url = self.ep(f'workspaces/{workspace_id}/features/intercept')
         data = super().get(url, params=params)
         r = InterceptGet.model_validate(data)
         return r
@@ -881,18 +1047,17 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
             body['incoming'] = incoming.model_dump(mode='json', by_alias=True, exclude_none=True)
         if outgoing is not None:
             body['outgoing'] = outgoing.model_dump(mode='json', by_alias=True, exclude_none=True)
-        url = self.ep(f'{workspace_id}/features/intercept')
+        url = self.ep(f'workspaces/{workspace_id}/features/intercept')
         super().put(url, params=params, json=body)
 
-    def retrieve_monitoring_settings_for_a_workspace(self, workspace_id: str, org_id: str = None) -> UserMonitoringGet:
+    def get_monitoring_settings_workspace(self, workspace_id: str, org_id: str = None) -> UserMonitoringGet:
         """
         Retrieve Monitoring Settings for a Workspace
 
-        Retrieves Monitoring settings for a Workspace.
-
-        Allow workspaces to monitor the line status of specified agents, workspaces, or call park extensions. The line
-        status indicates if a monitored agent or a workspace is on a call, or if a call has been parked on the
-        monitored call park extension.
+        Retrieve the monitoring settings for a workspace, which show specified people, places, virtual lines, or call
+        park extensions that are being monitored.
+        Monitors the line status, indicating if a person, place, or virtual line is on a call and if a call has been
+        parked on that extension.
 
         This API requires a full or read-only administrator or location administrator auth token with a scope of
         `spark-admin:workspaces_read` or a user auth token with `spark:workspaces_read` scope can be used to read
@@ -909,21 +1074,21 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/monitoring')
+        url = self.ep(f'workspaces/{workspace_id}/features/monitoring')
         data = super().get(url, params=params)
         r = UserMonitoringGet.model_validate(data)
         return r
 
-    def modify_monitoring_settings_for_a_workspace(self, workspace_id: str, enable_call_park_notification: bool = None,
-                                                   monitored_elements: list[str] = None, org_id: str = None) -> None:
+    def modify_monitoring_settings_workspace(self, workspace_id: str, enable_call_park_notification: bool = None,
+                                             monitored_elements: list[MonitoredElementItemPatch] = None,
+                                             org_id: str = None) -> None:
         """
-        Modify Monitoring settings for a Workspace.
+        Modify Monitoring Settings for a Workspace
 
-        Allow workspaces to monitor the line status of specified agents, workspaces, or call park extensions. The line
-        status indicates if a monitored agent or a workspace is on a call, or if a call has been parked on the
-        monitored call park extension.
-
-        The number of monitored elements is limited to 50.
+        Modifies the monitoring settings of the workspace.
+        Monitors the line status of specified people, places, virtual lines or call park extension. The line status
+        indicates if a person, place or virtual line is on a call and if a call has been parked on that extension.
+        Maximum 50 monitored elements.
 
         This API requires a full or user administrator or location administrator auth token with the
         `spark-admin:workspaces_write` scope or a user auth token with `spark:workspaces_write` scope can be used to
@@ -933,8 +1098,8 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         :type workspace_id: str
         :param enable_call_park_notification: Call park notification is enabled or disabled.
         :type enable_call_park_notification: bool
-        :param monitored_elements: Array of ID strings of monitored elements. Maximum 50 elements.
-        :type monitored_elements: list[str]
+        :param monitored_elements: Array of monitored elements. Maximum 50 elements.
+        :type monitored_elements: list[MonitoredElementItemPatch]
         :param org_id: ID of the organization within which the workspace resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
             token used to access the API.
@@ -948,8 +1113,8 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         if enable_call_park_notification is not None:
             body['enableCallParkNotification'] = enable_call_park_notification
         if monitored_elements is not None:
-            body['monitoredElements'] = monitored_elements
-        url = self.ep(f'{workspace_id}/features/monitoring')
+            body['monitoredElements'] = TypeAdapter(list[MonitoredElementItemPatch]).dump_python(monitored_elements, mode='json', by_alias=True, exclude_none=True)
+        url = self.ep(f'workspaces/{workspace_id}/features/monitoring')
         super().put(url, params=params, json=body)
 
     def list_numbers_associated_with_a_specific_workspace(self, workspace_id: str,
@@ -973,7 +1138,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/numbers')
+        url = self.ep(f'workspaces/{workspace_id}/features/numbers')
         data = super().get(url, params=params)
         r = PlaceGetNumbersResponse.model_validate(data)
         return r
@@ -1001,7 +1166,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/outgoingPermission')
+        url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission')
         data = super().get(url, params=params)
         r = UserOutgoingPermissionGet.model_validate(data)
         return r
@@ -1048,7 +1213,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
             body['useCustomPermissions'] = use_custom_permissions
         if calling_permissions is not None:
             body['callingPermissions'] = TypeAdapter(list[ModifyCallingPermission]).dump_python(calling_permissions, mode='json', by_alias=True, exclude_none=True)
-        url = self.ep(f'{workspace_id}/features/outgoingPermission')
+        url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission')
         super().put(url, params=params, json=body)
 
     def delete_all_access_codes_for_a_workspace(self, workspace_id: str, org_id: str = None) -> None:
@@ -1074,7 +1239,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/outgoingPermission/accessCodes')
+        url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission/accessCodes')
         super().delete(url, params=params)
 
     def retrieve_access_codes_for_a_workspace(self, workspace_id: str,
@@ -1099,7 +1264,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/outgoingPermission/accessCodes')
+        url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission/accessCodes')
         data = super().get(url, params=params)
         r = TypeAdapter(list[AuthorizationCode]).validate_python(data['accessCodes'])
         return r
@@ -1135,7 +1300,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         body: dict[str, Any] = dict()
         body['code'] = code
         body['description'] = description
-        url = self.ep(f'{workspace_id}/features/outgoingPermission/accessCodes')
+        url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission/accessCodes')
         super().post(url, params=params, json=body)
 
     def modify_access_codes_for_a_workspace(self, workspace_id: str, delete_codes: list[str] = None,
@@ -1165,7 +1330,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         body: dict[str, Any] = dict()
         if delete_codes is not None:
             body['deleteCodes'] = delete_codes
-        url = self.ep(f'{workspace_id}/features/outgoingPermission/accessCodes')
+        url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission/accessCodes')
         super().put(url, params=params, json=body)
 
     def retrieve_transfer_numbers_settings_for_a_workspace(self, workspace_id: str,
@@ -1192,7 +1357,7 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{workspace_id}/features/outgoingPermission/autoTransferNumbers')
+        url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission/autoTransferNumbers')
         data = super().get(url, params=params)
         r = TransferNumberGet.model_validate(data)
         return r
@@ -1246,5 +1411,5 @@ class WorkspaceCallSettings12Api(ApiChild, base='workspaces'):
             body['autoTransferNumber2'] = auto_transfer_number2
         if auto_transfer_number3 is not None:
             body['autoTransferNumber3'] = auto_transfer_number3
-        url = self.ep(f'{workspace_id}/features/outgoingPermission/autoTransferNumbers')
+        url = self.ep(f'workspaces/{workspace_id}/features/outgoingPermission/autoTransferNumbers')
         super().put(url, params=params, json=body)

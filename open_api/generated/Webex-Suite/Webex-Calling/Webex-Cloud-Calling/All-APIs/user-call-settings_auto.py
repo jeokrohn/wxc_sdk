@@ -12,15 +12,14 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['ApplicationsSetting', 'BargeInInfo', 'CallForwardingInfo', 'CallForwardingInfoCallForwarding',
-           'CallForwardingInfoCallForwardingAlways', 'CallForwardingInfoCallForwardingBusy',
-           'CallForwardingInfoCallForwardingNoAnswer', 'CallForwardingPutCallForwarding',
-           'CallForwardingPutCallForwardingNoAnswer', 'CallInterceptInfo', 'CallInterceptInfoIncoming',
-           'CallInterceptInfoIncomingAnnouncements', 'CallInterceptInfoIncomingAnnouncementsGreeting',
-           'CallInterceptInfoIncomingAnnouncementsNewNumber', 'CallInterceptInfoIncomingType',
-           'CallInterceptInfoOutgoing', 'CallInterceptInfoOutgoingType', 'CallInterceptPutIncoming',
-           'CallInterceptPutIncomingAnnouncements', 'CallRecordingInfo',
-           'CallRecordingInfoCallRecordingAccessSettings', 'CallRecordingInfoNotification',
+__all__ = ['ApplicationsSetting', 'AvailableMemberObject', 'BargeInInfo', 'CallForwardingInfo',
+           'CallForwardingInfoCallForwarding', 'CallForwardingInfoCallForwardingAlways',
+           'CallForwardingInfoCallForwardingBusy', 'CallForwardingInfoCallForwardingNoAnswer',
+           'CallForwardingPutCallForwarding', 'CallForwardingPutCallForwardingNoAnswer', 'CallInterceptInfo',
+           'CallInterceptInfoIncoming', 'CallInterceptInfoIncomingAnnouncements',
+           'CallInterceptInfoIncomingAnnouncementsGreeting', 'CallInterceptInfoIncomingAnnouncementsNewNumber',
+           'CallInterceptInfoIncomingType', 'CallInterceptInfoOutgoing', 'CallInterceptInfoOutgoingType',
+           'CallRecordingInfo', 'CallRecordingInfoCallRecordingAccessSettings', 'CallRecordingInfoNotification',
            'CallRecordingInfoNotificationType', 'CallRecordingInfoRecord', 'CallRecordingInfoRepeat',
            'CallRecordingInfoStartStopAnnouncement', 'CallRecordingPutNotification',
            'CallRecordingPutNotificationType', 'CallWaitingInfo', 'CallerIdInfo',
@@ -31,15 +30,16 @@ __all__ = ['ApplicationsSetting', 'BargeInInfo', 'CallForwardingInfo', 'CallForw
            'GetCallingBehaviorObjectEffectiveBehaviorType', 'GetEvent', 'GetMonitoredElementsObject',
            'GetMonitoredElementsObjectCallparkextension', 'GetMonitoredElementsObjectMember', 'GetNumbers',
            'GetNumbersPhoneNumbersItem', 'GetNumbersPhoneNumbersItemRingPattern', 'IncomingPermissionSetting',
-           'IncomingPermissionSettingExternalTransfer', 'MonitoredMemberObject', 'MonitoredNumberObject',
-           'MonitoringSettings', 'OutgoingCallingPermissionsSettingGet',
+           'IncomingPermissionSettingExternalTransfer', 'LocationObject', 'MonitoredElementItemPatch',
+           'MonitoredElementItemPatchType', 'MonitoredElementSpeedDial', 'MonitoredMemberObject',
+           'MonitoredNumberObject', 'MonitoringSettingsGet', 'OutgoingCallingPermissionsSettingGet',
            'OutgoingCallingPermissionsSettingGetCallingPermissionsItem',
            'OutgoingCallingPermissionsSettingGetCallingPermissionsItemAction',
            'OutgoingCallingPermissionsSettingGetCallingPermissionsItemCallType',
            'OutgoingCallingPermissionsSettingPutCallingPermissionsItem', 'PeopleOrPlaceOrVirtualLineType',
            'PrivacyGet', 'PushToTalkAccessType', 'PushToTalkConnectionType', 'PushToTalkInfo', 'ReceptionInfo',
            'RetrieveExecutiveAssistantSettingsForAPersonResponseType', 'ScheduleLevel', 'ScheduleLongDetails',
-           'ScheduleShortDetails', 'ScheduleType', 'UserCallSettings12Api', 'UserSelectionObject', 'VoicemailInfo',
+           'ScheduleShortDetails', 'ScheduleType', 'UserCallSettings13Api', 'UserSelectionObject', 'VoicemailInfo',
            'VoicemailInfoEmailCopyOfMessage', 'VoicemailInfoFaxMessage', 'VoicemailInfoMessageStorage',
            'VoicemailInfoMessageStorageStorageType', 'VoicemailInfoNotifications', 'VoicemailInfoSendBusyCalls',
            'VoicemailInfoSendUnansweredCalls', 'VoicemailPutSendBusyCalls', 'VoicemailPutSendUnansweredCalls']
@@ -216,24 +216,6 @@ class CallInterceptInfo(ApiModel):
     incoming: Optional[CallInterceptInfoIncoming] = None
     #: Settings related to how outgoing calls are handled when the intercept feature is enabled.
     outgoing: Optional[CallInterceptInfoOutgoing] = None
-
-
-class CallInterceptPutIncomingAnnouncements(ApiModel):
-    #: `DEFAULT` indicates that a system default message will be placed when incoming calls are intercepted.
-    greeting: Optional[CallInterceptInfoIncomingAnnouncementsGreeting] = None
-    #: Information about the new number announcement.
-    new_number: Optional[CallInterceptInfoIncomingAnnouncementsNewNumber] = None
-    #: Information about how call will be handled if zero (0) is pressed.
-    zero_transfer: Optional[CallInterceptInfoIncomingAnnouncementsNewNumber] = None
-
-
-class CallInterceptPutIncoming(ApiModel):
-    #: `INTERCEPT_ALL` indicated incoming calls are intercepted.
-    type: Optional[CallInterceptInfoIncomingType] = None
-    #: If `true`, the destination will be the person's voicemail.
-    voicemail_enabled: Optional[bool] = None
-    #: Settings related to how incoming calls are handled when the intercept feature is enabled.
-    announcements: Optional[CallInterceptPutIncomingAnnouncements] = None
 
 
 class CallRecordingInfoRecord(str, Enum):
@@ -577,24 +559,26 @@ class MonitoredNumberObject(ApiModel):
 
 
 class GetMonitoredElementsObjectMember(ApiModel):
-    #: The identifier of the monitored person, workspace or virtual line.
+    #: The identifier of the monitored person, workspace, or virtual line.
     id: Optional[str] = None
-    #: The last name of the monitored person, workspace or virtual line.
+    #: Last name of the monitored member (Virtual Line or User). For Workspace, this field is not applicable.
     last_name: Optional[str] = None
-    #: The first name of the monitored person, workspace or virtual line.
+    #: First name of the monitored member (Virtual Line or User). For Workspace, this field is not applicable.
     first_name: Optional[str] = None
-    #: The display name of the monitored person, workspace or virtual line.
+    #: The display name of the monitored person, workspace, or virtual line.
     display_name: Optional[str] = None
-    #: Indicates whether the type is `PEOPLE`, `PLACE` or `VIRTUAL_LINE`.
+    #: This is a custom line key label configured for the Member.
+    line_key_label: Optional[str] = None
+    #: Indicates whether the monitored element is a person, workspace, or virtual line.
     type: Optional[PeopleOrPlaceOrVirtualLineType] = None
     #: The email address of the monitored person.
     email: Optional[str] = None
-    #: The list of phone numbers containing only the primary number for the monitored person, workspace, or virtual
+    #: The list of phone numbers containing only the primary number for the monitored person, workspace or virtual
     #: line.
     numbers: Optional[list[MonitoredNumberObject]] = None
     #: The name of the location where the monitored person, workspace, or virtual line is situated.
     location: Optional[str] = None
-    #: The ID for the location.
+    #: The ID of the location.
     location_id: Optional[str] = None
 
 
@@ -603,21 +587,54 @@ class GetMonitoredElementsObjectCallparkextension(ApiModel):
     id: Optional[str] = None
     #: The name used to describe the call park extension.
     name: Optional[str] = None
+    #: This is a custom line key label configured for the Call Park Extension.
+    line_key_label: Optional[str] = None
     #: The extension number for the call park extension.
     extension: Optional[str] = None
-    #: Routing prefix of location.
+    #: Routing prefix of the location.
     routing_prefix: Optional[str] = None
-    #: Routing prefix + extension of the call park extension.
+    #: Routing prefix plus extension of the Call Park Extension. If routing prefix is not configured for the location,
+    #: esn will be same as extension.
     esn: Optional[str] = None
     #: The location name where the call park extension is.
     location: Optional[str] = None
-    #: The ID for the location.
+    #: The ID of the location.
+    location_id: Optional[str] = None
+
+
+class MonitoredElementSpeedDial(ApiModel):
+    #: ID of the configured speed dial (person or workspace or virtual line).
+    id: Optional[str] = None
+    #: First name of the monitored speed dial item (virtual line or person). For a workspace, this field is not
+    #: applicable.
+    first_name: Optional[str] = None
+    #: Last name of the monitored speed dial item (virtual line or person). For a workspace, this field is not
+    #: applicable.
+    last_name: Optional[str] = None
+    #: Display name of the configured speed dial (person or workspace or virtual line).
+    display_name: Optional[str] = None
+    #: Indicates whether type is person, workspace, or virtual line.
+    type: Optional[PeopleOrPlaceOrVirtualLineType] = None
+    #: Primary phone number for the configured speed dial. It can be either a person, workspace or virtual line. In
+    #: case of a custom speed dial, it can be any external phone number.
+    phone_number: Optional[str] = None
+    #: Primary extension for the configured speed dial. It can be either of a person or workspace or virtual line.
+    extension: Optional[str] = None
+    #: This is a custom line key label configured for the speed dial on the device.
+    line_key_label: Optional[str] = None
+    #: Name of the location for the call park.
+    location: Optional[str] = None
+    #: ID of the location for the call park.
     location_id: Optional[str] = None
 
 
 class GetMonitoredElementsObject(ApiModel):
+    #: Monitored person, workspace, or virtual line.
     member: Optional[GetMonitoredElementsObjectMember] = None
+    #: Monitored call park extension.
     callparkextension: Optional[GetMonitoredElementsObjectCallparkextension] = None
+    #: Speed dial configured as a monitored element.
+    speed_dial: Optional[MonitoredElementSpeedDial] = None
 
 
 class GetNumbersPhoneNumbersItemRingPattern(str, Enum):
@@ -689,13 +706,6 @@ class MonitoredMemberObject(ApiModel):
     email: Optional[str] = None
     #: List of phone numbers of the monitored person, workspace or virtual line.
     numbers: Optional[list[MonitoredNumberObject]] = None
-
-
-class MonitoringSettings(ApiModel):
-    #: Call park notification is enabled or disabled.
-    call_park_notification_enabled: Optional[bool] = None
-    #: Settings of monitored elements which can be person, place, virtual line or call park extension.
-    monitored_elements: Optional[list[GetMonitoredElementsObject]] = None
 
 
 class OutgoingCallingPermissionsSettingGetCallingPermissionsItemCallType(str, Enum):
@@ -932,6 +942,7 @@ class VoicemailInfo(ApiModel):
     send_all_calls: Optional[CallWaitingInfo] = None
     #: Settings for sending calls to voicemail when the line is busy.
     send_busy_calls: Optional[VoicemailInfoSendBusyCalls] = None
+    #: Settings for sending unanswered calls to voicemail.
     send_unanswered_calls: Optional[VoicemailInfoSendUnansweredCalls] = None
     #: Settings for notifications when there are any new voicemails.
     notifications: Optional[VoicemailInfoNotifications] = None
@@ -939,7 +950,9 @@ class VoicemailInfo(ApiModel):
     transfer_to_number: Optional[CallInterceptInfoIncomingAnnouncementsNewNumber] = None
     #: Settings for sending a copy of new voicemail message audio via email.
     email_copy_of_message: Optional[VoicemailInfoEmailCopyOfMessage] = None
+    #: Settings for voicemail message storage.
     message_storage: Optional[VoicemailInfoMessageStorage] = None
+    #: Settings for sending fax messages for new voicemails.
     fax_message: Optional[VoicemailInfoFaxMessage] = None
     #: Disable the user-level control when set to "false".
     voice_message_forwarding_enabled: Optional[bool] = None
@@ -962,6 +975,64 @@ class VoicemailPutSendUnansweredCalls(ApiModel):
     number_of_rings: Optional[int] = None
 
 
+class MonitoringSettingsGet(ApiModel):
+    #: Indicates whether call park notification is enabled.
+    call_park_notification_enabled: Optional[bool] = None
+    #: Indicates additional number of entries that can be stored (more than the number of entries listed).
+    available_entries_count: Optional[int] = None
+    #: Settings of monitored elements, which can be a person, place, virtual line, or call park extension.
+    monitored_elements: Optional[list[GetMonitoredElementsObject]] = None
+
+
+class LocationObject(ApiModel):
+    #: Unique identifier of the location.
+    id: Optional[str] = None
+    #: Name of the location.
+    name: Optional[str] = None
+
+
+class AvailableMemberObject(ApiModel):
+    #: Unique identifier of the member (PEOPLE, PLACE or VIRTUAL_LINE resource type).
+    id: Optional[str] = None
+    #: First name of the member (virtual line or person). For a workspace, this field is not applicable.
+    first_name: Optional[str] = None
+    #: Last name of the member (virtual line or person). For a workspace, this field is not applicable.
+    last_name: Optional[str] = None
+    #: The display name of the monitored person, workspace, or virtual line.
+    display_name: Optional[str] = None
+    #: Phone number of the member.
+    phone_number: Optional[str] = None
+    #: Extension of the member.
+    extension: Optional[str] = None
+    type: Optional[PeopleOrPlaceOrVirtualLineType] = None
+    #: Location details of the member.
+    location: Optional[LocationObject] = None
+
+
+class MonitoredElementItemPatchType(str, Enum):
+    #: Object is a person, workspace or virtual line.
+    member = 'MEMBER'
+    #: Object is a call park extension.
+    call_park_extension = 'CALL_PARK_EXTENSION'
+    #: Object is a speed dial.
+    speed_dial = 'SPEED_DIAL'
+
+
+class MonitoredElementItemPatch(ApiModel):
+    #: ID of the monitoring element. Required in case of member or call park extension monitoring or org (non-custom)
+    #: speed dial.
+    id: Optional[str] = None
+    #: Type of the monitoring element.
+    type: Optional[MonitoredElementItemPatchType] = None
+    #: This is a custom label configured for the speed dial on the device. Can be up to 63 characters long. Required in
+    #: case of custom speed dial.
+    line_key_label: Optional[str] = None
+    #: Phone number for the configured custom speed dial. Can be up to 31 digits and supports [0-9] digits, `*`, `#`,
+    #: `+`, `,`, and `P` (pause). Required in case of custom speed dial.The support for special characters varies
+    #: depending on the phone model.
+    phone_number: Optional[str] = None
+
+
 class RetrieveExecutiveAssistantSettingsForAPersonResponseType(str, Enum):
     #: The feature is not enabled.
     unassigned = 'UNASSIGNED'
@@ -971,9 +1042,9 @@ class RetrieveExecutiveAssistantSettingsForAPersonResponseType(str, Enum):
     executive_assistant = 'EXECUTIVE_ASSISTANT'
 
 
-class UserCallSettings12Api(ApiChild, base='people'):
+class UserCallSettings13Api(ApiChild, base=''):
     """
-    User Call Settings (1/2)
+    User Call Settings (1/3)
     
     Person Call Settings supports modifying Webex Calling settings for a specific person.
     
@@ -992,8 +1063,8 @@ class UserCallSettings12Api(ApiChild, base='people'):
     <https://help.webex.com/en-us/article/n1qbbp7/Features-available-by-license-type-for-Webex-Calling>`_.
     """
 
-    def retrieve_a_person_s_application_services_settings(self, person_id: str,
-                                                          org_id: str = None) -> ApplicationsSetting:
+    def retrieve_application_services_settings_for_a_person(self, person_id: str,
+                                                            org_id: str = None) -> ApplicationsSetting:
         """
         Retrieve a person's Application Services Settings
 
@@ -1014,20 +1085,20 @@ class UserCallSettings12Api(ApiChild, base='people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/applications')
+        url = self.ep(f'people/{person_id}/features/applications')
         data = super().get(url, params=params)
         r = ApplicationsSetting.model_validate(data)
         return r
 
-    def modify_a_person_s_application_services_settings(self, person_id: str,
-                                                        ring_devices_for_click_to_dial_calls_enabled: bool = None,
-                                                        ring_devices_for_group_page_enabled: bool = None,
-                                                        ring_devices_for_call_park_enabled: bool = None,
-                                                        browser_client_enabled: bool = None,
-                                                        desktop_client_enabled: bool = None,
-                                                        tablet_client_enabled: bool = None,
-                                                        mobile_client_enabled: bool = None,
-                                                        org_id: str = None) -> None:
+    def modify_application_services_settings_of_a_person(self, person_id: str,
+                                                         ring_devices_for_click_to_dial_calls_enabled: bool = None,
+                                                         ring_devices_for_group_page_enabled: bool = None,
+                                                         ring_devices_for_call_park_enabled: bool = None,
+                                                         browser_client_enabled: bool = None,
+                                                         desktop_client_enabled: bool = None,
+                                                         tablet_client_enabled: bool = None,
+                                                         mobile_client_enabled: bool = None,
+                                                         org_id: str = None) -> None:
         """
         Modify a person's Application Services Settings
 
@@ -1078,7 +1149,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
             body['tabletClientEnabled'] = tablet_client_enabled
         if mobile_client_enabled is not None:
             body['mobileClientEnabled'] = mobile_client_enabled
-        url = self.ep(f'{person_id}/features/applications')
+        url = self.ep(f'people/{person_id}/features/applications')
         super().put(url, params=params, json=body)
 
     def read_barge_in_settings_for_a_person(self, person_id: str, org_id: str = None) -> BargeInInfo:
@@ -1105,7 +1176,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/bargeIn')
+        url = self.ep(f'people/{person_id}/features/bargeIn')
         data = super().get(url, params=params)
         r = BargeInInfo.model_validate(data)
         return r
@@ -1145,7 +1216,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
             body['enabled'] = enabled
         if tone_enabled is not None:
             body['toneEnabled'] = tone_enabled
-        url = self.ep(f'{person_id}/features/bargeIn')
+        url = self.ep(f'people/{person_id}/features/bargeIn')
         super().put(url, params=params, json=body)
 
     def read_forwarding_settings_for_a_person(self, person_id: str, org_id: str = None) -> CallForwardingInfo:
@@ -1182,7 +1253,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/callForwarding')
+        url = self.ep(f'people/{person_id}/features/callForwarding')
         data = super().get(url, params=params)
         r = CallForwardingInfo.model_validate(data)
         return r
@@ -1235,7 +1306,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
             body['callForwarding'] = call_forwarding.model_dump(mode='json', by_alias=True, exclude_none=True)
         if business_continuity is not None:
             body['businessContinuity'] = business_continuity.model_dump(mode='json', by_alias=True, exclude_none=True)
-        url = self.ep(f'{person_id}/features/callForwarding')
+        url = self.ep(f'people/{person_id}/features/callForwarding')
         super().put(url, params=params, json=body)
 
     def read_call_recording_settings_for_a_person(self, person_id: str, org_id: str = None) -> CallRecordingInfo:
@@ -1264,7 +1335,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/callRecording')
+        url = self.ep(f'people/{person_id}/features/callRecording')
         data = super().get(url, params=params)
         r = CallRecordingInfo.model_validate(data)
         return r
@@ -1332,7 +1403,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
             body['repeat'] = repeat.model_dump(mode='json', by_alias=True, exclude_none=True)
         if start_stop_announcement is not None:
             body['startStopAnnouncement'] = start_stop_announcement.model_dump(mode='json', by_alias=True, exclude_none=True)
-        url = self.ep(f'{person_id}/features/callRecording')
+        url = self.ep(f'people/{person_id}/features/callRecording')
         super().put(url, params=params, json=body)
 
     def read_call_waiting_settings_for_a_person(self, person_id: str, org_id: str = None) -> bool:
@@ -1359,7 +1430,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/callWaiting')
+        url = self.ep(f'people/{person_id}/features/callWaiting')
         data = super().get(url, params=params)
         r = data['enabled']
         return r
@@ -1392,7 +1463,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
             params['orgId'] = org_id
         body: dict[str, Any] = dict()
         body['enabled'] = enabled
-        url = self.ep(f'{person_id}/features/callWaiting')
+        url = self.ep(f'people/{person_id}/features/callWaiting')
         super().put(url, params=params, json=body)
 
     def read_caller_id_settings_for_a_person(self, person_id: str, org_id: str = None) -> CallerIdInfo:
@@ -1417,7 +1488,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/callerId')
+        url = self.ep(f'people/{person_id}/features/callerId')
         data = super().get(url, params=params)
         r = CallerIdInfo.model_validate(data)
         return r
@@ -1522,10 +1593,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
             body['dialByFirstName'] = dial_by_first_name
         if dial_by_last_name is not None:
             body['dialByLastName'] = dial_by_last_name
-        url = self.ep(f'{person_id}/features/callerId')
+        url = self.ep(f'people/{person_id}/features/callerId')
         super().put(url, params=params, json=body)
 
-    def read_person_s_calling_behavior(self, person_id: str, org_id: str = None) -> GetCallingBehaviorObject:
+    def read_calling_behavior_for_a_person(self, person_id: str, org_id: str = None) -> GetCallingBehaviorObject:
         """
         Read Person's Calling Behavior
 
@@ -1557,14 +1628,14 @@ class UserCallSettings12Api(ApiChild, base='people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/callingBehavior')
+        url = self.ep(f'people/{person_id}/features/callingBehavior')
         data = super().get(url, params=params)
         r = GetCallingBehaviorObject.model_validate(data)
         return r
 
-    def configure_a_person_s_calling_behavior(self, person_id: str,
-                                              behavior_type: GetCallingBehaviorObjectBehaviorType = None,
-                                              profile_id: str = None, org_id: str = None) -> None:
+    def configure_calling_behavior_for_a_person(self, person_id: str,
+                                                behavior_type: GetCallingBehaviorObjectBehaviorType = None,
+                                                profile_id: str = None, org_id: str = None) -> None:
         """
         Configure a person's Calling Behavior
 
@@ -1607,7 +1678,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
             body['behaviorType'] = enum_str(behavior_type)
         if profile_id is not None:
             body['profileId'] = profile_id
-        url = self.ep(f'{person_id}/features/callingBehavior')
+        url = self.ep(f'people/{person_id}/features/callingBehavior')
         super().put(url, params=params, json=body)
 
     def read_do_not_disturb_settings_for_a_person(self, person_id: str, org_id: str = None) -> DoNotDisturbInfo:
@@ -1634,7 +1705,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/doNotDisturb')
+        url = self.ep(f'people/{person_id}/features/doNotDisturb')
         data = super().get(url, params=params)
         r = DoNotDisturbInfo.model_validate(data)
         return r
@@ -1677,7 +1748,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         if ring_splash_enabled is not None:
             body['ringSplashEnabled'] = ring_splash_enabled
         body['webexGoOverrideEnabled'] = webex_go_override_enabled
-        url = self.ep(f'{person_id}/features/doNotDisturb')
+        url = self.ep(f'people/{person_id}/features/doNotDisturb')
         super().put(url, params=params, json=body)
 
     def retrieve_executive_assistant_settings_for_a_person(self, person_id: str,
@@ -1705,7 +1776,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/executiveAssistant')
+        url = self.ep(f'people/{person_id}/features/executiveAssistant')
         data = super().get(url, params=params)
         r = RetrieveExecutiveAssistantSettingsForAPersonResponseType(data['type'])
         return r
@@ -1741,7 +1812,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         body: dict[str, Any] = dict()
         if type is not None:
             body['type'] = enum_str(type)
-        url = self.ep(f'{person_id}/features/executiveAssistant')
+        url = self.ep(f'people/{person_id}/features/executiveAssistant')
         super().put(url, params=params, json=body)
 
     def read_hoteling_settings_for_a_person(self, person_id: str, org_id: str = None) -> bool:
@@ -1767,7 +1838,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/hoteling')
+        url = self.ep(f'people/{person_id}/features/hoteling')
         data = super().get(url, params=params)
         r = data['enabled']
         return r
@@ -1799,7 +1870,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
             params['orgId'] = org_id
         body: dict[str, Any] = dict()
         body['enabled'] = enabled
-        url = self.ep(f'{person_id}/features/hoteling')
+        url = self.ep(f'people/{person_id}/features/hoteling')
         super().put(url, params=params, json=body)
 
     def read_incoming_permission_settings_for_a_person(self, person_id: str,
@@ -1826,7 +1897,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/incomingPermission')
+        url = self.ep(f'people/{person_id}/features/incomingPermission')
         data = super().get(url, params=params)
         r = IncomingPermissionSetting.model_validate(data)
         return r
@@ -1871,7 +1942,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         body['externalTransfer'] = enum_str(external_transfer)
         body['internalCallsEnabled'] = internal_calls_enabled
         body['collectCallsEnabled'] = collect_calls_enabled
-        url = self.ep(f'{person_id}/features/incomingPermission')
+        url = self.ep(f'people/{person_id}/features/incomingPermission')
         super().put(url, params=params, json=body)
 
     def read_call_intercept_settings_for_a_person(self, person_id: str, org_id: str = None) -> CallInterceptInfo:
@@ -1899,13 +1970,13 @@ class UserCallSettings12Api(ApiChild, base='people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/intercept')
+        url = self.ep(f'people/{person_id}/features/intercept')
         data = super().get(url, params=params)
         r = CallInterceptInfo.model_validate(data)
         return r
 
     def configure_call_intercept_settings_for_a_person(self, person_id: str, enabled: bool = None,
-                                                       incoming: CallInterceptPutIncoming = None,
+                                                       incoming: CallInterceptInfoIncoming = None,
                                                        outgoing: CallInterceptInfoOutgoing = None,
                                                        org_id: str = None) -> None:
         """
@@ -1926,7 +1997,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :param enabled: `true` if the intercept feature is enabled.
         :type enabled: bool
         :param incoming: Settings related to how incoming calls are handled when the intercept feature is enabled.
-        :type incoming: CallInterceptPutIncoming
+        :type incoming: CallInterceptInfoIncoming
         :param outgoing: Settings related to how outgoing calls are handled when the intercept feature is enabled.
         :type outgoing: CallInterceptInfoOutgoing
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization
@@ -1945,7 +2016,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
             body['incoming'] = incoming.model_dump(mode='json', by_alias=True, exclude_none=True)
         if outgoing is not None:
             body['outgoing'] = outgoing.model_dump(mode='json', by_alias=True, exclude_none=True)
-        url = self.ep(f'{person_id}/features/intercept')
+        url = self.ep(f'people/{person_id}/features/intercept')
         super().put(url, params=params, json=body)
 
     def configure_call_intercept_greeting_for_a_person(self, person_id: str, org_id: str = None) -> None:
@@ -1972,16 +2043,16 @@ class UserCallSettings12Api(ApiChild, base='people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/intercept/actions/announcementUpload/invoke')
+        url = self.ep(f'people/{person_id}/features/intercept/actions/announcementUpload/invoke')
         super().post(url, params=params)
 
-    def retrieve_a_person_s_monitoring_settings(self, person_id: str, org_id: str = None) -> MonitoringSettings:
+    def get_monitoring_settings_person(self, person_id: str, org_id: str = None) -> MonitoringSettingsGet:
         """
-        Retrieve a person's Monitoring Settings
+        Retrieve a Person's Monitoring Settings
 
-        Retrieves the monitoring settings of the person, which shows specified people, places, virtual lines or call
-        park extenions that are being monitored.
-        Monitors the line status which indicates if a person, place or virtual line is on a call and if a call has been
+        Retrieve the monitoring settings for a person, which show specified people, places, virtual lines, or call park
+        extensions that are being monitored.
+        Monitors the line status, indicating if a person, place, or virtual line is on a call and if a call has been
         parked on that extension.
 
         This API requires a full, user, or read-only administrator or location administrator auth token with a scope of
@@ -1990,43 +2061,43 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :param person_id: Unique identifier for the person.
         :type person_id: str
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization
-            (such as partners) may use this parameter as the default is the same organization as the token used to
-            access API.
+            (such as partners) may use this parameter, as the default is the same organization as the token used to
+            access the API.
         :type org_id: str
-        :rtype: :class:`MonitoringSettings`
+        :rtype: :class:`MonitoringSettingsGet`
         """
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/monitoring')
+        url = self.ep(f'people/{person_id}/features/monitoring')
         data = super().get(url, params=params)
-        r = MonitoringSettings.model_validate(data)
+        r = MonitoringSettingsGet.model_validate(data)
         return r
 
-    def modify_a_person_s_monitoring_settings(self, person_id: str, enable_call_park_notification: bool,
-                                              monitored_elements: list[str], org_id: str = None) -> None:
+    def modify_monitoring_settings_person(self, person_id: str, enable_call_park_notification: bool = None,
+                                          monitored_elements: list[MonitoredElementItemPatch] = None,
+                                          org_id: str = None) -> None:
         """
-        Modify a person's Monitoring Settings
+        Modify Monitoring Settings for a Person
 
         Modifies the monitoring settings of the person.
         Monitors the line status of specified people, places, virtual lines or call park extension. The line status
         indicates if a person, place or virtual line is on a call and if a call has been parked on that extension.
-
-        The number of monitored elements is limited to 50.
+        Maximum 50 monitored elements.
 
         This API requires a full or user administrator or location administrator auth token with the
         `spark-admin:people_write` scope.
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param enable_call_park_notification: Enable or disable call park notification.
+        :param enable_call_park_notification: Call park notification is enabled or disabled.
         :type enable_call_park_notification: bool
-        :param monitored_elements: Identifiers of monitored elements whose monitoring settings will be modified.
-            Maximum 50 elements.
-        :type monitored_elements: list[str]
+        :param monitored_elements: List of monitored elements consisting monitoring members, call park extensions as
+            well as speed dials. Maximum 50 elements.
+        :type monitored_elements: list[MonitoredElementItemPatch]
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization
-            (such as partners) may use this parameter as the default is the same organization as the token used to
-            access API.
+            (such as partners) may use this parameter, as the default is the same organization as the token used to
+            access the API.
         :type org_id: str
         :rtype: None
         """
@@ -2034,9 +2105,11 @@ class UserCallSettings12Api(ApiChild, base='people'):
         if org_id is not None:
             params['orgId'] = org_id
         body: dict[str, Any] = dict()
-        body['enableCallParkNotification'] = enable_call_park_notification
-        body['monitoredElements'] = monitored_elements
-        url = self.ep(f'{person_id}/features/monitoring')
+        if enable_call_park_notification is not None:
+            body['enableCallParkNotification'] = enable_call_park_notification
+        if monitored_elements is not None:
+            body['monitoredElements'] = TypeAdapter(list[MonitoredElementItemPatch]).dump_python(monitored_elements, mode='json', by_alias=True, exclude_none=True)
+        url = self.ep(f'people/{person_id}/features/monitoring')
         super().put(url, params=params, json=body)
 
     def get_a_list_of_phone_numbers_for_a_person(self, person_id: str, prefer_e164_format: bool = None,
@@ -2072,13 +2145,13 @@ class UserCallSettings12Api(ApiChild, base='people'):
             params['orgId'] = org_id
         if prefer_e164_format is not None:
             params['preferE164Format'] = str(prefer_e164_format).lower()
-        url = self.ep(f'{person_id}/features/numbers')
+        url = self.ep(f'people/{person_id}/features/numbers')
         data = super().get(url, params=params)
         r = GetNumbers.model_validate(data)
         return r
 
-    def retrieve_a_person_s_outgoing_calling_permissions_settings(self, person_id: str,
-                                                                  org_id: str = None) -> OutgoingCallingPermissionsSettingGet:
+    def retrieve_outgoing_calling_permissions_settings_for_a_person(self, person_id: str,
+                                                                    org_id: str = None) -> OutgoingCallingPermissionsSettingGet:
         """
         Retrieve a person's Outgoing Calling Permissions settings.
 
@@ -2100,16 +2173,16 @@ class UserCallSettings12Api(ApiChild, base='people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/outgoingPermission')
+        url = self.ep(f'people/{person_id}/features/outgoingPermission')
         data = super().get(url, params=params)
         r = OutgoingCallingPermissionsSettingGet.model_validate(data)
         return r
 
-    def modify_a_person_s_outgoing_calling_permissions_settings(self, person_id: str,
-                                                                calling_permissions: list[OutgoingCallingPermissionsSettingPutCallingPermissionsItem],
-                                                                use_custom_enabled: bool = None,
-                                                                use_custom_permissions: bool = None,
-                                                                org_id: str = None) -> None:
+    def modify_outgoing_calling_permissions_settings_for_a_person(self, person_id: str,
+                                                                  calling_permissions: list[OutgoingCallingPermissionsSettingPutCallingPermissionsItem],
+                                                                  use_custom_enabled: bool = None,
+                                                                  use_custom_permissions: bool = None,
+                                                                  org_id: str = None) -> None:
         """
         Modify a person's Outgoing Calling Permissions settings.
 
@@ -2145,10 +2218,10 @@ class UserCallSettings12Api(ApiChild, base='people'):
         if use_custom_permissions is not None:
             body['useCustomPermissions'] = use_custom_permissions
         body['callingPermissions'] = TypeAdapter(list[OutgoingCallingPermissionsSettingPutCallingPermissionsItem]).dump_python(calling_permissions, mode='json', by_alias=True, exclude_none=True)
-        url = self.ep(f'{person_id}/features/outgoingPermission')
+        url = self.ep(f'people/{person_id}/features/outgoingPermission')
         super().put(url, params=params, json=body)
 
-    def get_a_person_s_privacy_settings(self, person_id: str, org_id: str = None) -> PrivacyGet:
+    def get_privacy_settings_for_a_person(self, person_id: str, org_id: str = None) -> PrivacyGet:
         """
         Get a person's Privacy Settings
 
@@ -2171,16 +2244,16 @@ class UserCallSettings12Api(ApiChild, base='people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/privacy')
+        url = self.ep(f'people/{person_id}/features/privacy')
         data = super().get(url, params=params)
         r = PrivacyGet.model_validate(data)
         return r
 
-    def configure_a_person_s_privacy_settings(self, person_id: str, aa_extension_dialing_enabled: bool = None,
-                                              aa_naming_dialing_enabled: bool = None,
-                                              enable_phone_status_directory_privacy: bool = None,
-                                              enable_phone_status_pickup_barge_in_privacy: bool = None,
-                                              monitoring_agents: list[str] = None, org_id: str = None) -> None:
+    def configure_privacy_settings_for_a_person(self, person_id: str, aa_extension_dialing_enabled: bool = None,
+                                                aa_naming_dialing_enabled: bool = None,
+                                                enable_phone_status_directory_privacy: bool = None,
+                                                enable_phone_status_pickup_barge_in_privacy: bool = None,
+                                                monitoring_agents: list[str] = None, org_id: str = None) -> None:
         """
         Configure a person's Privacy Settings
 
@@ -2225,7 +2298,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
             body['enablePhoneStatusPickupBargeInPrivacy'] = enable_phone_status_pickup_barge_in_privacy
         if monitoring_agents is not None:
             body['monitoringAgents'] = monitoring_agents
-        url = self.ep(f'{person_id}/features/privacy')
+        url = self.ep(f'people/{person_id}/features/privacy')
         super().put(url, params=params, json=body)
 
     def read_push_to_talk_settings_for_a_person(self, person_id: str, org_id: str = None) -> PushToTalkInfo:
@@ -2251,7 +2324,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/pushToTalk')
+        url = self.ep(f'people/{person_id}/features/pushToTalk')
         data = super().get(url, params=params)
         r = PushToTalkInfo.model_validate(data)
         return r
@@ -2299,7 +2372,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
             body['accessType'] = enum_str(access_type)
         if members is not None:
             body['members'] = members
-        url = self.ep(f'{person_id}/features/pushToTalk')
+        url = self.ep(f'people/{person_id}/features/pushToTalk')
         super().put(url, params=params, json=body)
 
     def read_receptionist_client_settings_for_a_person(self, person_id: str, org_id: str = None) -> ReceptionInfo:
@@ -2325,7 +2398,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/reception')
+        url = self.ep(f'people/{person_id}/features/reception')
         data = super().get(url, params=params)
         r = ReceptionInfo.model_validate(data)
         return r
@@ -2363,7 +2436,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         body['receptionEnabled'] = reception_enabled
         if monitored_members is not None:
             body['monitoredMembers'] = monitored_members
-        url = self.ep(f'{person_id}/features/reception')
+        url = self.ep(f'people/{person_id}/features/reception')
         super().put(url, params=params, json=body)
 
     def list_of_schedules_for_a_person(self, person_id: str, name: str = None, type: str = None, org_id: str = None,
@@ -2400,7 +2473,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
             params['name'] = name
         if type is not None:
             params['type'] = type
-        url = self.ep(f'{person_id}/features/schedules')
+        url = self.ep(f'people/{person_id}/features/schedules')
         return self.session.follow_pagination(url=url, model=ScheduleShortDetails, item_key='schedules', params=params)
 
     def create_schedule_for_a_person(self, person_id: str, name: str, type: ScheduleType,
@@ -2439,7 +2512,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         body['type'] = enum_str(type)
         if events is not None:
             body['events'] = TypeAdapter(list[EventLongDetails]).dump_python(events, mode='json', by_alias=True, exclude_none=True)
-        url = self.ep(f'{person_id}/features/schedules')
+        url = self.ep(f'people/{person_id}/features/schedules')
         data = super().post(url, params=params, json=body)
         r = data['id']
         return r
@@ -2472,7 +2545,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/schedules/{schedule_type}/{schedule_id}')
+        url = self.ep(f'people/{person_id}/features/schedules/{schedule_type}/{schedule_id}')
         super().delete(url, params=params)
 
     def get_a_schedule_details(self, person_id: str, schedule_type: str, schedule_id: str,
@@ -2505,7 +2578,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/schedules/{schedule_type}/{schedule_id}')
+        url = self.ep(f'people/{person_id}/features/schedules/{schedule_type}/{schedule_id}')
         data = super().get(url, params=params)
         r = ScheduleLongDetails.model_validate(data)
         return r
@@ -2553,16 +2626,15 @@ class UserCallSettings12Api(ApiChild, base='people'):
         body['type'] = enum_str(type)
         if events is not None:
             body['events'] = TypeAdapter(list[EventLongDetails]).dump_python(events, mode='json', by_alias=True, exclude_none=True)
-        url = self.ep(f'{person_id}/features/schedules/{schedule_type}/{schedule_id}')
+        url = self.ep(f'people/{person_id}/features/schedules/{schedule_type}/{schedule_id}')
         data = super().put(url, params=params, json=body)
         r = data['id']
         return r
 
-    def add_a_new_event_for_person_s_schedule(self, person_id: str, schedule_type: str, schedule_id: str, name: str,
-                                              start_date: Union[str, datetime], end_date: Union[str, datetime],
-                                              start_time: str, end_time: str, all_day_enabled: bool = None,
-                                              recurrence: EventLongDetailsRecurrence = None,
-                                              org_id: str = None) -> str:
+    def add_a_new_event_for_person_schedule(self, person_id: str, schedule_type: str, schedule_id: str, name: str,
+                                            start_date: Union[str, datetime], end_date: Union[str, datetime],
+                                            start_time: str, end_time: str, all_day_enabled: bool = None,
+                                            recurrence: EventLongDetailsRecurrence = None, org_id: str = None) -> str:
         """
         Add a New Event for Person's Schedule
 
@@ -2617,13 +2689,13 @@ class UserCallSettings12Api(ApiChild, base='people'):
             body['allDayEnabled'] = all_day_enabled
         if recurrence is not None:
             body['recurrence'] = recurrence.model_dump(mode='json', by_alias=True, exclude_none=True)
-        url = self.ep(f'{person_id}/features/schedules/{schedule_type}/{schedule_id}/events')
+        url = self.ep(f'people/{person_id}/features/schedules/{schedule_type}/{schedule_id}/events')
         data = super().post(url, params=params, json=body)
         r = data['id']
         return r
 
-    def delete_an_event_for_a_person_s_schedule(self, person_id: str, schedule_type: str, schedule_id: str,
-                                                event_id: str, org_id: str = None) -> None:
+    def delete_an_event_for_person_schedule(self, person_id: str, schedule_type: str, schedule_id: str, event_id: str,
+                                            org_id: str = None) -> None:
         """
         Delete an Event for a person's Schedule
 
@@ -2652,11 +2724,11 @@ class UserCallSettings12Api(ApiChild, base='people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/schedules/{schedule_type}/{schedule_id}/events/{event_id}')
+        url = self.ep(f'people/{person_id}/features/schedules/{schedule_type}/{schedule_id}/events/{event_id}')
         super().delete(url, params=params)
 
-    def fetch_event_for_a_person_s_schedule(self, person_id: str, schedule_type: str, schedule_id: str, event_id: str,
-                                            org_id: str = None) -> GetEvent:
+    def fetch_event_for_person_schedule(self, person_id: str, schedule_type: str, schedule_id: str, event_id: str,
+                                        org_id: str = None) -> GetEvent:
         """
         Fetch Event for a person's Schedule
 
@@ -2686,17 +2758,16 @@ class UserCallSettings12Api(ApiChild, base='people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/schedules/{schedule_type}/{schedule_id}/events/{event_id}')
+        url = self.ep(f'people/{person_id}/features/schedules/{schedule_type}/{schedule_id}/events/{event_id}')
         data = super().get(url, params=params)
         r = GetEvent.model_validate(data)
         return r
 
-    def update_an_event_for_a_person_s_schedule(self, person_id: str, schedule_type: str, schedule_id: str,
-                                                event_id: str, new_name: str, name: str, start_date: Union[str,
-                                                datetime], end_date: Union[str, datetime], start_time: str,
-                                                end_time: str, all_day_enabled: bool = None,
-                                                recurrence: EventLongDetailsRecurrence = None,
-                                                org_id: str = None) -> str:
+    def update_an_event_for_person_schedule(self, person_id: str, schedule_type: str, schedule_id: str, event_id: str,
+                                            new_name: str, name: str, start_date: Union[str, datetime],
+                                            end_date: Union[str, datetime], start_time: str, end_time: str,
+                                            all_day_enabled: bool = None,
+                                            recurrence: EventLongDetailsRecurrence = None, org_id: str = None) -> str:
         """
         Update an Event for a person's Schedule
 
@@ -2756,7 +2827,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
             body['allDayEnabled'] = all_day_enabled
         if recurrence is not None:
             body['recurrence'] = recurrence.model_dump(mode='json', by_alias=True, exclude_none=True)
-        url = self.ep(f'{person_id}/features/schedules/{schedule_type}/{schedule_id}/events/{event_id}')
+        url = self.ep(f'people/{person_id}/features/schedules/{schedule_type}/{schedule_id}/events/{event_id}')
         data = super().put(url, params=params, json=body)
         r = data['id']
         return r
@@ -2788,7 +2859,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/voicemail')
+        url = self.ep(f'people/{person_id}/features/voicemail')
         data = super().get(url, params=params)
         r = VoicemailInfo.model_validate(data)
         return r
@@ -2830,13 +2901,13 @@ class UserCallSettings12Api(ApiChild, base='people'):
         :type send_all_calls: CallWaitingInfo
         :param send_busy_calls: Settings for sending calls to voicemail when the line is busy.
         :type send_busy_calls: VoicemailPutSendBusyCalls
-        :param send_unanswered_calls: -
+        :param send_unanswered_calls: Settings for sending unanswered calls to voicemail.
         :type send_unanswered_calls: VoicemailPutSendUnansweredCalls
         :param email_copy_of_message: Settings for sending a copy of new voicemail message audio via email.
         :type email_copy_of_message: VoicemailInfoEmailCopyOfMessage
-        :param message_storage: -
+        :param message_storage: Settings for voicemail message storage.
         :type message_storage: VoicemailInfoMessageStorage
-        :param fax_message: -
+        :param fax_message: Settings for sending fax messages for new voicemails.
         :type fax_message: VoicemailInfoFaxMessage
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization
             (such as partners) may use this parameter as the default is the same organization as the token used to
@@ -2864,7 +2935,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
             body['messageStorage'] = message_storage.model_dump(mode='json', by_alias=True, exclude_none=True)
         if fax_message is not None:
             body['faxMessage'] = fax_message.model_dump(mode='json', by_alias=True, exclude_none=True)
-        url = self.ep(f'{person_id}/features/voicemail')
+        url = self.ep(f'people/{person_id}/features/voicemail')
         super().put(url, params=params, json=body)
 
     def reset_voicemail_pin(self, person_id: str, org_id: str = None) -> None:
@@ -2893,7 +2964,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/voicemail/actions/resetPin/invoke')
+        url = self.ep(f'people/{person_id}/features/voicemail/actions/resetPin/invoke')
         super().post(url, params=params)
 
     def configure_busy_voicemail_greeting_for_a_person(self, person_id: str, org_id: str = None) -> None:
@@ -2921,7 +2992,7 @@ class UserCallSettings12Api(ApiChild, base='people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/voicemail/actions/uploadBusyGreeting/invoke')
+        url = self.ep(f'people/{person_id}/features/voicemail/actions/uploadBusyGreeting/invoke')
         super().post(url, params=params)
 
     def configure_no_answer_voicemail_greeting_for_a_person(self, person_id: str, org_id: str = None) -> None:
@@ -2949,5 +3020,97 @@ class UserCallSettings12Api(ApiChild, base='people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/voicemail/actions/uploadNoAnswerGreeting/invoke')
+        url = self.ep(f'people/{person_id}/features/voicemail/actions/uploadNoAnswerGreeting/invoke')
         super().post(url, params=params)
+
+    def get_available_members_for_person_monitoring(self, person_id: str, location_id: str = None,
+                                                    member_name: str = None, phone_number: str = None,
+                                                    order: list[str] = None, org_id: str = None,
+                                                    **params: Any) -> Generator[AvailableMemberObject, None, None]:
+        """
+        Get Available Members for Person Monitoring
+
+        Get available members for person monitoring. This API allows administrators to retrieve a list of members that
+        can be added to the monitoring list for a specific person.
+
+        Webex Calling monitoring allows a person to watch the line status of selected people, workspaces, and virtual
+        lines. Configuring a monitoring list helps the person quickly see whether monitored members are on a call.
+
+        This API requires a full, user, or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param location_id: Search for the available members in the location ID.
+        :type location_id: str
+        :param member_name: Search for available members by name.
+        :type member_name: str
+        :param phone_number: Search for available members by number or extension.
+        :type phone_number: str
+        :param order: Sort response based on `firstName` or `lastName` with sort direction `asc` or `desc`. Example:
+            `lastName-asc` or `firstName-desc`. Default sort is ascending order.
+        :type order: list[str]
+        :param org_id: ID of the organization within which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access the API.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableMemberObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if member_name is not None:
+            params['memberName'] = member_name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = ','.join(order)
+        url = self.ep(f'telephony/config/people/{person_id}/monitoring/availableMembers')
+        return self.session.follow_pagination(url=url, model=AvailableMemberObject, item_key='members', params=params)
+
+    def get_available_speed_dials_for_person_monitoring(self, person_id: str, location_id: str = None,
+                                                        member_name: str = None, phone_number: str = None,
+                                                        order: list[str] = None, org_id: str = None,
+                                                        **params: Any) -> Generator[AvailableMemberObject, None, None]:
+        """
+        Get Available Speed Dials for Person Monitoring
+
+        Get available speed dials for Person monitoring configuration. This API allows administrators to retrieve a
+        list of members that can be added as speed dials for monitoring a specific person.
+
+        Speed dials allow quick access to frequently contacted members. When configured for monitoring, speed dials
+        enable users to quickly call or monitor the status of specific members within the organization.
+
+        This API requires a full, user, or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param location_id: Search for the available speed dials in the location ID.
+        :type location_id: str
+        :param member_name: Search for available members by name.
+        :type member_name: str
+        :param phone_number: Search for available members by number or extension.
+        :type phone_number: str
+        :param order: Sort response based on `firstName` or `lastName` with sort direction `asc` or `desc`. Example:
+            `lastName-asc` or `firstName-desc`. Default sort is ascending order.
+        :type order: list[str]
+        :param org_id: ID of the organization within which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access the API.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableMemberObject` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if member_name is not None:
+            params['memberName'] = member_name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = ','.join(order)
+        url = self.ep(f'telephony/config/people/{person_id}/monitoring/speedDials/availableMembers')
+        return self.session.follow_pagination(url=url, model=AvailableMemberObject, item_key='members', params=params)

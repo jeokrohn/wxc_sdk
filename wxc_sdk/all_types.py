@@ -124,7 +124,8 @@ from wxc_sdk.person_settings.hotdesking import HotDeskingAvailableMember, HotDes
 from wxc_sdk.person_settings.mode_management import AvailableFeature, ExceptionType, FeatureType, \
     ModeManagementFeature
 from wxc_sdk.person_settings.moh import MusicOnHold
-from wxc_sdk.person_settings.monitoring import MonitoredElement, MonitoredElementMember, Monitoring
+from wxc_sdk.person_settings.monitoring import MonitoredElementCPE, MonitoredElementMember, \
+    MonitoredElementSpeedDial, Monitoring, MonitoringMember
 from wxc_sdk.person_settings.msteams import MSTeamsSettings, OrgMSTeamsSettings, SettingsObject
 from wxc_sdk.person_settings.numbers import PersonNumbers, PersonPhoneNumber, UpdatePersonNumbers, \
     UpdatePersonPhoneNumber
@@ -396,20 +397,20 @@ __all__ = ['AcdCustomization', 'Action', 'ActionToBePerformed', 'ActionToBePerfo
            'MeetingTelephony', 'MeetingType', 'MeetingsSite', 'MemberCommon', 'Membership', 'MembershipsData',
            'MenuKey', 'Message', 'MessageAttachment', 'MessageSummary', 'MessagesData', 'Meta',
            'MetaObjectResourceType', 'MoHConfig', 'MoHTheme', 'ModeDefaultForwardToSelection', 'ModeForward',
-           'ModeForwardTo', 'ModeManagementFeature', 'MohMessageSetting', 'MonitoredElement',
-           'MonitoredElementMember', 'MonitoredElementType', 'MonitoredMember', 'Monitoring', 'Month', 'MoveCounts',
-           'MoveNumberCounts', 'MoveUser', 'MoveUserJobDetails', 'MoveUsersList', 'MppCustomization', 'Multicast',
-           'MusicOnHold', 'NameAndCode', 'NameObject', 'NetworkConnectionType', 'NetworkType', 'NightService',
-           'NoAnswer', 'NoiseCancellation', 'NonBlockingDisableCalling', 'NoteType', 'Notification',
-           'NotificationRepeat', 'NotificationType', 'NumberAddError', 'NumberAddResponse', 'NumberAndAction',
-           'NumberDetails', 'NumberItem', 'NumberJob', 'NumberListPhoneNumber', 'NumberListPhoneNumberType',
-           'NumberOwner', 'NumberState', 'NumberType', 'NumberUsageType', 'NumbersRequestAction', 'OfficeNumber',
-           'OnboardingMethod', 'OperatingMode', 'OperatingModeDetail', 'OperatingModeForwardTo',
-           'OperatingModeHoliday', 'OperatingModeRecurYearlyByDate', 'OperatingModeRecurYearlyByDay',
-           'OperatingModeRecurrence', 'OperatingModeSchedule', 'OrgCallCaptions', 'OrgComplianceAnnouncement',
-           'OrgEmergencyCallNotification', 'OrgMSTeamsSettings', 'OrgPrefixObject', 'OrganisationVoicemailSettings',
-           'OrganisationVoicemailSettingsAPI', 'Organization', 'OriginatorType', 'OutboundProxy',
-           'OutgoingCallingPlanPermissionsByDigitPattern', 'OutgoingCallingPlanPermissionsByType',
+           'ModeForwardTo', 'ModeManagementFeature', 'MohMessageSetting', 'MonitoredElementCPE',
+           'MonitoredElementMember', 'MonitoredElementSpeedDial', 'MonitoredElementType', 'MonitoredMember',
+           'Monitoring', 'MonitoringMember', 'Month', 'MoveCounts', 'MoveNumberCounts', 'MoveUser',
+           'MoveUserJobDetails', 'MoveUsersList', 'MppCustomization', 'Multicast', 'MusicOnHold', 'NameAndCode',
+           'NameObject', 'NetworkConnectionType', 'NetworkType', 'NightService', 'NoAnswer', 'NoiseCancellation',
+           'NonBlockingDisableCalling', 'NoteType', 'Notification', 'NotificationRepeat', 'NotificationType',
+           'NumberAddError', 'NumberAddResponse', 'NumberAndAction', 'NumberDetails', 'NumberItem', 'NumberJob',
+           'NumberListPhoneNumber', 'NumberListPhoneNumberType', 'NumberOwner', 'NumberState', 'NumberType',
+           'NumberUsageType', 'NumbersRequestAction', 'OfficeNumber', 'OnboardingMethod', 'OperatingMode',
+           'OperatingModeDetail', 'OperatingModeForwardTo', 'OperatingModeHoliday', 'OperatingModeRecurYearlyByDate',
+           'OperatingModeRecurYearlyByDay', 'OperatingModeRecurrence', 'OperatingModeSchedule', 'OrgCallCaptions',
+           'OrgComplianceAnnouncement', 'OrgEmergencyCallNotification', 'OrgMSTeamsSettings', 'OrgPrefixObject',
+           'OrganisationVoicemailSettings', 'OrganisationVoicemailSettingsAPI', 'Organization', 'OriginatorType',
+           'OutboundProxy', 'OutgoingCallingPlanPermissionsByDigitPattern', 'OutgoingCallingPlanPermissionsByType',
            'OutgoingPermissionCallType', 'OutgoingPermissions', 'OverflowAction', 'OverflowSetting', 'OwnerType',
            'PChargeInfoSupportPolicy', 'PSTNConnection', 'PSTNConnectionOption', 'PSTNServiceType', 'PSTNType',
            'PTTConnectionType', 'Paging', 'PagingAgent', 'ParentLevel', 'Participant', 'ParticipantState',

@@ -12732,23 +12732,28 @@ class AsPersonSettingsApiChild(AsApiChild, base=''):
             ('workspaces', 'simultaneousRing'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'voicemail'): ('telephony/config/workspaces', '/'),
             ('people', 'agent'): ('telephony/config/people', '/'),
+            ('people', 'anonymousCallReject'): ('telephony/config/people', '/'),
             ('people', 'callBridge'): ('telephony/config/people', '/features/'),
             ('people', 'emergencyCallbackNumber'): ('telephony/config/people', '/'),
+            ('people', 'hotDesking'): ('telephony/config/people', '/features/'),
+            ('people', 'musicOnHold'): ('telephony/config/people', '/'),
             ('people', 'outgoingPermission/'): ('telephony/config/people', '/'),
             ('people', 'outgoingPermission/accessCodes'): ('telephony/config/people', '/'),
             ('people', 'outgoingPermission/digitPatterns'): ('telephony/config/people', '/'),
-            ('people', 'musicOnHold'): ('telephony/config/people', '/'),
             ('people', 'selectiveAccept'): ('telephony/config/people', '/'),
             ('people', 'selectiveForward'): ('telephony/config/people', '/'),
             ('people', 'selectiveReject'): ('telephony/config/people', '/'),
-            ('people', 'anonymousCallReject'): ('telephony/config/people', '/'),
-            ('people', 'hotDesking'): ('telephony/config/people', '/features/'),
             ('people', 'services'): ('telephony/config/people', '/'),
             ('people', 'simultaneousRing'): ('telephony/config/people', '/'),
         }
         if selector == 'people' and self.feature == 'voicemail' and path == '/passcode':
             # this is a new endpoint for users and is the only VM endpoint with a different URL structure
             return self.session.ep(f'telephony/config/people/{person_id}/voicemail/passcode')
+        if self.feature == 'monitoring' and path.endswith('availableMembers'):
+            # the new monitoring endpoints /monitoring/speedDials/availableMembers and /monitoring/availableMembers
+            # have a different URL structure
+            return self.session.ep(f'telephony/config/{selector}/{person_id}/monitoring{path}')
+
         selector, feature_prefix = alternates.get(
             (selector, self.feature),  # type: ignore[arg-type]
             (selector, feature_prefix),
@@ -15772,18 +15777,216 @@ class AsMonitoringApi(AsPersonSettingsApiChild):
         """
         ep = self.f_ep(person_id=entity_id)
         params = org_id and {'orgId': org_id} or None
-        data: dict[str, Any] = {}
-        if settings.call_park_notification_enabled is not None:
-            data['enableCallParkNotification'] = settings.call_park_notification_enabled
-        if settings.monitored_elements is not None:
-            id_list = []
-            for me in settings.monitored_elements:
-                if isinstance(me, str):
-                    id_list.append(me)
-                else:
-                    id_list.append(me.member and me.member.member_id or me.cpe and me.cpe.cpe_id)  # type: ignore[arg-type]
-            data['monitoredElements'] = id_list
+        data = settings.update()
         await self.put(ep, params=params, json=data)
+
+    def get_available_members_for_monitoring_gen(
+        self,
+        entity_id: str,
+        location_id: str = None,
+        member_name: str = None,
+        phone_number: str = None,
+        order: list[str] = None,
+        org_id: str = None,
+        **params: Any,
+    ) -> AsyncGenerator[MonitoringMember, None]:
+        """
+        Get Available Members for Person or Workspace monitoring
+
+        Get available members for person monitoring. This API allows administrators to retrieve a list of members that
+        can be added to the monitoring list for a specific person or workspace
+
+        Webex Calling monitoring allows a person to watch the line status of selected people, workspaces, and virtual
+        lines. Configuring a monitoring list helps the person quickly see whether monitored members are on a call.
+
+        This API requires a full, user, or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param entity_id: Unique identifier for the person or workspace.
+        :type entity_id: str
+        :param location_id: Search for the available members in the location ID.
+        :type location_id: str
+        :param member_name: Search for available members by name.
+        :type member_name: str
+        :param phone_number: Search for available members by number or extension.
+        :type phone_number: str
+        :param order: Sort response based on `firstName` or `lastName` with sort direction `asc` or `desc`. Example:
+            `lastName-asc` or `firstName-desc`. Default sort is ascending order.
+        :type order: list[str]
+        :param org_id: ID of the organization within which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access the API.
+        :type org_id: str
+        :return: Generator yielding :class:`MonitoringMember` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if member_name is not None:
+            params['memberName'] = member_name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = ','.join(order)
+        url = self.f_ep(entity_id, 'availableMembers')
+        return self.session.follow_pagination(url=url, model=MonitoringMember, item_key='members', params=params)
+
+    async def get_available_members_for_monitoring(
+        self,
+        entity_id: str,
+        location_id: str = None,
+        member_name: str = None,
+        phone_number: str = None,
+        order: list[str] = None,
+        org_id: str = None,
+        **params: Any,
+    ) -> builtins.list[MonitoringMember]:
+        """
+        Get Available Members for Person or Workspace monitoring
+
+        Get available members for person monitoring. This API allows administrators to retrieve a list of members that
+        can be added to the monitoring list for a specific person or workspace
+
+        Webex Calling monitoring allows a person to watch the line status of selected people, workspaces, and virtual
+        lines. Configuring a monitoring list helps the person quickly see whether monitored members are on a call.
+
+        This API requires a full, user, or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param entity_id: Unique identifier for the person or workspace.
+        :type entity_id: str
+        :param location_id: Search for the available members in the location ID.
+        :type location_id: str
+        :param member_name: Search for available members by name.
+        :type member_name: str
+        :param phone_number: Search for available members by number or extension.
+        :type phone_number: str
+        :param order: Sort response based on `firstName` or `lastName` with sort direction `asc` or `desc`. Example:
+            `lastName-asc` or `firstName-desc`. Default sort is ascending order.
+        :type order: list[str]
+        :param org_id: ID of the organization within which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access the API.
+        :type org_id: str
+        :return: Generator yielding :class:`MonitoringMember` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if member_name is not None:
+            params['memberName'] = member_name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = ','.join(order)
+        url = self.f_ep(entity_id, 'availableMembers')
+        return [o async for o in self.session.follow_pagination(url=url, model=MonitoringMember, item_key='members', params=params)]
+
+    def get_available_speed_dials_for_monitoring_gen(
+        self,
+        entity_id: str,
+        location_id: str = None,
+        member_name: str = None,
+        phone_number: str = None,
+        order: list[str] = None,
+        org_id: str = None,
+        **params: Any,
+    ) -> AsyncGenerator[MonitoringMember, None]:
+        """
+        Get Available Speed Dials for Person or Workspace Monitoring
+
+        Get available speed dials for Person monitoring configuration. This API allows administrators to retrieve a
+        list of members that can be added as speed dials for monitoring a specific person.
+
+        Speed dials allow quick access to frequently contacted members. When configured for monitoring, speed dials
+        enable users to quickly call or monitor the status of specific members within the organization.
+
+        This API requires a full, user, or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param entity_id: Unique identifier for the person or workspace
+        :type entity_id: str
+        :param location_id: Search for the available speed dials in the location ID.
+        :type location_id: str
+        :param member_name: Search for available members by name.
+        :type member_name: str
+        :param phone_number: Search for available members by number or extension.
+        :type phone_number: str
+        :param order: Sort response based on `firstName` or `lastName` with sort direction `asc` or `desc`. Example:
+            `lastName-asc` or `firstName-desc`. Default sort is ascending order.
+        :type order: list[str]
+        :param org_id: ID of the organization within which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access the API.
+        :type org_id: str
+        :return: Generator yielding :class:`MonitoringMember` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if member_name is not None:
+            params['memberName'] = member_name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = ','.join(order)
+        url = self.f_ep(entity_id, 'speedDials/availableMembers')
+        return self.session.follow_pagination(url=url, model=MonitoringMember, item_key='members', params=params)
+
+    async def get_available_speed_dials_for_monitoring(
+        self,
+        entity_id: str,
+        location_id: str = None,
+        member_name: str = None,
+        phone_number: str = None,
+        order: list[str] = None,
+        org_id: str = None,
+        **params: Any,
+    ) -> builtins.list[MonitoringMember]:
+        """
+        Get Available Speed Dials for Person or Workspace Monitoring
+
+        Get available speed dials for Person monitoring configuration. This API allows administrators to retrieve a
+        list of members that can be added as speed dials for monitoring a specific person.
+
+        Speed dials allow quick access to frequently contacted members. When configured for monitoring, speed dials
+        enable users to quickly call or monitor the status of specific members within the organization.
+
+        This API requires a full, user, or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param entity_id: Unique identifier for the person or workspace
+        :type entity_id: str
+        :param location_id: Search for the available speed dials in the location ID.
+        :type location_id: str
+        :param member_name: Search for available members by name.
+        :type member_name: str
+        :param phone_number: Search for available members by number or extension.
+        :type phone_number: str
+        :param order: Sort response based on `firstName` or `lastName` with sort direction `asc` or `desc`. Example:
+            `lastName-asc` or `firstName-desc`. Default sort is ascending order.
+        :type order: list[str]
+        :param org_id: ID of the organization within which the person resides. Only admin users of another organization
+            (such as partners) may use this parameter as the default is the same organization as the token used to
+            access the API.
+        :type org_id: str
+        :return: Generator yielding :class:`MonitoringMember` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if member_name is not None:
+            params['memberName'] = member_name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        if order is not None:
+            params['order'] = ','.join(order)
+        url = self.f_ep(entity_id, 'speedDials/availableMembers')
+        return [o async for o in self.session.follow_pagination(url=url, model=MonitoringMember, item_key='members', params=params)]
 
 
 class AsMusicOnHoldApi(AsPersonSettingsApiChild):
@@ -18155,7 +18358,7 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
         self,
         *,
         entity_id: str,
-        content: Union[BufferedReader, str],
+        content: BufferedReader | str,
         upload_as: str = None,
         org_id: str = None,
         greeting_key: str,
@@ -18195,7 +18398,7 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
                 content.close()
 
     def configure_busy_greeting(
-        self, entity_id: str, content: Union[BufferedReader, str], upload_as: str = None, org_id: str = None
+        self, entity_id: str, content: BufferedReader | str, upload_as: str = None, org_id: str = None
     ):
         """
         Configure Busy Voicemail Greeting for an entity
@@ -18222,7 +18425,7 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
         )
 
     def configure_no_answer_greeting(
-        self, entity_id: str, content: Union[BufferedReader, str], upload_as: str = None, org_id: str = None
+        self, entity_id: str, content: BufferedReader | str, upload_as: str = None, org_id: str = None
     ):
         """
         Configure No Answer Voicemail Greeting for an entity

@@ -3,6 +3,16 @@ Release history
 
 - feat: new api api.telephony.callqueue.dnis (call queue DNIS settings)
 - feat: read/update org level call recording announcement settings, api.telephony.call_recording.read_org_call_recording_announcement/update_org_call_recording_announcement
+- feat: update monitoring API
+
+    * New endpoints:
+
+        * api.person_settings.monitoring.get_available_members_for_monitoring
+        * api.person_settings.monitoring.get_available_speed_dials_for_monitoring
+        * api.workspace_settings.monitoring.get_available_members_for_monitoring
+        * api.workspace_settings.monitoring.get_available_speed_dials_for_monitoring
+
+    * Monitoring now supports speed dials
 
 1.36.0
 ------

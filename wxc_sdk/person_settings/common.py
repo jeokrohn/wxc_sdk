@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import StrEnum
 from typing import Any, Optional
 
 from ..api_child import ApiChild
@@ -7,7 +7,7 @@ from ..rest import RestSession
 __all__ = ['PersonSettingsApiChild', 'ApiSelector']
 
 
-class ApiSelector(str, Enum):
+class ApiSelector(StrEnum):
     location = 'location'
     person = 'person'
     workspace = 'workspace'
@@ -93,23 +93,28 @@ class PersonSettingsApiChild(ApiChild, base=''):
             ('workspaces', 'simultaneousRing'): ('telephony/config/workspaces', '/'),
             ('workspaces', 'voicemail'): ('telephony/config/workspaces', '/'),
             ('people', 'agent'): ('telephony/config/people', '/'),
+            ('people', 'anonymousCallReject'): ('telephony/config/people', '/'),
             ('people', 'callBridge'): ('telephony/config/people', '/features/'),
             ('people', 'emergencyCallbackNumber'): ('telephony/config/people', '/'),
+            ('people', 'hotDesking'): ('telephony/config/people', '/features/'),
+            ('people', 'musicOnHold'): ('telephony/config/people', '/'),
             ('people', 'outgoingPermission/'): ('telephony/config/people', '/'),
             ('people', 'outgoingPermission/accessCodes'): ('telephony/config/people', '/'),
             ('people', 'outgoingPermission/digitPatterns'): ('telephony/config/people', '/'),
-            ('people', 'musicOnHold'): ('telephony/config/people', '/'),
             ('people', 'selectiveAccept'): ('telephony/config/people', '/'),
             ('people', 'selectiveForward'): ('telephony/config/people', '/'),
             ('people', 'selectiveReject'): ('telephony/config/people', '/'),
-            ('people', 'anonymousCallReject'): ('telephony/config/people', '/'),
-            ('people', 'hotDesking'): ('telephony/config/people', '/features/'),
             ('people', 'services'): ('telephony/config/people', '/'),
             ('people', 'simultaneousRing'): ('telephony/config/people', '/'),
         }
         if selector == 'people' and self.feature == 'voicemail' and path == '/passcode':
             # this is a new endpoint for users and is the only VM endpoint with a different URL structure
             return self.session.ep(f'telephony/config/people/{person_id}/voicemail/passcode')
+        if self.feature == 'monitoring' and path.endswith('availableMembers'):
+            # the new monitoring endpoints /monitoring/speedDials/availableMembers and /monitoring/availableMembers
+            # have a different URL structure
+            return self.session.ep(f'telephony/config/{selector}/{person_id}/monitoring{path}')
+
         selector, feature_prefix = alternates.get(
             (selector, self.feature),  # type: ignore[arg-type]
             (selector, feature_prefix),
