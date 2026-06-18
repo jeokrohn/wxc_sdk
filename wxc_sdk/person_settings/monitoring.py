@@ -113,13 +113,11 @@ class Monitoring(ApiModel):
         :meta private:
         :return:
         """
-        # update only has id, type, line_key_label, and phone_number (for speed dials)
         data = self.model_dump(
             mode='json',
             by_alias=True,
             exclude_none=True,
             include={
-                'call_park_notification_enabled': True,
                 'monitored_elements': {
                     '__all__': {
                         'member': {'member_id': True, 'line_key_label': True},
@@ -129,19 +127,24 @@ class Monitoring(ApiModel):
                 },
             },
         )
-        monitored_elements = []
-        me_attr_to_type = {
-            'member': 'MEMBER',
-            'callparkextension': 'CALL_PARK_EXTENSION',
-            'speedDial': 'SPEED_DIAL',
-        }
-        for me in data['monitoredElements']:
-            # only one attribute is set: member, cpe, or speed_dial
-            me_attr = next(iter(me))
-            me_data = me[me_attr]
-            me_data['type'] = me_attr_to_type[me_attr]
-            monitored_elements.append(me_data)
-        data['monitoredElements'] = monitored_elements
+        if self.monitored_elements:
+            # update for each monitored element only has id, type, line_key_label, and phone_number (for speed dials)
+            monitored_elements = []
+            me_attr_to_type = {
+                'member': 'MEMBER',
+                'callparkextension': 'CALL_PARK_EXTENSION',
+                'speedDial': 'SPEED_DIAL',
+            }
+            for me in data['monitoredElements']:
+                # only one attribute is set: member, cpe, or speed_dial
+                me_attr = next(iter(me))
+                me_data = me[me_attr]
+                me_data['type'] = me_attr_to_type[me_attr]
+                monitored_elements.append(me_data)
+            data['monitoredElements'] = monitored_elements
+        # different attribute name in update
+        if self.call_park_notification_enabled is not None:
+            data['enableCallParkNotification'] = str(self.call_park_notification_enabled).lower()
         return data
 
 
