@@ -1232,6 +1232,9 @@ class UserSettingsPermissionsGetDefault(ApiModel):
     generate_activation_code: Optional[AccessLevel] = None
     #: Set whether end users have access to download voicemail via User Hub, or other clients (Webex, etc.).
     voicemail_download: Optional[AccessLevel] = None
+    #: Set whether end users have access to make changes to their `Speed Dial` feature via User Hub, or other clients
+    #: (Webex, IP phone, etc.).
+    speed_dial: Optional[AccessLevel] = None
 
 
 class UserSettingsPermissionsGet(ApiModel):
@@ -2140,7 +2143,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep('telephony/config/people/primary/availableNumbers')
         return self.session.follow_pagination(url=url, model=PersonPrimaryAvailableNumberObject, item_key='phoneNumbers', params=params)
 
-    def get_default_feature_access_settings_person(self) -> UserSettingsPermissionsGetDefault:
+    def get_default_feature_access_settings_person(self, org_id: str = None) -> UserSettingsPermissionsGetDefault:
         """
         Read Default Feature Access Settings for Person
 
@@ -2156,10 +2159,16 @@ class UserCallSettings22Api(ApiChild, base=''):
         To call this API, an administrator must use a full, or read-only administrator auth token with the
         `spark-admin:telephony_config_read` scope.
 
+        :param org_id: ID of the organization. Only admin users of another organization (such as partners) may use this
+            parameter as the default is the same organization as the token used to access the API.
+        :type org_id: str
         :rtype: :class:`UserSettingsPermissionsGetDefault`
         """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
         url = self.ep('telephony/config/people/settings/permissions')
-        data = super().get(url)
+        data = super().get(url, params=params)
         r = UserSettingsPermissionsGetDefault.model_validate(data)
         return r
 
@@ -2187,7 +2196,9 @@ class UserCallSettings22Api(ApiChild, base=''):
                                                            voicemail_notifications: AccessLevel = None,
                                                            voicemail_transfer_number: AccessLevel = None,
                                                            generate_activation_code: AccessLevel = None,
-                                                           voicemail_download: AccessLevel = None) -> None:
+                                                           voicemail_download: AccessLevel = None,
+                                                           speed_dial: AccessLevel = None,
+                                                           org_id: str = None) -> None:
         """
         Update Default Person Feature Access Configuration
 
@@ -2279,8 +2290,17 @@ class UserCallSettings22Api(ApiChild, base=''):
         :param voicemail_download: Set whether end users have access to download voicemail via User Hub, or other
             clients (Webex, etc.).
         :type voicemail_download: AccessLevel
+        :param speed_dial: Set whether end users have access to make changes to their `Speed Dial` feature via User
+            Hub, or other clients (Webex, IP phone, etc.).
+        :type speed_dial: AccessLevel
+        :param org_id: ID of the organization. Only admin users of another organization (such as partners) may use this
+            parameter as the default is the same organization as the token used to access the API.
+        :type org_id: str
         :rtype: None
         """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
         body: dict[str, Any] = dict()
         if anonymous_call_rejection is not None:
             body['anonymousCallRejection'] = enum_str(anonymous_call_rejection)
@@ -2332,8 +2352,10 @@ class UserCallSettings22Api(ApiChild, base=''):
             body['generateActivationCode'] = enum_str(generate_activation_code)
         if voicemail_download is not None:
             body['voicemailDownload'] = enum_str(voicemail_download)
+        if speed_dial is not None:
+            body['speedDial'] = enum_str(speed_dial)
         url = self.ep('telephony/config/people/settings/permissions')
-        super().put(url, json=body)
+        super().put(url, params=params, json=body)
 
     def get_timezone_announcement_language_settings_of_aperson(self, person_id: str,
                                                                org_id: str = None) -> GetPersonDetailsObject:
@@ -5299,7 +5321,8 @@ class UserCallSettings22Api(ApiChild, base=''):
                                                    voicemail_notifications: AccessLevel = None,
                                                    voicemail_transfer_number: AccessLevel = None,
                                                    generate_activation_code: AccessLevel = None,
-                                                   voicemail_download: AccessLevel = None) -> None:
+                                                   voicemail_download: AccessLevel = None,
+                                                   speed_dial: AccessLevel = None) -> None:
         """
         Update a Person’s Feature Access Configuration
 
@@ -5395,6 +5418,9 @@ class UserCallSettings22Api(ApiChild, base=''):
         :param voicemail_download: Set whether end users have access to download voicemail via User Hub, or other
             clients (Webex, etc.).
         :type voicemail_download: AccessLevel
+        :param speed_dial: Set whether end users have access to make changes to their `Speed Dial` feature via User
+            Hub, or other clients (Webex, IP phone, etc.).
+        :type speed_dial: AccessLevel
         :rtype: None
         """
         body: dict[str, Any] = dict()
@@ -5448,6 +5474,8 @@ class UserCallSettings22Api(ApiChild, base=''):
             body['generateActivationCode'] = enum_str(generate_activation_code)
         if voicemail_download is not None:
             body['voicemailDownload'] = enum_str(voicemail_download)
+        if speed_dial is not None:
+            body['speedDial'] = enum_str(speed_dial)
         url = self.ep(f'telephony/config/people/{person_id}/settings/permissions')
         super().put(url, json=body)
 

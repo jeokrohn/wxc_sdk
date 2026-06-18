@@ -15057,7 +15057,7 @@ class AsFeatureAccessApi(AsApiChild, base='telephony'):
     End user Feature Access API
     """
 
-    async def read_default(self) -> FeatureAccessSettings:
+    async def read_default(self, org_id: str = None) -> FeatureAccessSettings:
         """
         Read Default Feature Access Settings for Person
 
@@ -15073,14 +15073,20 @@ class AsFeatureAccessApi(AsApiChild, base='telephony'):
         To call this API, an administrator must use a full, or read-only administrator auth token with the
         `spark-admin:telephony_config_read` scope.
 
+        :param org_id: ID of the organization. Only admin users of another organization (such as partners) may use this
+            parameter as the default is the same organization as the token used to access the API.
+        :type org_id: str
         :rtype: :class:`FeatureAccessSettings`
         """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
         url = self.ep('config/people/settings/permissions')
-        data = await super().get(url)
+        data = await super().get(url, params=params)
         r = FeatureAccessSettings.model_validate(data)
         return r
 
-    async def update_default(self, settings: FeatureAccessSettings):
+    async def update_default(self, settings: FeatureAccessSettings, org_id: str = None):
         """
         Update Default Person Feature Access Configuration
 
@@ -15098,9 +15104,14 @@ class AsFeatureAccessApi(AsApiChild, base='telephony'):
 
         :param settings: The feature access settings to be updated.
         :type settings: :class:`FeatureAccessSettings`
-
+        :param org_id: ID of the organization. Only admin users of another organization (such as partners) may use this
+            parameter as the default is the same organization as the token used to access the API.
+        :type org_id: str
         :rtype: None
         """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
         body = settings.update()
         url = self.ep('config/people/settings/permissions')
         await super().put(url, json=body)
