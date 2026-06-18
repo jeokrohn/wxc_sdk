@@ -464,7 +464,7 @@ class TestCaseWithLog(TestCaseWithTokens):
 
     # write HAR file as well?
     with_har: ClassVar[bool] = True
-    har_writer: HarWriter = field(default=None)
+    har_writer: ClassVar[HarWriter] = field(default=None)
     # registration id if async API was registered with HARWriter
     async_api_reg_id: Optional[str] = field(default=None)
 
@@ -534,7 +534,7 @@ class TestCaseWithLog(TestCaseWithTokens):
         # also create a HAR file?
         self.async_api_reg_id = None
         if self.with_har:
-            self.har_writer = HarWriter(path=self.log_path.replace('.log', '.har'), api=self.api)
+            self.__class__.har_writer = HarWriter(path=self.log_path.replace('.log', '.har'), api=self.api)
 
         # enable debug logging on the REST loggers
         for rest_logger_name in self.rest_logger_names:
@@ -554,9 +554,9 @@ class TestCaseWithLog(TestCaseWithTokens):
                 rest_logger.removeHandler(self.file_log_handler)
                 rest_logger.removeHandler(self.record_log_handler)
 
-            if self.har_writer:
+            if self.__class__.har_writer:
                 self.har_writer.close()
-                self.har_writer = None
+                self.__class__.har_writer = None
 
             self.file_log_handler.close()
             self.file_log_handler = None
