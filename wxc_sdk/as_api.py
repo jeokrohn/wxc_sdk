@@ -7823,8 +7823,8 @@ class AsMeSettingsApi(AsApiChild, base='telephony/config/people/me'):
         """
         Get My Monitoring Settings
 
-        Retrieves the monitoring settings of the logged in person, which shows specified people, places, virtual lines
-        or call park extensions that are being monitored.
+        Retrieves the monitoring settings for the authenticated person, which shows specified people, places, virtual
+        lines or call park extensions that are being monitored.
 
         Monitors the line status which indicates if a person, place or virtual line is on a call and if a call has been
         parked on that extension.

@@ -44,8 +44,8 @@ from wxc_sdk.licenses import License, LicenseProperties, LicenseRequest, License
 from wxc_sdk.locations import Floor, Location, LocationAddress
 from wxc_sdk.me import CCExtensions, CountryTelephonyConfigRequirements, EndpointStatus, FeatureAccessCode, \
     GuestCallingNumber, LocationAssignedNumber, LocationNameAddress, MeDevice, MeMonitoredElement, \
-    MeMonitoringSettings, MeNumber, MeOwner, MeProfile, MonitoredElementType, ServicesEnum, UserEndpoint, \
-    UserEndpointType, UserExtension
+    MeMonitoringSettings, MeNumber, MeOwner, MeProfile, MonitoredElementType, MonitoredLineType, ServicesEnum, \
+    UserEndpoint, UserEndpointType, UserExtension
 from wxc_sdk.me.call_notify import CallNotify, CallNotifyCriteria
 from wxc_sdk.me.callblock import CallBlockNumber
 from wxc_sdk.me.callcenter import AgentACDState, MeCallCenterSettings, MeCallQueue
@@ -398,8 +398,8 @@ __all__ = ['AcdCustomization', 'Action', 'ActionToBePerformed', 'ActionToBePerfo
            'MenuKey', 'Message', 'MessageAttachment', 'MessageSummary', 'MessagesData', 'Meta',
            'MetaObjectResourceType', 'MoHConfig', 'MoHTheme', 'ModeDefaultForwardToSelection', 'ModeForward',
            'ModeForwardTo', 'ModeManagementFeature', 'MohMessageSetting', 'MonitoredElementCPE',
-           'MonitoredElementMember', 'MonitoredElementSpeedDial', 'MonitoredElementType', 'MonitoredMember',
-           'Monitoring', 'MonitoringMember', 'Month', 'MoveCounts', 'MoveNumberCounts', 'MoveUser',
+           'MonitoredElementMember', 'MonitoredElementSpeedDial', 'MonitoredElementType', 'MonitoredLineType',
+           'MonitoredMember', 'Monitoring', 'MonitoringMember', 'Month', 'MoveCounts', 'MoveNumberCounts', 'MoveUser',
            'MoveUserJobDetails', 'MoveUsersList', 'MppCustomization', 'Multicast', 'MusicOnHold', 'NameAndCode',
            'NameObject', 'NetworkConnectionType', 'NetworkType', 'NightService', 'NoAnswer', 'NoiseCancellation',
            'NonBlockingDisableCalling', 'NoteType', 'Notification', 'NotificationRepeat', 'NotificationType',
