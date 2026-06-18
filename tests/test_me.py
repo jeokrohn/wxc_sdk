@@ -1,12 +1,12 @@
 """
 tests for /me endpoint
 """
+
 import asyncio
 import base64
 import json
 from concurrent.futures.thread import ThreadPoolExecutor
 from random import choice
-from typing import List, Union
 
 from pydantic import TypeAdapter
 
@@ -30,7 +30,7 @@ class TestMe(TestWithRandomUserApi):
             details = api.me.details()
         print(json.dumps(details.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
 
-    def test_profile_all(self) -> Union[Exception, MeProfile]:
+    def test_profile_all(self):
         """
         Get profile details for all users
         """
@@ -48,10 +48,10 @@ class TestMe(TestWithRandomUserApi):
         with ThreadPoolExecutor() as pool:
             results = list(pool.map(get_profile, candidates))
         err = None
-        for user, result in zip(candidates, results):
+        for user, result in zip(candidates, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error getting profile for {user.display_name}: {result}")
+                print(f'Error getting profile for {user.display_name}: {result}')
         if err:
             raise err
 
@@ -63,9 +63,14 @@ class TestMe(TestWithRandomUserApi):
         with self.user_api(user) as api:
             api: WebexSimpleApi
             languages = api.me.announcement_languages()
-        print(json.dumps(TypeAdapter(list[AnnouncementLanguage]).dump_python(languages, mode='json', by_alias=True,
-                                                                             exclude_unset=True),
-                         indent=2))
+        print(
+            json.dumps(
+                TypeAdapter(list[AnnouncementLanguage]).dump_python(
+                    languages, mode='json', by_alias=True, exclude_unset=True
+                ),
+                indent=2,
+            )
+        )
 
     @async_test
     async def test_feature_access_codes(self):
@@ -80,13 +85,12 @@ class TestMe(TestWithRandomUserApi):
                     return await as_api.me.feature_access_codes()
 
         users = [user for user in self.users if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_fac_list(user)
-                                         for user in users], return_exceptions=True)
+        results = await asyncio.gather(*[get_fac_list(user) for user in users], return_exceptions=True)
         err = None
-        for user, result in zip(users, results):
+        for user, result in zip(users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error getting feature access codes for {user.display_name}: {result}")
+                print(f'Error getting feature access codes for {user.display_name}: {result}')
         if err:
             raise err
 
@@ -96,20 +100,20 @@ class TestMe(TestWithRandomUserApi):
         Retrieve monitoring settings for all calling users
         """
 
-        async def get_fac_list(user: Person):
+        async def get_monitoring_settings(user: Person):
             with self.user_api(user) as api:
                 async with self.as_webex_api(tokens=api.access_token) as as_api:
                     as_api: AsWebexSimpleApi
-                    return await as_api.me.monitoring_settings()
+                    r = await as_api.me.monitoring_settings()
+                return r
 
         users = [user for user in self.users if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_fac_list(user)
-                                         for user in users], return_exceptions=True)
+        results = await asyncio.gather(*[get_monitoring_settings(user) for user in users], return_exceptions=True)
         err = None
-        for user, result in zip(users, results):
+        for user, result in zip(users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error monitoring settings for {user.display_name}: {result}")
+                print(f'Error monitoring settings for {user.display_name}: {result}')
         if err:
             raise err
 
@@ -124,25 +128,26 @@ class TestMe(TestWithRandomUserApi):
             api: WebexSimpleApi
             unsupported_country_codes = {'RU'}
             languages = api.me.announcement_languages()
-            country_codes = [cc
-                             for lang in languages
-                             if (cc := lang.code.split('_')[-1].upper()) not in unsupported_country_codes]
+            country_codes = [
+                cc for lang in languages if (cc := lang.code.split('_')[-1].upper()) not in unsupported_country_codes
+            ]
             async with self.as_webex_api(tokens=api.access_token) as as_api:
                 as_api: AsWebexSimpleApi
                 har_id = self.har_writer.register_as_webex_api(as_api)
                 try:
-                    tasks = [as_api.me.country_telephony_config_requirements(country_code) for country_code in
-                             country_codes]
+                    tasks = [
+                        as_api.me.country_telephony_config_requirements(country_code) for country_code in country_codes
+                    ]
                     results = await asyncio.gather(*tasks, return_exceptions=True)
                 finally:
                     self.har_writer.unregister_api(har_id)
         err = None
         errored_country_codes = []
-        for country_code, result in zip(country_codes, results):
+        for country_code, result in zip(country_codes, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
                 errored_country_codes.append(country_code)
-                print(f"Error getting country telephony config requirements for {country_code}: {result}")
+                print(f'Error getting country telephony config requirements for {country_code}: {result}')
         if err:
             print(f'Errored country codes: {", ".join(errored_country_codes)}')
             raise err
@@ -161,13 +166,12 @@ class TestMe(TestWithRandomUserApi):
             # end of get_available_caller_id_list
 
         users = [user for user in self.users if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_available_caller_id_list(user)
-                                         for user in users], return_exceptions=True)
+        results = await asyncio.gather(*[get_available_caller_id_list(user) for user in users], return_exceptions=True)
         err = None
-        for user, result in zip(users, results):
+        for user, result in zip(users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error getting available caller ID list for {user.display_name}: {result}")
+                print(f'Error getting available caller ID list for {user.display_name}: {result}')
         if err:
             raise err
 
@@ -185,13 +189,12 @@ class TestMe(TestWithRandomUserApi):
             # end of get_list
 
         users = [user for user in self.users if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_list(user)
-                                         for user in users], return_exceptions=True)
+        results = await asyncio.gather(*[get_list(user) for user in users], return_exceptions=True)
         err = None
-        for user, result in zip(users, results):
+        for user, result in zip(users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error getting available calling services list for {user.display_name}: {result}")
+                print(f'Error getting available calling services list for {user.display_name}: {result}')
         if err:
             # Determine calling services list by looking at responses
             services_set: set[str] = set()
@@ -207,8 +210,10 @@ class TestMe(TestWithRandomUserApi):
             services_not_in_enum = services_set - set(enum_values)
             print(f'Calling services not in ServicesEnum: {", ".join(sorted(services_not_in_enum))}')
             enum_values_not_in_services = set(enum_values) - services_set
-            print(f'Calling services in ServicesEnum but not seen in responses: '
-                  f'{", ".join(sorted(enum_values_not_in_services))}')
+            print(
+                f'Calling services in ServicesEnum but not seen in responses: '
+                f'{", ".join(sorted(enum_values_not_in_services))}'
+            )
             print()
             raise err
 
@@ -225,10 +230,12 @@ class TestEndpoints(TestWithRandomUserApi):
         with self.user_api(user) as api:
             api: WebexSimpleApi
             endpoints = api.me.endpoints.list()
-        print(json.dumps(TypeAdapter(list[MeEndpoint]).dump_python(endpoints,
-                                                                   mode='json', by_alias=True,
-                                                                   exclude_unset=True),
-                         indent=2))
+        print(
+            json.dumps(
+                TypeAdapter(list[MeEndpoint]).dump_python(endpoints, mode='json', by_alias=True, exclude_unset=True),
+                indent=2,
+            )
+        )
 
     @async_test
     async def test_details(self):
@@ -247,12 +254,12 @@ class TestEndpoints(TestWithRandomUserApi):
                 tasks = [as_api.me.endpoints.details(endpoint.id) for endpoint in endpoints]
                 results = await asyncio.gather(*tasks, return_exceptions=True)
         err = None
-        for endpoint, result in zip(endpoints, results):
+        for endpoint, result in zip(endpoints, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error getting details for endpoint {endpoint.name}: {result}")
+                print(f'Error getting details for endpoint {endpoint.name}: {result}')
             else:
-                print(f"Getting details for endpoint {endpoint.name}")
+                print(f'Getting details for endpoint {endpoint.name}')
                 result: MeEndpoint
                 print(json.dumps(result.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
         if err:
@@ -272,13 +279,14 @@ class TestEndpoints(TestWithRandomUserApi):
             # end of get_available_preferred_answer_endpoints
 
         users = [user for user in self.users if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_available_preferred_answer_endpoints(user)
-                                         for user in users], return_exceptions=True)
+        results = await asyncio.gather(
+            *[get_available_preferred_answer_endpoints(user) for user in users], return_exceptions=True
+        )
         err = None
-        for user, result in zip(users, results):
+        for user, result in zip(users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error getting available preferred answer endpoints for {user.display_name}: {result}")
+                print(f'Error getting available preferred answer endpoints for {user.display_name}: {result}')
         if err:
             raise err
 
@@ -296,13 +304,12 @@ class TestEndpoints(TestWithRandomUserApi):
             # end of get_available_preferred_answer_endpoints
 
         users = [user for user in self.users if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_endpoint(user)
-                                         for user in users], return_exceptions=True)
+        results = await asyncio.gather(*[get_endpoint(user) for user in users], return_exceptions=True)
         err = None
-        for user, result in zip(users, results):
+        for user, result in zip(users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error getting preferred answer endpoint for {user.display_name}: {result}")
+                print(f'Error getting preferred answer endpoint for {user.display_name}: {result}')
         if err:
             raise err
 
@@ -352,13 +359,12 @@ class TestBarge(TestWithRandomUserApi):
             # end of get_available_preferred_answer_endpoints
 
         users = [user for user in self.users if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_barge_settings(user)
-                                         for user in users], return_exceptions=True)
+        results = await asyncio.gather(*[get_barge_settings(user) for user in users], return_exceptions=True)
         err = None
-        for user, result in zip(users, results):
+        for user, result in zip(users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error getting barge settings for {user.display_name}: {result}")
+                print(f'Error getting barge settings for {user.display_name}: {result}')
         if err:
             raise err
 
@@ -404,13 +410,12 @@ class TestCallBlock(TestWithRandomUserApi):
             # end of get_available_preferred_answer_endpoints
 
         users = [user for user in self.users if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_settings(user)
-                                         for user in users], return_exceptions=True)
+        results = await asyncio.gather(*[get_settings(user) for user in users], return_exceptions=True)
         err = None
-        for user, result in zip(users, results):
+        for user, result in zip(users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error getting call block settings for {user.display_name}: {result}")
+                print(f'Error getting call block settings for {user.display_name}: {result}')
         if err:
             raise err
 
@@ -467,13 +472,12 @@ class TestForwarding(TestWithRandomUserApi):
             # end of get_settings
 
         users = [user for user in self.users if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_settings(user)
-                                         for user in users], return_exceptions=True)
+        results = await asyncio.gather(*[get_settings(user) for user in users], return_exceptions=True)
         err = None
-        for user, result in zip(users, results):
+        for user, result in zip(users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error getting call forwarding settings for {user.display_name}: {result}")
+                print(f'Error getting call forwarding settings for {user.display_name}: {result}')
         if err:
             raise err
 
@@ -482,25 +486,22 @@ class TestForwarding(TestWithRandomUserApi):
         Configure call forwarding settings for a random calling user
         """
         user = self.random_user()
-        with (self.user_api(user) as api):
+        with self.user_api(user) as api:
             api: WebexSimpleApi
             current_settings = api.me.forwarding.settings()
             print('Current settings:')
-            print(json.dumps(current_settings.model_dump(mode='json', by_alias=True, exclude_unset=True),
-                             indent=2))
+            print(json.dumps(current_settings.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
             destination = f'+1555555{choice(range(1000, 9999))}'
             print(f'forwarding destination {destination}')
-            always = CallForwardingAlways(ring_reminder_enabled=True,
-                                          enabled=True,
-                                          destination=destination,
-                                          destination_voicemail_enabled=False)
+            always = CallForwardingAlways(
+                ring_reminder_enabled=True, enabled=True, destination=destination, destination_voicemail_enabled=False
+            )
             update = current_settings.model_copy(deep=True)
             update.call_forwarding.always = always
             api.me.forwarding.configure(update)
             updated_settings = api.me.forwarding.settings()
             print('Updated settings:')
-            print(json.dumps(updated_settings.model_dump(mode='json', by_alias=True, exclude_unset=True),
-                             indent=2))
+            print(json.dumps(updated_settings.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
             try:
                 self.assertEqual(updated_settings.call_forwarding.always, always)
             finally:
@@ -534,13 +535,12 @@ class TestCallPark(TestWithRandomUserApi):
             # end of get_settings
 
         users = [user for user in self.users if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_settings(user)
-                                         for user in users], return_exceptions=True)
+        results = await asyncio.gather(*[get_settings(user) for user in users], return_exceptions=True)
         err = None
-        for user, result in zip(users, results):
+        for user, result in zip(users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error getting call park settings for {user.display_name}: {result}")
+                print(f'Error getting call park settings for {user.display_name}: {result}')
         if err:
             raise err
 
@@ -563,13 +563,12 @@ class TestCallPickup(TestWithRandomUserApi):
             # end of get_settings
 
         users = [user for user in self.users if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_settings(user)
-                                         for user in users], return_exceptions=True)
+        results = await asyncio.gather(*[get_settings(user) for user in users], return_exceptions=True)
         err = None
-        for user, result in zip(users, results):
+        for user, result in zip(users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error getting call pickup settings for {user.display_name}: {result}")
+                print(f'Error getting call pickup settings for {user.display_name}: {result}')
         if err:
             raise err
 
@@ -592,13 +591,12 @@ class TestCallPolices(TestWithRandomUserApi):
             # end of get_settings
 
         users = [user for user in self.users if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_settings(user)
-                                         for user in users], return_exceptions=True)
+        results = await asyncio.gather(*[get_settings(user) for user in users], return_exceptions=True)
         err = None
-        for user, result in zip(users, results):
+        for user, result in zip(users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error getting call policy settings for {user.display_name}: {result}")
+                print(f'Error getting call policy settings for {user.display_name}: {result}')
         if err:
             raise err
 
@@ -607,7 +605,7 @@ class TestCallPolices(TestWithRandomUserApi):
         Update call policy settings for a random calling user
         """
         user = self.random_user()
-        with (self.user_api(user) as api):
+        with self.user_api(user) as api:
             api: WebexSimpleApi
             current = api.me.call_policies.settings()
             print(f'Current settings: {current}')
@@ -644,13 +642,12 @@ class TestRecording(TestWithRandomUserApi):
             # end of get_settings
 
         users = [user for user in self.users if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_settings(user)
-                                         for user in users], return_exceptions=True)
+        results = await asyncio.gather(*[get_settings(user) for user in users], return_exceptions=True)
         err = None
-        for user, result in zip(users, results):
+        for user, result in zip(users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error getting call recording settings for {user.display_name}: {result}")
+                print(f'Error getting call recording settings for {user.display_name}: {result}')
         if err:
             raise err
 
@@ -673,13 +670,12 @@ class TestCallerId(TestWithRandomUserApi):
             # end of get_settings
 
         users = [user for user in self.users if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_settings(user)
-                                         for user in users], return_exceptions=True)
+        results = await asyncio.gather(*[get_settings(user) for user in users], return_exceptions=True)
         err = None
-        for user, result in zip(users, results):
+        for user, result in zip(users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error getting caller id settings for {user.display_name}: {result}")
+                print(f'Error getting caller id settings for {user.display_name}: {result}')
         if err:
             raise err
 
@@ -702,14 +698,12 @@ class TestDND(TestWithRandomUserApi):
             # end of get_settings
 
         users = [user for user in self.users if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_settings(user)
-                                         for user in users],
-                                       return_exceptions=True)
+        results = await asyncio.gather(*[get_settings(user) for user in users], return_exceptions=True)
         err = None
-        for user, result in zip(users, results):
+        for user, result in zip(users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error getting DND settings for {user.display_name}: {result}")
+                print(f'Error getting DND settings for {user.display_name}: {result}')
         if err:
             raise err
 
@@ -718,19 +712,17 @@ class TestDND(TestWithRandomUserApi):
         Update DND settings for a random calling user
         """
         user = self.random_user()
-        with (self.user_api(user) as api):
+        with self.user_api(user) as api:
             api: WebexSimpleApi
             current = api.me.dnd.settings()
             print('Current settings:')
-            print(json.dumps(current.model_dump(mode='json', by_alias=True, exclude_unset=True),
-                             indent=2))
+            print(json.dumps(current.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
             update = DND(enabled=not current.enabled)
             print(f'Updated setting: {update}')
             api.me.dnd.configure(update)
             after = api.me.dnd.settings()
             print('After:')
-            print(json.dumps(after.model_dump(mode='json', by_alias=True, exclude_unset=True),
-                             indent=2))
+            print(json.dumps(after.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
             try:
                 self.assertEqual(update.enabled, after.enabled)
             finally:
@@ -764,15 +756,14 @@ class TestExec(TestWithRandomUserApi):
             # end of get_settings
 
         users = [user for user in self.users if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_settings(user)
-                                         for user in users], return_exceptions=True)
+        results = await asyncio.gather(*[get_settings(user) for user in users], return_exceptions=True)
         err = None
-        for user, result in zip(users, results):
+        for user, result in zip(users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error getting exec alert settings for {user.display_name}: {result}")
+                print(f'Error getting exec alert settings for {user.display_name}: {result}')
             elif result is not None:
-                print(f"Exec alert settings for {user.display_name}: ")
+                print(f'Exec alert settings for {user.display_name}: ')
                 print(json.dumps(result.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
         if err:
             raise err
@@ -796,15 +787,14 @@ class TestExec(TestWithRandomUserApi):
             # end of get_settings
 
         users = [user for user in self.users if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_settings(user)
-                                         for user in users], return_exceptions=True)
+        results = await asyncio.gather(*[get_settings(user) for user in users], return_exceptions=True)
         err = None
-        for user, result in zip(users, results):
+        for user, result in zip(users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error getting assigned assistants {user.display_name}: {result}")
+                print(f'Error getting assigned assistants {user.display_name}: {result}')
             elif result is not None:
-                print(f"Exec alert settings for {user.display_name}: ")
+                print(f'Exec alert settings for {user.display_name}: ')
                 print(json.dumps(result.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
         if err:
             raise err
@@ -828,15 +818,14 @@ class TestExec(TestWithRandomUserApi):
             # end of get_settings
 
         users = [user for user in self.users if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_settings(user)
-                                         for user in users], return_exceptions=True)
+        results = await asyncio.gather(*[get_settings(user) for user in users], return_exceptions=True)
         err = None
-        for user, result in zip(users, results):
+        for user, result in zip(users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error getting executive assistant settings {user.display_name}: {result}")
+                print(f'Error getting executive assistant settings {user.display_name}: {result}')
             elif result is not None:
-                print(f"executive assistant settings for {user.display_name}: ")
+                print(f'executive assistant settings for {user.display_name}: ')
                 print(json.dumps(result.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
         if err:
             raise err
@@ -860,15 +849,14 @@ class TestExec(TestWithRandomUserApi):
             # end of get_settings
 
         users = [user for user in self.users if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_settings(user)
-                                         for user in users], return_exceptions=True)
+        results = await asyncio.gather(*[get_settings(user) for user in users], return_exceptions=True)
         err = None
-        for user, result in zip(users, results):
+        for user, result in zip(users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error getting executive call filtering settings {user.display_name}: {result}")
+                print(f'Error getting executive call filtering settings {user.display_name}: {result}')
             elif result is not None:
-                print(f"Executive call filtering settings for {user.display_name}: ")
+                print(f'Executive call filtering settings for {user.display_name}: ')
                 print(json.dumps(result.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
         if err:
             raise err
@@ -897,15 +885,14 @@ class TestCallCenter(TestWithRandomUserApi):
             # end of get_settings
 
         users = [user for user in self.users if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_settings(user)
-                                         for user in users], return_exceptions=True)
+        results = await asyncio.gather(*[get_settings(user) for user in users], return_exceptions=True)
         err = None
-        for user, result in zip(users, results):
+        for user, result in zip(users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error getting call center settings for {user.display_name}: {result}")
+                print(f'Error getting call center settings for {user.display_name}: {result}')
             elif result is not None:
-                print(f"call center settings for {user.display_name}: ")
+                print(f'call center settings for {user.display_name}: ')
                 print(json.dumps(result.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
         if err:
             raise err
@@ -934,15 +921,14 @@ class TestSNR(TestWithRandomUserApi):
             # end of get_settings
 
         users = [user for user in self.users if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_settings(user)
-                                         for user in users], return_exceptions=True)
+        results = await asyncio.gather(*[get_settings(user) for user in users], return_exceptions=True)
         err = None
-        for user, result in zip(users, results):
+        for user, result in zip(users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error single number reach settings for {user.display_name}: {result}")
+                print(f'Error single number reach settings for {user.display_name}: {result}')
             elif result is not None:
-                print(f"single number reach for {user.display_name}: ")
+                print(f'single number reach for {user.display_name}: ')
                 print(json.dumps(result.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
         if err:
             raise err
@@ -971,15 +957,14 @@ class TestVoicemail(TestWithRandomUserApi):
             # end of get_settings
 
         users = [user for user in self.users if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_settings(user)
-                                         for user in users], return_exceptions=True)
+        results = await asyncio.gather(*[get_settings(user) for user in users], return_exceptions=True)
         err = None
-        for user, result in zip(users, results):
+        for user, result in zip(users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error voicemail settings for {user.display_name}: {result}")
+                print(f'Error voicemail settings for {user.display_name}: {result}')
             elif result is not None:
-                print(f"voicemail settings for {user.display_name}: ")
+                print(f'voicemail settings for {user.display_name}: ')
                 print(json.dumps(result.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
         if err:
             raise err
@@ -1005,16 +990,15 @@ class TestCallCaptions(TestWithRandomUserApi):
             # end of get_settings
 
         users = [user for user in self.users if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_settings(user)
-                                         for user in users], return_exceptions=True)
+        results = await asyncio.gather(*[get_settings(user) for user in users], return_exceptions=True)
         err = None
-        for user, result in zip(users, results):
+        for user, result in zip(users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error call captions settings for {user.display_name}: {result}")
+                print(f'Error call captions settings for {user.display_name}: {result}')
             elif result is not None:
                 result: UserCallCaptions
-                print(f"call caption settings for {user.display_name}: ")
+                print(f'call caption settings for {user.display_name}: ')
                 print(json.dumps(result.model_dump(mode='json', by_alias=True, exclude_unset=True), indent=2))
         if err:
             raise err
@@ -1041,23 +1025,24 @@ class TestAvailableNumbersForLocation(TestWithRandomUserApi):
             # end of get_settings
             return
 
-        users = [user
-                 for user in self.users
-                 if not user.display_name.startswith('admin@')]
-        results = await asyncio.gather(*[get_settings(user)
-                                         for user in users], return_exceptions=True)
+        users = [user for user in self.users if not user.display_name.startswith('admin@')]
+        results = await asyncio.gather(*[get_settings(user) for user in users], return_exceptions=True)
         err = None
-        for user, result in zip(users, results):
+        for user, result in zip(users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
-                print(f"Error available numbers for {user.display_name}: {result}")
+                print(f'Error available numbers for {user.display_name}: {result}')
             elif result is not None:
-                result: List[LocationAssignedNumber]
-                print(f"Available Numbers for {user.display_name}: ")
+                result: list[LocationAssignedNumber]
+                print(f'Available Numbers for {user.display_name}: ')
 
-                print(json.dumps(
-                    TypeAdapter(List[LocationAssignedNumber]).dump_python(result, mode='json', exclude_unset=True,
-                                                                          exclude_none=True),
-                    indent=2))
+                print(
+                    json.dumps(
+                        TypeAdapter(list[LocationAssignedNumber]).dump_python(
+                            result, mode='json', exclude_unset=True, exclude_none=True
+                        ),
+                        indent=2,
+                    )
+                )
         if err:
             raise err

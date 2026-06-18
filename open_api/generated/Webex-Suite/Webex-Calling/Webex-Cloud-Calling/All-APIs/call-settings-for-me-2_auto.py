@@ -13,7 +13,7 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __all__ = ['AvailableHotelingHost', 'BlockContiguousSequences', 'BlockPreviousPasscodes', 'BlockRepeatedDigits',
-           'CallNotifyGet', 'CallSettingsForMe22Api', 'GuestCallingNumber', 'HotelingGuestSettings',
+           'CallNotifyGet', 'CallSettingsForMe23Api', 'GuestCallingNumber', 'HotelingGuestSettings',
            'LocationAssignedNumber', 'LocationAssignedNumberOwner', 'LocationAssignedNumberPhoneNumberType',
            'LocationAssignedNumberState', 'ModeManagementFeatureResponse', 'ModeManagementFeatureResponseModesItem',
            'ModeManagementFeatureResponseModesItemForwardTo',
@@ -1059,9 +1059,9 @@ class PersonalAssistantSettings(ApiModel):
     alert_me_first_number_of_rings: Optional[int] = None
 
 
-class CallSettingsForMe22Api(ApiChild, base='telephony/config/people/me'):
+class CallSettingsForMe23Api(ApiChild, base='telephony/config/people/me'):
     """
-    Call Settings For Me (2/2)
+    Call Settings for Me (2/3)
     
     Call settings for me APIs allow a person to read or modify their settings.
     

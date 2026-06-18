@@ -60,6 +60,7 @@ __all__ = [
     'MeMonitoringSettings',
     'MeMonitoredElement',
     'MonitoredElementType',
+    'MonitoredLineType',
     'ServicesEnum',
     'LocationAssignedNumber',
     'GuestCallingNumber',
@@ -184,33 +185,45 @@ class MonitoredElementType(str, Enum):
     virtual_line = 'VIRTUAL_LINE'
     #: The monitored element is a call park extension.
     call_park_extension = 'CALL_PARK_EXTENSION'
+    #: The monitored element is a speed dial.
+    speed_dial = 'SPEED_DIAL'
+
+
+class MonitoredLineType(str, Enum):
+    call_park_extension = 'CALL_PARK_EXTENSION'
+    member = 'MEMBER'
+    speed_dial = 'SPEED_DIAL'
 
 
 class MeMonitoredElement(ApiModel):
-    #: The identifier of the monitored person.
+    #: The identifier of the monitored person, workspace, virtual line, call park extension or speed dial.
     id: Optional[str] = None
     #: The last name of the monitored person or virtual line.
     last_name: Optional[str] = None
     #: The first name of the monitored person or virtual line.
     first_name: Optional[str] = None
-    #: The display name of the monitored place or call park extension.
+    #: The display name of the monitored person, workspace, virtual line, call park extension or speed dial.
     display_name: Optional[str] = None
-    #: Indicates whether the type is `PEOPLE`, `PLACE`, `VIRTUAL_LINE` or `CALL_PARK_EXTENSION`.
+    #: Indicates whether the type is `PEOPLE`, `PLACE`, `VIRTUAL_LINE` , `CALL_PARK_EXTENSION` or `SPEED_DIAL`.
     type: Optional[MonitoredElementType] = None
-    #: The email address of the monitored person, place or virtual line.
+    #: The email address of the monitored person.
     email: Optional[str] = None
-    #: The list of phone numbers of the monitored person, place or virtual line.
+    #: The extension number for the person, place, virtual line, call park extension or speed dial.
     direct_number: Optional[str] = None
     #: The extension number for the person, place, virtual line or call park extension.
     extension: Optional[str] = None
     #: Routing prefix of location.
     routing_prefix: Optional[str] = None
-    #: Enterprise Significant Numbers (Routing prefix + extension of a person, place, virtual line).
+    #: Enterprise Significant Number (routing prefix + extension of a person, place, virtual line, call park
+    #: extension). If the routing prefix is not set, then ESN is the extension.
     esn: Optional[str] = None
     #: The location name where the monitored item is.
     location_name: Optional[str] = None
     #: The ID for the location.
     location_id: Optional[str] = None
+    #: This is a custom label configured for the monitored line on the device.
+    line_key_label: Optional[str] = None
+    monitored_line_type: Optional[MonitoredLineType] = None
 
 
 class MeMonitoringSettings(ApiModel):
@@ -559,8 +572,8 @@ class MeSettingsApi(ApiChild, base='telephony/config/people/me'):
         """
         Get My Monitoring Settings
 
-        Retrieves the monitoring settings of the logged in person, which shows specified people, places, virtual lines
-        or call park extensions that are being monitored.
+        Retrieves the monitoring settings for the authenticated person, which shows specified people, places, virtual
+        lines or call park extensions that are being monitored.
 
         Monitors the line status which indicates if a person, place or virtual line is on a call and if a call has been
         parked on that extension.
