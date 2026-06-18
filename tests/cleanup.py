@@ -15,7 +15,7 @@ from concurrent.futures import ThreadPoolExecutor
 from functools import reduce
 from itertools import chain, zip_longest
 from re import Pattern
-from typing import Union
+from typing import Any, Union
 
 from tests.base import WithIntegrationTokens, get_tokens
 from tests.cleanup_locations import delete_unused_locations
@@ -28,6 +28,8 @@ from wxc_sdk.har_writer import HarWriter
 from wxc_sdk.people import Person
 from wxc_sdk.person_settings.permissions_out import DigitPattern
 from wxc_sdk.telephony import NumberListPhoneNumber, NumberType
+from wxc_sdk.telephony.announcements_repo import FeatureReference
+from wxc_sdk.telephony.autoattendant import AutoAttendant, AutoAttendantMenu
 from wxc_sdk.telephony.callqueue import CallQueue
 from wxc_sdk.telephony.location import TelephonyLocation
 from wxc_sdk.workspaces import CallingType
@@ -120,6 +122,100 @@ def cleanup_devices(pool: ThreadPoolExecutor, api: WebexSimpleApi):
         )
 
 
+def cleanup_announcements(pool: ThreadPoolExecutor, api: WebexSimpleApi):
+    """
+    Clean up announcements
+    """
+
+    def needed_for_cleanup(data: dict[str, Any] | CallQueue, ann_id: str) -> dict[str, Any] | None:
+        """
+        Determine the subset of the CQ settings that are required to clean an CQ announcement reference
+        """
+        if isinstance(data, CallQueue):
+            data = data.model_dump(mode='json', by_alias=True)
+        r = dict()
+        # recursively look for announcement files in the data, if we find any, keep the parent objects needed to
+        # update them
+        for k, v in data.items():
+            if isinstance(v, dict):
+                needed = needed_for_cleanup(v, ann_id)
+                if needed:
+                    r[k] = needed
+        if af := data.get('audioAnnouncementFiles'):
+            # this is an entity with audio announcement files
+            # only keep announcement files other than the one we want to clean
+            af_cleaned = [a for a in af if a['id'] != ann_id]
+            if af_cleaned == af:
+                # no change
+                return None
+            r['audioAnnouncementFiles'] = af_cleaned
+            if data['greeting'] != 'DEFAULT':
+                r['greeting'] = 'DEFAULT'
+        return r or None
+
+    def clean_fr_call_queue(fr: FeatureReference) -> None:
+        cq = api.telephony.callqueue.details(location_id=fr.location_id, queue_id=fr.id)
+        cq_update = needed_for_cleanup(cq, ann.id)
+        if cq_update:
+            cq_settings = CallQueue.model_validate(cq_update)
+            api.telephony.callqueue.update(location_id=fr.location_id, queue_id=fr.id, update=cq_settings)
+            after = api.telephony.callqueue.details(location_id=fr.location_id, queue_id=fr.id)
+            if needed_for_cleanup(after, ann.id):
+                logging.error(f'Failed to clean announcement reference from Call Queue {cq.name}')
+        else:
+            logging.warning(f'No changes  for Call Queue {cq.name} to clean announcement reference, skipping update?')
+        return
+
+    def aa_menu_update(menu: AutoAttendantMenu) -> bool:
+        if menu and menu.audio_announcement_file and menu.audio_announcement_file.id == ann.id:
+            menu.audio_announcement_file = None
+            return True
+        return False
+
+    def aa_update(aa: AutoAttendant) -> bool:
+        return aa_menu_update(aa.business_hours_menu) or aa_menu_update(aa.after_hours_menu)
+
+    def clean_fr_aa(fr: FeatureReference) -> None:
+        aa = api.telephony.auto_attendant.details(location_id=fr.location_id, auto_attendant_id=fr.id)
+        if aa_update(aa):
+            api.telephony.auto_attendant.update(location_id=fr.location_id, auto_attendant_id=fr.id, settings=aa)
+            after = api.telephony.auto_attendant.details(location_id=fr.location_id, auto_attendant_id=fr.id)
+            if aa_update(after):
+                logging.error(f'Failed to clean announcement reference from Auto Attendant {aa.name}')
+        return
+
+    announcements = list(filtered(api.telephony.announcements_repo.list()))
+    ann_details = list(
+        pool.map(lambda ann: api.telephony.announcements_repo.details(announcement_id=ann.id), announcements)
+    )
+    ref_types = set(chain.from_iterable((fr.type for fr in ann.feature_references) for ann in ann_details))
+    # try to clean up usages
+    for ann in ann_details:
+        if not ann.feature_reference_count:
+            continue
+        for fr in ann.feature_references:
+            if fr.type == 'Call Queue':
+                clean_fr_call_queue(fr)
+            elif fr.type == 'Auto Attendant':
+                clean_fr_aa(fr)
+            elif fr.type == 'Music in Hold':
+                moh = api.telephony.location.moh.read(location_id=fr.location_id)
+                ...
+            else:
+                logging.error(f'Unknown feature reference type "{fr.type}" for announcement {ann.name}')
+                continue
+
+    # get details again to see if we cleaned up some references
+    ann_details = list(
+        pool.map(lambda ann: api.telephony.announcements_repo.details(announcement_id=ann.id), announcements)
+    )
+    ann_to_delete = [ann for ann in ann_details if not ann.feature_reference_count]
+    print(f'deleting {len(ann_to_delete)} announcements')
+    if not DRY_RUN:
+        list(pool.map(lambda ann: api.telephony.announcements_repo.delete(announcement_id=ann.id), ann_to_delete))
+    return
+
+
 async def main():
     tokens = get_tokens()
     if not tokens:
@@ -141,7 +237,7 @@ async def main():
                 *[as_api.telephony.location.details(location_id=loc.location_id) for loc in locations],
                 return_exceptions=True,
             )
-        locations = [loc for loc, detail in zip(locations, details) if not isinstance(detail, Exception)]
+        locations = [loc for loc, detail in zip(locations, details, strict=True) if not isinstance(detail, Exception)]
 
         fmt = logging.Formatter(fmt='%(asctime)s %(threadName)s %(message)s')
         fmt.converter = time.gmtime
@@ -290,7 +386,7 @@ async def main():
             users_and_schedules = list(
                 chain.from_iterable(
                     ((user, schedule) for schedule in filtered(schedules))
-                    for user, schedules in zip(users, schedule_lists)
+                    for user, schedules in zip(users, schedule_lists, strict=True)
                 )
             )
             print(
@@ -483,15 +579,8 @@ async def main():
                     *[as_api.rooms.delete(room_id=space.id) for space in spaces], return_exceptions=True
                 )
 
-            # try deleting all announcements and ignore any errors
-            anns = list(filtered(await as_api.telephony.announcements_repo.list()))
-            try:
-                await asyncio.gather(
-                    *[api.telephony.announcements_repo.delete(announcement_id=ann.id) for ann in anns],
-                    return_exceptions=True,
-                )
-            except Exception:
-                pass
+            # clean up announcements
+            cleanup_announcements(pool=pool, api=api)
 
             # remove ocp test patterns from all users
             users = list(api.people.list())
