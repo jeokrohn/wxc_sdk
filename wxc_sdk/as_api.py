@@ -21666,10 +21666,10 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
         :return: ID of the newly created auto attendant.
         :rtype: str
         """
-        data = settings.create_or_update()
+        body = settings.create_or_update()
         url = self._endpoint(location_id=location_id)
         params = org_id and {'orgId': org_id} or None
-        data = await self.post(url, data=data, params=params)
+        data = await self.post(url, json=body, params=params)
         return data['id']
 
     async def update(self, location_id: str, auto_attendant_id: str, settings: AutoAttendant, org_id: str = None):
@@ -21697,7 +21697,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
         data = settings.create_or_update()
         url = self._endpoint(location_id=location_id, auto_attendant_id=auto_attendant_id)
         params = org_id and {'orgId': org_id} or None
-        await self.put(url, data=data, params=params)
+        await self.put(url, json=data, params=params)
 
     async def delete_auto_attendant(self, location_id: str, auto_attendant_id: str, org_id: str = None) -> None:
         """

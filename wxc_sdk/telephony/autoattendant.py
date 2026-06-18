@@ -6,7 +6,7 @@ Auto attendant data types and API
 import builtins
 from collections.abc import Generator
 from dataclasses import dataclass
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import Field, TypeAdapter
 
@@ -239,14 +239,16 @@ class AutoAttendant(ApiModel):
     #: The name to be used for dial by name functions.
     dial_by_name: Optional[str] = None
 
-    def create_or_update(self) -> str:
+    def create_or_update(self) -> dict[str, Any]:
         """
-        Get JSON for create or update call
+        Get data for create or update call
 
-        :return: JSON
-        :rtype: str
+        :meta private:
         """
-        return self.model_dump_json(
+        return self.model_dump(
+            mode='json',
+            by_alias=True,
+            exclude_unset=True,
             exclude={
                 'auto_attendant_id': True,
                 'location_name': True,
@@ -256,7 +258,7 @@ class AutoAttendant(ApiModel):
                 'language': True,
                 'esn': True,
                 'routing_prefix': True,
-            }
+            },
         )
 
     @staticmethod
@@ -436,10 +438,10 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         :return: ID of the newly created auto attendant.
         :rtype: str
         """
-        data = settings.create_or_update()
+        body = settings.create_or_update()
         url = self._endpoint(location_id=location_id)
         params = org_id and {'orgId': org_id} or None
-        data = self.post(url, data=data, params=params)
+        data = self.post(url, json=body, params=params)
         return data['id']
 
     def update(self, location_id: str, auto_attendant_id: str, settings: AutoAttendant, org_id: str = None):
@@ -467,7 +469,7 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         data = settings.create_or_update()
         url = self._endpoint(location_id=location_id, auto_attendant_id=auto_attendant_id)
         params = org_id and {'orgId': org_id} or None
-        self.put(url, data=data, params=params)
+        self.put(url, json=data, params=params)
 
     def delete_auto_attendant(self, location_id: str, auto_attendant_id: str, org_id: str = None) -> None:
         """
