@@ -14244,7 +14244,10 @@ class AsCallerIdApi(AsPersonSettingsApiChild):
         :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
-        :param selected: Which type of outgoing Caller ID will be used.
+        :param selected: Specifies which source will be used for the outgoing Caller ID phone number. The allowed
+            values for the current workspace can be retrieved from the `Read Caller ID Settings for a Workspace
+            <https://developer.webex.com/calling/docs/api/v1/workspace-call-settings-1-2/read-caller-id-settings-for-a-workspace>`_
+            `types` field.
         :type selected: CallerIdSelectedType
         :param custom_number: This value must be an assigned number from the entity\'s location.
         :type custom_number: str

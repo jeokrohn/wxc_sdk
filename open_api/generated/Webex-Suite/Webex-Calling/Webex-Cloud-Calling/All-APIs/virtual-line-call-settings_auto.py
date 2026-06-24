@@ -2004,7 +2004,10 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         :param virtual_line_id: Update settings for a virtual line with the matching ID.
         :type virtual_line_id: str
-        :param selected: Which type of outgoing Caller ID will be used. This setting is for the number portion.
+        :param selected: Specifies which source will be used for the outgoing Caller ID phone number. The allowed
+            values for the current virtual line can be retrieved from the `Read Caller ID Settings for a Virtual Line
+            <https://developer.webex.com/calling/docs/api/v1/virtual-line-call-settings/read-caller-id-settings-for-a-virtual-line>`_
+            `types` field.
         :type selected: CallerIdInfoSelected
         :param custom_number: Custom number which will be shown if CUSTOM is selected. This value must be a number from
             the virtual line's location or from another location with the same country, PSTN provider, and zone (only

@@ -26,10 +26,10 @@ __all__ = ['ApplicationsSetting', 'AvailableMemberObject', 'BargeInInfo', 'CallF
            'CallerIdInfoExternalCallerIdNamePolicy', 'CallerIdInfoSelected', 'DirectLineCallerIdNameObject',
            'DoNotDisturbInfo', 'EventLongDetails', 'EventLongDetailsRecurrence',
            'EventLongDetailsRecurrenceRecurDaily', 'EventLongDetailsRecurrenceRecurWeekly',
-           'GetCallingBehaviorObject', 'GetCallingBehaviorObjectBehaviorType',
-           'GetCallingBehaviorObjectEffectiveBehaviorType', 'GetEvent', 'GetMonitoredElementsObject',
-           'GetMonitoredElementsObjectCallparkextension', 'GetMonitoredElementsObjectMember', 'GetNumbers',
-           'GetNumbersPhoneNumbersItem', 'GetNumbersPhoneNumbersItemRingPattern', 'IncomingPermissionSetting',
+           'GetCallingBehaviorObject', 'GetCallingBehaviorObjectBehaviorType', 'GetEvent',
+           'GetMonitoredElementsObject', 'GetMonitoredElementsObjectCallparkextension',
+           'GetMonitoredElementsObjectMember', 'GetNumbers', 'GetNumbersPhoneNumbersItem',
+           'GetNumbersPhoneNumbersItemRingPattern', 'IncomingPermissionSetting',
            'IncomingPermissionSettingExternalTransfer', 'LocationObject', 'MonitoredElementItemPatch',
            'MonitoredElementItemPatchType', 'MonitoredElementSpeedDial', 'MonitoredMemberObject',
            'MonitoredNumberObject', 'MonitoringSettingsGet', 'OutgoingCallingPermissionsSettingGet',
@@ -485,21 +485,6 @@ class GetCallingBehaviorObjectBehaviorType(str, Enum):
     call_with_app_registered_for_webexcalltel = 'CALL_WITH_APP_REGISTERED_FOR_WEBEXCALLTEL'
     #: Calling in Webex (Unified CM)
     native_sip_call_to_ucm = 'NATIVE_SIP_CALL_TO_UCM'
-    #: Using the non-string value of `null` results in the organization-wide default calling behavior being in effect.
-    null = 'null'
-
-
-class GetCallingBehaviorObjectEffectiveBehaviorType(str, Enum):
-    #: Calling in Webex or Hybrid Calling.
-    native_webex_teams_calling = 'NATIVE_WEBEX_TEAMS_CALLING'
-    #: Cisco Jabber app
-    call_with_app_registered_for_ciscotel = 'CALL_WITH_APP_REGISTERED_FOR_CISCOTEL'
-    #: Third-Party app
-    call_with_app_registered_for_tel = 'CALL_WITH_APP_REGISTERED_FOR_TEL'
-    #: Webex Calling app
-    call_with_app_registered_for_webexcalltel = 'CALL_WITH_APP_REGISTERED_FOR_WEBEXCALLTEL'
-    #: Calling in Webex (Unified CM)
-    native_sip_call_to_ucm = 'NATIVE_SIP_CALL_TO_UCM'
 
 
 class GetCallingBehaviorObject(ApiModel):
@@ -508,7 +493,7 @@ class GetCallingBehaviorObject(ApiModel):
     behavior_type: Optional[GetCallingBehaviorObjectBehaviorType] = None
     #: The effective Calling Behavior setting for the person, will be the organization's default Calling Behavior if
     #: the user's `behaviorType` is set to `null`.
-    effective_behavior_type: Optional[GetCallingBehaviorObjectEffectiveBehaviorType] = None
+    effective_behavior_type: Optional[GetCallingBehaviorObjectBehaviorType] = None
     #: The UC Manager Profile ID.
     profile_id: Optional[str] = None
 
@@ -1516,7 +1501,9 @@ class UserCallSettings13Api(ApiChild, base=''):
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param selected: Which type of outgoing Caller ID will be used. This setting is for the number portion.
+        :param selected: Specifies which source will be used for the outgoing Caller ID phone number. The allowed
+            values for the current user can be retrieved from the `Read Caller ID Settings for a Person
+            <https://developer.webex.com/calling/docs/api/v1/user-call-settings-1-3/read-caller-id-settings-for-a-person>`_ `types` field.
         :type selected: CallerIdInfoSelected
         :param custom_number: Custom number which will be shown if CUSTOM is selected. This value must be a number from
             the person's location or from another location with the same country, PSTN provider, and zone (only

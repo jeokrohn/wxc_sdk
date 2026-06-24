@@ -1,4 +1,4 @@
-from typing import ClassVar, Optional
+from typing import Any, ClassVar, Optional
 
 from pydantic import Field
 
@@ -116,7 +116,7 @@ class CallerId(ApiModel):
         'dial_by_last_name',
     }
 
-    def configure_params(self) -> dict:
+    def configure_params(self) -> dict[str, Any]:
         """
         Get a dict with values that can be used to configure the caller id settings
 
@@ -135,7 +135,7 @@ class CallerId(ApiModel):
         """
         return self.model_dump(mode='json', exclude_none=True, by_alias=False, include=self.fields_for_update)
 
-    def update(self) -> dict:
+    def update(self) -> dict[str, Any]:
         """
         data for update
 
@@ -196,7 +196,10 @@ class CallerIdApi(PersonSettingsApiChild):
         :param org_id: entity is in this organization. Only admin users of another organization (such as partners)
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
-        :param selected: Which type of outgoing Caller ID will be used.
+        :param selected: Specifies which source will be used for the outgoing Caller ID phone number. The allowed
+            values for the current workspace can be retrieved from the `Read Caller ID Settings for a Workspace
+            <https://developer.webex.com/calling/docs/api/v1/workspace-call-settings-1-2/read-caller-id-settings-for-a-workspace>`_
+            `types` field.
         :type selected: CallerIdSelectedType
         :param custom_number: This value must be an assigned number from the entity\'s location.
         :type custom_number: str

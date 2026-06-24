@@ -839,7 +839,10 @@ class WorkspaceCallSettings12Api(ApiChild, base=''):
 
         :param workspace_id: Unique identifier for the workspace.
         :type workspace_id: str
-        :param selected: Which type of outgoing Caller ID will be used. This setting is for the number portion.
+        :param selected: Specifies which source will be used for the outgoing Caller ID phone number. The allowed
+            values for the current workspace can be retrieved from the `Read Caller ID Settings for a Workspace
+            <https://developer.webex.com/calling/docs/api/v1/workspace-call-settings-1-2/read-caller-id-settings-for-a-workspace>`_ `types`
+            field.
         :type selected: CLIDPolicySelection
         :param custom_number: Custom number which is shown if CUSTOM is selected. This value must be a number from the
             workspace's location or from another location with the same country, PSTN provider, and zone (only
