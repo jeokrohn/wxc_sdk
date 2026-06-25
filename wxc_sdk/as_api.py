@@ -1205,12 +1205,23 @@ class AsDetailedCDRApi(AsApiChild, base=''):
     region's servers host the organization's data, then the data is returned. Otherwise, an HTTP 451 error code is
     returned. In such cases, the response body contains endpoint information indicating where the organization’s data
     can be retrieved.
+
+    To prevent this error, route your API requests directly to your organization's designated regional Fully Qualified
+    Domain Name (FQDN):
+
+    United States / Canada: https://analytics-calling.webexapis.com
+
+    Europe (EU / EUN): https://analytics-calling-eu.webexapis.com
+
+    India: https://analytics-calling-in.webexapis.com
+
+    Australia: https://analytics-calling-au.webexapis.com
     """
 
     def get_cdr_history_gen(
         self,
-        start_time: Union[str, datetime] = None,
-        end_time: Union[datetime, str] = None,
+        start_time: Optional[str | datetime] = None,
+        end_time: Optional[str | datetime] = None,
         locations: list[str] = None,
         host: str = 'analytics-calling.webexapis.com',
         stream: bool = False,
@@ -1229,12 +1240,12 @@ class AsDetailedCDRApi(AsApiChild, base=''):
             Note: The specified time must be between 5 minutes ago and 48 hours ago, and Can be a datetime object or
             an ISO-8601 datetime string to be parsed by :meth:`dateutil.parser.isoparse`
 
-        :type start_time: Union[str, datetime]
+        :type start_time: str|datetime
         :param end_time: Time of the last report you wish to collect. (Report time is the time the call finished).
 
             Note: The specified time should be earlier than startTime and no earlier than 48 hours ago. Can be a
             datetime object or an ISO-8601 datetime string to be parsed by :meth:`dateutil.parser.isoparse`.
-        :type end_time: Union[str, datetime]
+        :type end_time: str|datetime
         :param locations: Names of the location (as shown in Control Hub). Up to 10 comma-separated locations can be
             provided. Allows you to query reports by location.
         :type locations: list[str]
@@ -1254,7 +1265,7 @@ class AsDetailedCDRApi(AsApiChild, base=''):
         if not end_time:
             end_time = datetime.now(tz=tz.tzutc()) - timedelta(minutes=5, seconds=30)
 
-        def guess_datetime(dt: Union[datetime, str]) -> str:
+        def guess_datetime(dt: datetime | str) -> str:
             if isinstance(dt, str):
                 dt = isoparse(dt)
             r = dt_iso_str(dt)
@@ -1267,8 +1278,8 @@ class AsDetailedCDRApi(AsApiChild, base=''):
 
     async def get_cdr_history(
         self,
-        start_time: Union[str, datetime] = None,
-        end_time: Union[datetime, str] = None,
+        start_time: Optional[str | datetime] = None,
+        end_time: Optional[str | datetime] = None,
         locations: list[str] = None,
         host: str = 'analytics-calling.webexapis.com',
         stream: bool = False,
@@ -1287,12 +1298,12 @@ class AsDetailedCDRApi(AsApiChild, base=''):
             Note: The specified time must be between 5 minutes ago and 48 hours ago, and Can be a datetime object or
             an ISO-8601 datetime string to be parsed by :meth:`dateutil.parser.isoparse`
 
-        :type start_time: Union[str, datetime]
+        :type start_time: str|datetime
         :param end_time: Time of the last report you wish to collect. (Report time is the time the call finished).
 
             Note: The specified time should be earlier than startTime and no earlier than 48 hours ago. Can be a
             datetime object or an ISO-8601 datetime string to be parsed by :meth:`dateutil.parser.isoparse`.
-        :type end_time: Union[str, datetime]
+        :type end_time: str|datetime
         :param locations: Names of the location (as shown in Control Hub). Up to 10 comma-separated locations can be
             provided. Allows you to query reports by location.
         :type locations: list[str]
@@ -1312,7 +1323,7 @@ class AsDetailedCDRApi(AsApiChild, base=''):
         if not end_time:
             end_time = datetime.now(tz=tz.tzutc()) - timedelta(minutes=5, seconds=30)
 
-        def guess_datetime(dt: Union[datetime, str]) -> str:
+        def guess_datetime(dt: datetime | str) -> str:
             if isinstance(dt, str):
                 dt = isoparse(dt)
             r = dt_iso_str(dt)

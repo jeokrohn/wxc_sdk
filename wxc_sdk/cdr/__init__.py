@@ -6,7 +6,7 @@ import re
 from collections.abc import Generator, Iterator
 from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
 from dateutil import tz
 from dateutil.parser import isoparse
@@ -188,7 +188,7 @@ class CDR(ApiModel):
     # and one will be answered.
     answered: Optional[bool] = None
     #: Whether the call was inbound or outbound. The possible values are:
-    direction: Optional[Union[CDRDirection, str]] = None
+    direction: Optional[CDRDirection | str] = None
     #: For incoming calls, the calling line ID of the user. For outgoing calls, it's the calling line ID of the
     #: called party.
     called_line_id: Optional[str] = None
@@ -581,6 +581,22 @@ class CDR(ApiModel):
     #: ECBN—ECBN is used when the location has no ELINs provisioned, ELIN usage is not allowed for the call, or
     #: callback is not to an ELIN.
     emergency_number_source: Optional[str] = Field(alias='Emergency number source', default=None)
+    #: Indicates the type of the transfer attempt. Examples:
+    #:
+    #: AI Receptionist Deflection By Intent—Indicates that the call was routed to a specific number mapped to the
+    #: intent identified during the conversation.
+    #:
+    #: AI Receptionist Deflection By Default—Indicates that the call was routed to the pre-configured default number
+    #: based on the conversation outcome or call failure.
+    transfer_type: Optional[str] = Field(alias='Transfer type', default=None)
+    #: This field provides additional context for the transfer type. For example, Intent Name is the specific intent
+    #: identified by the AI Receptionist during the conversation, used to route the call to the number mapped to that
+    #: intent. Example intents include:
+    #:
+    #: - "for Pediatric Services"
+    #:
+    #: - "for Occupational Therapy"
+    transfer_type_context: Optional[str] = Field(alias='Transfer type context', default=None)
 
 
 @dataclass(init=False, repr=False)
@@ -619,12 +635,23 @@ class DetailedCDRApi(ApiChild, base=''):
     region's servers host the organization's data, then the data is returned. Otherwise, an HTTP 451 error code is
     returned. In such cases, the response body contains endpoint information indicating where the organization’s data
     can be retrieved.
+
+    To prevent this error, route your API requests directly to your organization's designated regional Fully Qualified
+    Domain Name (FQDN):
+
+    United States / Canada: https://analytics-calling.webexapis.com
+
+    Europe (EU / EUN): https://analytics-calling-eu.webexapis.com
+
+    India: https://analytics-calling-in.webexapis.com
+
+    Australia: https://analytics-calling-au.webexapis.com
     """
 
     def get_cdr_history(
         self,
-        start_time: Union[str, datetime] = None,
-        end_time: Union[datetime, str] = None,
+        start_time: Optional[str | datetime] = None,
+        end_time: Optional[str | datetime] = None,
         locations: list[str] = None,
         host: str = 'analytics-calling.webexapis.com',
         stream: bool = False,
@@ -643,12 +670,12 @@ class DetailedCDRApi(ApiChild, base=''):
             Note: The specified time must be between 5 minutes ago and 48 hours ago, and Can be a datetime object or
             an ISO-8601 datetime string to be parsed by :meth:`dateutil.parser.isoparse`
 
-        :type start_time: Union[str, datetime]
+        :type start_time: str|datetime
         :param end_time: Time of the last report you wish to collect. (Report time is the time the call finished).
 
             Note: The specified time should be earlier than startTime and no earlier than 48 hours ago. Can be a
             datetime object or an ISO-8601 datetime string to be parsed by :meth:`dateutil.parser.isoparse`.
-        :type end_time: Union[str, datetime]
+        :type end_time: str|datetime
         :param locations: Names of the location (as shown in Control Hub). Up to 10 comma-separated locations can be
             provided. Allows you to query reports by location.
         :type locations: list[str]
@@ -668,7 +695,7 @@ class DetailedCDRApi(ApiChild, base=''):
         if not end_time:
             end_time = datetime.now(tz=tz.tzutc()) - timedelta(minutes=5, seconds=30)
 
-        def guess_datetime(dt: Union[datetime, str]) -> str:
+        def guess_datetime(dt: datetime | str) -> str:
             if isinstance(dt, str):
                 dt = isoparse(dt)
             r = dt_iso_str(dt)

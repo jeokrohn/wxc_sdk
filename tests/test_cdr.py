@@ -1,6 +1,7 @@
 """
 Test CDR API
 """
+
 from collections import defaultdict
 from datetime import datetime, timedelta
 from functools import reduce
@@ -31,15 +32,17 @@ class TestCDR(TestCaseWithLog):
         print(f'{len(call_ids)} different call IDs:')
         print('\n'.join(f'  {c}' for c in sorted(call_ids, key=lambda v: v or '')))
 
-        by_correlation_id: dict[str, list[CDR]] = reduce(lambda s, el: s[el.correlation_id].append(el) or s,
-                                                         cdrs,
-                                                         defaultdict(list))
+        by_correlation_id: dict[str, list[CDR]] = reduce(
+            lambda s, el: s[el.correlation_id].append(el) or s, cdrs, defaultdict(list)
+        )
         print(f'{len(by_correlation_id)} correlation IDs')
         for corr_id, records in by_correlation_id.items():
             print(f'  {corr_id}')
             for record in records:
-                print(f'    {record.start_time} {record.answer_time} {record.duration} {record.calling_number}'
-                      f'->{record.called_number} {record.call_id}')
+                print(
+                    f'    {record.start_time} {record.answer_time} {record.duration} {record.calling_number}'
+                    f'->{record.called_number} {record.call_id}'
+                )
 
     def test_002_pagination(self):
         """
@@ -66,17 +69,35 @@ class TestCDR(TestCaseWithLog):
         end_time = datetime.now(tz=tz.tzutc()) - timedelta(minutes=5, seconds=30)
         print(f'Looking for CDRs between {start_time} and {end_time}')
         try:
-            cdr1 = list(self.api.cdr.get_cdr_history(start_time=start_time,
-                                                     end_time=end_time))
+            cdr1 = list(self.api.cdr.get_cdr_history(start_time=start_time, end_time=end_time))
         except RestError as rest_error:
-            if (rest_error.detail.error_code == 404
-                    and rest_error.detail.message == 'No CDRs for requested time range and filters'):
+            if (
+                rest_error.detail.error_code == 404
+                and rest_error.detail.message == 'No CDRs for requested time range and filters'
+            ):
                 self.skipTest('No CDRs')
             else:
                 raise
         # this should get us a 429
         with self.assertRaises(RestError) as exc:
             self.api.session.retry_429 = False
-            cdr2 = list(self.api.cdr.get_cdr_history(start_time=start_time + timedelta(seconds=2),
-                                                     end_time=end_time + timedelta(seconds=2)))
+            cdr2 = list(
+                self.api.cdr.get_cdr_history(
+                    start_time=start_time + timedelta(seconds=2), end_time=end_time + timedelta(seconds=2)
+                )
+            )
         self.assertEqual(429, exc.exception.response.status_code, f'Unexpected exception: {exc.exception}')
+
+    def test_004_wrong_region(self):
+        """
+        Send request to wrong region and check response
+        """
+        start_time = datetime.now(tz=tz.tzutc()) - timedelta(hours=2)
+        end_time = datetime.now(tz=tz.tzutc()) - timedelta(hours=1)
+        print(f'Looking for CDRs between {start_time} and {end_time}')
+        api = self.api.cdr
+        with self.assertRaises(RestError) as exc:
+            list(
+                api.get_cdr_history(start_time=start_time, end_time=end_time, host='analytics-calling-in.webexapis.com')
+            )
+        self.assertEqual(451, exc.exception.response.status_code, f'Expected 451, got: {exc.exception}')

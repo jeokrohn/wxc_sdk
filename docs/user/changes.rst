@@ -1,6 +1,7 @@
 Release history
 ===============
 
+- feat: new CDR fields transfer_type, transfer_type_context
 - feat: api.me.monitoring_settings response includes line_key_label
 - feat: add org_id parameter to api.person_settings.feature_access.read_default/update_default
 - feat: update monitoring API

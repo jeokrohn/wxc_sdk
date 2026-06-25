@@ -633,6 +633,22 @@ class CDR(ApiModel):
     #: ECBN—ECBN is used when the location has no ELINs provisioned, ELIN usage is not allowed for the call, or
     #: callback is not to an ELIN.
     emergency_number_source: Optional[str] = Field(alias='Emergency number source', default=None)
+    #: Indicates the type of the transfer attempt. Examples:
+    #: 
+    #: AI Receptionist Deflection By Intent—Indicates that the call was routed to a specific number mapped to the
+    #: intent identified during the conversation.
+    #: 
+    #: AI Receptionist Deflection By Default—Indicates that the call was routed to the pre-configured default number
+    #: based on the conversation outcome or call failure.
+    transfer_type: Optional[str] = Field(alias='Transfer type', default=None)
+    #: This field provides additional context for the transfer type. For example, Intent Name is the specific intent
+    #: identified by the AI Receptionist during the conversation, used to route the call to the number mapped to that
+    #: intent. Example intents include:
+    #: 
+    #: - "for Pediatric Services"
+    #: 
+    #: - "for Occupational Therapy"
+    transfer_type_context: Optional[str] = Field(alias='Transfer type context', default=None)
 
 
 class ReportsDetailedCallHistoryApi(ApiChild, base='cdr_feed'):
@@ -672,6 +688,17 @@ class ReportsDetailedCallHistoryApi(ApiChild, base='cdr_feed'):
     region's servers host the organization's data, then the data is returned. Otherwise, an HTTP 451 error code is
     returned. In such cases, the response body contains endpoint information indicating where the organization’s data
     can be retrieved.
+    
+    To prevent this error, route your API requests directly to your organization's designated regional Fully Qualified
+    Domain Name (FQDN):
+    
+    United States / Canada: https://analytics-calling.webexapis.com
+    
+    Europe (EU / EUN): https://analytics-calling-eu.webexapis.com
+    
+    India: https://analytics-calling-in.webexapis.com
+    
+    Australia: https://analytics-calling-au.webexapis.com
     """
 
     def get_detailed_call_history(self, start_time: Union[str, datetime], end_time: Union[str, datetime],
