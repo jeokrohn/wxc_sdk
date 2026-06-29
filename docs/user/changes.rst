@@ -1,6 +1,7 @@
 Release history
 ===============
 
+- fix: audio files in updates to CQ holiday service, night service, stranded calls, forced forward settings cannot have file_size and is_text_to_speech
 - feat: new CDR fields transfer_type, transfer_type_context
 - feat: api.me.monitoring_settings response includes line_key_label
 - feat: add org_id parameter to api.person_settings.feature_access.read_default/update_default

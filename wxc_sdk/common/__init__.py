@@ -1236,6 +1236,14 @@ class AnnAudioFile(ApiModel):
     #: Indicates whether the announcement is text-to-speech.
     is_text_to_speech: Optional[bool] = None
 
+    def update(self) -> dict[str, Any]:
+        """
+        data for update
+
+        :meta private:
+        """
+        return self.model_dump(exclude_none=True, exclude={'file_size', 'is_text_to_speech'})
+
 
 class AudioSource(ApiModel):
     #: Enable media on hold for queued calls.

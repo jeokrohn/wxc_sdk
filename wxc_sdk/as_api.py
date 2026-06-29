@@ -23095,8 +23095,7 @@ class AsCQPolicyApi(AsApiChild, base=''):
         """
         url = self._ep(location_id, queue_id, 'holidayService')
         params = org_id and {'orgId': org_id} or None
-        body = update.model_dump_json(exclude={'holiday_schedules'})
-        await self.put(url=url, params=params, data=body)
+        await self.put(url=url, params=params, json=update.update())
 
     async def night_service_detail(self, location_id: str, queue_id: str, org_id: str = None) -> NightService:
         """
@@ -23146,8 +23145,7 @@ class AsCQPolicyApi(AsApiChild, base=''):
         """
         url = self._ep(location_id, queue_id, 'nightService')
         params = org_id and {'orgId': org_id} or None
-        body = update.model_dump_json(exclude={'business_hour_schedules'})
-        await self.put(url=url, params=params, data=body)
+        await self.put(url=url, params=params, json=update.update())
 
     async def stranded_calls_details(self, location_id: str, queue_id: str, org_id: str = None) -> StrandedCalls:
         """
@@ -23198,7 +23196,7 @@ class AsCQPolicyApi(AsApiChild, base=''):
         """
         url = self._ep(location_id, queue_id, 'strandedCalls')
         params = org_id and {'orgId': org_id} or None
-        await self.put(url=url, params=params, data=update.model_dump_json())
+        await self.put(url=url, params=params, json=update.update())
 
     async def forced_forward_details(self, location_id: str, queue_id: str, org_id: str = None) -> ForcedForward:
         """
@@ -23249,7 +23247,7 @@ class AsCQPolicyApi(AsApiChild, base=''):
         """
         url = self._ep(location_id, queue_id, 'forcedForward')
         params = org_id and {'orgId': org_id} or None
-        await self.put(url=url, params=params, data=update.model_dump_json())
+        await self.put(url=url, params=params, json=update.update())
 
 
 class AsCallQueueAgentsApi(AsApiChild, base='telephony/config/queues/agents'):

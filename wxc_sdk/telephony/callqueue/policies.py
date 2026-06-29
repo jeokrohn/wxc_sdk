@@ -3,7 +3,7 @@ Call Queue policy settings
 """
 
 from dataclasses import dataclass
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import Field
 
@@ -73,6 +73,17 @@ class HolidayService(ApiModel):
     #: Lists the pre-configured holiday schedules.
     holiday_schedules: list[CQHolidaySchedule] = Field(default_factory=list)
 
+    def update(self) -> dict[str, Any]:
+        """
+        data for update
+
+        :meta private:
+        """
+        data = self.model_dump(mode='json', by_alias=True, exclude={'holiday_schedules'}, exclude_unset=True)
+        if self.audio_files:
+            data['audioFiles'] = [af.update() for af in self.audio_files]
+        return data
+
 
 class AnnouncementMode(str, Enum):
     """
@@ -117,6 +128,19 @@ class NightService(ApiModel):
     #: List Of Audio Files.
     manual_audio_files: Optional[list[AnnAudioFile]] = None
 
+    def update(self) -> dict[str, Any]:
+        """
+        data for update
+
+        :meta private:
+        """
+        data = self.model_dump(mode='json', by_alias=True, exclude_unset=True, exclude={'business_hour_schedules'})
+        if self.manual_audio_files:
+            data['manualAudioFiles'] = [af.update() for af in self.manual_audio_files]
+        if self.audio_files:
+            data['audioFiles'] = [af.update() for af in self.audio_files]
+        return data
+
 
 class StrandedCallsAction(str, Enum):
     """
@@ -142,7 +166,7 @@ class StrandedCallsAction(str, Enum):
 
 class StrandedCalls(ApiModel):
     """
-    Call Queue Holiday Service details
+    Call Queue stranded calls policy details
     """
 
     #: The call processing action type.
@@ -153,6 +177,17 @@ class StrandedCalls(ApiModel):
     audio_message_selection: Optional[Greeting] = None
     #: List of Announcement Audio Files when audioMessageSelection is CUSTOM.
     audio_files: Optional[list[AnnAudioFile]] = None
+
+    def update(self) -> dict[str, Any]:
+        """
+        data for update
+
+        :meta private:
+        """
+        data = self.model_dump(mode='json', by_alias=True, exclude_unset=True)
+        if self.audio_files:
+            data['audioFiles'] = [af.update() for af in self.audio_files]
+        return data
 
 
 class ForcedForward(ApiModel):
@@ -170,6 +205,17 @@ class ForcedForward(ApiModel):
     audio_message_selection: Optional[Greeting] = None
     #: List of Announcement Audio Files when audioMessageSelection is CUSTOM.
     audio_files: Optional[list[AnnAudioFile]] = None
+
+    def update(self) -> dict[str, Any]:
+        """
+        data for update
+
+        :meta private:
+        """
+        data = self.model_dump(mode='json', by_alias=True, exclude_unset=True)
+        if self.audio_files:
+            data['audioFiles'] = [af.update() for af in self.audio_files]
+        return data
 
 
 @dataclass(init=False, repr=False)
@@ -224,8 +270,7 @@ class CQPolicyApi(ApiChild, base=''):
         """
         url = self._ep(location_id, queue_id, 'holidayService')
         params = org_id and {'orgId': org_id} or None
-        body = update.model_dump_json(exclude={'holiday_schedules'})
-        self.put(url=url, params=params, data=body)
+        self.put(url=url, params=params, json=update.update())
 
     def night_service_detail(self, location_id: str, queue_id: str, org_id: str = None) -> NightService:
         """
@@ -275,8 +320,7 @@ class CQPolicyApi(ApiChild, base=''):
         """
         url = self._ep(location_id, queue_id, 'nightService')
         params = org_id and {'orgId': org_id} or None
-        body = update.model_dump_json(exclude={'business_hour_schedules'})
-        self.put(url=url, params=params, data=body)
+        self.put(url=url, params=params, json=update.update())
 
     def stranded_calls_details(self, location_id: str, queue_id: str, org_id: str = None) -> StrandedCalls:
         """
@@ -327,7 +371,7 @@ class CQPolicyApi(ApiChild, base=''):
         """
         url = self._ep(location_id, queue_id, 'strandedCalls')
         params = org_id and {'orgId': org_id} or None
-        self.put(url=url, params=params, data=update.model_dump_json())
+        self.put(url=url, params=params, json=update.update())
 
     def forced_forward_details(self, location_id: str, queue_id: str, org_id: str = None) -> ForcedForward:
         """
@@ -378,4 +422,4 @@ class CQPolicyApi(ApiChild, base=''):
         """
         url = self._ep(location_id, queue_id, 'forcedForward')
         params = org_id and {'orgId': org_id} or None
-        self.put(url=url, params=params, data=update.model_dump_json())
+        self.put(url=url, params=params, json=update.update())
