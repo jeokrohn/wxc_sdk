@@ -81,8 +81,7 @@ class LocationAvailableChargeNumberObjectOwner(ApiModel):
     #: Last name of the PSTN phone number's owner and will only be returned when the owner `type` is `PEOPLE` or
     #: `VIRTUAL_LINE`.
     last_name: Optional[str] = None
-    #: Display name of the PSTN phone number's owner. This field will be present except when the owner `type` is
-    #: `PEOPLE` or `VIRTUAL_LINE`.
+    #: Display name of the phone number's owner.
     display_name: Optional[str] = None
 
 
@@ -552,18 +551,17 @@ class WebexGoAvailableNumberObject(ApiModel):
 
 
 class LocationECBNAvailableNumberObjectOwner(ApiModel):
-    #: Unique identifier of the owner to which phone number is assigned.
+    #: Unique identifier of the owner to which the number is assigned.
     id: Optional[str] = None
-    #: Type of the phone number's owner.
+    #: Type of the number's owner.
     type: Optional[CallBackMemberType] = None
-    #: First name of the PSTN phone number's owner. This field will be present only when the owner `type` is `PEOPLE`
-    #: or `VIRTUAL_LINE`.
+    #: First name of the number's owner. This field will be present only when the owner `type` is `PEOPLE` or
+    #: `VIRTUAL_LINE`.
     first_name: Optional[str] = None
-    #: Last name of the PSTN phone number's owner. This field will be present only when the owner `type` is `PEOPLE` or
+    #: Last name of the number's owner. This field will be present only when the owner `type` is `PEOPLE` or
     #: `VIRTUAL_LINE`.
     last_name: Optional[str] = None
-    #: Display name of the PSTN phone number's owner. This field will be present only when the owner `type` is `PLACE`
-    #: or `HUNT_GROUP`.
+    #: Display name of the number's owner.
     display_name: Optional[str] = None
 
 

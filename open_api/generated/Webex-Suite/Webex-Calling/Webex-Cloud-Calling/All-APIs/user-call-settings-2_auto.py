@@ -645,18 +645,17 @@ class NumberOwnerType(str, Enum):
 
 
 class PersonCallForwardAvailableNumberObjectOwner(ApiModel):
-    #: Unique identifier of the owner to which PSTN Phone number is assigned.
+    #: Unique identifier of the owner to which the number is assigned.
     id: Optional[str] = None
-    #: Type of the PSTN phone number's owner.
+    #: Type of the number's owner.
     type: Optional[NumberOwnerType] = None
-    #: First name of the PSTN phone number's owner. This field will be present only when the owner `type` is `PEOPLE`
-    #: or `VIRTUAL_LINE`.
+    #: First name of the number's owner. This field will be present only when the owner `type` is `PEOPLE` or
+    #: `VIRTUAL_LINE`.
     first_name: Optional[str] = None
-    #: Last name of the PSTN phone number's owner. This field will be present only when the owner `type` is `PEOPLE` or
+    #: Last name of the number's owner. This field will be present only when the owner `type` is `PEOPLE` or
     #: `VIRTUAL_LINE`.
     last_name: Optional[str] = None
-    #: Display name of the PSTN phone number's owner. This field will be present except when the owner `type` is
-    #: `PEOPLE` or `VIRTUAL_LINE`.
+    #: Display name of the number's owner.
     display_name: Optional[str] = None
 
 
@@ -705,29 +704,28 @@ class PersonPrimaryAvailableNumberObject(ApiModel):
 
 
 class PersonECBNAvailableNumberObjectOwnerType(str, Enum):
-    #: Phone number's owner is a workspace.
+    #: Number's owner is a workspace.
     place = 'PLACE'
-    #: Phone number's owner is a person.
+    #: Number's owner is a person.
     people = 'PEOPLE'
-    #: Phone number's owner is a Virtual Line.
+    #: Number's owner is a Virtual Line.
     virtual_line = 'VIRTUAL_LINE'
-    #: Phone number's owner is a Hunt Group.
+    #: Number's owner is a Hunt Group.
     hunt_group = 'HUNT_GROUP'
 
 
 class PersonECBNAvailableNumberObjectOwner(ApiModel):
-    #: Unique identifier of the owner to which phone number is assigned.
+    #: Unique identifier of the owner to which the number is assigned.
     id: Optional[str] = None
-    #: Type of the PSTN phone number's owner.
+    #: Type of the number's owner.
     type: Optional[PersonECBNAvailableNumberObjectOwnerType] = None
-    #: First name of the phone number's owner. This field will be present only when the owner `type` is `PEOPLE` or
+    #: First name of the number's owner. This field will be present only when the owner `type` is `PEOPLE` or
     #: `VIRTUAL_LINE`.
     first_name: Optional[str] = None
-    #: Last name of the phone number's owner. This field will be present only when the owner `type` is `PEOPLE` or
+    #: Last name of the number's owner. This field will be present only when the owner `type` is `PEOPLE` or
     #: `VIRTUAL_LINE`.
     last_name: Optional[str] = None
-    #: Display name of the phone number's owner. This field will be present only when the owner `type` is `PLACE` or
-    #: `HUNT_GROUP`.
+    #: Display name of the number's owner.
     display_name: Optional[str] = None
 
 

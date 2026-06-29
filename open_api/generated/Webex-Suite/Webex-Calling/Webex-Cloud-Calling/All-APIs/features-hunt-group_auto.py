@@ -541,56 +541,55 @@ class HuntGroupPrimaryAvailableNumberObject(ApiModel):
 
 
 class NumberOwnerType(str, Enum):
-    #: PSTN phone number's owner is a workspace.
+    #: Number's owner is a workspace.
     place = 'PLACE'
-    #: PSTN phone number's owner is a person.
+    #: Number's owner is a person.
     people = 'PEOPLE'
-    #: PSTN phone number's owner is a Virtual Profile.
+    #: Number's owner is a Virtual Profile.
     virtual_line = 'VIRTUAL_LINE'
-    #: PSTN phone number's owner is an auto-attendant.
+    #: Number's owner is an auto-attendant.
     auto_attendant = 'AUTO_ATTENDANT'
-    #: PSTN phone number's owner is a call queue.
+    #: Number's owner is a call queue.
     call_queue = 'CALL_QUEUE'
-    #: PSTN phone number's owner is a group paging.
+    #: Number's owner is a group paging.
     group_paging = 'GROUP_PAGING'
-    #: PSTN phone number's owner is a hunt group.
+    #: Number's owner is a hunt group.
     hunt_group = 'HUNT_GROUP'
-    #: PSTN phone number's owner is a voice messaging.
+    #: Number's owner is a voice messaging.
     voice_messaging = 'VOICE_MESSAGING'
-    #: PSTN phone number's owner is a Single Number Reach.
+    #: Number's owner is a Single Number Reach.
     office_anywhere = 'OFFICE_ANYWHERE'
-    #: PSTN phone number's owner is a Contact Center link.
+    #: Number's owner is a Contact Center link.
     contact_center_link = 'CONTACT_CENTER_LINK'
-    #: PSTN phone number's owner is a Contact Center adapter.
+    #: Number's owner is a Contact Center adapter.
     contact_center_adapter = 'CONTACT_CENTER_ADAPTER'
-    #: PSTN phone number's owner is a route list.
+    #: Number's owner is a route list.
     route_list = 'ROUTE_LIST'
-    #: PSTN phone number's owner is a voicemail group.
+    #: Number's owner is a voicemail group.
     voicemail_group = 'VOICEMAIL_GROUP'
-    #: PSTN phone number's owner is a collaborate bridge.
+    #: Number's owner is a collaborate bridge.
     collaborate_bridge = 'COLLABORATE_BRIDGE'
 
 
 class HuntGroupCallForwardAvailableNumberObjectOwner(ApiModel):
-    #: Unique identifier of the owner to which PSTN Phone number is assigned.
+    #: Unique identifier of the owner to which the number is assigned.
     id: Optional[str] = None
-    #: Type of the PSTN phone number's owner.
+    #: Type of the number's owner.
     type: Optional[NumberOwnerType] = None
-    #: First name of the PSTN phone number's owner. This field will be present only when the owner `type` is `PEOPLE`
-    #: or `VIRTUAL_LINE`.
+    #: First name of the number's owner. This field will be present only when the owner `type` is `PEOPLE` or
+    #: `VIRTUAL_LINE`.
     first_name: Optional[str] = None
-    #: Last name of the PSTN phone number's owner. This field will be present only when the owner `type` is `PEOPLE` or
+    #: Last name of the number's owner. This field will be present only when the owner `type` is `PEOPLE` or
     #: `VIRTUAL_LINE`.
     last_name: Optional[str] = None
-    #: Display name of the PSTN phone number's owner. This field will be present except when the owner `type` is
-    #: `PEOPLE` or `VIRTUAL_LINE`.
+    #: Display name of the number's owner.
     display_name: Optional[str] = None
 
 
 class HuntGroupCallForwardAvailableNumberObject(ApiModel):
     #: A unique identifier for the PSTN phone number.
     phone_number: Optional[str] = None
-    #: Extension for a PSTN phone number.
+    #: Extension for a number.
     extension: Optional[str] = None
     #: Phone number's state.
     state: Optional[STATE] = None

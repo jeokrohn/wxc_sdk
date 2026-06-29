@@ -14,7 +14,7 @@ __all__ = ['AvailableNumber', 'AvailablePhoneNumberLicenseType', 'AvailableNumbe
 class AvailableNumber(ApiModel):
     #: A unique identifier for the phone number.
     phone_number: Optional[str] = None
-    #: Extension for a number.
+    #: Extension for the number.
     extension: Optional[str] = None
     #: Phone number's state.
     state: Optional[NumberState] = None
