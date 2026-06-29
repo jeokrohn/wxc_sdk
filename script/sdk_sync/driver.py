@@ -30,7 +30,7 @@ import subprocess
 import sys
 from collections import Counter
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from . import aliases as _aliases
 from . import dispatcher as _dispatcher
@@ -199,6 +199,7 @@ def main(argv: list[str] | None = None) -> int:
                 outcomes.append(_dispatcher.Outcome(record, m, 'already_in_sync', detail=rename_detail))
                 continue
             outcome = _dispatcher.dispatch(record, m, config, pending_writes=pending_writes)
+            _attach_unmatched_candidates(outcome, store)
             outcomes.append(outcome)
 
     # Flush pending in-memory rewrites to disk. In dry-run mode we skip
@@ -435,6 +436,10 @@ def _write_report(
             lines.append(f'- `{o.record.kind}` **{o.record.qualname}**{target}')
             if o.detail:
                 lines.append(f'  - detail: {o.detail}')
+            if o.candidates:
+                lines.append('  - candidates:')
+                for candidate in o.candidates:
+                    lines.append(f'    - {_format_candidate(candidate)}')
             if o.diff:
                 lines.append('  - diff:')
                 lines.append('    ```diff')
@@ -443,6 +448,49 @@ def _write_report(
                 lines.append('    ```')
         lines.append('')
     _REPORT_PATH.write_text('\n'.join(lines))
+
+
+def _attach_unmatched_candidates(outcome: _dispatcher.Outcome, store: _aliases.AliasStore) -> None:
+    """Copy matcher candidates from the alias store onto an outcome.
+
+    Matcher misses are recorded in :attr:`AliasStore.unmatched`; the
+    dispatcher outcome is what the report renderer sees. This adapter keeps
+    those structures connected without making the dispatcher depend on the
+    alias store.
+
+    :param outcome: Outcome to enrich in place.
+    :type outcome: script.sdk_sync.dispatcher.Outcome
+    :param store: Alias store populated by the matcher.
+    :type store: script.sdk_sync.aliases.AliasStore
+    :return: Nothing.
+    :rtype: None
+    """
+    if outcome.status != 'punted_no_match':
+        return
+    key = f'{outcome.record.kind}::{outcome.record.qualname}'
+    for unmatched in reversed(store.unmatched):
+        if unmatched.stub_key != key:
+            continue
+        outcome.candidates = unmatched.candidates
+        return
+
+
+def _format_candidate(candidate: dict[str, Any]) -> str:
+    """Render a matcher candidate as one report line.
+
+    :param candidate: Candidate dict from the matcher.
+    :type candidate: dict[str, Any]
+    :return: Markdown-friendly one-line summary.
+    :rtype: str
+    """
+    path = candidate.get('sdk_path', '<unknown>')
+    cls = candidate.get('sdk_class', '<unknown>')
+    member = candidate.get('sdk_member')
+    score = candidate.get('score', 0)
+    detail = candidate.get('detail', '')
+    target = f'`{path}::{cls}.{member or ""}`'
+    suffix = f' — {detail}' if detail else ''
+    return f'{target} (score={score}){suffix}'
 
 
 def _rel(path: Path) -> str:

@@ -350,6 +350,8 @@ def _doc_comment_changed(match: Match, old: str | None, new: str | None) -> Patc
         return Punt('target line not located')
 
     current = _doc_comment_above_text(sdk_ir.source_text, target_lineno)
+    if current == new:
+        return Punt('SDK doc-comment already reflects new stub (idempotent skip)')
     if current != old:
         return Punt('SDK doc-comment has diverged from old stub — needs LLM review')
 

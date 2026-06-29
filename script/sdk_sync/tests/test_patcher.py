@@ -11,6 +11,7 @@ Each fixture directory under `fixtures/` contains:
 from __future__ import annotations
 
 import json
+import textwrap
 from pathlib import Path
 
 import pytest
@@ -87,3 +88,118 @@ def _format_diff(actual: str, expected: str, name: str) -> str:
         )
     )
     return f'patcher output diverges from expected:\n{diff}'
+
+
+def test_doc_comment_update_uses_matched_enum_member() -> None:
+    """Update an enum value doc-comment after alias or structural matching.
+
+    :return: Nothing.
+    :rtype: None
+    """
+    before_text = textwrap.dedent("""\
+    from wxc_sdk.base import SafeEnum as Enum
+
+
+    class OwnerType(str, Enum):
+        #: Old owner text.
+        call_queue = 'CALL_QUEUE'
+    """)
+    record = ChangeRecord(
+        kind='docstring_changed',
+        qualname='NumberOwnerType.call_queue',
+        old={'doc_comment': 'Old owner text.'},
+        new={'doc_comment': 'New owner text.'},
+        severity='trivial',
+    )
+    match = Match(
+        sdk_path=Path('wxc_sdk/common.py'),
+        kind='enum_value',
+        sdk_class='OwnerType',
+        sdk_member='call_queue',
+        sdk_module_ir=extract_from_text(before_text, 'wxc_sdk/common.py'),
+        confidence=0.95,
+        matched_by='structural-enum',
+    )
+
+    result = patcher.apply(record, match)
+
+    assert isinstance(result, patcher.PatchResult)
+    assert '#: New owner text.' in result.new_text
+    assert '#: Old owner text.' not in result.new_text
+
+
+def test_doc_comment_update_uses_matched_sdk_field_name() -> None:
+    """Update a field doc-comment when the SDK field name differs from the stub.
+
+    :return: Nothing.
+    :rtype: None
+    """
+    before_text = textwrap.dedent("""\
+    from typing import Optional
+    from pydantic import Field
+    from wxc_sdk.base import ApiModel
+
+
+    class NumberOwner(ApiModel):
+        #: Old type text.
+        owner_type: Optional[str] = Field(alias='type', default=None)
+    """)
+    record = ChangeRecord(
+        kind='docstring_changed',
+        qualname='AutoAttendantCallForwardAvailableNumberObjectOwner.type',
+        old={'doc_comment': 'Old type text.'},
+        new={'doc_comment': 'New type text.'},
+        severity='trivial',
+    )
+    match = Match(
+        sdk_path=Path('wxc_sdk/common.py'),
+        kind='model_field',
+        sdk_class='NumberOwner',
+        sdk_member='owner_type',
+        sdk_module_ir=extract_from_text(before_text, 'wxc_sdk/common.py'),
+        confidence=0.95,
+        matched_by='structural-model',
+    )
+
+    result = patcher.apply(record, match)
+
+    assert isinstance(result, patcher.PatchResult)
+    assert '#: New type text.' in result.new_text
+    assert '#: Old type text.' not in result.new_text
+
+
+def test_doc_comment_changed_already_in_sync_is_idempotent_skip() -> None:
+    """Treat an SDK comment that already matches the new stub as success.
+
+    :return: Nothing.
+    :rtype: None
+    """
+    before_text = textwrap.dedent("""\
+    from wxc_sdk.base import SafeEnum as Enum
+
+
+    class OwnerType(str, Enum):
+        #: New owner text.
+        call_queue = 'CALL_QUEUE'
+    """)
+    record = ChangeRecord(
+        kind='docstring_changed',
+        qualname='NumberOwnerType.call_queue',
+        old={'doc_comment': 'Old owner text.'},
+        new={'doc_comment': 'New owner text.'},
+        severity='trivial',
+    )
+    match = Match(
+        sdk_path=Path('wxc_sdk/common.py'),
+        kind='enum_value',
+        sdk_class='OwnerType',
+        sdk_member='call_queue',
+        sdk_module_ir=extract_from_text(before_text, 'wxc_sdk/common.py'),
+        confidence=0.95,
+        matched_by='structural-enum',
+    )
+
+    result = patcher.apply(record, match)
+
+    assert isinstance(result, patcher.Punt)
+    assert 'idempotent skip' in result.reason

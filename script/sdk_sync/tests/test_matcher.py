@@ -12,6 +12,26 @@ from script.sdk_sync.differ import ChangeRecord
 from script.sdk_sync.ir import extract_from_text
 
 
+def _point_matcher_at_tmp_sdk(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, source: str) -> Path:
+    """Create a temporary SDK root and point the matcher index at it.
+
+    :param tmp_path: Temporary directory from pytest.
+    :type tmp_path: pathlib.Path
+    :param monkeypatch: Pytest helper used to reset matcher globals.
+    :type monkeypatch: pytest.MonkeyPatch
+    :param source: Python source for ``wxc_sdk/common.py``.
+    :type source: str
+    :return: Path to the temporary SDK root.
+    :rtype: pathlib.Path
+    """
+    sdk_root = tmp_path / 'wxc_sdk'
+    sdk_root.mkdir()
+    (sdk_root / 'common.py').write_text(textwrap.dedent(source))
+    monkeypatch.setattr(matcher, '_SDK_ROOT', sdk_root)
+    monkeypatch.setattr(matcher, '_index', matcher._SDKIndex())
+    return sdk_root
+
+
 def test_method_match_finds_non_last_api_class_in_sdk_module(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """
     Ensure endpoint matching searches every API class in an SDK module.
@@ -76,4 +96,283 @@ def test_method_match_finds_non_last_api_class_in_sdk_module(tmp_path: Path, mon
     assert match is not None
     assert match.sdk_class == 'ManageNumbersJobsApi'
     assert match.sdk_member == 'initiate_job'
+    assert match.matched_by == 'exact'
+
+
+def test_docstring_enum_value_structural_match_by_value_overlap(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Resolve a renamed SDK enum by structural value/name overlap.
+
+    :param tmp_path: Temporary directory used for the synthetic SDK package.
+    :type tmp_path: pathlib.Path
+    :param monkeypatch: Pytest helper used to reset matcher globals.
+    :type monkeypatch: pytest.MonkeyPatch
+    :return: Nothing.
+    :rtype: None
+    """
+    _point_matcher_at_tmp_sdk(
+        tmp_path,
+        monkeypatch,
+        """\
+        class OwnerType(str, Enum):
+            #: The PSTN phone number's owner is a workspace.
+            place = 'PLACE'
+            #: The PSTN phone number's owner is a person.
+            people = 'PEOPLE'
+            #: The PSTN phone number's owner is a virtual line.
+            virtual_line = 'VIRTUAL_LINE'
+            #: The PSTN phone number's owner is an auto-attendant.
+            auto_attendant = 'AUTO_ATTENDANT'
+            #: The PSTN phone number's owner is a call queue.
+            call_queue = 'CALL_QUEUE'
+            #: The PSTN phone number's owner is a hunt group.
+            hunt_group = 'HUNT_GROUP'
+        """,
+    )
+    stub_ir = extract_from_text(
+        textwrap.dedent("""\
+        class NumberOwnerType(str, Enum):
+            #: Number's owner is a workspace.
+            place = 'PLACE'
+            #: Number's owner is a person.
+            people = 'PEOPLE'
+            #: Number's owner is a Virtual Profile.
+            virtual_line = 'VIRTUAL_LINE'
+            #: Number's owner is an auto-attendant.
+            auto_attendant = 'AUTO_ATTENDANT'
+            #: Number's owner is a call queue.
+            call_queue = 'CALL_QUEUE'
+            #: Number's owner is a hunt group.
+            hunt_group = 'HUNT_GROUP'
+        """),
+        'open_api/generated/features-auto-attendant_auto.py',
+    )
+    record = ChangeRecord(
+        kind='docstring_changed',
+        qualname='NumberOwnerType.call_queue',
+        old={'doc_comment': "PSTN phone number's owner is a call queue."},
+        new={'doc_comment': "Number's owner is a call queue."},
+        severity='trivial',
+    )
+
+    match = matcher.match(record, stub_ir, aliases.AliasStore())
+
+    assert match is not None
+    assert match.sdk_class == 'OwnerType'
+    assert match.sdk_member == 'call_queue'
+    assert match.matched_by == 'structural-enum'
+
+
+def test_docstring_model_field_structural_match_by_wire_alias(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Resolve a reused SDK model field using ``Field(alias=...)`` wire names.
+
+    :param tmp_path: Temporary directory used for the synthetic SDK package.
+    :type tmp_path: pathlib.Path
+    :param monkeypatch: Pytest helper used to reset matcher globals.
+    :type monkeypatch: pytest.MonkeyPatch
+    :return: Nothing.
+    :rtype: None
+    """
+    _point_matcher_at_tmp_sdk(
+        tmp_path,
+        monkeypatch,
+        """\
+        class OwnerType(str, Enum):
+            people = 'PEOPLE'
+
+
+        class NumberOwner(ApiModel):
+            #: Unique identifier of the owner.
+            owner_id: Optional[str] = Field(alias='id', default=None)
+            #: Type of the owner.
+            owner_type: Optional[OwnerType] = Field(alias='type', default=None)
+            #: First name.
+            first_name: Optional[str] = None
+            #: Last name.
+            last_name: Optional[str] = None
+            #: Display name.
+            display_name: Optional[str] = None
+        """,
+    )
+    stub_ir = extract_from_text(
+        textwrap.dedent("""\
+        class NumberOwnerType(str, Enum):
+            people = 'PEOPLE'
+
+
+        class AutoAttendantCallForwardAvailableNumberObjectOwner(ApiModel):
+            #: Unique identifier of the owner.
+            id: Optional[str] = None
+            #: Type of the owner.
+            type: Optional[NumberOwnerType] = None
+            #: First name.
+            first_name: Optional[str] = None
+            #: Last name.
+            last_name: Optional[str] = None
+            #: Display name.
+            display_name: Optional[str] = None
+        """),
+        'open_api/generated/features-auto-attendant_auto.py',
+    )
+    record = ChangeRecord(
+        kind='docstring_changed',
+        qualname='AutoAttendantCallForwardAvailableNumberObjectOwner.type',
+        old={'doc_comment': 'Type of the PSTN phone number owner.'},
+        new={'doc_comment': 'Type of the number owner.'},
+        severity='trivial',
+    )
+
+    match = matcher.match(record, stub_ir, aliases.AliasStore())
+
+    assert match is not None
+    assert match.sdk_class == 'NumberOwner'
+    assert match.sdk_member == 'owner_type'
+    assert match.matched_by == 'structural-model'
+
+
+def test_docstring_enum_value_partial_mismatch_reports_candidate_without_match(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Do not auto-map enum values whose Python name and wire value both differ.
+
+    :param tmp_path: Temporary directory used for the synthetic SDK package.
+    :type tmp_path: pathlib.Path
+    :param monkeypatch: Pytest helper used to reset matcher globals.
+    :type monkeypatch: pytest.MonkeyPatch
+    :return: Nothing.
+    :rtype: None
+    """
+    _point_matcher_at_tmp_sdk(
+        tmp_path,
+        monkeypatch,
+        """\
+        class OwnerType(str, Enum):
+            place = 'PLACE'
+            people = 'PEOPLE'
+            paging_group = 'PAGING_GROUP'
+        """,
+    )
+    stub_ir = extract_from_text(
+        textwrap.dedent("""\
+        class NumberOwnerType(str, Enum):
+            place = 'PLACE'
+            people = 'PEOPLE'
+            group_paging = 'GROUP_PAGING'
+        """),
+        'open_api/generated/features-auto-attendant_auto.py',
+    )
+    record = ChangeRecord(
+        kind='docstring_changed',
+        qualname='NumberOwnerType.group_paging',
+        old={'doc_comment': "PSTN phone number's owner is a group paging."},
+        new={'doc_comment': "Number's owner is a group paging."},
+        severity='trivial',
+    )
+    store = aliases.AliasStore()
+
+    match = matcher.match(record, stub_ir, store)
+
+    assert match is None
+    assert store.unmatched
+    assert store.unmatched[0].candidates[0]['sdk_class'] == 'OwnerType'
+    assert 'no same name or wire value' in store.unmatched[0].candidates[0]['detail']
+
+
+def test_docstring_enum_value_ambiguous_structural_matches_are_not_accepted(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Report tied enum candidates instead of choosing arbitrarily.
+
+    :param tmp_path: Temporary directory used for the synthetic SDK package.
+    :type tmp_path: pathlib.Path
+    :param monkeypatch: Pytest helper used to reset matcher globals.
+    :type monkeypatch: pytest.MonkeyPatch
+    :return: Nothing.
+    :rtype: None
+    """
+    _point_matcher_at_tmp_sdk(
+        tmp_path,
+        monkeypatch,
+        """\
+        class FirstColor(str, Enum):
+            red = 'RED'
+            blue = 'BLUE'
+
+
+        class SecondColor(str, Enum):
+            red = 'RED'
+            blue = 'BLUE'
+        """,
+    )
+    stub_ir = extract_from_text(
+        textwrap.dedent("""\
+        class GeneratedColor(str, Enum):
+            red = 'RED'
+            blue = 'BLUE'
+        """),
+        'open_api/generated/colors_auto.py',
+    )
+    record = ChangeRecord(
+        kind='docstring_changed',
+        qualname='GeneratedColor.red',
+        old={'doc_comment': 'Old red.'},
+        new={'doc_comment': 'New red.'},
+        severity='trivial',
+    )
+    store = aliases.AliasStore()
+
+    match = matcher.match(record, stub_ir, store)
+
+    assert match is None
+    assert [candidate['sdk_class'] for candidate in store.unmatched[0].candidates[:2]] == ['FirstColor', 'SecondColor']
+
+
+def test_docstring_enum_value_exact_name_match_still_wins(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Keep the existing exact class/member match behavior.
+
+    :param tmp_path: Temporary directory used for the synthetic SDK package.
+    :type tmp_path: pathlib.Path
+    :param monkeypatch: Pytest helper used to reset matcher globals.
+    :type monkeypatch: pytest.MonkeyPatch
+    :return: Nothing.
+    :rtype: None
+    """
+    _point_matcher_at_tmp_sdk(
+        tmp_path,
+        monkeypatch,
+        """\
+        class NumberOwnerType(str, Enum):
+            call_queue = 'CALL_QUEUE'
+        """,
+    )
+    stub_ir = extract_from_text(
+        textwrap.dedent("""\
+        class NumberOwnerType(str, Enum):
+            call_queue = 'CALL_QUEUE'
+        """),
+        'open_api/generated/features-auto-attendant_auto.py',
+    )
+    record = ChangeRecord(
+        kind='docstring_changed',
+        qualname='NumberOwnerType.call_queue',
+        old={'doc_comment': 'Old.'},
+        new={'doc_comment': 'New.'},
+        severity='trivial',
+    )
+
+    match = matcher.match(record, stub_ir, aliases.AliasStore())
+
+    assert match is not None
+    assert match.sdk_class == 'NumberOwnerType'
+    assert match.sdk_member == 'call_queue'
     assert match.matched_by == 'exact'

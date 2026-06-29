@@ -17,6 +17,9 @@ Two kinds of mapping are persisted:
   ``DeviceConnectionStatus`` is the SDK's ``ConnectionStatus``). These are
   typically seeded by hand because the matcher cannot infer them from
   endpoint URLs alone.
+- **Member aliases** are hand-confirmed ``StubClass.member → SDKClass.member``
+  mappings for individual enum values or model fields whose Python names
+  differ even after the class is resolved.
 
 In addition we persist an ``unmatched`` list of records the matcher gave up
 on, with their top heuristic candidates. This lets a reviewer see what
@@ -41,6 +44,13 @@ JSON schema (version 1):
       },
       "model_aliases": {
         "<StubClassName>": {"sdk_path": "...", "sdk_class": "..."}
+      },
+      "member_aliases": {
+        "<StubClass.member>": {
+          "sdk_path": "...",
+          "sdk_class": "...",
+          "sdk_member": "..."
+        }
       },
       "unmatched": [
         {"stub_key": "...", "best_score": 0.62, "candidates": [...]}
@@ -126,6 +136,31 @@ class ModelAlias:
 
 
 @dataclass
+class MemberAlias:
+    """A persisted stub-member → SDK-member mapping for fields and enum values.
+
+    :param sdk_path: SDK file path, repo-relative.
+    :type sdk_path: str
+    :param sdk_class: Name of the SDK class containing the member.
+    :type sdk_class: str
+    :param sdk_member: Name of the SDK field or enum value.
+    :type sdk_member: str
+    """
+
+    sdk_path: str
+    sdk_class: str
+    sdk_member: str
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return a JSON-serializable dict form.
+
+        :return: Dict with ``sdk_path``, ``sdk_class`` and ``sdk_member``.
+        :rtype: dict[str, Any]
+        """
+        return {'sdk_path': self.sdk_path, 'sdk_class': self.sdk_class, 'sdk_member': self.sdk_member}
+
+
+@dataclass
 class UnmatchedEntry:
     """One record the matcher could not resolve.
 
@@ -134,7 +169,7 @@ class UnmatchedEntry:
     :param best_score: Top heuristic score below :data:`THRESHOLD`. ``0.0``
         if no candidates were even scored.
     :param candidates: Up to five top-scoring SDK candidates as plain dicts
-        with ``sdk_path``, ``sdk_class``, ``sdk_method`` and ``score``;
+        with ``sdk_path``, ``sdk_class``, ``sdk_member`` and ``score``;
         empty list when no candidates survived.
     """
 
@@ -148,13 +183,20 @@ class AliasStore:
     """In-memory representation of ``aliases.json``.
 
     :param method_aliases: Map of stub-method-key to :class:`MethodAlias`.
+    :type method_aliases: dict[str, MethodAlias]
     :param model_aliases: Map of stub-class-name to :class:`ModelAlias`.
-    :param unmatched: List of :class:`UnmatchedEntry`; cleared at the start
-        of each run and repopulated by the matcher as it punts.
+    :type model_aliases: dict[str, ModelAlias]
+    :param member_aliases: Map of stub member qualname to
+        :class:`MemberAlias`.
+    :type member_aliases: dict[str, MemberAlias]
+    :param unmatched: List of :class:`UnmatchedEntry`; cleared at the start of
+        each run and repopulated by the matcher as it punts.
+    :type unmatched: list[UnmatchedEntry]
     """
 
     method_aliases: dict[str, MethodAlias] = field(default_factory=dict)
     model_aliases: dict[str, ModelAlias] = field(default_factory=dict)
+    member_aliases: dict[str, MemberAlias] = field(default_factory=dict)
     unmatched: list[UnmatchedEntry] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
@@ -164,11 +206,13 @@ class AliasStore:
         produces stable git diffs.
 
         :return: Dict ready to feed to :func:`json.dumps`.
+        :rtype: dict[str, Any]
         """
         return {
             'version': 1,
             'method_aliases': {k: v.to_dict() for k, v in sorted(self.method_aliases.items())},
             'model_aliases': {k: v.to_dict() for k, v in sorted(self.model_aliases.items())},
+            'member_aliases': {k: v.to_dict() for k, v in sorted(self.member_aliases.items())},
             'unmatched': [
                 {'stub_key': u.stub_key, 'best_score': round(u.best_score, 4), 'candidates': u.candidates}
                 for u in self.unmatched
@@ -180,8 +224,10 @@ def load(path: Path = _ALIASES_PATH) -> AliasStore:
     """Read ``aliases.json`` from disk and return its in-memory form.
 
     :param path: Override the default cache path (used by tests).
+    :type path: pathlib.Path
     :return: A populated :class:`AliasStore`, or an empty one if the file
         does not exist.
+    :rtype: AliasStore
     """
     if not path.exists():
         return AliasStore()
@@ -189,6 +235,7 @@ def load(path: Path = _ALIASES_PATH) -> AliasStore:
     return AliasStore(
         method_aliases={k: MethodAlias(**v) for k, v in data.get('method_aliases', {}).items()},
         model_aliases={k: ModelAlias(**v) for k, v in data.get('model_aliases', {}).items()},
+        member_aliases={k: MemberAlias(**v) for k, v in data.get('member_aliases', {}).items()},
         unmatched=[UnmatchedEntry(**u) for u in data.get('unmatched', [])],
     )
 
@@ -197,8 +244,11 @@ def save(store: AliasStore, path: Path = _ALIASES_PATH) -> None:
     """Write ``store`` back to ``aliases.json`` (pretty-printed, with trailing newline).
 
     :param store: The store to persist.
+    :type store: AliasStore
     :param path: Override the default cache path (used by tests).
+    :type path: pathlib.Path
     :return: Nothing.
+    :rtype: None
     """
     path.write_text(json.dumps(store.to_dict(), indent=2) + '\n')
 
@@ -216,3 +266,16 @@ def method_key(stub_path: str, stub_class: str, stub_method: str) -> str:
         ``"<stub_path>::<StubClass>::<stub_method>"``.
     """
     return f'{stub_path}::{stub_class}::{stub_method}'
+
+
+def member_key(stub_class: str, stub_member: str) -> str:
+    """Build the canonical key used for member aliases.
+
+    :param stub_class: Name of the stub model or enum class.
+    :type stub_class: str
+    :param stub_member: Stub-side field or enum value name.
+    :type stub_member: str
+    :return: A string in the form ``"<StubClass>.<member>"``.
+    :rtype: str
+    """
+    return f'{stub_class}.{stub_member}'

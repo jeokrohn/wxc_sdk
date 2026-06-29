@@ -166,7 +166,11 @@ def eval_expr(node: ast.AST, env: dict[str, Any]) -> Any:
     if isinstance(node, ast.Tuple):
         return tuple(eval_expr(elt, env) for elt in node.elts)
     if isinstance(node, ast.Dict):
-        return {eval_expr(k, env): eval_expr(v, env) for k, v in zip(node.keys, node.values) if k is not None}
+        # ast.Dict stores parallel key/value arrays; strict zip makes that
+        # invariant explicit and keeps lint from hiding accidental drift.
+        return {
+            eval_expr(k, env): eval_expr(v, env) for k, v in zip(node.keys, node.values, strict=True) if k is not None
+        }
     if isinstance(node, ast.IfExp):
         test_value = eval_expr(node.test, env)
         if isinstance(test_value, bool):

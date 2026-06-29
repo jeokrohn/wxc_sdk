@@ -1,6 +1,7 @@
 # mypy: disable-error-code="attr-defined"
 from __future__ import annotations
 
+import textwrap
 from pathlib import Path
 from typing import Any, cast
 
@@ -8,6 +9,7 @@ import pytest
 
 from script.sdk_sync import dispatcher
 from script.sdk_sync.differ import ChangeRecord
+from script.sdk_sync.ir import extract_from_text
 from script.sdk_sync.matcher import Match
 
 
@@ -212,3 +214,49 @@ def test_git_apply_check_allows_reduced_context(monkeypatch: pytest.MonkeyPatch)
     assert ok
     assert err == ''
     assert captured['cmd'] == ['git', 'apply', '--check', '--recount', '--unidiff-zero', '-C0', '-']
+
+
+def test_dispatch_doc_comment_divergence_punts_when_llm_disabled(tmp_path: Path) -> None:
+    """Do not deterministically overwrite a hand-diverged SDK doc-comment.
+
+    :param tmp_path: Temporary directory used for the synthetic SDK file.
+    :type tmp_path: pathlib.Path
+    :return: Nothing.
+    :rtype: None
+    """
+    sdk_text = textwrap.dedent("""\
+    from wxc_sdk.base import SafeEnum as Enum
+
+
+    class OwnerType(str, Enum):
+        #: Hand-authored owner text.
+        call_queue = 'CALL_QUEUE'
+    """)
+    sdk_path = tmp_path / 'common.py'
+    sdk_path.write_text(sdk_text)
+    record = ChangeRecord(
+        kind='docstring_changed',
+        qualname='NumberOwnerType.call_queue',
+        old={'doc_comment': 'Old owner text.'},
+        new={'doc_comment': 'New owner text.'},
+        severity='trivial',
+    )
+    match = Match(
+        sdk_path=sdk_path,
+        kind='enum_value',
+        sdk_class='OwnerType',
+        sdk_member='call_queue',
+        sdk_module_ir=extract_from_text(sdk_text, str(sdk_path)),
+        confidence=0.95,
+        matched_by='structural-enum',
+    )
+
+    outcome = dispatcher.dispatch(
+        record,
+        match,
+        dispatcher.DispatchConfig(dry_run=True, use_llm=False),
+        pending_writes={},
+    )
+
+    assert outcome.status == 'punted_patcher_refused'
+    assert 'diverged from old stub' in outcome.detail

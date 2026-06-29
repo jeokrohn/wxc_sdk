@@ -7,16 +7,17 @@ the matcher returns a :class:`Match` pointing at the SDK file/class/member
 that should receive the equivalent edit. Resolution order:
 
 1. **Alias cache hit.** If the stub key is already in
-   :class:`~script.sdk_sync.aliases.AliasStore.method_aliases` or
-   ``.model_aliases``, return the recorded mapping. This is how the matcher
-   stays cheap across runs.
+   :class:`~script.sdk_sync.aliases.AliasStore.method_aliases`,
+   ``.model_aliases`` or ``.member_aliases``, return the recorded mapping.
+   This is how the matcher stays cheap across runs.
 2. **Exact match.** For methods, look up ``(verb, ep_template)`` against the
    SDK index — the join key is stable across stub and SDK because both
    compose URLs the same way. For models/enums/fields/enum-values, look up
    by class name (after applying any aliases).
-3. **Heuristic match (methods only).** Score every plausible SDK method by
+3. **Heuristic match.** Score every plausible SDK method by
    ``0.6 * URL-token-Jaccard + 0.4 * docstring-similarity`` and accept the
-   top candidate when its score clears :data:`THRESHOLD`.
+   top candidate when its score clears :data:`THRESHOLD`. For field/enum
+   doc-comments, use structural wire-shape matching when class names differ.
 4. **Punt.** Append an ``UnmatchedEntry`` to ``store.unmatched`` so the human
    reviewer can see what wasn't auto-resolved, and return ``None``.
 
@@ -26,19 +27,28 @@ lifetime — walking ~30 SDK modules with :mod:`ast` is ~100 ms once.
 
 from __future__ import annotations
 
+import ast
 import difflib
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 from . import aliases as _aliases
 from .differ import ChangeRecord
-from .ir import ApiClassIR, EnumIR, MethodIR, ModelIR, ModuleIR, extract
+from .ir import ApiClassIR, EnumIR, EnumValueIR, FieldIR, MethodIR, ModelIR, ModuleIR, extract
 
 #: Minimum combined score for the heuristic matcher to accept a match.
 #: Below this we punt to the unmatched list and let a human (or the LLM with
 #: a tightly scoped prompt) decide.
 THRESHOLD = 0.75
+
+# Minimum score for structural doc-comment matching. These are intentionally
+# higher than method URL matching because a false field/enum match can rewrite
+# a human-authored SDK comment.
+STRUCTURAL_MODEL_THRESHOLD = 0.82
+STRUCTURAL_ENUM_THRESHOLD = 0.82
+STRUCTURAL_MIN_GAP = 0.05
 
 # Resolve `wxc_sdk/` once at import time. Walking from
 # `script/sdk_sync/matcher.py` up three levels lands at the repo root, then
@@ -76,6 +86,59 @@ class Match:
     sdk_module_ir: ModuleIR
     confidence: float
     matched_by: str
+
+
+@dataclass(frozen=True)
+class _ModelCandidate:
+    """A structural SDK model candidate for a stub model field.
+
+    :param score: Confidence score in ``[0, 1]``.
+    :type score: float
+    :param sdk_path: SDK file containing the candidate.
+    :type sdk_path: pathlib.Path
+    :param sdk_ir: Parsed SDK module IR.
+    :type sdk_ir: ModuleIR
+    :param sdk_model: Candidate SDK model.
+    :type sdk_model: ModelIR
+    :param sdk_field: Candidate SDK field matching the stub field's wire name.
+    :type sdk_field: FieldIR
+    :param detail: Human-readable reason shown in unmatched reports.
+    :type detail: str
+    """
+
+    score: float
+    sdk_path: Path
+    sdk_ir: ModuleIR
+    sdk_model: ModelIR
+    sdk_field: FieldIR
+    detail: str
+
+
+@dataclass(frozen=True)
+class _EnumCandidate:
+    """A structural SDK enum candidate for a stub enum value.
+
+    :param score: Confidence score in ``[0, 1]``.
+    :type score: float
+    :param sdk_path: SDK file containing the candidate.
+    :type sdk_path: pathlib.Path
+    :param sdk_ir: Parsed SDK module IR.
+    :type sdk_ir: ModuleIR
+    :param sdk_enum: Candidate SDK enum.
+    :type sdk_enum: EnumIR
+    :param sdk_value: Candidate SDK enum value, or ``None`` when the enum
+        shape matches but the specific value cannot be mapped safely.
+    :type sdk_value: EnumValueIR | None
+    :param detail: Human-readable reason shown in unmatched reports.
+    :type detail: str
+    """
+
+    score: float
+    sdk_path: Path
+    sdk_ir: ModuleIR
+    sdk_enum: EnumIR
+    sdk_value: EnumValueIR | None
+    detail: str
 
 
 class _SDKIndex:
@@ -258,6 +321,48 @@ def _resolve_class_name(stub_name: str, store: _aliases.AliasStore) -> str:
     return a.sdk_class if a is not None else stub_name
 
 
+def _relative_sdk_path(path: Path) -> str:
+    """Return a stable SDK path for reports and persisted aliases.
+
+    :param path: SDK path, absolute or relative.
+    :type path: pathlib.Path
+    :return: Repo-relative path when possible, otherwise the original string.
+    :rtype: str
+    """
+    try:
+        return str(path.relative_to(_SDK_ROOT.parent))
+    except ValueError:
+        return str(path)
+
+
+def _member_alias_match(stub_class: str, stub_member: str, kind: str, store: _aliases.AliasStore) -> Match | None:
+    """Return a match from a hand-confirmed member alias, if one exists.
+
+    :param stub_class: Stub model or enum class name.
+    :type stub_class: str
+    :param stub_member: Stub-side field or enum value name.
+    :type stub_member: str
+    :param kind: Match kind to return, usually ``'model_field'`` or
+        ``'enum_value'``.
+    :type kind: str
+    :param store: Alias store containing optional member aliases.
+    :type store: script.sdk_sync.aliases.AliasStore
+    :return: A :class:`Match`, or ``None`` when no alias is recorded.
+    :rtype: Match | None
+    """
+    alias = store.member_aliases.get(_aliases.member_key(stub_class, stub_member))
+    if alias is None:
+        return None
+    sdk_path = Path(alias.sdk_path)
+    if not sdk_path.is_absolute():
+        sdk_path = (_SDK_ROOT.parent / sdk_path).resolve()
+    try:
+        sdk_ir = next(ir for ir in _index.all() if Path(ir.path) == sdk_path)
+    except StopIteration:
+        sdk_ir = extract(sdk_path, is_sdk=True)
+    return Match(sdk_path, kind, alias.sdk_class, alias.sdk_member, sdk_ir, 1.0, 'member-alias')
+
+
 def _match_model_or_enum(record: ChangeRecord, store: _aliases.AliasStore) -> Match | None:
     """Resolve a ``model_added`` or ``model_removed`` record.
 
@@ -295,6 +400,9 @@ def _match_enum_value(record: ChangeRecord, store: _aliases.AliasStore) -> Match
     stub_enum, value_name = _split_qualname(record.qualname)
     if value_name is None:
         return None
+    member_alias = _member_alias_match(stub_enum, value_name, 'enum_value', store)
+    if member_alias is not None:
+        return member_alias
     enum_name = _resolve_class_name(stub_enum, store)
     found = _index.find_enum(enum_name)
     if found is None:
@@ -324,6 +432,9 @@ def _match_model_field(record: ChangeRecord, store: _aliases.AliasStore) -> Matc
     stub_model, field_name = _split_qualname(record.qualname)
     if field_name is None:
         return None
+    member_alias = _member_alias_match(stub_model, field_name, 'model_field', store)
+    if member_alias is not None:
+        return member_alias
     model_name = _resolve_class_name(stub_model, store)
     found = _index.find_model(model_name)
     if found is None:
@@ -486,7 +597,8 @@ def _match_docstring(record: ChangeRecord, stub_ir: ModuleIR, store: _aliases.Al
     """Resolve a ``docstring_changed`` record.
 
     Docstring changes can apply at three levels: model fields, enum values
-    or methods. We disambiguate by looking at the head of the qualname:
+    or methods. We disambiguate by looking at the head of the qualname in
+    the *stub* IR first, because the SDK class may have a different name:
 
     - ``EnumName.value`` — route to :func:`_match_enum_value`.
     - ``ModelName.field`` — route to :func:`_match_model_field`.
@@ -500,11 +612,146 @@ def _match_docstring(record: ChangeRecord, stub_ir: ModuleIR, store: _aliases.Al
     head, tail = _split_qualname(record.qualname)
     if tail is None:
         return None
+    if stub_ir.enum_by_name(head) is not None:
+        return _match_docstring_enum_value(record, stub_ir, store)
+    if stub_ir.model_by_name(head) is not None:
+        return _match_docstring_model_field(record, stub_ir, store)
+    # Backward-compatible fallback for hand-built tests or unusual records
+    # whose stub IR is incomplete.
     if _index.find_enum(head) is not None:
         return _match_enum_value(record, store)
     if _index.find_model(head) is not None:
         return _match_model_field(record, store)
     return _match_method(record, stub_ir, store)
+
+
+def _match_docstring_enum_value(record: ChangeRecord, stub_ir: ModuleIR, store: _aliases.AliasStore) -> Match | None:
+    """Resolve an enum-value doc-comment change, using structural fallback.
+
+    :param record: ``docstring_changed`` record for ``Enum.member``.
+    :type record: ChangeRecord
+    :param stub_ir: Parsed generated stub IR.
+    :type stub_ir: ModuleIR
+    :param store: Alias store consulted for manual member/class aliases.
+    :type store: script.sdk_sync.aliases.AliasStore
+    :return: A resolved enum-value match, or ``None`` if no candidate is safe.
+    :rtype: Match | None
+    """
+    stub_enum_name, value_name = _split_qualname(record.qualname)
+    if value_name is None:
+        return None
+    member_alias = _member_alias_match(stub_enum_name, value_name, 'enum_value', store)
+    if member_alias is not None:
+        return member_alias
+
+    enum_name = _resolve_class_name(stub_enum_name, store)
+    exact = _index.find_enum(enum_name)
+    if exact is not None:
+        sdk_path, sdk_ir, sdk_enum = exact
+        if any(v.name == value_name for v in sdk_enum.values):
+            return Match(
+                sdk_path,
+                'enum_value',
+                enum_name,
+                value_name,
+                sdk_ir,
+                1.0,
+                'alias' if enum_name != stub_enum_name else 'exact',
+            )
+
+    stub_enum = stub_ir.enum_by_name(stub_enum_name)
+    if stub_enum is None:
+        return None
+    stub_value = next((v for v in stub_enum.values if v.name == value_name), None)
+    if stub_value is None:
+        _record_unmatched(record, store)
+        return None
+
+    candidates = _score_enum_candidates(stub_enum, stub_value, stub_ir)
+    accepted = _accepted_enum_candidate(candidates)
+    if accepted is None:
+        _record_unmatched(
+            record,
+            store,
+            candidates=[_enum_candidate_report(candidate) for candidate in candidates[:5]],
+            best_score=candidates[0].score if candidates else 0.0,
+        )
+        return None
+    assert accepted.sdk_value is not None
+    return Match(
+        accepted.sdk_path,
+        'enum_value',
+        accepted.sdk_enum.name,
+        accepted.sdk_value.name,
+        accepted.sdk_ir,
+        accepted.score,
+        'structural-enum',
+    )
+
+
+def _match_docstring_model_field(record: ChangeRecord, stub_ir: ModuleIR, store: _aliases.AliasStore) -> Match | None:
+    """Resolve a model-field doc-comment change, using wire-shape fallback.
+
+    :param record: ``docstring_changed`` record for ``Model.field``.
+    :type record: ChangeRecord
+    :param stub_ir: Parsed generated stub IR.
+    :type stub_ir: ModuleIR
+    :param store: Alias store consulted for manual member/class aliases.
+    :type store: script.sdk_sync.aliases.AliasStore
+    :return: A resolved model-field match, or ``None`` if no candidate is safe.
+    :rtype: Match | None
+    """
+    stub_model_name, field_name = _split_qualname(record.qualname)
+    if field_name is None:
+        return None
+    member_alias = _member_alias_match(stub_model_name, field_name, 'model_field', store)
+    if member_alias is not None:
+        return member_alias
+
+    model_name = _resolve_class_name(stub_model_name, store)
+    exact = _index.find_model(model_name)
+    if exact is not None:
+        sdk_path, sdk_ir, sdk_model = exact
+        target = next((f for f in sdk_model.fields if f.name == field_name), None)
+        if target is not None:
+            return Match(
+                sdk_path,
+                'model_field',
+                model_name,
+                target.name,
+                sdk_ir,
+                1.0,
+                'alias' if model_name != stub_model_name else 'exact',
+            )
+
+    stub_model = stub_ir.model_by_name(stub_model_name)
+    if stub_model is None:
+        return None
+    stub_field = next((f for f in stub_model.fields if f.name == field_name), None)
+    if stub_field is None:
+        _record_unmatched(record, store)
+        return None
+
+    context_names = _method_return_context_model_names(stub_model_name, stub_ir)
+    candidates = _score_model_candidates(stub_model, stub_field, context_names)
+    accepted = _accepted_model_candidate(candidates)
+    if accepted is None:
+        _record_unmatched(
+            record,
+            store,
+            candidates=[_model_candidate_report(candidate) for candidate in candidates[:5]],
+            best_score=candidates[0].score if candidates else 0.0,
+        )
+        return None
+    return Match(
+        accepted.sdk_path,
+        'model_field',
+        accepted.sdk_model.name,
+        accepted.sdk_field.name,
+        accepted.sdk_ir,
+        accepted.score,
+        'structural-model',
+    )
 
 
 def _match_type_changed(record: ChangeRecord, stub_ir: ModuleIR, store: _aliases.AliasStore) -> Match | None:
@@ -531,6 +778,386 @@ def _match_type_changed(record: ChangeRecord, stub_ir: ModuleIR, store: _aliases
         return _match_model_field(record, store)
     _record_unmatched(record, store)
     return None
+
+
+# ---------------------------------------------------------------------------
+# Structural doc-comment matching
+#
+# These helpers are used only for field/enum `docstring_changed` records. They
+# deliberately return ordinary Match objects so deterministic patching remains
+# behind the same interface as exact and alias matches.
+# ---------------------------------------------------------------------------
+
+
+def _score_model_candidates(
+    stub_model: ModelIR,
+    stub_field: FieldIR,
+    context_names: set[str] | None = None,
+) -> list[_ModelCandidate]:
+    """Score SDK models by wire-field shape for one stub field.
+
+    :param stub_model: Stub-side generated model.
+    :type stub_model: ModelIR
+    :param stub_field: Stub-side field whose comment changed.
+    :type stub_field: FieldIR
+    :param context_names: SDK model names inferred from matched method returns.
+    :type context_names: set[str] | None
+    :return: Candidates sorted by descending score.
+    :rtype: list[_ModelCandidate]
+    """
+    context_names = context_names or set()
+    stub_wire_names = {_field_wire_name(field) for field in stub_model.fields}
+    target_wire_name = _field_wire_name(stub_field)
+    candidates: list[_ModelCandidate] = []
+    if not stub_wire_names:
+        return candidates
+
+    for sdk_ir in _index.all():
+        for sdk_model in sdk_ir.models:
+            sdk_fields_by_wire = _fields_by_wire_name(sdk_model)
+            sdk_wire_names = set(sdk_fields_by_wire)
+            target = sdk_fields_by_wire.get(target_wire_name)
+            if target is None:
+                continue
+            shared = stub_wire_names & sdk_wire_names
+            if not shared:
+                continue
+            coverage = len(shared) / len(stub_wire_names)
+            precision = len(shared) / len(sdk_wire_names) if sdk_wire_names else 0.0
+            context = 1.0 if sdk_model.name in context_names else 0.0
+            # Coverage asks "does the SDK model contain the generated model's
+            # wire fields?"; precision penalizes broader shared SDK models so
+            # a generic model does not beat a focused reusable one. Context is
+            # deliberately small: it breaks ties when a matched endpoint
+            # already proves the generated return type maps to this SDK type.
+            score = (0.65 * coverage) + (0.25 * precision) + (0.10 * context)
+            detail = (
+                f'wire fields {len(shared)}/{len(stub_wire_names)} shared; '
+                f'{len(sdk_wire_names - stub_wire_names)} SDK-only fields'
+            )
+            if context:
+                detail += '; returned by matched endpoint'
+            candidates.append(
+                _ModelCandidate(
+                    score=score,
+                    sdk_path=Path(sdk_ir.path),
+                    sdk_ir=sdk_ir,
+                    sdk_model=sdk_model,
+                    sdk_field=target,
+                    detail=detail,
+                )
+            )
+    candidates.sort(key=lambda c: (-c.score, _relative_sdk_path(c.sdk_path), c.sdk_model.name, c.sdk_field.name))
+    return candidates
+
+
+def _score_enum_candidates(stub_enum: EnumIR, stub_value: EnumValueIR, stub_ir: ModuleIR) -> list[_EnumCandidate]:
+    """Score SDK enums by value/name overlap for one stub enum value.
+
+    :param stub_enum: Stub-side generated enum.
+    :type stub_enum: EnumIR
+    :param stub_value: Stub-side enum value whose comment changed.
+    :type stub_value: EnumValueIR
+    :param stub_ir: Parsed generated stub IR, used for type-reference context.
+    :type stub_ir: ModuleIR
+    :return: Candidates sorted by descending score.
+    :rtype: list[_EnumCandidate]
+    """
+    stub_names = {value.name for value in stub_enum.values}
+    stub_values = {_enum_wire_value(value) for value in stub_enum.values}
+    stub_values.discard(None)
+    context_names = _enum_type_context_names(stub_enum.name, stub_ir)
+    target_wire_value = _enum_wire_value(stub_value)
+    candidates: list[_EnumCandidate] = []
+    if not stub_names and not stub_values:
+        return candidates
+
+    for sdk_ir in _index.all():
+        for sdk_enum in sdk_ir.enums:
+            sdk_by_name = {value.name: value for value in sdk_enum.values}
+            sdk_by_wire = {
+                wire_value: value for value in sdk_enum.values if (wire_value := _enum_wire_value(value)) is not None
+            }
+            sdk_names = set(sdk_by_name)
+            sdk_values = set(sdk_by_wire)
+            value_overlap = len(stub_values & sdk_values) / len(stub_values) if stub_values else 0.0
+            name_overlap = len(stub_names & sdk_names) / len(stub_names) if stub_names else 0.0
+            same_name_target = sdk_by_name.get(stub_value.name)
+            same_value_target = sdk_by_wire.get(target_wire_value) if target_wire_value is not None else None
+            sdk_target = same_name_target or same_value_target
+            member_match = 1.0 if sdk_target is not None else 0.0
+            context = 1.0 if sdk_enum.name in context_names else 0.0
+            # Value overlap is the strongest enum-class signal because wire
+            # values are the public API contract. Name overlap helps with
+            # generated Python spelling, member_match proves this specific
+            # doc-comment has an SDK line to update, and context ties the enum
+            # back to a structurally matched model field.
+            score = (0.50 * value_overlap) + (0.25 * name_overlap) + (0.15 * member_match) + (0.10 * context)
+            if score == 0:
+                continue
+            if sdk_target is None:
+                detail = 'enum overlaps, but target member has no same name or wire value'
+            elif same_name_target is not None and same_value_target is not None:
+                detail = 'target member matches by name and wire value'
+            elif same_name_target is not None:
+                detail = 'target member matches by name'
+            else:
+                detail = 'target member matches by wire value'
+            if context:
+                detail += '; referenced by matched model field'
+            candidates.append(
+                _EnumCandidate(
+                    score=score,
+                    sdk_path=Path(sdk_ir.path),
+                    sdk_ir=sdk_ir,
+                    sdk_enum=sdk_enum,
+                    sdk_value=sdk_target,
+                    detail=detail,
+                )
+            )
+    candidates.sort(
+        key=lambda c: (
+            -c.score,
+            c.sdk_value is None,
+            _relative_sdk_path(c.sdk_path),
+            c.sdk_enum.name,
+            c.sdk_value.name if c.sdk_value is not None else '',
+        )
+    )
+    return candidates
+
+
+def _accepted_model_candidate(candidates: list[_ModelCandidate]) -> _ModelCandidate | None:
+    """Return the accepted model candidate, if one is unique enough.
+
+    :param candidates: Sorted model candidates.
+    :type candidates: list[_ModelCandidate]
+    :return: The accepted candidate or ``None``.
+    :rtype: _ModelCandidate | None
+    """
+    if not candidates or candidates[0].score < STRUCTURAL_MODEL_THRESHOLD:
+        return None
+    if len(candidates) > 1 and candidates[0].score - candidates[1].score < STRUCTURAL_MIN_GAP:
+        return None
+    return candidates[0]
+
+
+def _accepted_enum_candidate(candidates: list[_EnumCandidate]) -> _EnumCandidate | None:
+    """Return the accepted enum candidate, if one is unique and has a member.
+
+    :param candidates: Sorted enum candidates.
+    :type candidates: list[_EnumCandidate]
+    :return: The accepted candidate or ``None``.
+    :rtype: _EnumCandidate | None
+    """
+    if not candidates or candidates[0].score < STRUCTURAL_ENUM_THRESHOLD:
+        return None
+    if candidates[0].sdk_value is None:
+        return None
+    if len(candidates) > 1 and candidates[0].score - candidates[1].score < STRUCTURAL_MIN_GAP:
+        return None
+    return candidates[0]
+
+
+def _model_candidate_report(candidate: _ModelCandidate) -> dict[str, Any]:
+    """Render a model structural candidate for ``aliases.json``/report output.
+
+    :param candidate: Candidate to render.
+    :type candidate: _ModelCandidate
+    :return: JSON-friendly candidate details.
+    :rtype: dict[str, Any]
+    """
+    return {
+        'sdk_path': _relative_sdk_path(candidate.sdk_path),
+        'sdk_class': candidate.sdk_model.name,
+        'sdk_member': candidate.sdk_field.name,
+        'score': round(candidate.score, 4),
+        'detail': candidate.detail,
+    }
+
+
+def _enum_candidate_report(candidate: _EnumCandidate) -> dict[str, Any]:
+    """Render an enum structural candidate for ``aliases.json``/report output.
+
+    :param candidate: Candidate to render.
+    :type candidate: _EnumCandidate
+    :return: JSON-friendly candidate details.
+    :rtype: dict[str, Any]
+    """
+    return {
+        'sdk_path': _relative_sdk_path(candidate.sdk_path),
+        'sdk_class': candidate.sdk_enum.name,
+        'sdk_member': candidate.sdk_value.name if candidate.sdk_value is not None else None,
+        'score': round(candidate.score, 4),
+        'detail': candidate.detail,
+    }
+
+
+def _field_wire_name(field: FieldIR) -> str:
+    """Return the serialized JSON name for a model field.
+
+    :param field: Field IR to inspect.
+    :type field: FieldIR
+    :return: Explicit ``Field(alias=...)`` when present, otherwise the SDK's
+        camel-case alias generated from the Python field name.
+    :rtype: str
+    """
+    return _field_alias(field.default) or _to_camel(field.name)
+
+
+def _field_alias(default: str | None) -> str | None:
+    """Extract a string alias from a Pydantic ``Field(...)`` default.
+
+    :param default: Source text of a field default expression.
+    :type default: str | None
+    :return: Alias string, or ``None`` when no explicit alias exists.
+    :rtype: str | None
+    """
+    if not default:
+        return None
+    try:
+        expr = ast.parse(default, mode='eval').body
+    except SyntaxError:
+        return None
+    if not isinstance(expr, ast.Call):
+        return None
+    func = expr.func
+    if isinstance(func, ast.Name):
+        func_name = func.id
+    elif isinstance(func, ast.Attribute):
+        func_name = func.attr
+    else:
+        func_name = ''
+    if func_name != 'Field':
+        return None
+    for keyword in expr.keywords:
+        if keyword.arg == 'alias' and isinstance(keyword.value, ast.Constant) and isinstance(keyword.value.value, str):
+            return keyword.value.value
+    return None
+
+
+def _fields_by_wire_name(model: ModelIR) -> dict[str, FieldIR]:
+    """Build a wire-name index for a model's fields.
+
+    :param model: Model whose fields should be indexed.
+    :type model: ModelIR
+    :return: Mapping of wire field name to :class:`FieldIR`.
+    :rtype: dict[str, FieldIR]
+    """
+    out: dict[str, FieldIR] = {}
+    for field in model.fields:
+        out.setdefault(_field_wire_name(field), field)
+    return out
+
+
+def _enum_wire_value(value: EnumValueIR) -> str | None:
+    """Return the runtime string value represented by an enum assignment.
+
+    :param value: Enum value IR.
+    :type value: EnumValueIR
+    :return: Literal string RHS, or ``None`` if the RHS is not a string
+        literal.
+    :rtype: str | None
+    """
+    try:
+        expr = ast.parse(value.value, mode='eval').body
+        literal = ast.literal_eval(expr)
+    except (SyntaxError, ValueError):
+        return None
+    return literal if isinstance(literal, str) else None
+
+
+def _to_camel(name: str) -> str:
+    """Convert a snake_case Python field name to the SDK's camelCase alias.
+
+    :param name: Python field name.
+    :type name: str
+    :return: Camel-case alias.
+    :rtype: str
+    """
+    return ''.join(part.title() if index else part for index, part in enumerate(name.split('_')))
+
+
+def _method_return_context_model_names(stub_model_name: str, stub_ir: ModuleIR) -> set[str]:
+    """Infer SDK model names from exact-matched methods returning a stub model.
+
+    :param stub_model_name: Stub model class being resolved.
+    :type stub_model_name: str
+    :param stub_ir: Parsed generated stub IR.
+    :type stub_ir: ModuleIR
+    :return: SDK class names found in matching SDK method return annotations.
+    :rtype: set[str]
+    """
+    out: set[str] = set()
+    for api_class in stub_ir.iter_api_classes():
+        for method in api_class.methods:
+            if method.returns is None or stub_model_name not in _referenced_type_names(method.returns):
+                continue
+            if method.verb is None or method.ep_template is None:
+                continue
+            exact = _index.find_api_with_endpoint(method.verb, method.ep_template)
+            if len(exact) != 1:
+                continue
+            _sdk_path, _sdk_ir, _sdk_class, sdk_method = exact[0]
+            if sdk_method.returns:
+                out.update(_referenced_type_names(sdk_method.returns))
+    return out
+
+
+def _enum_type_context_names(stub_enum_name: str, stub_ir: ModuleIR) -> set[str]:
+    """Infer SDK enum names from structurally matched models using the enum.
+
+    :param stub_enum_name: Stub enum class being resolved.
+    :type stub_enum_name: str
+    :param stub_ir: Parsed generated stub IR.
+    :type stub_ir: ModuleIR
+    :return: SDK enum class names referenced by matching SDK model fields.
+    :rtype: set[str]
+    """
+    out: set[str] = set()
+    for stub_model in stub_ir.models:
+        for stub_field in stub_model.fields:
+            if stub_enum_name not in _referenced_type_names(stub_field.annotation):
+                continue
+            candidates = _score_model_candidates(stub_model, stub_field)
+            accepted = _accepted_model_candidate(candidates)
+            if accepted is None:
+                continue
+            out.update(_referenced_type_names(accepted.sdk_field.annotation))
+    return {name for name in out if _index.find_enum(name) is not None}
+
+
+def _referenced_type_names(annotation: str) -> set[str]:
+    """Return likely user-defined type names from an annotation string.
+
+    :param annotation: Source text of a Python type annotation.
+    :type annotation: str
+    :return: Identifier names referenced by the annotation, excluding common
+        typing and primitive names.
+    :rtype: set[str]
+    """
+    ignored = {
+        'Any',
+        'Optional',
+        'Union',
+        'Generator',
+        'Iterator',
+        'Iterable',
+        'Sequence',
+        'Mapping',
+        'dict',
+        'list',
+        'set',
+        'tuple',
+        'str',
+        'int',
+        'float',
+        'bool',
+        'None',
+        'NoneType',
+        'builtins',
+    }
+    return {name for name in re.findall(r'\b[A-Za-z_][A-Za-z0-9_]*\b', annotation) if name not in ignored}
 
 
 # ---------------------------------------------------------------------------

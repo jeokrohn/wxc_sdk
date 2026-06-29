@@ -274,3 +274,43 @@ def test_main_processes_new_stub_without_head_revision(monkeypatch: pytest.Monke
     assert [item[0] for item in captured['dispatched']] == [record]
     assert captured['outcomes'][0].record == record
     assert captured['skipped'] == [(missing_stub, 'file does not exist in working tree')]
+
+
+def test_attach_unmatched_candidates_to_report_outcome() -> None:
+    """Copy matcher candidates onto ``punted_no_match`` outcomes for reports.
+
+    :return: Nothing.
+    :rtype: None
+    """
+    record = ChangeRecord(
+        kind='docstring_changed',
+        qualname='NumberOwnerType.group_paging',
+        old={'doc_comment': 'old'},
+        new={'doc_comment': 'new'},
+        severity='trivial',
+    )
+    outcome = _dispatcher.Outcome(record, None, 'punted_no_match', detail='no SDK counterpart')
+    store = _driver._aliases.AliasStore(
+        unmatched=[
+            _driver._aliases.UnmatchedEntry(
+                stub_key='docstring_changed::NumberOwnerType.group_paging',
+                best_score=0.7,
+                candidates=[
+                    {
+                        'sdk_path': 'wxc_sdk/common/__init__.py',
+                        'sdk_class': 'OwnerType',
+                        'sdk_member': None,
+                        'score': 0.7,
+                        'detail': 'enum overlaps, but target member has no same name or wire value',
+                    }
+                ],
+            )
+        ]
+    )
+
+    _driver._attach_unmatched_candidates(outcome, store)
+
+    assert outcome.candidates == store.unmatched[0].candidates
+    rendered = _driver._format_candidate(outcome.candidates[0])
+    assert 'OwnerType' in rendered
+    assert 'no same name or wire value' in rendered

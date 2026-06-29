@@ -29,9 +29,9 @@ import re
 import subprocess
 import tempfile
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal
 
 from . import llm as _llm
 from . import patcher as _patcher
@@ -62,11 +62,18 @@ class Outcome:
     """The result of dispatching a single :class:`ChangeRecord`.
 
     :param record: The originating change.
+    :type record: ChangeRecord
     :param match: The resolved SDK target, or ``None`` for ``punted_no_match``.
+    :type match: Match | None
     :param status: One of :data:`OutcomeStatus`.
+    :type status: OutcomeStatus
     :param detail: Free-form human-readable explanation; shown in the report.
+    :type detail: str
     :param diff: Unified diff text for LLM-derived outcomes (applied,
         rejected, or pending). Empty for trivial outcomes.
+    :type diff: str
+    :param candidates: Optional matcher candidates for unresolved records.
+    :type candidates: list[dict[str, Any]]
     """
 
     record: ChangeRecord
@@ -74,6 +81,7 @@ class Outcome:
     status: OutcomeStatus
     detail: str = ''
     diff: str = ''
+    candidates: list[dict[str, Any]] = field(default_factory=list)
 
 
 @dataclass
