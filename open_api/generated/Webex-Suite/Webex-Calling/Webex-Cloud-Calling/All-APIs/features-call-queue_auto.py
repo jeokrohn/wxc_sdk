@@ -769,6 +769,8 @@ class GetCallQueueStrandedCallsObject(ApiModel):
     audio_message_selection: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
     #: List of Announcement Audio Files when `audioMessageSelection` is `CUSTOM`.
     audio_files: Optional[list[AudioAnnouncementFileFeatureGetObject]] = None
+    #: Trigger stranded calls queue policy when all agents are unreachable.
+    trigger_policy_when_all_agents_are_unreachable_enabled: Optional[bool] = None
 
 
 class GetForwardingRuleObject(ApiModel):
@@ -881,56 +883,55 @@ class CallQueuePrimaryAvailableNumberObject(ApiModel):
 
 
 class NumberOwnerType(str, Enum):
-    #: PSTN phone number's owner is a workspace.
+    #: Number's owner is a workspace.
     place = 'PLACE'
-    #: PSTN phone number's owner is a person.
+    #: Number's owner is a person.
     people = 'PEOPLE'
-    #: PSTN phone number's owner is a Virtual Profile.
+    #: Number's owner is a Virtual Profile.
     virtual_line = 'VIRTUAL_LINE'
-    #: PSTN phone number's owner is an auto-attendant.
+    #: Number's owner is an auto-attendant.
     auto_attendant = 'AUTO_ATTENDANT'
-    #: PSTN phone number's owner is a call queue.
+    #: Number's owner is a call queue.
     call_queue = 'CALL_QUEUE'
-    #: PSTN phone number's owner is a group paging.
+    #: Number's owner is a group paging.
     group_paging = 'GROUP_PAGING'
-    #: PSTN phone number's owner is a hunt group.
+    #: Number's owner is a hunt group.
     hunt_group = 'HUNT_GROUP'
-    #: PSTN phone number's owner is a voice messaging.
+    #: Number's owner is a voice messaging.
     voice_messaging = 'VOICE_MESSAGING'
-    #: PSTN phone number's owner is a Single Number Reach.
+    #: Number's owner is a Single Number Reach.
     office_anywhere = 'OFFICE_ANYWHERE'
-    #: PSTN phone number's owner is a Contact Center link.
+    #: Number's owner is a Contact Center link.
     contact_center_link = 'CONTACT_CENTER_LINK'
-    #: PSTN phone number's owner is a Contact Center adapter.
+    #: Number's owner is a Contact Center adapter.
     contact_center_adapter = 'CONTACT_CENTER_ADAPTER'
-    #: PSTN phone number's owner is a route list.
+    #: Number's owner is a route list.
     route_list = 'ROUTE_LIST'
-    #: PSTN phone number's owner is a voicemail group.
+    #: Number's owner is a voicemail group.
     voicemail_group = 'VOICEMAIL_GROUP'
-    #: PSTN phone number's owner is a collaborate bridge.
+    #: Number's owner is a collaborate bridge.
     collaborate_bridge = 'COLLABORATE_BRIDGE'
 
 
 class CallQueueCallForwardAvailableNumberObjectOwner(ApiModel):
-    #: Unique identifier of the owner to which PSTN Phone number is assigned.
+    #: Unique identifier of the owner to which the number is assigned.
     id: Optional[str] = None
-    #: Type of the PSTN phone number's owner.
+    #: Type of the number's owner.
     type: Optional[NumberOwnerType] = None
-    #: First name of the PSTN phone number's owner. This field will be present only when the owner `type` is `PEOPLE`
-    #: or `VIRTUAL_LINE`.
+    #: First name of the number's owner. This field will be present only when the owner `type` is `PEOPLE` or
+    #: `VIRTUAL_LINE`.
     first_name: Optional[str] = None
-    #: Last name of the PSTN phone number's owner. This field will be present only when the owner `type` is `PEOPLE` or
+    #: Last name of the number's owner. This field will be present only when the owner `type` is `PEOPLE` or
     #: `VIRTUAL_LINE`.
     last_name: Optional[str] = None
-    #: Display name of the PSTN phone number's owner. This field will be present except when the owner `type` is
-    #: `PEOPLE` or `VIRTUAL_LINE`.
+    #: Display name of the number's owner.
     display_name: Optional[str] = None
 
 
 class CallQueueCallForwardAvailableNumberObject(ApiModel):
     #: A unique identifier for the PSTN phone number.
     phone_number: Optional[str] = None
-    #: Extension for a PSTN phone number.
+    #: Extension for a number.
     extension: Optional[str] = None
     #: Phone number's state.
     state: Optional[STATE] = None
@@ -1110,7 +1111,7 @@ class GetCallQueueAgentObjectAgent(ApiModel):
     esn: Optional[str] = None
     #: The location information.
     location: Optional[LocationObject] = None
-    #: TIMEhe type of the call queue agent.
+    #: The type of the call queue agent.
     type: Optional[str] = None
 
 
@@ -2977,7 +2978,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         """
         Get Details for a Call Queue Stranded Calls
 
-        Allow admin to view default/configured Stranded Calls settings.
+        Allow admin to view default/configured Stranded Calls settings, including whether the stranded calls queue
+        policy will be triggered when all agents are unreachable.
 
         Stranded-All agents logoff Policy: If the last agent staffing a queue “unjoins” the queue or signs out, then
         all calls in the queue become stranded.
@@ -3008,13 +3010,15 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                                          audio_message_selection: CallQueueQueueSettingsGetObjectOverflowGreeting,
                                          transfer_phone_number: str = None,
                                          audio_files: list[AudioAnnouncementFileFeatureObject] = None,
+                                         trigger_policy_when_all_agents_are_unreachable_enabled: bool = None,
                                          org_id: str = None) -> None:
         """
         Update a Call Queue Stranded Calls Service
 
         Update the designated Call Stranded Calls Service.
 
-        Allow admin to modify configured Stranded Calls settings.
+        Allow admin to modify configured Stranded Calls settings, including whether the stranded calls queue policy
+        will be triggered when all agents are unreachable.
 
         Updating a call queue stranded calls requires a full administrator or location administrator auth token with a
         scope of `spark-admin:telephony_config_write`.
@@ -3032,6 +3036,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type transfer_phone_number: str
         :param audio_files: List of pre-configured Announcement Audio Files when `audioMessageSelection` is `CUSTOM`.
         :type audio_files: list[AudioAnnouncementFileFeatureObject]
+        :param trigger_policy_when_all_agents_are_unreachable_enabled: Trigger stranded calls queue policy when all
+            agents are unreachable.
+        :type trigger_policy_when_all_agents_are_unreachable_enabled: bool
         :param org_id: Update call queue settings from this organization.
         :type org_id: str
         :rtype: None
@@ -3046,6 +3053,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         body['audioMessageSelection'] = enum_str(audio_message_selection)
         if audio_files is not None:
             body['audioFiles'] = TypeAdapter(list[AudioAnnouncementFileFeatureObject]).dump_python(audio_files, mode='json', by_alias=True, exclude_none=True)
+        if trigger_policy_when_all_agents_are_unreachable_enabled is not None:
+            body['triggerPolicyWhenAllAgentsAreUnreachableEnabled'] = trigger_policy_when_all_agents_are_unreachable_enabled
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/strandedCalls')
         super().put(url, params=params, json=body)
 

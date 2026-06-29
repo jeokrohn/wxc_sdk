@@ -177,6 +177,8 @@ class StrandedCalls(ApiModel):
     audio_message_selection: Optional[Greeting] = None
     #: List of Announcement Audio Files when audioMessageSelection is CUSTOM.
     audio_files: Optional[list[AnnAudioFile]] = None
+    #: Trigger stranded calls queue policy when all agents are unreachable.
+    trigger_policy_when_all_agents_are_unreachable_enabled: Optional[bool] = None
 
     def update(self) -> dict[str, Any]:
         """
@@ -326,7 +328,8 @@ class CQPolicyApi(ApiChild, base=''):
         """
         Get Details for a Call Queue Stranded Calls
 
-        Allow admin to view default/configured Stranded Calls settings.
+        Allow admin to view default/configured Stranded Calls settings, including whether the stranded calls queue
+        policy will be triggered when all agents are unreachable.
 
         Stranded-All agents logoff Policy: If the last agent staffing a queue “unjoins” the queue or signs out,
         then all calls in the queue become stranded. Stranded-Unavailable Policy: This policy allows for the
@@ -355,7 +358,8 @@ class CQPolicyApi(ApiChild, base=''):
 
         Update the designated Call Stranded Calls Service.
 
-        Allow admin to modify configured Stranded Calls settings.
+        Allow admin to modify configured Stranded Calls settings, including whether the stranded calls queue policy
+        will be triggered when all agents are unreachable.
 
         Updating a call queue stranded calls requires a full administrator or location administrator auth token with a
         scope of `spark-admin:telephony_config_write`.

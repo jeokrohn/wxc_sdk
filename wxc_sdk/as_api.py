@@ -23151,7 +23151,8 @@ class AsCQPolicyApi(AsApiChild, base=''):
         """
         Get Details for a Call Queue Stranded Calls
 
-        Allow admin to view default/configured Stranded Calls settings.
+        Allow admin to view default/configured Stranded Calls settings, including whether the stranded calls queue
+        policy will be triggered when all agents are unreachable.
 
         Stranded-All agents logoff Policy: If the last agent staffing a queue “unjoins” the queue or signs out,
         then all calls in the queue become stranded. Stranded-Unavailable Policy: This policy allows for the
@@ -23180,7 +23181,8 @@ class AsCQPolicyApi(AsApiChild, base=''):
 
         Update the designated Call Stranded Calls Service.
 
-        Allow admin to modify configured Stranded Calls settings.
+        Allow admin to modify configured Stranded Calls settings, including whether the stranded calls queue policy
+        will be triggered when all agents are unreachable.
 
         Updating a call queue stranded calls requires a full administrator or location administrator auth token with a
         scope of `spark-admin:telephony_config_write`.
@@ -28575,7 +28577,7 @@ class AsGuestCallingApi(AsApiChild, base='telephony/config/guestCalling'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         body['privacyEnabled'] = privacy_enabled
         body['destinationMembers'] = destination_members

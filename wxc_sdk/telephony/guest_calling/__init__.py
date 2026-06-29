@@ -1,5 +1,5 @@
 from collections.abc import Generator
-from typing import Optional
+from typing import Any, Optional
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
@@ -32,7 +32,7 @@ class DestinationMember(ApiModel):
     routing_prefix: Optional[str] = None
     #: ESN of the destination member.
     esn: Optional[str] = None
-    #: Type of the destination member.
+    #: The type of the call queue agent.
     type: Optional[OwnerType] = None
     #: Location of the destination member.
     location: Optional[IdAndName] = None
@@ -105,7 +105,7 @@ class GuestCallingApi(ApiChild, base='telephony/config/guestCalling'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         body['privacyEnabled'] = privacy_enabled
         body['destinationMembers'] = destination_members
