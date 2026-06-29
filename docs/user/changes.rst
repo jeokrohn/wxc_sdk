@@ -1,9 +1,11 @@
 Release history
 ===============
 
+1.37.0
+------
 - feat: new attribute StrandedCalls.trigger_policy_when_all_agents_are_unreachable_enabled
-- fix: audio files in updates to CQ holiday service, night service, stranded calls, forced forward settings cannot have file_size and is_text_to_speech
 - feat: new CDR fields transfer_type, transfer_type_context
+- fix: audio files in updates to CQ holiday service, night service, stranded calls, forced forward settings cannot have file_size and is_text_to_speech
 - feat: api.me.monitoring_settings response includes line_key_label
 - feat: add org_id parameter to api.person_settings.feature_access.read_default/update_default
 - feat: update monitoring API
@@ -16,8 +18,8 @@ Release history
         * api.workspace_settings.monitoring.get_available_speed_dials_for_monitoring
 
     * Monitoring now supports speed dials
-- feat: new api api.telephony.callqueue.dnis (call queue DNIS settings)
 - feat: read/update org level call recording announcement settings, api.telephony.call_recording.read_org_call_recording_announcement/update_org_call_recording_announcement
+- feat: new api api.telephony.callqueue.dnis (call queue DNIS settings)
 
 1.36.0
 ------
