@@ -5,7 +5,7 @@ Simple SDK for Webex APIs with focus on Webex Calling specific endpoints
 import logging
 import os
 from dataclasses import dataclass
-from typing import Any, Optional, Self, Union
+from typing import Any, Optional, Self
 
 from .admin_audit import AdminAuditEventsApi
 from .attachment_actions import AttachmentActionsApi
@@ -140,7 +140,7 @@ class WebexSimpleApi:
     def __init__(
         self,
         *,
-        tokens: Union[str, Tokens] = None,
+        tokens: str | Tokens | None = None,
         concurrent_requests: int = 10,
         retry_429: bool = True,
         session: RestSession = None,

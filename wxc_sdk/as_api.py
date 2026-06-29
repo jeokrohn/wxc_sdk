@@ -40929,7 +40929,7 @@ class AsWebexSimpleApi:
     def __init__(
         self,
         *,
-        tokens: Union[str, Tokens] = None,
+        tokens: str | Tokens | None = None,
         concurrent_requests: int = 10,
         retry_429: bool = True,
         session: AsRestSession = None,
