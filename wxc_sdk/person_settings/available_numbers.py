@@ -14,7 +14,7 @@ __all__ = ['AvailableNumber', 'AvailablePhoneNumberLicenseType', 'AvailableNumbe
 class AvailableNumber(ApiModel):
     #: A unique identifier for the phone number.
     phone_number: Optional[str] = None
-    #: Extension for a PSTN phone number.
+    #: Extension for a number.
     extension: Optional[str] = None
     #: Phone number's state.
     state: Optional[NumberState] = None
@@ -85,7 +85,7 @@ class AvailableNumbersApi(ApiChild, base='telephony/config'):
         elif selector == ApiSelector.workspace:
             self.selector = 'workspaces'
 
-    def f_ep(self, available_for: str = None, entity_id: str = None) -> str:
+    def f_ep(self, available_for: str, entity_id: str = None) -> str:
         """
         Get endpoint URL
 

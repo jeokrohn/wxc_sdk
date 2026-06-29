@@ -1340,35 +1340,35 @@ class WaitMessageSetting(ApiModel):
 
 
 class OwnerType(str, Enum):
-    #: The PSTN phone number's owner is a workspace.
+    #: Number's owner is a workspace.
     place = 'PLACE'
-    #: The phone number's owner is a person.
+    #: Number's owner is a person.
     people = 'PEOPLE'
-    #: The PSTN phone number's owner is a virtual line.
+    #: Number's owner is a Virtual Profile.
     virtual_line = 'VIRTUAL_LINE'
-    #: The PSTN phone number's owner is an auto-attendant.
+    #: Number's owner is an auto-attendant.
     auto_attendant = 'AUTO_ATTENDANT'
-    #: The PSTN phone number's owner is a call queue.
+    #: Number's owner is a call queue.
     call_queue = 'CALL_QUEUE'
-    #: The PSTN phone number's owner is a paging group.
+    #: Number's owner is a paging group.
     paging_group = 'PAGING_GROUP'
-    #: The PSTN phone number's owner is a hunt group.
+    #: Number's owner is a hunt group.
     hunt_group = 'HUNT_GROUP'
-    #: The PSTN phone number's owner is a voice messaging.
+    #: Number's owner is a voice messaging.
     voice_messaging = 'VOICE_MESSAGING'
-    #: The PSTN phone number's owner is a Single Number Reach.
+    #: Number's owner is a Single Number Reach.
     office_anywhere = 'OFFICE_ANYWHERE'
-    #: PSTN phone number's owner is a Single Number Reach.
+    #: Number's owner is a Single Number Reach.
     broadworks_anywhere = 'BROADWORKS_ANYWHERE'
-    #: The PSTN phone number's owner is a Contact Center link.
+    #: Number's owner is a Contact Center link.
     contact_center_link = 'CONTACT_CENTER_LINK'
-    #: The PSTN phone number's owner is a Contact Center adapter.
+    #: Number's owner is a Contact Center adapter.
     contact_center_adapter = 'CONTACT_CENTER_ADAPTER'
-    #: The PSTN phone number's owner is a route list.
+    #: Number's owner is a route list.
     route_list = 'ROUTE_LIST'
-    #: The PSTN phone number's owner is a voicemail group.
+    #: Number's owner is a voicemail group.
     voicemail_group = 'VOICEMAIL_GROUP'
-    #: The PSTN phone number's owner is a collaborate bridge.
+    #: Number's owner is a collaborate bridge.
     collaborate_bridge = 'COLLABORATE_BRIDGE'
     ai_receptionist = 'AI_RECEPTIONIST'
 
@@ -1378,15 +1378,17 @@ class NumberOwner(ApiModel):
     Owner of a phone number
     """
 
-    #: ID of the owner to which PSTN Phone number is assigned.
+    #: Unique identifier of the owner to which the number is assigned.
     owner_id: Optional[str] = Field(alias='id', default=None)
-    #: Type of the PSTN phone number's owner
+    #: Type of the number's owner.
     owner_type: Optional[OwnerType] = Field(alias='type', default=None)
-    #: Last name of the PSTN phone number's owner
+    #: Last name of the number's owner. This field will be present only when the owner `type` is `PEOPLE` or
+    #: `VIRTUAL_LINE`.
     last_name: Optional[str] = None
-    #: First name of the PSTN phone number's owner
+    #: First name of the number's owner. This field will be present only when the owner `type` is `PEOPLE` or
+    #: `VIRTUAL_LINE`.
     first_name: Optional[str] = None
-    #: Display name of the PSTN phone number's owner and will only be returned when the owner type is a Feature.
+    #: Display name of the number's owner.
     display_name: Optional[str] = None
 
 
