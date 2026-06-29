@@ -1,3 +1,23 @@
+## 1.37.0 (2026-06-29)
+
+### Feat
+
+- new attribute StrandedCalls.trigger_policy_when_all_agents_are_unreachable_enabled
+- new CDR fields transfer_type, transfer_type_context
+- api.me.monitoring_settings response includes line_key_label
+- api.me.monitoring_settings response includes line_key_label
+- add org_id parameter to api.person_settings.feature_access.read_default/update_default
+- update monitoring API (available members, speed dials) for users and workspaces
+- read/update org level call recording announcement settings
+- new api api.telephony.callqueue.dnis (call queue DNIS settings)
+
+### Fix
+
+- audio files in updates to CQ holiday service, night service, stranded calls, forced forward settings cannot have file_size and is_text_to_speech
+- AutoAttendant.create_or_update now returns dict[str, Any]
+-  Monitoring.update() needs to consider updates w/o monitored_members; call_park_notification_enabled updated as enableCallParkNotification
+- fixed json body format for hoteling and call_waiting updates
+
 ## 1.36.0 (2026-05-31)
 
 ### Feat
