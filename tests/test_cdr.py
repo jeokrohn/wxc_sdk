@@ -101,3 +101,4 @@ class TestCDR(TestCaseWithLog):
                 api.get_cdr_history(start_time=start_time, end_time=end_time, host='analytics-calling-in.webexapis.com')
             )
         self.assertEqual(451, exc.exception.response.status_code, f'Expected 451, got: {exc.exception}')
+        print(exc.exception.description)
