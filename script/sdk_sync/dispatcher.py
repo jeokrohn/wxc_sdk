@@ -189,9 +189,10 @@ def _try_llm(
     :param record: The change being applied.
     :param match: The resolved SDK target.
     :param config: Dispatch behaviour flags (used to gate ``dry_run``).
-    :param pending_writes: Same accumulator passed to :func:`dispatch`;
-        invalidated for ``match.sdk_path`` after a successful apply because
-        ``git apply`` has already written the file.
+    :param pending_writes: Same accumulator passed to :func:`dispatch`. Before
+        a non-dry-run LLM diff is checked/applied, any pending text for
+        ``match.sdk_path`` is materialized to disk so ``git apply`` sees the
+        same base text that the LLM saw.
     :param fallback_reason: When the LLM is being invoked as a fallback
         from a refused deterministic patch, this is the patcher's punt
         reason; embedded in the resulting :class:`Outcome.detail` for the
@@ -247,6 +248,7 @@ def _try_llm(
         detail = f'{fallback_reason} | diff path: {err_one_line}' if fallback_reason else f'diff path: {err_one_line}'
         return Outcome(record, match, 'punted_diff_rejected', detail=detail, diff=diff)
     diff_lines = len(diff.splitlines())
+    _materialize_pending_write_for_apply(match, config, pending_writes)
     ok, err = _git_apply_check(diff)
     if not ok:
         if _should_retry_llm_diff(err):
@@ -285,14 +287,50 @@ def _try_llm(
             detail=f'applied check passed but apply failed | git apply: {err_one_line}',
             diff=diff,
         )
-    # After a successful git apply, the on-disk file is now the source of
-    # truth — drop any stale entry in pending_writes so a later trivial
-    # patch on the same file re-reads the freshly applied text.
-    if pending_writes is not None and match.sdk_path in pending_writes:
-        del pending_writes[match.sdk_path]
     if config.verbose:
         print(f'[llm] applied ({diff_lines} diff lines)')
     return Outcome(record, match, 'applied_llm', detail='LLM patch applied', diff=diff)
+
+
+def _materialize_pending_write_for_apply(
+    match: Match,
+    config: DispatchConfig,
+    pending_writes: dict[Path, str] | None,
+) -> None:
+    """Write a same-file pending deterministic edit before ``git apply``.
+
+    The dispatcher keeps deterministic patcher results in ``pending_writes`` so
+    multiple trivial edits can be composed in memory and flushed by the driver
+    at the end of the run. LLM diffs are different: outside dry-run mode they
+    are validated and applied with :command:`git apply`, which reads the
+    working tree from disk. If an LLM edit targets a file that already has a
+    pending deterministic edit, the LLM prompt sees the pending text but
+    :command:`git apply` would otherwise see the older on-disk file. That can
+    make the report say ``applied_trivial`` while a later LLM apply discards
+    the pending text from the accumulator.
+
+    This helper closes that gap by materializing the accepted deterministic
+    text for the same SDK file before the LLM diff is checked or applied. In
+    non-dry-run mode this is not an extra mutation; it is the same write the
+    driver would have performed at the end of the run, just moved earlier so
+    the LLM patch stacks on the correct base. Dry-run mode intentionally leaves
+    the working tree untouched.
+
+    :param match: Resolved SDK target for the LLM-bound change.
+    :type match: Match
+    :param config: Dispatch configuration, used to preserve dry-run behavior.
+    :type config: DispatchConfig
+    :param pending_writes: Shared map of SDK paths to in-memory patched text.
+    :type pending_writes: dict[pathlib.Path, str] | None
+    :return: Nothing.
+    :rtype: None
+    """
+    if config.dry_run or pending_writes is None:
+        return
+    pending_text = pending_writes.pop(match.sdk_path, None)
+    if pending_text is None:
+        return
+    match.sdk_path.write_text(pending_text)
 
 
 def _retry_llm_diff(
@@ -307,8 +345,31 @@ def _retry_llm_diff(
 ) -> Outcome | None:
     """Ask the LLM for one fresh diff after a stale-context rejection.
 
-    Returns an :class:`Outcome` for any terminal retry result, or ``None`` if
-    the caller should keep handling the original failed diff.
+    Retry diffs follow the same persistence rule as first-pass LLM diffs:
+    before a non-dry-run retry is checked or applied, any pending deterministic
+    edit for ``match.sdk_path`` is materialized to disk. This keeps the retry
+    base text aligned with the ``sdk_text`` that is sent back to the LLM.
+
+    :param record: Change record being retried.
+    :type record: ChangeRecord
+    :param match: Resolved SDK target for the change.
+    :type match: Match
+    :param sdk_text: SDK source text used in the retry prompt.
+    :type sdk_text: str
+    :param config: Dispatch configuration controlling dry-run and LLM options.
+    :type config: DispatchConfig
+    :param pending_writes: Shared in-memory deterministic patch accumulator.
+    :type pending_writes: dict[pathlib.Path, str] | None
+    :param fallback_reason: Patcher refusal reason, if this retry follows a
+        deterministic patcher punt.
+    :type fallback_reason: str
+    :param rejected_diff: Diff rejected by the first attempt.
+    :type rejected_diff: str
+    :param git_error: Git or semantic validation error that triggered retry.
+    :type git_error: str
+    :return: An :class:`Outcome` for a terminal retry result, or ``None`` if
+        the caller should keep handling the original failed diff.
+    :rtype: Outcome | None
     """
     if config.verbose:
         print(f'[llm] retrying after `git apply --check` failed: {_flatten_git_err(git_error)}')
@@ -353,6 +414,7 @@ def _retry_llm_diff(
             else (f'retry diff path: {err_one_line}')
         )
         return Outcome(record, match, 'punted_diff_rejected', detail=detail, diff=retry_diff)
+    _materialize_pending_write_for_apply(match, config, pending_writes)
     ok, err = _git_apply_check(retry_diff)
     if not ok:
         err_one_line = _flatten_git_err(err)
@@ -397,8 +459,6 @@ def _retry_llm_diff(
             detail=f'retry check passed but apply failed | git apply: {err_one_line}',
             diff=retry_diff,
         )
-    if pending_writes is not None and match.sdk_path in pending_writes:
-        del pending_writes[match.sdk_path]
     if config.verbose:
         print(f'[llm] retry applied ({diff_lines} diff lines)')
     return Outcome(record, match, 'applied_llm', detail='LLM patch applied after retry', diff=retry_diff)

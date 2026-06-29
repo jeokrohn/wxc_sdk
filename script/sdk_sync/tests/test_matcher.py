@@ -235,6 +235,153 @@ def test_docstring_model_field_structural_match_by_wire_alias(
     assert match.matched_by == 'structural-model'
 
 
+def test_model_field_added_structural_match_by_pre_add_wire_shape(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Resolve an added field to a reused SDK model by pre-addition shape.
+
+    The added field itself is expected to be absent from the SDK. The safe
+    class-level evidence is the already-shared wire fields plus the matched
+    endpoint return type: the generated stranded-calls response maps to SDK
+    ``StrandedCalls``.
+
+    :param tmp_path: Temporary directory used for the synthetic SDK package.
+    :type tmp_path: pathlib.Path
+    :param monkeypatch: Pytest helper used to reset matcher globals.
+    :type monkeypatch: pytest.MonkeyPatch
+    :return: Nothing.
+    :rtype: None
+    """
+    _point_matcher_at_tmp_sdk(
+        tmp_path,
+        monkeypatch,
+        """\
+        class StrandedCalls(ApiModel):
+            #: The call processing action type.
+            action: Optional[StrandedCallsAction] = None
+            #: Call gets transferred to this number when action is set to TRANSFER.
+            transfer_phone_number: Optional[str] = None
+            #: The type of announcement to be played.
+            audio_message_selection: Optional[Greeting] = None
+            #: List of Announcement Audio Files when audioMessageSelection is CUSTOM.
+            audio_files: Optional[list[AnnAudioFile]] = None
+
+
+        class CQPolicyApi(ApiChild, base='telephony/config/locations'):
+            def stranded_calls_details(self, location_id: str, queue_id: str) -> StrandedCalls:
+                url = self.ep(f'{location_id}/queues/{queue_id}/strandedCalls')
+                return self.get(url=url)
+        """,
+    )
+    stub_ir = extract_from_text(
+        textwrap.dedent("""\
+        class GetCallQueueStrandedCallsObject(ApiModel):
+            #: The call processing action type.
+            action: Optional[GetCallQueueStrandedCallsObjectAction] = None
+            #: Call gets transferred to this number when action is set to `TRANSFER`.
+            transfer_phone_number: Optional[str] = None
+            #: The type of announcement to be played.
+            audio_message_selection: Optional[CallQueueQueueSettingsGetObjectOverflowGreeting] = None
+            #: List of Announcement Audio Files when `audioMessageSelection` is `CUSTOM`.
+            audio_files: Optional[list[AudioAnnouncementFileFeatureGetObject]] = None
+            #: Trigger stranded calls queue policy when all agents are unreachable.
+            trigger_policy_when_all_agents_are_unreachable_enabled: Optional[bool] = None
+
+
+        class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
+            def get_call_queue_stranded_calls(
+                self,
+                location_id: str,
+                queue_id: str,
+            ) -> GetCallQueueStrandedCallsObject:
+                url = self.ep(f'locations/{location_id}/queues/{queue_id}/strandedCalls')
+                return self.get(url=url)
+        """),
+        'open_api/generated/features-call-queue_auto.py',
+    )
+    record = ChangeRecord(
+        kind='model_field_added',
+        qualname='GetCallQueueStrandedCallsObject.trigger_policy_when_all_agents_are_unreachable_enabled',
+        old=None,
+        new={
+            'name': 'trigger_policy_when_all_agents_are_unreachable_enabled',
+            'annotation': 'Optional[bool]',
+            'default': 'None',
+            'doc_comment': 'Trigger stranded calls queue policy when all agents are unreachable.',
+        },
+        severity='trivial',
+    )
+
+    match = matcher.match(record, stub_ir, aliases.AliasStore())
+
+    assert match is not None
+    assert match.sdk_class == 'StrandedCalls'
+    assert match.sdk_member == 'trigger_policy_when_all_agents_are_unreachable_enabled'
+    assert match.matched_by == 'structural-model-add'
+    assert match.confidence == pytest.approx(1.0)
+
+
+def test_model_field_added_ambiguous_structural_matches_are_not_accepted(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Report tied added-field candidates instead of choosing arbitrarily.
+
+    :param tmp_path: Temporary directory used for the synthetic SDK package.
+    :type tmp_path: pathlib.Path
+    :param monkeypatch: Pytest helper used to reset matcher globals.
+    :type monkeypatch: pytest.MonkeyPatch
+    :return: Nothing.
+    :rtype: None
+    """
+    _point_matcher_at_tmp_sdk(
+        tmp_path,
+        monkeypatch,
+        """\
+        class FirstWidget(ApiModel):
+            id: Optional[str] = None
+            name: Optional[str] = None
+
+
+        class SecondWidget(ApiModel):
+            id: Optional[str] = None
+            name: Optional[str] = None
+        """,
+    )
+    stub_ir = extract_from_text(
+        textwrap.dedent("""\
+        class GeneratedWidget(ApiModel):
+            id: Optional[str] = None
+            name: Optional[str] = None
+            color: Optional[str] = None
+        """),
+        'open_api/generated/widgets_auto.py',
+    )
+    record = ChangeRecord(
+        kind='model_field_added',
+        qualname='GeneratedWidget.color',
+        old=None,
+        new={
+            'name': 'color',
+            'annotation': 'Optional[str]',
+            'default': 'None',
+            'doc_comment': 'The widget color.',
+        },
+        severity='trivial',
+    )
+    store = aliases.AliasStore()
+
+    match = matcher.match(record, stub_ir, store)
+
+    assert match is None
+    assert [candidate['sdk_class'] for candidate in store.unmatched[0].candidates[:2]] == [
+        'FirstWidget',
+        'SecondWidget',
+    ]
+    assert 'added target field absent as expected' in store.unmatched[0].candidates[0]['detail']
+
+
 def test_docstring_enum_value_partial_mismatch_reports_candidate_without_match(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

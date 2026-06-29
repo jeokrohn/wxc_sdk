@@ -17,7 +17,8 @@ that should receive the equivalent edit. Resolution order:
 3. **Heuristic match.** Score every plausible SDK method by
    ``0.6 * URL-token-Jaccard + 0.4 * docstring-similarity`` and accept the
    top candidate when its score clears :data:`THRESHOLD`. For field/enum
-   doc-comments, use structural wire-shape matching when class names differ.
+   doc-comments and added model fields, use structural wire-shape matching
+   when class names differ.
 4. **Punt.** Append an ``UnmatchedEntry`` to ``store.unmatched`` so the human
    reviewer can see what wasn't auto-resolved, and return ``None``.
 
@@ -32,7 +33,7 @@ import difflib
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from . import aliases as _aliases
 from .differ import ChangeRecord
@@ -43,12 +44,20 @@ from .ir import ApiClassIR, EnumIR, EnumValueIR, FieldIR, MethodIR, ModelIR, Mod
 #: a tightly scoped prompt) decide.
 THRESHOLD = 0.75
 
-# Minimum score for structural doc-comment matching. These are intentionally
-# higher than method URL matching because a false field/enum match can rewrite
-# a human-authored SDK comment.
+# Minimum score for structural model/enum matching. These are intentionally
+# higher than method URL matching because a false structural match can rewrite
+# a human-authored SDK comment or add a field to the wrong reusable model.
 STRUCTURAL_MODEL_THRESHOLD = 0.82
 STRUCTURAL_ENUM_THRESHOLD = 0.82
 STRUCTURAL_MIN_GAP = 0.05
+
+#: Scoring mode for model-field structural matching.
+#:
+#: ``'existing_field'`` means the target SDK field must already exist, which is
+#: required for doc-comment replacement. ``'added_field'`` means the target
+#: field may be absent because the patcher is expected to append it after the
+#: SDK class has been identified.
+_ModelCandidateMode = Literal['existing_field', 'added_field']
 
 # Resolve `wxc_sdk/` once at import time. Walking from
 # `script/sdk_sync/matcher.py` up three levels lands at the repo root, then
@@ -100,8 +109,10 @@ class _ModelCandidate:
     :type sdk_ir: ModuleIR
     :param sdk_model: Candidate SDK model.
     :type sdk_model: ModelIR
-    :param sdk_field: Candidate SDK field matching the stub field's wire name.
-    :type sdk_field: FieldIR
+    :param sdk_field: Candidate SDK field matching the stub field's wire name,
+        or ``None`` when the candidate is for a field addition and the SDK
+        class intentionally does not contain that field yet.
+    :type sdk_field: FieldIR | None
     :param detail: Human-readable reason shown in unmatched reports.
     :type detail: str
     """
@@ -110,7 +121,7 @@ class _ModelCandidate:
     sdk_path: Path
     sdk_ir: ModuleIR
     sdk_model: ModelIR
-    sdk_field: FieldIR
+    sdk_field: FieldIR | None
     detail: str
 
 
@@ -270,7 +281,9 @@ def match(record: ChangeRecord, stub_ir: ModuleIR, store: _aliases.AliasStore) -
     """
     if record.kind in {'enum_value_added', 'enum_value_removed'}:
         return _match_enum_value(record, store)
-    if record.kind in {'model_field_added', 'model_field_removed'}:
+    if record.kind == 'model_field_added':
+        return _match_added_model_field(record, stub_ir, store)
+    if record.kind == 'model_field_removed':
         return _match_model_field(record, store)
     if record.kind == 'model_added' or record.kind == 'model_removed':
         return _match_model_or_enum(record, store)
@@ -420,14 +433,27 @@ def _match_enum_value(record: ChangeRecord, store: _aliases.AliasStore) -> Match
     )
 
 
-def _match_model_field(record: ChangeRecord, store: _aliases.AliasStore) -> Match | None:
+def _match_model_field(
+    record: ChangeRecord,
+    store: _aliases.AliasStore,
+    *,
+    record_unmatched: bool = True,
+) -> Match | None:
     """Resolve a ``model_field_added`` / ``model_field_removed`` record.
 
     :param record: A field-level model change record. ``qualname`` is
         expected to be ``"ModelName.field_name"``.
+    :type record: ChangeRecord
     :param store: Alias store consulted for model renames; mutated on a punt.
+    :type store: script.sdk_sync.aliases.AliasStore
+    :param record_unmatched: When ``True``, append an unmatched report entry
+        if the containing model cannot be resolved by exact or alias lookup.
+        Structural callers pass ``False`` so they can try shape-based
+        matching before recording a final miss with richer candidates.
+    :type record_unmatched: bool
     :return: A :class:`Match` pointing at the SDK model and its field name,
         or ``None`` if the model is absent.
+    :rtype: Match | None
     """
     stub_model, field_name = _split_qualname(record.qualname)
     if field_name is None:
@@ -438,7 +464,8 @@ def _match_model_field(record: ChangeRecord, store: _aliases.AliasStore) -> Matc
     model_name = _resolve_class_name(stub_model, store)
     found = _index.find_model(model_name)
     if found is None:
-        _record_unmatched(record, store)
+        if record_unmatched:
+            _record_unmatched(record, store)
         return None
     path, ir, _ = found
     return Match(
@@ -449,6 +476,92 @@ def _match_model_field(record: ChangeRecord, store: _aliases.AliasStore) -> Matc
         ir,
         1.0,
         'alias' if model_name != stub_model else 'exact',
+    )
+
+
+def _match_added_model_field(record: ChangeRecord, stub_ir: ModuleIR, store: _aliases.AliasStore) -> Match | None:
+    """Resolve a ``model_field_added`` record with structural class fallback.
+
+    Field additions differ from doc-comment changes in one important way: the
+    target SDK field is normally absent, so requiring the changed wire field to
+    exist would reject the correct class. This resolver therefore first tries
+    the existing exact/member-alias path, then scores SDK classes by comparing
+    the generated model's pre-addition wire shape with each SDK model.
+
+    The returned match deliberately looks like any other ``'model_field'``
+    match. The patcher already knows how to append ``record.new['name']`` to a
+    resolved SDK class, so the matcher only needs to identify the containing
+    class safely. ``sdk_member`` is still populated with the new field name for
+    reporting consistency and for future dispatcher logic that expects member
+    names on field-level matches.
+
+    :param record: A ``model_field_added`` change record.
+    :type record: ChangeRecord
+    :param stub_ir: Parsed generated stub IR containing the new field.
+    :type stub_ir: ModuleIR
+    :param store: Alias store consulted for manual aliases and populated with
+        candidate details when no structural class is safe.
+    :type store: script.sdk_sync.aliases.AliasStore
+    :return: A model-field match whose ``sdk_member`` is the new SDK field
+        name, or ``None`` when no unique SDK class can be identified.
+    :rtype: Match | None
+    """
+    # Preserve the safest existing paths first. A hand-confirmed member alias
+    # or exact model-name match should not be displaced by structural scoring.
+    exact_or_alias = _match_model_field(record, store, record_unmatched=False)
+    if exact_or_alias is not None:
+        return exact_or_alias
+
+    stub_model_name, field_name = _split_qualname(record.qualname)
+    if field_name is None:
+        return None
+
+    # The new stub IR must contain both the model and the field that triggered
+    # the differ record. If either is missing, structural comparison would be
+    # operating on stale or incomplete evidence, so punt without inventing a
+    # candidate list.
+    stub_model = stub_ir.model_by_name(stub_model_name)
+    if stub_model is None:
+        _record_unmatched(record, store)
+        return None
+    stub_field = next((field for field in stub_model.fields if field.name == field_name), None)
+    if stub_field is None:
+        _record_unmatched(record, store)
+        return None
+
+    # Method return context is strong tie-breaking evidence for generated
+    # response models. In the call-queue case, the matched endpoint proves that
+    # `GetCallQueueStrandedCallsObject` corresponds to SDK `StrandedCalls`.
+    context_names = _method_return_context_model_names(stub_model_name, stub_ir)
+
+    # In added-field mode the scorer removes `stub_field` from the stub wire
+    # shape before comparison. The absence of that wire field in the SDK is
+    # therefore expected and is captured in the candidate detail for review.
+    candidates = _score_model_candidates(stub_model, stub_field, context_names, mode='added_field')
+    accepted = _accepted_model_candidate(candidates)
+    if accepted is None:
+        # A no-match report with top candidates is more useful than the old
+        # empty `candidates: []` punt because it shows whether the problem is
+        # missing evidence, ambiguity, or a threshold miss.
+        _record_unmatched(
+            record,
+            store,
+            candidates=[_model_candidate_report(candidate) for candidate in candidates[:5]],
+            best_score=candidates[0].score if candidates else 0.0,
+        )
+        return None
+
+    # `accepted.sdk_field` may be None here. That is the normal add-field case:
+    # the patcher uses `record.new` for the field text and the match's
+    # `sdk_class`/module IR for the insertion point.
+    return Match(
+        accepted.sdk_path,
+        'model_field',
+        accepted.sdk_model.name,
+        field_name,
+        accepted.sdk_ir,
+        accepted.score,
+        'structural-model-add',
     )
 
 
@@ -743,6 +856,9 @@ def _match_docstring_model_field(record: ChangeRecord, stub_ir: ModuleIR, store:
             best_score=candidates[0].score if candidates else 0.0,
         )
         return None
+    # Existing-field mode only yields candidates that have a concrete SDK
+    # member. The assertion documents that invariant for the type checker.
+    assert accepted.sdk_field is not None
     return Match(
         accepted.sdk_path,
         'model_field',
@@ -781,11 +897,13 @@ def _match_type_changed(record: ChangeRecord, stub_ir: ModuleIR, store: _aliases
 
 
 # ---------------------------------------------------------------------------
-# Structural doc-comment matching
+# Structural model/enum matching
 #
-# These helpers are used only for field/enum `docstring_changed` records. They
-# deliberately return ordinary Match objects so deterministic patching remains
-# behind the same interface as exact and alias matches.
+# These helpers deliberately return ordinary Match objects so deterministic
+# patching remains behind the same interface as exact and alias matches. Model
+# field additions use a slightly different target rule from doc-comment
+# updates: the SDK class should match by shape, but the new SDK field is
+# expected to be absent until the patcher appends it.
 # ---------------------------------------------------------------------------
 
 
@@ -793,23 +911,48 @@ def _score_model_candidates(
     stub_model: ModelIR,
     stub_field: FieldIR,
     context_names: set[str] | None = None,
+    *,
+    mode: _ModelCandidateMode = 'existing_field',
 ) -> list[_ModelCandidate]:
     """Score SDK models by wire-field shape for one stub field.
 
+    The scorer compares JSON wire names rather than Python attribute names so
+    reusable SDK models that use ``Field(alias=...)`` still line up with
+    generated stubs. The caller selects the safety policy with ``mode``:
+
+    - ``'existing_field'`` is used when patching an existing member, such as a
+      field doc-comment. The candidate must contain the target wire field, and
+      ``_ModelCandidate.sdk_field`` is the concrete SDK field to update.
+    - ``'added_field'`` is used when only the containing SDK class is needed.
+      The target wire field is removed from the stub shape before scoring, and
+      ``_ModelCandidate.sdk_field`` is allowed to be ``None`` because the
+      deterministic patcher will append the field later.
+
     :param stub_model: Stub-side generated model.
     :type stub_model: ModelIR
-    :param stub_field: Stub-side field whose comment changed.
+    :param stub_field: Stub-side field being matched.
     :type stub_field: FieldIR
     :param context_names: SDK model names inferred from matched method returns.
     :type context_names: set[str] | None
+    :param mode: ``'existing_field'`` requires the target wire field to exist
+        in the SDK model and is used for doc-comment updates. ``'added_field'``
+        excludes the target wire field from the shape comparison and allows it
+        to be absent, because the patcher will add it after the class target is
+        resolved.
+    :type mode: Literal['existing_field', 'added_field']
     :return: Candidates sorted by descending score.
     :rtype: list[_ModelCandidate]
     """
     context_names = context_names or set()
     stub_wire_names = {_field_wire_name(field) for field in stub_model.fields}
     target_wire_name = _field_wire_name(stub_field)
+
+    # Added-field resolution should compare the model as it existed before the
+    # API gained the new member. Otherwise the correct SDK class would look
+    # artificially incomplete because the field we want to add is not there yet.
+    compared_stub_wire_names = stub_wire_names - {target_wire_name} if mode == 'added_field' else stub_wire_names
     candidates: list[_ModelCandidate] = []
-    if not stub_wire_names:
+    if not compared_stub_wire_names:
         return candidates
 
     for sdk_ir in _index.all():
@@ -817,12 +960,16 @@ def _score_model_candidates(
             sdk_fields_by_wire = _fields_by_wire_name(sdk_model)
             sdk_wire_names = set(sdk_fields_by_wire)
             target = sdk_fields_by_wire.get(target_wire_name)
-            if target is None:
+
+            # Existing-field updates need a real SDK member to splice. Added
+            # fields need only a trustworthy SDK class; `target is None` is the
+            # common success shape in that mode.
+            if mode == 'existing_field' and target is None:
                 continue
-            shared = stub_wire_names & sdk_wire_names
+            shared = compared_stub_wire_names & sdk_wire_names
             if not shared:
                 continue
-            coverage = len(shared) / len(stub_wire_names)
+            coverage = len(shared) / len(compared_stub_wire_names)
             precision = len(shared) / len(sdk_wire_names) if sdk_wire_names else 0.0
             context = 1.0 if sdk_model.name in context_names else 0.0
             # Coverage asks "does the SDK model contain the generated model's
@@ -831,10 +978,17 @@ def _score_model_candidates(
             # deliberately small: it breaks ties when a matched endpoint
             # already proves the generated return type maps to this SDK type.
             score = (0.65 * coverage) + (0.25 * precision) + (0.10 * context)
+            sdk_only_wire_names = sdk_wire_names - compared_stub_wire_names
             detail = (
-                f'wire fields {len(shared)}/{len(stub_wire_names)} shared; '
-                f'{len(sdk_wire_names - stub_wire_names)} SDK-only fields'
+                f'wire fields {len(shared)}/{len(compared_stub_wire_names)} shared; '
+                f'{len(sdk_only_wire_names)} SDK-only fields'
             )
+            if mode == 'added_field':
+                # Reporting the target state makes review easier: "absent as
+                # expected" means the patcher can add it, while "already
+                # present" usually points to an idempotent follow-up.
+                target_state = 'already present' if target is not None else 'absent as expected'
+                detail += f'; added target field {target_state}'
             if context:
                 detail += '; returned by matched endpoint'
             candidates.append(
@@ -847,7 +1001,7 @@ def _score_model_candidates(
                     detail=detail,
                 )
             )
-    candidates.sort(key=lambda c: (-c.score, _relative_sdk_path(c.sdk_path), c.sdk_model.name, c.sdk_field.name))
+    candidates.sort(key=_model_candidate_sort_key)
     return candidates
 
 
@@ -930,6 +1084,11 @@ def _score_enum_candidates(stub_enum: EnumIR, stub_value: EnumValueIR, stub_ir: 
 def _accepted_model_candidate(candidates: list[_ModelCandidate]) -> _ModelCandidate | None:
     """Return the accepted model candidate, if one is unique enough.
 
+    Structural matching is intentionally conservative. A candidate must clear
+    the model threshold and must be separated from the runner-up by
+    :data:`STRUCTURAL_MIN_GAP`; otherwise the caller punts with the candidate
+    list so a reviewer can add an alias or adjust the heuristic deliberately.
+
     :param candidates: Sorted model candidates.
     :type candidates: list[_ModelCandidate]
     :return: The accepted candidate or ``None``.
@@ -940,6 +1099,19 @@ def _accepted_model_candidate(candidates: list[_ModelCandidate]) -> _ModelCandid
     if len(candidates) > 1 and candidates[0].score - candidates[1].score < STRUCTURAL_MIN_GAP:
         return None
     return candidates[0]
+
+
+def _model_candidate_sort_key(candidate: _ModelCandidate) -> tuple[float, str, str, str]:
+    """Return a deterministic sort key for structural model candidates.
+
+    :param candidate: Candidate to sort.
+    :type candidate: _ModelCandidate
+    :return: Tuple that orders higher scores first, then path/class/member for
+        stable reporting.
+    :rtype: tuple[float, str, str, str]
+    """
+    sdk_member = candidate.sdk_field.name if candidate.sdk_field is not None else ''
+    return (-candidate.score, _relative_sdk_path(candidate.sdk_path), candidate.sdk_model.name, sdk_member)
 
 
 def _accepted_enum_candidate(candidates: list[_EnumCandidate]) -> _EnumCandidate | None:
@@ -962,6 +1134,10 @@ def _accepted_enum_candidate(candidates: list[_EnumCandidate]) -> _EnumCandidate
 def _model_candidate_report(candidate: _ModelCandidate) -> dict[str, Any]:
     """Render a model structural candidate for ``aliases.json``/report output.
 
+    Added-field candidates may have no concrete SDK member yet. In that case
+    ``sdk_member`` is rendered as ``None`` so the report distinguishes a
+    class-only candidate from an existing field/member match.
+
     :param candidate: Candidate to render.
     :type candidate: _ModelCandidate
     :return: JSON-friendly candidate details.
@@ -970,7 +1146,7 @@ def _model_candidate_report(candidate: _ModelCandidate) -> dict[str, Any]:
     return {
         'sdk_path': _relative_sdk_path(candidate.sdk_path),
         'sdk_class': candidate.sdk_model.name,
-        'sdk_member': candidate.sdk_field.name,
+        'sdk_member': candidate.sdk_field.name if candidate.sdk_field is not None else None,
         'score': round(candidate.score, 4),
         'detail': candidate.detail,
     }
@@ -1121,7 +1297,7 @@ def _enum_type_context_names(stub_enum_name: str, stub_ir: ModuleIR) -> set[str]
                 continue
             candidates = _score_model_candidates(stub_model, stub_field)
             accepted = _accepted_model_candidate(candidates)
-            if accepted is None:
+            if accepted is None or accepted.sdk_field is None:
                 continue
             out.update(_referenced_type_names(accepted.sdk_field.annotation))
     return {name for name in out if _index.find_enum(name) is not None}

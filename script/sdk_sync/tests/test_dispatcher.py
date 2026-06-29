@@ -172,6 +172,66 @@ def test_try_llm_retries_patch_that_does_not_apply(
     assert 'patch does not apply' in calls[1]['git_error']
 
 
+def test_try_llm_materializes_same_file_pending_write_before_apply(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    """Preserve accepted deterministic edits before a same-file LLM apply.
+
+    :param monkeypatch: Pytest helper used to replace LLM and git helpers.
+    :type monkeypatch: pytest.MonkeyPatch
+    :param tmp_path: Temporary directory used for the synthetic SDK file.
+    :type tmp_path: pathlib.Path
+    :return: Nothing.
+    :rtype: None
+    """
+    sdk_path = tmp_path / 'demo.py'
+    original_text = 'class Demo:\n    value: str\n'
+    pending_text = 'class Demo:\n    value: str\n    color: str\n'
+    final_text = pending_text + '    llm_value: int\n'
+    sdk_path.write_text(original_text)
+    match = _match(sdk_path)
+    diff = '--- a/demo.py\n+++ b/demo.py\n@@ -1,1 +1,1 @@\n-class Demo:\n+class Demo:\n'
+    calls: list[str] = []
+
+    def fake_propose_diff(*args: Any, **kwargs: Any) -> str:
+        """Return an LLM diff while asserting the prompt saw pending text."""
+        assert args[2] == pending_text
+        return diff
+
+    def fake_git_apply_check(_diff: str) -> tuple[bool, str]:
+        """Assert the on-disk file was materialized before validation."""
+        calls.append('check')
+        assert sdk_path.read_text() == pending_text
+        return True, ''
+
+    def fake_git_apply(_diff: str) -> tuple[bool, str]:
+        """Simulate ``git apply`` stacking an LLM change on pending text."""
+        calls.append('apply')
+        assert sdk_path.read_text() == pending_text
+        sdk_path.write_text(final_text)
+        return True, ''
+
+    monkeypatch.setattr(dispatcher._llm, 'propose_diff', fake_propose_diff)
+    monkeypatch.setattr(dispatcher, '_normalize_diff_paths', lambda diff, match: diff)
+    monkeypatch.setattr(dispatcher, '_git_apply_check', fake_git_apply_check)
+    monkeypatch.setattr(dispatcher, '_git_apply', fake_git_apply)
+    monkeypatch.setattr(dispatcher, '_semantic_validation_error_for_diff', lambda *args: None)
+    pending_writes = {sdk_path: pending_text}
+
+    outcome = dispatcher._try_llm(
+        _record(),
+        match,
+        dispatcher.DispatchConfig(dry_run=False),
+        pending_writes=pending_writes,
+    )
+
+    assert outcome.status == 'applied_llm'
+    assert calls == ['check', 'apply']
+    assert pending_writes == {}
+    assert sdk_path.read_text() == final_text
+
+
 def test_try_llm_rejects_method_param_added_with_wrong_order(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -260,3 +320,64 @@ def test_dispatch_doc_comment_divergence_punts_when_llm_disabled(tmp_path: Path)
 
     assert outcome.status == 'punted_patcher_refused'
     assert 'diverged from old stub' in outcome.detail
+
+
+def test_dispatch_model_field_added_from_structural_match_uses_patcher(tmp_path: Path) -> None:
+    """Apply an added field deterministically after structural class matching.
+
+    :param tmp_path: Temporary directory used for the synthetic SDK file.
+    :type tmp_path: pathlib.Path
+    :return: Nothing.
+    :rtype: None
+    """
+    before_text = textwrap.dedent("""\
+    from typing import Optional
+
+    from wxc_sdk.base import ApiModel
+
+
+    class StrandedCalls(ApiModel):
+        #: The call processing action type.
+        action: Optional[str] = None
+        #: Call gets transferred to this number when action is set to TRANSFER.
+        transfer_phone_number: Optional[str] = None
+        #: The type of announcement to be played.
+        audio_message_selection: Optional[str] = None
+        #: List of Announcement Audio Files when audioMessageSelection is CUSTOM.
+        audio_files: Optional[list[str]] = None
+    """)
+    sdk_path = tmp_path / 'policies.py'
+    sdk_path.write_text(before_text)
+    record = ChangeRecord(
+        kind='model_field_added',
+        qualname='GetCallQueueStrandedCallsObject.trigger_policy_when_all_agents_are_unreachable_enabled',
+        old=None,
+        new={
+            'name': 'trigger_policy_when_all_agents_are_unreachable_enabled',
+            'annotation': 'Optional[bool]',
+            'default': 'None',
+            'doc_comment': 'Trigger stranded calls queue policy when all agents are unreachable.',
+        },
+        severity='trivial',
+    )
+    match = Match(
+        sdk_path=sdk_path,
+        kind='model_field',
+        sdk_class='StrandedCalls',
+        sdk_member='trigger_policy_when_all_agents_are_unreachable_enabled',
+        sdk_module_ir=extract_from_text(before_text, str(sdk_path)),
+        confidence=1.0,
+        matched_by='structural-model-add',
+    )
+    pending_writes: dict[Path, str] = {}
+
+    outcome = dispatcher.dispatch(
+        record,
+        match,
+        dispatcher.DispatchConfig(dry_run=True, use_llm=False),
+        pending_writes=pending_writes,
+    )
+
+    assert outcome.status == 'applied_trivial'
+    assert pending_writes[sdk_path].count('trigger_policy_when_all_agents_are_unreachable_enabled') == 1
+    assert '#: Trigger stranded calls queue policy when all agents are unreachable.' in pending_writes[sdk_path]
