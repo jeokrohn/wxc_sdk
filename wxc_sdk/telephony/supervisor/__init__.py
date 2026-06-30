@@ -170,11 +170,18 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         url = self.ep(supervisor_id)
         super().delete(url, params=params)
 
-    def delete_bulk(self, supervisor_ids: builtins.list[str], delete_all: bool = None, org_id: str = None) -> None:
+    def delete_bulk(
+        self,
+        supervisor_ids: builtins.list[str],
+        has_cx_essentials: bool = None,
+        delete_all: bool = None,
+        org_id: str = None,
+    ) -> None:
         """
-        Delete Bulk Supervisors
+        Delete the Call Queue or Customer Assist Supervisors
 
-        Deletes supervisors in bulk from an organization.
+        Delete the Call Queue or Customer Assist supervisors for an organization. Once you remove the supervisor,
+        assigned agents will lose their supervisor assignments.
 
         Supervisors are users who manage agents and who perform functions including monitoring, coaching, and more.
 
@@ -182,6 +189,9 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
 
         :param supervisor_ids: Array of supervisors IDs to be deleted.
         :type supervisor_ids: list[str]
+        :param has_cx_essentials: Delete the Customer Assist supervisors, when `true`. Otherwise delete the Call Queue
+            supervisors. The default value is `false`.
+        :type has_cx_essentials: bool
         :param delete_all: If present the `supervisorIds` array is ignored, and all supervisors in the context are
             deleted. **WARNING**: This will remove all supervisors from the organization.
         :type delete_all: bool
@@ -192,6 +202,8 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
         body = dict()
         body['supervisorIds'] = supervisor_ids
         if delete_all is not None:

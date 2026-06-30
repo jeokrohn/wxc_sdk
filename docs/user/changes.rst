@@ -1,6 +1,8 @@
 Release history
 ===============
 
+- feat: support Customer Assist supervisor bulk delete
+
 1.37.0
 ------
 - feat: new attribute StrandedCalls.trigger_policy_when_all_agents_are_unreachable_enabled

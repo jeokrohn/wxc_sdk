@@ -3368,12 +3368,13 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep('queues/settings')
         super().put(url, params=params, json=body)
 
-    def delete_bulk_call_queue_supervisors(self, supervisor_ids: list[str], delete_all: bool = None,
-                                           org_id: str = None) -> None:
+    def delete_bulk_call_queue_supervisors(self, supervisor_ids: list[str], has_cx_essentials: bool = None,
+                                           delete_all: bool = None, org_id: str = None) -> None:
         """
-        Delete Bulk Supervisors
+        Delete the Call Queue or Customer Assist Supervisors
 
-        Deletes supervisors in bulk from an organization.
+        Delete the Call Queue or Customer Assist supervisors for an organization. Once you remove the supervisor,
+        assigned agents will lose their supervisor assignments.
 
         Supervisors are users who manage agents and who perform functions including monitoring, coaching, and more.
 
@@ -3381,6 +3382,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
 
         :param supervisor_ids: Array of supervisors IDs to be deleted.
         :type supervisor_ids: list[str]
+        :param has_cx_essentials: Delete the Customer Assist supervisors, when `true`. Otherwise delete the Call Queue
+            supervisors. The default value is `false`.
+        :type has_cx_essentials: bool
         :param delete_all: If present the `supervisorIds` array is ignored, and all supervisors in the context are
             deleted. **WARNING**: This will remove all supervisors from the organization.
         :type delete_all: bool
@@ -3393,6 +3397,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body: dict[str, Any] = dict()
         body['supervisorIds'] = supervisor_ids
+        if has_cx_essentials is not None:
+            body['hasCxEssentials'] = has_cx_essentials
         if delete_all is not None:
             body['deleteAll'] = delete_all
         url = self.ep('supervisors')

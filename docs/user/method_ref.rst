@@ -3211,7 +3211,7 @@ description of the operation. The method name is a link to the method documentat
         | Delete a Supervisor
         | ``DELETE /telephony/config/supervisors/{supervisor_id}``
    * - :meth:`api.telephony.supervisors.delete_bulk <wxc_sdk.telephony.supervisor.SupervisorApi.delete_bulk>`
-        | Delete Bulk Supervisors
+        | Delete the Call Queue or Customer Assist Supervisors
         | ``DELETE /telephony/config/supervisors``
    * - :meth:`api.telephony.supervisors.details <wxc_sdk.telephony.supervisor.SupervisorApi.details>`
         | GET Supervisor Details
