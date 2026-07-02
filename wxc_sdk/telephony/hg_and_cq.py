@@ -3,7 +3,7 @@ common base for Call Queues and Hunt Groups
 """
 
 from base64 import b64decode
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import Field
 
@@ -53,7 +53,7 @@ class Agent(UserBase):
 
     @property
     def cpapi_id(self) -> str:
-        return webex_id_to_uuid(self.agent_id)
+        return webex_id_to_uuid(self.agent_id)  # type: ignore[return-value]
 
 
 class CallingLineIdPolicy(str, Enum):
@@ -120,8 +120,7 @@ class HGandCQ(ApiModel):
         bc_id = webex_id_to_uuid(self.id)
         return bc_id and b64decode(bc_id).decode()
 
-    @staticmethod
-    def exclude_update_or_create() -> dict:
+    def exclude_update_or_create(self) -> dict[str, Any]:
         """
         Exclude dict for update or create calls
 
@@ -152,7 +151,7 @@ class HGandCQ(ApiModel):
             'alternate_number_settings': {'alternate_numbers': {'__all__': {'toll_free_number': True}}},
         }
 
-    def create_or_update(self) -> dict:
+    def create_or_update(self) -> dict[str, Any]:
         """
         Get data for create or update call
 

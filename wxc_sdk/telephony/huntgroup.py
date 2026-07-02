@@ -114,15 +114,14 @@ class HuntGroup(HGandCQ):
     #: Whether or not the hunt group can be used as the caller ID when the agent places outgoing calls.
     hunt_group_caller_id_for_outgoing_calls_enabled: Optional[bool] = None
 
-    @staticmethod
-    def exclude_update_or_create() -> dict[str, Any]:
+    def exclude_update_or_create(self) -> dict[str, Any]:
         """
         Exclude dict for update or create calls
 
         :meta private:
         :return: dict
         """
-        base_exclude = HGandCQ.exclude_update_or_create()
+        base_exclude = super().exclude_update_or_create()
         base_exclude.update(
             {
                 'call_policies': {'no_answer': {'system_max_number_of_rings': True}},

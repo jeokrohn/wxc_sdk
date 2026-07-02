@@ -23900,6 +23900,7 @@ class AsCallQueueApi(AsApiChild, base=''):
         department_id: str = None,
         department_name: str = None,
         has_cx_essentials: bool = None,
+        digital_inbox_enabled: bool = None,
         org_id: str = None,
         **params,
     ) -> AsyncGenerator[CallQueue, None]:
@@ -23931,6 +23932,9 @@ class AsCallQueueApi(AsApiChild, base=''):
         :param has_cx_essentials: Returns only the list of call queues with Customer Assist license when
             `true`, otherwise returns the list of Customer Experience Basic call queues.
         :type has_cx_essentials: bool
+        :param digital_inbox_enabled: Returns only the list of call queues with digital inbox enabled when `true`, or
+            disabled when `false`. This query parameter is only valid when `hasCxEssentials` is `true`.
+        :type digital_inbox_enabled: bool
         :param org_id: Returns the list of call queues in this organization.
         :type org_id: str
         :return: yields :class:`CallQueue` objects
@@ -23949,6 +23953,8 @@ class AsCallQueueApi(AsApiChild, base=''):
             params['departmentName'] = department_name
         if has_cx_essentials is not None:
             params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        if digital_inbox_enabled is not None:
+            params['digitalInboxEnabled'] = str(digital_inbox_enabled).lower()
         url = self._endpoint()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=CallQueue, params=params)
@@ -23961,6 +23967,7 @@ class AsCallQueueApi(AsApiChild, base=''):
         department_id: str = None,
         department_name: str = None,
         has_cx_essentials: bool = None,
+        digital_inbox_enabled: bool = None,
         org_id: str = None,
         **params,
     ) -> builtins.list[CallQueue]:
@@ -23992,6 +23999,9 @@ class AsCallQueueApi(AsApiChild, base=''):
         :param has_cx_essentials: Returns only the list of call queues with Customer Assist license when
             `true`, otherwise returns the list of Customer Experience Basic call queues.
         :type has_cx_essentials: bool
+        :param digital_inbox_enabled: Returns only the list of call queues with digital inbox enabled when `true`, or
+            disabled when `false`. This query parameter is only valid when `hasCxEssentials` is `true`.
+        :type digital_inbox_enabled: bool
         :param org_id: Returns the list of call queues in this organization.
         :type org_id: str
         :return: yields :class:`CallQueue` objects
@@ -24010,6 +24020,8 @@ class AsCallQueueApi(AsApiChild, base=''):
             params['departmentName'] = department_name
         if has_cx_essentials is not None:
             params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        if digital_inbox_enabled is not None:
+            params['digitalInboxEnabled'] = str(digital_inbox_enabled).lower()
         url = self._endpoint()
         # noinspection PyTypeChecker
         return [o async for o in self.session.follow_pagination(url=url, model=CallQueue, params=params)]

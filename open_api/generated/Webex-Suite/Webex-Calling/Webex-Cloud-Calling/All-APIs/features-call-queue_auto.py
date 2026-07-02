@@ -43,15 +43,16 @@ __all__ = ['AgentAction', 'AlternateNumbersWithPattern', 'AnnouncementAudioFile'
            'GetCallQueueAgentObjectAgent', 'GetCallQueueAgentObjectQueuesItem', 'GetCallQueueCallPolicyObject',
            'GetCallQueueCallPolicyObjectCallBounce', 'GetCallQueueCallPolicyObjectDistinctiveRing',
            'GetCallQueueEssentialsCallPolicyObject', 'GetCallQueueEssentialsObject',
-           'GetCallQueueForcedForwardObject', 'GetCallQueueHolidayObject', 'GetCallQueueHolidayObjectAction',
-           'GetCallQueueNightServiceObject', 'GetCallQueueNightServiceObjectAnnouncementMode',
-           'GetCallQueueObjectAlternateNumberSettings', 'GetCallQueueStrandedCallsObject',
-           'GetCallQueueStrandedCallsObjectAction', 'GetCallQueueSupervisorResponse', 'GetForwardingRuleObject',
-           'GetPersonPlaceObject', 'GetPersonPlaceVirtualLineCallQueueObjectType', 'GetUserNumberItemObject',
-           'HuntPolicySelection', 'HuntRoutingTypeSelection', 'ListCallQueueAgentObject',
-           'ListCallQueueEssentialsObject', 'ListSupervisorAgentObject', 'ListSupervisorObject', 'LocationObject',
-           'MediaType', 'ModesGet', 'ModesGetForwardTo', 'ModesGetForwardToDefaultForwardToSelection', 'ModesGetType',
-           'ModesPatch', 'ModesPatchForwardTo', 'ModifyAgentsForCallQueueObjectSettingsItem',
+           'GetCallQueueEssentialsObjectNumberUsageType', 'GetCallQueueForcedForwardObject',
+           'GetCallQueueHolidayObject', 'GetCallQueueHolidayObjectAction', 'GetCallQueueNightServiceObject',
+           'GetCallQueueNightServiceObjectAnnouncementMode', 'GetCallQueueObjectAlternateNumberSettings',
+           'GetCallQueueStrandedCallsObject', 'GetCallQueueStrandedCallsObjectAction',
+           'GetCallQueueSupervisorResponse', 'GetForwardingRuleObject', 'GetPersonPlaceObject',
+           'GetPersonPlaceVirtualLineCallQueueObjectType', 'GetUserNumberItemObject', 'HuntPolicySelection',
+           'HuntRoutingTypeSelection', 'ListCallQueueAgentObject', 'ListCallQueueEssentialsObject',
+           'ListSupervisorAgentObject', 'ListSupervisorObject', 'LocationObject', 'MediaType', 'ModesGet',
+           'ModesGetForwardTo', 'ModesGetForwardToDefaultForwardToSelection', 'ModesGetType', 'ModesPatch',
+           'ModesPatchForwardTo', 'ModifyAgentsForCallQueueObjectSettingsItem',
            'ModifyCallForwardingObjectCallForwarding', 'ModifyCallForwardingObjectCallForwardingOperatingModes',
            'ModifyPersonPlaceVirtualLineCallQueueObject', 'MohMessageSource', 'MohMessageSourceGreeting',
            'MohMessageSourceModify', 'NumberOwnerType', 'PostPersonPlaceVirtualLineCallQueueObject',
@@ -1163,6 +1164,19 @@ class ListCallQueueEssentialsObject(ApiModel):
     enabled: Optional[bool] = None
     #: The department information.
     department: Optional[LocationObject] = None
+    #: Digital Inbox enabled for Queue. This field is applicable for queue which has `hasCxEssentials=true`.
+    digital_inbox_enabled: Optional[bool] = None
+
+
+class GetCallQueueEssentialsObjectNumberUsageType(str, Enum):
+    #: Public Switched Telephone Network (PSTN) number.
+    pstn_number = 'PSTN_NUMBER'
+    #: Mobile number.
+    mobile_number = 'MOBILE_NUMBER'
+    #: A number used in high-volume service.
+    service_number = 'SERVICE_NUMBER'
+    #: Emergency Location Identification Number (ELIN), numbers can be used to place emergency calls from a location.
+    elin = 'ELIN'
 
 
 class GetCallQueueEssentialsCallPolicyObject(ApiModel):
@@ -1246,6 +1260,11 @@ class GetCallQueueEssentialsObject(ApiModel):
     time_zone: Optional[str] = None
     #: Primary phone number of the call queue.
     phone_number: Optional[str] = None
+    #: Number type of primary number assigned to queue.
+    number_usage_type: Optional[GetCallQueueEssentialsObjectNumberUsageType] = None
+    #: Indicates whether business texting is enabled for the primary number assigned to the queue. This field is
+    #: read-only and cannot be modified through the queue APIs.
+    business_texting_enabled: Optional[bool] = None
     #: Extension of the call queue.
     extension: Optional[str] = None
     #: The alternate numbers feature allows you to assign multiple phone numbers or extensions to a call queue. Each
@@ -1266,6 +1285,8 @@ class GetCallQueueEssentialsObject(ApiModel):
     direct_line_caller_id_name: Optional[DirectLineCallerIdNameObject] = None
     #: The name to be used for dial by name functions.
     dial_by_name: Optional[str] = None
+    #: Digital Inbox enabled for Queue. This field is applicable for queue which has `hasCxEssentials=true`.
+    digital_inbox_enabled: Optional[bool] = None
 
 
 class AvailablePhoneNumber(ApiModel):
@@ -1519,7 +1540,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                           calling_line_id_phone_number: str = None, allow_agent_join_enabled: bool = None,
                           phone_number_for_outgoing_calls_enabled: bool = None,
                           direct_line_caller_id_name: DirectLineCallerIdNameObject = None, dial_by_name: str = None,
-                          org_id: str = None) -> str:
+                          digital_inbox_enabled: bool = None, org_id: str = None) -> str:
         """
         Create a Call Queue with Customer Assist
 
@@ -1579,6 +1600,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :param dial_by_name: The name to be used for dial by name functions. Characters of `%`,  `+`, `\\`, `"` and
             Unicode characters are not allowed.
         :type dial_by_name: str
+        :param digital_inbox_enabled: Digital Inbox enabled for Queue. This field is applicable for queue which has
+            `hasCxEssentials=true`.
+        :type digital_inbox_enabled: bool
         :param org_id: The organization ID where the call queue needs to be created.
         :type org_id: str
         :rtype: str
@@ -1617,6 +1641,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             body['directLineCallerIdName'] = direct_line_caller_id_name.model_dump(mode='json', by_alias=True, exclude_none=True)
         if dial_by_name is not None:
             body['dialByName'] = dial_by_name
+        if digital_inbox_enabled is not None:
+            body['digitalInboxEnabled'] = digital_inbox_enabled
         url = self.ep(f'locations/{location_id}/queues')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -1841,7 +1867,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                           agents: list[ModifyPersonPlaceVirtualLineCallQueueObject] = None,
                           allow_agent_join_enabled: bool = None, phone_number_for_outgoing_calls_enabled: bool = None,
                           direct_line_caller_id_name: DirectLineCallerIdNameObject = None, dial_by_name: str = None,
-                          org_id: str = None) -> None:
+                          digital_inbox_enabled: bool = None, org_id: str = None) -> None:
         """
         Update a Call Queue
 
@@ -1909,6 +1935,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             the attribute must be set to null or empty string. Characters of `%`,  `+`, `\\`, `"` and Unicode
             characters are not allowed.
         :type dial_by_name: str
+        :param digital_inbox_enabled: Digital Inbox enabled for Queue. This field is applicable for queue which has
+            `hasCxEssentials=true`.
+        :type digital_inbox_enabled: bool
         :param org_id: Update call queue settings from this organization.
         :type org_id: str
         :rtype: None
@@ -1954,6 +1983,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             body['directLineCallerIdName'] = direct_line_caller_id_name.model_dump(mode='json', by_alias=True, exclude_none=True)
         if dial_by_name is not None:
             body['dialByName'] = dial_by_name
+        if digital_inbox_enabled is not None:
+            body['digitalInboxEnabled'] = digital_inbox_enabled
         url = self.ep(f'locations/{location_id}/queues/{queue_id}')
         super().put(url, params=params, json=body)
 
@@ -3060,7 +3091,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
 
     def list_call_queues(self, location_id: str = None, name: str = None, phone_number: str = None,
                          department_id: str = None, department_name: str = None, has_cx_essentials: bool = None,
-                         org_id: str = None, **params: Any) -> Generator[ListCallQueueEssentialsObject, None, None]:
+                         digital_inbox_enabled: bool = None, org_id: str = None,
+                         **params: Any) -> Generator[ListCallQueueEssentialsObject, None, None]:
         """
         Read the List of Call Queues with Customer Assist
 
@@ -3089,6 +3121,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :param has_cx_essentials: Returns only the list of call queues with Customer Assist license when `true`,
             otherwise returns the list of Customer Experience Basic call queues.
         :type has_cx_essentials: bool
+        :param digital_inbox_enabled: Returns only the list of call queues with digital inbox enabled when `true`, or
+            disabled when `false`. This query parameter is only valid when `hasCxEssentials` is `true`.
+        :type digital_inbox_enabled: bool
         :param org_id: Returns the list of call queues in this organization.
         :type org_id: str
         :return: Generator yielding :class:`ListCallQueueEssentialsObject` instances
@@ -3107,6 +3142,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             params['departmentName'] = department_name
         if has_cx_essentials is not None:
             params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        if digital_inbox_enabled is not None:
+            params['digitalInboxEnabled'] = str(digital_inbox_enabled).lower()
         url = self.ep('queues')
         return self.session.follow_pagination(url=url, model=ListCallQueueEssentialsObject, item_key='queues', params=params)
 

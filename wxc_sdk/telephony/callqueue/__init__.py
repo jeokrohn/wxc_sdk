@@ -43,6 +43,7 @@ __all__ = [
     'CQRoutingType',
     'AvailableAgent',
     'CallQueueSettings',
+    'CallQueueNumberUsageType',
 ]
 
 
@@ -260,6 +261,17 @@ class QueueSettings(ApiModel):
         return QueueSettings(queue_size=queue_size, overflow=OverflowSetting.default())
 
 
+class CallQueueNumberUsageType(str, Enum):
+    #: Public Switched Telephone Network (PSTN) number.
+    pstn_number = 'PSTN_NUMBER'
+    #: Mobile number.
+    mobile_number = 'MOBILE_NUMBER'
+    #: A number used in high-volume service.
+    service_number = 'SERVICE_NUMBER'
+    #: Emergency Location Identification Number (ELIN), numbers can be used to place emergency calls from a location.
+    elin = 'ELIN'
+
+
 class CallQueue(HGandCQ):
     """
     Call queue details
@@ -275,25 +287,30 @@ class CallQueue(HGandCQ):
     allow_agent_join_enabled: Optional[bool] = None
     #: Allow queue phone number for outgoing calls
     phone_number_for_outgoing_calls_enabled: Optional[bool] = None
+    #: Number type of primary number assigned to queue.
+    number_usage_type: Optional[CallQueueNumberUsageType] = None
+    #: Indicates whether business texting is enabled for the primary number assigned to the queue. This field is
+    #: read-only and cannot be modified through the queue APIs.
+    business_texting_enabled: Optional[bool] = None
     #: Specifies the department information.
     department: Optional[IdAndName] = None
     #: Denotes if the call queue has Customer Assist license.
     has_cx_essentials: Optional[bool] = None
 
-    @staticmethod
-    def exclude_update_or_create() -> dict[str, Any]:
+    def exclude_update_or_create(self) -> dict[str, Any]:
         """
         Exclude dict for update or create calls
         :return: dict
 
         :meta private:
         """
-        base_exclude = HGandCQ.exclude_update_or_create()
+        base_exclude = super().exclude_update_or_create()
         base_exclude.update(
             {
                 'queue_settings': {'overflow': {'is_transfer_number_set': True}},
                 'department': {'name': True},
                 'has_cx_essentials': True,
+                'number_usage_type': True,
             }
         )
         return base_exclude
@@ -463,6 +480,7 @@ class CallQueueApi(ApiChild, base=''):
         department_id: str = None,
         department_name: str = None,
         has_cx_essentials: bool = None,
+        digital_inbox_enabled: bool = None,
         org_id: str = None,
         **params,
     ) -> Generator[CallQueue, None, None]:
@@ -494,6 +512,9 @@ class CallQueueApi(ApiChild, base=''):
         :param has_cx_essentials: Returns only the list of call queues with Customer Assist license when
             `true`, otherwise returns the list of Customer Experience Basic call queues.
         :type has_cx_essentials: bool
+        :param digital_inbox_enabled: Returns only the list of call queues with digital inbox enabled when `true`, or
+            disabled when `false`. This query parameter is only valid when `hasCxEssentials` is `true`.
+        :type digital_inbox_enabled: bool
         :param org_id: Returns the list of call queues in this organization.
         :type org_id: str
         :return: yields :class:`CallQueue` objects
@@ -512,6 +533,8 @@ class CallQueueApi(ApiChild, base=''):
             params['departmentName'] = department_name
         if has_cx_essentials is not None:
             params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        if digital_inbox_enabled is not None:
+            params['digitalInboxEnabled'] = str(digital_inbox_enabled).lower()
         url = self._endpoint()
         # noinspection PyTypeChecker
         return self.session.follow_pagination(url=url, model=CallQueue, params=params)

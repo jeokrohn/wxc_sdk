@@ -1,6 +1,7 @@
 Release history
 ===============
 
+- feat: new attribute CallQueue.business_texting_enabled
 - feat: support Customer Assist supervisor bulk delete
 
 1.37.0
