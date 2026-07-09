@@ -1,15 +1,19 @@
 """
 Tests for OpenAPI specs
 """
+
+# mypy: disable-error-code="import-untyped,no-untyped-def,no-untyped-call,misc,var-annotated,func-returns-value"
+
 import json
 import logging
 import os
 import re
+import tempfile
 from collections import Counter, defaultdict
 from collections.abc import Callable, Generator
 from dataclasses import dataclass
 from functools import reduce
-from typing import ClassVar, Union
+from typing import ClassVar
 from unittest import TestCase
 
 import yaml
@@ -31,9 +35,14 @@ def read_one_spec_from_file(spec: OpenApiSpecInfo) -> OASpec:
     return parsed_spec
 
 
-def descend_into_property(*, spec: OASpec, prop: OASchemaProperty, path: str,
-                          call_back: Callable[[OASchemaProperty, str], bool] = None,
-                          deref: bool = True) -> bool:
+def descend_into_property(
+    *,
+    spec: OASpec,
+    prop: OASchemaProperty,
+    path: str,
+    call_back: Callable[[OASchemaProperty, str], bool],
+    deref: bool = True,
+) -> bool:
     """
     Descend into a property and call callback for each property
     """
@@ -49,8 +58,9 @@ def descend_into_property(*, spec: OASpec, prop: OASchemaProperty, path: str,
         if ref_schema is None:
             raise ValueError(f'Unknown reference {ref}')
         if deref:
-            return descend_into_property(spec=spec, prop=ref_schema, path=f'{path}(ref {ref})', call_back=call_back,
-                                         deref=deref)
+            return descend_into_property(
+                spec=spec, prop=ref_schema, path=f'{path}(ref {ref})', call_back=call_back, deref=deref
+            )
         return False
 
     if prop.ref:
@@ -59,16 +69,18 @@ def descend_into_property(*, spec: OASpec, prop: OASchemaProperty, path: str,
         r = r or descend_into_ref(object_ref)
     if prop.any_of:
         for item in prop.any_of:
-            r = r or descend_into_property(spec=spec, prop=item, path=f'{path}.any_of', call_back=call_back,
-                                           deref=deref)
+            r = r or descend_into_property(
+                spec=spec, prop=item, path=f'{path}.any_of', call_back=call_back, deref=deref
+            )
     if prop.items:
         # this is an array
         assert prop.type == 'array'
         r = r or descend_into_property(spec=spec, prop=prop.items, path=f'{path}[]', call_back=call_back, deref=deref)
     if prop.properties:
         for name, prop_prop in prop.properties.items():
-            r = r or descend_into_property(spec=spec, prop=prop_prop, path=f'{path}.{name}', call_back=call_back,
-                                           deref=deref)
+            r = r or descend_into_property(
+                spec=spec, prop=prop_prop, path=f'{path}.{name}', call_back=call_back, deref=deref
+            )
     return r
 
 
@@ -181,7 +193,7 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
         """
         Generator of all schema properties with api_name and name
         """
-        for spec_info, spec in zip(self.spec_infos, self.parsed_specs):
+        for spec_info, spec in zip(self.spec_infos, self.parsed_specs, strict=True):
             if spec is None:
                 continue
             if spec.components and spec.components.schemas:
@@ -189,7 +201,7 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
                     yield spec_info, spec, name, schema_property
 
     def all_operations(self) -> Generator[tuple[OpenApiSpecInfo, OASpec, str, str, OAOperation], None, None]:
-        for spec_info, spec in zip(self.spec_infos, self.parsed_specs):
+        for spec_info, spec in zip(self.spec_infos, self.parsed_specs, strict=True):
             if spec is None:
                 continue
             for path, method, operation in spec.operations():
@@ -201,7 +213,9 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
         """
         visited_refs = set()
 
-        def yield_and_descend_into_property(spec: OASpec, prop: OASchemaProperty, path: str):
+        def yield_and_descend_into_property(
+            spec_info: OpenApiSpecInfo, spec: OASpec, prop: OASchemaProperty, path: str
+        ):
             while prop.ref and prop.ref not in visited_refs:
                 visited_refs.add(prop.ref)
                 deref_property = spec.get_schema(prop.ref)
@@ -209,22 +223,22 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
             yield spec_info, spec, path, prop
             if prop.properties:
                 for prop_name, prop_prop in prop.properties.items():
-                    yield from yield_and_descend_into_property(spec, prop_prop, f'{path}.{prop_name}')
+                    yield from yield_and_descend_into_property(spec_info, spec, prop_prop, f'{path}.{prop_name}')
             return
 
-        for spec_info, spec in zip(self.spec_infos, self.parsed_specs):
+        for spec_info, spec in zip(self.spec_infos, self.parsed_specs, strict=True):
             if spec is None:
                 continue
             if spec.components and spec.components.schemas:
                 for name, schema_property in spec.components.schemas.items():
-                    yield from yield_and_descend_into_property(spec, schema_property, name)
+                    yield from yield_and_descend_into_property(spec_info, spec, schema_property, name)
             for path, method, operation in spec.operations():
                 if operation.request_body:
                     for content_type, content in operation.request_body.content.items():
                         if content.schema_:
-                            yield from yield_and_descend_into_property(spec,
-                                                                       content.schema_,
-                                                                       f'{path} {method} req: {content_type}')
+                            yield from yield_and_descend_into_property(
+                                spec_info, spec, content.schema_, f'{path} {method} req: {content_type}'
+                            )
                         # if
                     # for
                 # if
@@ -235,10 +249,9 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
                         if response.content:
                             for content_type, content in response.content.items():
                                 if content.schema_:
-                                    yield from yield_and_descend_into_property(spec,
-                                                                               content.schema_,
-                                                                               f'{path} {method} {code} resp:'
-                                                                               f'{content_type}')
+                                    yield from yield_and_descend_into_property(
+                                        spec_info, spec, content.schema_, f'{path} {method} {code} resp:{content_type}'
+                                    )
                                 # if
                             # for
                         # if
@@ -251,8 +264,7 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
         """
         Collect types of components.schemas
         """
-        type_counter = Counter(schema.type
-                               for _, _, _, schema in self.all_schemas())
+        type_counter = Counter(schema.type for _, _, _, schema in self.all_schemas())
         print()
         for type_, count in sorted(type_counter.items(), key=lambda item: item[1], reverse=True):
             print(f'{type_}: {count}')
@@ -274,8 +286,9 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
             return
 
         for api_spec_info, spec, name, schema in self.all_schemas():
-            descend_into_property(spec=spec, prop=schema, path=f'{api_spec_info.rel_spec_path}.{name}',
-                                  call_back=check_none, deref=False)
+            descend_into_property(
+                spec=spec, prop=schema, path=f'{api_spec_info.rel_spec_path}.{name}', call_back=check_none, deref=False
+            )
         if errs:
             print('"None" schemas:')
             print('\n'.join(f'{path}: {prop}' for path, prop in errs))
@@ -284,9 +297,11 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
         """
         Understand schema types that are "string"; they should be enums
         """
-        string_schemas = [(api_spec_info, name, schema)
-                          for api_spec_info, _, name, schema in self.all_schemas()
-                          if schema.type == 'string']
+        string_schemas = [
+            (api_spec_info, name, schema)
+            for api_spec_info, _, name, schema in self.all_schemas()
+            if schema.type == 'string'
+        ]
         print()
         print(f'"string" schemas: {len(string_schemas)}')
         for api_spec_info, name, schema in string_schemas:
@@ -294,9 +309,9 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
             print(f'{api_name=} {name=} {schema=}')
 
         print()
-        string_schemas_not_enum = [(api_spec_info, name, schema)
-                                   for api_spec_info, name, schema in string_schemas
-                                   if schema.enum is None]
+        string_schemas_not_enum = [
+            (api_spec_info, name, schema) for api_spec_info, name, schema in string_schemas if schema.enum is None
+        ]
         print(f'Not enum: {len(string_schemas_not_enum)}')
         for api_spec_info, name, schema in string_schemas:
             api_name = api_spec_info.api_name
@@ -307,9 +322,11 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
         """
         Understand schema types that are "array"
         """
-        array_schemas = [(api_spec_info, name, schema)
-                         for api_spec_info, _, name, schema in self.all_schemas()
-                         if schema.type == 'array']
+        array_schemas = [
+            (api_spec_info, name, schema)
+            for api_spec_info, _, name, schema in self.all_schemas()
+            if schema.type == 'array'
+        ]
         print()
         print(f'"array" schemas: {len(array_schemas)}')
         for api_spec_info, name, schema in array_schemas:
@@ -329,15 +346,16 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
                 print('-' * 130)
 
         for api_spec_info, spec, name, schema in self.all_schemas():
-            descend_into_property(spec=spec, prop=schema, path=f'{api_spec_info.rel_spec_path}.{name}',
-                                  call_back=check_property)
+            descend_into_property(
+                spec=spec, prop=schema, path=f'{api_spec_info.rel_spec_path}.{name}', call_back=check_property
+            )
 
     def test_enum_properties_descriptions(self):
         """
         Enum documentation has been pushed to the description field. Validate description fields
         """
         err = False
-        for api_spec_info, spec, path, schema_property in self.all_schema_properties():
+        for api_spec_info, _spec, path, schema_property in self.all_schema_properties():
             if not schema_property.enum:
                 continue
             if not schema_property.description:
@@ -361,12 +379,15 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
                 if ' *' in enum_description:
                     # enum description should not have anything that smells like an enum value description
                     err = True
-                    print(f'{api_spec_info.api_name} {path} "fishy" enum description: '
-                          f'{enum_details=} {enum_description=}')
+                    print(
+                        f'{api_spec_info.api_name} {path} "fishy" enum description: {enum_details=} {enum_description=}'
+                    )
                 if len(enum_details) != len(schema_property.enum):
                     err = True
-                    print(f'{api_spec_info.api_name} {path} has different number of enum and details: '
-                          f'{enum_details=} {schema_property.enum=}')
+                    print(
+                        f'{api_spec_info.api_name} {path} has different number of enum and details: '
+                        f'{enum_details=} {schema_property.enum=}'
+                    )
                     continue
                 if any(not d for _, d in enum_details):
                     err = True
@@ -386,7 +407,7 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
             errors.append((si, name, schema))
             print(f'{si.api_name} {name} {msg} {si.rel_spec_path} {schema}')
 
-        for api_spec_info, spec, name, schema in self.all_schemas():
+        for api_spec_info, _spec, name, schema in self.all_schemas():
             if schema.type == 'array':
                 if not schema.items:
                     errors.append((api_spec_info, name, schema))
@@ -435,12 +456,12 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
             previous_spec_info = api_spec_info
             for code, response in operation.responses.items():
                 if response.content:
-                    for content_type, content in response.content.items():
+                    for _content_type, content in response.content.items():
                         ct_path = f'{api_spec_info.rel_spec_path}: {path} {method.upper()}->{code}'
                         if content.schema_:
-                            err_in_spec = err_in_spec or descend_into_property(spec=parsed_spec,
-                                                                               prop=content.schema_, path=ct_path,
-                                                                               call_back=check_empty_property)
+                            err_in_spec = err_in_spec or descend_into_property(
+                                spec=parsed_spec, prop=content.schema_, path=ct_path, call_back=check_empty_property
+                            )
                         else:
                             err_str = f'no schema, {content=}'
                             print(f'{ct_path}: {err_str}')
@@ -459,22 +480,30 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
         """
         Understand types of properties in object schemas
         """
-        object_schemas = [(api_spec_info, name, schema)
-                          for api_spec_info, _, name, schema in self.all_schemas()
-                          if schema.type == 'object']
+        object_schemas = [
+            (api_spec_info, name, schema)
+            for api_spec_info, _, name, schema in self.all_schemas()
+            if schema.type == 'object'
+        ]
         # group all properties by type
-        properties_by_type = reduce(lambda acc, x: acc[x[0]].append(x[1:]) or acc,
-                                    ((prop.type, api_spec_info, schema_name, schema, prop_name, prop)
-                                     for api_spec_info, schema_name, schema in object_schemas
-                                     for prop_name, prop in schema.properties.items()),
-                                    defaultdict(list))
-        properties_by_type: dict[
-            Union[str, None], list[tuple[OpenApiSpecInfo, str, OASchemaProperty, str, OASchemaProperty]]]
+        properties_by_type = reduce(
+            lambda acc, x: acc[x[0]].append(x[1:]) or acc,  # type: ignore[arg-type]
+            (
+                (prop.type, api_spec_info, schema_name, schema, prop_name, prop)
+                for api_spec_info, schema_name, schema in object_schemas
+                for prop_name, prop in schema.properties.items()
+            ),
+            defaultdict(list),
+        )
+        properties_by_type: dict[  # type: ignore[no-redef]
+            str | None,
+            list[tuple[OpenApiSpecInfo, str, OASchemaProperty, str, OASchemaProperty]],
+        ]
         for type_ in sorted(properties_by_type, key=lambda key: len(properties_by_type[key]), reverse=True):
             print()
             print(f'{type_}: {len(properties_by_type[type_])}')
             if type_ == 'array':
-                for api_spec_info, schema_name, schema, prop_name, prop in properties_by_type[type_]:
+                for api_spec_info, schema_name, _schema, prop_name, prop in properties_by_type[type_]:
                     items = prop.items
                     api_name = api_spec_info.api_name
                     # items can
@@ -489,7 +518,7 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
                         else:
                             print(f'  {api_name=} {schema_name=} {prop_name} array of {items}')
             elif type_ is None:
-                for api_spec_info, schema_name, schema, prop_name, prop in properties_by_type[type_]:
+                for api_spec_info, schema_name, _schema, prop_name, prop in properties_by_type[type_]:
                     api_name = api_spec_info.api_name
                     # property could
                     # - be a reference to another schema
@@ -499,7 +528,7 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
                         continue
                     print(f'  {api_name=} {schema_name=} {prop_name} {prop}')
             elif type_ == 'object':
-                for api_spec_info, schema_name, schema, prop_name, prop in properties_by_type[type_]:
+                for api_spec_info, schema_name, _schema, prop_name, prop in properties_by_type[type_]:
                     api_name = api_spec_info.api_name
                     if prop.properties:
                         continue
@@ -515,8 +544,9 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
         """
         Understand operation parameters
         """
-        parameters_in: dict[
-            str, list[tuple[OAParameter, OpenApiSpecInfo, OASpec, str, str, OAOperation]]] = defaultdict(list)
+        parameters_in: dict[str, list[tuple[OAParameter, OpenApiSpecInfo, OASpec, str, str, OAOperation]]] = (
+            defaultdict(list)
+        )
         for api_spec_info, parsed_spec, path, method, operation in self.all_operations():
             for param in operation.parameters:
                 parameters_in[param.in_].append((param, api_spec_info, parsed_spec, path, method, operation))
@@ -542,10 +572,10 @@ class TestParsedOpenApiSpecs(WithParsedOpenApiSpecs):
         Understand operations request body content
         """
         err = False
-        for api_spec_info, parsed_spec, path, method, operation in self.all_operations():
+        for api_spec_info, _parsed_spec, path, method, operation in self.all_operations():
             if not operation.request_body:
                 continue
-            for content_type, content in operation.request_body.content.items():
+            for _content_type, content in operation.request_body.content.items():
                 content_schema = content.schema_
                 self.assertIsNotNone(content_schema, 'Missing schema')
                 # schema has a ref or a type
@@ -584,6 +614,160 @@ class TestCodeGenerator(TestCase):
         super().setUpClass()
         logging.basicConfig(level=logging.DEBUG)
         logging.getLogger('open_api').setLevel(logging.DEBUG)
+
+    def test_response_component_ref_sets_return_type(self):
+        """
+        Ensure response component references are resolved when endpoint return types are generated.
+
+        :return: None.
+        """
+        spec_data = {
+            'openapi': '3.0.0',
+            'info': {
+                'title': 'Response Ref Test',
+                'version': 'v1',
+                'description': 'Small spec used to verify response ref code generation.',
+            },
+            'servers': [{'url': 'https://example.test'}],
+            'paths': {
+                '/things/current': {
+                    'get': {
+                        'summary': 'Get current thing',
+                        'operationId': 'getThing',
+                        'description': 'Return the current thing.',
+                        'responses': {
+                            '200': {
+                                '$ref': '#/components/responses/ThingResponse',
+                            },
+                        },
+                    },
+                },
+            },
+            'components': {
+                'schemas': {
+                    'Thing': {
+                        'type': 'object',
+                        'description': 'A generated response model.',
+                        'properties': {
+                            'enabled': {
+                                'type': 'boolean',
+                                'description': 'Whether the thing is enabled.',
+                            },
+                        },
+                    },
+                },
+                'responses': {
+                    'ThingResponse': {
+                        'description': 'OK',
+                        'content': {
+                            'application/json': {
+                                'schema': {
+                                    '$ref': '#/components/schemas/Thing',
+                                },
+                                'example': {'enabled': True},
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            spec_path = os.path.join(temp_dir, 'spec.json')
+            with open(spec_path, 'w') as spec_file:
+                json.dump(spec_data, spec_file)
+
+            code_gen = OACodeGenerator()
+            code_gen.add_open_api_spec(
+                OpenApiSpecInfo(api_name='response-ref-test', base_path=temp_dir, spec_path=spec_path, version='v1')
+            )
+            code_gen.cleanup()
+            endpoint = next(endpoint for _, endpoint in code_gen.all_endpoints() if endpoint.name == 'get_thing')
+            source = code_gen.source(with_example=False)
+
+        self.assertEqual('Thing', endpoint.result)
+        self.assertEqual('Thing', endpoint.result_referenced_class)
+        self.assertIn('def get_thing(self) -> bool:', source)
+        self.assertIn("r = data['enabled']", source)
+
+    def test_request_body_component_ref_sets_body_parameters(self):
+        """
+        Ensure request body component references are resolved when body parameters are generated.
+
+        :return: None.
+        """
+        spec_data = {
+            'openapi': '3.0.0',
+            'info': {
+                'title': 'Request Body Ref Test',
+                'version': 'v1',
+                'description': 'Small spec used to verify request body ref code generation.',
+            },
+            'servers': [{'url': 'https://example.test'}],
+            'paths': {
+                '/things/current': {
+                    'put': {
+                        'summary': 'Update current thing',
+                        'operationId': 'updateThing',
+                        'description': 'Update the current thing.',
+                        'requestBody': {
+                            '$ref': '#/components/requestBodies/ThingRequest',
+                        },
+                        'responses': {
+                            '204': {
+                                'description': 'No Content',
+                            },
+                        },
+                    },
+                },
+            },
+            'components': {
+                'schemas': {
+                    'ThingSettings': {
+                        'type': 'object',
+                        'description': 'Settings for the generated request body.',
+                        'required': ['enabled'],
+                        'properties': {
+                            'enabled': {
+                                'type': 'boolean',
+                                'description': 'Whether the thing is enabled.',
+                            },
+                        },
+                    },
+                },
+                'requestBodies': {
+                    'ThingRequest': {
+                        'required': True,
+                        'content': {
+                            'application/json': {
+                                'schema': {
+                                    '$ref': '#/components/schemas/ThingSettings',
+                                },
+                                'example': {'enabled': True},
+                            },
+                        },
+                    },
+                },
+            },
+        }
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            spec_path = os.path.join(temp_dir, 'spec.json')
+            with open(spec_path, 'w') as spec_file:
+                json.dump(spec_data, spec_file)
+
+            code_gen = OACodeGenerator()
+            code_gen.add_open_api_spec(
+                OpenApiSpecInfo(api_name='request-body-ref-test', base_path=temp_dir, spec_path=spec_path, version='v1')
+            )
+            code_gen.cleanup()
+            endpoint = next(endpoint for _, endpoint in code_gen.all_endpoints() if endpoint.name == 'update_thing')
+            source = code_gen.source(with_example=False)
+
+        self.assertEqual(['enabled'], [param.name for param in endpoint.body_parameter])
+        self.assertFalse(endpoint.body_parameter[0].optional)
+        self.assertIn('def update_thing(self, enabled: bool) -> None:', source)
+        self.assertIn("body['enabled'] = enabled", source)
 
     def test_read_spec_and_create_source(self):
         code_gen = OACodeGenerator()

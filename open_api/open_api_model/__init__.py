@@ -5,7 +5,7 @@ Pydantic models to deserialize OpenAPI specs
 import logging
 import re
 from collections.abc import Generator
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 from pydantic_core.core_schema import ValidationInfo
@@ -88,7 +88,7 @@ class OASchemaRef(OABaseModel):
 
 class OASchemaProperty(OABaseModel):
     title: Optional[str] = None
-    type: Optional[Union[str, OASchemaPropertyItemsRef]] = None
+    type: Optional[str | OASchemaPropertyItemsRef] = None
     deprecated: bool = Field(default=False)
     # if no type, then this is a reference to another schema
     ref: Optional[str] = Field(alias='$ref', default=None)
@@ -330,7 +330,7 @@ class NameAndDescription(OABaseModel):
     description: Optional[str] = None
 
 
-Tag = Union[str, NameAndDescription]
+Tag = str | NameAndDescription
 
 
 class OASpec(OABaseModel):
@@ -364,11 +364,15 @@ class OASpec(OABaseModel):
         schema_ref = ref_match and ref_match.group(1) or schema_ref
         return self.components.schemas[schema_ref]
 
-    def deref(self, ref: str) -> Union[OAResponse, OASchemaProperty, OAParameter, None]:
+    def deref(self, ref: str) -> OARequestBody | OAResponse | OASchemaProperty | OAParameter | None:
         """
-        Dereference a ref like '#/components/responses/BadRequestError'
-        :param ref:
-        :return:
+        Dereference a component reference.
+
+        :param ref: OpenAPI component reference such as ``#/components/responses/BadRequestError``.
+        :type ref: str
+        :return: Referenced component object, or ``None`` when the reference does not target ``#/components``.
+        :rtype: OARequestBody | OAResponse | OASchemaProperty | OAParameter | None
+        :raises ValueError: If the component type is not supported by the generator.
         """
         ref_match = re.match(r'^#/components/(.+?)/(.+)$', ref)
         if not ref_match:
@@ -381,6 +385,8 @@ class OASpec(OABaseModel):
             return self.components.responses[component_name]  # type: ignore[index]
         elif component_type == 'parameters':
             return self.components.parameters[component_name]  # type: ignore[index]
+        elif component_type == 'requestBodies':
+            return self.components.request_bodies[component_name]  # type: ignore[index]
         else:
             raise ValueError(f'Unknown component type: {component_type}')
 

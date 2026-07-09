@@ -15,7 +15,15 @@ import dateutil.parser
 from apib.class_registry import PythonClassRegistry
 from apib.python_class import Attribute, Endpoint, Parameter, PythonAPI, PythonClass
 from apib.tools import sanitize_class_name, snake_case
-from open_api.open_api_model import OAContent, OAOperation, OAParameter, OASchemaProperty, OASpec
+from open_api.open_api_model import (
+    OAContent,
+    OAOperation,
+    OAParameter,
+    OARequestBody,
+    OAResponse,
+    OASchemaProperty,
+    OASpec,
+)
 from open_api.open_api_sources import OpenApiSpecInfo
 
 log = logging.getLogger(__name__)
@@ -636,12 +644,40 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             registry=self,
         )
 
+    def _dereference_request_body(self, spec: OASpec, request_body: Optional[OARequestBody]) -> Optional[OARequestBody]:
+        """
+        Resolve a component request body reference before request body code generation.
+
+        :param spec: OpenAPI specification that owns the referenced request body component.
+        :type spec: OASpec
+        :param request_body: Operation request body selected for body parameter generation.
+        :type request_body: Optional[OARequestBody]
+        :return: Concrete request body object, or ``None`` when the operation has no request body.
+        :rtype: Optional[OARequestBody]
+        :raises ValueError: If the reference does not resolve to a request body component.
+        """
+        if request_body is None or not request_body.ref:
+            return request_body
+        dereferenced = spec.deref(request_body.ref)
+        if not isinstance(dereferenced, OARequestBody):
+            raise ValueError(f'Request body reference {request_body.ref} did not resolve to a request body')
+        return dereferenced
+
     def _raw_body_properties(self, spec: OASpec, operation: OAOperation) -> Optional[dict[str, 'OASchemaProperty']]:
         """
         Return the raw OAS property dict for the request body schema, or None if there is no body.
+
         Used to inspect nested schema structures without going through Parameter conversion.
+
+        :param spec: OpenAPI specification that owns the operation and any request body references.
+        :type spec: OASpec
+        :param operation: Operation whose request body should be inspected.
+        :type operation: OAOperation
+        :return: Raw schema properties from the request body, or ``None`` if no body schema is available.
+        :rtype: Optional[dict[str, OASchemaProperty]]
+        :raises ValueError: If the operation's request body reference does not resolve to a request body.
         """
-        if not (req_body := operation.request_body):
+        if not (req_body := self._dereference_request_body(spec, operation.request_body)):
             return None
         if not (content := req_body.content):
             return None
@@ -656,9 +692,18 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
 
     def _body_parameter_from_operation(self, spec: OASpec, operation: OAOperation) -> list[Parameter]:
         """
-        Create parameter list from operation
+        Create request body parameters from an OpenAPI operation.
+
+        :param spec: OpenAPI specification that owns the operation and any referenced request body schemas.
+        :type spec: OASpec
+        :param operation: Operation whose request body should be converted to SDK method parameters.
+        :type operation: OAOperation
+        :return: SDK method parameters derived from the operation request body.
+        :rtype: list[Parameter]
+        :raises ValueError: If the request body has multiple content types, lacks a schema, or references an unknown
+            schema or request body component.
         """
-        if not (req_body := operation.request_body):
+        if not (req_body := self._dereference_request_body(spec, operation.request_body)):
             return []
         if not (content := req_body.content):
             return []
@@ -688,6 +733,25 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             for prop_name, prop in param_properties.items()
         ]
         return parameters
+
+    def _dereference_response(self, spec: OASpec, response: Optional[OAResponse]) -> Optional[OAResponse]:
+        """
+        Resolve a component response reference before endpoint return type generation.
+
+        :param spec: OpenAPI specification that owns the referenced response component.
+        :type spec: OASpec
+        :param response: Operation response selected for return type generation.
+        :type response: Optional[OAResponse]
+        :return: Concrete response object, or ``None`` when no response was selected.
+        :rtype: Optional[OAResponse]
+        :raises ValueError: If the reference does not resolve to a response component.
+        """
+        if response is None or not response.ref:
+            return response
+        dereferenced = spec.deref(response.ref)
+        if not isinstance(dereferenced, OAResponse):
+            raise ValueError(f'Response reference {response.ref} did not resolve to a response')
+        return dereferenced
 
     def _endpoint_from_operation(self, spec: OASpec, operation: OAOperation, host: str, path: str, method: str):
         """
@@ -793,8 +857,9 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         response_code, response = next(
             ((rc, content) for rc, content in operation.responses.items() if rc.startswith('2')), (None, None)
         )
+        response = self._dereference_response(spec, response)
 
-        response_ct, response_content = next(iter(response.content.items()), (None, None))
+        response_ct, response_content = next(iter(response.content.items()), (None, None)) if response else (None, None)
         if not (response_ct and response_content):
             if response_code == '200':
                 log.warning(f'No content in 200 response for {endpoint_name}')
