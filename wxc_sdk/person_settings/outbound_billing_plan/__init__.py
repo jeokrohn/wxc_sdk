@@ -16,7 +16,7 @@ class OutboundBillingPlanApi(PersonSettingsApiChild):
         """
         Retrieve an entity's Outbound Billing Plan
 
-        <div><Callout type="warning">Not supported for Webex for Government (FedRAMP).</Callout></div>
+        Not supported for Webex for Government (FedRAMP).
 
         Retrieve the Cisco Calling Plan outbound billing plan setting for an entity.
 
@@ -48,7 +48,7 @@ class OutboundBillingPlanApi(PersonSettingsApiChild):
         """
         Modify a Person's Outbound Billing Plan
 
-        <div><Callout type="warning">Not supported for Webex for Government (FedRAMP).</Callout></div>
+        Not supported for Webex for Government (FedRAMP).
 
         Modify the Cisco Calling Plan outbound billing plan setting for an entity.
 
