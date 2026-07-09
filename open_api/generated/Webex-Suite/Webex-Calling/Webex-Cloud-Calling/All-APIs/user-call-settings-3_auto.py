@@ -395,6 +395,72 @@ class UserCallSettings33Api(ApiChild, base='telephony/config/people'):
         url = self.ep(f'{person_id}/features/hotDesking/members')
         super().put(url, params=params, json=body)
 
+    def get_person_outbound_billing_plan(self, person_id: str, org_id: str = None) -> bool:
+        """
+        Retrieve a Person's Outbound Billing Plan
+
+        <div><Callout type="warning">Not supported for Webex for Government (FedRAMP).</Callout></div>
+
+        Retrieve the Cisco Calling Plan outbound billing plan setting for a person.
+
+        Cisco Calling Plan outbound billing identifies whether outbound calls for the person are billed through Cisco
+        Calling Plan.
+
+        The response returns `enabled` as `true` when Cisco Calling Plan outbound billing is enabled for the person.
+        Otherwise, the response returns `enabled` as `false`.
+
+        Retrieving a person's outbound billing plan requires a full, user, read-only administrator, or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization,
+            such as partners, may use this parameter. If not specified, the organization from the OAuth token is used.
+        :type org_id: str
+        :rtype: bool
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{person_id}/outboundBillingPlan')
+        data = super().get(url, params=params)
+        r = data['enabled']
+        return r
+
+    def update_person_outbound_billing_plan(self, person_id: str, enabled: bool, org_id: str = None) -> None:
+        """
+        Modify a Person's Outbound Billing Plan
+
+        <div><Callout type="warning">Not supported for Webex for Government (FedRAMP).</Callout></div>
+
+        Modify the Cisco Calling Plan outbound billing plan setting for a person.
+
+        Cisco Calling Plan outbound billing identifies whether outbound calls for the person are billed through Cisco
+        Calling Plan.
+
+        Set `enabled` to `true` to enable Cisco Calling Plan outbound billing. Setting `enabled` to `true` is supported
+        only for a person in a Cisco Calling Plan location. Set `enabled` to `false` to disable it.
+
+        Updating a person's outbound billing plan requires a full, user, or location administrator auth token with a
+        scope of `spark-admin:telephony_config_write`.
+
+        :param person_id: Unique identifier for the person.
+        :type person_id: str
+        :param enabled: Set to `true` when Cisco Calling Plan outbound billing is enabled for the person.
+        :type enabled: bool
+        :param org_id: ID of the organization in which the person resides. Only admin users of another organization,
+            such as partners, may use this parameter. If not specified, the organization from the OAuth token is used.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        body['enabled'] = enabled
+        url = self.ep(f'{person_id}/outboundBillingPlan')
+        super().put(url, params=params, json=body)
+
     def get_person_calling_services(self, person_id: str, org_id: str = None) -> builtins.list[str]:
         """
         List Enabled Calling Services for a Person

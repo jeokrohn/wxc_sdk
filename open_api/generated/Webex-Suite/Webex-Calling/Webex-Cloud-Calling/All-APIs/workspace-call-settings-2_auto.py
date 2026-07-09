@@ -1719,6 +1719,74 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         url = self.ep(f'{workspace_id}/numbers')
         super().put(url, params=params, json=body)
 
+    def get_workspace_outbound_billing_plan(self, workspace_id: str, org_id: str = None) -> bool:
+        """
+        Retrieve a Workspace's Outbound Billing Plan
+
+        <div><Callout type="warning">Not supported for Webex for Government (FedRAMP).</Callout></div>
+
+        Retrieve the Cisco Calling Plan outbound billing plan setting for a workspace.
+
+        Cisco Calling Plan outbound billing identifies whether outbound calls for the workspace are billed through
+        Cisco Calling Plan.
+
+        The response returns `enabled` as `true` when Cisco Calling Plan outbound billing is enabled for the workspace.
+        Otherwise, the response returns `enabled` as `false`.
+
+        Retrieving a workspace's outbound billing plan requires a full, device, read-only administrator, or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param workspace_id: Unique identifier for the workspace.
+        :type workspace_id: str
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization, such as partners, may use this parameter because the default is the same organization as the
+            token used to access the API.
+        :type org_id: str
+        :rtype: bool
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{workspace_id}/outboundBillingPlan')
+        data = super().get(url, params=params)
+        r = data['enabled']
+        return r
+
+    def update_workspace_outbound_billing_plan(self, workspace_id: str, enabled: bool, org_id: str = None) -> None:
+        """
+        Modify a Workspace's Outbound Billing Plan
+
+        <div><Callout type="warning">Not supported for Webex for Government (FedRAMP).</Callout></div>
+
+        Modify the Cisco Calling Plan outbound billing plan setting for a workspace.
+
+        Cisco Calling Plan outbound billing identifies whether outbound calls for the workspace are billed through
+        Cisco Calling Plan.
+
+        Set `enabled` to `true` to enable Cisco Calling Plan outbound billing. Setting `enabled` to `true` is supported
+        only for a workspace in a Cisco Calling Plan location. Set `enabled` to `false` to disable it.
+
+        Updating a workspace's outbound billing plan requires a full, device, or location administrator auth token with
+        a scope of `spark-admin:telephony_config_write`.
+
+        :param workspace_id: Unique identifier for the workspace.
+        :type workspace_id: str
+        :param enabled: Set to `true` when Cisco Calling Plan outbound billing is enabled for the workspace.
+        :type enabled: bool
+        :param org_id: ID of the organization within which the workspace resides. Only admin users of another
+            organization, such as partners, may use this parameter because the default is the same organization as the
+            token used to access the API.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        body['enabled'] = enabled
+        url = self.ep(f'{workspace_id}/outboundBillingPlan')
+        super().put(url, params=params, json=body)
+
     def delete_all_digit_patterns_for_a_workspace(self, workspace_id: str, org_id: str = None) -> None:
         """
         Delete all digit patterns for a Workspace.

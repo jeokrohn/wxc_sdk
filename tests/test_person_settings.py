@@ -5,12 +5,13 @@ import os.path
 import random
 import uuid
 from collections import defaultdict
+from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from functools import reduce
 from itertools import chain
 from operator import attrgetter
-from typing import Any, Callable
+from typing import Any
 from unittest import skip
 
 from tests.base import TestCaseWithUsers, async_test, gather
@@ -70,7 +71,7 @@ class TestRead(TestCaseWithUsers):
         read call recording settings for all users
         """
         results = self.execute_read_test(self.api.person_settings.call_recording.read)
-        for user, result in zip(self.users, results):
+        for user, result in zip(self.users, results, strict=False):
             if isinstance(result, Exception):
                 continue
             result: CallRecordingSetting
@@ -88,7 +89,7 @@ class TestRead(TestCaseWithUsers):
                     f'{user.display_name} has call recording access settings: {result.call_recording_access_settings}'
                 )
 
-        for u, e in ((u, r) for u, r in zip(self.users, results) if isinstance(r, Exception)):
+        for u, e in ((u, r) for u, r in zip(self.users, results, strict=True) if isinstance(r, Exception)):
             u: Person
             print(f'{u.display_name}: {e}')
         self.assertFalse(any(isinstance(r, Exception) for r in results))
@@ -110,7 +111,7 @@ class TestRead(TestCaseWithUsers):
         for e in (r for r in results if isinstance(r, Exception)):
             print(f'{e}')
         dn_len = max(len(user.display_name) for user in self.users)
-        for user, pa_setting in zip(self.users, results):
+        for user, pa_setting in zip(self.users, results, strict=True):
             pa_setting: PreferredAnswerResponse
             print(f'{user.display_name:{dn_len}}', end='')
             if isinstance(pa_setting, Exception):
@@ -135,13 +136,27 @@ class TestRead(TestCaseWithUsers):
         for e in (r for r in results if isinstance(r, Exception)):
             print(f'{e}')
         dn_len = max(len(user.display_name) for user in self.users)
-        for user, pa_setting in zip(self.users, results):
+        for user, pa_setting in zip(self.users, results, strict=True):
             pa_setting: PersonSettings
             print(f'{user.display_name:{dn_len}} - ', end='')
             if isinstance(pa_setting, Exception):
                 print(f'{pa_setting}')
             else:
                 print(f'{pa_setting}')
+        self.assertFalse(any(isinstance(r, Exception) for r in results))
+
+    def test_outbound_billing_plan(self):
+        results = self.execute_read_test(self.api.person_settings.outbound_billing_plan.read)
+        for e in (r for r in results if isinstance(r, Exception)):
+            print(f'{e}')
+        dn_len = max(len(user.display_name) for user in self.users)
+        for user, obp_setting in zip(self.users, results, strict=True):
+            obp_setting: bool
+            print(f'{user.display_name:{dn_len}} - ', end='')
+            if isinstance(obp_setting, Exception):
+                print(f'{obp_setting}')
+            else:
+                print(f'outbound billing plan enabled: {obp_setting}')
         self.assertFalse(any(isinstance(r, Exception) for r in results))
 
 
@@ -304,7 +319,7 @@ class TestConfigure(TestCaseWithUsers):
 
         # pic a user where an alternative endpoint exists
         pa: PreferredAnswerResponse
-        candidates = [(user, pa) for user, pa in zip(self.users, pa_settings) if pa.endpoints]
+        candidates = [(user, pa) for user, pa in zip(self.users, pa_settings, strict=True) if pa.endpoints]
         target_user, pa_setting = random.choice(candidates)
         target_user: Person
         pa_setting: PreferredAnswerResponse
@@ -355,7 +370,7 @@ class TestConfigure(TestCaseWithUsers):
 
         # verify that 'APPLICATION' entry in preferred answer endpoints correlates with desktop app enablement
         err = False
-        for user, app_setting, preferred_answer in zip(self.users, apps, pa):
+        for user, app_setting, preferred_answer in zip(self.users, apps, pa, strict=True):
             user: Person
             app_setting: AppServicesSettings
             pa: PreferredAnswerResponse
@@ -447,7 +462,7 @@ class TestConfigure(TestCaseWithUsers):
             *[self.async_api.person_settings.call_recording.configure(user.person_id, setting) for user in self.users]
         )
         err = None
-        for user, result in zip(self.users, results):
+        for user, result in zip(self.users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
                 print(f'Failed to enable call recording for {user.display_name}: {result}')
@@ -464,7 +479,7 @@ class TestConfigure(TestCaseWithUsers):
             *[self.async_api.person_settings.call_recording.configure(user.person_id, setting) for user in self.users]
         )
         err = None
-        for user, result in zip(self.users, results):
+        for user, result in zip(self.users, results, strict=True):
             if isinstance(result, Exception):
                 err = err or result
                 print(f'Failed to disable call recording for {user.display_name}: {result}')

@@ -20,6 +20,7 @@ from ..person_settings.ecbn import ECBNApi
 from ..person_settings.forwarding import PersonForwardingApi
 from ..person_settings.moh import MusicOnHoldApi
 from ..person_settings.monitoring import MonitoringApi
+from ..person_settings.outbound_billing_plan import OutboundBillingPlanApi
 from ..person_settings.permissions_in import IncomingPermissionsApi
 from ..person_settings.permissions_out import OutgoingPermissionsApi
 from ..person_settings.priority_alert import PriorityAlertApi
@@ -63,6 +64,7 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
     monitoring: MonitoringApi
     music_on_hold: MusicOnHoldApi
     numbers: WorkspaceNumbersApi
+    outbound_billing_plan: OutboundBillingPlanApi
     permissions_in: IncomingPermissionsApi
     permissions_out: OutgoingPermissionsApi
     priority_alert: PriorityAlertApi
@@ -92,6 +94,7 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
         self.monitoring = MonitoringApi(session=session, selector=ApiSelector.workspace)
         self.music_on_hold = MusicOnHoldApi(session=session, selector=ApiSelector.workspace)
         self.numbers = WorkspaceNumbersApi(session=session)
+        self.outbound_billing_plan = OutboundBillingPlanApi(session=session, selector=ApiSelector.workspace)
         self.permissions_in = IncomingPermissionsApi(session=session, selector=ApiSelector.workspace)
         self.permissions_out = OutgoingPermissionsApi(session=session, selector=ApiSelector.workspace)
         self.priority_alert = PriorityAlertApi(session=session, selector=ApiSelector.workspace)

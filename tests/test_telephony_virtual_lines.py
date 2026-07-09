@@ -37,10 +37,13 @@ class VirtualLineTest(TestWithLocations):
         """
         Create a virtual line
         """
-        return await api.telephony.virtual_lines.create(first_name='VL', last_name=extension,
-                                                        display_name=f"VL {extension}-{location.name}",
-                                                        extension=extension,
-                                                        location_id=location.location_id)
+        return await api.telephony.virtual_lines.create(
+            first_name='VL',
+            last_name=extension,
+            display_name=f'VL {extension}-{location.name}',
+            extension=extension,
+            location_id=location.location_id,
+        )
 
     @asynccontextmanager
     async def assert_virtual_lines(self, min_count: int, min_create: int = 0, delete_after_test: bool = True):
@@ -61,29 +64,31 @@ class VirtualLineTest(TestWithLocations):
             # get extensions in location
             extensions = await as_available_extensions_gen(api=self.async_api, location_id=location.location_id)
             # create virtual lines
-            new_ids = await asyncio.gather(*[self.create_test_vl(api=self.async_api,
-                                                                 location=location,
-                                                                 extension=next(extensions))
-                                             for _ in range(virtual_lines_per_location)])
+            new_ids = await asyncio.gather(
+                *[
+                    self.create_test_vl(api=self.async_api, location=location, extension=next(extensions))
+                    for _ in range(virtual_lines_per_location)
+                ]
+            )
             return new_ids
 
         if (len(vl_list) < min_count) or min_create:
             virtual_lines_per_location = ceil((min_count - len(vl_list)) / len(locations))
             virtual_lines_per_location = max(virtual_lines_per_location, min_create)
             with self.no_log():
-                new_vl_ids = chain.from_iterable(await asyncio.gather(*[create_virtual_lines(loc)
-                                                                        for loc in locations]))
+                new_vl_ids = chain.from_iterable(
+                    await asyncio.gather(*[create_virtual_lines(loc) for loc in locations])
+                )
         else:
             new_vl_ids = None
         try:
             yield None
         finally:
-            if not new_vl_ids or not delete_after_test:
-                return
-            # delete all virtual lines we created temporarily
-            with self.no_log():
-                await asyncio.gather(*[as_delete_vl(api=self.async_api, vl_id=vl_id)
-                                       for vl_id in new_vl_ids])
+            if new_vl_ids and delete_after_test:
+                # delete all virtual lines we created temporarily
+                with self.no_log():
+                    await asyncio.gather(*[as_delete_vl(api=self.async_api, vl_id=vl_id) for vl_id in new_vl_ids])
+        return
 
 
 async def create_virtual_lines(api: AsWebexSimpleApi, location_id: str, vl_count: int = 1) -> list[str]:
@@ -91,12 +96,12 @@ async def create_virtual_lines(api: AsWebexSimpleApi, location_id: str, vl_count
 
     # create virtual lines
     async def create_vl(extension: str):
-        r = await api.telephony.virtual_lines.create(first_name='VL', last_name=extension,
-                                                     location_id=location_id, extension=extension)
+        r = await api.telephony.virtual_lines.create(
+            first_name='VL', last_name=extension, location_id=location_id, extension=extension
+        )
         return r
 
-    result = await asyncio.gather(*[create_vl(extension=next(extensions))
-                                    for _ in range(vl_count)])
+    result = await asyncio.gather(*[create_vl(extension=next(extensions)) for _ in range(vl_count)])
     return result
 
 
@@ -137,7 +142,6 @@ async def as_delete_vl(api: AsWebexSimpleApi, vl_id: str):
 
 
 class TestVirtualLines(VirtualLineTest):
-
     def test_list(self):
         virtual_lines = list(self.api.telephony.virtual_lines.list())
         if not virtual_lines:
@@ -170,10 +174,11 @@ class TestVirtualLines(VirtualLineTest):
         if not virtual_lines:
             self.skipTest('no virtual lines')
 
-        details = await asyncio.gather(*[api.details(virtual_line_id=vl.id) for vl in virtual_lines],
-                                       return_exceptions=True)
+        details = await asyncio.gather(
+            *[api.details(virtual_line_id=vl.id) for vl in virtual_lines], return_exceptions=True
+        )
         err = None
-        for vl, detail in zip(virtual_lines, details):
+        for vl, detail in zip(virtual_lines, details, strict=False):
             if isinstance(detail, Exception):
                 err = err or detail
                 print(f'Failed to get details for {vl}: {detail}')
@@ -187,10 +192,11 @@ class TestVirtualLines(VirtualLineTest):
         if not virtual_lines:
             self.skipTest('no virtual lines')
 
-        numbers = await asyncio.gather(*[api.get_phone_number(virtual_line_id=vl.id) for vl in virtual_lines],
-                                       return_exceptions=True)
+        numbers = await asyncio.gather(
+            *[api.get_phone_number(virtual_line_id=vl.id) for vl in virtual_lines], return_exceptions=True
+        )
         err = None
-        for vl, number in zip(virtual_lines, numbers):
+        for vl, number in zip(virtual_lines, numbers, strict=False):
             if isinstance(number, Exception):
                 err = err or number
                 print(f'Failed to get numbers for {vl}: {number}')
@@ -207,13 +213,15 @@ class TestVirtualLines(VirtualLineTest):
         if not virtual_lines:
             self.skipTest('no virtual lines')
         assigned_devices_list = await asyncio.gather(
-            *[api.assigned_devices(virtual_line_id=vl.id) for vl in virtual_lines],
-            return_exceptions=True)
+            *[api.assigned_devices(virtual_line_id=vl.id) for vl in virtual_lines], return_exceptions=True
+        )
         err = None
 
         def vl_str(vl: VirtualLine) -> str:
-            return (f'{vl.first_name=} {vl.last_name=} {vl.custom_external_caller_id_name=} {vl.location.name=} '
-                    f'{vl.number.esn=} {vl.number.external=}')
+            return (
+                f'{vl.first_name=} {vl.last_name=} {vl.custom_external_caller_id_name=} {vl.location.name=} '
+                f'{vl.number.esn=} {vl.number.external=}'
+            )
 
         def device_str(device: TelephonyDevice) -> str:
             r = f'{device.model}'
@@ -224,7 +232,7 @@ class TestVirtualLines(VirtualLineTest):
             return r
 
         owner_err = False
-        for vl, assigned_devices in zip(virtual_lines, assigned_devices_list):
+        for vl, assigned_devices in zip(virtual_lines, assigned_devices_list, strict=False):
             vl: VirtualLine
             assigned_devices: VirtualLineDevices
             if isinstance(assigned_devices, Exception):
@@ -242,7 +250,7 @@ class TestVirtualLines(VirtualLineTest):
                             details = self.api.devices.details(device_id=device.device_id)
                         rest_error: RestError = exc.exception
                         self.assertEqual(404, rest_error.response.status_code)
-                        print('    Device doesn\'t exist')
+                        print("    Device doesn't exist")
                     except AssertionError as ae:
                         print(f'  Assertion error: {ae}')
                         err = err or ae
@@ -258,10 +266,10 @@ class TestVirtualLines(VirtualLineTest):
         if not virtual_lines:
             self.skipTest('no virtual lines')
         dect_networks_list = await asyncio.gather(
-            *[api.dect_networks(virtual_line_id=vl.id) for vl in virtual_lines],
-            return_exceptions=True)
+            *[api.dect_networks(virtual_line_id=vl.id) for vl in virtual_lines], return_exceptions=True
+        )
         err = None
-        for vl, dect_networks in zip(virtual_lines, dect_networks_list):
+        for vl, dect_networks in zip(virtual_lines, dect_networks_list, strict=False):
             if isinstance(dect_networks, Exception):
                 err = err or dect_networks
                 print(f'Failed to get numbers for {vl}: {dect_networks}')
@@ -275,10 +283,10 @@ class TestVirtualLines(VirtualLineTest):
         if not virtual_lines:
             self.skipTest('no virtual lines')
         caller_id_settings_list = await asyncio.gather(
-            *[api.caller_id.read(entity_id=vl.id) for vl in virtual_lines],
-            return_exceptions=True)
+            *[api.caller_id.read(entity_id=vl.id) for vl in virtual_lines], return_exceptions=True
+        )
         err = None
-        for vl, caller_id_settings in zip(virtual_lines, caller_id_settings_list):
+        for vl, caller_id_settings in zip(virtual_lines, caller_id_settings_list, strict=False):
             if isinstance(caller_id_settings, Exception):
                 err = err or caller_id_settings
                 print(f'Failed to get numbers for {vl}: {caller_id_settings}')
@@ -292,10 +300,10 @@ class TestVirtualLines(VirtualLineTest):
         if not virtual_lines:
             self.skipTest('no virtual lines')
         caller_waiting_list = await asyncio.gather(
-            *[api.call_waiting.read(entity_id=vl.id) for vl in virtual_lines],
-            return_exceptions=True)
+            *[api.call_waiting.read(entity_id=vl.id) for vl in virtual_lines], return_exceptions=True
+        )
         err = None
-        for vl, call_waiting in zip(virtual_lines, caller_waiting_list):
+        for vl, call_waiting in zip(virtual_lines, caller_waiting_list, strict=False):
             if isinstance(call_waiting, Exception):
                 err = err or call_waiting
                 print(f'Failed to get numbers for {vl}: {call_waiting}')
@@ -309,10 +317,10 @@ class TestVirtualLines(VirtualLineTest):
         if not virtual_lines:
             self.skipTest('no virtual lines')
         call_forwarding_list = await asyncio.gather(
-            *[api.forwarding.read(entity_id=vl.id) for vl in virtual_lines],
-            return_exceptions=True)
+            *[api.forwarding.read(entity_id=vl.id) for vl in virtual_lines], return_exceptions=True
+        )
         err = None
-        for vl, call_forwarding in zip(virtual_lines, call_forwarding_list):
+        for vl, call_forwarding in zip(virtual_lines, call_forwarding_list, strict=False):
             if isinstance(call_forwarding, Exception):
                 err = err or call_forwarding
                 print(f'Failed to get numbers for {vl}: {call_forwarding}')
@@ -326,10 +334,10 @@ class TestVirtualLines(VirtualLineTest):
         if not virtual_lines:
             self.skipTest('no virtual lines')
         incoming_permission_list = await asyncio.gather(
-            *[api.permissions_in.read(entity_id=vl.id) for vl in virtual_lines],
-            return_exceptions=True)
+            *[api.permissions_in.read(entity_id=vl.id) for vl in virtual_lines], return_exceptions=True
+        )
         err = None
-        for vl, incoming_permission in zip(virtual_lines, incoming_permission_list):
+        for vl, incoming_permission in zip(virtual_lines, incoming_permission_list, strict=False):
             if isinstance(incoming_permission, Exception):
                 err = err or incoming_permission
                 print(f'Failed to get numbers for {vl}: {incoming_permission}')
@@ -343,10 +351,10 @@ class TestVirtualLines(VirtualLineTest):
         if not virtual_lines:
             self.skipTest('no virtual lines')
         outgoing_calling_permissions_list = await asyncio.gather(
-            *[api.permissions_out.read(entity_id=vl.id) for vl in virtual_lines],
-            return_exceptions=True)
+            *[api.permissions_out.read(entity_id=vl.id) for vl in virtual_lines], return_exceptions=True
+        )
         err = None
-        for vl, outgoing_calling_permissions in zip(virtual_lines, outgoing_calling_permissions_list):
+        for vl, outgoing_calling_permissions in zip(virtual_lines, outgoing_calling_permissions_list, strict=False):
             if isinstance(outgoing_calling_permissions, Exception):
                 err = err or outgoing_calling_permissions
                 print(f'Failed to get numbers for {vl}: {outgoing_calling_permissions}')
@@ -360,10 +368,10 @@ class TestVirtualLines(VirtualLineTest):
         if not virtual_lines:
             self.skipTest('no virtual lines')
         call_intercept_list = await asyncio.gather(
-            *[api.call_intercept.read(entity_id=vl.id) for vl in virtual_lines],
-            return_exceptions=True)
+            *[api.call_intercept.read(entity_id=vl.id) for vl in virtual_lines], return_exceptions=True
+        )
         err = None
-        for vl, call_intercept in zip(virtual_lines, call_intercept_list):
+        for vl, call_intercept in zip(virtual_lines, call_intercept_list, strict=False):
             if isinstance(call_intercept, Exception):
                 err = err or call_intercept
                 print(f'Failed to get numbers for {vl}: {call_intercept}')
@@ -377,13 +385,30 @@ class TestVirtualLines(VirtualLineTest):
         if not virtual_lines:
             self.skipTest('no virtual lines')
         call_recording_list = await asyncio.gather(
-            *[api.call_recording.read(entity_id=vl.id) for vl in virtual_lines],
-            return_exceptions=True)
+            *[api.call_recording.read(entity_id=vl.id) for vl in virtual_lines], return_exceptions=True
+        )
         err = None
-        for vl, call_recording in zip(virtual_lines, call_recording_list):
+        for vl, call_recording in zip(virtual_lines, call_recording_list, strict=False):
             if isinstance(call_recording, Exception):
                 err = err or call_recording
                 print(f'Failed to get numbers for {vl}: {call_recording}')
+        if err:
+            raise err
+
+    @async_test
+    async def test_read_outbound_billing_plan(self):
+        api = self.async_api.telephony.virtual_lines
+        virtual_lines = await api.list()
+        if not virtual_lines:
+            self.skipTest('no virtual lines')
+        outbound_billing_plan_list = await asyncio.gather(
+            *[api.outbound_billing_plan.read(entity_id=vl.id) for vl in virtual_lines], return_exceptions=True
+        )
+        err = None
+        for vl, outbound_billing_plan in zip(virtual_lines, outbound_billing_plan_list, strict=False):
+            if isinstance(outbound_billing_plan, Exception):
+                err = err or outbound_billing_plan
+                print(f'Failed to get outbound billing plan settings for {vl}: {outbound_billing_plan}')
         if err:
             raise err
 
@@ -396,9 +421,9 @@ class TestVirtualLines(VirtualLineTest):
         with self.no_log():
             extensions = await as_available_extensions_gen(api=self.async_api, location_id=target_location.location_id)
         new_extension = next(extensions)
-        vl_id = self.api.telephony.virtual_lines.create(first_name='VL', last_name=new_extension,
-                                                        location_id=target_location.location_id,
-                                                        extension=new_extension)
+        vl_id = self.api.telephony.virtual_lines.create(
+            first_name='VL', last_name=new_extension, location_id=target_location.location_id, extension=new_extension
+        )
         virtual_line = self.api.telephony.virtual_lines.details(virtual_line_id=vl_id)
         print(f'Created new virtual line in location "{target_location.name}"')
         print(json.dumps(virtual_line.model_dump(mode='json', exclude_none=True), indent=2))
@@ -417,10 +442,13 @@ class TestVirtualLines(VirtualLineTest):
             extensions = await as_available_extensions_gen(api=self.async_api, location_id=target_location.location_id)
         new_extension = next(extensions)
         display_name = f'custom VL-{new_extension}'
-        vl_id = self.api.telephony.virtual_lines.create(first_name='VL', last_name=new_extension,
-                                                        location_id=target_location.location_id,
-                                                        extension=new_extension,
-                                                        display_name=display_name)
+        vl_id = self.api.telephony.virtual_lines.create(
+            first_name='VL',
+            last_name=new_extension,
+            location_id=target_location.location_id,
+            extension=new_extension,
+            display_name=display_name,
+        )
         try:
             virtual_line = self.api.telephony.virtual_lines.details(virtual_line_id=vl_id)
             print(f'Created new virtual line in location "{target_location.name}"')
@@ -446,11 +474,12 @@ class TestWithTemporaryVirtualLine(VirtualLineTest):
     def setUpClass(cls) -> None:
         super().setUpClass()
 
-        async def prepare() -> Generator[str, None, None]:
+        async def prepare() -> None:
             async with AsWebexSimpleApi(tokens=cls.tokens) as as_api:
                 cls.target_location = choice(cls.locations)
-                cls.extensions = await as_available_extensions_gen(api=as_api,
-                                                                   location_id=cls.target_location.location_id)
+                cls.extensions = await as_available_extensions_gen(
+                    api=as_api, location_id=cls.target_location.location_id
+                )
             return
 
         asyncio.run(prepare())
@@ -460,9 +489,12 @@ class TestWithTemporaryVirtualLine(VirtualLineTest):
 
         new_extension = next(self.extensions)
         api = self.api.telephony.virtual_lines
-        vl_id = api.create(first_name='VL', last_name=f'last {new_extension}',
-                           location_id=self.target_location.location_id,
-                           extension=new_extension)
+        vl_id = api.create(
+            first_name='VL',
+            last_name=f'last {new_extension}',
+            location_id=self.target_location.location_id,
+            extension=new_extension,
+        )
         virtual_lines = list(api.list(id=[vl_id]))
         self.target = virtual_lines[0]
         self.target_detail = api.details(virtual_line_id=vl_id)
@@ -484,8 +516,12 @@ class TestUpdate(TestWithTemporaryVirtualLine):
         """
         display_name = f'custom VL-{self.target.number.extension}'
         api = self.api.telephony.virtual_lines
-        api.update(virtual_line_id=self.target.id, display_name=display_name, first_name=self.target_detail.first_name,
-                   last_name=self.target_detail.last_name)
+        api.update(
+            virtual_line_id=self.target.id,
+            display_name=display_name,
+            first_name=self.target_detail.first_name,
+            last_name=self.target_detail.last_name,
+        )
         after_details = api.details(virtual_line_id=self.target.id)
         self.assertEqual(display_name, after_details.display_name)
         after_details.display_name = self.target_detail.display_name
@@ -573,10 +609,8 @@ class TestUpdate(TestWithTemporaryVirtualLine):
 
         forwarding = api.read(entity_id=self.target.id)
         always = CallForwardingAlways(
-            enabled=True,
-            destination='9999',
-            destination_voicemail_enabled=True,
-            ring_reminder_enabled=True)
+            enabled=True, destination='9999', destination_voicemail_enabled=True, ring_reminder_enabled=True
+        )
         update = forwarding.model_copy(deep=True)
         update.call_forwarding.always = always
         api.configure(entity_id=self.target.id, forwarding=update)
@@ -598,8 +632,7 @@ class TestUpdate(TestWithTemporaryVirtualLine):
         # update call intercept settings
         update = call_intercept.model_copy(deep=True)
         update.incoming.announcements.greeting = Greeting.custom
-        api.configure(entity_id=self.target.id,
-                      intercept=update)
+        api.configure(entity_id=self.target.id, intercept=update)
         after = api.read(entity_id=self.target.id)
 
         self.assertEqual('sample.wav', after.incoming.announcements.file_name)
@@ -621,8 +654,7 @@ class TestUpdate(TestWithTemporaryVirtualLine):
         update: CallRecordingSetting
         update.enabled = True
         update.record_voicemail_enabled = True
-        api.configure(entity_id=self.target.id,
-                      recording=update)
+        api.configure(entity_id=self.target.id, recording=update)
         after = api.read(entity_id=self.target.id)
         self.assertEqual(True, after.enabled)
         self.assertEqual(True, after.record_voicemail_enabled)
@@ -639,10 +671,9 @@ class TestUpdate(TestWithTemporaryVirtualLine):
         response_body = request.response_body
 
         # add an extra permission
-        response_body['callingPermissions'].append({'action': 'BLOCK',
-                                                    'callType': 'MADE_UP',
-                                                    'isCallTypeRestrictionEnabled': True,
-                                                    'transferEnabled': True})
+        response_body['callingPermissions'].append(
+            {'action': 'BLOCK', 'callType': 'MADE_UP', 'isCallTypeRestrictionEnabled': True, 'transferEnabled': True}
+        )
         # should parse w/o an issue
         parsed_response = OutgoingPermissions.model_validate(response_body)
         parsed_response: OutgoingPermissions
@@ -662,8 +693,9 @@ class TestBulkDelete(TestWithLocations):
     async def test_001_bulk_delete(self):
         target_location = choice(self.locations)
         vl_ids = await create_virtual_lines(api=self.async_api, location_id=target_location.location_id, vl_count=20)
-        await asyncio.gather(*[self.async_api.telephony.virtual_lines.delete(virtual_line_id=vl_id)
-                               for vl_id in vl_ids])
+        await asyncio.gather(
+            *[self.async_api.telephony.virtual_lines.delete(virtual_line_id=vl_id) for vl_id in vl_ids]
+        )
 
 
 class TestDeleteAll(TestCaseWithLog):
@@ -676,8 +708,9 @@ class TestDeleteAll(TestCaseWithLog):
         virtual_lines = [vl for vl in self.api.telephony.virtual_lines.list() if vl.first_name == 'VL']
         if not virtual_lines:
             self.skipTest('No virtual lines to delete')
-        await asyncio.gather(*[as_delete_vl(api=self.async_api, vl_id=vl.id) for vl in virtual_lines],
-                             return_exceptions=True)
+        await asyncio.gather(
+            *[as_delete_vl(api=self.async_api, vl_id=vl.id) for vl in virtual_lines], return_exceptions=True
+        )
 
 
 class TestPagination(VirtualLineTest):
@@ -687,11 +720,10 @@ class TestPagination(VirtualLineTest):
 
     @async_test
     async def test_pagination(self):
-        delete_vls = [vl for vl in await self.async_api.telephony.virtual_lines.list()
-                      if vl.caller_id_first_name == 'VL']
-        await asyncio.gather(*[as_delete_vl(api=self.async_api,
-                                            vl_id=webex_id_to_uuid(vl.id))
-                               for vl in delete_vls])
+        delete_vls = [
+            vl for vl in await self.async_api.telephony.virtual_lines.list() if vl.caller_id_first_name == 'VL'
+        ]
+        await asyncio.gather(*[as_delete_vl(api=self.async_api, vl_id=webex_id_to_uuid(vl.id)) for vl in delete_vls])
         async with self.assert_virtual_lines(min_count=15):
             vl_api = self.api.telephony.virtual_lines
             vl_list = list(vl_api.list())
@@ -701,9 +733,7 @@ class TestPagination(VirtualLineTest):
 
 
 class TestOutgoingCallPermissions(TestWithTemporaryVirtualLine):
-    """
-
-    """
+    """ """
 
     def test_read_and_create_patterns(self):
         api = self.api.telephony.virtual_lines.permissions_out
@@ -711,13 +741,12 @@ class TestOutgoingCallPermissions(TestWithTemporaryVirtualLine):
         patterns: OutgoingPermissions
         # add a new pattern
         # clear all pattern baed permission setting at user level
-        category_control = api.digit_patterns.get_digit_patterns(
-            entity_id=self.target.id).use_custom_digit_patterns
+        category_control = api.digit_patterns.get_digit_patterns(entity_id=self.target.id).use_custom_digit_patterns
         api.digit_patterns.update_category_control_settings(entity_id=self.target.id, use_custom_digit_patterns=True)
         # make sure there is exactly one pattern
         api.digit_patterns.delete_all(entity_id=self.target.id)
-        block_pattern = DigitPattern(name='block496196', pattern='+496196!', action=Action.block,
-                                     transfer_enabled=False)
-        api.digit_patterns.create(entity_id=self.target.id,
-                                  pattern=block_pattern)
+        block_pattern = DigitPattern(
+            name='block496196', pattern='+496196!', action=Action.block, transfer_enabled=False
+        )
+        api.digit_patterns.create(entity_id=self.target.id, pattern=block_pattern)
         api.digit_patterns.get_digit_patterns(entity_id=self.target.id)

@@ -1,6 +1,7 @@
 Release history
 ===============
 
+- feat: outbound billing plan settings API for users, workspaces and virtual lines
 - feat: new attribute CallQueue.business_texting_enabled
 - feat: support Customer Assist supervisor bulk delete
 

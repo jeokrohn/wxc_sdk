@@ -40,6 +40,7 @@ from .moh import MusicOnHoldApi
 from .monitoring import MonitoringApi
 from .msteams import MSTeamsSettingApi
 from .numbers import NumbersApi
+from .outbound_billing_plan import OutboundBillingPlanApi
 from .permissions_in import IncomingPermissionsApi
 from .permissions_out import OutgoingPermissionsApi
 from .personal_assistant import PersonalAssistantApi
@@ -233,6 +234,8 @@ class PersonSettingsApi(ApiChild, base='people'):
     music_on_hold: MusicOnHoldApi
     #: Phone Numbers for a Person
     numbers: NumbersApi
+    #: Outbound billing plan settings for a person
+    outbound_billing_plan: OutboundBillingPlanApi
     #: Incoming Permission Settings for a Person
     permissions_in: IncomingPermissionsApi
     #: Person's Outgoing Calling Permissions Settings
@@ -293,6 +296,7 @@ class PersonSettingsApi(ApiChild, base='people'):
         self.ms_teams = MSTeamsSettingApi(session=session)
         self.music_on_hold = MusicOnHoldApi(session=session)
         self.numbers = NumbersApi(session=session)
+        self.outbound_billing_plan = OutboundBillingPlanApi(session=session)
         self.permissions_in = IncomingPermissionsApi(session=session)
         self.permissions_out = OutgoingPermissionsApi(session=session)
         self.personal_assistant = PersonalAssistantApi(session=session)

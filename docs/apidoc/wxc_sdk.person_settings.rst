@@ -15,6 +15,7 @@ Subpackages
    wxc_sdk.person_settings.executive
    wxc_sdk.person_settings.feature_access
    wxc_sdk.person_settings.hotdesking
+   wxc_sdk.person_settings.outbound_billing_plan
    wxc_sdk.person_settings.single_number_reach
 
 Submodules

@@ -2572,6 +2572,75 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         r = GetVirtualLineNumberObjectPhoneNumber.model_validate(data['phoneNumber'])
         return r
 
+    def get_virtual_line_outbound_billing_plan(self, virtual_line_id: str, org_id: str = None) -> bool:
+        """
+        Retrieve a Virtual Line's Outbound Billing Plan
+
+        <div><Callout type="warning">Not supported for Webex for Government (FedRAMP).</Callout></div>
+
+        Retrieve the Cisco Calling Plan outbound billing plan setting for a virtual line.
+
+        Cisco Calling Plan outbound billing identifies whether outbound calls for the virtual line are billed through
+        Cisco Calling Plan.
+
+        The response returns `enabled` as `true` when Cisco Calling Plan outbound billing is enabled for the virtual
+        line. Otherwise, the response returns `enabled` as `false`.
+
+        Retrieving a virtual line's outbound billing plan requires a full, user, read-only administrator, or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param virtual_line_id: Unique identifier for the virtual line.
+        :type virtual_line_id: str
+        :param org_id: ID of the organization in which the virtual line resides. Only admin users of another
+            organization, such as partners, may use this parameter because the default is the same organization as the
+            token used to access the API.
+        :type org_id: str
+        :rtype: bool
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{virtual_line_id}/outboundBillingPlan')
+        data = super().get(url, params=params)
+        r = data['enabled']
+        return r
+
+    def update_virtual_line_outbound_billing_plan(self, virtual_line_id: str, enabled: bool,
+                                                  org_id: str = None) -> None:
+        """
+        Modify a Virtual Line's Outbound Billing Plan
+
+        <div><Callout type="warning">Not supported for Webex for Government (FedRAMP).</Callout></div>
+
+        Modify the Cisco Calling Plan outbound billing plan setting for a virtual line.
+
+        Cisco Calling Plan outbound billing identifies whether outbound calls for the virtual line are billed through
+        Cisco Calling Plan.
+
+        Set `enabled` to `true` to enable Cisco Calling Plan outbound billing. Setting `enabled` to `true` is supported
+        only for a virtual line in a Cisco Calling Plan location. Set `enabled` to `false` to disable it.
+
+        Updating a virtual line's outbound billing plan requires a full, user, or location administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
+
+        :param virtual_line_id: Unique identifier for the virtual line.
+        :type virtual_line_id: str
+        :param enabled: Set to `true` when Cisco Calling Plan outbound billing is enabled for the virtual line.
+        :type enabled: bool
+        :param org_id: ID of the organization in which the virtual line resides. Only admin users of another
+            organization, such as partners, may use this parameter because the default is the same organization as the
+            token used to access the API.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        body['enabled'] = enabled
+        url = self.ep(f'{virtual_line_id}/outboundBillingPlan')
+        super().put(url, params=params, json=body)
+
     def retrieve_a_virtual_line_s_outgoing_calling_permissions_settings(self, virtual_line_id: str,
                                                                         org_id: str = None) -> OutgoingCallingPermissionsSettingGet:
         """

@@ -22,6 +22,7 @@ from ...person_settings.dnd import DndApi
 from ...person_settings.ecbn import ECBNApi
 from ...person_settings.forwarding import PersonForwardingApi
 from ...person_settings.moh import MusicOnHoldApi
+from ...person_settings.outbound_billing_plan import OutboundBillingPlanApi
 from ...person_settings.permissions_in import IncomingPermissionsApi
 from ...person_settings.permissions_out import OutgoingPermissionsApi
 from ...person_settings.privacy import PrivacyApi
@@ -129,6 +130,8 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
     forwarding: PersonForwardingApi
     #: music on hold settings
     music_on_hold: MusicOnHoldApi
+    #: outbound billing plan settings
+    outbound_billing_plan: OutboundBillingPlanApi
     #: incoming permissions
     permissions_in: IncomingPermissionsApi
     #: outgoing permissions
@@ -154,6 +157,7 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
         self.ecbn = ECBNApi(session=session, selector=ApiSelector.virtual_line)
         self.forwarding = PersonForwardingApi(session=session, selector=ApiSelector.virtual_line)
         self.music_on_hold = MusicOnHoldApi(session=session, selector=ApiSelector.virtual_line)
+        self.outbound_billing_plan = OutboundBillingPlanApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_in = IncomingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
         self.permissions_out = OutgoingPermissionsApi(session=session, selector=ApiSelector.virtual_line)
         self.privacy = PrivacyApi(session=session, selector=ApiSelector.virtual_line)

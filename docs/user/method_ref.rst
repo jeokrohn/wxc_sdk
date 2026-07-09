@@ -1242,6 +1242,12 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.person_settings.numbers.update <wxc_sdk.person_settings.numbers.NumbersApi.update>`
         | Assign or unassign alternate phone numbers to a person
         | ``PUT /telephony/config/people/{person_id}/numbers``
+   * - :meth:`api.person_settings.outbound_billing_plan.read <wxc_sdk.person_settings.outbound_billing_plan.OutboundBillingPlanApi.read>`
+        | Retrieve an entity's Outbound Billing Plan
+        | ``GET /telephony/config/people/{entity_id}/outboundBillingPlan``
+   * - :meth:`api.person_settings.outbound_billing_plan.update <wxc_sdk.person_settings.outbound_billing_plan.OutboundBillingPlanApi.update>`
+        | Modify a Person's Outbound Billing Plan
+        | ``PUT /telephony/config/people/{entity_id}/outboundBillingPlan``
    * - :meth:`api.person_settings.permissions_in.configure <wxc_sdk.person_settings.permissions_in.IncomingPermissionsApi.configure>`
         | Configure incoming permissions settings
         | ``PUT /people/{entity_id}/features/incomingPermission``
@@ -1262,7 +1268,7 @@ description of the operation. The method name is a link to the method documentat
         | ``GET /telephony/config/people/{entity_id}/outgoingPermission/accessCodes``
    * - :meth:`api.person_settings.permissions_out.configure <wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.configure>`
         | Configure Outgoing Calling Permissions Settings
-        | ``PUT /people/{entity_id}/features/outgoingPermission``
+        | ``PUT /telephony/config/people/{entity_id}/outgoingPermission``
    * - :meth:`api.person_settings.permissions_out.digit_patterns.create <wxc_sdk.person_settings.permissions_out.DigitPatternsApi.create>`
         | Create Digit Patterns
         | ``POST /telephony/config/people/{entity_id}/outgoingPermission/digitPatterns``
@@ -1286,7 +1292,7 @@ description of the operation. The method name is a link to the method documentat
         | ``PUT /telephony/config/people/{entity_id}/outgoingPermission/digitPatterns``
    * - :meth:`api.person_settings.permissions_out.read <wxc_sdk.person_settings.permissions_out.OutgoingPermissionsApi.read>`
         | Retrieve Outgoing Calling Permissions Settings
-        | ``GET /people/{entity_id}/features/outgoingPermission``
+        | ``GET /telephony/config/people/{entity_id}/outgoingPermission``
    * - :meth:`api.person_settings.permissions_out.transfer_numbers.configure <wxc_sdk.person_settings.permissions_out.TransferNumbersApi.configure>`
         | Modify Transfer Numbers Settings for an entity
         | ``PUT /people/{entity_id}/features/outgoingPermission/autoTransferNumbers``
@@ -3414,6 +3420,12 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.telephony.virtual_lines.music_on_hold.read <wxc_sdk.person_settings.moh.MusicOnHoldApi.read>`
         | Retrieve Music On Hold Settings for a Person, virtual line, or workspace
         | ``GET /telephony/config/virtualLines/{entity_id}/musicOnHold``
+   * - :meth:`api.telephony.virtual_lines.outbound_billing_plan.read <wxc_sdk.person_settings.outbound_billing_plan.OutboundBillingPlanApi.read>`
+        | Retrieve an entity's Outbound Billing Plan
+        | ``GET /telephony/config/virtualLines/{entity_id}/outboundBillingPlan``
+   * - :meth:`api.telephony.virtual_lines.outbound_billing_plan.update <wxc_sdk.person_settings.outbound_billing_plan.OutboundBillingPlanApi.update>`
+        | Modify a Person's Outbound Billing Plan
+        | ``PUT /telephony/config/virtualLines/{entity_id}/outboundBillingPlan``
    * - :meth:`api.telephony.virtual_lines.permissions_in.configure <wxc_sdk.person_settings.permissions_in.IncomingPermissionsApi.configure>`
         | Configure incoming permissions settings
         | ``PUT /telephony/config/virtualLines/{entity_id}/incomingPermission``
@@ -3723,6 +3735,12 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.workspace_settings.numbers.update <wxc_sdk.workspace_settings.numbers.WorkspaceNumbersApi.update>`
         | Assign or Unassign numbers associated with a specific workspace
         | ``PUT /telephony/config/workspaces/{workspace_id}/numbers``
+   * - :meth:`api.workspace_settings.outbound_billing_plan.read <wxc_sdk.person_settings.outbound_billing_plan.OutboundBillingPlanApi.read>`
+        | Retrieve an entity's Outbound Billing Plan
+        | ``GET /telephony/config/workspaces/{entity_id}/outboundBillingPlan``
+   * - :meth:`api.workspace_settings.outbound_billing_plan.update <wxc_sdk.person_settings.outbound_billing_plan.OutboundBillingPlanApi.update>`
+        | Modify a Person's Outbound Billing Plan
+        | ``PUT /telephony/config/workspaces/{entity_id}/outboundBillingPlan``
    * - :meth:`api.workspace_settings.permissions_in.configure <wxc_sdk.person_settings.permissions_in.IncomingPermissionsApi.configure>`
         | Configure incoming permissions settings
         | ``PUT /workspaces/{entity_id}/features/incomingPermission``
