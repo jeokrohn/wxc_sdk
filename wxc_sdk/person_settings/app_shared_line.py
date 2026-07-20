@@ -1,5 +1,4 @@
 from collections.abc import Generator
-from typing import Union
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.telephony.devices import AvailableMember, DeviceMember, DeviceMembersResponse
@@ -111,10 +110,10 @@ class AppSharedLineApi(ApiChild, base='telephony/config/people'):
             params['phoneNumber'] = phone_number
         if extension is not None:
             params['extension'] = extension
-        url = self.ep(f'telephony/config/people/{person_id}/applications/availableMembers/count')
+        url = self.ep(f'{person_id}/applications/availableMembers/count')
         data = super().get(url, params=params)
         r = data['totalCount']
-        return r
+        return r  # type: ignore[return-value]
 
     def get_members(self, person_id: str) -> DeviceMembersResponse:
         """
@@ -137,7 +136,7 @@ class AppSharedLineApi(ApiChild, base='telephony/config/people'):
         r = DeviceMembersResponse.model_validate(data)
         return r
 
-    def update_members(self, person_id: str, members: list[Union[DeviceMember, AvailableMember]] = None):
+    def update_members(self, person_id: str, members: list[DeviceMember | AvailableMember] = None):
         """
         Put Shared-Line Appearance Members New
 
@@ -173,7 +172,7 @@ class AppSharedLineApi(ApiChild, base='telephony/config/people'):
         # create body
         if members_for_update:
             members = [
-                m.model_dump(
+                m.model_dump(  # type: ignore[misc]
                     mode='json',
                     exclude_none=True,
                     by_alias=True,

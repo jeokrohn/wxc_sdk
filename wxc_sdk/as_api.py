@@ -13059,10 +13059,10 @@ class AsAppSharedLineApi(AsApiChild, base='telephony/config/people'):
             params['phoneNumber'] = phone_number
         if extension is not None:
             params['extension'] = extension
-        url = self.ep(f'telephony/config/people/{person_id}/applications/availableMembers/count')
+        url = self.ep(f'{person_id}/applications/availableMembers/count')
         data = await super().get(url, params=params)
         r = data['totalCount']
-        return r
+        return r  # type: ignore[return-value]
 
     async def get_members(self, person_id: str) -> DeviceMembersResponse:
         """
@@ -13085,7 +13085,7 @@ class AsAppSharedLineApi(AsApiChild, base='telephony/config/people'):
         r = DeviceMembersResponse.model_validate(data)
         return r
 
-    async def update_members(self, person_id: str, members: list[Union[DeviceMember, AvailableMember]] = None):
+    async def update_members(self, person_id: str, members: list[DeviceMember | AvailableMember] = None):
         """
         Put Shared-Line Appearance Members New
 
@@ -13121,7 +13121,7 @@ class AsAppSharedLineApi(AsApiChild, base='telephony/config/people'):
         # create body
         if members_for_update:
             members = [
-                m.model_dump(
+                m.model_dump(  # type: ignore[misc]
                     mode='json',
                     exclude_none=True,
                     by_alias=True,
