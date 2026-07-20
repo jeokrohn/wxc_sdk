@@ -29464,7 +29464,7 @@ class AsLocationAccessCodesApi(AsApiChild, base='telephony/config/locations'):
         data = await self.get(url, params=params)
         return TypeAdapter(list[AuthCode]).validate_python(data['accessCodes'])
 
-    async def create(self, location_id: str, access_codes: list[AuthCode], org_id: str = None) -> list[AuthCode]:
+    async def create(self, location_id: str, access_codes: list[AuthCode], org_id: str = None) -> None:
         """
         Create Outgoing Permission a new access code for a customer location
 
@@ -29487,9 +29487,7 @@ class AsLocationAccessCodesApi(AsApiChild, base='telephony/config/locations'):
         body = {'accessCodes': [ac.model_dump(mode='json', by_alias=True, exclude_none=True) for ac in access_codes]}
         await self.post(url, json=body, params=params)
 
-    async def delete_codes(
-        self, location_id: str, access_codes: list[Union[str, AuthCode]], org_id: str = None
-    ) -> list[AuthCode]:
+    async def delete_codes(self, location_id: str, access_codes: list[str | AuthCode], org_id: str = None) -> None:
         """
         Delete Access Code Location
 

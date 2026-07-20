@@ -1,6 +1,7 @@
 Release history
 ===============
 
+- fix: correct return type annotation for LocationAccessCodesApi.create and delete_codes
 - fix: fix endpoint url for AppSharedLineApi.members_count()
 - feat: outbound billing plan settings API for users, workspaces and virtual lines
 - feat: new attribute CallQueue.business_texting_enabled
