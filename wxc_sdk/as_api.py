@@ -55,29 +55,30 @@ __all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'A
            'AsMeForwardingApi', 'AsMeHotelingApi', 'AsMeModeManagementApi', 'AsMePersonalAssistantApi',
            'AsMePriorityAlertApi', 'AsMeRecordingApi', 'AsMeSNRApi', 'AsMeSchedulesApi', 'AsMeSelectiveAcceptApi',
            'AsMeSelectiveForwardApi', 'AsMeSelectiveRejectApi', 'AsMeSequentialRingApi', 'AsMeSettingsApi',
-           'AsMeSimRingApi', 'AsMeVoicemailApi', 'AsMeetingChatsApi', 'AsMeetingClosedCaptionsApi',
-           'AsMeetingInviteesApi', 'AsMeetingParticipantsApi', 'AsMeetingPreferencesApi', 'AsMeetingQandAApi',
-           'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi', 'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi',
-           'AsModeManagementApi', 'AsMonitoringApi', 'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi',
-           'AsOperatingModesApi', 'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi',
-           'AsOrganisationAccessCodesApi', 'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi',
-           'AsOrganizationContactsApi', 'AsOutboundBillingPlanApi', 'AsOutgoingPermissionsApi', 'AsPSTNApi',
-           'AsPagingApi', 'AsPeopleApi', 'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild',
-           'AsPersonalAssistantApi', 'AsPlayListApi', 'AsPreferredAnswerApi', 'AsPremisePstnApi',
-           'AsPriorityAlertApi', 'AsPrivacyApi', 'AsPrivateNetworkConnectApi', 'AsPushToTalkApi',
-           'AsQueueCallRecordingSettingsApi', 'AsRebuildPhonesJobsApi', 'AsReceptionistApi',
-           'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi', 'AsReportsApi', 'AsRestSession', 'AsRolesApi',
-           'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi', 'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2GroupsApi',
-           'AsSCIM2UsersApi', 'AsScheduleApi', 'AsScimApiChild', 'AsScimV2Api', 'AsSelectiveAcceptApi',
-           'AsSelectiveForwardApi', 'AsSelectiveRejectApi', 'AsSendActivationEmailApi', 'AsSequentialRingApi',
-           'AsSimRingApi', 'AsSingleNumberReachApi', 'AsStatusAPI', 'AsSupervisorApi', 'AsTeamMembershipsApi',
-           'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi', 'AsTelephonyLocationApi', 'AsTextToSpeechApi',
-           'AsTransferNumbersApi', 'AsTranslationPatternsApi', 'AsTrunkApi', 'AsUpdateDynamicDeviceSettingsJobsApi',
-           'AsUpdateRoutingPrefixJobsApi', 'AsVirtualExtensionsApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi',
-           'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi',
-           'AsWebhookApi', 'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi',
-           'AsWorkspaceNumbersApi', 'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi',
-           'AsWrapupReasonApi', 'AsXApi']
+           'AsMeSimRingApi', 'AsMeSpeedDialApi', 'AsMeVoicemailApi', 'AsMeetingChatsApi',
+           'AsMeetingClosedCaptionsApi', 'AsMeetingInviteesApi', 'AsMeetingParticipantsApi',
+           'AsMeetingPreferencesApi', 'AsMeetingQandAApi', 'AsMeetingQualitiesApi', 'AsMeetingTranscriptsApi',
+           'AsMeetingsApi', 'AsMembershipApi', 'AsMessagesApi', 'AsModeManagementApi', 'AsMonitoringApi',
+           'AsMoveUsersJobsApi', 'AsMusicOnHoldApi', 'AsNumbersApi', 'AsOperatingModesApi',
+           'AsOrgEmergencyServicesApi', 'AsOrgMSTeamsSettingApi', 'AsOrganisationAccessCodesApi',
+           'AsOrganisationVoicemailSettingsAPI', 'AsOrganizationApi', 'AsOrganizationContactsApi',
+           'AsOutboundBillingPlanApi', 'AsOutgoingPermissionsApi', 'AsPSTNApi', 'AsPagingApi', 'AsPeopleApi',
+           'AsPersonForwardingApi', 'AsPersonSettingsApi', 'AsPersonSettingsApiChild', 'AsPersonalAssistantApi',
+           'AsPlayListApi', 'AsPreferredAnswerApi', 'AsPremisePstnApi', 'AsPriorityAlertApi', 'AsPrivacyApi',
+           'AsPrivateNetworkConnectApi', 'AsPushToTalkApi', 'AsQueueCallRecordingSettingsApi',
+           'AsRebuildPhonesJobsApi', 'AsReceptionistApi', 'AsReceptionistContactsDirectoryApi', 'AsRecordingsApi',
+           'AsReportsApi', 'AsRestSession', 'AsRolesApi', 'AsRoomTabsApi', 'AsRoomsApi', 'AsRouteGroupApi',
+           'AsRouteListApi', 'AsSCIM2BulkApi', 'AsSCIM2GroupsApi', 'AsSCIM2UsersApi', 'AsScheduleApi',
+           'AsScimApiChild', 'AsScimV2Api', 'AsSelectiveAcceptApi', 'AsSelectiveForwardApi', 'AsSelectiveRejectApi',
+           'AsSendActivationEmailApi', 'AsSequentialRingApi', 'AsSimRingApi', 'AsSingleNumberReachApi', 'AsStatusAPI',
+           'AsSupervisorApi', 'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi',
+           'AsTelephonyLocationApi', 'AsTextToSpeechApi', 'AsTransferNumbersApi', 'AsTranslationPatternsApi',
+           'AsTrunkApi', 'AsUpdateDynamicDeviceSettingsJobsApi', 'AsUpdateRoutingPrefixJobsApi',
+           'AsVirtualExtensionsApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi',
+           'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi',
+           'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
+           'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi', 'AsWrapupReasonApi',
+           'AsXApi']
 
 
 @dataclass(init=False, repr=False)
@@ -7520,6 +7521,135 @@ class AsMeSimRingApi(AsApiChild, base='telephony/config/people/me'):
         await super().put(url, json=body)
 
 
+class AsMeSpeedDialApi(AsApiChild, base='telephony/config/people/me'):
+    async def get(self) -> MeSpeedDials:  # type: ignore[override]
+        """
+        Get Speed Dials
+
+        Get the Speed Dials settings for the authenticated user. This API returns all configured speed dials (no
+        pagination).
+
+        Speed Dials allow Webex Calling users to quickly dial frequently contacted people, places, or virtual lines by
+        assigning them to dedicated keys on their desk phones or soft clients.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: :class:`MeSpeedDials`
+        """
+        url = self.ep('settings/speedDials')
+        data = await super().get(url)
+        r = MeSpeedDials.model_validate(data)
+        return r
+
+    async def modify(self, speed_dials: list[MeSpeedDialModify]) -> None:
+        """
+        Modify Speed Dials
+
+        Modify the Speed Dials settings for the authenticated user. This is a replacement list for speed dials.
+
+        Speed Dials allow Webex Calling users to quickly dial frequently contacted people, places, or virtual lines by
+        assigning them to dedicated keys on their desk phones or soft clients.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_write`.
+
+        :param speed_dials: List of speed dial entries to be configured for the person. This is a replacement list.
+        :type speed_dials: list[MeSpeedDialModify]
+        :rtype: None
+        """
+        body: dict[str, Any] = dict()
+        body['speedDials'] = TypeAdapter(list[MeSpeedDialModify]).dump_python(
+            speed_dials, mode='json', by_alias=True, exclude_none=True
+        )
+        url = self.ep('settings/speedDials')
+        await super().put(url, json=body)
+
+    def available_members_gen(
+        self,
+        location_id: str = None,
+        name: list[str] = None,
+        phone_number: list[str] = None,
+        order: str = None,
+        **params: Any,
+    ) -> AsyncGenerator[MeSpeedDialAvailableMember, None]:
+        """
+        Get Speed Dial Available Members
+
+        Get the available members which can be configured as Speed Dials for the authenticated user.
+
+        Speed Dials allow Webex Calling users to quickly dial frequently contacted people, places, or virtual lines by
+        assigning them to dedicated keys on their desk phones or soft clients.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param location_id: Return the members list available in this location.
+        :type location_id: str
+        :param name: Search (Contains) based on first name and last name.
+        :type name: list[str]
+        :param phone_number: Search (Contains) based on number and extension.
+        :type phone_number: list[str]
+        :param order: Sort by first name (`firstName`) or last name (`lastName`). Sort directions asc or desc.
+        * `asc` - Sort in ascending order.
+        * `desc` - Sort in descending order.
+        :type order: str
+        :return: Generator yielding :class:`SpeedDialAvailableMember` instances
+        """
+        if location_id is not None:
+            params['locationId'] = location_id
+        if name is not None:
+            params['name'] = ','.join(name)
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if order is not None:
+            params['order'] = order
+        url = self.ep('settings/speedDials/availableMembers')
+        return self.session.follow_pagination(
+            url=url, model=MeSpeedDialAvailableMember, item_key='members', params=params
+        )
+
+    async def available_members(
+        self,
+        location_id: str = None,
+        name: list[str] = None,
+        phone_number: list[str] = None,
+        order: str = None,
+        **params: Any,
+    ) -> builtins.list[MeSpeedDialAvailableMember]:
+        """
+        Get Speed Dial Available Members
+
+        Get the available members which can be configured as Speed Dials for the authenticated user.
+
+        Speed Dials allow Webex Calling users to quickly dial frequently contacted people, places, or virtual lines by
+        assigning them to dedicated keys on their desk phones or soft clients.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param location_id: Return the members list available in this location.
+        :type location_id: str
+        :param name: Search (Contains) based on first name and last name.
+        :type name: list[str]
+        :param phone_number: Search (Contains) based on number and extension.
+        :type phone_number: list[str]
+        :param order: Sort by first name (`firstName`) or last name (`lastName`). Sort directions asc or desc.
+        * `asc` - Sort in ascending order.
+        * `desc` - Sort in descending order.
+        :type order: str
+        :return: Generator yielding :class:`SpeedDialAvailableMember` instances
+        """
+        if location_id is not None:
+            params['locationId'] = location_id
+        if name is not None:
+            params['name'] = ','.join(name)
+        if phone_number is not None:
+            params['phoneNumber'] = ','.join(phone_number)
+        if order is not None:
+            params['order'] = order
+        url = self.ep('settings/speedDials/availableMembers')
+        return [o async for o in self.session.follow_pagination(
+            url=url, model=MeSpeedDialAvailableMember, item_key='members', params=params
+        )]
+
+
 class AsMeVoicemailApi(AsApiChild, base='telephony/config/people/me'):
     async def settings(self) -> VoicemailSettings:
         """
@@ -7720,6 +7850,7 @@ class AsMeSettingsApi(AsApiChild, base='telephony/config/people/me'):
     sequential_ring: AsMeSequentialRingApi
     sim_ring: AsMeSimRingApi
     snr: AsMeSNRApi
+    speed_dials: AsMeSpeedDialApi
     voicemail: AsMeVoicemailApi
 
     def __init__(self, session: AsRestSession):
@@ -7756,6 +7887,7 @@ class AsMeSettingsApi(AsApiChild, base='telephony/config/people/me'):
         self.sequential_ring = AsMeSequentialRingApi(session=session)
         self.sim_ring = AsMeSimRingApi(session=session)
         self.snr = AsMeSNRApi(session=session)
+        self.speed_dials = AsMeSpeedDialApi(session=session)
         self.voicemail = AsMeVoicemailApi(session=session)
 
     async def details(self) -> MeProfile:
@@ -7993,6 +8125,80 @@ class AsMeSettingsApi(AsApiChild, base='telephony/config/people/me'):
         data = await super().get(url)
         r = CCExtensions.model_validate(data)
         return r
+
+    async def large_org_status(self) -> bool:
+        """
+        Get Large Organization Status
+
+        Get whether the authenticated person's organization is considered as a large organization.
+
+        Large organization status is used to determine how certain Webex Calling features behave, such as pagination
+        limits and search capabilities, to optimize performance for organizations with many people.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: bool
+        """
+        url = self.ep('organization/largeOrgStatus')
+        data = await super().get(url)
+        r = data['isLargeOrg']
+        return r  # type: ignore[return-value]
+
+    def org_locations_gen(
+        self, name: list[str] = None, order: str = None, **params: Any
+    ) -> AsyncGenerator[OrgLocation, None]:
+        """
+        Get Location List for My Organization
+
+        Get the list of locations for the authenticated person's organization.
+
+        Locations are used to organize Webex Calling resources such as people, workspaces, and features within an
+        organization. Each location can have its own settings and configurations for calling services.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param name: Search (Contains) based on location name. Multiple values are logically OR-ed.
+        :type name: list[str]
+        :param order: Sort by location name (`name`). Sort directions asc or desc.
+        * `asc` - Sort in ascending order.
+        * `desc` - Sort in descending order.
+        :type order: str
+        :return: Generator yielding :class:`OrganizationLocation` instances
+        """
+        if name is not None:
+            params['name'] = ','.join(name)
+        if order is not None:
+            params['order'] = order
+        url = self.ep('organization/locations')
+        return self.session.follow_pagination(url=url, model=OrgLocation, item_key='locations', params=params)
+
+    async def org_locations(
+        self, name: list[str] = None, order: str = None, **params: Any
+    ) -> builtins.list[OrgLocation]:
+        """
+        Get Location List for My Organization
+
+        Get the list of locations for the authenticated person's organization.
+
+        Locations are used to organize Webex Calling resources such as people, workspaces, and features within an
+        organization. Each location can have its own settings and configurations for calling services.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param name: Search (Contains) based on location name. Multiple values are logically OR-ed.
+        :type name: list[str]
+        :param order: Sort by location name (`name`). Sort directions asc or desc.
+        * `asc` - Sort in ascending order.
+        * `desc` - Sort in descending order.
+        :type order: str
+        :return: Generator yielding :class:`OrganizationLocation` instances
+        """
+        if name is not None:
+            params['name'] = ','.join(name)
+        if order is not None:
+            params['order'] = order
+        url = self.ep('organization/locations')
+        return [o async for o in self.session.follow_pagination(url=url, model=OrgLocation, item_key='locations', params=params)]
 
 
 class AsMeetingChatsApi(AsApiChild, base='meetings/postMeetingChats'):

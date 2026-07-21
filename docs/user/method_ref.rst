@@ -516,6 +516,9 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.me.hoteling.update_guest_settings <wxc_sdk.me.hoteling.MeHotelingApi.update_guest_settings>`
         | Update Hoteling Guest Settings
         | ``PUT /telephony/config/people/me/settings/hoteling/guest``
+   * - :meth:`api.me.large_org_status <wxc_sdk.me.MeSettingsApi.large_org_status>`
+        | Get Large Organization Status
+        | ``GET /telephony/config/people/me/organization/largeOrgStatus``
    * - :meth:`api.me.mode_management.extend_mode <wxc_sdk.me.mode_management.MeModeManagementApi.extend_mode>`
         | Extend Current Operating Mode Duration
         | ``POST /telephony/config/people/me/settings/modeManagement/features/{feature_id}/actions/extendMode/invoke``
@@ -546,6 +549,9 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.me.monitoring_settings <wxc_sdk.me.MeSettingsApi.monitoring_settings>`
         | Get My Monitoring Settings
         | ``GET /telephony/config/people/me/settings/monitoring``
+   * - :meth:`api.me.org_locations <wxc_sdk.me.MeSettingsApi.org_locations>`
+        | Get Location List for My Organization
+        | ``GET /telephony/config/people/me/organization/locations``
    * - :meth:`api.me.personal_assistant.get <wxc_sdk.me.personal_assistant.MePersonalAssistantApi.get>`
         | Get Personal Assistant Settings
         | ``GET /telephony/config/people/me/settings/personalAssistant``
@@ -708,6 +714,15 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.me.snr.update_snr <wxc_sdk.me.snr.MeSNRApi.update_snr>`
         | Modify User's Single Number Reach Contact Settings
         | ``PUT /telephony/config/people/me/settings/singleNumberReach/numbers/{phone_number_id}``
+   * - :meth:`api.me.speed_dials.available_members <wxc_sdk.me.speed_dials.MeSpeedDialApi.available_members>`
+        | Get Speed Dial Available Members
+        | ``GET /telephony/config/people/me/settings/speedDials/availableMembers``
+   * - :meth:`api.me.speed_dials.get <wxc_sdk.me.speed_dials.MeSpeedDialApi.get>`
+        | Get Speed Dials
+        | ``GET /telephony/config/people/me/settings/speedDials``
+   * - :meth:`api.me.speed_dials.modify <wxc_sdk.me.speed_dials.MeSpeedDialApi.modify>`
+        | Modify Speed Dials
+        | ``PUT /telephony/config/people/me/settings/speedDials``
    * - :meth:`api.me.voicemail.configure <wxc_sdk.me.voicemail.MeVoicemailApi.configure>`
         | Configure Voicemail Settings for a Person
         | ``PUT /telephony/config/people/me/settings/voicemail``

@@ -1046,3 +1046,29 @@ class TestAvailableNumbersForLocation(TestWithRandomUserApi):
                 )
         if err:
             raise err
+
+
+class TestLargeOrgStatus(TestWithRandomUserApi):
+    @async_test
+    async def test_get_status(self):
+        async def get_settings(user: Person):
+            with self.user_api(user) as api:
+                async with self.as_webex_api(tokens=api.access_token) as as_api:
+                    as_api: AsWebexSimpleApi
+                    try:
+                        return await as_api.me.large_org_status()
+                    except AsRestError as e:
+                        raise e
+            # end of get_settings
+
+        users = [user for user in self.users if not user.display_name.startswith('admin@')]
+        results = await asyncio.gather(*[get_settings(user) for user in users], return_exceptions=True)
+        err = None
+        for user, result in zip(users, results, strict=True):
+            if isinstance(result, Exception):
+                err = err or result
+                print(f'Error large org status for {user.display_name}: {result}')
+            elif result is not None:
+                print(f'call caption settings for {user.display_name}: {result}')
+        if err:
+            raise err

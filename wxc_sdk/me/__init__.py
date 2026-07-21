@@ -43,6 +43,7 @@ from wxc_sdk.me.selective_reject import MeSelectiveRejectApi
 from wxc_sdk.me.sequential_ring import MeSequentialRingApi
 from wxc_sdk.me.sim_ring import MeSimRingApi
 from wxc_sdk.me.snr import MeSNRApi
+from wxc_sdk.me.speed_dials import MeSpeedDialApi
 from wxc_sdk.me.voicemail import MeVoicemailApi
 from wxc_sdk.person_settings import DeviceActivationState, UserCallCaptions
 from wxc_sdk.rest import RestSession
@@ -69,6 +70,7 @@ __all__ = [
     'EndpointStatus',
     'UserEndpoint',
     'CCExtensions',
+    'OrgLocation',
 ]
 
 
@@ -355,7 +357,7 @@ class LocationAssignedNumber(ApiModel):
     #: * `ALTERNATE` - An alternate phone number.
     #: * `FAX` - A FAX number.
     phone_number_type: Optional[NumberListPhoneNumberType] = None
-    #: Indicate if the number is toll free.
+    #: Indicate if the number is toll-free.
     toll_free_number: Optional[bool] = None
     #: The owner details.
     owner: Optional[NumberOwner] = None
@@ -418,6 +420,15 @@ class CCExtensions(ApiModel):
     endpoints: Optional[list[UserEndpoint]] = None
 
 
+class OrgLocation(ApiModel):
+    #: Unique identifier for the location.
+    id: Optional[str] = None
+    #: Name of the location.
+    name: Optional[str] = None
+    #: Location's routing prefix.
+    routing_prefix: Optional[str] = None
+
+
 @dataclass(init=False, repr=False)
 class MeSettingsApi(ApiChild, base='telephony/config/people/me'):
     """
@@ -458,6 +469,7 @@ class MeSettingsApi(ApiChild, base='telephony/config/people/me'):
     sequential_ring: MeSequentialRingApi
     sim_ring: MeSimRingApi
     snr: MeSNRApi
+    speed_dials: MeSpeedDialApi
     voicemail: MeVoicemailApi
 
     def __init__(self, session: RestSession):
@@ -494,6 +506,7 @@ class MeSettingsApi(ApiChild, base='telephony/config/people/me'):
         self.sequential_ring = MeSequentialRingApi(session=session)
         self.sim_ring = MeSimRingApi(session=session)
         self.snr = MeSNRApi(session=session)
+        self.speed_dials = MeSpeedDialApi(session=session)
         self.voicemail = MeVoicemailApi(session=session)
 
     def details(self) -> MeProfile:
@@ -698,3 +711,49 @@ class MeSettingsApi(ApiChild, base='telephony/config/people/me'):
         data = super().get(url)
         r = CCExtensions.model_validate(data)
         return r
+
+    def large_org_status(self) -> bool:
+        """
+        Get Large Organization Status
+
+        Get whether the authenticated person's organization is considered as a large organization.
+
+        Large organization status is used to determine how certain Webex Calling features behave, such as pagination
+        limits and search capabilities, to optimize performance for organizations with many people.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :rtype: bool
+        """
+        url = self.ep('organization/largeOrgStatus')
+        data = super().get(url)
+        r = data['isLargeOrg']
+        return r  # type: ignore[return-value]
+
+    def org_locations(
+        self, name: list[str] = None, order: str = None, **params: Any
+    ) -> Generator[OrgLocation, None, None]:
+        """
+        Get Location List for My Organization
+
+        Get the list of locations for the authenticated person's organization.
+
+        Locations are used to organize Webex Calling resources such as people, workspaces, and features within an
+        organization. Each location can have its own settings and configurations for calling services.
+
+        This API requires a user auth token with a scope of `spark:telephony_config_read`.
+
+        :param name: Search (Contains) based on location name. Multiple values are logically OR-ed.
+        :type name: list[str]
+        :param order: Sort by location name (`name`). Sort directions asc or desc.
+        * `asc` - Sort in ascending order.
+        * `desc` - Sort in descending order.
+        :type order: str
+        :return: Generator yielding :class:`OrganizationLocation` instances
+        """
+        if name is not None:
+            params['name'] = ','.join(name)
+        if order is not None:
+            params['order'] = order
+        url = self.ep('organization/locations')
+        return self.session.follow_pagination(url=url, model=OrgLocation, item_key='locations', params=params)

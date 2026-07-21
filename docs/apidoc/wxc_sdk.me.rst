@@ -41,4 +41,5 @@ Subpackages
    wxc_sdk.me.sequential_ring
    wxc_sdk.me.sim_ring
    wxc_sdk.me.snr
+   wxc_sdk.me.speed_dials
    wxc_sdk.me.voicemail

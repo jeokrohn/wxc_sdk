@@ -1,6 +1,7 @@
 Release history
 ===============
 
+- feat: new endpoints MeSettingsApi.large_org_status/org_locations. new API MeSettingsApi.speed_dials
 - fix: correct return type annotation for LocationAccessCodesApi.create and delete_codes
 - fix: fix endpoint url for AppSharedLineApi.members_count()
 - feat: outbound billing plan settings API for users, workspaces and virtual lines

@@ -44,8 +44,8 @@ from wxc_sdk.licenses import License, LicenseProperties, LicenseRequest, License
 from wxc_sdk.locations import Floor, Location, LocationAddress
 from wxc_sdk.me import CCExtensions, CountryTelephonyConfigRequirements, EndpointStatus, FeatureAccessCode, \
     GuestCallingNumber, LocationAssignedNumber, LocationNameAddress, MeDevice, MeMonitoredElement, \
-    MeMonitoringSettings, MeNumber, MeOwner, MeProfile, MonitoredElementType, MonitoredLineType, ServicesEnum, \
-    UserEndpoint, UserEndpointType, UserExtension
+    MeMonitoringSettings, MeNumber, MeOwner, MeProfile, MonitoredElementType, MonitoredLineType, OrgLocation, \
+    ServicesEnum, UserEndpoint, UserEndpointType, UserExtension
 from wxc_sdk.me.call_notify import CallNotify, CallNotifyCriteria
 from wxc_sdk.me.callblock import CallBlockNumber
 from wxc_sdk.me.callcenter import AgentACDState, MeCallCenterSettings, MeCallQueue
@@ -59,6 +59,7 @@ from wxc_sdk.me.recording import MeRecordingSettings, MeRecordingVendor
 from wxc_sdk.me.selective_forward import MeSelectiveForwardCriteria
 from wxc_sdk.me.sim_ring import MeSimRing, MeSimRingNumber
 from wxc_sdk.me.snr import MeSNRSettings
+from wxc_sdk.me.speed_dials import MeSpeedDial, MeSpeedDialAvailableMember, MeSpeedDialModify, MeSpeedDials
 from wxc_sdk.meetings import AnswerCondition, ApprovalQuestion, ApprovalRule, AttendeePrivileges, \
     AudioConnectionOptions, AudioConnectionType, AutoRegistrationResult, BreakoutSession, CallInNumbers, \
     CreateMeetingBody, CustomizedQuestionForCreateMeeting, EntryAndExitTone, GetMeetingSurveyResponse, InputMode, \
@@ -393,23 +394,24 @@ __all__ = ['AcdCustomization', 'Action', 'ActionToBePerformed', 'ActionToBePerfo
            'MeEndpoint', 'MeGroupMember', 'MeGroupSettings', 'MeHost', 'MeMobility', 'MeMonitoredElement',
            'MeMonitoringSettings', 'MeNumber', 'MeOwner', 'MeProfile', 'MeRecordingSettings', 'MeRecordingVendor',
            'MeSNRSettings', 'MeSecondaryLine', 'MeSelectedCallerId', 'MeSelectiveForwardCriteria', 'MeSimRing',
-           'MeSimRingNumber', 'MediaFile', 'MediaFileType', 'MediaSessionQuality', 'Meeting', 'MeetingCallType',
-           'MeetingDevice', 'MeetingOptions', 'MeetingPreferenceDetails', 'MeetingService', 'MeetingState',
-           'MeetingTelephony', 'MeetingType', 'MeetingsSite', 'MemberCommon', 'Membership', 'MembershipsData',
-           'MenuKey', 'Message', 'MessageAttachment', 'MessageSummary', 'MessagesData', 'Meta',
-           'MetaObjectResourceType', 'MoHConfig', 'MoHTheme', 'ModeDefaultForwardToSelection', 'ModeForward',
-           'ModeForwardTo', 'ModeManagementFeature', 'MohMessageSetting', 'MonitoredElementCPE',
-           'MonitoredElementMember', 'MonitoredElementSpeedDial', 'MonitoredElementType', 'MonitoredLineType',
-           'MonitoredMember', 'Monitoring', 'MonitoringMember', 'Month', 'MoveCounts', 'MoveNumberCounts', 'MoveUser',
-           'MoveUserJobDetails', 'MoveUsersList', 'MppCustomization', 'Multicast', 'MusicOnHold', 'NameAndCode',
-           'NameObject', 'NetworkConnectionType', 'NetworkType', 'NightService', 'NoAnswer', 'NoiseCancellation',
-           'NonBlockingDisableCalling', 'NoteType', 'Notification', 'NotificationRepeat', 'NotificationType',
-           'NumberAddError', 'NumberAddResponse', 'NumberAndAction', 'NumberDetails', 'NumberItem', 'NumberJob',
-           'NumberListPhoneNumber', 'NumberListPhoneNumberType', 'NumberOwner', 'NumberState', 'NumberType',
-           'NumberUsageType', 'NumbersRequestAction', 'OfficeNumber', 'OnboardingMethod', 'OperatingMode',
-           'OperatingModeDetail', 'OperatingModeForwardTo', 'OperatingModeHoliday', 'OperatingModeRecurYearlyByDate',
-           'OperatingModeRecurYearlyByDay', 'OperatingModeRecurrence', 'OperatingModeSchedule', 'OrgCallCaptions',
-           'OrgComplianceAnnouncement', 'OrgEmergencyCallNotification', 'OrgMSTeamsSettings', 'OrgPrefixObject',
+           'MeSimRingNumber', 'MeSpeedDial', 'MeSpeedDialAvailableMember', 'MeSpeedDialModify', 'MeSpeedDials',
+           'MediaFile', 'MediaFileType', 'MediaSessionQuality', 'Meeting', 'MeetingCallType', 'MeetingDevice',
+           'MeetingOptions', 'MeetingPreferenceDetails', 'MeetingService', 'MeetingState', 'MeetingTelephony',
+           'MeetingType', 'MeetingsSite', 'MemberCommon', 'Membership', 'MembershipsData', 'MenuKey', 'Message',
+           'MessageAttachment', 'MessageSummary', 'MessagesData', 'Meta', 'MetaObjectResourceType', 'MoHConfig',
+           'MoHTheme', 'ModeDefaultForwardToSelection', 'ModeForward', 'ModeForwardTo', 'ModeManagementFeature',
+           'MohMessageSetting', 'MonitoredElementCPE', 'MonitoredElementMember', 'MonitoredElementSpeedDial',
+           'MonitoredElementType', 'MonitoredLineType', 'MonitoredMember', 'Monitoring', 'MonitoringMember', 'Month',
+           'MoveCounts', 'MoveNumberCounts', 'MoveUser', 'MoveUserJobDetails', 'MoveUsersList', 'MppCustomization',
+           'Multicast', 'MusicOnHold', 'NameAndCode', 'NameObject', 'NetworkConnectionType', 'NetworkType',
+           'NightService', 'NoAnswer', 'NoiseCancellation', 'NonBlockingDisableCalling', 'NoteType', 'Notification',
+           'NotificationRepeat', 'NotificationType', 'NumberAddError', 'NumberAddResponse', 'NumberAndAction',
+           'NumberDetails', 'NumberItem', 'NumberJob', 'NumberListPhoneNumber', 'NumberListPhoneNumberType',
+           'NumberOwner', 'NumberState', 'NumberType', 'NumberUsageType', 'NumbersRequestAction', 'OfficeNumber',
+           'OnboardingMethod', 'OperatingMode', 'OperatingModeDetail', 'OperatingModeForwardTo',
+           'OperatingModeHoliday', 'OperatingModeRecurYearlyByDate', 'OperatingModeRecurYearlyByDay',
+           'OperatingModeRecurrence', 'OperatingModeSchedule', 'OrgCallCaptions', 'OrgComplianceAnnouncement',
+           'OrgEmergencyCallNotification', 'OrgLocation', 'OrgMSTeamsSettings', 'OrgPrefixObject',
            'OrganisationVoicemailSettings', 'OrganisationVoicemailSettingsAPI', 'Organization', 'OriginatorType',
            'OutboundProxy', 'OutgoingCallingPlanPermissionsByDigitPattern', 'OutgoingCallingPlanPermissionsByType',
            'OutgoingPermissionCallType', 'OutgoingPermissions', 'OverflowAction', 'OverflowSetting', 'OwnerType',
