@@ -134,6 +134,8 @@ class OASchemaProperty(OABaseModel):
     max_properties: Optional[int] = None
     minimum: Optional[int] = None
     maximum: Optional[int] = None
+    # OpenAPI allows integer and fractional divisors for numeric schemas.
+    multiple_of: Optional[int | float] = None
     min_items: Optional[int] = None
     max_items: Optional[int] = None
     discriminator: Optional[OADiscriminator] = None
