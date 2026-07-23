@@ -897,9 +897,31 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             raise ValueError(f'Response reference {response.ref} did not resolve to a response')
         return dereferenced
 
-    def _endpoint_from_operation(self, spec: OASpec, operation: OAOperation, host: str, path: str, method: str):
+    def _endpoint_from_operation(
+        self, spec: OASpec, operation: OAOperation, host: str, path: str, method: str
+    ) -> Endpoint:
         """
-        Add operation to api
+        Create an SDK endpoint from an OpenAPI operation.
+
+        DELETE operations without a documented successful response are treated as returning an empty
+        ``204 No Content`` response. This fallback leaves the parsed OpenAPI document unchanged and emits a warning.
+
+        :param spec: OpenAPI specification containing the operation and referenced components.
+        :type spec: OASpec
+        :param operation: Operation to convert into an SDK endpoint.
+        :type operation: OAOperation
+        :param host: Base URL for the generated endpoint.
+        :type host: str
+        :param path: URL path for the generated endpoint.
+        :type path: str
+        :param method: HTTP method for the generated endpoint.
+        :type method: str
+        :return: Generated endpoint metadata.
+        :rtype: Endpoint
+        :raises ValueError: If request or response metadata is unsupported, including a non-DELETE operation without
+            a successful response.
+
+        This method may register generated request or response model classes in the registry.
         """
         endpoint_name = snake_case(operation.operation_id)
         method = method
@@ -1001,6 +1023,10 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         response_code, response = next(
             ((rc, content) for rc, content in operation.responses.items() if rc.startswith('2')), (None, None)
         )
+        if response_code is None and method.upper() == 'DELETE':
+            # Some upstream DELETE specs document only error responses even though the endpoint succeeds without a body.
+            log.warning(f'No 2xx response defined for DELETE endpoint {endpoint_name}; assuming 204 No Content')
+            response_code = '204'
         response = self._dereference_response(spec, response)
 
         response_ct, response_content = next(iter(response.content.items()), (None, None)) if response else (None, None)
