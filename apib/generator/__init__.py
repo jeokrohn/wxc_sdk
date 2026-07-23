@@ -73,6 +73,11 @@ class CodeGenerator:
         Generate Python source for the APIB files read
             * dataclasses
             * API classes
+
+        :param with_example: Whether generated model docstrings include examples.
+        :type with_example: bool
+        :return: Complete generated Python module source.
+        :rtype: str
         """
         apis = [api for _, api in self.class_registry.apis()]
 
@@ -100,10 +105,12 @@ class CodeGenerator:
 
             # check for referenced classes in all attributes
             for attr in class_to_check.attributes:
-                if (rc := attr.referenced_class) and rc not in referenced_classes:
+                for referenced_class in attr.class_references:
+                    if referenced_class in referenced_classes:
+                        continue
                     # attribute references a class we are not yet aware off
-                    referenced_classes.add(rc)
-                    class_names_to_check.append(rc)
+                    referenced_classes.add(referenced_class)
+                    class_names_to_check.append(referenced_class)
                 # if
             # for
         # while

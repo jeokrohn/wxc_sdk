@@ -7,7 +7,7 @@ from io import StringIO
 from itertools import chain
 from os.path import commonprefix
 from re import sub, subn
-from typing import Any, Optional, Union
+from typing import Any, Optional
 from urllib.parse import urljoin
 
 import dateutil.parser
@@ -48,10 +48,72 @@ DESC_TEMPLATE = '''    """
 '''
 
 
+def _ordered_class_references(referenced_class: Optional[str], referenced_classes: tuple[str, ...]) -> tuple[str, ...]:
+    """
+    Return class references in stable order without duplicates.
+
+    :param referenced_class: Legacy primary class reference.
+    :type referenced_class: Optional[str]
+    :param referenced_classes: Complete ordered class-reference collection.
+    :type referenced_classes: tuple[str, ...]
+    :return: Ordered unique references, including the primary reference when present.
+    :rtype: tuple[str, ...]
+    """
+    references = chain((referenced_class,) if referenced_class else (), referenced_classes)
+    return tuple(dict.fromkeys(references))
+
+
+def _replace_class_reference(
+    *,
+    python_type: str,
+    referenced_class: Optional[str],
+    referenced_classes: tuple[str, ...],
+    old_reference: str,
+    replacement_type: str,
+    replacement_references: tuple[str, ...],
+) -> tuple[str, Optional[str], tuple[str, ...]]:
+    """
+    Replace one class reference in a generated Python type.
+
+    :param python_type: Python type expression containing the old reference.
+    :type python_type: str
+    :param referenced_class: Legacy primary class reference.
+    :type referenced_class: Optional[str]
+    :param referenced_classes: Complete ordered class-reference collection.
+    :type referenced_classes: tuple[str, ...]
+    :param old_reference: Reference to replace.
+    :type old_reference: str
+    :param replacement_type: Python type expression replacing the old reference.
+    :type replacement_type: str
+    :param replacement_references: Class references required by the replacement type.
+    :type replacement_references: tuple[str, ...]
+    :return: Updated Python type, primary reference, and ordered references.
+    :rtype: tuple[str, Optional[str], tuple[str, ...]]
+    """
+    updated_references: list[str] = []
+    for reference in _ordered_class_references(referenced_class, referenced_classes):
+        if reference == old_reference:
+            updated_references.extend(replacement_references)
+        else:
+            updated_references.append(reference)
+    ordered_references = tuple(dict.fromkeys(updated_references))
+    primary_reference = referenced_class
+    if referenced_class == old_reference:
+        primary_reference = replacement_references[0] if replacement_references else None
+    return (
+        python_type.replace(old_reference, replacement_type),
+        primary_reference,
+        ordered_references,
+    )
+
+
 @dataclass
 class Parameter:
     """
-    One Parameter
+    Generated endpoint parameter and its Python type metadata.
+
+    ``referenced_class`` remains the legacy primary reference. ``referenced_classes``
+    carries every generated class needed by compound types such as ``Union``.
     """
 
     name: str
@@ -63,6 +125,40 @@ class Parameter:
     # true -> parameter is parameter in URL
     url_parameter: bool = field(default=False)
     registry: 'PythonClassRegistry' = field(default=None)
+    referenced_classes: tuple[str, ...] = field(default_factory=tuple)
+
+    @property
+    def class_references(self) -> tuple[str, ...]:
+        """
+        Return every generated class referenced by this parameter.
+
+        :return: Ordered unique class references.
+        :rtype: tuple[str, ...]
+        """
+        return _ordered_class_references(self.referenced_class, self.referenced_classes)
+
+    def replace_class_reference(
+        self, old_reference: str, replacement_type: str, replacement_references: tuple[str, ...]
+    ) -> None:
+        """
+        Replace a class reference in this parameter's type metadata.
+
+        :param old_reference: Reference to replace.
+        :type old_reference: str
+        :param replacement_type: Python type expression replacing the old reference.
+        :type replacement_type: str
+        :param replacement_references: Class references required by the replacement type.
+        :type replacement_references: tuple[str, ...]
+        :return: None.
+        """
+        self.python_type, self.referenced_class, self.referenced_classes = _replace_class_reference(
+            python_type=self.python_type,
+            referenced_class=self.referenced_class,
+            referenced_classes=self.referenced_classes,
+            old_reference=old_reference,
+            replacement_type=replacement_type,
+            replacement_references=replacement_references,
+        )
 
     @property
     def python_name(self) -> str:
@@ -97,8 +193,7 @@ class Parameter:
         arg = f'{self.python_name}:&{python_type}'
         if self.optional:
             arg = f'{arg}&=&None'
-        if self.referenced_class:
-            class_names.add(self.referenced_class)
+        class_names.update(self.class_references)
         return arg
 
     # noinspection PyUnresolvedReferences
@@ -164,7 +259,7 @@ class Parameter:
         else:
             indent = ''
         # most simple form:
-        if not self.referenced_class:
+        if not self.class_references:
             # most simple form
             # body['{name}'] = {python_name}
             yield f"{indent}body['{self.name}'] = {self.python_name}"
@@ -200,6 +295,13 @@ class SourceIO(StringIO):
 
 @dataclass
 class Endpoint:
+    """
+    Generated API endpoint and its request/response type metadata.
+
+    ``result_referenced_class`` remains the legacy primary response reference.
+    ``result_referenced_classes`` carries every class needed by compound result types.
+    """
+
     # python name for the method
     name: str
     # title for docstring
@@ -236,6 +338,40 @@ class Endpoint:
     # example response body
     response_body: str = field(default=None)
     registry: 'PythonClassRegistry' = field(default=None, repr=False)
+    result_referenced_classes: tuple[str, ...] = field(default_factory=tuple, repr=False)
+
+    @property
+    def result_class_references(self) -> tuple[str, ...]:
+        """
+        Return every generated class referenced by the endpoint result.
+
+        :return: Ordered unique result class references.
+        :rtype: tuple[str, ...]
+        """
+        return _ordered_class_references(self.result_referenced_class, self.result_referenced_classes)
+
+    def replace_result_class_reference(
+        self, old_reference: str, replacement_type: str, replacement_references: tuple[str, ...]
+    ) -> None:
+        """
+        Replace a class reference in the endpoint result type metadata.
+
+        :param old_reference: Reference to replace.
+        :type old_reference: str
+        :param replacement_type: Python type expression replacing the old reference.
+        :type replacement_type: str
+        :param replacement_references: Class references required by the replacement type.
+        :type replacement_references: tuple[str, ...]
+        :return: None.
+        """
+        self.result, self.result_referenced_class, self.result_referenced_classes = _replace_class_reference(
+            python_type=self.result,
+            referenced_class=self.result_referenced_class,
+            referenced_classes=self.result_referenced_classes,
+            old_reference=old_reference,
+            replacement_type=replacement_type,
+            replacement_references=replacement_references,
+        )
 
     @property
     def full_url(self) -> str:
@@ -285,8 +421,11 @@ class Endpoint:
             return attribute_list_base(sa)
 
         if self.result and self.result.startswith('list['):
-            if self.result_referenced_class:
-                return self.result_referenced_class
+            if len(self.result_class_references) == 1:
+                return self.result_class_references[0]
+            if self.result_class_references:
+                # A list of union alternatives has no single model suitable for list-endpoint optimizations.
+                return None
             m = re.match(r'list\[(\S+)]', self.result)
             return m and m.group(1)
         return None
@@ -412,12 +551,10 @@ class Endpoint:
             if self.result:
                 if sra := self.single_result_attribute:
                     r_type = sra.python_type
-                    if sra.referenced_class:
-                        class_names.add(sra.referenced_class)
+                    class_names.update(sra.class_references)
                 else:
                     r_type = self.result
-                    if self.result_referenced_class:
-                        class_names.add(self.result_referenced_class)
+                    class_names.update(self.result_class_references)
                 # use List instead of list
                 if r_type.startswith('list['):
                     r_type = 'builtins.' + r_type
@@ -506,8 +643,15 @@ class Endpoint:
             return validate
         if self.result != self.result_referenced_class:
             # complex return type -> need to use TypeAdapter
-            for_ta = self.result.replace(self.result_referenced_class, f'module.{self.result_referenced_class}')
-            ta = eval(f'TypeAdapter({for_ta})')
+            try:
+                result_type = eval(self.result, vars(module))
+            except NameError as e:
+                missing_class = next(
+                    (class_name for class_name in self.result_class_references if not hasattr(module, class_name)),
+                    self.result_referenced_class,
+                )
+                raise ValueError(f'Failed to find class "{missing_class}" in module') from e
+            ta = TypeAdapter(result_type)
             validator = ta.validate_python
         else:
             # simple return type
@@ -531,9 +675,9 @@ class Endpoint:
                         else:
                             validator = model.model_validate
                     else:
-                        python_type = sra.python_type.replace(sra.referenced_class, f'module.{sra.referenced_class}')
+                        python_type = sra.python_type
                         try:
-                            ta = eval(f'TypeAdapter({python_type})')
+                            ta = TypeAdapter(eval(python_type, vars(module)))
                         except NameError as e:
                             raise ValueError(f'Failed to find class "{sra.referenced_class}" in module') from e
                         validator = ta.validate_python
@@ -674,7 +818,10 @@ class Endpoint:
 @dataclass
 class Attribute:
     """
-    one datastructure attribute
+    Attribute of a generated Python class.
+
+    ``referenced_class`` remains the legacy primary reference. ``referenced_classes``
+    carries every generated class needed by compound types such as ``Union``.
     """
 
     name: str
@@ -683,8 +830,47 @@ class Attribute:
     sample: Optional[Any] = None
     referenced_class: Optional[str] = None
     optional: bool = field(default=False)
+    referenced_classes: tuple[str, ...] = field(default_factory=tuple)
 
-    def __post_init__(self):
+    @property
+    def class_references(self) -> tuple[str, ...]:
+        """
+        Return every generated class referenced by this attribute.
+
+        :return: Ordered unique class references.
+        :rtype: tuple[str, ...]
+        """
+        return _ordered_class_references(self.referenced_class, self.referenced_classes)
+
+    def replace_class_reference(
+        self, old_reference: str, replacement_type: str, replacement_references: tuple[str, ...]
+    ) -> None:
+        """
+        Replace a class reference in this attribute's type metadata.
+
+        :param old_reference: Reference to replace.
+        :type old_reference: str
+        :param replacement_type: Python type expression replacing the old reference.
+        :type replacement_type: str
+        :param replacement_references: Class references required by the replacement type.
+        :type replacement_references: tuple[str, ...]
+        :return: None.
+        """
+        self.python_type, self.referenced_class, self.referenced_classes = _replace_class_reference(
+            python_type=self.python_type,
+            referenced_class=self.referenced_class,
+            referenced_classes=self.referenced_classes,
+            old_reference=old_reference,
+            replacement_type=replacement_type,
+            replacement_references=replacement_references,
+        )
+
+    def __post_init__(self) -> None:
+        """
+        Normalize boolean samples that disagree with their declared type.
+
+        :return: None.
+        """
         if (
             self.sample
             and isinstance(self.sample, str)
@@ -698,6 +884,7 @@ class Attribute:
             self.sample = self.sample == 'true'
             self.python_type = 'bool'
             self.referenced_class = None
+            self.referenced_classes = ()
             log.warning(f'attribute "{self.name}" has been converted to a bool')
 
     @classmethod
@@ -1005,7 +1192,7 @@ class PythonAPI:
         return full_api_source
 
 
-def guess_datetime_or_int(sample: Optional[str], type_hint: Optional[str]) -> tuple[Optional[Union[str, int]], str]:
+def guess_datetime_or_int(sample: Optional[str], type_hint: Optional[str]) -> tuple[Optional[str | int], str]:
     """
     Guess type of sample and return tuple:
         * sample value

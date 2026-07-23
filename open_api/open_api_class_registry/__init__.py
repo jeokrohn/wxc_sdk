@@ -7,6 +7,7 @@ import json
 import logging
 import re
 from collections import defaultdict
+from dataclasses import dataclass
 from itertools import chain
 from typing import Any, Optional
 
@@ -30,6 +31,33 @@ log = logging.getLogger(__name__)
 
 # Verb prefixes that appear at the start of operation-specific model names
 _MODEL_VERB_PREFIXES = ('Post', 'Put', 'Patch', 'Get', 'List', 'Modify', 'Create', 'Update', 'Delete', 'Add', 'Set')
+
+
+@dataclass(frozen=True)
+class _ResolvedPythonType:
+    """
+    Python type expression and the generated classes needed by that expression.
+
+    ``referenced_classes`` preserves discovery order so generated unions remain stable.
+
+    :param python_type: Complete generated Python type expression.
+    :type python_type: str
+    :param referenced_classes: Generated class names used by the type expression.
+    :type referenced_classes: tuple[str, ...]
+    """
+
+    python_type: str
+    referenced_classes: tuple[str, ...] = ()
+
+    @property
+    def primary_reference(self) -> Optional[str]:
+        """
+        Return the first class reference for legacy single-reference consumers.
+
+        :return: First referenced class, or ``None`` for a primitive-only type.
+        :rtype: Optional[str]
+        """
+        return self.referenced_classes[0] if self.referenced_classes else None
 
 
 def _strip_model_name(qualified: str) -> str:
@@ -124,7 +152,7 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             self.consolidate_resource_models()
             self._strip_verb_affixes_from_all_models()
             self._merge_include_sets_before_redundancy_elimination()
-        super().normalize()  # type: ignore[no-untyped-call]
+        super().normalize()
 
     def _merge_include_sets_before_redundancy_elimination(self) -> None:
         """
@@ -157,10 +185,14 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
 
     def _apply_class_rename(self, old_name: str, new_name: str) -> None:
         """
-        Rename *old_name* to *new_name* throughout the registry: the class dict key, the
-        PythonClass.name field, every Attribute.referenced_class / python_type that points to
-        the old name, and every Endpoint field (body_class_name, result_referenced_class,
-        result, and parameter referenced_class / python_type).
+        Rename a class and every singular or compound reference to it.
+
+        :param old_name: Current qualified generated class name.
+        :type old_name: str
+        :param new_name: Replacement qualified generated class name.
+        :type new_name: str
+        :return: None.
+        :raises KeyError: If ``old_name`` is not registered.
         """
         pc = self._classes.pop(old_name)
         pc.name = new_name
@@ -168,24 +200,19 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
 
         for other_pc in self._classes.values():
             for attr in other_pc.attributes or []:
-                if attr.referenced_class == old_name:
-                    attr.python_type = attr.python_type.replace(old_name, new_name)
-                    attr.referenced_class = new_name
-            if other_pc.alias and other_pc.alias.referenced_class == old_name:
-                other_pc.alias.python_type = other_pc.alias.python_type.replace(old_name, new_name)
-                other_pc.alias.referenced_class = new_name
+                if old_name in attr.class_references:
+                    attr.replace_class_reference(old_name, new_name, (new_name,))
+            if other_pc.alias and old_name in other_pc.alias.class_references:
+                other_pc.alias.replace_class_reference(old_name, new_name, (new_name,))
 
         for _, endpoint in self.endpoints():
             if endpoint.body_class_name == old_name:
                 endpoint.body_class_name = new_name
-            if endpoint.result_referenced_class == old_name:
-                if endpoint.result:
-                    endpoint.result = endpoint.result.replace(old_name, new_name)
-                endpoint.result_referenced_class = new_name
+            if old_name in endpoint.result_class_references:
+                endpoint.replace_result_class_reference(old_name, new_name, (new_name,))
             for param in chain(endpoint.body_parameter, endpoint.href_parameter):
-                if param.referenced_class == old_name:
-                    param.python_type = param.python_type.replace(old_name, new_name)
-                    param.referenced_class = new_name
+                if old_name in param.class_references:
+                    param.replace_class_reference(old_name, new_name, (new_name,))
 
     def _rename_with_cascade(self, old_name: str, new_name: str) -> None:
         """
@@ -271,8 +298,9 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         global_result_classes: set[str] = set()
         for ep_list in resource_groups.values():
             for ep in ep_list:
-                if ep.result_referenced_class and ep.result_referenced_class in self._classes:
-                    global_result_classes.add(ep.result_referenced_class)
+                global_result_classes.update(
+                    reference for reference in ep.result_class_references if reference in self._classes
+                )
 
         classes_to_remove: set[str] = set()
         consolidated_canonicals: set[str] = set()  # canonicals that absorbed at least one model
@@ -287,8 +315,14 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             for ep in group_eps:
                 if ep.body_class_name and ep.body_class_name in self._classes:
                     body_class_endpoints[ep.body_class_name].append(ep)
-                if ep.result_referenced_class and ep.result_referenced_class in self._classes:
-                    result_classes.add(ep.result_referenced_class)
+                result_classes.update(
+                    reference for reference in ep.result_class_references if reference in self._classes
+                )
+                if (
+                    len(ep.result_class_references) == 1
+                    and ep.result == ep.result_referenced_class
+                    and ep.result_referenced_class in self._classes
+                ):
                     # Single-item GET: method GET and URL ends with /{param}
                     if ep.method.upper() == 'GET' and re.search(r'/\{[^}]+\}$', ep.url):
                         rc = self._classes.get(ep.result_referenced_class)
@@ -380,20 +414,24 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
                 if endpoint.body_class_name and endpoint.body_class_name in body_to_canonical:
                     endpoint.body_class_name = body_to_canonical[endpoint.body_class_name]
                 for param in chain(endpoint.body_parameter, endpoint.href_parameter):
-                    if param.referenced_class and param.referenced_class in body_to_canonical:
-                        new_ref = body_to_canonical[param.referenced_class]
-                        param.python_type = param.python_type.replace(param.referenced_class, new_ref)
-                        param.referenced_class = new_ref
+                    for referenced_class in param.class_references:
+                        if referenced_class not in body_to_canonical:
+                            continue
+                        new_ref = body_to_canonical[referenced_class]
+                        param.replace_class_reference(referenced_class, new_ref, (new_ref,))
             for pc in self._classes.values():
                 for attr in pc.attributes or []:
-                    if attr.referenced_class and attr.referenced_class in body_to_canonical:
-                        new_ref = body_to_canonical[attr.referenced_class]
-                        attr.python_type = attr.python_type.replace(attr.referenced_class, new_ref)
-                        attr.referenced_class = new_ref
-                if pc.alias and pc.alias.referenced_class in body_to_canonical:
-                    new_ref = body_to_canonical[pc.alias.referenced_class]
-                    pc.alias.python_type = pc.alias.python_type.replace(pc.alias.referenced_class, new_ref)
-                    pc.alias.referenced_class = new_ref
+                    for referenced_class in attr.class_references:
+                        if referenced_class not in body_to_canonical:
+                            continue
+                        new_ref = body_to_canonical[referenced_class]
+                        attr.replace_class_reference(referenced_class, new_ref, (new_ref,))
+                if pc.alias:
+                    for referenced_class in pc.alias.class_references:
+                        if referenced_class not in body_to_canonical:
+                            continue
+                        new_ref = body_to_canonical[referenced_class]
+                        pc.alias.replace_class_reference(referenced_class, new_ref, (new_ref,))
 
         # Rename consolidated canonicals: strip leading verb prefix, trailing 'Object', and
         # trailing verb suffix.  Cascade to sub-models whose unqualified name shares the prefix.
@@ -429,12 +467,27 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
 
     def _add_or_get_type_for_property(
         self, prop: OASchemaProperty, name: str, prop_name: str = '', parent_example: Any = None
-    ) -> tuple[str, Optional[str]]:
+    ) -> _ResolvedPythonType:
         """
-        Add or get type for property
+        Resolve an OpenAPI property to a generated Python type.
 
-        :return: python_type and referenced_class
+        :param prop: OpenAPI schema property to resolve.
+        :type prop: OASchemaProperty
+        :param name: Owning generated class name.
+        :type name: str
+        :param prop_name: Property name within the owning class.
+        :type prop_name: str
+        :param parent_example: Example inherited from a containing parameter.
+        :type parent_example: Any
+        :return: Python type expression and all generated class references it requires.
+        :rtype: _ResolvedPythonType
+        :raises ValueError: If a ``oneOf`` is empty or combined with unsupported schema-defining fields.
+        :raises NotImplementedError: If the property uses another unsupported OpenAPI schema shape.
         """
+        if prop.one_of is not None:
+            # Resolve oneOf first so schema-defining siblings cannot silently take precedence.
+            return self._resolve_one_of_property(prop=prop, name=name, prop_name=prop_name)
+
         try:
             ref = None
             if ref := prop.ref or prop.object_ref:
@@ -446,7 +499,7 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
                     desc_prop = next((p for p in prop.all_of if p.description), None)
                     if desc_prop:
                         prop.description = desc_prop.description
-                return referenced_class_name, referenced_class_name  # type: ignore[return-value]
+                return _ResolvedPythonType(referenced_class_name, (referenced_class_name,))
         except AttributeError:
             raise
 
@@ -461,7 +514,7 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             )
             # add to registry
             self._add_class(python_class)
-            return enum_class_name, enum_class_name  # type: ignore[return-value]
+            return _ResolvedPythonType(enum_class_name, (enum_class_name,))
         elif prop.type == 'array':
             # array type
             # we need to create a class for the array
@@ -470,16 +523,14 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             array_class_name = sanitize_class_name(f'{name}{sanitize_class_name(prop_name)}')
             if not prop.items:
                 # fall back to array[string]
-                schema_type = 'string'
-                referenced_class = None
+                item_type = _ResolvedPythonType('str')
                 log.warning(f'No items in array property {prop_name} in {name}. Falling back to array[string]')
             else:
-                schema_type, referenced_class = self._add_or_get_type_for_property(prop.items, array_class_name, 'item')
-                referenced_class = self._class_reference(referenced_class)
-            python_type = f'list[{self._schema_type_to_python_type(schema_type)}]'
-            if referenced_class:
-                referenced_class = self.qualified_class_name(referenced_class)
-            return python_type, referenced_class
+                item_type = self._add_or_get_type_for_property(prop.items, array_class_name, 'item')
+            return _ResolvedPythonType(
+                python_type=f'list[{item_type.python_type}]',
+                referenced_classes=item_type.referenced_classes,
+            )
         elif self._is_simple_type(prop_type := prop.type):
             example = prop.example or parent_example
             if prop_type == 'number' and isinstance(example, int):
@@ -497,37 +548,84 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
                 )
                 log.info(msg)
                 prop_type = 'datetime'
-            return self._schema_type_to_python_type(prop_type), None
+            return _ResolvedPythonType(self._schema_type_to_python_type(prop_type))
         elif prop.type == 'object':
             # create class for object
             if not prop.properties:
                 # empty object
-                return 'dict', None
+                return _ResolvedPythonType('dict')
             object_class_name = sanitize_class_name(f'{name}{sanitize_class_name(prop_name)}')
             object_class_name = self.qualified_class_name(object_class_name)  # type: ignore[assignment]
             self._add_object_schema(object_class_name, prop)
-            return object_class_name, object_class_name
+            return _ResolvedPythonType(object_class_name, (object_class_name,))
         elif any_type := prop.any_type:
             """
             property has any_of and types of all options are identical
             """
             if self._is_simple_type(any_type):
                 any_type = self._schema_type_to_python_type(any_type)
-                return any_type, None
+                return _ResolvedPythonType(any_type)
             else:
                 raise NotImplementedError(f'any_type {any_type}, need to figure out how to handle non-simple types')
         elif not prop.model_fields_set:
             # This is an empty property
             # for code generation we will use 'Any' as the type
             log.warning(f'Empty property {prop_name} in {name}')
-            return 'Any', None
+            return _ResolvedPythonType('Any')
         else:
             raise NotImplementedError(f'Need to handle property {prop_name} in {name}: {prop}')
 
-    def _class_reference(self, schema_type: str) -> Optional[str]:
-        if self._is_simple_type(schema_type):
-            return None
-        return schema_type
+    def _resolve_one_of_property(self, *, prop: OASchemaProperty, name: str, prop_name: str) -> _ResolvedPythonType:
+        """
+        Resolve a nested ``oneOf`` property to an ordered Python ``Union``.
+
+        :param prop: Property carrying the ``oneOf`` alternatives.
+        :type prop: OASchemaProperty
+        :param name: Owning generated class name.
+        :type name: str
+        :param prop_name: Property name within the owning class.
+        :type prop_name: str
+        :return: Ordered union type and all generated class references used by its alternatives.
+        :rtype: _ResolvedPythonType
+        :raises ValueError: If the union is empty or has schema-defining siblings that cannot be combined safely.
+        """
+        context = '.'.join(part for part in (name.split('%')[-1], prop_name) if part)
+        if not prop.one_of:
+            raise ValueError(f'{context}: oneOf must contain at least one alternative')
+
+        # Metadata may accompany oneOf, but another schema-defining keyword would mean an
+        # intersection that cannot be represented by a plain Python Union.
+        metadata_fields = {
+            'one_of',
+            'description',
+            'title',
+            'nullable',
+            'deprecated',
+            'discriminator',
+            'example',
+            'default',
+            'read_only',
+        }
+        unsupported_fields = sorted(prop.model_fields_set - metadata_fields)
+        if unsupported_fields:
+            raise ValueError(
+                f'{context}: oneOf cannot be combined with schema-defining fields: {", ".join(unsupported_fields)}'
+            )
+
+        option_types: list[str] = []
+        referenced_classes: list[str] = []
+        for index, option in enumerate(prop.one_of, start=1):
+            # The suffix gives inline object alternatives stable, collision-free generated names.
+            option_prop_name = f'{prop_name}OneOf{index}' if prop_name else f'OneOf{index}'
+            resolved_option = self._add_or_get_type_for_property(option, name, option_prop_name)
+            if resolved_option.python_type not in option_types:
+                option_types.append(resolved_option.python_type)
+            for referenced_class in resolved_option.referenced_classes:
+                if referenced_class not in referenced_classes:
+                    referenced_classes.append(referenced_class)
+
+        python_type = option_types[0] if len(option_types) == 1 else f'Union[{", ".join(option_types)}]'
+        return _ResolvedPythonType(python_type=python_type, referenced_classes=tuple(referenced_classes))
 
     @staticmethod
     def _schema_type_to_python_type(schema_type: str) -> str:
@@ -541,7 +639,13 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
 
     def _add_object_schema(self, schema_name: str, schema: OASchemaProperty) -> None:
         """
-        Add "object" schema to registry as Python class
+        Add an object schema to the registry as a generated Python class.
+
+        :param schema_name: Name to use for the generated class.
+        :type schema_name: str
+        :param schema: OpenAPI object schema to convert.
+        :type schema: OASchemaProperty
+        :return: None.
         """
         name = self.qualified_class_name(class_name_from_schema_name(schema_name))
         schema_description = schema.description
@@ -556,13 +660,14 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             if actual_prop_name != prop_name:
                 log.warning(f'Property name {prop_name} in {name} contains value, using {actual_prop_name} instead')
                 prop_name = actual_prop_name
-            python_type, referenced_class = self._add_or_get_type_for_property(prop, name, prop_name)
+            resolved_type = self._add_or_get_type_for_property(prop, name, prop_name)
             attr = Attribute(
                 name=prop_name,
-                python_type=python_type,
+                python_type=resolved_type.python_type,
                 docstring=prop.docstring,
                 sample=None,
-                referenced_class=referenced_class,
+                referenced_class=resolved_type.primary_reference,
+                referenced_classes=resolved_type.referenced_classes,
             )
             attrs.append(attr)
         python_class = PythonClass(
@@ -571,11 +676,17 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         # add to registry
         self._add_class(python_class)
 
-    def _add_schema(self, schema_name: str, schema: OASchemaProperty):
+    def _add_schema(self, schema_name: str, schema: OASchemaProperty) -> None:
         """
-        Add schema to registry
+        Add a component schema and any required top-level alias to the registry.
+
+        :param schema_name: Component schema name.
+        :type schema_name: str
+        :param schema: OpenAPI schema to add.
+        :type schema: OASchemaProperty
+        :return: None.
         """
-        python_type, referenced_class = self._add_or_get_type_for_property(schema, sanitize_class_name(schema_name))
+        resolved_type = self._add_or_get_type_for_property(schema, sanitize_class_name(schema_name))
         """
             For a schema like:
                 "LocationListResponse": {
@@ -592,10 +703,27 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
 
             we probably need to create a dummy for LocationListResponse
         """
-        if (unqualified_ref := referenced_class.split('%')[-1]) != schema_name and unqualified_ref.endswith('Item'):
+        referenced_class = resolved_type.primary_reference
+        if (
+            referenced_class
+            and (unqualified_ref := referenced_class.split('%')[-1]) != schema_name
+            and unqualified_ref.endswith('Item')
+        ):
             # this is a list of items, we need to create a dummy class for the list
             # so that we can use it as a type
-            alias_attribute = Attribute(name='alias', python_type=python_type, referenced_class=referenced_class)
+            alias_attribute = Attribute(
+                name='alias',
+                python_type=resolved_type.python_type,
+                referenced_class=referenced_class,
+                referenced_classes=resolved_type.referenced_classes,
+            )
+            dummy_class_name = self.qualified_class_name(snake_case(schema_name))
+            dummy_class = PythonClass(name=dummy_class_name, alias=alias_attribute)
+            self._add_class(dummy_class)
+        elif schema.type == 'object' and not schema.properties:
+            # References to schema-free object components still name the component. Register
+            # a private alias so normalization can replace those references with ``dict``.
+            alias_attribute = Attribute(name='alias', python_type=resolved_type.python_type)
             dummy_class_name = self.qualified_class_name(snake_case(schema_name))
             dummy_class = PythonClass(name=dummy_class_name, alias=alias_attribute)
             self._add_class(dummy_class)
@@ -610,38 +738,54 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         url_parameter: bool = False,
     ) -> Parameter:
         """
-        Create parameter from schema property
+        Create an endpoint parameter from an OpenAPI schema property.
+
+        :param prop_name: Parameter/property name.
+        :type prop_name: str
+        :param prop: OpenAPI schema property describing the parameter.
+        :type prop: OASchemaProperty
+        :param param_required: Names required by the containing object schema.
+        :type param_required: Optional[set[str]]
+        :param url_parameter: Whether the value is interpolated into the URL.
+        :type url_parameter: bool
+        :return: Generated endpoint parameter with complete class-reference metadata.
+        :rtype: Parameter
         """
         param_required = param_required or prop.required and set(prop.required) or {}  # type: ignore[assignment]
         required = param_required and prop_name in param_required
-        python_type, referenced_class = self._add_or_get_type_for_property(prop, prop_name)
+        resolved_type = self._add_or_get_type_for_property(prop, prop_name)
         return Parameter(
             name=prop_name,
-            python_type=python_type,
-            referenced_class=referenced_class,
+            python_type=resolved_type.python_type,
+            referenced_class=resolved_type.primary_reference,
             docstring=prop.docstring,
             sample=prop.example,
             optional=not required,
             url_parameter=url_parameter,
             registry=self,
+            referenced_classes=resolved_type.referenced_classes,
         )
 
     def _parameter_from_oa_parameter(self, param: OAParameter) -> Parameter:
         """
-        Create parameter from OAParameter
+        Create a generated endpoint parameter from an OpenAPI Parameter Object.
+
+        :param param: OpenAPI parameter to convert.
+        :type param: OAParameter
+        :return: Generated endpoint parameter with complete class-reference metadata.
+        :rtype: Parameter
         """
-        python_type, referenced_class = self._add_or_get_type_for_property(
-            param.schema_, param.name, parent_example=param.example
-        )
+        resolved_type = self._add_or_get_type_for_property(param.schema_, param.name, parent_example=param.example)
         return Parameter(
             name=param.name,
-            python_type=python_type,
-            referenced_class=referenced_class,
+            python_type=resolved_type.python_type,
+            referenced_class=resolved_type.primary_reference,
             docstring=param.description,
             sample=param.example,
             optional=not param.required,
             url_parameter=param.in_ == 'path',
             registry=self,
+            referenced_classes=resolved_type.referenced_classes,
         )
 
     def _dereference_request_body(self, spec: OASpec, request_body: Optional[OARequestBody]) -> Optional[OARequestBody]:
@@ -820,10 +964,10 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
                         if body_prop is None:
                             continue
                         attr = attr_by_oas_name.get(field_name)
-                        if attr is None or not attr.referenced_class:
+                        if attr is None or len(attr.class_references) != 1:
                             continue
                         # Resolve the referenced class name (strip qualification prefix)
-                        ref_class_name = attr.referenced_class
+                        ref_class_name = attr.class_references[0]
                         nested_model = self._classes.get(ref_class_name)
                         if nested_model is None or nested_model.is_enum or not nested_model.attributes:
                             continue
@@ -866,6 +1010,7 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             response_body = None
             result = None
             result_referenced_class = None
+            result_referenced_classes: tuple[str, ...] = ()
             if response_code not in {'204', '201', '202', '200'}:
                 raise ValueError(f'unexpected response code {response_code} for {endpoint_name}')
         else:
@@ -878,10 +1023,14 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
                 log.warning(f'No schema in response for {endpoint_name}')
                 result = None
                 result_referenced_class = None
+                result_referenced_classes = ()
             else:
-                result, result_referenced_class = self._add_or_get_type_for_property(
+                resolved_result = self._add_or_get_type_for_property(
                     response_schema, endpoint_name, prop_name='Response'
                 )
+                result = resolved_result.python_type
+                result_referenced_class = resolved_result.primary_reference
+                result_referenced_classes = resolved_result.referenced_classes
 
         endpoint = Endpoint(
             name=endpoint_name,
@@ -899,6 +1048,7 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             response_body=response_body,
             result=result,
             result_referenced_class=result_referenced_class,
+            result_referenced_classes=result_referenced_classes,
             registry=registry,
         )
         return endpoint

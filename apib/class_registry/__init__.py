@@ -9,7 +9,7 @@ from collections.abc import Generator, Iterable
 from dataclasses import dataclass, field
 from functools import partial
 from itertools import chain
-from typing import Optional, Union
+from typing import Optional
 
 from apib.apib import (
     ApibArray,
@@ -115,7 +115,8 @@ class PythonClassRegistry:
         def yield_classes(p_class: PythonClass) -> Generator[PythonClass, None, None]:
             yield from yield_from_classname(p_class.baseclass)
             for attr in p_class.attributes:
-                yield from yield_from_classname(attr.referenced_class)
+                for referenced_class in attr.class_references:
+                    yield from yield_from_classname(referenced_class)
 
             if p_class.name not in visited:
                 visited.add(p_class.name)
@@ -372,17 +373,29 @@ class PythonClassRegistry:
         return class_name
 
     def _attribute_python_type(self, attribute: Attribute) -> str:
-        if not attribute.referenced_class:
+        """
+        Return an attribute type after resolving redundant class references.
+
+        Compound types are updated for every referenced class while preserving the
+        original reference order.
+
+        :param attribute: Generated class attribute whose type should be resolved.
+        :type attribute: Attribute
+        :return: Dereferenced Python type expression.
+        :rtype: str
+        """
+        if not attribute.class_references:
             return attribute.python_type
-        class_name = self._dereferenced_class_name(attribute.referenced_class)
-        if class_name != attribute.referenced_class:
-            # clean up the python type and referenced class on the fly
-            new_python_type = attribute.python_type.replace(attribute.referenced_class, class_name)
+        for referenced_class in attribute.class_references:
+            class_name = self._dereferenced_class_name(referenced_class)
+            if class_name == referenced_class:
+                continue
+            # Clean up every reference in a compound Python type on the fly.
+            old_python_type = attribute.python_type
+            attribute.replace_class_reference(referenced_class, class_name, (class_name,))
             log.debug(
-                f'update attribute {attribute.name}: python_type "{attribute.python_type}" -> "{new_python_type}"'
+                f'update attribute {attribute.name}: python_type "{old_python_type}" -> "{attribute.python_type}"'
             )
-            attribute.referenced_class = class_name
-            attribute.python_type = new_python_type
         return attribute.python_type
 
     def eliminate_redundancies(self):
@@ -420,7 +433,9 @@ class PythonClassRegistry:
             if not pc1.is_enum:
                 # if these are not enums then we actually have to compare the attributes
                 for attr1, attr2 in zip(
-                    sorted(pc1.attributes, key=attrgetter('name')), sorted(pc2.attributes, key=attrgetter('name'))
+                    sorted(pc1.attributes, key=attrgetter('name')),
+                    sorted(pc2.attributes, key=attrgetter('name')),
+                    strict=True,
                 ):
                     attr1: Attribute
                     attr2: Attribute
@@ -431,10 +446,10 @@ class PythonClassRegistry:
                         continue
 
                     # maybe both attributes reference equivalent classes?
-                    if not all((attr1.referenced_class, attr2.referenced_class)):
+                    if len(attr1.class_references) != 1 or len(attr2.class_references) != 1:
                         return False
-                    class1, ref1 = self._dereferenced_class(attr1.referenced_class)
-                    class2, ref2 = self._dereferenced_class(attr2.referenced_class)
+                    class1, ref1 = self._dereferenced_class(attr1.class_references[0])
+                    class2, ref2 = self._dereferenced_class(attr2.class_references[0])
                     if not all((ref1, ref2)) or not classes_equivalent(ref1, ref2):
                         return False
 
@@ -517,25 +532,63 @@ class PythonClassRegistry:
             # for
         # for
 
-    def fix_alias_classes(self):
+    def fix_alias_classes(self) -> None:
         """
-        check for classes that are actually aliases and fix references to these classes
+        Replace model and endpoint references to generated alias classes.
+
+        All references in compound types are resolved in their original order.
+
+        :return: None.
         """
         alias_classes: dict[str, PythonClass] = {ident: pc for ident, pc in self._classes.items() if pc.alias}
         # get all attributes that reference an alias class
         for pc in self._classes.values():
             # go though all attributes and alias (if any) ...
             for attr in pc.attributes or []:
-                if attr.referenced_class in alias_classes:
+                for referenced_class in attr.class_references:
+                    if referenced_class not in alias_classes:
+                        continue
                     # this is an alias class; update the referenced class to the aliased class
-                    alias_class = alias_classes[attr.referenced_class]
+                    alias_class = alias_classes[referenced_class]
                     alias_attr = alias_class.alias
-                    attr.python_type = alias_attr.python_type
-                    attr.referenced_class = alias_attr.referenced_class
-                    log.info(f'fixing reference to alias class {attr.referenced_class} -> {alias_attr.python_type}')
+                    assert alias_attr is not None
+                    attr.replace_class_reference(
+                        referenced_class,
+                        alias_attr.python_type,
+                        alias_attr.class_references,
+                    )
+                    log.info(f'fixing reference to alias class {referenced_class} -> {alias_attr.python_type}')
+
+        for _, endpoint in self.endpoints():
+            for param in chain(endpoint.body_parameter, endpoint.href_parameter):
+                for referenced_class in param.class_references:
+                    if referenced_class not in alias_classes:
+                        continue
+                    alias_attr = alias_classes[referenced_class].alias
+                    assert alias_attr is not None
+                    param.replace_class_reference(
+                        referenced_class,
+                        alias_attr.python_type,
+                        alias_attr.class_references,
+                    )
+                    log.info(
+                        f'fixing parameter reference to alias class {referenced_class} -> {alias_attr.python_type}'
+                    )
+
+            for referenced_class in endpoint.result_class_references:
+                if referenced_class not in alias_classes:
+                    continue
+                alias_attr = alias_classes[referenced_class].alias
+                assert alias_attr is not None
+                endpoint.replace_result_class_reference(
+                    referenced_class,
+                    alias_attr.python_type,
+                    alias_attr.class_references,
+                )
+                log.info(f'fixing result reference to alias class {referenced_class} -> {alias_attr.python_type}')
         return
 
-    def normalize(self):
+    def normalize(self) -> None:
         """
         Eliminate redundancies and then transform all class names to Python class names
             * the normalization makes sure that unique Python class names are used
@@ -552,6 +605,8 @@ class PythonClassRegistry:
                   * ... in Endpoint
             * after normalization updated PythonClass and Attribute instances can be used for code creation
             * check for classes that are actually aliases and fix references to these classes
+
+        :return: None.
         """
         self.eliminate_redundancies()
 
@@ -589,47 +644,41 @@ class PythonClassRegistry:
             pc.baseclass = pc.baseclass and qualident_to_python_name[pc.baseclass]
             # go though all attributes and alias (if any) ...
             for attr in python_class_attributes_and_alias(pc):
-                if attr.referenced_class:
-                    new_class_name = qualident_to_python_name[attr.referenced_class]
-                    attr.python_type = attr.python_type.replace(attr.referenced_class, new_class_name)
-                    attr.referenced_class = new_class_name
+                # Iterate the ordered snapshot so replacing one union member cannot hide later references.
+                for referenced_class in attr.class_references:
+                    new_class_name = qualident_to_python_name[referenced_class]
+                    attr.replace_class_reference(referenced_class, new_class_name, (new_class_name,))
             self._classes[python_name] = pc
 
         # now go through all classes and attributes again and updated to dereferences classes
         for pc in self._classes.values():
             # go though all attributes and alias (if any) ...
             for attr in python_class_attributes_and_alias(pc):
-                if attr.referenced_class:
-                    new_class_name = self._dereferenced_class_name(attr.referenced_class)
-                    if new_class_name != attr.referenced_class:
-                        attr.python_type = attr.python_type.replace(attr.referenced_class, new_class_name)
-                        attr.referenced_class = new_class_name
+                for referenced_class in attr.class_references:
+                    new_class_name = self._dereferenced_class_name(referenced_class)
+                    if new_class_name != referenced_class:
+                        attr.replace_class_reference(referenced_class, new_class_name, (new_class_name,))
 
         # update class references in endpoints
         for key, endpoint in self.endpoints():
             # parameter
             for param in chain(endpoint.body_parameter, endpoint.href_parameter):
-                if param.referenced_class:
-                    python_name = qualident_to_python_name[param.referenced_class]
+                for referenced_class in param.class_references:
+                    python_name = qualident_to_python_name[referenced_class]
                     python_name, _ = self._dereferenced_class(python_name)
-                    param.python_type = param.python_type.replace(param.referenced_class, python_name)
-                    param.referenced_class = python_name
+                    param.replace_class_reference(referenced_class, python_name, (python_name,))
 
             # result class
-            if endpoint.result_referenced_class:
+            for referenced_class in endpoint.result_class_references:
                 try:
-                    python_name = qualident_to_python_name[endpoint.result_referenced_class]
+                    python_name = qualident_to_python_name[referenced_class]
                 except KeyError:
-                    err_txt = (
-                        f'"{endpoint.result_referenced_class}" not found in qualident_to_python_name '
-                        f'endpoint: {endpoint.name}'
-                    )
+                    err_txt = f'"{referenced_class}" not found in qualident_to_python_name endpoint: {endpoint.name}'
                     log.error(err_txt)
                     raise KeyError(err_txt)
 
                 python_name, _ = self._dereferenced_class(python_name)
-                endpoint.result = endpoint.result.replace(endpoint.result_referenced_class, python_name)
-                endpoint.result_referenced_class = python_name
+                endpoint.replace_result_class_reference(referenced_class, python_name, (python_name,))
 
             if endpoint.body_class_name:
                 python_name = qualident_to_python_name[endpoint.body_class_name]
@@ -743,6 +792,7 @@ class PythonClassRegistry:
                                     optional=attr.optional,
                                     referenced_class=attr.referenced_class,
                                     registry=self,
+                                    referenced_classes=attr.referenced_classes,
                                 )
                                 for attr in python_class.attributes
                             ]
@@ -813,7 +863,7 @@ class PythonClassRegistry:
             python_api.add_endpoint(endpoint)
         return
 
-    def _param_from_member_or_select(self, endpoint_name: str, member: Union[ApibMember, ApibSelect]) -> Parameter:
+    def _param_from_member_or_select(self, endpoint_name: str, member: ApibMember | ApibSelect) -> Parameter:
 
         if not (isinstance(member, ApibMember) or isinstance(member, ApibSelect)):
             raise TypeError(f'unexpected parameter type: {member.__class__.__name__}')
@@ -829,7 +879,7 @@ class PythonClassRegistry:
             ]
             python_type = f'Union[{", ".join(sorted(set(types)))}]'
             text_of_options = '\n'.join(
-                f'{option.content.value.content} ({t})' for option, t in zip(member.content, types)
+                f'{option.content.value.content} ({t})' for option, t in zip(member.content, types, strict=True)
             )
             docstring = '\n'.join(
                 l

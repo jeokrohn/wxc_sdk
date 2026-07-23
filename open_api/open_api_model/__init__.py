@@ -79,7 +79,17 @@ class OASchemaPropertyItemsRef(OABaseModel):
 
 
 class OADiscriminator(OABaseModel):
+    """
+    OpenAPI discriminator metadata for a polymorphic schema.
+
+    :param property_name: Property whose value selects the concrete schema.
+    :type property_name: str
+    :param mapping: Optional discriminator-value to schema-reference mapping.
+    :type mapping: Optional[dict[str, str]]
+    """
+
     property_name: str
+    mapping: Optional[dict[str, str]] = None
 
 
 class OASchemaRef(OABaseModel):
@@ -87,6 +97,13 @@ class OASchemaRef(OABaseModel):
 
 
 class OASchemaProperty(OABaseModel):
+    """
+    OpenAPI Schema Object used for components, properties, and nested alternatives.
+
+    Nested ``anyOf``, ``allOf``, and ``oneOf`` alternatives recursively retain complete
+    Schema Objects, including inline types, items, properties, and references.
+    """
+
     title: Optional[str] = None
     type: Optional[str | OASchemaPropertyItemsRef] = None
     deprecated: bool = Field(default=False)
@@ -105,7 +122,7 @@ class OASchemaProperty(OABaseModel):
     # list of possible types
     any_of: Optional[list['OASchemaProperty']] = None
     all_of: Optional[list['OASchemaProperty']] = None
-    one_of: Optional[list['OASchemaRef']] = None
+    one_of: Optional[list['OASchemaProperty']] = None
     format: Optional[str] = None
     max_length: Optional[int] = None
     min_length: Optional[int] = None
@@ -113,6 +130,8 @@ class OASchemaProperty(OABaseModel):
     unique_items: Optional[bool] = None
     read_only: Optional[bool] = None
     additional_properties: Optional[Any] = None
+    min_properties: Optional[int] = None
+    max_properties: Optional[int] = None
     minimum: Optional[int] = None
     maximum: Optional[int] = None
     min_items: Optional[int] = None
@@ -406,7 +425,8 @@ class OASpec(OABaseModel):
 
         For every schema whose ``one_of`` field is set this method:
 
-        1. Validates that no other schema-defining fields (beyond ``description``) are set.
+        1. Validates that no incompatible schema-defining fields are set. A redundant
+           ``type: object`` is accepted.
         2. Dereferences every ``$ref`` listed in ``one_of``.
         3. Computes the union of all properties across the referenced schemas.
         4. Marks a property as *required* only when it is required in **every** referenced schema.
@@ -414,6 +434,14 @@ class OASpec(OABaseModel):
            that carry that property, preserving original order with duplicates removed.
         6. Replaces ``one_of`` with the unified ``type='object'`` / ``properties`` / ``required``
            representation on the schema object so that downstream codegen sees a normal object.
+
+        Nested ``oneOf`` declarations are left intact for the type resolver. Component-level
+        declarations must contain only references to object schemas so this compatibility
+        normalization cannot silently change a primitive or array union into an object.
+
+        :return: None.
+        :raises ValueError: If a component-level ``oneOf`` is empty, contains inline alternatives,
+            references a non-object schema, or is combined with other schema-defining fields.
         """
 
         def ref_to_schema_name(ref: str) -> str:
@@ -424,8 +452,11 @@ class OASpec(OABaseModel):
             if schema.one_of is None:
                 continue
 
-            # Validate: only description and one_of may be explicitly set.
-            disallowed_fields = sorted(schema.model_fields_set - {'description', 'one_of', 'title'})
+            # A redundant ``type: object`` is compatible with the object-only flattening.
+            allowed_fields = {'description', 'discriminator', 'one_of', 'title'}
+            if schema.type == 'object':
+                allowed_fields.add('type')
+            disallowed_fields = sorted(schema.model_fields_set - allowed_fields)
             if disallowed_fields:
                 raise ValueError(
                     f'Schema {schema_name!r}: one_of cannot be unified when other fields are set: '
@@ -433,10 +464,30 @@ class OASpec(OABaseModel):
                 )
 
             # --- 1. Dereference ---
-            referenced: list[OASchemaProperty] = [self.get_schema(ref.ref) for ref in schema.one_of]
+            if not schema.one_of or any(
+                option.ref is None or option.model_fields_set != {'ref'} for option in schema.one_of
+            ):
+                raise ValueError(
+                    f'Schema {schema_name!r}: top-level oneOf alternatives must all be object schema references'
+                )
+            referenced: list[OASchemaProperty] = []
+            for option in schema.one_of:
+                try:
+                    referenced_schema = self.get_schema(option.ref)  # type: ignore[arg-type]
+                except KeyError as e:
+                    raise ValueError(
+                        f'Schema {schema_name!r}: oneOf reference {option.ref!r} could not be resolved'
+                    ) from e
+                if referenced_schema.type != 'object':
+                    raise ValueError(
+                        f'Schema {schema_name!r}: top-level oneOf alternatives must all be object schema references'
+                    )
+                referenced.append(referenced_schema)
 
             # Collect schema names referenced inside oneOf.
-            one_of_schema_names = sorted({ref_to_schema_name(schema_one_of.ref) for schema_one_of in schema.one_of})
+            one_of_schema_names = sorted(
+                {ref_to_schema_name(schema_one_of.ref) for schema_one_of in schema.one_of if schema_one_of.ref}
+            )
 
             # --- 2. Collect all property names ---
             all_names: list[str] = []

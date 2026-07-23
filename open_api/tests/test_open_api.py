@@ -72,6 +72,11 @@ def descend_into_property(
             r = r or descend_into_property(
                 spec=spec, prop=item, path=f'{path}.any_of', call_back=call_back, deref=deref
             )
+    if prop.one_of:
+        for item in prop.one_of:
+            r = r or descend_into_property(
+                spec=spec, prop=item, path=f'{path}.one_of', call_back=call_back, deref=deref
+            )
     if prop.items:
         # this is an array
         assert prop.type == 'array'
