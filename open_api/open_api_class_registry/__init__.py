@@ -481,12 +481,16 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         :type parent_example: Any
         :return: Python type expression and all generated class references it requires.
         :rtype: _ResolvedPythonType
-        :raises ValueError: If a ``oneOf`` is empty or combined with unsupported schema-defining fields.
+        :raises ValueError: If a ``oneOf`` or ``anyOf`` is empty or combined with unsupported
+            schema-defining fields.
         :raises NotImplementedError: If the property uses another unsupported OpenAPI schema shape.
         """
         if prop.one_of is not None:
             # Resolve oneOf first so schema-defining siblings cannot silently take precedence.
             return self._resolve_one_of_property(prop=prop, name=name, prop_name=prop_name)
+        if prop.any_of is not None:
+            # anyOf has the same Python acceptance type as oneOf: an ordered Union of alternatives.
+            return self._resolve_any_of_property(prop=prop, name=name, prop_name=prop_name)
 
         try:
             ref = None
@@ -558,15 +562,6 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             object_class_name = self.qualified_class_name(object_class_name)  # type: ignore[assignment]
             self._add_object_schema(object_class_name, prop)
             return _ResolvedPythonType(object_class_name, (object_class_name,))
-        elif any_type := prop.any_type:
-            """
-            property has any_of and types of all options are identical
-            """
-            if self._is_simple_type(any_type):
-                any_type = self._schema_type_to_python_type(any_type)
-                return _ResolvedPythonType(any_type)
-            else:
-                raise NotImplementedError(f'any_type {any_type}, need to figure out how to handle non-simple types')
         elif not prop.model_fields_set:
             # This is an empty property
             # for code generation we will use 'Any' as the type
@@ -589,14 +584,87 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         :rtype: _ResolvedPythonType
         :raises ValueError: If the union is empty or has schema-defining siblings that cannot be combined safely.
         """
-        context = '.'.join(part for part in (name.split('%')[-1], prop_name) if part)
-        if not prop.one_of:
-            raise ValueError(f'{context}: oneOf must contain at least one alternative')
+        return self._resolve_union_property(
+            prop=prop,
+            alternatives=prop.one_of,
+            name=name,
+            prop_name=prop_name,
+            composition_name='oneOf',
+            composition_field='one_of',
+            option_suffix='OneOf',
+        )
 
-        # Metadata may accompany oneOf, but another schema-defining keyword would mean an
+    def _resolve_any_of_property(self, *, prop: OASchemaProperty, name: str, prop_name: str) -> _ResolvedPythonType:
+        """
+        Resolve a nested ``anyOf`` property to an ordered Python ``Union``.
+
+        Alternatives with the same primitive schema type retain the historical single-type
+        annotation instead of introducing enum classes or a redundant union.
+
+        :param prop: Property carrying the ``anyOf`` alternatives.
+        :type prop: OASchemaProperty
+        :param name: Owning generated class name.
+        :type name: str
+        :param prop_name: Property name within the owning class.
+        :type prop_name: str
+        :return: Ordered union type and all generated class references used by its alternatives.
+        :rtype: _ResolvedPythonType
+        :raises ValueError: If the union is empty or has schema-defining siblings that cannot be combined safely.
+        """
+        return self._resolve_union_property(
+            prop=prop,
+            alternatives=prop.any_of,
+            name=name,
+            prop_name=prop_name,
+            composition_name='anyOf',
+            composition_field='any_of',
+            option_suffix='AnyOf',
+            collapse_same_simple_type=True,
+        )
+
+    def _resolve_union_property(
+        self,
+        *,
+        prop: OASchemaProperty,
+        alternatives: Optional[list[OASchemaProperty]],
+        name: str,
+        prop_name: str,
+        composition_name: str,
+        composition_field: str,
+        option_suffix: str,
+        collapse_same_simple_type: bool = False,
+    ) -> _ResolvedPythonType:
+        """
+        Resolve an OpenAPI composition keyword to an ordered Python ``Union``.
+
+        :param prop: Property carrying the composition alternatives and metadata.
+        :type prop: OASchemaProperty
+        :param alternatives: Ordered Schema Objects declared by the composition keyword.
+        :type alternatives: Optional[list[OASchemaProperty]]
+        :param name: Owning generated class name.
+        :type name: str
+        :param prop_name: Property name within the owning class.
+        :type prop_name: str
+        :param composition_name: OpenAPI keyword used in diagnostics, such as ``oneOf``.
+        :type composition_name: str
+        :param composition_field: Pydantic model field corresponding to the OpenAPI keyword.
+        :type composition_field: str
+        :param option_suffix: Stable suffix used to name inline object alternatives.
+        :type option_suffix: str
+        :param collapse_same_simple_type: Whether identical primitive alternatives collapse to one type.
+        :type collapse_same_simple_type: bool
+        :return: Ordered union type and all generated class references used by its alternatives.
+        :rtype: _ResolvedPythonType
+        :raises ValueError: If the union is empty or has schema-defining siblings that cannot be combined safely.
+        """
+        context = '.'.join(part for part in (name.split('%')[-1], prop_name) if part)
+        if not alternatives:
+            raise ValueError(f'{context}: {composition_name} must contain at least one alternative')
+
+        # Metadata may accompany a composition keyword, but another schema-defining keyword would mean an
         # intersection that cannot be represented by a plain Python Union.
         metadata_fields = {
-            'one_of',
+            composition_field,
             'description',
             'title',
             'nullable',
@@ -609,14 +677,24 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         unsupported_fields = sorted(prop.model_fields_set - metadata_fields)
         if unsupported_fields:
             raise ValueError(
-                f'{context}: oneOf cannot be combined with schema-defining fields: {", ".join(unsupported_fields)}'
+                f'{context}: {composition_name} cannot be combined with schema-defining fields: '
+                f'{", ".join(unsupported_fields)}'
             )
+
+        if collapse_same_simple_type:
+            schema_type = alternatives[0].type
+            if (
+                isinstance(schema_type, str)
+                and self._is_simple_type(schema_type)
+                and all(option.type == schema_type for option in alternatives)
+            ):
+                return _ResolvedPythonType(self._schema_type_to_python_type(schema_type))
 
         option_types: list[str] = []
         referenced_classes: list[str] = []
-        for index, option in enumerate(prop.one_of, start=1):
+        for index, option in enumerate(alternatives, start=1):
             # The suffix gives inline object alternatives stable, collision-free generated names.
-            option_prop_name = f'{prop_name}OneOf{index}' if prop_name else f'OneOf{index}'
+            option_prop_name = f'{prop_name}{option_suffix}{index}' if prop_name else f'{option_suffix}{index}'
             resolved_option = self._add_or_get_type_for_property(option, name, option_prop_name)
             if resolved_option.python_type not in option_types:
                 option_types.append(resolved_option.python_type)
