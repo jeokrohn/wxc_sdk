@@ -163,7 +163,9 @@ class UserLicenseType(str, Enum):
 
 
 class UserBase(ApiModel):
+    #: First name of a person, workspace or virtual line.
     first_name: Optional[str] = None
+    #: Last name of a person, workspace or virtual line.
     last_name: Optional[str] = None
     user_type: Optional[UserType] = Field(alias='type', default=None)
 
@@ -202,8 +204,9 @@ class Greeting(str, Enum):
     DEFAULT indicates that a system default message will be placed when incoming calls are intercepted.
     """
 
-    #: A custom will be placed when incoming calls are intercepted.
+    #: Play custom greeting.
     custom = 'CUSTOM'
+    #: Play default greeting.
     #: A System default message will be placed when incoming calls are intercepted.
     default = 'DEFAULT'
     playlist = 'PLAYLIST'

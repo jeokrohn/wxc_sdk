@@ -60,9 +60,9 @@ class GetAvailableAgentsCallQueueObject(ApiModel):
     id: Optional[str] = None
     #: Last name of the agent assigned to the particular location.
     last_name: Optional[str] = None
-    #: First name of the agent assigned to the particular location. Defaults to ".".
+    #: First name of the agent assigned to the particular location.
     first_name: Optional[str] = None
-    #: (string, optional) - Display name of the agent.
+    #: Display name of the agent.
     display_name: Optional[str] = None
     #: Type of the person, workspace or virtual line.
     type: Optional[UserType] = None

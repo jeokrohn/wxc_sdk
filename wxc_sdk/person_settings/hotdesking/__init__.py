@@ -11,46 +11,50 @@ __all__ = ['HotDeskingApi', 'HotDeskingAvailableMember', 'HotDeskingMember', 'Ho
 
 
 class HotDeskingAvailableMember(ApiModel):
-    #: Unique identifier for the available member.
+    #: Unique identifier for the member.
     id: Optional[str] = None
-    #: First name of the available member.
+    #: First name of the member.
     first_name: Optional[str] = None
-    #: Last name of the available member.
+    #: Last name of the member.
     last_name: Optional[str] = None
-    #: Phone number of the available member.
+    #: Phone number of the member. Currently, E.164 format is not supported.
     phone_number: Optional[str] = None
-    #: Extension of the available member.
+    #: Phone extension of the member.
     extension: Optional[str] = None
-    #: Routing prefix of the member's location.
+    #: Routing prefix of the location.
     routing_prefix: Optional[str] = None
-    #: Enterprise significant number for the available member.
+    #: Routing prefix plus extension of a person or workspace.
     esn: Optional[str] = None
+    #: Indicates if the line is acting as a primary line or a shared line for this device.
     line_type: Optional[PrimaryOrShared] = None
     member_type: Optional[UserType] = None
+    #: Location object containing a unique identifier for the location and its name.
     location: Optional[IdAndName] = None
 
 
 class HotDeskingMember(ApiModel):
     #: Unique identifier for the assigned member.
     id: Optional[str] = None
-    #: First name of the assigned member.
+    #: First name of the person or workspace.
     first_name: Optional[str] = None
-    #: Last name of the assigned member.
+    #: Last name of the person or workspace.
     last_name: Optional[str] = None
-    #: Phone number of the assigned member.
+    #: Phone number of the person or workspace. Currently, E.164 format is not supported. This will be supported in a
+    #: future update.
     phone_number: Optional[str] = None
-    #: Extension of the assigned member.
+    #: Phone extension of the person or workspace.
     extension: Optional[str] = None
-    #: Routing prefix of the member's location.
+    #: Routing prefix of the location.
     routing_prefix: Optional[str] = None
-    #: Enterprise significant number for the assigned member.
+    #: Routing prefix plus extension of a person or workspace.
     esn: Optional[str] = None
-    #: Indicates whether this member is the hot desking guest profile owner.
+    #: If `true`, the person or workspace is the owner of the device. Points to the primary line/port of the device.
     primary_owner: Optional[bool] = None
-    #: Port assigned to the member.
+    #: Device port number assigned to the person or workspace.
     port: Optional[int] = None
-    #: T.38 fax compression setting for the member line.
+    #: T.38 Fax Compression setting. Valid only for ATA Devices. Overrides user-level compression options.
     t38_fax_compression_enabled: Optional[bool] = None
+    #: Indicates if the line is acting as a primary line or a shared line for this device.
     line_type: Optional[PrimaryOrShared] = None
     #: Number of lines configured for the member on the hot desking guest profile endpoint.
     line_weight: Optional[int] = None
@@ -58,14 +62,17 @@ class HotDeskingMember(ApiModel):
     host_ip: Optional[str] = Field(alias='hostIP', default=None)
     #: Registration remote IP address for the line port.
     remote_ip: Optional[str] = Field(alias='remoteIP', default=None)
-    #: Whether this line automatically calls a predefined number when taken off-hook.
+    #: Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line
+    #: can only make calls to the predefined number set in `hotlineDestination`.
     hotline_enabled: Optional[bool] = None
     #: Preconfigured number for the hotline. Required when `hotlineEnabled` is `true`.
     hotline_destination: Optional[str] = None
-    #: When enabled, a call decline request is extended to all endpoints on the line. When disabled, the call is
-    #: declined only at the current endpoint.
+    #: Set how a device behaves when a call is declined. When set to `true`, a call decline request is extended to all
+    #: endpoints on the device. When set to `false`, a call decline request is only declined at the current endpoint.
     allow_call_decline_enabled: Optional[bool] = None
+    #: Indicates if the member is of type `PEOPLE` or `PLACE`.
     member_type: Optional[UserType] = None
+    #: Location object containing a unique identifier for the location and its name.
     location: Optional[IdAndName] = None
 
     def update(self) -> dict[str, Any]:

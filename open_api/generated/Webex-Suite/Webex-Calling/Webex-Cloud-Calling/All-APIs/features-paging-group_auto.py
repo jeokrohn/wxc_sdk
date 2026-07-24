@@ -35,10 +35,9 @@ class GetPagingGroupAgentObject(ApiModel):
     last_name: Optional[str] = None
     #: Type of the person, workspace or virtual line.
     type: Optional[GetPagingGroupAgentObjectType] = None
-    #: Agent's phone number. Minimum length is 1. Maximum length is 23.  Either `phoneNumber` or `extension` is
-    #: mandatory.
+    #: Agent's phone number. Minimum length is 1. Maximum length is 23. Either phoneNumber or extension is mandatory.
     phone_number: Optional[str] = None
-    #: Agent's extension. Minimum length is 2. Maximum length is 10.  Either `phoneNumber` or `extension` is mandatory.
+    #: Agent's extension. Minimum length is 2. Maximum length is 10. Either phoneNumber or extension is mandatory.
     extension: Optional[str] = None
     #: Routing prefix of location.
     routing_prefix: Optional[str] = None

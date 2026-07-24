@@ -55,7 +55,7 @@ class VirtualLine(ApiModel):
     last_name: Optional[str] = None
     #: First name for virtual line.
     first_name: Optional[str] = None
-    #: Display name defined for a virtual line.
+    #: The display name defined for the virtual line.
     display_name: Optional[str] = None
     #: `callerIdLastName` for virtual line.
     caller_id_last_name: Optional[str] = None

@@ -75,9 +75,10 @@ __all__ = [
 class DeviceOwner(ApiModel):
     #: unique identifier for user or workspace the device is owned by
     owner_id: str = Field(alias='id', default=None)
-    #: last name of device owner.
+    #: The last name of the device owner. This field is not returned when the value is a placeholder such as `.` or `-`.
     last_name: Optional[str] = None
-    #: First name of device owner.
+    #: The first name of the device owner. This field is not returned when the value is a placeholder such as
+    #: `.` or `-`.
     first_name: Optional[str] = None
     #: user or workspace?
     owner_type: UserType = Field(alias='type')

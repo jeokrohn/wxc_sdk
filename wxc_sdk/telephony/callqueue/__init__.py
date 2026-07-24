@@ -403,7 +403,7 @@ class AvailableAgent(ApiModel):
     id: Optional[str] = None
     #: Last name of the agent assigned to the particular location.
     last_name: Optional[str] = None
-    #: First name of the agent assigned to the particular location. Defaults to ".".
+    #: First name of the agent assigned to the particular location.
     first_name: Optional[str] = None
     #: Display name of the agent.
     display_name: Optional[str] = None

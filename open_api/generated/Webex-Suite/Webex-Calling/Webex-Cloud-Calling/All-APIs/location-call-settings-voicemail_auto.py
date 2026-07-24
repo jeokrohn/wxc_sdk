@@ -49,7 +49,7 @@ class GetLocationVoicemailGroupObjectMessageStorage(ApiModel):
 class GetLocationVoicemailGroupObjectNotifications(ApiModel):
     #: Enable/disable messages notification
     enabled: Optional[bool] = None
-    #: Notifications to be sent to provided email to SMS gateway.
+    #: Notifications to be sent to the provided email to SMS gateway.
     destination: Optional[str] = None
 
 

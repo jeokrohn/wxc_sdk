@@ -14253,7 +14253,7 @@ class AsCallInterceptApi(AsPersonSettingsApiChild):
         data = intercept.update()
         await self.put(ep, params=params, json=data)
 
-    async def greeting(self, entity_id: str, content: Union[BufferedReader, str], upload_as: str = None, org_id: str = None):
+    async def greeting(self, entity_id: str, content: BufferedReader | str, upload_as: str = None, org_id: str = None):
         """
         Configure Call Intercept Greeting
 
@@ -21935,7 +21935,7 @@ class AsAutoAttendantApi(AsApiChild, base='telephony/config/autoAttendants'):
         :type location_id: str
         :param auto_attendant_id: Retrieve the auto attendant with the matching ID.
         :type auto_attendant_id: str
-        :param org_id: Retrieve auto attendant details from this organization.
+        :param org_id: Retrieve the auto attendant details from this organization.
         :type org_id: str
         :return: auto attendant details
         :rtype: :class:`AutoAttendant`
@@ -29359,9 +29359,9 @@ class AsHuntGroupApi(AsApiChild, base='telephony/config/huntGroups'):
 
         :param location_id: Retrieve settings for a hunt group in this location.
         :type location_id: str
-        :param huntgroup_id: Retrieve settings for the hunt group with this identifier.
+        :param huntgroup_id: Retrieve the settings for the hunt group with this identifier.
         :type huntgroup_id: str
-        :param org_id: Retrieve hunt group settings from this organization.
+        :param org_id: Retrieve the hunt group settings from this organization.
         :type org_id: str
         :return: hunt group details
         """

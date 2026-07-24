@@ -50,9 +50,9 @@ class ECBNQuality(str, Enum):
 class PersonECBNDirectLine(ApiModel):
     #: The callback phone number that is associated with the direct line.
     phone_number: Optional[str] = None
-    #: First name of the user.
+    #: The first name of the user.
     first_name: Optional[str] = None
-    #: Last name of the user.
+    #: The last name of the user.
     last_name: Optional[str] = None
     #: The source from which the emergency calling line ID (CLID) is selected for an actual emergency call, applying
     #: fallback rules as necessary.

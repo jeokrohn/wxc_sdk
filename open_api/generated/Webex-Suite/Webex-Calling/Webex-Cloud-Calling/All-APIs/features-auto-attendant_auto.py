@@ -35,9 +35,13 @@ __all__ = ['ActionToBePerformedObject', 'ActionToBePerformedObjectAction', 'Alte
 
 
 class AlternateNumbersObjectRingPattern(str, Enum):
+    #: Normal incoming ring pattern.
     normal = 'NORMAL'
+    #: Incoming ring pattern of two long rings.
     long_long = 'LONG_LONG'
+    #: Incoming ring pattern of two short rings, followed by a short ring.
     short_short_long = 'SHORT_SHORT_LONG'
+    #: Incoming ring pattern of a short ring, followed by a long ring, followed by a short ring.
     short_long_short = 'SHORT_LONG_SHORT'
 
 
@@ -324,40 +328,56 @@ class GetAutoAttendantCallForwardSelectiveRuleObject(ApiModel):
 
 
 class GetAutoAttendantObjectExtensionDialing(str, Enum):
+    #: Enterprise (organization) level extension dialing.
     enterprise = 'ENTERPRISE'
+    #: Group (location) level extension dialing.
     group = 'GROUP'
 
 
 class HoursMenuGetObjectGreeting(str, Enum):
+    #: Play default greeting.
     default = 'DEFAULT'
+    #: Play custom greeting.
     custom = 'CUSTOM'
 
 
 class KeyConfigurationsGetObjectKey(str, Enum):
+    #: When the 0 key is pressed, perform the operation specified by the `action` field.
     d0 = '0'
+    #: When the 1 key is pressed, perform the operation specified by the `action` field.
     d1 = '1'
+    #: When the 2 key is pressed, perform the operation specified by the `action` field.
     d2 = '2'
+    #: When the 3 key is pressed, perform the operation specified by the `action` field.
     d3 = '3'
+    #: When the 4 key is pressed, perform the operation specified by the `action` field.
     d4 = '4'
+    #: When the 5 key is pressed, perform the operation specified by the `action` field.
     d5 = '5'
+    #: When the 6 key is pressed, perform the operation specified by the `action` field.
     d6 = '6'
+    #: When the 7 key is pressed, perform the operation specified by the `action` field.
     d7 = '7'
+    #: When the 8 key is pressed, perform the operation specified by the `action` field.
     d8 = '8'
+    #: When the 9 key is pressed, perform the operation specified by the `action` field.
     d9 = '9'
+    #: When the * key is pressed, perform the operation specified by the `action` field.
     star = '*'
+    #: When the # key is pressed, perform the operation specified by the `action` field.
     hash = '#'
 
 
 class KeyConfigurationsGetObjectAction(str, Enum):
     #: Plays a recorded message and then returns to the current Auto Attendant menu.
     play_announcement = 'PLAY_ANNOUNCEMENT'
-    #: Transfers the call to the specified number, without playing a transfer prompt.
-    transfer_with_prompt = 'TRANSFER_WITH_PROMPT'
     #: Plays the message and then transfers the call to the specified number.
+    transfer_with_prompt = 'TRANSFER_WITH_PROMPT'
+    #: Transfers the call to the specified number, without playing a transfer prompt.
     transfer_without_prompt = 'TRANSFER_WITHOUT_PROMPT'
     #: Plays the message and then transfers the call to the specified operator number.
     transfer_to_operator = 'TRANSFER_TO_OPERATOR'
-    #: Prompts the user for an extension, and transfers the user to voice mailbox of the dialed extension.
+    #: Transfers the call to the configured mailbox, without playing a transfer prompt.
     transfer_to_mailbox = 'TRANSFER_TO_MAILBOX'
     #: Brings the user into the automated name directory.
     name_dialing = 'NAME_DIALING'
@@ -425,7 +445,7 @@ class CallTreatmentObject(ApiModel):
     #: Number of times to repeat the Welcome greeting when the user does not provide an input. By default, NO_REPEAT is
     #: set.
     retry_attempt_for_no_input: Optional[CallTreatmentObjectRetryAttemptForNoInput] = None
-    #: Interval the Auto Attendant service waits before timing out. By default, 10 seconds. Min value is 1 and max
+    #: Interval the Auto Attendant service waits before timing out. By default, 10 seconds. Min value is 1, and max
     #: value is 60.
     no_input_timer: Optional[str] = None
     #: Action to perform after the retry attempt is reached.
@@ -435,7 +455,7 @@ class CallTreatmentObject(ApiModel):
 class HoursMenuGetObject(ApiModel):
     #: Greeting type defined for the auto attendant.
     greeting: Optional[HoursMenuGetObjectGreeting] = None
-    #: Flag to indicate if auto attendant extension is enabled or not.
+    #: If `true`, extension dialing without requiring a menu item is enabled.
     extension_enabled: Optional[bool] = None
     #: Announcement Audio File details.
     audio_announcement_file: Optional[AudioAnnouncementFileGetObject] = None
@@ -465,7 +485,7 @@ class GetAutoAttendantObject(ApiModel):
     id: Optional[str] = None
     #: Unique name for the auto attendant.
     name: Optional[str] = None
-    #: Flag to indicate if auto attendant number is enabled or not.
+    #: If `true` auto attendant is enabled.
     enabled: Optional[bool] = None
     #: Auto attendant phone number.  Either `phoneNumber` or `extension` is mandatory.
     phone_number: Optional[str] = None
@@ -956,7 +976,7 @@ class FeaturesAutoAttendantApi(ApiChild, base='telephony/config'):
         :type location_id: str
         :param auto_attendant_id: Retrieve the auto attendant with the matching ID.
         :type auto_attendant_id: str
-        :param org_id: Retrieve auto attendant details from this organization.
+        :param org_id: Retrieve the auto attendant details from this organization.
         :type org_id: str
         :rtype: :class:`GetAutoAttendantObject`
         """

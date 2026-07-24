@@ -373,10 +373,10 @@ class CallerIdInfo(ApiModel):
     #: or from another location with the same country, PSTN provider, and zone (only applicable for India locations)
     #: as the person's location.
     custom_number: Optional[str] = None
-    #: Person's Caller ID first name.  Characters of `%`,  `+`, ``, `"` and Unicode characters are not allowed. This
+    #: Person's Caller ID first name. Characters `%`, `+`, `` ` ``, `"`, and Unicode characters are not allowed. This
     #: field has been deprecated. Please use `directLineCallerIdName` and `dialByFirstName` instead.
     first_name: Optional[str] = None
-    #: Person's Caller ID last name.  Characters of `%`,  `+`, ``, `"` and Unicode characters are not allowed. This
+    #: Person's Caller ID last name. Characters `%`, `+`, `` ` ``, `"`, and Unicode characters are not allowed. This
     #: field has been deprecated. Please use `directLineCallerIdName` and `dialByLastName` instead.
     last_name: Optional[str] = None
     #: Block this person's identity when receiving a call.

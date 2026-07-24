@@ -1200,9 +1200,9 @@ class DeviceOwner(ApiModel):
     id: Optional[str] = None
     #: Enumeration that indicates if the member is of type `PEOPLE` or `PLACE`.
     type: Optional[MemberType] = None
-    #: First name of device owner.
+    #: First name of the device owner. This field is not returned when the value is a placeholder such as `.` or `-`.
     first_name: Optional[str] = None
-    #: Last name of device owner.
+    #: Last name of the device owner. This field is not returned when the value is a placeholder such as `.` or `-`.
     last_name: Optional[str] = None
 
 

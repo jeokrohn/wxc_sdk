@@ -113,23 +113,23 @@ class Location(ApiModel):
 
 
 class AvailableSharedLineMemberItem(ApiModel):
-    #: A unique member identifier.
+    #: Unique identifier for the member.
     id: Optional[str] = None
-    #: First name of member.
+    #: First name of the member.
     first_name: Optional[str] = None
-    #: Last name of member.
+    #: Last name of the member.
     last_name: Optional[str] = None
-    #: Phone number of member. Currently, E.164 format is not supported.
+    #: Phone number of the member. Currently, E.164 format is not supported.
     phone_number: Optional[str] = None
-    #: Phone extension of member.
+    #: Phone extension of the member.
     extension: Optional[str] = None
-    #: Routing prefix of location.
+    #: Routing prefix of the location.
     routing_prefix: Optional[str] = None
-    #: Routing prefix + extension of a person or workspace.
+    #: Routing prefix plus extension of a person or workspace.
     esn: Optional[str] = None
-    #: If the line is acting as a primary line or a shared line for this device.
+    #: Indicates if the line is acting as a primary line or a shared line for this device.
     line_type: Optional[LineType] = None
-    #: Location object having a unique identifier for the location and its name.
+    #: Location object containing a unique identifier for the location and its name.
     location: Optional[Location] = None
 
 
@@ -152,26 +152,26 @@ class UserType(str, Enum):
 class GetSharedLineMemberItem(ApiModel):
     #: Unique identifier for the member.
     id: Optional[str] = None
-    #: First name of person or workspace.
+    #: First name of the person or workspace.
     first_name: Optional[str] = None
-    #: Last name of person or workspace.
+    #: Last name of the person or workspace.
     last_name: Optional[str] = None
-    #: Phone number of a person or workspace. Currently, E.164 format is not supported. This will be supported in the
+    #: Phone number of the person or workspace. Currently, E.164 format is not supported. This will be supported in a
     #: future update.
     phone_number: Optional[str] = None
-    #: Phone extension of a person or workspace.
+    #: Phone extension of the person or workspace.
     extension: Optional[str] = None
-    #: Routing prefix of location.
+    #: Routing prefix of the location.
     routing_prefix: Optional[str] = None
-    #: Routing prefix + extension of a person or workspace.
+    #: Routing prefix plus extension of a person or workspace.
     esn: Optional[str] = None
-    #: Device port number assigned to a person or workspace.
+    #: Device port number assigned to the person or workspace.
     port: Optional[int] = None
-    #: T.38 Fax Compression setting. Valid only for ATA Devices. Overrides user level compression options.
+    #: T.38 Fax Compression setting. Valid only for ATA Devices. Overrides user-level compression options.
     t38_fax_compression_enabled: Optional[bool] = None
-    #: If `true` the person or the workspace is the owner of the device. Points to primary line/port of the device.
+    #: If `true`, the person or workspace is the owner of the device. Points to the primary line/port of the device.
     primary_owner: Optional[str] = None
-    #: If the line is acting as a primary line or a shared line for this device.
+    #: Indicates if the line is acting as a primary line or a shared line for this device.
     line_type: Optional[LineType] = None
     #: Number of lines that have been configured for the person on the device.
     line_weight: Optional[int] = None
@@ -180,19 +180,18 @@ class GetSharedLineMemberItem(ApiModel):
     #: Registration remote IP for the line port.
     remote_ip: Optional[str] = Field(alias='remoteIP', default=None)
     #: Configure this line to automatically call a predefined number whenever taken off-hook. Once enabled, the line
-    #: can only make calls to the predefined number set in hotlineDestination.
+    #: can only make calls to the predefined number set in `hotlineDestination`.
     hotline_enabled: Optional[bool] = None
     #: Preconfigured number for the hotline. Required only if `hotlineEnabled` is set to `true`.
     hotline_destination: Optional[str] = None
     #: Set how a device behaves when a call is declined. When set to `true`, a call decline request is extended to all
-    #: the endpoints on the device. When set to `false`, a call decline request is only declined at the current
-    #: endpoint.
+    #: endpoints on the device. When set to `false`, a call decline request is only declined at the current endpoint.
     allow_call_decline_enabled: Optional[bool] = None
     #: Device line label.
     line_label: Optional[str] = None
-    #: If the member is of type `PEOPLE` or `PLACE`.
+    #: Indicates if the member is of type `PEOPLE` or `PLACE`.
     member_type: Optional[UserType] = None
-    #: Location object having a unique identifier for the location and its name.
+    #: Location object containing a unique identifier for the location and its name.
     location: Optional[Location] = None
 
 
@@ -2623,24 +2622,23 @@ class UserCallSettings22Api(ApiChild, base=''):
         """
         Search Shared-Line Appearance Members
 
-        Get members available for shared-line assignment to a Webex Calling Apps Desktop device.
+        Retrieve members available for shared-line assignment to a Webex Calling Apps Desktop device.
 
-        This API requires a full or user administrator or location administrator auth token with the
-        `spark-admin:people_read` scope.
+        This API requires a full, user, or location administrator auth token with the `spark-admin:people_read` scope.
 
-        :param person_id: A unique identifier for the person.
+        :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param application_id: A unique identifier for the application.
+        :param application_id: Unique identifier for the application.
         :type application_id: str
         :param location: Location ID for the user.
         :type location: str
-        :param name: Search for users with names that match the query.
+        :param name: Search for users whose names match the query.
         :type name: str
-        :param number: Search for users with numbers that match the query.
+        :param number: Search for users whose numbers match the query.
         :type number: str
         :param order: Sort by first name (`fname`) or last name (`lname`).
         :type order: str
-        :param extension: Search for users with extensions that match the query.
+        :param extension: Search for users whose extensions match the query.
         :type extension: str
         :return: Generator yielding :class:`AvailableSharedLineMemberItem` instances
         """
@@ -2661,14 +2659,13 @@ class UserCallSettings22Api(ApiChild, base=''):
         """
         Get Shared-Line Appearance Members
 
-        Get primary and secondary members assigned to a shared line on a Webex Calling Apps Desktop device.
+        Retrieve primary and secondary members assigned to a shared line on a Webex Calling Apps Desktop device.
 
-        This API requires a full or user administrator or location administrator auth token with the
-        `spark-admin:people_read` scope.
+        This API requires a full, user, or location administrator auth token with the `spark-admin:people_read` scope.
 
-        :param person_id: A unique identifier for the person.
+        :param person_id: Unique identifier for the person.
         :type person_id: str
-        :param application_id: A unique identifier for the application.
+        :param application_id: Unique identifier for the application.
         :type application_id: str
         :rtype: :class:`GetSharedLineMemberList`
         """

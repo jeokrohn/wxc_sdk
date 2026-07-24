@@ -38,7 +38,9 @@ class Dialing(str, Enum):
     Dialing setting.
     """
 
+    #: Enterprise (organization) level extension dialing.
     enterprise = 'ENTERPRISE'
+    #: Group (location) level extension dialing.
     group = 'GROUP'
 
 
@@ -62,16 +64,25 @@ class AutoAttendantAction(str, Enum):
     Auto Attendant Action
     """
 
-    transfer_without_prompt = 'TRANSFER_WITHOUT_PROMPT'
-    transfer_with_prompt = 'TRANSFER_WITH_PROMPT'
-    transfer_to_operator = 'TRANSFER_TO_OPERATOR'
-    name_dialing = 'NAME_DIALING'
-    extension_dialing = 'EXTENSION_DIALING'
-    repeat_menu = 'REPEAT_MENU'
-    exit = 'EXIT'
-    transfer_to_mailbox = 'TRANSFER_TO_MAILBOX'
-    return_to_previous_menu = 'RETURN_TO_PREVIOUS_MENU'
+    #: Plays a recorded message and then returns to the current Auto Attendant menu.
     play_announcement = 'PLAY_ANNOUNCEMENT'
+    #: Plays the message and then transfers the call to the specified number.
+    transfer_with_prompt = 'TRANSFER_WITH_PROMPT'
+    #: Transfers the call to the specified number, without playing a transfer prompt.
+    transfer_without_prompt = 'TRANSFER_WITHOUT_PROMPT'
+    #: Plays the message and then transfers the call to the specified operator number.
+    transfer_to_operator = 'TRANSFER_TO_OPERATOR'
+    #: Transfers the call to the configured mailbox, without playing a transfer prompt.
+    transfer_to_mailbox = 'TRANSFER_TO_MAILBOX'
+    #: Brings the user into the automated name directory.
+    name_dialing = 'NAME_DIALING'
+    #: Prompts the user for an extension, and transfers the user.
+    extension_dialing = 'EXTENSION_DIALING'
+    #: Replays the Auto Attendant greeting.
+    repeat_menu = 'REPEAT_MENU'
+    #: Terminates the call.
+    exit = 'EXIT'
+    return_to_previous_menu = 'RETURN_TO_PREVIOUS_MENU'
 
 
 class AutoAttendantKeyConfiguration(ApiModel):
@@ -146,7 +157,7 @@ class CallTreatment(ApiModel):
     #: Number of times to repeat the Welcome greeting when the user does not provide an input. By default, NO_REPEAT is
     #: set.
     retry_attempt_for_no_input: Optional[CallTreatmentRetry] = None
-    #: Interval the Auto Attendant service waits before timing out. By default, 10 seconds. Min value is 1 and max
+    #: Interval the Auto Attendant service waits before timing out. By default, 10 seconds. Min value is 1, and max
     #: value is 60.
     no_input_timer: Optional[int] = None
     #: Action to perform after the retry attempt is reached.
@@ -160,7 +171,7 @@ class AutoAttendantMenu(ApiModel):
 
     #: Greeting type defined for the auto attendant.
     greeting: Greeting
-    #: Flag to indicate if auto attendant extension is enabled or not.
+    #: If `true`, extension dialing without requiring a menu item is enabled.
     extension_enabled: bool
     #: Announcement Audio File details.
     audio_announcement_file: Optional[AnnAudioFile] = None
@@ -196,7 +207,7 @@ class AutoAttendant(ApiModel):
     location_name: Optional[str] = None
     #: ID of location for auto attendant. (only returned by list())
     location_id: Optional[str] = None
-    #: Flag to indicate if auto attendant number is enabled or not (only returned by details())
+    #: If `true` auto attendant is enabled.
     enabled: Optional[bool] = None
     #: Auto attendant phone number. Either phone number or extension should be present as mandatory.
     phone_number: Optional[str] = None
@@ -408,7 +419,7 @@ class AutoAttendantApi(ApiChild, base='telephony/config/autoAttendants'):
         :type location_id: str
         :param auto_attendant_id: Retrieve the auto attendant with the matching ID.
         :type auto_attendant_id: str
-        :param org_id: Retrieve auto attendant details from this organization.
+        :param org_id: Retrieve the auto attendant details from this organization.
         :type org_id: str
         :return: auto attendant details
         :rtype: :class:`AutoAttendant`

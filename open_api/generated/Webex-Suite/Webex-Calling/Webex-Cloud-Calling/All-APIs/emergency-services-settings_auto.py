@@ -330,9 +330,9 @@ class MemberType(str, Enum):
 class VirtualLinesECBNObjectDirectLineInfo(ApiModel):
     #: The callback phone number that is associated with the direct line.
     phone_number: Optional[str] = None
-    #: First name of a user.
+    #: The first name of the user.
     first_name: Optional[str] = None
-    #: Last name of a user.
+    #: The last name of the user.
     last_name: Optional[str] = None
     #: The source from which the emergency calling line ID (CLID) is selected for an actual emergency call, applying
     #: fallback rules as necessary.
@@ -347,9 +347,9 @@ class VirtualLinesECBNObjectDirectLineInfo(ApiModel):
 class VirtualLinesECBNObjectLocationMemberInfo(ApiModel):
     #: A unique identifier for the location member's PSTN phone number.
     phone_number: Optional[str] = None
-    #: First name for the location member.
+    #: The first name of the location member.
     first_name: Optional[str] = None
-    #: Last name for the location member. This field will always return "." when `effectiveLevel` is `DIRECT_LINE` or
+    #: The last name of the location member. This field will not be present when `effectiveLevel` is `DIRECT_LINE` or
     #: `LOCATION_MEMBER_NUMBER`, and the selected member is a place.
     last_name: Optional[str] = None
     #: Member ID of user/place/virtual line/hunt group within the location.
@@ -1145,20 +1145,20 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         r = ComplianceStatusResponse.model_validate(data)
         return r
 
-    def get_the_virtual_line_s_emergency_callback_settings(self, virtual_line_id: str,
-                                                           org_id: str = None) -> VirtualLinesECBNObject:
+    def get_virtual_line_emergency_callback_settings(self, virtual_line_id: str,
+                                                     org_id: str = None) -> VirtualLinesECBNObject:
         """
-        Get the Virtual Line's Emergency Callback settings
+        Get the Virtual Line's Emergency Callback Settings
 
-        Retrieves the emergency callback number settings for a specific virtual line.
+        Retrieve the emergency callback number settings for a specific virtual line.
 
-        Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines for Webex
-        Calling users.
+        A virtual line is a capability in Webex Calling that allows administrators to configure multiple lines for
+        Webex Calling users.
 
-        Retrieving the dependencies requires a full or read-only administrator auth token with a scope of
+        Retrieving these settings requires a full or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
-        :param virtual_line_id: Unique identifier for the virtual line.
+        :param virtual_line_id: The unique identifier for the virtual line.
         :type virtual_line_id: str
         :param org_id: List virtual lines for this organization.
         :type org_id: str

@@ -62,11 +62,11 @@ class CallerId(ApiModel):
     #: from another location with the same country, PSTN provider, and zone (only applicable for India locations) as
     #: the workspace's location.
     custom_number: Optional[E164Number] = None
-    #: Person's Caller ID first name. The characters `%`,  `+`, ``, `"` and Unicode characters are not allowed.
+    #: The virtual line's Caller ID first name. The characters `%`, `+`, `` ` ``, `"`, and Unicode characters are not
     #: field has been deprecated. Please use `directLineCallerIdName` and `dialByFirstName` instead.
     first_name: Optional[str] = None
-    #: Person's Caller ID last name. The characters `%`,  `+`, ``, `"` and Unicode characters are not allowed.
-    #: field has been deprecated. Please use `directLineCallerIdName` and `dialByLastName` instead.
+    #: The virtual line's Caller ID last name. The characters `%`, `+`, `` ` ``, `"` and Unicode characters are not
+    #: allowed. This field has been deprecated. Please use `directLineCallerIdName` and `dialByLastName` instead.
     last_name: Optional[str] = None
     #: `true` if the virtual line's identity is blocked when receiving a transferred or forwarded call.
     block_in_forward_calls_enabled: Optional[bool] = None

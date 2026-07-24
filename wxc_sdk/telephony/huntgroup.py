@@ -296,9 +296,9 @@ class HuntGroupApi(ApiChild, base='telephony/config/huntGroups'):
 
         :param location_id: Retrieve settings for a hunt group in this location.
         :type location_id: str
-        :param huntgroup_id: Retrieve settings for the hunt group with this identifier.
+        :param huntgroup_id: Retrieve the settings for the hunt group with this identifier.
         :type huntgroup_id: str
-        :param org_id: Retrieve hunt group settings from this organization.
+        :param org_id: Retrieve the hunt group settings from this organization.
         :type org_id: str
         :return: hunt group details
         """

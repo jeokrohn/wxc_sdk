@@ -1089,7 +1089,7 @@ class ListCallQueueAgentObject(ApiModel):
     location_count: Optional[int] = None
     #: Denotes the join count for call queue agent.
     join_count: Optional[int] = None
-    #: Denotes unjoin count for call queue agent.
+    #: Denotes the unjoin count for call queue agent.
     unjoin_count: Optional[int] = None
     #: The location information.
     location: Optional[LocationObject] = None

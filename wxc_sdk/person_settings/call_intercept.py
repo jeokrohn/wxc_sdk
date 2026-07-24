@@ -4,7 +4,7 @@ Call intercept API
 
 import os
 from io import BufferedReader
-from typing import Optional, Union
+from typing import Any, Optional
 
 from pydantic import Field
 from requests_toolbelt.multipart.encoder import MultipartEncoder
@@ -40,7 +40,7 @@ class InterceptNumber(ApiModel):
 
     #: If true, the caller will hear this number when the call is intercepted.
     enabled: Optional[bool] = None
-    #: number caller will hear announced.
+    #: Notifications to be sent to the provided email to SMS gateway.
     destination: Optional[str] = None
 
 
@@ -63,7 +63,7 @@ class InterceptAnnouncements(ApiModel):
         Default for incoming call intercept announcement settings
         """
         return InterceptAnnouncements(
-            greeting=Greeting.default,
+            greeting=Greeting.default,  # type: ignore[arg-type]
             new_number=InterceptNumber(enabled=False),
             zero_transfer=InterceptNumber(enabled=False),
         )
@@ -85,7 +85,7 @@ class InterceptSettingIncoming(ApiModel):
         """
         Default incoming call intercept settings
         """
-        return InterceptSettingIncoming(
+        return InterceptSettingIncoming(  # type: ignore[call-arg]
             intercept_type=InterceptTypeIncoming.intercept_all,
             voicemail_enabled=False,
             announcements=InterceptAnnouncements.default(),
@@ -111,7 +111,9 @@ class InterceptSettingOutgoing(ApiModel):
         """
         Default outgoing call intercept settings
         """
-        return InterceptSettingOutgoing(intercept_type=InterceptTypeOutgoing.intercept_all, transfer_enabled=False)
+        return InterceptSettingOutgoing(  # type: ignore[call-arg]
+            intercept_type=InterceptTypeOutgoing.intercept_all, transfer_enabled=False
+        )
 
 
 class InterceptSetting(ApiModel):
@@ -135,14 +137,17 @@ class InterceptSetting(ApiModel):
             enabled=False, incoming=InterceptSettingIncoming.default(), outgoing=InterceptSettingOutgoing.default()
         )
 
-    def update(self) -> dict:
+    def update(self) -> dict[str, Any]:
         """
         data for update
 
         :meta private:
         """
         return self.model_dump(
-            mode='json', exclude_none=True, by_alias=True, exclude={'incoming': {'announcements': 'file_name'}}
+            mode='json',
+            exclude_none=True,
+            by_alias=True,
+            exclude={'incoming': {'announcements': 'file_name'}},  # type: ignore[arg-type]
         )
 
 
@@ -206,7 +211,7 @@ class CallInterceptApi(PersonSettingsApiChild):
         data = intercept.update()
         self.put(ep, params=params, json=data)
 
-    def greeting(self, entity_id: str, content: Union[BufferedReader, str], upload_as: str = None, org_id: str = None):
+    def greeting(self, entity_id: str, content: BufferedReader | str, upload_as: str = None, org_id: str = None):
         """
         Configure Call Intercept Greeting
 

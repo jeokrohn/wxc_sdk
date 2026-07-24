@@ -32,17 +32,17 @@ class AlternateNumberSettings(ApiModel):
 
 
 class Agent(UserBase):
-    #: ID of person, workspace or virtual line.
+    #: ID of a person, workspace or virtual line.
     agent_id: str = Field(alias='id')
-    #: Phone number of person or workspace.
+    #: Phone number of a person, workspace or virtual line.
     phone_number: Optional[str] = None
-    #: Extension of person or workspace.
+    #: Extension of a person, workspace or virtual line.
     extension: Optional[str] = None
     #: Routing prefix of location.
     routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     esn: Optional[str] = None
-    #: Weight of person, workspace or virtual line. Only applied when call policy is WEIGHTED.
+    #: Weight of a person, workspace or virtual line. Only applied when call policy is `WEIGHTED`.
     weight: Optional[str] = None
     #: Skill level of person, workspace or virtual line. Only applied when the call routingType is SKILL_BASED.
     skill_level: Optional[int] = None

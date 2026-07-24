@@ -393,21 +393,21 @@ class GetHuntGroupCallPolicyObject(ApiModel):
 
 
 class GetPersonPlaceVirtualLineHuntGroupObject(ApiModel):
-    #: ID of person, workspace or virtual line.
+    #: ID of a person, workspace or virtual line.
     id: Optional[str] = None
-    #: First name of person, workspace or virtual line.
+    #: First name of a person, workspace or virtual line.
     first_name: Optional[str] = None
-    #: Last name of person, workspace or virtual line.
+    #: Last name of a person, workspace or virtual line.
     last_name: Optional[str] = None
-    #: Phone number of person, workspace or virtual line.
+    #: Phone number of a person, workspace or virtual line.
     phone_number: Optional[str] = None
-    #: Extension of person, workspace or virtual line.
+    #: Extension of a person, workspace or virtual line.
     extension: Optional[str] = None
     #: Routing prefix of location.
     routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a person or workspace.
     esn: Optional[str] = None
-    #: Weight of person, workspace or virtual line. Only applied when call policy is `WEIGHTED`.
+    #: Weight of a person, workspace or virtual line. Only applied when call policy is `WEIGHTED`.
     weight: Optional[str] = None
 
 
@@ -432,8 +432,8 @@ class GetHuntGroupObject(ApiModel):
     language: Optional[str] = None
     #: Language code for hunt group.
     language_code: Optional[str] = None
-    #: First name to be shown when calls are forwarded out of this hunt group. Defaults to `.`. This field has been
-    #: deprecated. Please use `directLineCallerIdName` and `dialByName` instead.
+    #: First name to be shown when calls are forwarded out of this hunt group. This field has been deprecated. Please
+    #: use `directLineCallerIdName` and `dialByName` instead.
     first_name: Optional[str] = None
     #: Last name to be shown when calls are forwarded out of this hunt group. Defaults to phone number if set,
     #: otherwise defaults to call group name. This field has been deprecated. Please use `directLineCallerIdName` and
@@ -893,9 +893,9 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
 
         :param location_id: Retrieve settings for a hunt group in this location.
         :type location_id: str
-        :param hunt_group_id: Retrieve settings for the hunt group with this identifier.
+        :param hunt_group_id: Retrieve the settings for the hunt group with this identifier.
         :type hunt_group_id: str
-        :param org_id: Retrieve hunt group settings from this organization.
+        :param org_id: Retrieve the hunt group settings from this organization.
         :type org_id: str
         :rtype: :class:`GetHuntGroupObject`
         """

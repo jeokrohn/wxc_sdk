@@ -97,9 +97,9 @@ class ListVirtualLineObjectLocation(ApiModel):
 class ListVirtualLineObject(ApiModel):
     #: A unique identifier for the virtual line.
     id: Optional[str] = None
-    #: Last name for virtual line.
+    #: The last name of the virtual line.
     last_name: Optional[str] = None
-    #: First name for virtual line.
+    #: The first name of the virtual line.
     first_name: Optional[str] = None
     #: `callerIdLastName` for virtual line.
     caller_id_last_name: Optional[str] = None
@@ -255,9 +255,9 @@ class DeviceOwner(ApiModel):
     id: Optional[str] = None
     #: Enumeration that indicates if the member is of type `PEOPLE` or `PLACE`.
     type: Optional[MemberType] = None
-    #: First name of device owner.
+    #: The first name of the device owner.
     first_name: Optional[str] = None
-    #: Last name of device owner.
+    #: The last name of the device owner.
     last_name: Optional[str] = None
 
 
@@ -293,11 +293,11 @@ class DevicesObject(ApiModel):
 class GetVirtualLineObject(ApiModel):
     #: A unique identifier for the virtual line.
     id: Optional[str] = None
-    #: First name defined for a virtual line. Minimum length is 1. Maximum length is 64.
+    #: The first name defined for the virtual line. Minimum length is 1. Maximum length is 64.
     first_name: Optional[str] = None
-    #: Last name defined for a virtual line. Minimum length is 1. Maximum length is 64.
+    #: The last name defined for the virtual line. Minimum length is 1. Maximum length is 64.
     last_name: Optional[str] = None
-    #: Display name defined for a virtual line.
+    #: The display name defined for the virtual line.
     display_name: Optional[str] = None
     #: Flag to indicate a directory search.
     directory_search_enabled: Optional[bool] = None
@@ -415,11 +415,11 @@ class CallerIdInfo(ApiModel):
     #: location or from another location with the same country, PSTN provider, and zone (only applicable for India
     #: locations) as the virtual line's location.
     custom_number: Optional[str] = None
-    #: Virtual line's Caller ID first name. The characters `%`,  `+`, ``, `"` and Unicode characters are not allowed.
-    #: This field has been deprecated. Please use `directLineCallerIdName` and `dialByFirstName` instead.
+    #: The virtual line's Caller ID first name. The characters `%`,  `+`, ``, `"` and Unicode characters are not
+    #: allowed. This field has been deprecated. Please use `directLineCallerIdName` and `dialByFirstName` instead.
     first_name: Optional[str] = None
-    #: Virtual line's Caller ID last name. The characters `%`,  `+`, ``, `"` and Unicode characters are not allowed.
-    #: This field has been deprecated. Please use `directLineCallerIdName` and `dialByLastName` instead.
+    #: The virtual line's Caller ID last name. The characters `%`,  `+`, ``, `"` and Unicode characters are not
+    #: allowed. This field has been deprecated. Please use `directLineCallerIdName` and `dialByLastName` instead.
     last_name: Optional[str] = None
     #: Block this virtual line's identity when receiving a call.
     block_in_forward_calls_enabled: Optional[bool] = None

@@ -176,7 +176,7 @@ class GetLocationCallBackNumberObjectLocationMemberInfo(ApiModel):
     phone_number: Optional[str] = None
     #: The member first name.
     first_name: Optional[str] = None
-    #: The member last name. Always contains `.` if the member is a place.
+    #: The member last name.
     last_name: Optional[str] = None
     #: Member ID of user/place/virtual line/hunt group within the location.
     member_id: Optional[str] = None
