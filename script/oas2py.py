@@ -56,6 +56,7 @@ sys.path.insert(0, parent_dir)
 print(sys.path)
 print()
 from open_api.open_api_code_generator import OACodeGenerator
+from open_api.open_api_sources import OpenApiSpecInfo
 
 
 def main() -> None:
@@ -187,16 +188,21 @@ def main() -> None:
         exit(0)
 
     # conversion for each OAS file
-    def convert_one_oas(oas_path: str):
+    def convert_one_oas(spec_info: OpenApiSpecInfo) -> None:
+        """Convert one OpenAPI specification to Python source.
+
+        :param spec_info: Metadata and path for the specification to convert.
+        :raises ValueError: If the specification metadata has no source path.
         """
-        Convert one OAS file
-        """
+        oas_path = spec_info.spec_path
+        if oas_path is None:
+            raise ValueError(f'OpenAPI specification "{spec_info.api_name}" has no source path')
         code_gen = OACodeGenerator(
             with_unreferenced_classes=args.with_unref,
             body_style=args.body_style,
             consolidate_models=args.consolidate_models,
         )
-        code_gen.add_open_api_spec_from_path(oas_path)
+        code_gen.add_open_api_spec(spec_info)
         code_gen.cleanup()
 
         @contextmanager
@@ -254,7 +260,12 @@ def main() -> None:
     for oas_file in oas_files:
         print(f'Conversion of "{oas_file}"')
         try:
-            convert_one_oas(oas_file)
+            spec_info = OpenApiSpecInfo.from_spec_json_path(oas_file)
+            if not spec_info.supports_oas_codegen:
+                api_type = spec_info.api_config.api_type if spec_info.api_config else 'unknown'
+                print(f'Skipping "{oas_file}" (apiType: {api_type})')
+                continue
+            convert_one_oas(spec_info)
         except Exception:
             if args.raise_exception:
                 raise

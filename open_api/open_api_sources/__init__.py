@@ -49,8 +49,13 @@ class APIConfig(BaseModel):
 
 @dataclass
 class OpenApiSpecInfo:
-    """
-    Information of one OpenAPI spec
+    """Describe one specification and its surrounding API metadata.
+
+    :param api_name: Name of the API.
+    :param base_path: Root directory containing the specification hierarchy.
+    :param spec_path: Path to the specification file.
+    :param version: Version represented by the specification.
+    :param api_config: Optional metadata loaded from the sibling ``api.json``.
     """
 
     api_name: str
@@ -59,6 +64,18 @@ class OpenApiSpecInfo:
     version: str
 
     api_config: Optional[APIConfig] = None
+
+    @property
+    def supports_oas_codegen(self) -> bool:
+        """Return whether the specification is eligible for OAS code generation.
+
+        Specifications explicitly declared as gRPC contain protobuf descriptor
+        data rather than an OpenAPI document. Other API types remain eligible so
+        that the OpenAPI validator continues to report malformed inputs.
+
+        :return: ``False`` for explicitly declared gRPC APIs; otherwise ``True``.
+        """
+        return self.api_config is None or self.api_config.api_type != 'grpc'
 
     @property
     def rel_spec_path(self) -> str:
@@ -99,12 +116,15 @@ class OpenApiSpecInfo:
 
 
 def open_api_specs() -> Generator[OpenApiSpecInfo, None, None]:
-    """
-    Generator of OpenAPI specs
+    """Yield specifications eligible for OpenAPI code generation.
+
+    :return: Generator of discovered, code-generation-compatible specifications.
     """
     base_dir = os.path.expanduser(os.path.join(WORKSPACE_BASE, WORKSPACE_DIR, 'openapi'))
     assert os.path.exists(base_dir), f'Directory {base_dir} does not exist'
     search_spec = os.path.join(base_dir, '**', 'spec.json')
     specs = glob.glob(search_spec, recursive=True)
     for spec in specs:
-        yield OpenApiSpecInfo.from_spec_json_path(spec)
+        spec_info = OpenApiSpecInfo.from_spec_json_path(spec)
+        if spec_info.supports_oas_codegen:
+            yield spec_info
