@@ -20,7 +20,7 @@ from functools import cache, cached_property
 from pathlib import Path
 from typing import Any, cast
 
-from script.endpoint_ref import EndpointReference, endpoint_reference, markdown_table
+from script.endpoint_ref import EndpointReference, endpoint_reference
 from tests.base import LoggedRequest
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.rest import RestError, RestSession
@@ -247,7 +247,7 @@ def endpoint_rows() -> tuple[EndpointReference, ...]:
 
     :return: Sorted endpoint reference rows for ``WebexSimpleApi``.
     """
-    # Source of truth: the same resolver that builds endpoint_ref.md.
+    # The endpoint resolver is the source of truth for the live SDK inventory.
     api = WebexSimpleApi(tokens='dummy')
     return tuple(sorted(endpoint_reference('api', api), key=lambda row: row.method))
 
@@ -260,15 +260,6 @@ def endpoint_by_method() -> dict[str, EndpointReference]:
     :return: Mapping from names such as ``api.people.me`` to reference rows.
     """
     return {row.method: row for row in endpoint_rows()}
-
-
-def current_endpoint_markdown() -> str:
-    """
-    Render the current in-memory endpoint inventory as Markdown.
-
-    :return: Markdown content expected in ``endpoint_ref.md``.
-    """
-    return markdown_table(list(endpoint_rows()))
 
 
 def endpoint_template_regex(endpoint: str) -> re.Pattern[str]:

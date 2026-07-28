@@ -2,9 +2,9 @@
 # Copyright (c) 2026 Johannes Krohn <jkrohn@cisco.com>
 # License: MIT
 
-.PHONY: all package docs types clean rst async methref endpointref apib oas oas-hybrid sync-stubs sync-stubs-dry sync-stubs-no-llm sync-stubs-verbose sync-stubs-one oas-public
+.PHONY: all package docs types clean rst async methref apib oas oas-hybrid sync-stubs sync-stubs-dry sync-stubs-no-llm sync-stubs-verbose sync-stubs-one oas-public
 # Default target builds everything
-all: clean types methref endpointref async docs package
+all: clean types methref async docs package
 
 # Find all .py files in wxc_sdk (w/ the exception of two auto-generated files)
 WXC_SDK_PY_FILES := $(shell find wxc_sdk -mindepth 1 -name '*.py' -not -name 'as_api.py' -not -name 'all_types.py')
@@ -23,11 +23,6 @@ docs/user/method_ref.rst: $(WXC_SDK_PY_FILES)
 	@echo "==> Creating method_ref.rst"
 	script/endpoint_ref.py docs/user/method_ref.rst --format rst
 methref: docs/user/method_ref.rst
-
-endpoint_ref.md: $(WXC_SDK_PY_FILES)
-	@echo "==> Creating endpoint_ref.md"
-	script/endpoint_ref.py endpoint_ref.md
-endpointref: endpoint_ref.md
 
 clean:
 	@echo "==> Cleaning previous build artifacts"
