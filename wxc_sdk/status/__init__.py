@@ -60,6 +60,8 @@ class AffectComponent(ApiModel):
     component_id: Optional[str] = None
     component: Optional[str] = None
     component_name: Optional[str] = None
+    current_status: Optional[str] = None
+    region: Optional[str] = None
 
 
 class IncidentUpdate(ApiModel):

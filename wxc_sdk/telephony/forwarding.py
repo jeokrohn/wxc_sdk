@@ -449,7 +449,7 @@ class ForwardingApi(ApiChild, base=''):
         url = self._endpoint(location_id=location_id, feature_id=feature_id, path='selectiveRules')
         params = org_id and {'orgId': org_id} or None
         body = forwarding_rule.update()
-        data = self._session.rest_post(url=url, data=body, params=params)
+        data = self._session.rest_post(url=url, json=body, params=params)
         return data['id']
 
     def call_forwarding_rule(

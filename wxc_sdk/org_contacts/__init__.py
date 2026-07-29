@@ -1,7 +1,7 @@
 import builtins
 from collections.abc import Generator
 from datetime import datetime
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import Field, TypeAdapter
 
@@ -153,7 +153,7 @@ class Contact(ApiModel):
     #: Groups associated with the contact.
     group_ids: Optional[list[str]] = None
 
-    def create(self) -> dict:
+    def create(self) -> dict[str, Any]:
         """
 
         :meta private:
@@ -163,7 +163,7 @@ class Contact(ApiModel):
 
 class BulkFailed(ApiModel):
     #: Bulk ID of the contact object that failed creation.
-    id: Optional[str] = None
+    id: Optional[int] = None
     #: Error message for the contact creation failure.
     error_message: Optional[str] = None
     #: HTTP Response code for the contact creation failure.
@@ -227,7 +227,7 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations'):
         data = super().post(url, json=body)
         return Contact.model_validate(data)
 
-    def get(self, org_id: str, contact_id: str) -> Contact:
+    def get(self, org_id: str, contact_id: str) -> Contact:  # type: ignore[override]
         """
         Get a Contact
 
@@ -322,13 +322,13 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations'):
         :param group_ids: Filter contacts based on groups.
         :type group_ids: list[str]
         """
-        params = {}
+        params: dict[str, str] = {}
         if keyword is not None:
             params['keyword'] = keyword
         if source is not None:
             params['source'] = source
         if limit is not None:
-            params['limit'] = limit
+            params['limit'] = str(limit)
         if group_ids is not None:
             params['groupIds'] = ','.join(group_ids)
         url = self.ep(f'{org_id}/contacts/search')
@@ -370,7 +370,7 @@ class OrganizationContactsApi(ApiChild, base='contacts/organizations'):
         :type object_ids: list[str]
         :rtype: None
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['schemas'] = 'urn:cisco:codev:identity:contact:core:1.0'
         body['objectIds'] = object_ids
         url = self.ep(f'{org_id}/contacts/bulk/delete')

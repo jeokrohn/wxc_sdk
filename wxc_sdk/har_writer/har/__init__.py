@@ -6,11 +6,11 @@ import base64
 import json
 import re
 import urllib.parse
-from collections.abc import Generator, Mapping
+from collections.abc import Callable, Generator, Mapping
 from contextlib import contextmanager
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from json import JSONDecodeError
-from typing import Annotated, Any, Callable, Literal, Optional, Self, TextIO, Union
+from typing import Annotated, Any, Literal, Optional, Self, TextIO
 
 import requests_toolbelt
 from pydantic import (
@@ -34,7 +34,7 @@ __all__ = ['HAR', 'HARLog', 'HAREntry', 'HARRequest', 'HARResponse', 'HARCreator
 
 
 def tz_is_utc(dt: datetime) -> datetime:
-    if dt.tzinfo is None or timezone.utc.utcoffset(dt).total_seconds() != 0:
+    if dt.tzinfo is None or UTC.utcoffset(dt).total_seconds() != 0:
         raise ValueError(f'Expected UTC time, got {dt}')
     return dt
 
@@ -77,7 +77,7 @@ class NameValue(HARModel):
     value: str
 
     @staticmethod
-    def list_to_dict(v: Union[dict[str, str], list[dict[str, str]]]) -> CaseInsensitiveDict[str]:
+    def list_to_dict(v: dict[str, str] | list[dict[str, str]]) -> CaseInsensitiveDict[str]:
         """
         Convert a list of NameValue entries to a dictionary; used for deserialization
         """
@@ -121,7 +121,7 @@ class PostData(HARModel):
     params: Optional[HARDict] = None
     # for mimeType 'multipart/form-data' text is actually base64 encoded
     # excluded from serialization; serialization handled in model_serializer
-    text: Union[bytes, str] = Field(exclude=True)
+    text: bytes | str = Field(exclude=True)
 
     def is_multipart(self) -> bool:
         return self.mimeType.startswith('multipart/form-data')
@@ -168,7 +168,7 @@ class HARRequest(HARModel):
     cookies: HARDict = Field(default_factory=dict)
     headers: HARDict
     queryString: Optional[HARDict] = Field(default_factory=dict)
-    postData: Optional[Union[str, PostData, Any]] = Field(default=None)
+    postData: bytes | str | PostData | Any = Field(None)
     headersSize: int = Field(default=-1)
     bodySize: int = Field(default=-1)
     with_authorization: bool = Field(default=False, exclude=True)
@@ -361,7 +361,7 @@ class HAREntry(HARModel):
     request: HARRequest
     response: HARResponse
     cache: Optional[HARDict] = Field(default_factory=dict)
-    startedDateTime: UTCDateTime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    startedDateTime: UTCDateTime = Field(default_factory=lambda: datetime.now(UTC))
     time: float
     timings: HARTimings = Field(default_factory=HARTimings)
 
@@ -385,7 +385,7 @@ class HAR(HARModel):
     log: HARLog
 
     @classmethod
-    def from_file(cls, file: Union[str, TextIO]) -> 'HAR':
+    def from_file(cls, file: str | TextIO) -> 'HAR':
         """
         Load a HAR file from a path or file-like object
 

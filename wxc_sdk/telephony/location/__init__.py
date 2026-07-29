@@ -140,6 +140,10 @@ class LocationECBNLocation(ApiModel):
     effective_value: Optional[str] = None
     #: Used to represent whether a number is a recommended ECBN.
     quality: Optional[ECBNQuality] = None
+    #: ELIN (Emergency Location Identification Number) provides location-specific callback information to emergency
+    #: responders. This field indicates the time in minutes that the ELIN association remains active after being
+    #: established. The default value is 60 minutes, and the valid values range from 10 to 1440 minutes
+    elin_expiry_time_minutes: Optional[int] = None
 
 
 class LocationECBNLocationMember(ApiModel):

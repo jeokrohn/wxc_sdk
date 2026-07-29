@@ -2,7 +2,7 @@
 Person PTT settings API
 """
 
-from typing import Optional, Union
+from typing import Optional
 
 from ..base import ApiModel
 from ..base import SafeEnum as Enum
@@ -43,7 +43,7 @@ class PushToTalkSettings(ApiModel):
     access_type: Optional[PushToTalkAccessType] = None
     #: List of people that are allowed or disallowed to interact using the Push-to-Talk feature.
     #: can be just a member id for a configure() call
-    members: Optional[list[Union[str, MonitoredMember]]] = None
+    members: Optional[list[str | MonitoredMember]] = None
 
 
 class PushToTalkApi(PersonSettingsApiChild):
@@ -100,8 +100,8 @@ class PushToTalkApi(PersonSettingsApiChild):
             # for an update member is just a list of IDs
             body_settings = settings.model_copy(deep=True)
             members = [m.member_id if isinstance(m, MonitoredMember) else m for m in settings.members]
-            body_settings.members = members
+            body_settings.members = members  # type: ignore[assignment]
         else:
             body_settings = settings
-        body = body_settings.model_dump_json(exclude_none=False, exclude_unset=True)
-        self.put(ep, params=params, data=body)
+        body = body_settings.model_dump(mode='json', by_alias=True, exclude_unset=True)
+        self.put(ep, params=params, json=body)

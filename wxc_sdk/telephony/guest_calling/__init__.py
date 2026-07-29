@@ -24,6 +24,8 @@ class DestinationMember(ApiModel):
     first_name: Optional[str] = None
     #: Last name of the destination member.
     last_name: Optional[str] = None
+    #: Display name of the destination member. This field will be present except when the member `type` is `PEOPLE`.
+    display_name: Optional[str] = None
     #: Phone number of the destination member.
     phone_number: Optional[str] = None
     #: Extension of the destination member.

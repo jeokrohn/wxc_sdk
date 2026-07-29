@@ -1238,6 +1238,7 @@ class AnnAudioFile(ApiModel):
     level: Optional[AnnouncementLevel] = None
     #: Indicates whether the announcement is text-to-speech.
     is_text_to_speech: Optional[bool] = None
+    type: Optional[str] = None
 
     def update(self) -> dict[str, Any]:
         """

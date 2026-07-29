@@ -23,7 +23,7 @@ __all__ = [
 
 class MonitoredElementMember(MonitoredMember):
     # the location name
-    location: str
+    location: Optional[str] = None
     #: The location ID for the location.
     location_id: Optional[str] = None
     #: This is a custom line key label configured for the monitored member.

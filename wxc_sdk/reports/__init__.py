@@ -57,6 +57,9 @@ class Report(ApiModel):
     end_date: Optional[date] = None
     #: The site to which this report belongs to. This only exists if the report belongs to service Webex.
     site_list: Optional[str] = None
+    #: Time zone used for report date and time values. Use an IANA time zone name. The default value is `UTC` when not
+    #: specified.
+    time_zone: Optional[str] = None
     #: Time of creation for this report.
     created: Optional[datetime] = None
     #: The person who created the report.
@@ -68,7 +71,6 @@ class Report(ApiModel):
     download_domain: Optional[str] = None
     #: The link from which the report can be downloaded.
     download_url: Optional[str] = Field(alias='downloadURL', default=None)
-    timezone_name: Optional[str] = None
 
 
 class CallingCDR(CDR):

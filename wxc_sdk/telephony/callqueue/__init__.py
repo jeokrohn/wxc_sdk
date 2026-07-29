@@ -296,6 +296,8 @@ class CallQueue(HGandCQ):
     department: Optional[IdAndName] = None
     #: Denotes if the call queue has Customer Assist license.
     has_cx_essentials: Optional[bool] = None
+    #: Digital Inbox enabled for Queue. This field is applicable for queue which has `hasCxEssentials=true`.
+    digital_inbox_enabled: Optional[bool] = None
 
     def exclude_update_or_create(self) -> dict[str, Any]:
         """

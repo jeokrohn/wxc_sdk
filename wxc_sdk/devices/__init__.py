@@ -55,7 +55,7 @@ class Device(ApiModel):
     #: A unique identifier for the device specifically for use with Webex Devices APIs. May be null.
     webex_device_id: Optional[str] = None
     #: A persistent unique identifier for the device. Org based and persistent across federation migrations.
-    p_device_id: Optional[str] = Field(None, alias='device_id')
+    p_device_id: Optional[str] = None
     #: A friendly name for the device.
     display_name: Optional[str] = None
     #: The workspace associated with the device.
@@ -127,11 +127,14 @@ class Device(ApiModel):
 
     @model_validator(mode='before')
     @classmethod
-    def pop_place_id(cls, values):
+    def clean_data(cls, values):
         """
         :meta private:
         """
         values.pop('placeId', None)
+        device_id = values.pop('deviceId', None)
+        if device_id is not None:
+            values['pDeviceId'] = device_id
         return values
 
     @field_validator('mac')

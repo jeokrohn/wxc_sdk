@@ -8,7 +8,7 @@ import os
 from collections.abc import Generator
 from datetime import datetime
 from io import BufferedReader
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
 from pydantic import Field
 from requests_toolbelt import MultipartEncoder
@@ -236,7 +236,7 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
         self,
         name: str,
         file_uri: str = None,
-        file: Union[BufferedReader, str] = None,
+        file: BufferedReader | str | None = None,
         is_text_to_speech: bool = False,
         upload_as: str = None,
         location_id: str = None,
@@ -413,7 +413,7 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
         announcement_id: str,
         name: str,
         file_uri: str = None,
-        file: Union[BufferedReader, str] = None,
+        file: BufferedReader | str | None = None,
         upload_as: str = None,
         is_text_to_speech: bool = False,
         location_id: str = None,
@@ -462,7 +462,7 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
             url = self.ep(f'announcements/{announcement_id}')
         else:
             url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')
-        data = await self._upload_or_modify(
+        await self._upload_or_modify(
             url=url,
             name=name,
             file=file,
@@ -472,7 +472,7 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
             is_text_to_speech=is_text_to_speech,
             is_upload=False
         )
-        return data["id"]
+        return
 
         """
         params = org_id and {'orgId': org_id} or None
@@ -480,7 +480,7 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
             url = self.ep(f'announcements/{announcement_id}')
         else:
             url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')
-        data = self._upload_or_modify(
+        self._upload_or_modify(
             url=url,
             name=name,
             file=file,
@@ -490,4 +490,4 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
             is_upload=False,
             is_text_to_speech=is_text_to_speech,
         )
-        return data['id']
+        return
