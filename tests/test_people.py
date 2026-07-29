@@ -20,6 +20,8 @@ from wxc_sdk.person_settings.numbers import PersonNumbers
 from wxc_sdk.rest import RestError
 from wxc_sdk.telephony.location import TelephonyLocation
 
+# mypy: disable-error-code="list-item"
+
 
 @contextmanager
 def time_it(message: str = None):
@@ -133,6 +135,7 @@ class TestPeople(TestCaseWithLog):
             "list by id doesn't return userName",
         )
 
+    @skip('Not supported any more')
     @async_test
     async def test_007_get_details_by_uuid(self):
         """
@@ -163,9 +166,9 @@ class TestPeoplePhoneNumbers(TestCaseWithLog):
         numbers, details_and_number_list = await asyncio.gather(
             self.async_api.telephony.phone_numbers(), asyncio.gather(*[user_info(user) for user in users])
         )
-        user_details, user_numbers = zip(*details_and_number_list)
+        user_details, user_numbers = zip(*details_and_number_list, strict=True)
         err = False
-        for person, person_numbers in zip(user_details, user_numbers):
+        for person, person_numbers in zip(user_details, user_numbers, strict=True):
             person: Person
             person_numbers: PersonNumbers
             person_error = False
@@ -204,10 +207,10 @@ class TestPeoplePhoneNumbers(TestCaseWithLog):
                     if len(person_phone_numbers_esn) == len(person_phone_number_not_in_person_settings):
                         print(', all of them seem to be ESN?')
                     else:
-                        print(
-                            f', some seem to be not an ESN: '
-                            f'{", ".join(p for p in person_phone_number_not_in_person_settings if p not in person_phone_numbers_esn)}'
-                        )
+                        not_esn = [
+                            p for p in person_phone_number_not_in_person_settings if p not in person_phone_numbers_esn
+                        ]
+                        print(f', some seem to be not an ESN: {", ".join(p for p in not_esn)}')
 
             if not person_error:
                 print(f' ok: {", ".join(pn.value for pn in person.phone_numbers)}')
@@ -221,7 +224,7 @@ class TestCallingUser(TestWithLocations):
         t_loc: TelephonyLocation
         lgw_locations = [
             loc
-            for loc, t_loc in zip(self.locations, self.telephony_locations)
+            for loc, t_loc in zip(self.locations, self.telephony_locations, strict=True)
             if t_loc.connection and t_loc.connection.type in {RouteType.trunk, RouteType.route_group}
         ]
         target_location: Location = choice(lgw_locations)
@@ -271,7 +274,7 @@ class TestCallingLocations(TestWithLocations):
                 return_exceptions=True,
             )
             user_err = None
-            for user, list_user in zip(details, users):
+            for user, list_user in zip(details, users, strict=True):
                 if isinstance(user, Exception):
                     print(f'  Error getting details for user: {list_user.display_name}')
                     continue
@@ -302,7 +305,7 @@ class TestCallingLocations(TestWithLocations):
         tasks = [list_people_in_location(location) for location in self.telephony_locations]
         results = await asyncio.gather(*tasks, return_exceptions=True)
         err = None
-        for result, location in zip(results, self.telephony_locations):
+        for result, location in zip(results, self.telephony_locations, strict=True):
             if isinstance(result, Exception):
                 err = err or result
                 print(f'{location.name}, Error: {result}')

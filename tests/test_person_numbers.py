@@ -1,6 +1,7 @@
 """
 Test for person numbers
 """
+
 import asyncio
 import functools
 import json
@@ -13,6 +14,7 @@ from operator import attrgetter
 from random import choice
 from time import sleep
 from typing import ClassVar
+from unittest import skip
 
 from tests.base import TestCaseWithLog, TestCaseWithUsers, TestWithLocations, async_test
 from tests.testutil import (
@@ -27,6 +29,7 @@ from tests.testutil import (
 from wxc_sdk.as_api import AsWebexSimpleApi
 from wxc_sdk.base import webex_id_to_uuid
 from wxc_sdk.common import OwnerType, PatternAction, RingPattern
+from wxc_sdk.groups import Group
 from wxc_sdk.licenses import LicenseProperties, LicenseRequest
 from wxc_sdk.locations import Location
 from wxc_sdk.people import Person, PhoneNumber, PhoneNumberType
@@ -36,9 +39,10 @@ from wxc_sdk.rest import RestError
 from wxc_sdk.telephony import NumberListPhoneNumber, NumberType
 from wxc_sdk.telephony.location import TelephonyLocation
 
+# mypy: disable-error-code="return-value"
+
 
 class TestRead(TestCaseWithUsers):
-
     @async_test
     async def test_001_read_all(self):
         """
@@ -64,10 +68,8 @@ class TestRead(TestCaseWithUsers):
         user_dict = {user.person_id: user for user in self.users}
         for request in requests:
             user = user_dict[request.url_dict['user_id']]
-            direct_numbers = [dn for pn in request.response_body['phoneNumbers']
-                              if (dn := pn.get('directNumber'))]
-            non_e14 = [n for n in direct_numbers
-                       if not n.startswith('+')]
+            direct_numbers = [dn for pn in request.response_body['phoneNumbers'] if (dn := pn.get('directNumber'))]
+            non_e14 = [n for n in direct_numbers if not n.startswith('+')]
             if non_e14:
                 err = True
                 print(f'{user.display_name}: {", ".join(direct_numbers)}')
@@ -83,13 +85,18 @@ class TestRead(TestCaseWithUsers):
         numbers_no_preference, numbers_e164_false, numbers_e164_true = await asyncio.gather(
             asyncio.gather(*[nu.read(person_id=user.person_id) for user in self.users]),
             asyncio.gather(*[nu.read(person_id=user.person_id, prefer_e164_format=False) for user in self.users]),
-            asyncio.gather(*[nu.read(person_id=user.person_id, prefer_e164_format=True) for user in self.users]))
+            asyncio.gather(*[nu.read(person_id=user.person_id, prefer_e164_format=True) for user in self.users]),
+        )
         numbers_no_preference: list[PersonNumbers]
         numbers_e164_false: list[PersonNumbers]
         numbers_e164_true: list[PersonNumbers]
-        diffs = [(user, n, n_true, n_false) for user, n, n_true, n_false in
-                 zip(self.users, numbers_no_preference, numbers_e164_true, numbers_e164_false)
-                 if n != n_true or n != n_false]
+        diffs = [
+            (user, n, n_true, n_false)
+            for user, n, n_true, n_false in zip(
+                self.users, numbers_no_preference, numbers_e164_true, numbers_e164_false, strict=True
+            )
+            if n != n_true or n != n_false
+        ]
         self.assertFalse(not diffs, 'apparently prefer_e164_format does not change anything?')
 
     def test_check_and_fix_user_extension_format(self):
@@ -105,8 +112,9 @@ class TestRead(TestCaseWithUsers):
         available_extension_cache: dict[str, str] = dict()
 
         for user in self.users:
-            work_extension = next((pn for pn in user.phone_numbers
-                                   if pn.number_type == PhoneNumberType.work_extension), None)
+            work_extension = next(
+                (pn for pn in user.phone_numbers if pn.number_type == PhoneNumberType.work_extension), None
+            )
             if not work_extension:
                 print(f'User {user.display_name} does not have a work extension')
                 err = True
@@ -118,8 +126,10 @@ class TestRead(TestCaseWithUsers):
                 err = True
                 continue
             if work_extension.value != user_number.esn:
-                print(f'User {user.display_name} has an invalid work extension: {work_extension.value} '
-                      f'({user_number.esn})')
+                print(
+                    f'User {user.display_name} has an invalid work extension: {work_extension.value} '
+                    f'({user_number.esn})'
+                )
                 new_extension = available_extension_cache.get(user.location_id, None)
                 if new_extension is None:
                     # get a new extension in that location
@@ -136,19 +146,24 @@ class TestRead(TestCaseWithUsers):
                 after = self.api.people.update(person=user, calling_data=True)
 
                 # verify work extension after update
-                after_work_extension = next((pn for pn in after.phone_numbers
-                                             if pn.number_type == PhoneNumberType.work_extension), None)
+                after_work_extension = next(
+                    (pn for pn in after.phone_numbers if pn.number_type == PhoneNumberType.work_extension), None
+                )
                 if after_work_extension is None:
                     print(f'User {user.display_name} has no work extension after update')
                     err = True
                 else:
                     if after_work_extension.value != user_number.esn:
-                        print(f'User {user.display_name} still has an invalid work extension: '
-                              f'{after_work_extension.value} ({user_number.esn})')
+                        print(
+                            f'User {user.display_name} still has an invalid work extension: '
+                            f'{after_work_extension.value} ({user_number.esn})'
+                        )
                         err = True
                     else:
-                        print(f'User {user.display_name} has a valid work extension after update: '
-                              f'{after_work_extension.value}')
+                        print(
+                            f'User {user.display_name} has a valid work extension after update: '
+                            f'{after_work_extension.value}'
+                        )
                     # if
                 # if
             # if
@@ -177,15 +192,17 @@ class PhoneNumbersAndExtensions(TestCaseWithUsers, TestWithLocations):
 
                 # figure out the NPA of the existing phone numbers
                 with self.no_log():
-                    existing_tns = self.api.telephony.phone_numbers(location_id=self.target_location.location_id,
-                                                                    number_type=NumberType.number)
+                    existing_tns = self.api.telephony.phone_numbers(
+                        location_id=self.target_location.location_id, number_type=NumberType.number
+                    )
 
                 # take the NPA from the 1st phone number
                 npa = next((n.phone_number[2:5] for n in existing_tns), None)
                 if npa is None:
                     self.skipTest(
                         f'Couldn\'t figure out the NPA for target location "{self.target_location.name}": no existing '
-                        f'TNs')
+                        f'TNs'
+                    )
 
                 with self.no_log():
                     # get random user
@@ -195,38 +212,44 @@ class PhoneNumbersAndExtensions(TestCaseWithUsers, TestWithLocations):
                     calling_license_id = get_calling_license(api=self.api)
 
                     # we also need a new extension
-                    self.new_extension = \
-                        available_extensions(api=self.api, location_id=self.target_location.location_id)[0]
+                    self.new_extension = available_extensions(
+                        api=self.api, location_id=self.target_location.location_id
+                    )[0]
 
                     # need routing prefix
                     self.routing_prefix = self.api.telephony.location.details(
-                        location_id=self.target_location.location_id).routing_prefix
+                        location_id=self.target_location.location_id
+                    ).routing_prefix
 
                 # create user
                 self.new_user = self.api.people.create(
-                    settings=Person(emails=[random_user.email],
-                                    display_name=random_user.display_name,
-                                    first_name=random_user.name.first,
-                                    last_name=random_user.name.last))
+                    settings=Person(
+                        emails=[random_user.email],
+                        display_name=random_user.display_name,
+                        first_name=random_user.name.first,
+                        last_name=random_user.name.last,
+                    )
+                )
                 print(f'Created new user "{self.new_user.display_name}"')
 
                 # add a new TN to the calling location (inactive)
                 with self.no_log():
                     self.new_tn = (await as_available_tns(as_api=as_api, tn_prefix=npa))[0]
-                self.api.telephony.location.number.add(location_id=self.target_location.location_id,
-                                                       phone_numbers=[self.new_tn])
+                self.api.telephony.location.number.add(
+                    location_id=self.target_location.location_id, phone_numbers=[self.new_tn]
+                )
                 print(f'Added {self.new_tn} to "{self.target_location.name}"')
 
                 # update user: add calling license and set work phone number
                 self.new_user.licenses.append(calling_license_id)
                 self.new_user.location_id = self.target_location.location_id
-                self.new_user.phone_numbers = [
-                    PhoneNumber(type=PhoneNumberType.work,
-                                value=self.new_tn[2:])]
+                self.new_user.phone_numbers = [PhoneNumber(type=PhoneNumberType.work, value=self.new_tn[2:])]
                 self.new_user.extension = f'{self.new_extension}'
                 self.new_user = self.api.people.update(person=self.new_user, calling_data=True)
-                print(f'Enabled "{self.new_user.display_name}" for calling with TN {self.new_tn} '
-                      f'and extension {self.new_extension}')
+                print(
+                    f'Enabled "{self.new_user.display_name}" for calling with TN {self.new_tn} '
+                    f'and extension {self.new_extension}'
+                )
 
         super().setUp()
         asyncio.run(as_setup())
@@ -243,10 +266,11 @@ class PhoneNumbersAndExtensions(TestCaseWithUsers, TestWithLocations):
             if self.new_tn:
                 # after deleting the user it might take some time until we can delete the TN again
                 err = None
-                for i in range(3):
+                for _ in range(3):
                     try:
-                        self.api.telephony.location.number.remove(location_id=self.target_location.location_id,
-                                                                  phone_numbers=[self.new_tn])
+                        self.api.telephony.location.number.remove(
+                            location_id=self.target_location.location_id, phone_numbers=[self.new_tn]
+                        )
                     except RestError as e:
                         err = e
                         if e.response.status_code == 502:
@@ -267,11 +291,11 @@ class PhoneNumbersAndExtensions(TestCaseWithUsers, TestWithLocations):
         Validate work number and extension of user
         """
         details = self.api.people.details(person_id=self.new_user.person_id)
-        number = next((pn.value for pn in details.phone_numbers
-                       if pn.number_type == PhoneNumberType.work), None)
+        number = next((pn.value for pn in details.phone_numbers if pn.number_type == PhoneNumberType.work), None)
         self.assertEqual(work, number, 'work number wrong')
-        number = next((pn.value for pn in details.phone_numbers
-                       if pn.number_type == PhoneNumberType.work_extension), None)
+        number = next(
+            (pn.value for pn in details.phone_numbers if pn.number_type == PhoneNumberType.work_extension), None
+        )
         if extension:
             self.assertEqual(f'{self.routing_prefix}{extension}', number, 'Unexpected work extension')
         else:
@@ -336,17 +360,24 @@ class TestCreateCallingUser(TestWithLocations):
 
         # create user
         new_user = self.api.people.create(
-            settings=Person(emails=[random_user.email],
-                            display_name=random_user.display_name,
-                            first_name=random_user.name.first,
-                            last_name=random_user.name.last))
+            settings=Person(
+                emails=[random_user.email],
+                display_name=random_user.display_name,
+                first_name=random_user.name.first,
+                last_name=random_user.name.last,
+            )
+        )
         print(f'Created new user "{new_user.display_name}"')
         try:
             license_response = self.api.licenses.assign_licenses_to_users(
                 person_id=new_user.person_id,
-                licenses=[LicenseRequest(id=calling_license_id,
-                                         properties=LicenseProperties(location_id=target_location.location_id,
-                                                                      extension=extension))])
+                licenses=[
+                    LicenseRequest(
+                        id=calling_license_id,
+                        properties=LicenseProperties(location_id=target_location.location_id, extension=extension),
+                    )
+                ],
+            )
             print(f'Enabled "{new_user.display_name}" for calling with extension {extension}')
             print('License response')
             print(json.dumps(license_response.model_dump(mode='json', exclude_none=True, by_alias=True), indent=2))
@@ -355,53 +386,53 @@ class TestCreateCallingUser(TestWithLocations):
             user_after = self.api.people.details(person_id=new_user.person_id, calling_data=True)
 
             # calling license has to be present
-            self.assertTrue(calling_license_id in user_after.licenses,
-                            'Calling license not present in user after update')
+            self.assertTrue(
+                calling_license_id in user_after.licenses, 'Calling license not present in user after update'
+            )
             # user should only have one phone number
-            self.assertEqual(1, len(user_after.phone_numbers),
-                             'Expected exactly one user phone number')
+            self.assertEqual(1, len(user_after.phone_numbers), 'Expected exactly one user phone number')
             # .. a work extension
-            self.assertEqual(PhoneNumberType.work_extension, user_after.phone_numbers[0].number_type,
-                             'Phone number type should be work extension')
+            self.assertEqual(
+                PhoneNumberType.work_extension,
+                user_after.phone_numbers[0].number_type,
+                'Phone number type should be work extension',
+            )
             # .. where the value is the concatenation of the site code and the extension
             pn_value = user_after.phone_numbers[0].value
 
             if target_location_calling.routing_prefix:
-                self.assertEqual(f'{target_location_calling.routing_prefix}{extension}', pn_value,
-                                 'wrong ESN')
+                self.assertEqual(f'{target_location_calling.routing_prefix}{extension}', pn_value, 'wrong ESN')
             else:
-                self.assertEqual(extension, pn_value,
-                                 'wrong extension')
+                self.assertEqual(extension, pn_value, 'wrong extension')
 
             # .. the phone number should be the primary number
-            self.assertTrue(user_after.phone_numbers[0].primary,
-                            'phone number should be primary')
+            self.assertTrue(user_after.phone_numbers[0].primary, 'phone number should be primary')
 
             # also the extension should now exist as number in the location
-            numbers_after = list(self.api.telephony.phone_numbers(location_id=target_location.location_id,
-                                                                  extension=extension))
+            numbers_after = list(
+                self.api.telephony.phone_numbers(location_id=target_location.location_id, extension=extension)
+            )
 
-            self.assertEqual(1, len(numbers_after),
-                             'Expected exactly one result when searching for extension on location')
+            self.assertEqual(
+                1, len(numbers_after), 'Expected exactly one result when searching for extension on location'
+            )
             number = numbers_after[0]
-            self.assertEqual(extension, number.extension,
-                             'Wrong extension')
-            self.assertIsNotNone(number.owner,
-                                 'number has to have an owner')
+            self.assertEqual(extension, number.extension, 'Wrong extension')
+            self.assertIsNotNone(number.owner, 'number has to have an owner')
             owner = number.owner
             self.assertEqual(OwnerType.people, owner.owner_type)
             self.assertEqual(new_user.person_id, owner.owner_id)
 
-            self.assertEqual(target_location.location_id, number.location.id,
-                             'Unexpected location id')
+            self.assertEqual(target_location.location_id, number.location.id, 'Unexpected location id')
             yield target_location, extension, user_after, target_location_calling
 
         finally:
             self.api.people.delete_person(person_id=new_user.person_id)
             print(f'deleted "{new_user.display_name}"')
             # extension should not exist any more
-            numbers_after = list(self.api.telephony.phone_numbers(location_id=target_location.location_id,
-                                                                  extension=extension))
+            numbers_after = list(
+                self.api.telephony.phone_numbers(location_id=target_location.location_id, extension=extension)
+            )
             self.assertEqual(0, len(numbers_after))
 
     @async_test
@@ -433,36 +464,38 @@ class TestCreateCallingUser(TestWithLocations):
 
             # try to assign the new extension
             person_settings = new_user.model_copy(deep=True)
-            person_settings.phone_numbers = [PhoneNumber(type=PhoneNumberType.work_extension,
-                                                         value=new_work_extension,
-                                                         primary=True)]
+            person_settings.phone_numbers = [
+                PhoneNumber(type=PhoneNumberType.work_extension, value=new_work_extension, primary=True)
+            ]
             person_settings.extension = new_extension
             updated_user = self.api.people.update(person=person_settings, calling_data=True)
 
             # user should only have one phone number
-            self.assertEqual(1, len(updated_user.phone_numbers),
-                             'Expected exactly one user phone number')
+            self.assertEqual(1, len(updated_user.phone_numbers), 'Expected exactly one user phone number')
             # .. a work extension
-            self.assertEqual(PhoneNumberType.work_extension, updated_user.phone_numbers[0].number_type,
-                             'Phone number type should be work extension')
+            self.assertEqual(
+                PhoneNumberType.work_extension,
+                updated_user.phone_numbers[0].number_type,
+                'Phone number type should be work extension',
+            )
             # .. where the value is the concatenation of the site code and the extension
             pn_value = updated_user.phone_numbers[0].value
 
             if telephony_location.routing_prefix:
-                self.assertEqual(new_work_extension, pn_value,
-                                 'wrong ESN')
+                self.assertEqual(new_work_extension, pn_value, 'wrong ESN')
             else:
-                self.assertEqual(new_extension, pn_value,
-                                 'wrong extension')
+                self.assertEqual(new_extension, pn_value, 'wrong extension')
 
             self.assertEqual(new_extension, updated_user.extension, 'wrong extension')
             # .. the phone number should be the primary number
-            self.assertTrue(updated_user.phone_numbers[0].primary,
-                            'phone number should be primary')
+            self.assertTrue(updated_user.phone_numbers[0].primary, 'phone number should be primary')
 
             # old extension does not exist in location any more
-            numbers = list(self.api.telephony.phone_numbers(location_id=target_location.location_id,
-                                                            number_type=NumberType.extension))
+            numbers = list(
+                self.api.telephony.phone_numbers(
+                    location_id=target_location.location_id, number_type=NumberType.extension
+                )
+            )
             self.assertIsNone(next((n for n in numbers if n.extension == extension), None))
             # new extension should exist in location
             number = next((n for n in numbers if n.extension == new_extension), None)
@@ -476,6 +509,7 @@ class TestUpdate(TestCaseWithUsers):
     """
     Assign and un-assign alternate numbers to person
     """
+
     us_locations: ClassVar[list[LocationInfo]]
     us_users: list[Person] = field(default=None)
 
@@ -489,8 +523,7 @@ class TestUpdate(TestCaseWithUsers):
         if not self.us_locations:
             self.skipTest('Need US locations with numbers to run the test')
         us_location_ids = set(loc.location.location_id for loc in self.us_locations)
-        self.us_users = [u for u in self.users
-                         if u.location_id in us_location_ids]
+        self.us_users = [u for u in self.users if u.location_id in us_location_ids]
         if not self.us_users:
             self.skipTest('Need some US calling users to run the test')
 
@@ -498,8 +531,9 @@ class TestUpdate(TestCaseWithUsers):
     def update_user_context(self):
         # pick a US calling user
         user = choice(self.users)
-        location_info = next((loc_info for loc_info in self.us_locations
-                              if loc_info.location.location_id == user.location_id), None)
+        location_info = next(
+            (loc_info for loc_info in self.us_locations if loc_info.location.location_id == user.location_id), None
+        )
         self.assertIsNotNone(location_info)
         print(f'Testing with user {user.display_name}({user.emails[0]}) in location "{location_info.location.name}"')
 
@@ -507,8 +541,7 @@ class TestUpdate(TestCaseWithUsers):
         numbers = self.api.person_settings.numbers.read(person_id=user.person_id)
 
         # some available TNs in the location
-        available_tns_in_location = [n.phone_number for n in location_info.numbers
-                                     if not n.owner and not n.main_number]
+        available_tns_in_location = [n.phone_number for n in location_info.numbers if not n.owner and not n.main_number]
         new_tn = None
         if not available_tns_in_location:
             new_tn = available_tns(api=self.api, tn_prefix=location_info.main_number[:5], tns_requested=3)[0]
@@ -518,29 +551,32 @@ class TestUpdate(TestCaseWithUsers):
             tn = choice(available_tns_in_location)
         if new_tn:
             print(f'Temporarily adding new number to location "{location_info.location.name}": {tn}')
-            self.api.telephony.location.number.add(location_id=location_info.location.location_id,
-                                                   phone_numbers=[new_tn])
+            self.api.telephony.location.number.add(
+                location_id=location_info.location.location_id, phone_numbers=[new_tn]
+            )
         try:
             try:
                 yield location_info.location, user, numbers, tn
             finally:
                 # remove TN again
-                print(f'Removing {tn} from user {user.display_name}({user.emails[0]}) '
-                      f'in location "{location_info.location.name}"')
-                update = UpdatePersonNumbers(enable_distinctive_ring_pattern=numbers.distinctive_ring_enabled,
-                                             phone_numbers=[
-                                                 UpdatePersonPhoneNumber(action=PatternAction.delete,
-                                                                         external=tn)])
-                self.api.person_settings.numbers.update(person_id=user.person_id,
-                                                        update=update)
+                print(
+                    f'Removing {tn} from user {user.display_name}({user.emails[0]}) '
+                    f'in location "{location_info.location.name}"'
+                )
+                update = UpdatePersonNumbers(
+                    enable_distinctive_ring_pattern=numbers.distinctive_ring_enabled,
+                    phone_numbers=[UpdatePersonPhoneNumber(action=PatternAction.delete, external=tn)],
+                )
+                self.api.person_settings.numbers.update(person_id=user.person_id, update=update)
                 numbers_after = self.api.person_settings.numbers.read(person_id=user.person_id)
                 self.assertEqual(numbers, numbers_after)
         finally:
             # remove new TN (if needed)
             if new_tn:
                 print(f'Removing number from location "{location_info.location.name}": {tn}')
-                self.api.telephony.location.number.remove(location_id=location_info.location.location_id,
-                                                          phone_numbers=[new_tn])
+                self.api.telephony.location.number.remove(
+                    location_id=location_info.location.location_id, phone_numbers=[new_tn]
+                )
 
     def test_001_update_add_tn(self):
         """
@@ -553,16 +589,15 @@ class TestUpdate(TestCaseWithUsers):
             numbers: PersonNumbers
             tn: str
 
-            print(f'Adding {tn} to user {user.display_name}({user.emails[0]}) '
-                  f'in location "{location.name}"')
+            print(f'Adding {tn} to user {user.display_name}({user.emails[0]}) in location "{location.name}"')
             ring_pattern = RingPattern.short_short_long
-            update = UpdatePersonNumbers(enable_distinctive_ring_pattern=True,
-                                         phone_numbers=[
-                                             UpdatePersonPhoneNumber(action=PatternAction.add,
-                                                                     external=tn,
-                                                                     ring_pattern=ring_pattern)])
-            self.api.person_settings.numbers.update(person_id=user.person_id,
-                                                    update=update)
+            update = UpdatePersonNumbers(
+                enable_distinctive_ring_pattern=True,
+                phone_numbers=[
+                    UpdatePersonPhoneNumber(action=PatternAction.add, external=tn, ring_pattern=ring_pattern)
+                ],
+            )
+            self.api.person_settings.numbers.update(person_id=user.person_id, update=update)
             # validation
             numbers_after = self.api.person_settings.numbers.read(person_id=user.person_id)
             self.assertEqual(True, numbers_after.distinctive_ring_enabled)
@@ -579,8 +614,7 @@ class TestAvailableNumbers(TestCaseWithUsers):
     @async_test
     async def test_primary_license_type(self):
         api = self.async_api.person_settings.available_numbers
-        await asyncio.gather(*[api.primary(license_type=lt) for
-                               lt in AvailablePhoneNumberLicenseType])
+        await asyncio.gather(*[api.primary(license_type=lt) for lt in AvailablePhoneNumberLicenseType])
 
 
 @dataclass(init=False, repr=False)
@@ -589,19 +623,34 @@ class TestUserLocationConsistency(TestCaseWithLog):
     numbers_by_owner_id: ClassVar[dict[str, list[NumberListPhoneNumber]]]
     users: ClassVar[dict[str, Person]]
     locations: ClassVar[dict[str, Location]]
+    groups: ClassVar[dict[str, Group]]
+    # for each member we store the list of group ids that the member is part of
+    member_groups: ClassVar[dict[str, list[str]]]
 
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
         cls.numbers = list(cls.api.telephony.phone_numbers(owner_type=OwnerType.people))
-        cls.numbers_by_owner_id = reduce(lambda acc, n: acc[n.owner.owner_id].append(n) or acc,
-                                         cls.numbers, defaultdict(list))
+        cls.numbers_by_owner_id = reduce(
+            lambda acc, n: acc[n.owner.owner_id].append(n) or acc, cls.numbers, defaultdict(list)
+        )
         # get all users that have numbers
         owner_ids = {n.owner.owner_id for n in cls.numbers}
         with ThreadPoolExecutor() as pool:
             users = list(pool.map(functools.partial(cls.api.people.details, calling_data=True), owner_ids))
         cls.users = {u.person_id: u for u in users}
         cls.locations = {l.location_id: l for l in cls.api.locations.list()}
+        groups = list(cls.api.groups.list())
+        with ThreadPoolExecutor() as pool:
+            member_lists = list(pool.map(lambda g: list(cls.api.groups.members(g.group_id)), groups))
+        cls.groups = dict()
+        cls.member_groups = defaultdict(list)
+        for group, members in zip(groups, member_lists, strict=True):
+            group.members = members
+            cls.groups[group.group_id] = group
+            for member in members:
+                cls.member_groups[member.member_id].append(group.group_id)
+        return
 
     """
     See if location information at the user level is consistent with location info on primary numbers of users
@@ -616,19 +665,25 @@ class TestUserLocationConsistency(TestCaseWithLog):
         Make sure that all number owned by a user are in the same location
         """
         location_ids_by_owner_id: dict[str, set[str]] = reduce(
-            lambda acc, n: acc[n.owner.owner_id].add(n.location.id) or acc,
-            self.numbers, defaultdict(set))
+            lambda acc, n: acc[n.owner.owner_id].add(n.location.id) or acc, self.numbers, defaultdict(set)
+        )
 
         user_len = max(len(self.user_str(user)) for user in self.users.values())
         for user_id in sorted(location_ids_by_owner_id, key=lambda k: self.users[k].display_name):
             user = self.users[user_id]
             numbers = self.numbers_by_owner_id[user_id]
             location_ids = location_ids_by_owner_id[user_id]
-            print(f'{self.user_str(user):{user_len}}: {len(numbers)} number(s) in location(s) '
-                  f'{", ".join(self.locations[l].name for l in location_ids)}')
+            print(
+                f'{self.user_str(user):{user_len}}: {len(numbers)} number(s) in location(s) '
+                f'{", ".join(self.locations[l].name for l in location_ids)}'
+            )
             self.assertEqual(location_ids, {n.location.id for n in numbers}, 'Inconsistent location IDs')
             self.assertEqual(1, len(location_ids), 'User has numbers in multiple locations')
 
+    @skip(
+        "Doesn't make sense: users can belong to a different location group than their calling group (number "
+        'association)'
+    )
     def test_consistent_location_in_user_info(self):
         err = None
         user_len = max(len(self.user_str(user)) for user in self.users.values())
@@ -636,19 +691,25 @@ class TestUserLocationConsistency(TestCaseWithLog):
             try:
                 user_location = self.locations[user.location_id]
             except KeyError as e:
-                print(f'{self.user_str(user):{user_len}}: location not found, id: '
-                      f'{user.location_id}/{webex_id_to_uuid(user.location_id)}')
+                print(
+                    f'{self.user_str(user):{user_len}}: location not found, id: '
+                    f'{user.location_id}/{webex_id_to_uuid(user.location_id)}'
+                )
                 err = err or e
                 continue
             numbers = self.numbers_by_owner_id[user.person_id]
             # use the 1st location id. Technically, if a user has multiple numbers, they should all be in the same
             # location (see other test)
             number_location_id = next(n.location.id for n in numbers)
-            if number_location_id == user.location_id:
-                continue
             number_location = self.locations[number_location_id]
-            print(f'{self.user_str(user):{user_len}}: '
-                  f'user location: "{user_location.name}", number location: "{number_location.name}"')
+            print(
+                f'{self.user_str(user):{user_len}}: '
+                f'user location: "{user_location.name}", number location: "{number_location.name}"'
+            )
+            print('  member of:')
+            groups = self.member_groups[user.person_id]
+            for group_id in groups:
+                print(f'   * {self.groups[group_id].display_name}')
             try:
                 self.assertEqual(user_location, number_location, 'Different location information')
             except AssertionError as e:

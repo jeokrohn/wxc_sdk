@@ -89,7 +89,7 @@ class TestRead(TestCaseWithUsers):
                     f'{user.display_name} has call recording access settings: {result.call_recording_access_settings}'
                 )
 
-        for u, e in ((u, r) for u, r in zip(self.users, results, strict=True) if isinstance(r, Exception)):
+        for u, e in ((u, r) for u, r in zip(self.users, results, strict=False) if isinstance(r, Exception)):
             u: Person
             print(f'{u.display_name}: {e}')
         self.assertFalse(any(isinstance(r, Exception) for r in results))

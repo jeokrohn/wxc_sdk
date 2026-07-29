@@ -39,6 +39,8 @@ from wxc_sdk.telephony.voicemail_groups import VoicemailGroup
 from wxc_sdk.workspace_locations import WorkspaceLocation
 from wxc_sdk.workspaces import Workspace
 
+# mypy: disable-error-code="call-arg"
+
 # TODO: add test cases for floors etc. (see WorksspaceLocations test cases)
 
 
@@ -75,7 +77,7 @@ class TestLocationSimple(TestCaseWithLog):
             ),
         )
         exception = None
-        for location, detail, telephony_detail in zip(locations, details, telephony_details):
+        for location, detail, telephony_detail in zip(locations, details, telephony_details, strict=True):
             print(f'{location.name}')
             if isinstance(detail, Exception):
                 print(f'  error getting location details: {detail}')
@@ -373,7 +375,7 @@ class TestUnifiedLocations(TestCaseWithLog):
         # we either get calling details or the call leads to 404 AsRestError
         name_len = max(map(len, (loc.name for loc in locations)))
         err = False
-        for location, details in zip(locations, calling_details):
+        for location, details in zip(locations, calling_details, strict=True):
             print(f'{location.name:{name_len}}: ', end='')
             if isinstance(details, TelephonyLocation):
                 print('telephony location')
@@ -437,7 +439,7 @@ class TestUnifiedLocations(TestCaseWithLog):
         )
 
         # any issues deleting?
-        for wsl, result in zip(workspace_locations_wo_location, delete_results):
+        for wsl, result in zip(workspace_locations_wo_location, delete_results, strict=True):
             if isinstance(result, Exception):
                 print(f'{wsl.display_name}: {result}')
         self.assertFalse(any(map(lambda r: isinstance(r, Exception), delete_results)))
@@ -1179,7 +1181,7 @@ class TestLocationConsistency(TestCaseWithLog):
             # value: owner UUID
             owner_name_and_id: dict[str, str] = dict()
             for number in numbers_in_workspaces:
-                owner_display_name = f'{number.owner.first_name} {number.owner.last_name.strip(".")}'.strip()
+                owner_display_name = f'{number.owner.first_name} {(number.owner.last_name or ".").strip(".")}'.strip()
                 owner_name_and_id[owner_display_name] = base64.b64decode(number.owner.owner_id + '==').decode()
 
             # create an equivalent dict based on list of workstations

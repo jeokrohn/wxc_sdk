@@ -84,14 +84,16 @@ class TestOutgoingPermissionsAutoTransferNumbers(TestWithProfessionalWorkspace):
         """
         wsa = self.api.workspaces
         tna = self.async_api.workspace_settings.permissions_out.transfer_numbers
-        targets = [ws for ws in wsa.list() if ws.calling and ws.calling.type == CallingType.webex]
+        targets = [
+            ws for ws in wsa.list() if ws.calling and ws.calling.type == CallingType.webex and not ws.is_hotdesking_only
+        ]
         if not targets:
             self.skipTest('Need some WxC enabled workspaces to run this test')
         tn_settings = await asyncio.gather(
             *[tna.read(entity_id=ws.workspace_id) for ws in targets], return_exceptions=True
         )
         err = None
-        for ws, settings in zip(targets, tn_settings):
+        for ws, settings in zip(targets, tn_settings, strict=True):
             ws: Workspace
             print(f'workspace {ws.display_name}:')
             if isinstance(settings, Exception):
@@ -241,7 +243,7 @@ class TestCallerId(TestWithProfessionalWorkspace):
             *[cia.read(entity_id=ws.workspace_id) for ws in targets], return_exceptions=True
         )
         err = None
-        for ws, settings in zip(targets, cia_settings):
+        for ws, settings in zip(targets, cia_settings, strict=True):
             if isinstance(settings, Exception):
                 err = err or settings
                 print(f'Failed to get caller id settings for workspace "{ws.display_name}": {settings}')

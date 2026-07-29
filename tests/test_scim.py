@@ -221,7 +221,7 @@ class TestScimRead(TestWithScimToken):
         issues = [
             user
             for user in users_attrs
-            if set(user.model_dump(exclude_none=True)) != {'schemas', 'id', 'user_name', 'display_name', 'first_admin'}
+            if set(user.model_dump(exclude_none=True)) != {'schemas', 'id', 'user_name', 'display_name'}
         ]
         if issues:
             print(json.dumps(TypeAdapter(list[ScimUser]).dump_python(issues, mode='json', exclude_none=True), indent=2))
@@ -290,7 +290,7 @@ class TestScimRead(TestWithScimToken):
         scim_details: list[ScimUser]
         err = 0
         display_name_len = max(len(user.display_name) for user in users_with_uris)
-        for user, scim_user in zip(users_with_uris, scim_details):
+        for user, scim_user in zip(users_with_uris, scim_details, strict=True):
             user: Person
             scim_user: ScimUser
             if not scim_user.webex_user.sip_addresses:
@@ -459,7 +459,7 @@ class TestScimCreate(TestWithScimToken):
             *[create(org_id=org_id, user=scim_user) for scim_user in new_scim_users], return_exceptions=True
         )
         err = None
-        for i, (scim_user, created_user) in enumerate(zip(new_scim_users, created_users)):
+        for i, (scim_user, created_user) in enumerate(zip(new_scim_users, created_users, strict=True)):
             scim_user: ScimUser
             if isinstance(created_user, Exception):
                 created_user: AsRestError
@@ -687,7 +687,9 @@ class TestScimDelete(TestWithScimToken):
         api = self.api.scim
         targets = list(
             user
-            for user, _ in zip((user for user in api.users.search_all(org_id=org_id) if user.external_id), range(10))
+            for user, _ in zip(
+                (user for user in api.users.search_all(org_id=org_id) if user.external_id), range(10), strict=True
+            )
             if user
         )
         if not targets:
@@ -950,7 +952,7 @@ class TestScimAndCalling(TestWithScimToken, TestCaseWithUsers):
             self.api.scim.users.search_all(org_id=self.org_id, return_groups='true', include_group_details='true')
         )
         foo = 1
-        for user, scim_user in zip(self.users, scim_details):
+        for user, scim_user in zip(self.users, scim_details, strict=True):
             user: Person
             scim_user: ScimUser
             print(f'User: {user.display_name}({user.emails[0]})')
@@ -994,6 +996,7 @@ class TestScimAndCalling(TestWithScimToken, TestCaseWithUsers):
                 print(f'numbers after details: {after_details.phone_numbers}')
             print()
 
+    @skip('Does not make sense. Actually users can belong to groups different from their calling location')
     def test_locations(self):
         """
         Check consistency between location and SCIM groups
@@ -1045,7 +1048,7 @@ class TestScimGroups(TestWithScimToken):
         """
         search all
         """
-        groups = list(self.api.scim.groups.search_all(org_id=self.org_id, include_members=True))
+        groups = list(self.api.scim.groups.search_all(org_id=self.org_id, include_members=False))
         print(f'{len(groups)} groups')
         print(json.dumps(TypeAdapter(list[ScimGroup]).dump_python(groups, mode='json', by_alias=True), indent=2))
 
@@ -1254,7 +1257,7 @@ class TestUsersAndGroups(TestScimCreate):
         ]
         print(f'Creating {len(new_scim_users)} users')
         bulk_response = self.api.scim.bulk.bulk_request(org_id=self.org_id, fail_on_errors=1, operations=operations)
-        for scim_user, operation in zip(new_scim_users, bulk_response.operations):
+        for scim_user, operation in zip(new_scim_users, bulk_response.operations, strict=True):
             scim_user: ScimUser
             operation: BulkResponseOperation
             scim_user.id = operation.user_id

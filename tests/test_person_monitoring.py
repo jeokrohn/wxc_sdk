@@ -14,10 +14,13 @@ from typing import ClassVar, Optional
 from pydantic import TypeAdapter
 
 from tests.base import TestCaseWithUsers
+from tests.testutil import as_available_extensions_gen
 from wxc_sdk import WebexSimpleApi
 from wxc_sdk.all_types import *
 from wxc_sdk.as_api import AsWebexSimpleApi
-from wxc_sdk.person_settings.monitoring import MonitoringMember
+from wxc_sdk.person_settings.monitoring import MonitoredElement, MonitoringMember
+
+# mypy: disable-error-code="call-arg"
 
 
 def print_monitoring(*, user: Person, monitoring: Monitoring):
@@ -156,15 +159,11 @@ class TempCPE:
                     self.location_id = location_id
                     cpe_names = set(cpe.name for cpe in existing_cpes if cpe.location_id == location_id)
                     new_names = (name for i in range(1000) if (name := f'cpe_{i:03}') not in cpe_names)
-
-                    # assumption: we can assign new extensions to CPEs in ascending order
-                    extensions = [int(cpe.extension) for cpe in existing_cpes if cpe.location_id == location_id]
-                    extensions = extensions or [1100]
-                    max_cpe_extension = max(extensions)
+                    av_extensions = await as_available_extensions_gen(api=api, location_id=location_id)
 
                     tasks = [
                         api.telephony.callpark_extension.create(
-                            location_id=location_id, name=next(new_names), extension=str(max_cpe_extension + i + 1)
+                            location_id=location_id, name=next(new_names), extension=next(av_extensions)
                         )
                         for i in range(missing)
                     ]
@@ -242,8 +241,10 @@ class TestUpdate(TestCaseWithUsers):
             # get some CPE ids to add
             temp_cpe = TempCPE(api=self.api)
             with temp_cpe.generate_cpes(cpes_present=before.monitored_cpes, cpe_count=8) as new_cpe_ids:
-                # ths is what we want to add
-                new_monitoring_elements = [cpe_id for cpe_id in new_cpe_ids]
+                # this is what we want to add
+                new_monitoring_elements = [
+                    MonitoredElement(cpe=MonitoredElementCPE(id=cpe_id)) for cpe_id in new_cpe_ids
+                ]
                 settings = Monitoring(monitored_elements=(before.monitored_elements or []) + new_monitoring_elements)
 
                 # update
@@ -256,12 +257,13 @@ class TestUpdate(TestCaseWithUsers):
         # with
 
         # all new CPE ids need to be present now
-        after_cpe_ids = set(cpe.cpe_id for cpe in after.monitored_cpes)
+        after_cpe_ids = set(cpe.id for cpe in after.monitored_cpes)
         new_cpe_ids = set(new_cpe_ids)
         self.assertEqual(new_cpe_ids, after_cpe_ids & new_cpe_ids)
 
         # other than that nothing should've changed
         after.monitored_elements = before.monitored_elements
+        after.available_entries_count = before.available_entries_count
         self.assertEqual(before, after)
 
     def test_003_add_user_by_id(self):
@@ -283,7 +285,9 @@ class TestUpdate(TestCaseWithUsers):
             print(f'Trying to add monitoring for: {", ".join(u.display_name for u in to_add)}')
 
             # ths is what we want to add
-            new_monitoring_elements = [user.person_id for user in to_add]
+            new_monitoring_elements = [
+                MonitoredElement(member=MonitoredElementMember(member_id=user.person_id)) for user in to_add
+            ]
             settings = Monitoring(monitored_elements=(before.monitored_elements or []) + new_monitoring_elements)
 
             # update
@@ -300,6 +304,7 @@ class TestUpdate(TestCaseWithUsers):
 
         # other than that nothing should've changed
         after.monitored_elements = before.monitored_elements
+        after.available_entries_count = before.available_entries_count
         self.assertEqual(before, after)
 
     def test_004_verify_user_id_format(self):
@@ -317,7 +322,9 @@ class TestUpdate(TestCaseWithUsers):
             print(f'Trying to add monitoring for: {", ".join(u.display_name for u in to_add)}')
 
             # ths is what we want to add
-            new_monitoring_elements = [user.person_id for user in to_add]
+            new_monitoring_elements = [
+                MonitoredElement(member=MonitoredElementMember(member_id=user.person_id)) for user in to_add
+            ]
             settings = Monitoring(monitored_elements=(before.monitored_elements or []) + new_monitoring_elements)
 
             # update

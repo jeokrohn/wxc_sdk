@@ -1,6 +1,7 @@
 """
 Test for person PTT settings
 """
+
 import random
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
@@ -9,9 +10,10 @@ from dataclasses import dataclass
 from tests.base import TestCaseWithUsers
 from wxc_sdk.all_types import *
 
+# mypy: disable-error-code="call-arg"
+
 
 class TestRead(TestCaseWithUsers):
-
     def test_001_read_all(self):
         """
         Read PTT settings of all users
@@ -19,15 +21,13 @@ class TestRead(TestCaseWithUsers):
         ptt = self.api.person_settings.push_to_talk
 
         with ThreadPoolExecutor() as pool:
-            settings = list(pool.map(lambda user: ptt.read(entity_id=user.person_id),
-                                     self.users))
+            settings = list(pool.map(lambda user: ptt.read(entity_id=user.person_id), self.users))
         print(f'Got PTT settings for {len(self.users)} users')
         print('\n'.join(s.model_dump_json() for s in settings))
 
 
 @dataclass(init=False, repr=False)
 class TestUpdate(TestCaseWithUsers):
-
     @contextmanager
     def target_user(self):
         """
@@ -40,8 +40,11 @@ class TestUpdate(TestCaseWithUsers):
             yield user
         finally:
             # restore old settings
+            if settings.members is None:
+                settings.members = []
             ptt.configure(entity_id=user.person_id, settings=settings)
             restored = ptt.read(entity_id=user.person_id)
+            settings.members = settings.members or None
             self.assertEqual(settings, restored)
 
     def test_001_toggle_allow_auto_answer(self):
@@ -55,8 +58,7 @@ class TestUpdate(TestCaseWithUsers):
             settings = PushToTalkSettings(allow_auto_answer=not before.allow_auto_answer)
             ptt.configure(entity_id=user.person_id, settings=settings)
             after = ptt.read(entity_id=user.person_id)
-            self.assertEqual(settings.allow_auto_answer,
-                             after.allow_auto_answer)
+            self.assertEqual(settings.allow_auto_answer, after.allow_auto_answer)
             after.allow_auto_answer = before.allow_auto_answer
             self.assertEqual(before, after)
 
@@ -68,12 +70,12 @@ class TestUpdate(TestCaseWithUsers):
             ptt = self.api.person_settings.push_to_talk
             user: Person
             before = ptt.read(entity_id=user.person_id)
-            settings = PushToTalkSettings(connection_type=next(ct for ct in PTTConnectionType
-                                                               if ct != before.connection_type))
+            settings = PushToTalkSettings(
+                connection_type=next(ct for ct in PTTConnectionType if ct != before.connection_type)
+            )
             ptt.configure(entity_id=user.person_id, settings=settings)
             after = ptt.read(entity_id=user.person_id)
-            self.assertEqual(settings.connection_type,
-                             after.connection_type)
+            self.assertEqual(settings.connection_type, after.connection_type)
             after.connection_type = before.connection_type
             self.assertEqual(before, after)
 
@@ -85,12 +87,12 @@ class TestUpdate(TestCaseWithUsers):
             ptt = self.api.person_settings.push_to_talk
             user: Person
             before = ptt.read(entity_id=user.person_id)
-            settings = PushToTalkSettings(access_type=next(at for at in PushToTalkAccessType
-                                                           if at != before.access_type))
+            settings = PushToTalkSettings(
+                access_type=next(at for at in PushToTalkAccessType if at != before.access_type)
+            )
             ptt.configure(entity_id=user.person_id, settings=settings)
             after = ptt.read(entity_id=user.person_id)
-            self.assertEqual(settings.access_type,
-                             after.access_type)
+            self.assertEqual(settings.access_type, after.access_type)
             after.access_type = before.access_type
             self.assertEqual(before, after)
 

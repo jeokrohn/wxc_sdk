@@ -188,7 +188,7 @@ def cleanup_announcements(pool: ThreadPoolExecutor, api: WebexSimpleApi):
     ann_details = list(
         pool.map(lambda ann: api.telephony.announcements_repo.details(announcement_id=ann.id), announcements)
     )
-    ref_types = set(chain.from_iterable((fr.type for fr in ann.feature_references) for ann in ann_details))
+    ref_types = set(chain.from_iterable((fr.type for fr in (ann.feature_references or [])) for ann in ann_details))
     # try to clean up usages
     for ann in ann_details:
         if not ann.feature_reference_count:
@@ -550,6 +550,9 @@ async def main():
             if not DRY_RUN:
                 list(pool.map(lambda g: scim_api.scim.groups.delete(org_id=org_id, group_id=g.id), scim_groups))
 
+            # clean up announcements
+            cleanup_announcements(pool=pool, api=api)
+
         async with AsWebexSimpleApi(tokens=tokens) as as_api:
             har_writer.register_as_webex_api(as_api)
             # workspace locations
@@ -578,9 +581,6 @@ async def main():
                 await asyncio.gather(
                     *[as_api.rooms.delete(room_id=space.id) for space in spaces], return_exceptions=True
                 )
-
-            # clean up announcements
-            cleanup_announcements(pool=pool, api=api)
 
             # remove ocp test patterns from all users
             users = list(api.people.list())

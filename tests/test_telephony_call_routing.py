@@ -63,6 +63,8 @@ from wxc_sdk.telephony.prem_pstn.route_group import RGTrunk, RouteGroup
 from wxc_sdk.telephony.prem_pstn.route_list import NumberAndAction, RouteList
 from wxc_sdk.telephony.prem_pstn.trunk import TrunkDetail
 
+# mypy: disable-error-code="call-arg, str-unpack,return-value"
+
 
 @dataclass
 class DpContext:
@@ -569,7 +571,9 @@ class ToUserWithTN(TestCallRouting):
                     return_exceptions=True,
                 )
                 locations = [
-                    loc for loc, details in zip(locations, telephony_locations) if not isinstance(details, Exception)
+                    loc
+                    for loc, details in zip(locations, telephony_locations, strict=True)
+                    if not isinstance(details, Exception)
                 ]
                 telephony_locations = [tl for tl in telephony_locations if not isinstance(tl, Exception)]
                 telephony_locations: list[TelephonyLocation]
@@ -581,7 +585,7 @@ class ToUserWithTN(TestCallRouting):
                 # noinspection PyUnboundLocalVariable
                 return [
                     LocationAndTelephony(location=loc, telephony_location=tel_loc, main_number=nlp.phone_number)
-                    for loc, tel_loc in zip(locations, telephony_locations)
+                    for loc, tel_loc in zip(locations, telephony_locations, strict=True)
                     if tel_loc.connection and (nlp := main_numbers.get(loc.location_id))
                 ]
 
@@ -747,7 +751,7 @@ class ToUserWithTN(TestCallRouting):
                 return r
 
             print(f'Calling "{called.display_name}({called.emails[0]})" with TN {tn}')
-            for (dialled, how), result in zip(dialing_habits, results):
+            for (dialled, how), result in zip(dialing_habits, results, strict=True):
                 print(f'Dialling "{dialled:13}" ({how:6}) -> destination: {result.destination_type} {dest_str(result)}')
 
         finally:
@@ -868,7 +872,8 @@ class TestUsersAndTrunks(TestCallRouting):
             # before testing we ignore the location id in the hosted user destination
             # we already know that this is broken
             # TODO: monitor defect for wrong id format and remove if not needed any more
-            test_result.hosted_user.location_id = called.location_id
+            if test_result.hosted_user:
+                test_result.hosted_user.location_id = called.location_id
             self.assertEqual(
                 TestCallRoutingResult(
                     call_source_info=CallSourceInfo(
@@ -1195,7 +1200,7 @@ class TestUsersAndTrunks(TestCallRouting):
                 )
             results: list[TestCallRoutingResult]
 
-            for dialled, result in zip(dial_strings, results):
+            for dialled, result in zip(dial_strings, results, strict=True):
                 print(f'Dialling "{dialled:{len(uk_number) + 3}}" -> destination: {result.destination_type} ')
             for result in results:
                 self.print_result(result=result)
@@ -1931,7 +1936,7 @@ class TestTranslationPattern(TestCallRouting):
             *[tpa.list(limitToLocationId=loc.location_id) for loc in locations], return_exceptions=True
         )
         err = None
-        for location, tp_list in zip(locations, tp_lists):
+        for location, tp_list in zip(locations, tp_lists, strict=True):
             location: Location
             tp_list: Union[Exception, list[TranslationPattern]]
             if isinstance(tp_list, Exception):
@@ -2460,7 +2465,7 @@ class TestInterLocation(TestCaseWithLog):
                 )
 
                 location_index_list = [0, 0, 1]
-                for location_index, extension, user in zip(location_index_list, new_extensions, new_users):
+                for location_index, extension, user in zip(location_index_list, new_extensions, new_users, strict=True):
                     location = cls.target_locations[location_index]
                     print(
                         f'Creating user "{user.display_name}" in location "{location.name}" w/ extension "{extension}"'

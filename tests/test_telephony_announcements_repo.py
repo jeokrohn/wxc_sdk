@@ -81,7 +81,12 @@ class Repo(TestWithLocations):
 
         print(f'Trying to rename: "{target.name}" to "{new_name}", new file: {upload_as}')
         details_before = api.details(announcement_id=target.id)
-        api.modify(announcement_id=target.id, name=target.name, file='sample.wav', upload_as=upload_as)
+        api.modify(
+            announcement_id=target.id,
+            name=target.name,
+            file=str(Path(__file__).parent / 'sample.wav'),
+            upload_as=upload_as,
+        )
 
         details_after = api.details(announcement_id=target.id)
         foo = 1
@@ -144,7 +149,7 @@ class Repo(TestWithLocations):
             return_exceptions=True,
         )
         loc_len = max(len(loc.name) for loc in locations)
-        for location, usage in zip(locations, usages):
+        for location, usage in zip(locations, usages, strict=True):
             print(f'{location.name:{loc_len}}: {usage}')
 
     @async_test
@@ -156,7 +161,7 @@ class Repo(TestWithLocations):
         details = await asyncio.gather(*[api.details(announcement_id=ann.id) for ann in anns], return_exceptions=True)
         err = next((detail for detail in details if isinstance(detail, Exception)), None)
         if err:
-            for ann, detail in zip(anns, details):
+            for ann, detail in zip(anns, details, strict=True):
                 print(f'{ann.name}: ', end='')
                 if isinstance(detail, Exception):
                     print(f'{detail}')
@@ -186,7 +191,7 @@ class Repo(TestWithLocations):
                         for ann in loc_anns
                     ]
                 )
-                for loc, loc_anns in zip(locations, anns)
+                for loc, loc_anns in zip(locations, anns, strict=True)
                 if loc_anns
             ]
         )
@@ -249,7 +254,7 @@ class Repo(TestWithLocations):
                 for ann in anns
             ]
         )
-        anns = [ann for ann, detail in zip(anns, details) if not detail.feature_references]
+        anns = [ann for ann, detail in zip(anns, details, strict=True) if not detail.feature_references]
         if not anns:
             self.skipTest('No location announcement w/o references')
         target: RepoAnnouncement = random.choice(anns)
