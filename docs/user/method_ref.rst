@@ -1495,7 +1495,7 @@ description of the operation. The method name is a link to the method documentat
         | Reset Voicemail PIN
         | ``POST /people/{entity_id}/features/voicemail/actions/resetPin/invoke``
    * - :meth:`api.reports.create <wxc_sdk.reports.ReportsApi.create>`
-        | Create a new report
+        | Create a Report
         | ``POST /reports``
    * - :meth:`api.reports.delete <wxc_sdk.reports.ReportsApi.delete>`
         | Remove a report from the system

@@ -19587,37 +19587,59 @@ class AsReportsApi(AsApiChild, base='devices'):
         url = self.session.ep('reports')
         return [o async for o in self.session.follow_pagination(url=url, params=params, model=Report, item_key='items')]
 
-    async def create(self, template_id: int, start_date: date = None, end_date: date = None, site_list: str = None) -> str:
+    async def create(
+        self,
+        template_id: int,
+        start_date: str | date | None = None,
+        end_date: str | date | None = None,
+        site_list: str = None,
+        time_zone: str = None,
+    ) -> str:
         """
-        Create a new report. For each templateId, there are a set of validation rules that need to be followed. For
-        example, for templates belonging to Webex, the user needs to provide siteUrl. These validation rules can be
-        retrieved via the Report Templates API.
+        Create a Report
 
-        CSV reports for Teams services are only supported for organizations based in the North American region.
+        Create a new report. For each `templateId`, there are a set of validation rules that need to be followed. For
+        example, for templates belonging to Webex, the user needs to provide `siteUrl`. These validation rules can be
+        retrieved via the `Report Templates API
+        <https://developer.webex.com/docs/api/v1/report-templates>`_.
+
+        The 'templateId' parameter is a number. However, it is a limitation of developer.webex.com platform that it is
+        passed as a string when you try to test the API from here.
+
+        CSV reports for Webex suite services are only supported for organizations based in the North American region.
         Organizations based in a different region will return blank CSV files for any Teams reports.
 
         :param template_id: Unique ID representing valid report templates.
         :type template_id: int
         :param start_date: Data in the report will be from this date onwards.
-        :type start_date: date
+        :type start_date: Union[str, datetime]
         :param end_date: Data in the report will be until this date.
-        :type end_date: date
+        :type end_date: Union[str, datetime]
         :param site_list: Sites belonging to user's organization. This attribute is needed for site-based templates.
         :type site_list: str
-        :return: The unique identifier for the report.
+        :param time_zone: Time zone used for report date and time values. Use an IANA time zone name. This field is
+            optional.
+        :type time_zone: str
         :rtype: str
         """
         # TODO: https://developer.webex.com/docs/api/v1/reports/create-a-report, documentation bug
         #   result actually is something like: {'items': {'Id': 'Y2...lMg'}}
-        body: dict[str, Any] = {'templateId': template_id}
-        if start_date:
-            body['startDate'] = start_date.strftime('%Y-%m-%d')
-        if end_date:
-            body['endDate'] = end_date.strftime('%Y-%m-%d')
-        if site_list:
+        body: dict[str, Any] = dict()
+        body['templateId'] = template_id
+        if start_date is not None:
+            if isinstance(start_date, date):
+                start_date = start_date.strftime('%Y-%m-%d')
+            body['startDate'] = start_date
+        if end_date is not None:
+            if isinstance(end_date, date):
+                end_date = end_date.strftime('%Y-%m-%d')
+            body['endDate'] = end_date
+        if site_list is not None:
             body['siteList'] = site_list
+        if time_zone is not None:
+            body['timeZone'] = time_zone
         url = self.session.ep('reports')
-        data = await self.post(url=url, json=body)
+        data = await super().post(url=url, json=body)
         result = data['items']['Id']
         return result
 
