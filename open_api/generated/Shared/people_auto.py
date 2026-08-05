@@ -537,6 +537,11 @@ class PeopleApi(ApiChild, base='people'):
 
         **NOTE**:
 
+        * When assigning a Webex Calling license, either a telephone number or extension must already be assigned to
+        the person or provided in the request payload.
+
+        * When `callingData` is set to `true`, a Webex Calling license must be included in the `licenses` array.
+
         * The `locationId` can only be set when assigning a calling license to a user. It cannot be changed if a user
         is already an existing calling user.
 

@@ -14,10 +14,9 @@ from wxc_sdk.base import SafeEnum as Enum
 
 __all__ = ['GetGroupResponse', 'GetGroupResponseMembersItem',
            'GetGroupResponseUrnscimschemasextensionciscowebexidentity20Group',
-           'GetGroupResponseUrnscimschemasextensionciscowebexidentity20GroupMeta', 'GroupInheritancesObject',
-           'GroupInheritancesObjectType', 'GroupMemberObject', 'GroupMemberResponse',
-           'GroupMemberResponseMembersItem', 'ManagedByObject', 'MetaObject', 'MetaObjectResourceType',
-           'PatchGroupOperationsItem', 'PatchGroupOperationsItemOp',
+           'GetGroupResponseUrnscimschemasextensionciscowebexidentity20GroupMeta', 'GroupMemberObject',
+           'GroupMemberResponse', 'GroupMemberResponseMembersItem', 'ManagedByObject', 'MetaObject',
+           'MetaObjectResourceType', 'PatchGroupOperationsItem', 'PatchGroupOperationsItemOp',
            'PostGroupUrnscimschemasextensionciscowebexidentity20Group',
            'PostGroupUrnscimschemasextensionciscowebexidentity20GroupOwnersItem', 'SCIM2GroupsApi',
            'SearchGroupResponse']
@@ -29,29 +28,13 @@ class PatchGroupOperationsItemOp(str, Enum):
     remove = 'remove'
 
 
-class GroupInheritancesObjectType(str, Enum):
-    role = 'role'
-
-
-class GroupInheritancesObject(ApiModel):
-    #: Type of inheritance. Currently, only the `role` type is supported. Only `policy` usage supports inheritance.
-    type: Optional[GroupInheritancesObjectType] = None
-    #: The value of the inheritance. For the role type, this can be role names such as `id_full_admin`,
-    #: `id_user_admin`, etc.
-    value: Optional[str] = None
-    #: Indicates whether this inheritance is nested.
-    nested: Optional[bool] = None
-    #: Indicates which types of entities can inherit this property.
-    scope: Optional[list[str]] = None
-
-
 class PatchGroupOperationsItem(ApiModel):
     #: The operation to perform.
     op: Optional[PatchGroupOperationsItemOp] = None
     #: A string containing an attribute path describing the target of the operation.
     path: Optional[str] = None
     #: New value.
-    value: Optional[list[GroupInheritancesObject]] = None
+    value: Optional[str] = None
 
 
 class PostGroupUrnscimschemasextensionciscowebexidentity20GroupOwnersItem(ApiModel):
@@ -75,8 +58,6 @@ class PostGroupUrnscimschemasextensionciscowebexidentity20Group(ApiModel):
     usage: Optional[str] = None
     #: The owners of this group.
     owners: Optional[list[PostGroupUrnscimschemasextensionciscowebexidentity20GroupOwnersItem]] = None
-    #: An array of inheritances
-    inheritances: Optional[list[GroupInheritancesObject]] = None
     #: A list of delegates of this group.
     managed_by: Optional[list[ManagedByObject]] = None
 
@@ -113,8 +94,6 @@ class GetGroupResponseUrnscimschemasextensionciscowebexidentity20Group(ApiModel)
     managed_by: Optional[list[ManagedByObject]] = None
     #: The identifier of the source.
     provision_source: Optional[str] = None
-    #: An array of inheritances
-    inheritances: Optional[list[GroupInheritancesObject]] = None
     #: Response metadata.
     meta: Optional[GetGroupResponseUrnscimschemasextensionciscowebexidentity20GroupMeta] = None
 
