@@ -15,7 +15,8 @@ from wxc_sdk.base import SafeEnum as Enum
 __all__ = ['Action', 'AnonymousCallRejectionGet', 'AudioAnnouncementFileGetObject',
            'AudioAnnouncementFileGetObjectLevel', 'AudioAnnouncementFileGetObjectMediaFileType', 'CallRecordingInfo',
            'CallRecordingInfoNotification', 'CallRecordingInfoNotificationType', 'CallRecordingInfoRecord',
-           'CallRecordingInfoRepeat', 'CallRecordingInfoStartStopAnnouncement', 'CallRecordingPutNotification',
+           'CallRecordingInfoRepeat', 'CallRecordingInfoSelectiveCallRecordingSettings',
+           'CallRecordingInfoStartStopAnnouncement', 'CallRecordingPutNotification',
            'CallRecordingPutNotificationType', 'CallsFromTypeForSelectiveForward', 'GetMusicOnHoldObject',
            'GetMusicOnHoldObjectGreeting', 'MonitoredPersonObject', 'NumberOwnerObject', 'NumberOwnerType',
            'PeopleOrPlaceOrVirtualLineType', 'PhoneNumber', 'PlaceDoNotDisturbGet', 'PlacePriorityAlertCriteriaGet',
@@ -882,6 +883,17 @@ class CallRecordingInfoStartStopAnnouncement(ApiModel):
     pstn_calls_enabled: Optional[bool] = None
 
 
+class CallRecordingInfoSelectiveCallRecordingSettings(ApiModel):
+    #: When `true`, inbound internal calls are recorded.
+    record_inbound_internal_calls_enabled: Optional[bool] = None
+    #: When `true`, inbound external calls are recorded.
+    record_inbound_external_calls_enabled: Optional[bool] = None
+    #: When `true`, outbound internal calls are recorded.
+    record_outbound_internal_calls_enabled: Optional[bool] = None
+    #: When `true`, outbound external calls are recorded.
+    record_outbound_external_calls_enabled: Optional[bool] = None
+
+
 class CallRecordingInfo(ApiModel):
     #: `true` if call recording is enabled.
     enabled: Optional[bool] = None
@@ -901,6 +913,8 @@ class CallRecordingInfo(ApiModel):
     external_identifier: Optional[str] = None
     #: Call Recording starts and stops announcement settings.
     start_stop_announcement: Optional[CallRecordingInfoStartStopAnnouncement] = None
+    #: Settings for selective call recording based on call direction and type.
+    selective_call_recording_settings: Optional[CallRecordingInfoSelectiveCallRecordingSettings] = None
 
 
 class CallRecordingPutNotificationType(str, Enum):
@@ -1534,6 +1548,7 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
                                                        notification: CallRecordingPutNotification = None,
                                                        repeat: CallRecordingInfoRepeat = None,
                                                        start_stop_announcement: CallRecordingInfoStartStopAnnouncement = None,
+                                                       selective_call_recording_settings: CallRecordingInfoSelectiveCallRecordingSettings = None,
                                                        org_id: str = None) -> None:
         """
         Modify Call Recording Settings for a Workspace
@@ -1563,6 +1578,9 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         :type repeat: CallRecordingInfoRepeat
         :param start_stop_announcement: Call Recording starts and stops announcement settings.
         :type start_stop_announcement: CallRecordingInfoStartStopAnnouncement
+        :param selective_call_recording_settings: Settings for selective call recording based on call direction and
+            type. These settings only apply when `record` is set to `Always` or `Always with Pause/Resume`.
+        :type selective_call_recording_settings: CallRecordingInfoSelectiveCallRecordingSettings
         :param org_id: ID of the organization within which the workspace resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
             token used to access the API.
@@ -1585,6 +1603,8 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
             body['repeat'] = repeat.model_dump(mode='json', by_alias=True, exclude_none=True)
         if start_stop_announcement is not None:
             body['startStopAnnouncement'] = start_stop_announcement.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if selective_call_recording_settings is not None:
+            body['selectiveCallRecordingSettings'] = selective_call_recording_settings.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{workspace_id}/features/callRecordings')
         super().put(url, params=params, json=body)
 

@@ -103,7 +103,7 @@ from wxc_sdk.person_settings.call_intercept import InterceptAnnouncements, Inter
 from wxc_sdk.person_settings.call_policy import PrivacyOnRedirectedCalls
 from wxc_sdk.person_settings.call_recording import BaseCallRecordingAnnouncement, CallRecordingAccessSettings, \
     CallRecordingAnnouncement, CallRecordingAnnouncements, CallRecordingSetting, Notification, NotificationRepeat, \
-    NotificationType, PostCallRecordingSettings, Record, StartStopAnnouncement
+    NotificationType, PostCallRecordingSettings, Record, SelectiveCallRecording, StartStopAnnouncement
 from wxc_sdk.person_settings.callbridge import CallBridgeSetting
 from wxc_sdk.person_settings.caller_id import CallerId, CallerIdSelectedType, ExternalCallerIdNamePolicy
 from wxc_sdk.person_settings.calling_behavior import BehaviorType, CallingBehavior
@@ -457,8 +457,8 @@ __all__ = ['AIRDirectLineCallerIdName', 'AIRIntent', 'AIRSessionState', 'AIRSess
            'ScheduleMonth', 'ScheduleType', 'ScheduleTypeOrStr', 'ScheduleWeek', 'ScheduledMeeting', 'ScheduledType',
            'SchedulingOptions', 'ScimGroup', 'ScimGroupMember', 'ScimMeta', 'ScimPhoneNumberType', 'ScimUser',
            'ScimValueDisplayRef', 'ScreenPopConfiguration', 'SearchGroupResponse', 'SearchUserResponse',
-           'SelectedECBN', 'SelectiveAccept', 'SelectiveAcceptCriteria', 'SelectiveCrit', 'SelectiveCriteria',
-           'SelectiveForward', 'SelectiveForwardCriteria', 'SelectiveFrom', 'SelectiveReject',
+           'SelectedECBN', 'SelectiveAccept', 'SelectiveAcceptCriteria', 'SelectiveCallRecording', 'SelectiveCrit',
+           'SelectiveCriteria', 'SelectiveForward', 'SelectiveForwardCriteria', 'SelectiveFrom', 'SelectiveReject',
            'SelectiveRejectCriteria', 'SelectiveScheduleLevel', 'Sender', 'SequentialRing', 'SequentialRingCriteria',
            'SequentialRingNumber', 'ServiceType', 'ServicesEnum', 'SessionObject', 'SetOrClear', 'SettingsGroup',
            'SettingsObject', 'SettingsType', 'ShowWhen', 'SimRing', 'SimRingCriteria', 'SimRingNumber',

@@ -21,8 +21,8 @@ __all__ = ['ApplicationsSetting', 'AvailableMemberObject', 'BargeInInfo', 'CallF
            'CallInterceptInfoIncomingType', 'CallInterceptInfoOutgoing', 'CallInterceptInfoOutgoingType',
            'CallRecordingInfo', 'CallRecordingInfoCallRecordingAccessSettings', 'CallRecordingInfoNotification',
            'CallRecordingInfoNotificationType', 'CallRecordingInfoRecord', 'CallRecordingInfoRepeat',
-           'CallRecordingInfoStartStopAnnouncement', 'CallRecordingPutNotification',
-           'CallRecordingPutNotificationType', 'CallWaitingInfo', 'CallerIdInfo',
+           'CallRecordingInfoSelectiveCallRecordingSettings', 'CallRecordingInfoStartStopAnnouncement',
+           'CallRecordingPutNotification', 'CallRecordingPutNotificationType', 'CallWaitingInfo', 'CallerIdInfo',
            'CallerIdInfoExternalCallerIdNamePolicy', 'CallerIdInfoSelected', 'DirectLineCallerIdNameObject',
            'DoNotDisturbInfo', 'EventLongDetails', 'EventLongDetailsRecurrence',
            'EventLongDetailsRecurrenceRecurDaily', 'EventLongDetailsRecurrenceRecurWeekly',
@@ -274,6 +274,17 @@ class CallRecordingInfoCallRecordingAccessSettings(ApiModel):
     share_recordings_enabled: Optional[bool] = None
 
 
+class CallRecordingInfoSelectiveCallRecordingSettings(ApiModel):
+    #: When `true`, inbound internal calls are recorded.
+    record_inbound_internal_calls_enabled: Optional[bool] = None
+    #: When `true`, inbound external calls are recorded.
+    record_inbound_external_calls_enabled: Optional[bool] = None
+    #: When `true`, outbound internal calls are recorded.
+    record_outbound_internal_calls_enabled: Optional[bool] = None
+    #: When `true`, outbound external calls are recorded.
+    record_outbound_external_calls_enabled: Optional[bool] = None
+
+
 class CallRecordingInfo(ApiModel):
     #: `true` if call recording is enabled.
     enabled: Optional[bool] = None
@@ -298,6 +309,8 @@ class CallRecordingInfo(ApiModel):
     start_stop_announcement: Optional[CallRecordingInfoStartStopAnnouncement] = None
     #: Settings related to call recording access.
     call_recording_access_settings: Optional[CallRecordingInfoCallRecordingAccessSettings] = None
+    #: Settings for selective call recording based on call direction and type.
+    selective_call_recording_settings: Optional[CallRecordingInfoSelectiveCallRecordingSettings] = None
 
 
 class CallRecordingPutNotificationType(str, Enum):
@@ -1332,6 +1345,7 @@ class UserCallSettings13Api(ApiChild, base=''):
                                                        notification: CallRecordingPutNotification = None,
                                                        repeat: CallRecordingInfoRepeat = None,
                                                        start_stop_announcement: CallRecordingInfoStartStopAnnouncement = None,
+                                                       selective_call_recording_settings: CallRecordingInfoSelectiveCallRecordingSettings = None,
                                                        org_id: str = None) -> None:
         """
         Configure Call Recording Settings for a Person
@@ -1364,6 +1378,9 @@ class UserCallSettings13Api(ApiChild, base=''):
         :type repeat: CallRecordingInfoRepeat
         :param start_stop_announcement: Call Recording starts and stops announcement settings.
         :type start_stop_announcement: CallRecordingInfoStartStopAnnouncement
+        :param selective_call_recording_settings: Settings for selective call recording based on call direction and
+            type. These settings only apply when `record` is set to `Always` or `Always with Pause/Resume`.
+        :type selective_call_recording_settings: CallRecordingInfoSelectiveCallRecordingSettings
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
@@ -1388,6 +1405,8 @@ class UserCallSettings13Api(ApiChild, base=''):
             body['repeat'] = repeat.model_dump(mode='json', by_alias=True, exclude_none=True)
         if start_stop_announcement is not None:
             body['startStopAnnouncement'] = start_stop_announcement.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if selective_call_recording_settings is not None:
+            body['selectiveCallRecordingSettings'] = selective_call_recording_settings.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'people/{person_id}/features/callRecording')
         super().put(url, params=params, json=body)
 

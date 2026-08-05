@@ -5,7 +5,7 @@ from wxc_sdk.api_child import ApiChild
 __all__ = ['MeRecordingApi', 'MeRecordingSettings', 'MeRecordingVendor']
 
 from wxc_sdk.base import ApiModel
-from wxc_sdk.person_settings.call_recording import NotificationType, Record
+from wxc_sdk.person_settings.call_recording import NotificationType, Record, SelectiveCallRecording
 
 
 class MeRecordingVendor(ApiModel):
@@ -30,6 +30,7 @@ class MeRecordingSettings(ApiModel):
     warning_tone_enabled: Optional[bool] = None
     #: Duration of the warning tone in seconds. Duration can be configured between 10 and 1800 seconds.
     warning_tone_duration: Optional[int] = None
+    selective_call_recording_settings: Optional[SelectiveCallRecording] = None
 
 
 class MeRecordingApi(ApiChild, base='telephony/config/people/me'):

@@ -1,6 +1,7 @@
 Release history
 ===============
 
+- feat: selective call recording settings for users, workspaces, virtual lines and me api
 - feat: new API: api.telephony.ai_receptionists
 - feat: new endpoints MeSettingsApi.large_org_status/org_locations. new API MeSettingsApi.speed_dials
 - fix: correct return type annotation for LocationAccessCodesApi.create and delete_codes

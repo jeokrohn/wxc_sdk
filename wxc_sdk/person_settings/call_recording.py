@@ -24,6 +24,7 @@ __all__ = [
     'BaseCallRecordingAnnouncement',
     'CallRecordingAnnouncement',
     'CallRecordingAnnouncements',
+    'SelectiveCallRecording',
     'CallRecordingApi',
 ]
 
@@ -157,6 +158,17 @@ class CallRecordingAnnouncements(BaseCallRecordingAnnouncement):
     use_location_level_enabled: Optional[bool] = None
 
 
+class SelectiveCallRecording(ApiModel):
+    #: When `true`, inbound internal calls are recorded.
+    record_inbound_internal_calls_enabled: Optional[bool] = None
+    #: When `true`, inbound external calls are recorded.
+    record_inbound_external_calls_enabled: Optional[bool] = None
+    #: When `true`, outbound internal calls are recorded.
+    record_outbound_internal_calls_enabled: Optional[bool] = None
+    #: When `true`, outbound external calls are recorded.
+    record_outbound_external_calls_enabled: Optional[bool] = None
+
+
 class CallRecordingSetting(ApiModel):
     #: true if call recording is enabled.
     enabled: Optional[bool] = None
@@ -185,6 +197,8 @@ class CallRecordingSetting(ApiModel):
     post_call_recording_settings: Optional[PostCallRecordingSettings] = None
     #: Announcement settings
     announcements: Optional[CallRecordingAnnouncements] = None
+    #: Settings for selective call recording based on call direction and type.
+    selective_call_recording_settings: Optional[SelectiveCallRecording] = None
 
     @staticmethod
     def default() -> 'CallRecordingSetting':

@@ -36,15 +36,15 @@ __all__ = ['AddressObject', 'AgentACDStateType', 'Assistant', 'AvailableAssistan
            'MonitoringSettingsGetResponseObject', 'Numbers', 'OwnerObject', 'PauseResumeNotifyMethodType',
            'PersonalAssistantGet', 'PersonalAssistantGetAlerting', 'PersonalAssistantGetPresence',
            'PreferredAnswerEndpoint', 'RecordingModeType', 'SecondaryLine', 'SelectedCallerIdSettingsGetSelected',
-           'SelectedCallerIdSettingsPutSelected', 'ServicesEnum', 'SingleNumberReachNumber',
-           'UserCallParkSettingsGetResponseObject', 'UserCallPoliciesGetConnectedLineIdPrivacyOnRedirectedCalls',
-           'UserCallRecordingGetResponseObject', 'UserCallRecordingGetResponseObjectVendor', 'UserDevice',
-           'UserNumber', 'UserProfileGetResponseObject', 'VoicemailInfo', 'VoicemailInfoEmailCopyOfMessage',
-           'VoicemailInfoFaxMessage', 'VoicemailInfoMessageStorage', 'VoicemailInfoMessageStorageStorageType',
-           'VoicemailInfoNotifications', 'VoicemailInfoSendAllCalls', 'VoicemailInfoSendBusyCalls',
-           'VoicemailInfoSendBusyCallsAudioFile', 'VoicemailInfoSendBusyCallsGreeting',
-           'VoicemailInfoSendUnansweredCalls', 'VoicemailInfoTransferToNumber', 'VoicemailPutSendBusyCalls',
-           'VoicemailPutSendUnansweredCalls']
+           'SelectedCallerIdSettingsPutSelected', 'SelectiveCallRecordingSettings', 'ServicesEnum',
+           'SingleNumberReachNumber', 'UserCallParkSettingsGetResponseObject',
+           'UserCallPoliciesGetConnectedLineIdPrivacyOnRedirectedCalls', 'UserCallRecordingGetResponseObject',
+           'UserCallRecordingGetResponseObjectVendor', 'UserDevice', 'UserNumber', 'UserProfileGetResponseObject',
+           'VoicemailInfo', 'VoicemailInfoEmailCopyOfMessage', 'VoicemailInfoFaxMessage',
+           'VoicemailInfoMessageStorage', 'VoicemailInfoMessageStorageStorageType', 'VoicemailInfoNotifications',
+           'VoicemailInfoSendAllCalls', 'VoicemailInfoSendBusyCalls', 'VoicemailInfoSendBusyCallsAudioFile',
+           'VoicemailInfoSendBusyCallsGreeting', 'VoicemailInfoSendUnansweredCalls', 'VoicemailInfoTransferToNumber',
+           'VoicemailPutSendBusyCalls', 'VoicemailPutSendUnansweredCalls']
 
 
 class AgentACDStateType(str, Enum):
@@ -716,6 +716,17 @@ class PauseResumeNotifyMethodType(str, Enum):
     play_announcement = 'Play Announcement'
 
 
+class SelectiveCallRecordingSettings(ApiModel):
+    #: If `true`, inbound internal calls are recorded.
+    record_inbound_internal_calls_enabled: Optional[bool] = None
+    #: If `true`, inbound external calls are recorded.
+    record_inbound_external_calls_enabled: Optional[bool] = None
+    #: If `true`, outbound internal calls are recorded.
+    record_outbound_internal_calls_enabled: Optional[bool] = None
+    #: If `true`, outbound external calls are recorded.
+    record_outbound_external_calls_enabled: Optional[bool] = None
+
+
 class UserCallRecordingGetResponseObject(ApiModel):
     #: Indicates whether Call Recording is enabled for the user or not.
     enabled: Optional[bool] = None
@@ -729,6 +740,7 @@ class UserCallRecordingGetResponseObject(ApiModel):
     warning_tone_enabled: Optional[bool] = None
     #: Duration of the warning tone in seconds. Duration can be configured between 10 and 1800 seconds.
     warning_tone_duration: Optional[int] = None
+    selective_call_recording_settings: Optional[SelectiveCallRecordingSettings] = None
 
 
 class UserNumber(ApiModel):
