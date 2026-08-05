@@ -1,6 +1,7 @@
 Release history
 ===============
 
+- feat: new API: api.telephony.ai_receptionists
 - feat: new endpoints MeSettingsApi.large_org_status/org_locations. new API MeSettingsApi.speed_dials
 - fix: correct return type annotation for LocationAccessCodesApi.create and delete_codes
 - fix: fix endpoint url for AppSharedLineApi.members_count()

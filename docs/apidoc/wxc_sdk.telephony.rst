@@ -12,6 +12,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   wxc_sdk.telephony.ai_receptionists
    wxc_sdk.telephony.announcements_repo
    wxc_sdk.telephony.call_contols_members
    wxc_sdk.telephony.call_recording

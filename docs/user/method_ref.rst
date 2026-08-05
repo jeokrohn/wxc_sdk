@@ -1641,6 +1641,96 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.telephony.access_codes.read <wxc_sdk.telephony.access_codes.LocationAccessCodesApi.read>`
         | Get Outgoing Permission Location Access Code
         | ``GET /telephony/config/locations/{location_id}/outgoingPermission/accessCodes``
+   * - :meth:`api.telephony.ai_receptionists.available_numbers <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.available_numbers>`
+        | List Available Numbers for AI Receptionist
+        | ``GET /telephony/config/locations/{location_id}/aiReceptionists/availableNumbers``
+   * - :meth:`api.telephony.ai_receptionists.create <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.create>`
+        | Create an AI Receptionist
+        | ``POST /telephony/config/locations/{location_id}/aiReceptionists``
+   * - :meth:`api.telephony.ai_receptionists.create_intent <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.create_intent>`
+        | Create AI Receptionist Intent
+        | ``POST /telephony/config/locations/{location_id}/aiReceptionists/{ai_receptionist_id}/intents``
+   * - :meth:`api.telephony.ai_receptionists.create_knowledge_base <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.create_knowledge_base>`
+        | Create a Knowledge Base
+        | ``POST /telephony/config/knowledgeBases``
+   * - :meth:`api.telephony.ai_receptionists.create_knowledge_base_document <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.create_knowledge_base_document>`
+        | Create Knowledge Base Document
+        | ``POST /telephony/config/knowledgeBases/{knowledge_base_id}/documents``
+   * - :meth:`api.telephony.ai_receptionists.delete <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.delete>`
+        | Delete an AI Receptionist
+        | ``DELETE /telephony/config/locations/{location_id}/aiReceptionists/{ai_receptionist_id}``
+   * - :meth:`api.telephony.ai_receptionists.delete_intent <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.delete_intent>`
+        | Delete AI Receptionist Intent
+        | ``DELETE /telephony/config/locations/{location_id}/aiReceptionists/{ai_receptionist_id}/intents/{intent_id}``
+   * - :meth:`api.telephony.ai_receptionists.delete_knowledge_base <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.delete_knowledge_base>`
+        | Delete a Knowledge Base
+        | ``DELETE /telephony/config/knowledgeBases/{knowledge_base_id}``
+   * - :meth:`api.telephony.ai_receptionists.delete_knowledge_base_document <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.delete_knowledge_base_document>`
+        | Delete Knowledge Base Document
+        | ``DELETE /telephony/config/knowledgeBases/{knowledge_base_id}/documents/{document_id}``
+   * - :meth:`api.telephony.ai_receptionists.details <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.details>`
+        | Get AI Receptionist details
+        | ``GET /telephony/config/locations/{location_id}/aiReceptionists/{ai_receptionist_id}``
+   * - :meth:`api.telephony.ai_receptionists.download_knowledge_base_document <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.download_knowledge_base_document>`
+        | Download Knowledge Base Document
+        | ``POST /telephony/config/knowledgeBases/{knowledge_base_id}/documents/{document_id}/actions/download/invoke``
+   * - :meth:`api.telephony.ai_receptionists.get_intent <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.get_intent>`
+        | Get AI Receptionist Intent
+        | ``GET /telephony/config/locations/{location_id}/aiReceptionists/{ai_receptionist_id}/intents/{intent_id}``
+   * - :meth:`api.telephony.ai_receptionists.get_knowledge_base <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.get_knowledge_base>`
+        | Get Knowledge Base Details
+        | ``GET /telephony/config/knowledgeBases/{knowledge_base_id}``
+   * - :meth:`api.telephony.ai_receptionists.get_knowledge_base_document <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.get_knowledge_base_document>`
+        | Get Knowledge Base Document Details
+        | ``GET /telephony/config/knowledgeBases/{knowledge_base_id}/documents/{document_id}``
+   * - :meth:`api.telephony.ai_receptionists.get_template <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.get_template>`
+        | Get AI Receptionist template details
+        | ``GET /telephony/config/aiReceptionists/templates/{template_id}``
+   * - :meth:`api.telephony.ai_receptionists.intents <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.intents>`
+        | List AI Receptionist Intents
+        | ``GET /telephony/config/locations/{location_id}/aiReceptionists/{ai_receptionist_id}/intents``
+   * - :meth:`api.telephony.ai_receptionists.knowledge_bases <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.knowledge_bases>`
+        | List Knowledge Bases
+        | ``GET /telephony/config/knowledgeBases``
+   * - :meth:`api.telephony.ai_receptionists.list <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.list>`
+        | List AI Receptionists
+        | ``GET /telephony/config/aiReceptionists``
+   * - :meth:`api.telephony.ai_receptionists.list_knowledge_base_documents <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.list_knowledge_base_documents>`
+        | List Knowledge Base Documents
+        | ``GET /telephony/config/knowledgeBases/{knowledge_base_id}/documents``
+   * - :meth:`api.telephony.ai_receptionists.modify_intent <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.modify_intent>`
+        | Modify AI Receptionist Intent
+        | ``PUT /telephony/config/locations/{location_id}/aiReceptionists/{ai_receptionist_id}/intents/{intent_id}``
+   * - :meth:`api.telephony.ai_receptionists.session_transcripts <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.session_transcripts>`
+        | Get AI Receptionist Session Transcripts
+        | ``GET /aiReceptionists/{ai_receptionist_id}/sessions/{session_id}/transcripts``
+   * - :meth:`api.telephony.ai_receptionists.sessions <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.sessions>`
+        | List AI Receptionist Sessions
+        | ``GET /aiReceptionists/{ai_receptionist_id}/sessions``
+   * - :meth:`api.telephony.ai_receptionists.templates <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.templates>`
+        | List AI Receptionist Templates
+        | ``GET /telephony/config/aiReceptionists/templates``
+   * - :meth:`api.telephony.ai_receptionists.update <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.update>`
+        | Update an AI Receptionist
+        | ``PUT /telephony/config/locations/{location_id}/aiReceptionists/{ai_receptionist_id}``
+   * - :meth:`api.telephony.ai_receptionists.update_knowledge_base <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.update_knowledge_base>`
+        | Modify a Knowledge Base
+        | ``PUT /telephony/config/knowledgeBases/{knowledge_base_id}``
+   * - :meth:`api.telephony.ai_receptionists.update_knowledge_base_document <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.update_knowledge_base_document>`
+        | Modify Knowledge Base Document
+        | ``PUT /telephony/config/knowledgeBases/{knowledge_base_id}/documents/{document_id}``
+   * - :meth:`api.telephony.ai_receptionists.upload_knowledge_base_document <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.upload_knowledge_base_document>`
+        | Upload Knowledge Base Document
+        | ``POST /telephony/config/knowledgeBases/{knowledge_base_id}/documents/actions/upload/invoke``
+   * - :meth:`api.telephony.ai_receptionists.validate <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.validate>`
+        | Validate AI Receptionist
+        | ``POST /telephony/config/locations/{location_id}/aiReceptionists/actions/validate/invoke``
+   * - :meth:`api.telephony.ai_receptionists.validate_country <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.validate_country>`
+        | Validate Country for AI Receptionist
+        | ``POST /telephony/config/aiReceptionists/actions/validateCountry/invoke``
+   * - :meth:`api.telephony.ai_receptionists.voices <wxc_sdk.telephony.ai_receptionists.AIReceptionistApi.voices>`
+        | Get AI Receptionist Voices
+        | ``GET /telephony/config/locations/{location_id}/aiReceptionists/voices``
    * - :meth:`api.telephony.announcements_repo.delete <wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.delete>`
         | Delete an announcement greeting
         | ``DELETE /telephony/config/announcements/{announcement_id}``

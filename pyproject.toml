@@ -91,6 +91,7 @@ dev = [
     "lxml-stubs>=0.5.1",
     "types-pyyaml>=6.0.12.20250915",
     "webex-kms-sdk>=0.3.0",
+    "pycountry>=26.2.16",
 ]
 
 [tool.uv]

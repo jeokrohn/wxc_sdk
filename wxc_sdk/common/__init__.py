@@ -186,14 +186,9 @@ class RingPattern(str, Enum):
 
 
 class AlternateNumber(ApiModel):
-    """
-    Hunt group or call queue alternate number
-    """
-
-    #: Alternate phone number for the hunt group or call queue
+    #: Alternate phone number
     phone_number: Optional[str] = None
-    #: Ring pattern for when this alternate number is called. Only available when distinctiveRing is enabled for the
-    #: hunt group.
+    #: Ring pattern for when this alternate number is called.
     ring_pattern: Optional[RingPattern] = None
     #: Flag: phone_number is a toll free number
     toll_free_number: Optional[bool] = None

@@ -31,6 +31,7 @@ from ..person_settings.msteams import OrgMSTeamsSettingApi
 from ..person_settings.permissions_out import Action, OutgoingPermissionsApi
 from ..rest import RestSession
 from .access_codes import LocationAccessCodesApi
+from .ai_receptionists import AIReceptionistApi
 from .announcements_repo import AnnouncementsRepositoryApi
 from .autoattendant import AutoAttendantApi
 from .call_contols_members import CallControlsMembersApi
@@ -633,6 +634,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
 
     #: access or authentication codes at location level
     access_codes: LocationAccessCodesApi
+    ai_receptionists: AIReceptionistApi
     announcements_repo: AnnouncementsRepositoryApi
     auto_attendant: AutoAttendantApi
     #: location call intercept settings
@@ -689,6 +691,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     def __init__(self, session: RestSession):
         super().__init__(session=session)
         self.access_codes = LocationAccessCodesApi(session=session)
+        self.ai_receptionists = AIReceptionistApi(session=session)
         self.announcements_repo = AnnouncementsRepositoryApi(session=session)
         self.auto_attendant = AutoAttendantApi(session=session)
         self.call_controls_members = CallControlsMembersApi(session=session)

@@ -31,15 +31,15 @@ MAX_USERS_WITH_CALLING_DATA = 10
 CALLING_DATA_TIMEOUT_PROTECTION = False
 
 
-__all__ = ['AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi', 'AsAnnouncementApi',
-           'AsAnnouncementsRepositoryApi', 'AsAnonCallsApi', 'AsApiChild', 'AsAppServicesApi', 'AsAppSharedLineApi',
-           'AsApplyLineKeyTemplatesJobsApi', 'AsAttachmentActionsApi', 'AsAuthorizationsApi', 'AsAutoAttendantApi',
-           'AsAvailableNumbersApi', 'AsBargeApi', 'AsCQPolicyApi', 'AsCallBridgeApi', 'AsCallControlsMembersApi',
-           'AsCallInterceptApi', 'AsCallParkApi', 'AsCallPickupApi', 'AsCallPolicyApi', 'AsCallQueueAgentsApi',
-           'AsCallQueueApi', 'AsCallQueueDnisApi', 'AsCallRecordingApi', 'AsCallRecordingJobsApi',
-           'AsCallRecordingSettingsApi', 'AsCallRoutingApi', 'AsCallWaitingApi', 'AsCallerIdApi',
-           'AsCallerReputationProviderApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi', 'AsCallsApi',
-           'AsConferenceControlsApi', 'AsConvergedRecordingsApi', 'AsCustomerExperienceEssentialsApi',
+__all__ = ['AsAIReceptionistApi', 'AsAccessCodesApi', 'AsAdminAuditEventsApi', 'AsAgentCallerIdApi',
+           'AsAnnouncementApi', 'AsAnnouncementsRepositoryApi', 'AsAnonCallsApi', 'AsApiChild', 'AsAppServicesApi',
+           'AsAppSharedLineApi', 'AsApplyLineKeyTemplatesJobsApi', 'AsAttachmentActionsApi', 'AsAuthorizationsApi',
+           'AsAutoAttendantApi', 'AsAvailableNumbersApi', 'AsBargeApi', 'AsCQPolicyApi', 'AsCallBridgeApi',
+           'AsCallControlsMembersApi', 'AsCallInterceptApi', 'AsCallParkApi', 'AsCallPickupApi', 'AsCallPolicyApi',
+           'AsCallQueueAgentsApi', 'AsCallQueueApi', 'AsCallQueueDnisApi', 'AsCallRecordingApi',
+           'AsCallRecordingJobsApi', 'AsCallRecordingSettingsApi', 'AsCallRoutingApi', 'AsCallWaitingApi',
+           'AsCallerIdApi', 'AsCallerReputationProviderApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi',
+           'AsCallsApi', 'AsConferenceControlsApi', 'AsConvergedRecordingsApi', 'AsCustomerExperienceEssentialsApi',
            'AsDECTDevicesApi', 'AsDetailedCDRApi', 'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi',
            'AsDevicesApi', 'AsDevicesDynamicSettingsApi', 'AsDialPlanApi', 'AsDigitPatternsApi',
            'AsDisableCallingLocationJobsApi', 'AsDndApi', 'AsECBNApi', 'AsEmergencyAddressApi', 'AsEventsApi',
@@ -21261,6 +21261,1092 @@ class AsTeamsApi(AsApiChild, base='teams'):
         return
 
 
+class AsAIReceptionistApi(AsApiChild, base=''):
+    """
+    AI Receptionist
+
+    AI Receptionist for Webex Calling allows administrators to configure and manage AI-powered receptionists that
+    handle incoming calls. This includes validating countries and AI receptionist names, listing available phone
+    numbers, managing templates, and retrieving intents.
+
+    Viewing these settings requires a full or read-only administrator auth token with a scope of
+    `spark-admin:telephony_config_read`.
+
+    Modifying these settings requires a full administrator auth token with a scope of
+    `spark-admin:telephony_config_write`.
+
+    A partner administrator can retrieve or change settings in another organization using the optional `orgId` query
+    parameter.
+    """
+
+    async def sessions(
+        self, ai_receptionist_id: str, interaction_id: str = None, limit: int = None, offset: int = None
+    ) -> AIRSessions:
+        """
+        List AI Receptionist Sessions
+
+        List the AI Receptionist sessions for the given `aiReceptionistId`.
+
+        A session represents a single conversation between a caller and the AI Receptionist. You can optionally filter
+        sessions by `interaction_id` (which corresponds to the call correlation ID retrievable from the Webex Control
+        Hub troubleshooting page) to locate the session associated with a specific call.
+
+        This API requires a full administrator auth token with a CI role of `id_full_admin`.
+
+        :param ai_receptionist_id: Unique identifier of the AI Receptionist. AI Receptionist ID from the response of
+            List AI Receptionists API.
+        :type ai_receptionist_id: str
+        :param interaction_id: Filter sessions by the call correlation ID retrieved from Webex Control Hub
+            troubleshooting page.
+        :type interaction_id: str
+        :param limit: Maximum number of sessions to return in a single page. Must be between `1` and `100`.
+        :type limit: int
+        :param offset: Pagination offset. Starting index of the result set.
+        :type offset: int
+        :rtype: :class:`AIRSessions`
+        """
+        params: dict[str, Any] = dict()
+        if interaction_id is not None:
+            params['interaction_id'] = interaction_id
+        if limit is not None:
+            params['limit'] = limit
+        if offset is not None:
+            params['offset'] = offset
+        url = self.ep(f'aiReceptionists/{ai_receptionist_id}/sessions')
+        data = await super().get(url, params=params)
+        r = AIRSessions.model_validate(data)
+        return r
+
+    async def session_transcripts(
+        self, ai_receptionist_id: str, session_id: str, limit: int = None, offset: int = None
+    ) -> TranscriptsResponse:
+        """
+        Get AI Receptionist Session Transcripts
+
+        Retrieve the transcript (messages exchanged between the caller and the AI Receptionist) for a specific session.
+
+        Each message represents a single utterance, identified by `user_type` (`human` or `bot`). For bot messages, the
+        message is an array of text objects; for human messages, it is a plain string. Additional metadata may include
+        tool invocations, knowledge-base lookups, and latency information useful for debugging.
+
+        This API requires a full administrator auth token with a CI role of `id_full_admin`.
+
+        :param ai_receptionist_id: Unique identifier of the AI Receptionist. AI Receptionist ID from the response of
+            List AI Receptionists API.
+        :type ai_receptionist_id: str
+        :param session_id: Identifier of the session returned by the List AI Receptionist Sessions API.
+        :type session_id: str
+        :param limit: Maximum number of messages to return in a single page. Must be between `1` and `1000`.
+        :type limit: int
+        :param offset: Pagination offset. Starting index of the result set.
+        :type offset: int
+        :rtype: :class:`TranscriptsResponse`
+        """
+        params: dict[str, Any] = dict()
+        if limit is not None:
+            params['limit'] = limit
+        if offset is not None:
+            params['offset'] = offset
+        url = self.ep(f'aiReceptionists/{ai_receptionist_id}/sessions/{session_id}/transcripts')
+        data = await super().get(url, params=params)
+        r = TranscriptsResponse.model_validate(data)
+        return r
+
+    def list_gen(
+        self, location_id: str = None, name: str = None, phone_number: str = None, org_id: str = None, **params: Any
+    ) -> AsyncGenerator[AiReceptionist, None]:
+        """
+        List AI Receptionists
+
+        Get list of AI Receptionists.
+
+        AI Receptionist is a Webex Calling feature that uses AI to greet callers and intelligently route calls to
+        people or services. These APIs let administrators manage AI receptionist resources across organizations and
+        locations.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Location identifier. If not specified, returns AI receptionists from all locations.
+        :type location_id: str
+        :param name: Search AI receptionists by name (contains match).
+        :type name: str
+        :param phone_number: Search (Contains) based on number or extension. Search cannot be performed based on esn.
+        :type phone_number: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :return: Generator yielding :class:`AiReceptionist` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        url = self.ep('telephony/config/aiReceptionists')
+        return self.session.follow_pagination(url=url, model=AiReceptionist, item_key='aiReceptionists', params=params)
+
+    async def list(
+        self, location_id: str = None, name: str = None, phone_number: str = None, org_id: str = None, **params: Any
+    ) -> builtins.list[AiReceptionist]:
+        """
+        List AI Receptionists
+
+        Get list of AI Receptionists.
+
+        AI Receptionist is a Webex Calling feature that uses AI to greet callers and intelligently route calls to
+        people or services. These APIs let administrators manage AI receptionist resources across organizations and
+        locations.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Location identifier. If not specified, returns AI receptionists from all locations.
+        :type location_id: str
+        :param name: Search AI receptionists by name (contains match).
+        :type name: str
+        :param phone_number: Search (Contains) based on number or extension. Search cannot be performed based on esn.
+        :type phone_number: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :return: Generator yielding :class:`AiReceptionist` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if location_id is not None:
+            params['locationId'] = location_id
+        if name is not None:
+            params['name'] = name
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        url = self.ep('telephony/config/aiReceptionists')
+        return [o async for o in self.session.follow_pagination(url=url, model=AiReceptionist, item_key='aiReceptionists', params=params)]
+
+    async def validate_country(self, country_code: str, location_id: str = None, org_id: str = None) -> None:
+        """
+        Validate Country for AI Receptionist
+
+        Validates if country passed in the request supports AI Receptionist.
+
+        AI Receptionist is a Webex Calling feature that uses AI to greet callers and intelligently route calls.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param country_code: Two letter country code of the location for which AI Receptionist needs to be validated.
+        :type country_code: str
+        :param location_id: Location associated with the AI Receptionist.
+        :type location_id: str
+        :param org_id: Optional; target organization ID, otherwise defaults to token's org.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        body['countryCode'] = country_code
+        if location_id is not None:
+            body['locationId'] = location_id
+        url = self.ep('telephony/config/aiReceptionists/actions/validateCountry/invoke')
+        await super().post(url, params=params, json=body)
+
+    async def templates(self, org_id: str = None) -> builtins.list[IdAndName]:
+        """
+        List AI Receptionist Templates
+
+        Get AI Receptionist template list.
+
+        AI Receptionist is a Webex Calling feature that uses AI to greet callers and intelligently route calls.
+        Templates help standardize greetings, goals, and guidelines.
+
+        Returns all templates in a single response.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: list[AiReceptionistLocation]
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('telephony/config/aiReceptionists/templates')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[IdAndName]).validate_python(data['templates'])
+        return r
+
+    async def get_template(self, template_id: str, org_id: str = None) -> AIRTemplate:
+        """
+        Get AI Receptionist template details.
+
+        AI Receptionist is a Webex Calling feature that uses AI to greet callers and intelligently route calls. Use
+        templates to define goals, messages, and guidelines.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param template_id: Template Id.
+        :type template_id: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: :class:`AIRTemplate`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/aiReceptionists/templates/{template_id}')
+        data = await super().get(url, params=params)
+        r = AIRTemplate.model_validate(data)
+        return r
+
+    def knowledge_bases_gen(
+        self, name: str = None, org_id: str = None, **params: Any
+    ) -> AsyncGenerator[KnowledgeBase, None]:
+        """
+        List Knowledge Bases
+
+        Get list of Knowledge Bases for an organization.
+
+        Knowledge Bases are repositories of information that AI Receptionists use to answer caller queries. This API
+        returns all knowledge bases available in the organization.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param name: Search knowledge bases by name (contains match).
+        :type name: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :return: Generator yielding :class:`KnowledgeBaseSummary` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if name is not None:
+            params['name'] = name
+        url = self.ep('telephony/config/knowledgeBases')
+        return self.session.follow_pagination(url=url, model=KnowledgeBase, item_key='knowledgeBases', params=params)
+
+    async def knowledge_bases(
+        self, name: str = None, org_id: str = None, **params: Any
+    ) -> builtins.list[KnowledgeBase]:
+        """
+        List Knowledge Bases
+
+        Get list of Knowledge Bases for an organization.
+
+        Knowledge Bases are repositories of information that AI Receptionists use to answer caller queries. This API
+        returns all knowledge bases available in the organization.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param name: Search knowledge bases by name (contains match).
+        :type name: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :return: Generator yielding :class:`KnowledgeBaseSummary` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if name is not None:
+            params['name'] = name
+        url = self.ep('telephony/config/knowledgeBases')
+        return [o async for o in self.session.follow_pagination(url=url, model=KnowledgeBase, item_key='knowledgeBases', params=params)]
+
+    async def create_knowledge_base(self, name: str, description: str = None, org_id: str = None) -> str:
+        """
+        Create a Knowledge Base
+
+        Create a new Knowledge Base for an organization.
+
+        Knowledge Bases are repositories of information that AI Receptionists use to answer caller queries.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param name: The display name assigned to the Knowledge Base. Used to identify the KB across the platform.
+        :type name: str
+        :param description: A human-readable description providing additional context about the purpose or contents of
+            the Knowledge Base.
+        :type description: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: str
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        body['name'] = name
+        if description is not None:
+            body['description'] = description
+        url = self.ep('telephony/config/knowledgeBases')
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    async def delete_knowledge_base(self, knowledge_base_id: str, org_id: str = None) -> None:
+        """
+        Delete a Knowledge Base.
+
+        Knowledge Bases are repositories of information that AI Receptionists use to answer caller queries.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param knowledge_base_id: Unique identifier for the Knowledge Base.
+        :type knowledge_base_id: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/knowledgeBases/{knowledge_base_id}')
+        await super().delete(url, params=params)
+
+    async def get_knowledge_base(self, knowledge_base_id: str, org_id: str = None) -> KnowledgeBase:
+        """
+        Get Knowledge Base Details
+
+        Get details of a specific Knowledge Base.
+
+        Knowledge Bases are repositories of information that AI Receptionists use to answer caller queries.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param knowledge_base_id: Unique identifier for the Knowledge Base.
+        :type knowledge_base_id: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: :class:`KnowledgeBase`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/knowledgeBases/{knowledge_base_id}')
+        data = await super().get(url, params=params)
+        r = KnowledgeBase.model_validate(data)
+        return r
+
+    async def update_knowledge_base(
+        self, knowledge_base_id: str, name: str = None, description: str = None, org_id: str = None
+    ) -> None:
+        """
+        Modify a Knowledge Base
+
+        Modify an existing Knowledge Base.
+
+        Knowledge Bases are repositories of information that AI Receptionists use to answer caller queries.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param knowledge_base_id: Unique identifier for the Knowledge Base.
+        :type knowledge_base_id: str
+        :param name: The display name assigned to the Knowledge Base. Used to identify the KB across the platform.
+        :type name: str
+        :param description: A human-readable description providing additional context about the purpose or contents of
+            the Knowledge Base.
+        :type description: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        if name is not None:
+            body['name'] = name
+        if description is not None:
+            body['description'] = description
+        url = self.ep(f'telephony/config/knowledgeBases/{knowledge_base_id}')
+        await super().put(url, params=params, json=body)
+
+    def list_knowledge_base_documents_gen(
+        self, knowledge_base_id: str, org_id: str = None, **params: Any
+    ) -> AsyncGenerator[KnowledgeBaseDocumentDetails, None]:
+        """
+        List Knowledge Base Documents
+
+        Get list of documents in a Knowledge Base.
+
+        Documents are files uploaded to a Knowledge Base that AI Receptionists use to answer caller queries.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param knowledge_base_id: Unique identifier for the Knowledge Base.
+        :type knowledge_base_id: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :return: Generator yielding :class:`KnowledgeBaseDocumentDetails` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/knowledgeBases/{knowledge_base_id}/documents')
+        return self.session.follow_pagination(
+            url=url, model=KnowledgeBaseDocumentDetails, item_key='documents', params=params
+        )
+
+    async def list_knowledge_base_documents(
+        self, knowledge_base_id: str, org_id: str = None, **params: Any
+    ) -> builtins.list[KnowledgeBaseDocumentDetails]:
+        """
+        List Knowledge Base Documents
+
+        Get list of documents in a Knowledge Base.
+
+        Documents are files uploaded to a Knowledge Base that AI Receptionists use to answer caller queries.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param knowledge_base_id: Unique identifier for the Knowledge Base.
+        :type knowledge_base_id: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :return: Generator yielding :class:`KnowledgeBaseDocumentDetails` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/knowledgeBases/{knowledge_base_id}/documents')
+        return [o async for o in self.session.follow_pagination(
+            url=url, model=KnowledgeBaseDocumentDetails, item_key='documents', params=params
+        )]
+
+    async def create_knowledge_base_document(
+        self, knowledge_base_id: str, name: str, content: str, org_id: str = None
+    ) -> str:
+        """
+        Create Knowledge Base Document
+
+        Create a new document in a Knowledge Base.
+
+        Documents are content entries in a Knowledge Base that AI Receptionists use to answer caller queries. This API
+        creates a document with specified name and content.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param knowledge_base_id: Unique identifier for the Knowledge Base.
+        :type knowledge_base_id: str
+        :param name: The display name assigned to the Knowledge Base document. Used to identify the document across the
+            platform.
+        :type name: str
+        :param content: The content of the document.
+        :type content: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: str
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        body['name'] = name
+        body['content'] = content
+        url = self.ep(f'telephony/config/knowledgeBases/{knowledge_base_id}/documents')
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    async def upload_knowledge_base_document(self, knowledge_base_id: str, file: str, org_id: str = None) -> str:
+        """
+        Upload Knowledge Base Document
+
+        Upload a document to a Knowledge Base.
+
+        Documents are files uploaded to a Knowledge Base that AI Receptionists use to answer caller queries. Supported
+        file types include PDF, TXT, DOCX, XLSX, XLS, and CSV.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param knowledge_base_id: Unique identifier for the Knowledge Base.
+        :type knowledge_base_id: str
+        :param file: The document file to upload. Supported file types: PDF, TXT, DOCX, XLSX, XLS, CSV. Maximum file
+            size: 10MB.
+        :type file: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: str
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        upload_as = os.path.basename(file)
+        content_type, _ = mimetypes.guess_type(upload_as)
+
+        if content_type is None:
+            raise ValueError(f'Could not determine content type for {upload_as!r}')
+
+        with open(file, mode='rb') as content:
+            encoder = MultipartEncoder({'file': (upload_as, content, content_type)})
+            url = self.ep(f'telephony/config/knowledgeBases/{knowledge_base_id}/documents/actions/upload/invoke')
+            data = await super().post(url, params=params, data=encoder, headers={'Content-Type': encoder.content_type})
+            r = data['id']
+            return r
+
+    async def delete_knowledge_base_document(self, knowledge_base_id: str, document_id: str, org_id: str = None) -> None:
+        """
+        Delete Knowledge Base Document
+
+        Delete a document from a Knowledge Base.
+
+        Documents are files uploaded to a Knowledge Base that AI Receptionists use to answer caller queries.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param knowledge_base_id: Unique identifier for the Knowledge Base.
+        :type knowledge_base_id: str
+        :param document_id: Unique identifier for the document.
+        :type document_id: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/knowledgeBases/{knowledge_base_id}/documents/{document_id}')
+        await super().delete(url, params=params)
+
+    async def get_knowledge_base_document(
+        self, knowledge_base_id: str, document_id: str, org_id: str = None
+    ) -> KnowledgeBaseDocumentDetails:
+        """
+        Get Knowledge Base Document Details
+
+        Get details of a specific document in a Knowledge Base.
+
+        Documents are content entries in a Knowledge Base that AI Receptionists use to answer caller queries. This API
+        returns document metadata including name, content, status, and timestamps.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param knowledge_base_id: Unique identifier for the Knowledge Base.
+        :type knowledge_base_id: str
+        :param document_id: Unique identifier for the document.
+        :type document_id: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: :class:`KnowledgeBaseDocumentDetails`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/knowledgeBases/{knowledge_base_id}/documents/{document_id}')
+        data = await super().get(url, params=params)
+        r = KnowledgeBaseDocumentDetails.model_validate(data)
+        return r
+
+    async def update_knowledge_base_document(
+        self, knowledge_base_id: str, document_id: str, name: str = None, content: str = None, org_id: str = None
+    ) -> None:
+        """
+        Modify Knowledge Base Document
+
+        Modify a document in a Knowledge Base.
+
+        Documents are content entries in a Knowledge Base that AI Receptionists use to answer caller queries. This API
+        allows updating the name and content of an existing document.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param knowledge_base_id: Unique identifier for the Knowledge Base.
+        :type knowledge_base_id: str
+        :param document_id: Unique identifier for the document.
+        :type document_id: str
+        :param name: The display name assigned to the Knowledge Base document. Used to identify the document across the
+            platform.
+        :type name: str
+        :param content: The content of the document.
+        :type content: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        if name is not None:
+            body['name'] = name
+        if content is not None:
+            body['content'] = content
+        url = self.ep(f'telephony/config/knowledgeBases/{knowledge_base_id}/documents/{document_id}')
+        await super().put(url, params=params, json=body)
+
+    async def download_knowledge_base_document(self, knowledge_base_id: str, document_id: str, org_id: str = None) -> str:
+        """
+        Download Knowledge Base Document
+
+        Download a document from a Knowledge Base.
+
+        Documents are files uploaded to a Knowledge Base that AI Receptionists use to answer caller queries. The
+        response contains the file content with appropriate Content-Type and Content-Disposition headers.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        **WARNING:** This API is not callable using the developer portal web interface due to the lack of support for
+        binary file downloads. This API can be utilized using other tools that support binary responses, such as
+        Postman or curl.
+
+        :param knowledge_base_id: Unique identifier for the Knowledge Base.
+        :type knowledge_base_id: str
+        :param document_id: Unique identifier for the document.
+        :type document_id: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: str
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(
+            f'telephony/config/knowledgeBases/{knowledge_base_id}/documents/{document_id}/actions/download/invoke'
+        )
+        data = await super().post(url, params=params)
+        return data  # type: ignore[return-value]
+
+    async def create(
+        self,
+        location_id: str,
+        name: str,
+        enabled: bool,
+        default_action: DefaultAction,
+        ai_agent: AiAgent,
+        phone_number: str = None,
+        extension: str = None,
+        direct_line_caller_id_name: AIRDirectLineCallerIdName = None,
+        dial_by_name: str = None,
+        org_id: str = None,
+    ) -> str:
+        """
+        Create an AI Receptionist
+
+        Create a new AI Receptionist for a location.
+
+        AI Receptionist is a Webex Calling feature that uses AI to greet callers and intelligently route calls to
+        people or services.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Location ID.
+        :type location_id: str
+        :param name: Name of the AI Receptionist. This has to be unique across location.
+        :type name: str
+        :param enabled: Flag to indicate AI receptionist is enabled or not. When disabled, incoming calls to this AI
+            receptionist will not be answered.
+        :type enabled: bool
+        :param default_action: Default action configuration for the AI Receptionist
+        :type default_action: DefaultAction
+        :param ai_agent: AI Agent configuration
+        :type ai_agent: AiAgent
+        :param phone_number: Phone number of the AI Receptionist. Either phoneNumber or extension is mandatory. At
+            least one is required.
+        :type phone_number: str
+        :param extension: Extension of the AI Receptionist. Either phoneNumber or extension is mandatory. At least one
+            is required.
+        :type extension: str
+        :param direct_line_caller_id_name: Direct line caller ID name configuration
+        :type direct_line_caller_id_name: AIRDirectLineCallerIdName
+        :param dial_by_name: A dial by name used for AI Receptionist name dialing. Characters of `%`, `+`, `\\`, `"`
+            and Unicode characters are not allowed.
+        :type dial_by_name: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: str
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        body['name'] = name
+        body['enabled'] = enabled
+        if phone_number is not None:
+            body['phoneNumber'] = phone_number
+        if extension is not None:
+            body['extension'] = extension
+        if direct_line_caller_id_name is not None:
+            body['directLineCallerIdName'] = direct_line_caller_id_name.model_dump(
+                mode='json', by_alias=True, exclude_none=True
+            )
+        if dial_by_name is not None:
+            body['dialByName'] = dial_by_name
+        body['defaultAction'] = default_action.update()
+        body['aiAgent'] = ai_agent.update()
+        url = self.ep(f'telephony/config/locations/{location_id}/aiReceptionists')
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    async def validate(self, location_id: str, name: str, org_id: str = None) -> None:
+        """
+        Validate AI Receptionist
+
+        Validates AI Receptionist name at location level and max limit at org level.
+
+        AI Receptionist is a Webex Calling feature that uses AI to greet callers and intelligently route calls.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Location ID.
+        :type location_id: str
+        :param name: Name of the AI Receptionist.
+        :type name: str
+        :param org_id: Optional target organization identifier, defaults to the token's org if not provided.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        body['name'] = name
+        url = self.ep(f'telephony/config/locations/{location_id}/aiReceptionists/actions/validate/invoke')
+        await super().post(url, params=params, json=body)
+
+    def available_numbers_gen(
+        self, location_id: str, phone_number: str = None, org_id: str = None, **params: Any
+    ) -> AsyncGenerator[AvailableNumber, None]:
+        """
+        List Available Numbers for AI Receptionist
+
+        List and search numbers that can be assigned as AI Receptionist number.
+
+        AI Receptionist is a Webex Calling feature that uses AI to greet callers and intelligently route calls. Numbers
+        listed here can be assigned to an AI receptionist at a location.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Location ID.
+        :type location_id: str
+        :param phone_number: Search (Contains) based on number or extension. Search cannot be performed based on esn.
+        :type phone_number: str
+        :param org_id: Optional target organization identifier. Defaults to the token's org Id if not provided.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        url = self.ep(f'telephony/config/locations/{location_id}/aiReceptionists/availableNumbers')
+        return self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)
+
+    async def available_numbers(
+        self, location_id: str, phone_number: str = None, org_id: str = None, **params: Any
+    ) -> builtins.list[AvailableNumber]:
+        """
+        List Available Numbers for AI Receptionist
+
+        List and search numbers that can be assigned as AI Receptionist number.
+
+        AI Receptionist is a Webex Calling feature that uses AI to greet callers and intelligently route calls. Numbers
+        listed here can be assigned to an AI receptionist at a location.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Location ID.
+        :type location_id: str
+        :param phone_number: Search (Contains) based on number or extension. Search cannot be performed based on esn.
+        :type phone_number: str
+        :param org_id: Optional target organization identifier. Defaults to the token's org Id if not provided.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableNumber` instances
+        """
+        if org_id is not None:
+            params['orgId'] = org_id
+        if phone_number is not None:
+            params['phoneNumber'] = phone_number
+        url = self.ep(f'telephony/config/locations/{location_id}/aiReceptionists/availableNumbers')
+        return [o async for o in self.session.follow_pagination(url=url, model=AvailableNumber, item_key='phoneNumbers', params=params)]
+
+    async def voices(self, location_id: str, org_id: str = None) -> builtins.list[AiEngine]:
+        """
+        Get AI Receptionist Voices
+
+        Get list of available AI Receptionist voices.
+
+        AI Receptionist is a Webex Calling feature that uses AI to greet callers and intelligently route calls. This
+        API returns the available voice options that can be configured for an AI Receptionist. The response returns
+        all available engines and voices; no pagination is required.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Location ID.
+        :type location_id: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: list[AiEngine]
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/locations/{location_id}/aiReceptionists/voices')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[AiEngine]).validate_python(data['aiEngines'])
+        return r
+
+    # noinspection method-overriding
+
+    async def delete(self, location_id: str, ai_receptionist_id: str, org_id: str = None) -> None:  # type: ignore[override]
+        """
+        Delete an AI Receptionist.
+
+        AI Receptionist is a Webex Calling feature that uses AI to greet callers and intelligently route calls to
+        people or services.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Location ID.
+        :type location_id: str
+        :param ai_receptionist_id: Unique identifier for the AI Receptionist.
+        :type ai_receptionist_id: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/locations/{location_id}/aiReceptionists/{ai_receptionist_id}')
+        await super().delete(url, params=params)
+
+    async def details(self, location_id: str, ai_receptionist_id: str, org_id: str = None) -> AiReceptionist:
+        """
+        Get AI Receptionist details.
+
+        AI Receptionist is a Webex Calling feature that uses AI to greet callers and intelligently route calls to
+        people or services.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Location ID.
+        :type location_id: str
+        :param ai_receptionist_id: Unique identifier for the AI Receptionist.
+        :type ai_receptionist_id: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: :class:`AiReceptionist`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/locations/{location_id}/aiReceptionists/{ai_receptionist_id}')
+        data = await super().get(url, params=params)
+        r = AiReceptionist.model_validate(data)
+        return r
+
+    async def update(self, location_id: str, ai_receptionist_id: str, settings=AiReceptionist, org_id: str = None) -> None:
+        """
+        Update an AI Receptionist.
+
+        AI Receptionist is a Webex Calling feature that uses AI to greet callers and intelligently route calls to
+        people or services.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Location ID.
+        :type location_id: str
+        :param ai_receptionist_id: Unique identifier for the AI Receptionist.
+        :type ai_receptionist_id: str
+        :param settings: settings for AI Receptionist
+        :type settings: :class:`AiReceptionist`
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.ep(f'telephony/config/locations/{location_id}/aiReceptionists/{ai_receptionist_id}')
+        await super().put(url, params=params, json=body)
+
+    async def intents(self, location_id: str, ai_receptionist_id: str, org_id: str = None) -> builtins.list[AIRIntent]:
+        """
+        List AI Receptionist Intents
+
+        Get list of AI Receptionist Intents.
+
+        AI Receptionist is a Webex Calling feature that uses AI to greet callers and intelligently route calls. Intents
+        represent call-handling behaviors such as transfers.
+
+        Returns all intents in a single response.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Location ID.
+        :type location_id: str
+        :param ai_receptionist_id: Unique identifier for the AI Receptionist.
+        :type ai_receptionist_id: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: list[AIRIntent]
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'telephony/config/locations/{location_id}/aiReceptionists/{ai_receptionist_id}/intents')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[AIRIntent]).validate_python(data['intents'])
+        return r
+
+    async def create_intent(
+        self,
+        location_id: str,
+        ai_receptionist_id: str,
+        name: str,
+        description: str,
+        transfer_to: TransferTo,
+        org_id: str = None,
+    ) -> str:
+        """
+        Create AI Receptionist Intent
+
+        Create a new AI Receptionist Intent.
+
+        AI Receptionist is a Webex Calling feature that uses AI to greet callers and intelligently route calls. Intents
+        represent call-handling behaviors such as transfers.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Location ID.
+        :type location_id: str
+        :param ai_receptionist_id: Unique identifier for the AI Receptionist.
+        :type ai_receptionist_id: str
+        :param name: Name of the intent.
+        :type name: str
+        :param description: Description of the intent (Action).
+        :type description: str
+        :param transfer_to: -
+        :type transfer_to: TransferTo
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: str
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        body['name'] = name
+        body['description'] = description
+        body['transferTo'] = transfer_to.model_dump(mode='json', by_alias=True, exclude_none=True)
+        url = self.ep(f'telephony/config/locations/{location_id}/aiReceptionists/{ai_receptionist_id}/intents')
+        data = await super().post(url, params=params, json=body)
+        r = data['id']
+        return r
+
+    async def delete_intent(self, location_id: str, ai_receptionist_id: str, intent_id: str, org_id: str = None) -> None:
+        """
+        Delete AI Receptionist Intent
+
+        Delete an AI Receptionist Intent.
+
+        AI Receptionist is a Webex Calling feature that uses AI to greet callers and intelligently route calls. Intents
+        represent call-handling behaviors such as transfers.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Location ID.
+        :type location_id: str
+        :param ai_receptionist_id: Unique identifier for the AI Receptionist.
+        :type ai_receptionist_id: str
+        :param intent_id: Unique identifier for a specific AI Receptionist intent within a given location and AI
+            Receptionist instance.
+        :type intent_id: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(
+            f'telephony/config/locations/{location_id}/aiReceptionists/{ai_receptionist_id}/intents/{intent_id}'
+        )
+        await super().delete(url, params=params)
+
+    async def get_intent(self, location_id: str, ai_receptionist_id: str, intent_id: str, org_id: str = None) -> AIRIntent:
+        """
+        Get AI Receptionist Intent
+
+        Get details of a specific AI Receptionist Intent.
+
+        AI Receptionist is a Webex Calling feature that uses AI to greet callers and intelligently route calls. Intents
+        represent call-handling behaviors such as transfers.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Location ID.
+        :type location_id: str
+        :param ai_receptionist_id: Unique identifier for the AI Receptionist.
+        :type ai_receptionist_id: str
+        :param intent_id: Unique identifier for a specific AI Receptionist intent within a given location and AI
+            Receptionist instance.
+        :type intent_id: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: :class:`AIRIntent`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(
+            f'telephony/config/locations/{location_id}/aiReceptionists/{ai_receptionist_id}/intents/{intent_id}'
+        )
+        data = await super().get(url, params=params)
+        r = AIRIntent.model_validate(data)
+        return r
+
+    async def modify_intent(
+        self, location_id: str, ai_receptionist_id: str, intent_id: str, settings: AIRIntent, org_id: str = None
+    ) -> None:
+        """
+        Modify AI Receptionist Intent
+
+        Modify an existing AI Receptionist Intent.
+
+        AI Receptionist is a Webex Calling feature that uses AI to greet callers and intelligently route calls. Intents
+        represent call-handling behaviors such as transfers.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param location_id: Location ID.
+        :type location_id: str
+        :param ai_receptionist_id: Unique identifier for the AI Receptionist.
+        :type ai_receptionist_id: str
+        :param intent_id: Unique identifier for a specific AI Receptionist intent within a given location and AI
+            Receptionist instance.
+        :type intent_id: str
+        :param settings: Settings for this AIRIntent.
+        :type settings: :class:`AIRIntent`
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body = settings.update()
+        url = self.ep(
+            f'telephony/config/locations/{location_id}/aiReceptionists/{ai_receptionist_id}/intents/{intent_id}'
+        )
+        await super().put(url, params=params, json=body)
+
+
 class AsAnnouncementsRepositoryApi(AsApiChild, base='telephony/config'):
     """
     Not supported for Webex for Government (FedRAMP)
@@ -38763,6 +39849,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
 
     #: access or authentication codes at location level
     access_codes: AsLocationAccessCodesApi
+    ai_receptionists: AsAIReceptionistApi
     announcements_repo: AsAnnouncementsRepositoryApi
     auto_attendant: AsAutoAttendantApi
     #: location call intercept settings
@@ -38819,6 +39906,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
         self.access_codes = AsLocationAccessCodesApi(session=session)
+        self.ai_receptionists = AsAIReceptionistApi(session=session)
         self.announcements_repo = AsAnnouncementsRepositoryApi(session=session)
         self.auto_attendant = AsAutoAttendantApi(session=session)
         self.call_controls_members = AsCallControlsMembersApi(session=session)
