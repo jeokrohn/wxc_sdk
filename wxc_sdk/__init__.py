@@ -14,6 +14,7 @@ from .cdr import DetailedCDRApi
 from .converged_recordings import ConvergedRecordingsApi
 from .device_configurations import DeviceConfigurationsApi
 from .devices import DevicesApi
+from .domain_management import DomainManagementApi
 from .events import EventsApi
 from .groups import GroupsApi
 from .guests import GuestManagementApi
@@ -74,6 +75,8 @@ class WebexSimpleApi:
     device_configurations: DeviceConfigurationsApi
     #: devices API :class:`devices.DevicesApi`
     devices: DevicesApi
+    #: domain management API :class:`domain_management.DomainManagementApi`
+    domain_management: DomainManagementApi
     #: events API; :class:`events.EventsApi`
     events: EventsApi
     #: groups API :class:`groups.GroupsApi`
@@ -185,6 +188,7 @@ class WebexSimpleApi:
         self.converged_recordings = ConvergedRecordingsApi(session=session)
         self.device_configurations = DeviceConfigurationsApi(session=session)
         self.devices = DevicesApi(session=session)
+        self.domain_management = DomainManagementApi(session=session)
         self.events = EventsApi(session=session)
         self.groups = GroupsApi(session=session)
         self.guests = GuestManagementApi(session=session)

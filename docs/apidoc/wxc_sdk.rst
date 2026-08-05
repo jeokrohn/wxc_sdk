@@ -20,6 +20,7 @@ Subpackages
    wxc_sdk.converged_recordings
    wxc_sdk.device_configurations
    wxc_sdk.devices
+   wxc_sdk.domain_management
    wxc_sdk.events
    wxc_sdk.groups
    wxc_sdk.guests

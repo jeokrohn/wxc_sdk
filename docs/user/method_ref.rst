@@ -96,6 +96,21 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.devices.settings_jobs.status <wxc_sdk.telephony.jobs.DeviceSettingsJobsApi.status>`
         | Get change device settings job status
         | ``GET /telephony/config/jobs/devices/callDeviceSettings/{job_id}``
+   * - :meth:`api.domain_management.claim_domain <wxc_sdk.domain_management.DomainManagementApi.claim_domain>`
+        | Claim Domain
+        | ``POST /identity/organizations/{org_id}/actions/claimDomain``
+   * - :meth:`api.domain_management.get_domain_verification_token <wxc_sdk.domain_management.DomainManagementApi.get_domain_verification_token>`
+        | Get Domain Verification Token
+        | ``POST /identity/organizations/{org_id}/actions/getDomainVerificationToken``
+   * - :meth:`api.domain_management.unclaim_domain <wxc_sdk.domain_management.DomainManagementApi.unclaim_domain>`
+        | Unclaim Domain
+        | ``POST /identity/organizations/{org_id}/actions/unclaimDomain``
+   * - :meth:`api.domain_management.unverify_domain <wxc_sdk.domain_management.DomainManagementApi.unverify_domain>`
+        | Unverify Domain
+        | ``POST /identity/organizations/{org_id}/actions/unverifyDomain``
+   * - :meth:`api.domain_management.verify_domain <wxc_sdk.domain_management.DomainManagementApi.verify_domain>`
+        | Verify Domain
+        | ``POST /identity/organizations/{org_id}/actions/verifyDomain``
    * - :meth:`api.events.details <wxc_sdk.events.EventsApi.details>`
         | Shows details for an event, by event ID
         | ``GET /events/{event_id}``

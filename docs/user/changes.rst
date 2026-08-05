@@ -1,6 +1,7 @@
 Release history
 ===============
 
+- feat: domain management API
 - feat: selective call recording settings for users, workspaces, virtual lines and me api
 - feat: new API: api.telephony.ai_receptionists
 - feat: new endpoints MeSettingsApi.large_org_status/org_locations. new API MeSettingsApi.speed_dials
