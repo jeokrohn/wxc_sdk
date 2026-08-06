@@ -181,7 +181,8 @@ from wxc_sdk.telephony.ai_receptionists import AIRDirectLineCallerIdName, AIRInt
     KnowledgeBaseDocumentDetails, KnowledgeBaseDocumentKnowledgeType, KnowledgeBaseDocumentStatus, \
     KnowledgeBaseMappedBot, MessageMetadata, MessageText, SessionObject, ToolInvocation, TranscriptObject, \
     TranscriptObjectUserType, TranscriptsResponse, TransferTo, TransferToContactType, Voice, VoiceGender
-from wxc_sdk.telephony.announcements_repo import FeatureReference, RepoAnnouncement, RepositoryUsage
+from wxc_sdk.telephony.announcements_repo import FeatureReference, GenerateUploadUrlResponse, GetMediaUrlResponse, \
+    RepoAnnouncement, RepositoryUsage
 from wxc_sdk.telephony.autoattendant import ActionToBePerformed, ActionToBePerformedAction, AutoAttendant, \
     AutoAttendantAction, AutoAttendantKeyConfiguration, AutoAttendantMenu, CallTreatment, CallTreatmentRetry, \
     Dialing, MenuKey
@@ -380,20 +381,20 @@ __all__ = ['AIRDirectLineCallerIdName', 'AIRIntent', 'AIRSessionState', 'AIRSess
            'FeatureMode', 'FeatureModeForwardTo', 'FeatureReference', 'FeatureSelector', 'FeatureType', 'Floor',
            'ForcedForward', 'ForwardCallsTo', 'ForwardFromSelection', 'ForwardOperatingModes', 'ForwardTo',
            'ForwardToSelection', 'ForwardingRule', 'ForwardingRuleDetails', 'ForwardingSetting',
-           'GetMeetingSurveyResponse', 'Greeting', 'Group', 'GroupMember', 'GroupMemberObject', 'GroupMemberResponse',
-           'GroupMeta', 'Guest', 'GuestCallingNumber', 'GuestCallingSettings', 'HGCallPolicies', 'HGandCQ', 'Handset',
-           'HistoryType', 'HolidayService', 'HostedFeatureDestination', 'HostedUserDestination', 'HotDesk',
-           'HotDeskingAvailableMember', 'HotDeskingMember', 'HotDeskingMembers', 'HotDeskingVoicePortalSetting',
-           'HotdeskingStatus', 'Hoteling', 'HotelingGuestSettings', 'HttpProxy', 'HttpProxyMode', 'HuntGroup',
-           'IdAndAction', 'IdAndName', 'IdOnly', 'InProgressDevice', 'Incident', 'IncidentUpdate',
-           'IncomingPermissions', 'InitiateMoveNumberJobsBody', 'InputMode', 'IntentTransferTo',
-           'InterceptAnnouncements', 'InterceptNumber', 'InterceptSetting', 'InterceptSettingIncoming',
-           'InterceptSettingOutgoing', 'InterceptTypeIncoming', 'InterceptTypeOutgoing', 'InternalDialing',
-           'InterpreterForSimultaneousInterpretation', 'Invitee', 'InviteeForCreateMeeting', 'JobError',
-           'JobErrorItem', 'JobErrorMessage', 'JobExecutionStatus', 'JoinMeetingBody', 'JoinMeetingResponse',
-           'KemKey', 'KemModuleType', 'KnowledgeBase', 'KnowledgeBaseDocument', 'KnowledgeBaseDocumentDetails',
-           'KnowledgeBaseDocumentKnowledgeType', 'KnowledgeBaseDocumentStatus', 'KnowledgeBaseMappedBot',
-           'LargeOrgStatus', 'LayoutMode', 'License', 'LicenseProperties', 'LicenseRequest',
+           'GenerateUploadUrlResponse', 'GetMediaUrlResponse', 'GetMeetingSurveyResponse', 'Greeting', 'Group',
+           'GroupMember', 'GroupMemberObject', 'GroupMemberResponse', 'GroupMeta', 'Guest', 'GuestCallingNumber',
+           'GuestCallingSettings', 'HGCallPolicies', 'HGandCQ', 'Handset', 'HistoryType', 'HolidayService',
+           'HostedFeatureDestination', 'HostedUserDestination', 'HotDesk', 'HotDeskingAvailableMember',
+           'HotDeskingMember', 'HotDeskingMembers', 'HotDeskingVoicePortalSetting', 'HotdeskingStatus', 'Hoteling',
+           'HotelingGuestSettings', 'HttpProxy', 'HttpProxyMode', 'HuntGroup', 'IdAndAction', 'IdAndName', 'IdOnly',
+           'InProgressDevice', 'Incident', 'IncidentUpdate', 'IncomingPermissions', 'InitiateMoveNumberJobsBody',
+           'InputMode', 'IntentTransferTo', 'InterceptAnnouncements', 'InterceptNumber', 'InterceptSetting',
+           'InterceptSettingIncoming', 'InterceptSettingOutgoing', 'InterceptTypeIncoming', 'InterceptTypeOutgoing',
+           'InternalDialing', 'InterpreterForSimultaneousInterpretation', 'Invitee', 'InviteeForCreateMeeting',
+           'JobError', 'JobErrorItem', 'JobErrorMessage', 'JobExecutionStatus', 'JoinMeetingBody',
+           'JoinMeetingResponse', 'KemKey', 'KemModuleType', 'KnowledgeBase', 'KnowledgeBaseDocument',
+           'KnowledgeBaseDocumentDetails', 'KnowledgeBaseDocumentKnowledgeType', 'KnowledgeBaseDocumentStatus',
+           'KnowledgeBaseMappedBot', 'LargeOrgStatus', 'LayoutMode', 'License', 'LicenseProperties', 'LicenseRequest',
            'LicenseRequestOperation', 'LicenseUser', 'LicenseUserType', 'Lifecycle', 'LineKeyLabelSelection',
            'LineKeyLedPattern', 'LineKeyTemplate', 'LineKeyTemplateAdvisoryTypes', 'LineKeyType', 'LinkRelation',
            'Location', 'LocationAddress', 'LocationAndNumbers', 'LocationAssignedNumber', 'LocationCallCaptions',

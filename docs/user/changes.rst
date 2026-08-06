@@ -1,6 +1,8 @@
 Release history
 ===============
 
+- feat: adding methods api.telephony.announcements_repo.generate_upload_url, get_announcement_file_uri, get_media_download_url
+- feat: Support for multiple TTS languages
 - feat: domain management API
 - feat: selective call recording settings for users, workspaces, virtual lines and me api
 - feat: new API: api.telephony.ai_receptionists

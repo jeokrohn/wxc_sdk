@@ -14,8 +14,8 @@ from wxc_sdk.base import SafeEnum as Enum
 
 __all__ = ['AnnouncementResponse', 'AnnouncementResponseWithPlaylist', 'AnnouncementUsageResponse',
            'AnnouncementsListResponse', 'AnnouncementsListResponseLevel', 'FeatureReferenceObject',
-           'FeaturesAnnouncementRepositoryApi', 'LocationId', 'LocationObject', 'TtsStatusResponse',
-           'TtsStatusResponseStatus', 'TtsUsageResponse', 'TtsVoice']
+           'FeaturesAnnouncementRepositoryApi', 'GenerateUploadUrlResponse', 'GetMediaUrlResponse', 'LocationId',
+           'LocationObject', 'TtsStatusResponse', 'TtsStatusResponseStatus', 'TtsUsageResponse', 'TtsVoice']
 
 
 class FeatureReferenceObject(ApiModel):
@@ -108,6 +108,7 @@ class AnnouncementUsageResponse(ApiModel):
 
 class AnnouncementsListResponseLevel(str, Enum):
     location = 'LOCATION'
+    organization = 'ORGANIZATION'
 
 
 class AnnouncementsListResponse(ApiModel):
@@ -174,6 +175,26 @@ class TtsVoice(ApiModel):
     id: Optional[str] = None
     #: The voice label, including the voice name and gender.
     label: Optional[str] = None
+    #: The language code supported by the voice.
+    language_code: Optional[str] = None
+
+
+class GenerateUploadUrlResponse(ApiModel):
+    #: A pre-signed S3 URL for uploading the announcement media file. The URL is time-limited and should be used
+    #: promptly.
+    pre_signed_url: Optional[str] = None
+    #: The KMS key URI used to encrypt the media file before uploading to the pre-signed URL.
+    kms_key_uri: Optional[str] = None
+    #: A file URI that identifies the uploaded media. Use this URI when configuring announcements.
+    file_uri: Optional[str] = None
+
+
+class GetMediaUrlResponse(ApiModel):
+    #: A pre-signed S3 URL for downloading the announcement media file. The URL is time-limited and should be used
+    #: promptly.
+    pre_signed_url: Optional[str] = None
+    #: The KMS key URI required to decrypt the media file downloaded from the pre-signed URL.
+    kms_key_uri: Optional[str] = None
 
 
 class LocationId(str, Enum):
@@ -290,6 +311,46 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         r = data['id']
         return r
 
+    def generate_upload_url(self, org_id: str = None) -> GenerateUploadUrlResponse:
+        """
+        Generate Upload URL
+
+        Generate a pre-signed S3 upload URL, KMS encryption key for uploading an announcement media file. And file URI
+        to create announcement using the media file.
+
+        To encrypt and upload the announcement media file:
+
+        1. Download the KMS key - Use the Webex Node.js SDK and provide `kmsKeyUri` to download the key from KMS.
+
+        2. Encrypt media file - Use the jose library to encrypt the raw media file with the downloaded key.
+
+        3. Upload the encrypted media file - Send a `PUT` request with encrypted media file to the `preSignedUrl`. The
+        request must include following headers:
+
+        - `x-amz-meta-contenttype`: The media MIME type, for example: `audio/wav`
+
+        - `x-amz-meta-kmskeyuri`: The returned `kmsKeyUri`, for example:
+        `kms://kms-cisco.wbx2.com/keys/b56642f3-d597-420c-8a55-41aaa8c5b6e7`
+
+        - `x-amz-tagging`: `tmp=true`
+
+        This API is part of the Announcement Repository with Media URLs feature, which optimizes the media file upload
+        process by enabling direct S3 uploads and adds the ability to preview existing announcement audio files.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param org_id: Generate the upload URL for this organization.
+        :type org_id: str
+        :rtype: :class:`GenerateUploadUrlResponse`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('announcements/uploadUrls/actions/generate/invoke')
+        data = super().post(url, params=params)
+        r = GenerateUploadUrlResponse.model_validate(data)
+        return r
+
     def fetch_repository_usage_for_announcements_for_an_organization(self,
                                                                      org_id: str = None) -> AnnouncementUsageResponse:
         """
@@ -399,6 +460,33 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         body['isTextToSpeech'] = is_text_to_speech
         url = self.ep(f'announcements/{announcement_id}')
         super().put(url, params=params, json=body)
+
+    def get_announcement_file_uri(self, announcement_id: str, org_id: str = None) -> str:
+        """
+        Get Announcement File URI
+
+        Retrieve the `fileUri` for an existing binary announcement greeting at the organization level. Use the returned
+        `fileUri` with the Get Media Download URL API to get URLs for downloading the announcement media file.
+
+        This API is part of the Announcement Repository with Media URLs feature, which optimizes the media file upload
+        process by enabling direct S3 uploads and adds the ability to preview existing announcement audio files.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param announcement_id: Unique identifier of an announcement.
+        :type announcement_id: str
+        :param org_id: Get announcement fileUri in this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'announcements/{announcement_id}/fileUri')
+        data = super().get(url, params=params)
+        r = data['fileUri']
+        return r
 
     def upload_a_binary_announcement_greeting_at_the_location_level(self, location_id: str, name: str, file_uri: str,
                                                                     file_name: str, is_text_to_speech: bool,
@@ -560,6 +648,77 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')
         super().put(url, params=params, json=body)
 
+    def get_location_announcement_file_uri(self, location_id: str, announcement_id: str, org_id: str = None) -> str:
+        """
+        Get Location Announcement File URI
+
+        Retrieve the `fileUri` for an existing binary announcement greeting at the location level. Use the returned
+        `fileUri` with the Get Media Download URL API to get URLs for downloading the announcement media file.
+
+        This API is part of the Announcement Repository with Media URLs feature, which optimizes the media file upload
+        process by enabling direct S3 uploads and adds the ability to preview existing announcement audio files.
+
+        This API requires a full or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Unique identifier of a location where an announcement is stored.
+        :type location_id: str
+        :param announcement_id: Unique identifier of an announcement.
+        :type announcement_id: str
+        :param org_id: Get announcement fileUri for location in this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/announcements/{announcement_id}/fileUri')
+        data = super().get(url, params=params)
+        r = data['fileUri']
+        return r
+
+    def get_media_download_url(self, s3_path: str, org_id: str = None) -> GetMediaUrlResponse:
+        """
+        Get Media Download URL
+
+        Retrieve a pre-signed S3 download URL and KMS encryption key for a previously uploaded announcement media file
+        identified by its S3 path.
+
+        To preview the announcement media file:
+
+        1. Download the KMS key - Use the Webex Node.js SDK and provide `kmsKeyUri` to download the key from KMS.
+
+        2. Download the encrypted media file - The encrypted media file content is stored in cloud and can be retrieved
+        using `preSignedUrl`.
+
+        3. Decrypt the media content - Use the jose library to decrypt the content downloaded from `preSignedUrl` using
+        the downloaded key.
+
+        This API is part of the Announcement Repository with Media URLs feature, which optimizes the media file upload
+        process and adds the ability to preview existing announcement audio files by generating pre-signed S3 download
+        URLs.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param s3_path: The storage path of the announcement media file. Use the value after `/media/urls/` in the
+            `fileUri` returned by the Get Announcement File URI or Get Location Announcement File URI API. For
+            example, if `fileUri` is
+            `cmf://customers/bf01164f-ed87-44d9-bc41-f63f26fb9663/media/urls/tmp/af01164f-ed87-44d9-bc41-f63f26fb8663`,
+            then `s3Path` is `tmp/af01164f-ed87-44d9-bc41-f63f26fb8663`.
+        :type s3_path: str
+        :param org_id: Retrieve the media download URL for this organization.
+        :type org_id: str
+        :rtype: :class:`GetMediaUrlResponse`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'media/urls/{s3_path}')
+        data = super().get(url, params=params)
+        r = GetMediaUrlResponse.model_validate(data)
+        return r
+
     def generate_text_to_speech(self, voice: str, text: str, language_code: str, org_id: str = None) -> str:
         """
         Generate a Text-to-Speech Prompt
@@ -578,8 +737,8 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type voice: str
         :param text: The text to convert to speech.
         :type text: str
-        :param language_code: The language code used to generate the audio prompt. Use the Read the List of
-            Announcement Languages API to retrieve supported language codes.
+        :param language_code: The language code used to generate the audio prompt. Use the List Text-to-Speech Voices
+            API to retrieve the language code supported by the selected voice.
         :type language_code: str
         :param org_id: Generate text-to-speech for this organization.
         :type org_id: str
@@ -623,11 +782,12 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         r = TtsUsageResponse.model_validate(data)
         return r
 
-    def list_text_to_speech_voices(self, org_id: str = None) -> builtins.list[TtsVoice]:
+    def list_text_to_speech_voices(self, language_code: str = None, org_id: str = None) -> builtins.list[TtsVoice]:
         """
         List Text-to-Speech Voices
 
-        Fetch a list of available text-to-speech voices. Use the returned voice ID in the generation request.
+        Fetch a list of available text-to-speech voices. Use the returned voice ID and language code in the generation
+        request.
 
         Text-to-speech (TTS) efficiently generates prompts, greetings, and announcements by converting written text
         into synthesized audio using the specified voice. The generated audio functions like a recorded WAV file,
@@ -636,11 +796,17 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         This API requires a full or read-only administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
+        :param language_code: Language code used to filter the available text-to-speech voices. Use the Read the List
+            of Announcement Languages API to retrieve supported language codes. If not specified, the default language
+            code is `en_us`.
+        :type language_code: str
         :param org_id: List text-to-speech voices supported for this organization.
         :type org_id: str
         :rtype: list[TtsVoice]
         """
         params: dict[str, Any] = dict()
+        if language_code is not None:
+            params['languageCode'] = language_code
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('textToSpeech/voices')

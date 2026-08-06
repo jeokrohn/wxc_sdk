@@ -1752,6 +1752,18 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.telephony.announcements_repo.details <wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.details>`
         | Fetch details of a binary announcement greeting at the organization or location level
         | ``GET /telephony/config/announcements/{announcement_id}``
+   * - :meth:`api.telephony.announcements_repo.generate_upload_url <wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.generate_upload_url>`
+        | Generate Upload URL
+        | ``POST /telephony/config/announcements/uploadUrls/actions/generate/invoke``
+   * - :meth:`api.telephony.announcements_repo.get_announcement_file_uri <wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.get_announcement_file_uri>`
+        | Get Announcement File URI
+        | ``GET /telephony/config/announcements/{announcement_id}/fileUri``
+   * - :meth:`api.telephony.announcements_repo.get_location_announcement_file_uri <wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.get_location_announcement_file_uri>`
+        | Get Location Announcement File URI
+        | ``GET /telephony/config/locations/{location_id}/announcements/{announcement_id}/fileUri``
+   * - :meth:`api.telephony.announcements_repo.get_media_download_url <wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.get_media_download_url>`
+        | Get Media Download URL
+        | ``GET /telephony/config/media/urls/{s3_path}``
    * - :meth:`api.telephony.announcements_repo.list <wxc_sdk.telephony.announcements_repo.AnnouncementsRepositoryApi.list>`
         | List Announcements
         | ``GET /telephony/config/announcements``

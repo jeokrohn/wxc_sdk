@@ -54,6 +54,8 @@ class TtsVoice(ApiModel):
     id: Optional[str] = None
     #: The voice label, including the voice name and gender.
     label: Optional[str] = None
+    #: The language code supported by the voice.
+    language_code: Optional[str] = None
 
 
 class TextToSpeechApi(ApiChild, base='telephony/config'):
@@ -75,8 +77,8 @@ class TextToSpeechApi(ApiChild, base='telephony/config'):
         :type voice: str
         :param text: The text to convert to speech.
         :type text: str
-        :param language_code: The language code used to generate the audio prompt. Use the Read the List of
-            Announcement Languages API to retrieve supported language codes.
+        :param language_code: The language code used to generate the audio prompt. Use the List Text-to-Speech Voices
+            API to retrieve the language code supported by the selected voice.
         :type language_code: str
         :param org_id: Generate text-to-speech for this organization.
         :type org_id: str
@@ -120,11 +122,12 @@ class TextToSpeechApi(ApiChild, base='telephony/config'):
         r = TtsUsageResponse.model_validate(data)
         return r
 
-    def voices(self, org_id: str = None) -> builtins.list[TtsVoice]:
+    def voices(self, language_code: str = None, org_id: str = None) -> builtins.list[TtsVoice]:
         """
         List Text-to-Speech Voices
 
-        Fetch a list of available text-to-speech voices. Use the returned voice ID in the generation request.
+        Fetch a list of available text-to-speech voices. Use the returned voice ID and language code in the generation
+        request.
 
         Text-to-speech (TTS) efficiently generates prompts, greetings, and announcements by converting written text
         into synthesized audio using the specified voice. The generated audio functions like a recorded WAV file,
@@ -133,11 +136,17 @@ class TextToSpeechApi(ApiChild, base='telephony/config'):
         This API requires a full or read-only administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
+        :param language_code: Language code used to filter the available text-to-speech voices. Use the Read the List
+            of Announcement Languages API to retrieve supported language codes. If not specified, the default language
+            code is `en_us`.
+        :type language_code: str
         :param org_id: List text-to-speech voices supported for this organization.
         :type org_id: str
         :rtype: list[TtsVoice]
         """
         params: dict[str, Any] = dict()
+        if language_code is not None:
+            params['languageCode'] = language_code
         if org_id is not None:
             params['orgId'] = org_id
         url = self.ep('textToSpeech/voices')

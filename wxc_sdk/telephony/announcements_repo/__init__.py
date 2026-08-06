@@ -17,7 +17,14 @@ from ...api_child import ApiChild
 from ...base import ApiModel
 from ...common import AnnouncementLevel, IdAndName, MediaFileType
 
-__all__ = ['RepoAnnouncement', 'AnnouncementsRepositoryApi', 'RepositoryUsage', 'FeatureReference']
+__all__ = [
+    'RepoAnnouncement',
+    'AnnouncementsRepositoryApi',
+    'RepositoryUsage',
+    'FeatureReference',
+    'GenerateUploadUrlResponse',
+    'GetMediaUrlResponse',
+]
 
 
 class FeatureReference(ApiModel):
@@ -73,6 +80,24 @@ class RepositoryUsage(ApiModel):
     max_video_file_size_allowed_kb: Optional[int] = Field(alias='maxVideoFileSizeAllowedKB', default=None)
     #: Total file size limit for the repository in megabytes.
     total_file_size_limit_mb: Optional[int] = Field(alias='totalFileSizeLimitMB', default=None)
+
+
+class GenerateUploadUrlResponse(ApiModel):
+    #: A pre-signed S3 URL for uploading the announcement media file. The URL is time-limited and should be used
+    #: promptly.
+    pre_signed_url: Optional[str] = None
+    #: The KMS key URI used to encrypt the media file before uploading to the pre-signed URL.
+    kms_key_uri: Optional[str] = None
+    #: A file URI that identifies the uploaded media. Use this URI when configuring announcements.
+    file_uri: Optional[str] = None
+
+
+class GetMediaUrlResponse(ApiModel):
+    #: A pre-signed S3 URL for downloading the announcement media file. The URL is time-limited and should be used
+    #: promptly.
+    pre_signed_url: Optional[str] = None
+    #: The KMS key URI required to decrypt the media file downloaded from the pre-signed URL.
+    kms_key_uri: Optional[str] = None
 
 
 class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
@@ -337,6 +362,46 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
         )
         return data['id']  # type: ignore[no-any-return]
 
+    def generate_upload_url(self, org_id: str = None) -> GenerateUploadUrlResponse:
+        """
+        Generate Upload URL
+
+        Generate a pre-signed S3 upload URL, KMS encryption key for uploading an announcement media file. And file URI
+        to create announcement using the media file.
+
+        To encrypt and upload the announcement media file:
+
+        1. Download the KMS key - Use the Webex Node.js SDK and provide `kmsKeyUri` to download the key from KMS.
+
+        2. Encrypt media file - Use the jose library to encrypt the raw media file with the downloaded key.
+
+        3. Upload the encrypted media file - Send a `PUT` request with encrypted media file to the `preSignedUrl`. The
+        request must include following headers:
+
+        - `x-amz-meta-contenttype`: The media MIME type, for example: `audio/wav`
+
+        - `x-amz-meta-kmskeyuri`: The returned `kmsKeyUri`, for example:
+        `kms://kms-cisco.wbx2.com/keys/b56642f3-d597-420c-8a55-41aaa8c5b6e7`
+
+        - `x-amz-tagging`: `tmp=true`
+
+        This API is part of the Announcement Repository with Media URLs feature, which optimizes the media file upload
+        process by enabling direct S3 uploads and adds the ability to preview existing announcement audio files.
+
+        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+
+        :param org_id: Generate the upload URL for this organization.
+        :type org_id: str
+        :rtype: :class:`GenerateUploadUrlResponse`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('announcements/uploadUrls/actions/generate/invoke')
+        data = super().post(url, params=params)
+        r = GenerateUploadUrlResponse.model_validate(data)
+        return r
+
     def usage(self, location_id: str = None, org_id: str = None) -> RepositoryUsage:
         """
         Fetch repository usage for announcements for an organization or location
@@ -491,3 +556,101 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
             is_text_to_speech=is_text_to_speech,
         )
         return
+
+    def get_announcement_file_uri(self, announcement_id: str, org_id: str = None) -> str:
+        """
+        Get Announcement File URI
+
+        Retrieve the `fileUri` for an existing binary announcement greeting at the organization level. Use the returned
+        `fileUri` with the Get Media Download URL API to get URLs for downloading the announcement media file.
+
+        This API is part of the Announcement Repository with Media URLs feature, which optimizes the media file upload
+        process by enabling direct S3 uploads and adds the ability to preview existing announcement audio files.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param announcement_id: Unique identifier of an announcement.
+        :type announcement_id: str
+        :param org_id: Get announcement fileUri in this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'announcements/{announcement_id}/fileUri')
+        data = super().get(url, params=params)
+        r = data['fileUri']
+        return r
+
+    def get_location_announcement_file_uri(self, location_id: str, announcement_id: str, org_id: str = None) -> str:
+        """
+        Get Location Announcement File URI
+
+        Retrieve the `fileUri` for an existing binary announcement greeting at the location level. Use the returned
+        `fileUri` with the Get Media Download URL API to get URLs for downloading the announcement media file.
+
+        This API is part of the Announcement Repository with Media URLs feature, which optimizes the media file upload
+        process by enabling direct S3 uploads and adds the ability to preview existing announcement audio files.
+
+        This API requires a full or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Unique identifier of a location where an announcement is stored.
+        :type location_id: str
+        :param announcement_id: Unique identifier of an announcement.
+        :type announcement_id: str
+        :param org_id: Get announcement fileUri for location in this organization.
+        :type org_id: str
+        :rtype: str
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/announcements/{announcement_id}/fileUri')
+        data = super().get(url, params=params)
+        r = data['fileUri']
+        return r
+
+    def get_media_download_url(self, s3_path: str, org_id: str = None) -> GetMediaUrlResponse:
+        """
+        Get Media Download URL
+
+        Retrieve a pre-signed S3 download URL and KMS encryption key for a previously uploaded announcement media file
+        identified by its S3 path.
+
+        To preview the announcement media file:
+
+        1. Download the KMS key - Use the Webex Node.js SDK and provide `kmsKeyUri` to download the key from KMS.
+
+        2. Download the encrypted media file - The encrypted media file content is stored in cloud and can be retrieved
+        using `preSignedUrl`.
+
+        3. Decrypt the media content - Use the jose library to decrypt the content downloaded from `preSignedUrl` using
+        the downloaded key.
+
+        This API is part of the Announcement Repository with Media URLs feature, which optimizes the media file upload
+        process and adds the ability to preview existing announcement audio files by generating pre-signed S3 download
+        URLs.
+
+        This API requires a full or read-only administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param s3_path: The storage path of the announcement media file. Use the value after `/media/urls/` in the
+            `fileUri` returned by the Get Announcement File URI or Get Location Announcement File URI API. For
+            example, if `fileUri` is
+            `cmf://customers/bf01164f-ed87-44d9-bc41-f63f26fb9663/media/urls/tmp/af01164f-ed87-44d9-bc41-f63f26fb8663`,
+            then `s3Path` is `tmp/af01164f-ed87-44d9-bc41-f63f26fb8663`.
+        :type s3_path: str
+        :param org_id: Retrieve the media download URL for this organization.
+        :type org_id: str
+        :rtype: :class:`GetMediaUrlResponse`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'media/urls/{s3_path}')
+        data = super().get(url, params=params)
+        r = GetMediaUrlResponse.model_validate(data)
+        return r
