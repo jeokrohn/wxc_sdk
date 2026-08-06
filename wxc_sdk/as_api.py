@@ -19520,6 +19520,26 @@ class AsReportsApi(AsApiChild, base='devices'):
         CSV (comma separated value) reports for Webex services are only supported for organizations based in the
         North American region. Organizations based in other regions will return blank CSV files for any Webex reports.
 
+        Validation Fields
+
+        Each template includes validation rules that specify which fields are required when generating a report using
+        the `Reports API
+        <https://developer.webex.com/docs/api/v1/reports>`_. The possible validation field values are:
+
+        - **templateId**: The unique identifier of the report template to use. This is always required when creating a
+          report.
+        - **siteList**: A comma-separated list of Webex sites (e.g., 'cisco.webex.com'). Required for site-based
+          templates, typically for Webex Meetings reports.
+        - **subIds**: Subscription IDs for the report. Required for certain enterprise agreement templates,
+          particularly for Webex Onboarding service reports.
+        - **startDate**: The start date for the report data range in YYYY-MM-DD format. Required for date-range based
+          templates.
+        - **endDate**: The end date for the report data range in YYYY-MM-DD format. Required for date-range based
+          templates.
+
+        When creating a report, ensure you provide all fields marked as 'required': 'yes' in the template's validation
+        rules.
+
         :return: list of report templates
         :rtype: list[ReportTemplate]
         """
