@@ -4904,6 +4904,10 @@ class AsLocationsApi(AsApiChild, base='locations'):
         :param location_id: Update location common attributes for this location.
         :type location_id: str
         :param settings: new settings for the org:
+            Once PSTN connectivity is set up for a location, please go to the
+            `Update the Emergency Address of a Location
+            <https://developer.webex.com/docs/api/v1/pstn/update-the-emergency-address-of-a-location>`_
+            API to update the location address.
         :type settings: :class:`Location`
         :param org_id: Update location common attributes for this organization
         :type org_id: str
@@ -4949,7 +4953,7 @@ class AsLocationsApi(AsApiChild, base='locations'):
         :type display_name: str
         :rtype: :class:`Floor`
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['floorNumber'] = floor_number
         if display_name is not None:
             body['displayName'] = display_name
@@ -13284,8 +13288,12 @@ class AsAgentCallerIdApi(AsPersonSettingsApiChild):
         Get the list of call queues and hunt groups available for caller ID use by this person, virtual line, or
         workspace as an agent.
 
-        This API requires a full, user, or read-only administrator or location administrator auth token with a scope
-        of `spark-admin:people_read`.
+        When a person, virtual line, or workspace is configured as an agent in call queues or hunt groups, they can
+        choose which caller ID to display when making outbound calls. This API returns the available options for the
+        agent to select from.
+
+        This API requires a full, user, read-only administrator, or location administrator auth token with a scope of
+        `spark-admin:people_read`.
 
         :param entity_id: Unique identifier for the person, virtual line, or workspace.
         :type entity_id: str
@@ -13300,7 +13308,7 @@ class AsAgentCallerIdApi(AsPersonSettingsApiChild):
         data = await self.get(ep, params=params)
         return TypeAdapter(list[AgentCallerId]).validate_python(data['availableCallerIds'])
 
-    async def read(self, entity_id: str) -> AgentCallerId:
+    async def read(self, entity_id: str, org_id: str = None) -> AgentCallerId:
         """
         Retrieve Agent's Caller ID Information
 
@@ -13314,33 +13322,43 @@ class AsAgentCallerIdApi(AsPersonSettingsApiChild):
 
         :param entity_id: Unique identifier for the person, virtual line, or workspace
         :type entity_id: str
+        :param org_id: ID of the organization in which the virtual line resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
+        :type org_id: str
         :rtype: AgentCallerId
         """
         url = self.f_ep(entity_id, 'callerId')
-        data = await super().get(url)
+        params = org_id and {'orgId': org_id} or None
+        data = await super().get(url, params=params)
         r = AgentCallerId.model_validate(data['selectedCallerId'])
         return r
 
-    async def configure(self, entity_id: str, selected_caller_id: str = None):
+    async def configure(self, entity_id: str, selected_caller_id: str = None, org_id: str = None):
         """
         Modify Agent's Caller ID Information.
 
         Each Agent will be able to set their outgoing Caller ID as either the designated Call Queue's Caller ID or Hunt
         Group's Caller ID or their own configured Caller ID
 
-        This API requires a full or user administrator or location administrator auth token with
-        the `spark-admin:telephony_config_write` scope.
+        This API requires a full, user, or location administrator auth token with the
+        `spark-admin:telephony_config_write` scope.
 
         :param entity_id: Unique identifier for the person, virtual line, or workspace
         :type entity_id: str
         :param selected_caller_id: The unique identifier of the call queue or hunt group to use for the agent's caller
             ID. Set to null to use the agent's own caller ID.
         :type selected_caller_id: str
+        :param org_id: ID of the organization in which the virtual line resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
         :rtype: None
         """
         body = {'selectedCallerId': selected_caller_id}
         url = self.f_ep(entity_id, 'callerId')
-        await super().put(url, json=body)
+        params = org_id and {'orgId': org_id} or None
+        await super().put(url, params=params, json=body)
 
 
 class AsAnonCallsApi(AsPersonSettingsApiChild):
@@ -14367,13 +14385,14 @@ class AsBargeApi(AsPersonSettingsApiChild):
 
     async def read(self, entity_id: str, org_id: str = None) -> BargeSettings:
         """
-        Retrieve Barge In Settings
+        Retrieve Barge in Settings
 
         The Barge In feature enables you to use a Feature Access Code (FAC) to answer a call that was directed to
         another subscriber, or barge-in on the call if it was already answered. Barge In can be used across locations.
 
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read
-        or a user auth token with spark:people_read scope can be used by an entity to read their own settings.
+        This API requires a full, user, read-only administrator, or location administrator auth token with a scope of
+        spark-admin:people_read or a user auth token with spark:people_read scope can be used by an entity to read their
+        own settings.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -14389,13 +14408,13 @@ class AsBargeApi(AsPersonSettingsApiChild):
 
     async def configure(self, entity_id: str, barge_settings: BargeSettings, org_id: str = None):
         """
-        Configure Barge In Settings
+        Configure Barge in Settings
 
         The Barge In feature enables you to use a Feature Access Code (FAC) to answer a call that was directed to
         another subscriber, or barge-in on the call if it was already answered. Barge In can be used across locations.
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
-        auth token with spark:people_write scope can be used by an entity to update their own settings.
+        This API requires a full, user, or location administrator auth token with the spark-admin:people_write scope or
+        a user auth token with spark:people_write scope can be used by an entity to update their own settings.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -14436,8 +14455,11 @@ class AsCallBridgeApi(AsPersonSettingsApiChild):
 
         Retrieve Bridge settings.
 
-        This API requires a full, user or read-only administrator or location administrator auth token with a scope
-        of `spark-admin:people_read`.
+        Call bridge settings allow administrators to configure warning tones that play when a call is bridged or
+        transferred, helping users identify when they are being connected to another party.
+
+        This API requires a full, user, read-only administrator, or location administrator auth token with a scope of
+        `spark-admin:people_read`.
 
         :param entity_id: Unique identifier for the person.
         :type entity_id: str
@@ -14460,8 +14482,11 @@ class AsCallBridgeApi(AsPersonSettingsApiChild):
 
         Configure Call Bridge settings.
 
-        This API requires a full or user administrator or location administrator auth token with
-        the `spark-admin:people_write` scope.
+        Call bridge settings allow administrators to configure warning tones that play when a call is bridged or
+        transferred, helping users identify when they are being connected to another party.
+
+        This API requires a full, user, or location administrator auth token with the `spark-admin:people_write`
+        scope.
 
         :param entity_id: Unique identifier for the person.
         :type entity_id: str
@@ -14501,7 +14526,8 @@ class AsCallInterceptApi(AsPersonSettingsApiChild):
         some, or all incoming calls to the specified entity are intercepted. Also depending on the service
         configuration, outgoing calls are intercepted or rerouted to another location.
 
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
+        This API requires a full, user, read-only administrator, or location administrator auth token with a scope of
+        spark-admin:people_read.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -14526,7 +14552,7 @@ class AsCallInterceptApi(AsPersonSettingsApiChild):
         or all incoming calls to the specified entity are intercepted. Also depending on the service configuration,
         outgoing calls are intercepted or rerouted to another location.
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope.
+        This API requires a full, user, or location administrator auth token with the spark-admin:people_write scope.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -14550,8 +14576,8 @@ class AsCallInterceptApi(AsPersonSettingsApiChild):
 
         Your request will need to be a multipart/form-data request rather than JSON, using the audio/wav Content-Type.
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
-        auth token with spark:people_write scope can be used by an entity to update their settings.
+        This API requires a full, user, or location administrator auth token with the spark-admin:people_write scope
+        or a user auth token with spark:people_write scope can be used by an entity to update their settings.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -14603,7 +14629,8 @@ class AsCallRecordingApi(AsPersonSettingsApiChild):
         The Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier
         platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope.
+        This API requires a full, user, read-only, or location administrator auth token with the
+        spark-admin:people_write scope.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -14624,7 +14651,8 @@ class AsCallRecordingApi(AsPersonSettingsApiChild):
         The Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier
         platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope.
+        This API requires a full, user, or location administrator auth token with the
+        spark-admin:people_write scope.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -14659,7 +14687,8 @@ class AsCallWaitingApi(AsPersonSettingsApiChild):
         while you are on an active call, a tone alerts you of an incoming call and you can choose to answer or
         ignore the call.
 
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
+        This API requires a full, user, read-only administrator, or location administrator auth token with a scope of
+        spark-admin:people_read.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -14684,7 +14713,8 @@ class AsCallWaitingApi(AsPersonSettingsApiChild):
         while you are on an active call, a tone alerts you of an incoming call and you can choose to answer or ignore
         the call.
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope.
+        This API requires a full, user, or location administrator auth token with the
+        spark-admin:people_write scope.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -14714,8 +14744,9 @@ class AsCallerIdApi(AsPersonSettingsApiChild):
 
         Caller ID settings control how a entity’s information is displayed when making outgoing calls.
 
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read
-        or a user auth token with spark:people_read scope can be used by a entity to read their settings.
+        This API requires a full, user, read-only administrator, or location administrator auth token with a scope of
+        spark-admin:people_read or a user auth token with spark:people_read scope can be used by a entity to read their
+        settings.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -14739,9 +14770,9 @@ class AsCallerIdApi(AsPersonSettingsApiChild):
         custom_external_caller_id_name: str = None,
     ):
         """
-        Configure a Caller ID Settings
+        Configure Caller ID Settings
 
-        Caller ID settings control how a entity’s information is displayed when making outgoing calls.
+        Caller ID settings control how an entity’s information is displayed when making outgoing calls.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
         auth token with spark:people_write scope can be used by a entity to update their own settings.
@@ -15971,7 +16002,8 @@ class AsIncomingPermissionsApi(AsPersonSettingsApiChild):
         You can change the incoming calling permissions for an entity if you want them to be different from your
         organization's default.
 
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
+        This API requires a full, user, read-only administrator, or location administrator auth token with a scope of
+        spark-admin:people_read.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -15992,8 +16024,8 @@ class AsIncomingPermissionsApi(AsPersonSettingsApiChild):
         The Barge In feature enables you to use a Feature Access Code (FAC) to answer a call that was directed to
         another subscriber, or barge-in on the call if it was already answered. Barge In can be used across locations.
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
-        auth token with spark:people_write scope can be used by an entity to update their own settings.
+        This API requires a full, user, or location administrator auth token with the spark-admin:people_write scope
+        or a user auth token with spark:people_write scope can be used by an entity to update their own settings.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -16515,13 +16547,13 @@ class AsMusicOnHoldApi(AsPersonSettingsApiChild):
 
     async def read(self, entity_id: str, org_id: str = None) -> MusicOnHold:
         """
-        Retrieve Music On Hold Settings for a Person, virtual line, or workspace.
+        Retrieve Music on Hold Settings for a Person, virtual line, or workspace.
 
         Retrieve the music on hold settings.
 
         Music on hold is played when a caller is put on hold, or the call is parked.
 
-        Retrieving a person's music on hold settings requires a full, user or read-only administrator or location
+        Retrieving a person's music on hold settings requires a full, user, read-only administrator, or location
         administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param entity_id: Unique identifier for the person, virtual line, or workspace.
@@ -16540,7 +16572,7 @@ class AsMusicOnHoldApi(AsPersonSettingsApiChild):
 
     async def configure(self, entity_id: str, settings: MusicOnHold, org_id: str = None):
         """
-        Configure Music On Hold Settings for a Personvirtual line, or workspace.
+        Configure Music on Hold Settings for a Personvirtual line, or workspace.
 
         Configure music on hold settings.
 
@@ -16548,8 +16580,8 @@ class AsMusicOnHoldApi(AsPersonSettingsApiChild):
 
         To configure music on hold settings for a person, music on hold setting must be enabled for this location.
 
-        Updating a person's music on hold settings requires a full or user administrator or location administrator auth
-        token with a scope of `spark-admin:telephony_config_write`.
+        Updating a person's music on hold settings requires a full, user, or location administrator auth token with a
+        scope of `spark-admin:telephony_config_write`.
 
         :param entity_id: Unique identifier for the person, virtual line, or workspace.
         :type entity_id: str
@@ -16712,8 +16744,8 @@ class AsAccessCodesApi(AsPersonSettingsApiChild):
 
         Access codes are used to bypass permissions.
 
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or
-        a user auth token with spark:workspaces_read scope can be used to read entity settings.
+        This API requires a full, user, or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -16733,7 +16765,7 @@ class AsAccessCodesApi(AsPersonSettingsApiChild):
         self,
         entity_id: str,
         use_custom_access_codes: bool = None,
-        delete_codes: list[Union[str, AuthCode]] = None,
+        delete_codes: list[str | AuthCode] = None,
         org_id: str = None,
     ):
         """
@@ -16741,8 +16773,8 @@ class AsAccessCodesApi(AsPersonSettingsApiChild):
 
         Access codes are used to bypass permissions.
 
-        This API requires a full or user administrator or location administrator auth token with
-        the `spark-admin:telephony_config_write` scope.
+        This API requires a full, user, or location administrator auth token with the
+        `spark-admin:telephony_config_write` scope.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -16779,8 +16811,8 @@ class AsAccessCodesApi(AsPersonSettingsApiChild):
 
         Access codes are used to bypass permissions.
 
-        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a
-        user auth token with spark:workspaces_write scope can be used to update workspace settings.
+        This API requires a full, user, or location administrator auth token with the
+        `spark-admin:telephony_config_write` scope.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -16806,9 +16838,8 @@ class AsAccessCodesApi(AsPersonSettingsApiChild):
 
         Access codes are used to bypass permissions.
 
-        This API requires a full or user administrator or location administrator auth token with the
-        `spark-admin:workspaces_write` scope or a user auth token with `spark:workspaces_write` scope can be used to
-        update entity settings.
+        This API requires a full, user, or location administrator auth token with the
+        `spark-admin:telephony_config_write` scope.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -16836,7 +16867,7 @@ class AsDigitPatternsApi(AsPersonSettingsApiChild):
 
         Digit patterns are used to bypass permissions.
 
-        Retrieving digit patterns requires a full or user or read-only administrator or location administrator auth
+        Retrieving digit patterns requires a full, user, or read-only administrator or location administrator auth
         token with a scope of `spark-admin:telephony_config_read`.
 
         :param entity_id: Unique identifier for location, person, workspace, or virtual line.
@@ -16861,8 +16892,8 @@ class AsDigitPatternsApi(AsPersonSettingsApiChild):
 
         Digit patterns are used to bypass permissions.
 
-        Retrieving the digit pattern details requires a full or user or read-only administrator or location
-        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+        Retrieving the digit pattern details requires a full, user, read-only, or location administrator auth token
+        with a scope of `spark-admin:telephony_config_read`.
 
         :param entity_id: Unique identifier for location, person, workspace, or virtual line.
         :type entity_id: str
@@ -16888,7 +16919,7 @@ class AsDigitPatternsApi(AsPersonSettingsApiChild):
 
         Digit patterns are used to bypass permissions.
 
-        Creating the digit pattern requires a full or user or location administrator auth token with a scope of
+        Creating the digit pattern requires a full, user, or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
         :param entity_id: Unique identifier for location, person, workspace, or virtual line.
@@ -16916,7 +16947,11 @@ class AsDigitPatternsApi(AsPersonSettingsApiChild):
 
         Modifies whether this user uses the specified digit patterns when placing outbound calls or not.
 
-        Updating the digit pattern category control settings requires a full or user or location administrator auth
+        Digit patterns allow administrators to create exceptions to outgoing call permissions, enabling or blocking
+        specific number patterns regardless of the broader permission settings. This provides granular control over
+        which numbers an entity can dial.
+
+        Updating the digit pattern category control settings requires a full, user, or location administrator auth
         token with a scope of `spark-admin:telephony_config_write`.
 
         :param entity_id: Unique identifier for location, person, workspace, or virtual line.
@@ -16945,7 +16980,7 @@ class AsDigitPatternsApi(AsPersonSettingsApiChild):
 
         Digit patterns are used to bypass permissions.
 
-        Updating the digit pattern requires a full or user or location administrator auth token with a scope of
+        Updating the digit pattern requires a full, user, or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
         :param entity_id: Unique identifier for location, person, workspace, or virtual line.
@@ -16971,7 +17006,7 @@ class AsDigitPatternsApi(AsPersonSettingsApiChild):
 
         Digit patterns are used to bypass permissions.
 
-        Deleting the digit pattern requires a full or user or location administrator auth token with a scope of
+        Deleting the digit pattern requires a full, user, or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
         :param entity_id: Unique identifier for location, person, workspace, or virtual line.
@@ -16994,7 +17029,7 @@ class AsDigitPatternsApi(AsPersonSettingsApiChild):
 
         Digit patterns are used to bypass permissions.
 
-        Deleting the digit patterns requires a full or user or location administrator auth token with a scope of
+        Deleting the digit patterns requires a full, user, or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
         :param entity_id: Unique identifier for location, person, workspace, or virtual line.
@@ -17025,7 +17060,7 @@ class AsTransferNumbersApi(AsPersonSettingsApiChild):
         person assigned the Auto Transfer Number can then approve the call and send it through or reject the call
         type. You can add up to 3 numbers.
 
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read, or
         a user auth token with spark:workspaces_read scope can be used to read entity settings.
 
         :param entity_id: Unique identifier for the entity.
@@ -17049,8 +17084,8 @@ class AsTransferNumbersApi(AsPersonSettingsApiChild):
         The person assigned the Auto Transfer Number can then approve the call and send it through or reject the
         call type. You can add up to 3 numbers.
 
-        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a
-        user auth token with spark:workspaces_write scope can be used to update entity settings.
+        This API requires a full, user, or location administrator auth token with the
+        `spark-admin:telephony_config_write` scope.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -17104,7 +17139,8 @@ class AsOutgoingPermissionsApi(AsPersonSettingsApiChild):
         You can change the outgoing calling permissions for a person if you want them to be different from your
         organization's default.
 
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
+        This API requires a full, user, read-only administrator, or location administrator auth token with a scope of
+        spark-admin:people_read.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -17127,8 +17163,8 @@ class AsOutgoingPermissionsApi(AsPersonSettingsApiChild):
         Turn on outgoing call settings for this entity to override the calling settings from the location that are
         used by default.
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
-        auth token with spark:people_write scope can be used by a person to update their own settings.
+        This API requires a full, user, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -17170,7 +17206,8 @@ class AsPersonForwardingApi(AsPersonSettingsApiChild):
         In addition, the Business Continuity feature will send calls to a destination of your choice if your phone is
         not connected to the network for any reason, such as power outage, failed Internet connection, or wiring problem
 
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read
+        This API requires a full, user, read-only administrator, or location administrator auth token with a scope of
+        spark-admin:people_read
         or a user auth token with spark:people_read scope can be used by a person to read their own settings.
 
         :param entity_id: Unique identifier for the entity.
@@ -17201,8 +17238,8 @@ class AsPersonForwardingApi(AsPersonSettingsApiChild):
         In addition, the Business Continuity feature will send calls to a destination of your choice if your phone is
         not connected to the network for any reason, such as power outage, failed Internet connection, or wiring problem
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
-        auth token with spark:people_write scope can be used by a person to update their settings.
+        This API requires a full, user, or location administrator auth token with the spark-admin:people_write scope or
+        a user auth token with spark:people_write scope can be used by a person to update their settings.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -17364,7 +17401,8 @@ class AsPrivacyApi(AsPersonSettingsApiChild):
         The privacy feature enables the entity's line to be monitored by others and determine if they can be reached
         by Auto Attendant services.
 
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
+        This API requires a full, user, read-only administrator, or location administrator auth token with a scope of
+        spark-admin:people_read.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -17388,7 +17426,7 @@ class AsPrivacyApi(AsPersonSettingsApiChild):
         The privacy feature enables the entity's line to be monitored by others and determine if they can be reached by
         Auto Attendant services.
 
-        This API requires a full or user administrator or location administrator auth token with
+        This API requires a full, user, or location administrator auth token with
         the spark-admin:people_write scope.
 
         :param entity_id: Unique identifier for the entity.
@@ -17429,7 +17467,8 @@ class AsPushToTalkApi(AsPersonSettingsApiChild):
         Push-to-Talk allows the use of desk phones as either a one-way or two-way intercom that connects people in
         different parts of your organization.
 
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
+        This API requires a full, user, read-only administrator, or location administrator auth token with a scope of
+        spark-admin:people_read.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -17452,7 +17491,7 @@ class AsPushToTalkApi(AsPersonSettingsApiChild):
         Push-to-Talk allows the use of desk phones as either a one-way or two-way intercom that connects people in
         different parts of your organization.
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope.
+        This API requires a full, user, or location administrator auth token with the spark-admin:people_write scope.
 
         :param entity_id: Unique identifier for the person.
         :type entity_id: str
@@ -18914,7 +18953,8 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
         Optionally, notifications can be sent to a mobile phone via text or email. These notifications will not include
         the voicemail files.
 
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read
+        This API requires a full, user, read-only administrator, or location administrator auth token with a scope of
+        spark-admin:people_read
         or a user auth token with spark:people_read scope can be used by a person to read their settings.
 
         :param entity_id: Unique identifier for the entity
@@ -18939,8 +18979,8 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
         Optionally, notifications can be sent to a mobile phone via text or email. These notifications will not
         include the voicemail files.
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
-        auth token with spark:people_write scope can be used by a person to update their settings.
+        This API requires a full, user, or location administrator auth token with the spark-admin:people_write scope or
+        a user auth token with spark:people_write scope can be used by a person to update their settings.
         :return:
         """
         # some settings can't be part of an update
@@ -19015,7 +19055,7 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        return self._configure_greeting(
+        self._configure_greeting(
             entity_id=entity_id, content=content, upload_as=upload_as, org_id=org_id, greeting_key='uploadBusyGreeting'
         )
 
@@ -19030,8 +19070,8 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
 
         Your request will need to be a multipart/form-data request rather than JSON, using the audio/wav Content-Type.
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
-        auth token with spark:people_write scope can be used by a person to update their settings.
+        This API requires a full, user, or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -19045,7 +19085,7 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        return self._configure_greeting(
+        self._configure_greeting(
             entity_id=entity_id,
             content=content,
             upload_as=upload_as,
@@ -19057,7 +19097,10 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
         """
         Modify an entity's voicemail passcode.
 
-        Modifying an entity's voicemail passcode requires a full administrator, user administrator or location
+        The voicemail passcode is used to secure access to the entity's voicemail messages. Administrators can update
+        this passcode to maintain security or assist users who have forgotten their passcode.
+
+        Modifying an entity's voicemail passcode requires a full administrator, user administrator, or location
         administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
         :param entity_id: Modify voicemail passcode for this entity.
@@ -19086,7 +19129,7 @@ class AsVoicemailApi(AsPersonSettingsApiChild):
         The voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice
         messages via Voicemail.  A voicemail PIN is used to retrieve your voicemail messages.
 
-        This API requires a full or user administrator or location administrator auth token with
+        This API requires a full, user, or location administrator auth token with
         the`spark-admin:people_write` scope.
 
         :param entity_id: Unique identifier for the entity.
@@ -26391,7 +26434,7 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
 
     async def read_terms_of_service(self, vendor_id: str, org_id: str = None) -> CallRecordingTermsOfService:
         """
-        Get Call Recording Terms Of Service Settings
+        Get Call Recording Terms of Service Settings
 
         Retrieve call recording terms of service settings for the organization.
 
@@ -26417,7 +26460,7 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
 
     async def update_terms_of_service(self, vendor_id: str, enabled: bool, org_id: str = None):
         """
-        Update Call Recording Terms Of Service Settings
+        Update Call Recording Terms of Service Settings
 
         Update call recording terms of service settings for the given vendor.
 
@@ -26496,7 +26539,7 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
 
     async def read_org_compliance_announcement(self, org_id: str = None) -> OrgComplianceAnnouncement:
         """
-        Get details for the organization Compliance Announcement Setting
+        Get Details for the Organization Compliance Announcement Setting
 
         Retrieve the organization compliance announcement settings.
 
@@ -26551,7 +26594,7 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
         self, location_id: str, org_id: str = None
     ) -> LocationComplianceAnnouncement:
         """
-        Get details for the Location Compliance Announcement Setting
+        Get Details of Call Recording Compliance Announcement for the Location
 
         Retrieve the location compliance announcement settings.
 
@@ -26559,8 +26602,8 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
         of the start/stop announcement. When the compliance announcement is played to the PSTN party, and the PSTN
         party is connected to a party with call recording enabled, then the start/stop announcement is inhibited.
 
-        Retrieving location compliance announcement setting requires a full or read-only administrator auth token with
-        a scope of `spark-admin:telephony_config_read`.
+        Retrieving location compliance announcement setting requires a full, read-only, or location administrator auth
+        token with a scope of `spark-admin:telephony_config_read`.
 
         :param location_id: Retrieve compliance announcement settings for this location.
         :type location_id: str
@@ -26583,14 +26626,16 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
         org_id: str = None,
     ) -> None:
         """
+        Update Call Recording Compliance Announcement for the Location
+
         Update the location compliance announcement.
 
         The Compliance Announcement feature interacts with the Call Recording feature, specifically with the playback
         of the start/stop announcement. When the compliance announcement is played to the PSTN party, and the PSTN
         party is connected to a party with call recording enabled, then the start/stop announcement is inhibited.
 
-        Updating the location compliance announcement requires a full administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.
+        Updating the location compliance announcement requires a full or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
 
         :param location_id: Update the compliance announcement settings for this location.
         :type location_id: str
@@ -26617,7 +26662,8 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
         manage call recordings. An organization is configured with an overall provider, but locations can be
         configured to use a different vendor than the overall organization default.
 
-        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+        Requires a full or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
 
         :param org_id: Retrieve call recording regions for this organization.
         :type org_id: str
@@ -26690,8 +26736,6 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
         location_id: str,
         id: str = None,
         org_default_enabled: bool = None,
-        storage_region: str = None,
-        org_storage_region_enabled: bool = None,
         failure_behavior: FailureBehavior = None,
         org_failure_behavior_enabled: bool = None,
         org_id: str = None,
@@ -26714,10 +26758,6 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
         :type id: str
         :param org_default_enabled: Vendor is enabled by default.
         :type org_default_enabled: bool
-        :param storage_region: Regions where call recordings are stored.
-        :type storage_region: str
-        :param org_storage_region_enabled: Region-based call recording storage is enabled.
-        :type org_storage_region_enabled: bool
         :param failure_behavior: Type of failure behavior.
         :type failure_behavior: FailureBehavior
         :param org_failure_behavior_enabled: Failure behavior is enabled.
@@ -26734,10 +26774,6 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
             body['id'] = id
         if org_default_enabled is not None:
             body['orgDefaultEnabled'] = org_default_enabled
-        if storage_region is not None:
-            body['storageRegion'] = storage_region
-        if org_storage_region_enabled is not None:
-            body['orgStorageRegionEnabled'] = org_storage_region_enabled
         if failure_behavior is not None:
             body['failureBehavior'] = enum_str(failure_behavior)
         if org_failure_behavior_enabled is not None:
@@ -26869,7 +26905,8 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
         manage call recordings. An organization is configured with an overall provider, but locations can be
         configured to use a different vendor than the overall organization default.
 
-        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+        Requires a full or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
 
         :param org_id: Retrieve call recording settings from this organization.
         :type org_id: str
@@ -26883,9 +26920,7 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
         r = CallRecordingVendors.model_validate(data)
         return r
 
-    async def set_org_vendor(
-        self, vendor_id: str, storage_region: str = None, failure_behavior: FailureBehavior = None, org_id: str = None
-    ) -> str:
+    async def set_org_vendor(self, vendor_id: str, failure_behavior: FailureBehavior = None, org_id: str = None) -> str:
         """
         Set Organization Call Recording Vendor
 
@@ -26900,9 +26935,6 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
 
         :param vendor_id: Unique identifier of the vendor.
         :type vendor_id: str
-        :param storage_region: Call recording storage region. Only applicable for Webex as a vendor and isn't used for
-            other vendors.
-        :type storage_region: str
         :param failure_behavior: Call recording failure behavior.
         :type failure_behavior: FailureBehavior
         :param org_id: Modify call recording settings from this organization.
@@ -26914,8 +26946,6 @@ class AsCallRecordingSettingsApi(AsApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body = dict()
         body['vendorId'] = vendor_id
-        if storage_region is not None:
-            body['storageRegion'] = storage_region
         if failure_behavior is not None:
             body['failureBehavior'] = enum_str(failure_behavior)
         url = self.ep('callRecording/vendor')
@@ -29106,7 +29136,10 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
 
         Create a multi-cell DECT network for a given location.
 
-        Creating a DECT network requires a full administrator auth token with a scope of
+        DECT networks enable wireless communication for DECT devices within a location, allowing multiple base stations
+        to provide coverage across a larger area.
+
+        Creating a DECT network requires a full or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
         :param location_id: Create a DECT network in this location.
@@ -29135,7 +29168,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         if display_name is not None:
             body['displayName'] = display_name
@@ -29151,7 +29184,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         self, name: str = None, location_id: str = None, org_id: str = None
     ) -> list[DECTNetworkDetail]:
         """
-        Get the List of DECT Networks for an organization
+        Get the List of DECT Networks for an Organization
 
         Retrieves the list of DECT networks for an organization.
 
@@ -29250,7 +29283,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         :rtype: None
         """
         params = org_id and {'orgId': org_id} or None
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         if display_name is not None:
             body['displayName'] = display_name
@@ -29317,7 +29350,10 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
 
         This API is used to create multiple base stations in a DECT network in an organization.
 
-        Creating base stations in a DECT network requires a full administrator auth token with a scope
+        Base stations provide wireless connectivity for DECT handsets and extend the coverage area of a DECT network.
+        Multiple base stations can be added to ensure seamless coverage across the location.
+
+        Creating base stations in a DECT network requires a full or location administrator auth token with a scope
         of `spark-admin:telephony_config_write`.
 
         :param location_id: Create a base station in this location.
@@ -29344,7 +29380,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         self, location_id: str, dect_network_id: str, org_id: str = None
     ) -> list[BaseStationsResponse]:
         """
-        Get a list of DECT Network Base Stations
+        Get a List of DECT Network Base Stations
 
         Retrieve a list of base stations in a DECT Network.
 
@@ -29375,7 +29411,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         self, location_id: str, dect_network_id: str, base_station_id: str, org_id: str = None
     ) -> BaseStationDetail:
         """
-        Get the details of a specific DECT Network Base Station
+        Get the Details of a Specific DECT Network Base Station
 
         Retrieve details of a specific base station in the DECT Network.
 
@@ -29383,7 +29419,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         A DECT DBS-110 allows up to 30 lines of registration and supports 1 base station only. A DECT DBS-210 can have
         up to 254 base stations and supports up to 1000 lines of registration.
 
-        This API requires a full or read-only administrator auth token with a scope of
+        This API requires a full or read-only administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
         :param location_id: Location containing the DECT network.
@@ -29406,7 +29442,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
 
     async def delete_bulk_base_stations(self, location_id: str, dect_network_id: str, org_id: str = None):
         """
-        Delete bulk DECT Network Base Stations
+        Delete Bulk DECT Network Base Stations
 
         Delete all the base stations in the DECT Network.
 
@@ -29414,7 +29450,8 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         A DECT DBS-110 allows up to 30 lines of registration and supports 1 base station only. A DECT DBS-210 can have
         up to 254 base stations and supports up to 1000 lines of registration.
 
-        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+        This API requires a full or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         :param location_id: Location containing the DECT network.
         :type location_id: str
@@ -29432,7 +29469,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
 
     async def delete_base_station(self, location_id: str, dect_network_id: str, base_station_id: str, org_id: str = None):
         """
-        Delete a specific DECT Network Base Station
+        Delete a Specific DECT Network Base Station
 
         Delete a specific base station in the DECT Network.
 
@@ -29472,7 +29509,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
 
         Add a handset to a DECT network in a location in an organization.
 
-        Adding a handset to a DECT network requires a full administrator auth token with a scope
+        Adding a handset to a DECT network requires a full or location administrator auth token with a scope
         of `spark-admin:telephony_config_write`
 
         Adding a DECT handset to a person with a Webex Calling Standard license will
@@ -29522,7 +29559,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         capable of handling up to two lines. Once the network is created, you can add bases, handsets, and assign
         users or lines as needed.
 
-        Adding a list of handsets to a DECT network requires a full administrator auth token with a scope of
+        Adding a list of handsets to a DECT network requires a full or location administrator auth token with a scope
         `spark-admin:telephony_config_write`.
 
         Adding a DECT handset to a person with a Webex Calling Standard license will
@@ -29649,7 +29686,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         A member on line1 of a DECT handset can be of type PEOPLE or PLACE while a member on line2 of a DECT handset
         can be of type PEOPLE, PLACE, or VIRTUAL_LINE.
 
-        Updating a DECT Network handset requires a full administrator auth token with a scope
+        Updating a DECT Network handset requires a full or location administrator auth token with a scope
         of `spark-admin:telephony_config_write`.
 
         :param location_id: Location containing the DECT network.
@@ -29672,7 +29709,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['line1MemberId'] = line1_member_id
         body['line2MemberId'] = line2_member_id
         body['customDisplayName'] = custom_display_name
@@ -29681,7 +29718,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
 
     async def delete_handset(self, location_id: str, dect_network_id: str, handset_id: str, org_id: str = None):
         """
-        Delete specific DECT Network Handset Details
+        Delete Specific DECT Network Handset Details
 
         Delete a specific DECT Network handset.
 
@@ -29689,7 +29726,8 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         A member on line1 of a DECT handset can be of type PEOPLE or PLACE while a member on line2 of a DECT handset
         can be of type PEOPLE, PLACE, or VIRTUAL_LINE.
 
-        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+        This API requires a full or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         :param location_id: Location containing the DECT network.
         :type location_id: str
@@ -29716,7 +29754,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         org_id: str = None,
     ):
         """
-        Delete multiple handsets
+        Delete Multiple Handsets
 
         Delete multiple handsets or all of them.
 
@@ -29724,7 +29762,8 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         A member on line1 of a DECT handset can be of type PEOPLE or PLACE while a member on line2 of a DECT handset
         can be of type PEOPLE, PLACE, or VIRTUAL_LINE.
 
-        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+        This API requires a full or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         Deleting a DECT handset from a person with a Webex Calling Standard license will
         enable Webex Calling across their Webex mobile, tablet, desktop, and browser applications.
@@ -29747,7 +29786,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['handsetIds'] = handset_ids
         if delete_all is not None:
             body['deleteAll'] = delete_all
@@ -29756,7 +29795,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
 
     async def dect_networks_associated_with_person(self, person_id: str, org_id: str = None) -> list[AssignedDectNetwork]:
         """
-        GET List of DECT networks associated with a Person
+        GET List of DECT Networks Associated with a Person
 
         Retrieves the list of DECT networks for a person in an organization.
 
@@ -29784,14 +29823,14 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         self, workspace_id: str, org_id: str = None
     ) -> list[AssignedDectNetwork]:
         """
-        GET List of DECT networks associated with a workspace
+        GET List of DECT Networks Associated with a Workspace
 
         Retrieves the list of DECT networks for a workspace in an organization.
 
         DECT Network provides roaming voice services via base stations and wireless handsets. DECT network can be
         provisioned up to 1000 lines across up to 254 base stations.
 
-        This API requires a full or read-only administrator auth token with a scope of
+        This API requires a full or read-only administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
         :param workspace_id: List of DECT networks associated with this workspace.
@@ -29812,14 +29851,16 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         self, virtual_line_id: str, org_id: str = None
     ) -> list[AssignedDectNetwork]:
         """
-        Get List of Dect Networks Handsets for a Virtual Line
+        Get List of DECT Networks Handsets for a Virtual Line
+
+        Not supported for Webex for Government (FedRAMP)
 
         Retrieve DECT Network details assigned for a virtual line.
 
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
 
-        Retrieving the assigned device detials for a virtual line requires a full or user or read-only administrator
+        Retrieving the assigned device detials for a virtual line requires a full, user, or read-only administrator
         auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
@@ -29853,6 +29894,9 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         Search Available Members
 
         List the members that are available to be assigned to DECT handset lines.
+
+        DECT handset lines can be assigned to people, places, or virtual lines within the organization. This API helps
+        administrators identify which members are eligible for assignment to DECT devices.
 
         This requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
@@ -29912,6 +29956,9 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
 
         List the members that are available to be assigned to DECT handset lines.
 
+        DECT handset lines can be assigned to people, places, or virtual lines within the organization. This API helps
+        administrators identify which members are eligible for assignment to DECT devices.
+
         This requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param member_name: Search (Contains) numbers based on member name.
@@ -29967,8 +30014,9 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         The DECT serviceability password, also known as the admin override password, provides read/write access to DECT
         base stations for performing system serviceability and troubleshooting functions.
 
-        This API requires either a full administrator auth token with the scope `spark-admin:telephony_config_write`,
-        or a device administrator token with the scope of `spark-admin:devices_write`.
+        This API requires a full or location administrator auth token with the scope of
+        `spark-admin:telephony_config_write`, or a device administrator token with the scope of
+        `spark-admin:devices_write`.
 
         :param location_id: Unique identifier for the location.
         :type location_id: str
@@ -29992,7 +30040,7 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         self, location_id: str, dect_network_id: str, org_id: str = None
     ) -> bool:
         """
-        Get DECT Serviceability Password status
+        Get DECT Serviceability Password Status
 
         Retrieves the DECT serviceability password status.
 
@@ -30002,8 +30050,8 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         The DECT serviceability password, also known as the admin override password, provides read/write access to DECT
         base stations for performing system serviceability and troubleshooting functions.
 
-        This API requires an auth token with either a full, read-only token with the scope of
-        `spark-admin:telephony_config_read`, or a device administrator token with the scope of
+        This API requires an auth token with either a full, read-only, or location administrator token with the scope
+        of `spark-admin:telephony_config_read`, or a device administrator token with the scope of
         `spark-admin:devices_read`.
 
         :param location_id: Unique identifier for the location.
@@ -30020,13 +30068,13 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/serviceabilityPassword')
         data = await super().get(url, params=params)
         r = data['enabled']
-        return r
+        return r  # type: ignore[return-value]
 
     async def update_dect_serviceability_password_status(
         self, location_id: str, dect_network_id: str, enabled: bool, org_id: str = None
     ):
         """
-        Update DECT Serviceability Password status
+        Update DECT Serviceability Password Status
 
         Enables or disables the DECT serviceability password.
 
@@ -30039,8 +30087,9 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         The DECT serviceability password, also known as the admin override password, provides read/write access to DECT
         base stations for performing system serviceability and troubleshooting functions.
 
-        This API requires either a full administrator auth token with the scope `spark-admin:telephony_config_write`,
-        or a device administrator token with the scope of `spark-admin:devices_write`.
+        This API requires a full or location administrator auth token with the scope of
+        `spark-admin:telephony_config_write`, or a device administrator token with the scope of
+        `spark-admin:devices_write`.
 
         :param location_id: Unique identifier for the location.
         :type location_id: str
@@ -39105,7 +39154,7 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
 
-        Creating a virtual line requires a full or user administrator auth token with a scope of
+        Creating a virtual line requires a full, user, or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
         :param first_name: First name defined for a virtual line. Minimum length is 1. Maximum length is 30.
@@ -39168,7 +39217,7 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
 
-        Deleting a virtual line requires a full or user administrator auth token with a scope of
+        Deleting a virtual line requires a full, user, or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
         :param virtual_line_id: Delete the virtual line with the matching ID.
@@ -39192,8 +39241,8 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
 
-        Retrieving virtual line details requires a full or user or read-only administrator or location administrator
-        auth token with a scope of `spark-admin:telephony_config_read`.
+        Retrieving virtual line details requires a full, user, read-only administrator, or location administrator auth
+        token with a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -39232,14 +39281,14 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
 
-        Updating a virtual line requires a full or user or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.
+        Updating a virtual line requires a full, user, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write` and `identity:contacts_rw`.
 
         :param virtual_line_id: Update settings for a virtual line with the matching ID.
         :type virtual_line_id: str
         :param first_name: First name defined for a virtual line. Minimum length is 1. Maximum length is 30.
         :type first_name: str
-        :param last_name: Last name defined for a virtual line. Minimum length is 1. Maximum length is 30.
+        :param last_name: Last name defined for a virtual line. Minimum length is 1. Maximum length is 64.
         :type last_name: str
         :param display_name: Display name defined for a virtual line.
         :type display_name: str
@@ -39252,10 +39301,10 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
         :param announcement_language: Virtual Line's announcement language.
         :type announcement_language: str
         :param caller_id_last_name: Last name used in the Calling Line ID and for dial-by-name functions. Minimum
-            length is 1. Maximum length is 30.
+            length is 1. Maximum length is 64.
         :type caller_id_last_name: str
         :param caller_id_first_name: First name used in the Calling Line ID and for dial-by-name functions. Minimum
-            length is 1. Maximum length is 30.
+            length is 1. Maximum length is 128.
         :type caller_id_first_name: str
         :param caller_id_number: Phone number to appear as the CLID for all calls. Minimum length is 1. Maximum length
             is 23.
@@ -39295,12 +39344,14 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
 
     async def get_phone_number(self, virtual_line_id: str, org_id: str = None) -> VirtualLineNumberPhoneNumber:
         """
-        Get Phone Number assigned for a Virtual Line
+        Get Phone Number Assigned for a Virtual Line
 
         Get details on the assigned phone number and extension for the virtual line.
 
-        Retrieving virtual line phone number details requires a full or user or read-only administrator auth token
-        with
+        Virtual lines can be assigned phone numbers and extensions to enable calling functionality. This information is
+        essential for configuring and managing virtual line communication settings.
+
+        Retrieving virtual line phone number details requires a full, user, or read-only administrator auth token with
         a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
@@ -39319,15 +39370,15 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
 
     async def update_directory_search(self, virtual_line_id: str, enabled: bool, org_id: str = None):
         """
-        Update Directory search for a Virtual Line
+        Update Directory Search for a Virtual Line
 
         Update the directory search for a designated Virtual Line.
 
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
 
-        Updating Directory search for a virtual line requires a full or user administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.
+        Updating Directory search for a virtual line requires a full, user, or location administrator auth token with a
+        scope of `spark-admin:telephony_config_write` and `identity:contacts_rw`.
 
         :param virtual_line_id: Update settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -39347,14 +39398,14 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
 
     async def assigned_devices(self, virtual_line_id: str, org_id: str = None) -> VirtualLineDevices:
         """
-        Get List of Devices assigned for a Virtual Line
+        Get List of Devices Assigned for a Virtual Line
 
         Retrieve Device details assigned for a virtual line.
 
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
 
-        Retrieving the assigned device detials for a virtual line requires a full or user or read-only administrator
+        Retrieving the assigned device detials for a virtual line requires a full, user, or read-only administrator
         auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
@@ -39415,8 +39466,9 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
         List all Virtual Lines for the organization.
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
-        Retrieving this list requires a full or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
+
+        Retrieving this list requires a full, user, read-only, or location administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param org_id: List virtual lines for this organization.
         :type org_id: str
@@ -39486,8 +39538,9 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
         List all Virtual Lines for the organization.
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
-        Retrieving this list requires a full or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
+
+        Retrieving this list requires a full, user, read-only, or location administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param org_id: List virtual lines for this organization.
         :type org_id: str

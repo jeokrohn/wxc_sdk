@@ -137,7 +137,8 @@ class VoicemailApi(PersonSettingsApiChild):
         Optionally, notifications can be sent to a mobile phone via text or email. These notifications will not include
         the voicemail files.
 
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read
+        This API requires a full, user, read-only administrator, or location administrator auth token with a scope of
+        spark-admin:people_read
         or a user auth token with spark:people_read scope can be used by a person to read their settings.
 
         :param entity_id: Unique identifier for the entity
@@ -162,8 +163,8 @@ class VoicemailApi(PersonSettingsApiChild):
         Optionally, notifications can be sent to a mobile phone via text or email. These notifications will not
         include the voicemail files.
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
-        auth token with spark:people_write scope can be used by a person to update their settings.
+        This API requires a full, user, or location administrator auth token with the spark-admin:people_write scope or
+        a user auth token with spark:people_write scope can be used by a person to update their settings.
         :return:
         """
         # some settings can't be part of an update
@@ -238,7 +239,7 @@ class VoicemailApi(PersonSettingsApiChild):
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        return self._configure_greeting(
+        self._configure_greeting(
             entity_id=entity_id, content=content, upload_as=upload_as, org_id=org_id, greeting_key='uploadBusyGreeting'
         )
 
@@ -253,8 +254,8 @@ class VoicemailApi(PersonSettingsApiChild):
 
         Your request will need to be a multipart/form-data request rather than JSON, using the audio/wav Content-Type.
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
-        auth token with spark:people_write scope can be used by a person to update their settings.
+        This API requires a full, user, or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -268,7 +269,7 @@ class VoicemailApi(PersonSettingsApiChild):
             may use this parameter as the default is the same organization as the token used to access API.
         :type org_id: str
         """
-        return self._configure_greeting(
+        self._configure_greeting(
             entity_id=entity_id,
             content=content,
             upload_as=upload_as,
@@ -280,7 +281,10 @@ class VoicemailApi(PersonSettingsApiChild):
         """
         Modify an entity's voicemail passcode.
 
-        Modifying an entity's voicemail passcode requires a full administrator, user administrator or location
+        The voicemail passcode is used to secure access to the entity's voicemail messages. Administrators can update
+        this passcode to maintain security or assist users who have forgotten their passcode.
+
+        Modifying an entity's voicemail passcode requires a full administrator, user administrator, or location
         administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
         :param entity_id: Modify voicemail passcode for this entity.
@@ -309,7 +313,7 @@ class VoicemailApi(PersonSettingsApiChild):
         The voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice
         messages via Voicemail.  A voicemail PIN is used to retrieve your voicemail messages.
 
-        This API requires a full or user administrator or location administrator auth token with
+        This API requires a full, user, or location administrator auth token with
         the`spark-admin:people_write` scope.
 
         :param entity_id: Unique identifier for the entity.

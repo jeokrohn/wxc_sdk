@@ -10,7 +10,7 @@ API is used in:
 
 import json
 from dataclasses import dataclass
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
 from pydantic import ConfigDict, field_validator, model_validator
 
@@ -358,7 +358,7 @@ class TransferNumbersApi(PersonSettingsApiChild):
         person assigned the Auto Transfer Number can then approve the call and send it through or reject the call
         type. You can add up to 3 numbers.
 
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or
+        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read, or
         a user auth token with spark:workspaces_read scope can be used to read entity settings.
 
         :param entity_id: Unique identifier for the entity.
@@ -382,8 +382,8 @@ class TransferNumbersApi(PersonSettingsApiChild):
         The person assigned the Auto Transfer Number can then approve the call and send it through or reject the
         call type. You can add up to 3 numbers.
 
-        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a
-        user auth token with spark:workspaces_write scope can be used to update entity settings.
+        This API requires a full, user, or location administrator auth token with the
+        `spark-admin:telephony_config_write` scope.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -419,8 +419,8 @@ class AccessCodesApi(PersonSettingsApiChild):
 
         Access codes are used to bypass permissions.
 
-        This API requires a full or read-only administrator auth token with a scope of spark-admin:workspaces_read or
-        a user auth token with spark:workspaces_read scope can be used to read entity settings.
+        This API requires a full, user, or read-only administrator auth token with a scope of
+        spark-admin:telephony_config_read
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -440,7 +440,7 @@ class AccessCodesApi(PersonSettingsApiChild):
         self,
         entity_id: str,
         use_custom_access_codes: bool = None,
-        delete_codes: list[Union[str, AuthCode]] = None,
+        delete_codes: list[str | AuthCode] = None,
         org_id: str = None,
     ):
         """
@@ -448,8 +448,8 @@ class AccessCodesApi(PersonSettingsApiChild):
 
         Access codes are used to bypass permissions.
 
-        This API requires a full or user administrator or location administrator auth token with
-        the `spark-admin:telephony_config_write` scope.
+        This API requires a full, user, or location administrator auth token with the
+        `spark-admin:telephony_config_write` scope.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -486,8 +486,8 @@ class AccessCodesApi(PersonSettingsApiChild):
 
         Access codes are used to bypass permissions.
 
-        This API requires a full or user administrator auth token with the spark-admin:workspaces_write scope or a
-        user auth token with spark:workspaces_write scope can be used to update workspace settings.
+        This API requires a full, user, or location administrator auth token with the
+        `spark-admin:telephony_config_write` scope.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -513,9 +513,8 @@ class AccessCodesApi(PersonSettingsApiChild):
 
         Access codes are used to bypass permissions.
 
-        This API requires a full or user administrator or location administrator auth token with the
-        `spark-admin:workspaces_write` scope or a user auth token with `spark:workspaces_write` scope can be used to
-        update entity settings.
+        This API requires a full, user, or location administrator auth token with the
+        `spark-admin:telephony_config_write` scope.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -543,7 +542,7 @@ class DigitPatternsApi(PersonSettingsApiChild):
 
         Digit patterns are used to bypass permissions.
 
-        Retrieving digit patterns requires a full or user or read-only administrator or location administrator auth
+        Retrieving digit patterns requires a full, user, or read-only administrator or location administrator auth
         token with a scope of `spark-admin:telephony_config_read`.
 
         :param entity_id: Unique identifier for location, person, workspace, or virtual line.
@@ -568,8 +567,8 @@ class DigitPatternsApi(PersonSettingsApiChild):
 
         Digit patterns are used to bypass permissions.
 
-        Retrieving the digit pattern details requires a full or user or read-only administrator or location
-        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+        Retrieving the digit pattern details requires a full, user, read-only, or location administrator auth token
+        with a scope of `spark-admin:telephony_config_read`.
 
         :param entity_id: Unique identifier for location, person, workspace, or virtual line.
         :type entity_id: str
@@ -595,7 +594,7 @@ class DigitPatternsApi(PersonSettingsApiChild):
 
         Digit patterns are used to bypass permissions.
 
-        Creating the digit pattern requires a full or user or location administrator auth token with a scope of
+        Creating the digit pattern requires a full, user, or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
         :param entity_id: Unique identifier for location, person, workspace, or virtual line.
@@ -623,7 +622,11 @@ class DigitPatternsApi(PersonSettingsApiChild):
 
         Modifies whether this user uses the specified digit patterns when placing outbound calls or not.
 
-        Updating the digit pattern category control settings requires a full or user or location administrator auth
+        Digit patterns allow administrators to create exceptions to outgoing call permissions, enabling or blocking
+        specific number patterns regardless of the broader permission settings. This provides granular control over
+        which numbers an entity can dial.
+
+        Updating the digit pattern category control settings requires a full, user, or location administrator auth
         token with a scope of `spark-admin:telephony_config_write`.
 
         :param entity_id: Unique identifier for location, person, workspace, or virtual line.
@@ -652,7 +655,7 @@ class DigitPatternsApi(PersonSettingsApiChild):
 
         Digit patterns are used to bypass permissions.
 
-        Updating the digit pattern requires a full or user or location administrator auth token with a scope of
+        Updating the digit pattern requires a full, user, or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
         :param entity_id: Unique identifier for location, person, workspace, or virtual line.
@@ -678,7 +681,7 @@ class DigitPatternsApi(PersonSettingsApiChild):
 
         Digit patterns are used to bypass permissions.
 
-        Deleting the digit pattern requires a full or user or location administrator auth token with a scope of
+        Deleting the digit pattern requires a full, user, or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
         :param entity_id: Unique identifier for location, person, workspace, or virtual line.
@@ -701,7 +704,7 @@ class DigitPatternsApi(PersonSettingsApiChild):
 
         Digit patterns are used to bypass permissions.
 
-        Deleting the digit patterns requires a full or user or location administrator auth token with a scope of
+        Deleting the digit patterns requires a full, user, or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
         :param entity_id: Unique identifier for location, person, workspace, or virtual line.
@@ -756,7 +759,8 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
         You can change the outgoing calling permissions for a person if you want them to be different from your
         organization's default.
 
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
+        This API requires a full, user, read-only administrator, or location administrator auth token with a scope of
+        spark-admin:people_read.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -779,8 +783,8 @@ class OutgoingPermissionsApi(PersonSettingsApiChild):
         Turn on outgoing call settings for this entity to override the calling settings from the location that are
         used by default.
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
-        auth token with spark:people_write scope can be used by a person to update their own settings.
+        This API requires a full, user, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str

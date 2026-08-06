@@ -254,7 +254,8 @@ class CallRecordingApi(PersonSettingsApiChild):
         The Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier
         platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope.
+        This API requires a full, user, read-only, or location administrator auth token with the
+        spark-admin:people_write scope.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -275,7 +276,8 @@ class CallRecordingApi(PersonSettingsApiChild):
         The Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier
         platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope.
+        This API requires a full, user, or location administrator auth token with the
+        spark-admin:people_write scope.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str

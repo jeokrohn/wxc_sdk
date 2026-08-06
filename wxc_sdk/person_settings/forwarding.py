@@ -2,7 +2,7 @@
 Call forwarding API
 """
 
-from typing import Optional
+from typing import Any, Optional
 
 from ..base import ApiModel
 from .common import PersonSettingsApiChild
@@ -102,7 +102,7 @@ class PersonForwardingSetting(ApiModel):
             call_forwarding=CallForwardingPerson.default(), business_continuity=CallForwardingCommon.default()
         )
 
-    def update(self) -> dict:
+    def update(self) -> dict[str, Any]:
         """
         data for update
 
@@ -141,7 +141,8 @@ class PersonForwardingApi(PersonSettingsApiChild):
         In addition, the Business Continuity feature will send calls to a destination of your choice if your phone is
         not connected to the network for any reason, such as power outage, failed Internet connection, or wiring problem
 
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read
+        This API requires a full, user, read-only administrator, or location administrator auth token with a scope of
+        spark-admin:people_read
         or a user auth token with spark:people_read scope can be used by a person to read their own settings.
 
         :param entity_id: Unique identifier for the entity.
@@ -172,8 +173,8 @@ class PersonForwardingApi(PersonSettingsApiChild):
         In addition, the Business Continuity feature will send calls to a destination of your choice if your phone is
         not connected to the network for any reason, such as power outage, failed Internet connection, or wiring problem
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
-        auth token with spark:people_write scope can be used by a person to update their settings.
+        This API requires a full, user, or location administrator auth token with the spark-admin:people_write scope or
+        a user auth token with spark:people_write scope can be used by a person to update their settings.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str

@@ -159,8 +159,9 @@ class CallerIdApi(PersonSettingsApiChild):
 
         Caller ID settings control how a entity’s information is displayed when making outgoing calls.
 
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read
-        or a user auth token with spark:people_read scope can be used by a entity to read their settings.
+        This API requires a full, user, read-only administrator, or location administrator auth token with a scope of
+        spark-admin:people_read or a user auth token with spark:people_read scope can be used by a entity to read their
+        settings.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -184,9 +185,9 @@ class CallerIdApi(PersonSettingsApiChild):
         custom_external_caller_id_name: str = None,
     ):
         """
-        Configure a Caller ID Settings
+        Configure Caller ID Settings
 
-        Caller ID settings control how a entity’s information is displayed when making outgoing calls.
+        Caller ID settings control how an entity’s information is displayed when making outgoing calls.
 
         This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
         auth token with spark:people_write scope can be used by a entity to update their own settings.

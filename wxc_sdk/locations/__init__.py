@@ -11,7 +11,7 @@ combinations.
 
 import builtins
 from collections.abc import Generator
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import Field, TypeAdapter
 
@@ -64,7 +64,7 @@ class Location(ApiModel):
     #: Notes
     notes: Optional[str] = None
 
-    def update(self) -> dict:
+    def update(self) -> dict[str, Any]:
         """
         get data for update call
 
@@ -75,14 +75,14 @@ class Location(ApiModel):
         )
 
     @property
-    def location_id_uuid(self) -> str:
+    def location_id_uuid(self) -> str | None:
         """
         location id as UUID
         """
         return webex_id_to_uuid(self.location_id)
 
     @property
-    def org_id_uuid(self) -> str:
+    def org_id_uuid(self) -> str | None:
         """
         org id as UUID
         """
@@ -99,7 +99,7 @@ class Floor(ApiModel):
     #: The floor display name.
     display_name: Optional[str] = None
 
-    def update(self) -> dict:
+    def update(self) -> dict[str, Any]:
         """
         date for update
 
@@ -330,6 +330,10 @@ class LocationsApi(ApiChild, base='locations'):
         :param location_id: Update location common attributes for this location.
         :type location_id: str
         :param settings: new settings for the org:
+            Once PSTN connectivity is set up for a location, please go to the
+            `Update the Emergency Address of a Location
+            <https://developer.webex.com/docs/api/v1/pstn/update-the-emergency-address-of-a-location>`_
+            API to update the location address.
         :type settings: :class:`Location`
         :param org_id: Update location common attributes for this organization
         :type org_id: str
@@ -375,7 +379,7 @@ class LocationsApi(ApiChild, base='locations'):
         :type display_name: str
         :rtype: :class:`Floor`
         """
-        body = dict()
+        body: dict[str, Any] = dict()
         body['floorNumber'] = floor_number
         if display_name is not None:
             body['displayName'] = display_name

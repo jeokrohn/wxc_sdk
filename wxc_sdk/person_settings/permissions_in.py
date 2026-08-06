@@ -46,7 +46,7 @@ class IncomingPermissions(ApiModel):
         """
         return IncomingPermissions(
             use_custom_enabled=True,
-            external_transfer=ExternalTransfer.allow_all_external,
+            external_transfer=ExternalTransfer.allow_all_external,  # type: ignore[arg-type]
             internal_calls_enabled=True,
             collect_calls_enabled=True,
         )
@@ -60,7 +60,7 @@ class IncomingPermissions(ApiModel):
         """
         return IncomingPermissions(
             use_custom_enabled=False,
-            external_transfer=ExternalTransfer.allow_all_external,
+            external_transfer=ExternalTransfer.allow_all_external,  # type: ignore[arg-type]
             internal_calls_enabled=True,
             collect_calls_enabled=True,
         )
@@ -84,7 +84,8 @@ class IncomingPermissionsApi(PersonSettingsApiChild):
         You can change the incoming calling permissions for an entity if you want them to be different from your
         organization's default.
 
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
+        This API requires a full, user, read-only administrator, or location administrator auth token with a scope of
+        spark-admin:people_read.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -105,8 +106,8 @@ class IncomingPermissionsApi(PersonSettingsApiChild):
         The Barge In feature enables you to use a Feature Access Code (FAC) to answer a call that was directed to
         another subscriber, or barge-in on the call if it was already answered. Barge In can be used across locations.
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
-        auth token with spark:people_write scope can be used by an entity to update their own settings.
+        This API requires a full, user, or location administrator auth token with the spark-admin:people_write scope
+        or a user auth token with spark:people_write scope can be used by an entity to update their own settings.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str

@@ -92,8 +92,12 @@ class AgentCallerIdApi(PersonSettingsApiChild):
         Get the list of call queues and hunt groups available for caller ID use by this person, virtual line, or
         workspace as an agent.
 
-        This API requires a full, user, or read-only administrator or location administrator auth token with a scope
-        of `spark-admin:people_read`.
+        When a person, virtual line, or workspace is configured as an agent in call queues or hunt groups, they can
+        choose which caller ID to display when making outbound calls. This API returns the available options for the
+        agent to select from.
+
+        This API requires a full, user, read-only administrator, or location administrator auth token with a scope of
+        `spark-admin:people_read`.
 
         :param entity_id: Unique identifier for the person, virtual line, or workspace.
         :type entity_id: str
@@ -108,7 +112,7 @@ class AgentCallerIdApi(PersonSettingsApiChild):
         data = self.get(ep, params=params)
         return TypeAdapter(list[AgentCallerId]).validate_python(data['availableCallerIds'])
 
-    def read(self, entity_id: str) -> AgentCallerId:
+    def read(self, entity_id: str, org_id: str = None) -> AgentCallerId:
         """
         Retrieve Agent's Caller ID Information
 
@@ -122,30 +126,40 @@ class AgentCallerIdApi(PersonSettingsApiChild):
 
         :param entity_id: Unique identifier for the person, virtual line, or workspace
         :type entity_id: str
+        :param org_id: ID of the organization in which the virtual line resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the token
+            used to access API.
+        :type org_id: str
         :rtype: AgentCallerId
         """
         url = self.f_ep(entity_id, 'callerId')
-        data = super().get(url)
+        params = org_id and {'orgId': org_id} or None
+        data = super().get(url, params=params)
         r = AgentCallerId.model_validate(data['selectedCallerId'])
         return r
 
-    def configure(self, entity_id: str, selected_caller_id: str = None):
+    def configure(self, entity_id: str, selected_caller_id: str = None, org_id: str = None):
         """
         Modify Agent's Caller ID Information.
 
         Each Agent will be able to set their outgoing Caller ID as either the designated Call Queue's Caller ID or Hunt
         Group's Caller ID or their own configured Caller ID
 
-        This API requires a full or user administrator or location administrator auth token with
-        the `spark-admin:telephony_config_write` scope.
+        This API requires a full, user, or location administrator auth token with the
+        `spark-admin:telephony_config_write` scope.
 
         :param entity_id: Unique identifier for the person, virtual line, or workspace
         :type entity_id: str
         :param selected_caller_id: The unique identifier of the call queue or hunt group to use for the agent's caller
             ID. Set to null to use the agent's own caller ID.
         :type selected_caller_id: str
+        :param org_id: ID of the organization in which the virtual line resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
         :rtype: None
         """
         body = {'selectedCallerId': selected_caller_id}
         url = self.f_ep(entity_id, 'callerId')
-        super().put(url, json=body)
+        params = org_id and {'orgId': org_id} or None
+        super().put(url, params=params, json=body)

@@ -185,7 +185,7 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
 
-        Creating a virtual line requires a full or user administrator auth token with a scope of
+        Creating a virtual line requires a full, user, or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
         :param first_name: First name defined for a virtual line. Minimum length is 1. Maximum length is 30.
@@ -248,7 +248,7 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
 
-        Deleting a virtual line requires a full or user administrator auth token with a scope of
+        Deleting a virtual line requires a full, user, or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
         :param virtual_line_id: Delete the virtual line with the matching ID.
@@ -272,8 +272,8 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
 
-        Retrieving virtual line details requires a full or user or read-only administrator or location administrator
-        auth token with a scope of `spark-admin:telephony_config_read`.
+        Retrieving virtual line details requires a full, user, read-only administrator, or location administrator auth
+        token with a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -312,14 +312,14 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
 
-        Updating a virtual line requires a full or user or location administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.
+        Updating a virtual line requires a full, user, or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write` and `identity:contacts_rw`.
 
         :param virtual_line_id: Update settings for a virtual line with the matching ID.
         :type virtual_line_id: str
         :param first_name: First name defined for a virtual line. Minimum length is 1. Maximum length is 30.
         :type first_name: str
-        :param last_name: Last name defined for a virtual line. Minimum length is 1. Maximum length is 30.
+        :param last_name: Last name defined for a virtual line. Minimum length is 1. Maximum length is 64.
         :type last_name: str
         :param display_name: Display name defined for a virtual line.
         :type display_name: str
@@ -332,10 +332,10 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
         :param announcement_language: Virtual Line's announcement language.
         :type announcement_language: str
         :param caller_id_last_name: Last name used in the Calling Line ID and for dial-by-name functions. Minimum
-            length is 1. Maximum length is 30.
+            length is 1. Maximum length is 64.
         :type caller_id_last_name: str
         :param caller_id_first_name: First name used in the Calling Line ID and for dial-by-name functions. Minimum
-            length is 1. Maximum length is 30.
+            length is 1. Maximum length is 128.
         :type caller_id_first_name: str
         :param caller_id_number: Phone number to appear as the CLID for all calls. Minimum length is 1. Maximum length
             is 23.
@@ -375,12 +375,14 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
 
     def get_phone_number(self, virtual_line_id: str, org_id: str = None) -> VirtualLineNumberPhoneNumber:
         """
-        Get Phone Number assigned for a Virtual Line
+        Get Phone Number Assigned for a Virtual Line
 
         Get details on the assigned phone number and extension for the virtual line.
 
-        Retrieving virtual line phone number details requires a full or user or read-only administrator auth token
-        with
+        Virtual lines can be assigned phone numbers and extensions to enable calling functionality. This information is
+        essential for configuring and managing virtual line communication settings.
+
+        Retrieving virtual line phone number details requires a full, user, or read-only administrator auth token with
         a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
@@ -399,15 +401,15 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
 
     def update_directory_search(self, virtual_line_id: str, enabled: bool, org_id: str = None):
         """
-        Update Directory search for a Virtual Line
+        Update Directory Search for a Virtual Line
 
         Update the directory search for a designated Virtual Line.
 
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
 
-        Updating Directory search for a virtual line requires a full or user administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.
+        Updating Directory search for a virtual line requires a full, user, or location administrator auth token with a
+        scope of `spark-admin:telephony_config_write` and `identity:contacts_rw`.
 
         :param virtual_line_id: Update settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -427,14 +429,14 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
 
     def assigned_devices(self, virtual_line_id: str, org_id: str = None) -> VirtualLineDevices:
         """
-        Get List of Devices assigned for a Virtual Line
+        Get List of Devices Assigned for a Virtual Line
 
         Retrieve Device details assigned for a virtual line.
 
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
 
-        Retrieving the assigned device detials for a virtual line requires a full or user or read-only administrator
+        Retrieving the assigned device detials for a virtual line requires a full, user, or read-only administrator
         auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
@@ -495,8 +497,9 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
         List all Virtual Lines for the organization.
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
-        Retrieving this list requires a full or read-only administrator auth token with a scope
-        of spark-admin:telephony_config_read.
+
+        Retrieving this list requires a full, user, read-only, or location administrator auth token with a scope of
+        spark-admin:telephony_config_read.
 
         :param org_id: List virtual lines for this organization.
         :type org_id: str

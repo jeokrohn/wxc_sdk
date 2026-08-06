@@ -258,7 +258,9 @@ class LocationsApi(ApiChild, base='locations'):
         :type time_zone: str
         :param preferred_language: Default email language.
         :type preferred_language: str
-        :param address: The address of the location.
+        :param address: The address of the location. Once PSTN connectivity is set up for a location, please go to the
+            `Update the Emergency Address of a Location
+            <https://developer.webex.com/docs/api/v1/pstn/update-the-emergency-address-of-a-location>`_ API to update the location address.
         :type address: LocationAddress
         :param org_id: Update location common attributes for this organization.
         :type org_id: str

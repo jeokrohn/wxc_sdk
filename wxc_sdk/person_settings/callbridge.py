@@ -37,8 +37,11 @@ class CallBridgeApi(PersonSettingsApiChild):
 
         Retrieve Bridge settings.
 
-        This API requires a full, user or read-only administrator or location administrator auth token with a scope
-        of `spark-admin:people_read`.
+        Call bridge settings allow administrators to configure warning tones that play when a call is bridged or
+        transferred, helping users identify when they are being connected to another party.
+
+        This API requires a full, user, read-only administrator, or location administrator auth token with a scope of
+        `spark-admin:people_read`.
 
         :param entity_id: Unique identifier for the person.
         :type entity_id: str
@@ -61,8 +64,11 @@ class CallBridgeApi(PersonSettingsApiChild):
 
         Configure Call Bridge settings.
 
-        This API requires a full or user administrator or location administrator auth token with
-        the `spark-admin:people_write` scope.
+        Call bridge settings allow administrators to configure warning tones that play when a call is bridged or
+        transferred, helping users identify when they are being connected to another party.
+
+        This API requires a full, user, or location administrator auth token with the `spark-admin:people_write`
+        scope.
 
         :param entity_id: Unique identifier for the person.
         :type entity_id: str

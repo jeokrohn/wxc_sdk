@@ -1066,10 +1066,10 @@ description of the operation. The method name is a link to the method documentat
         | Get Person Secondary Available Phone Numbers
         | ``GET /telephony/config/people/{entity_id}/secondary/availableNumbers``
    * - :meth:`api.person_settings.barge.configure <wxc_sdk.person_settings.barge.BargeApi.configure>`
-        | Configure Barge In Settings
+        | Configure Barge in Settings
         | ``PUT /people/{entity_id}/features/bargeIn``
    * - :meth:`api.person_settings.barge.read <wxc_sdk.person_settings.barge.BargeApi.read>`
-        | Retrieve Barge In Settings
+        | Retrieve Barge in Settings
         | ``GET /people/{entity_id}/features/bargeIn``
    * - :meth:`api.person_settings.call_bridge.configure <wxc_sdk.person_settings.callbridge.CallBridgeApi.configure>`
         | Configure Call Bridge Settings
@@ -1099,7 +1099,7 @@ description of the operation. The method name is a link to the method documentat
         | Read Call Waiting Settings for
         | ``GET /people/{entity_id}/features/callWaiting``
    * - :meth:`api.person_settings.caller_id.configure <wxc_sdk.person_settings.caller_id.CallerIdApi.configure>`
-        | Configure a Caller ID Settings
+        | Configure Caller ID Settings
         | ``PUT /people/{entity_id}/features/callerId``
    * - :meth:`api.person_settings.caller_id.configure_settings <wxc_sdk.person_settings.caller_id.CallerIdApi.configure_settings>`
         | Configure a Caller ID Settings
@@ -1261,10 +1261,10 @@ description of the operation. The method name is a link to the method documentat
         | Retrieve a Person's MS Teams Settings
         | ``GET /telephony/config/people/{person_id}/settings/msTeams``
    * - :meth:`api.person_settings.music_on_hold.configure <wxc_sdk.person_settings.moh.MusicOnHoldApi.configure>`
-        | Configure Music On Hold Settings for a Personvirtual line, or workspace
+        | Configure Music on Hold Settings for a Personvirtual line, or workspace
         | ``PUT /telephony/config/people/{entity_id}/musicOnHold``
    * - :meth:`api.person_settings.music_on_hold.read <wxc_sdk.person_settings.moh.MusicOnHoldApi.read>`
-        | Retrieve Music On Hold Settings for a Person, virtual line, or workspace
+        | Retrieve Music on Hold Settings for a Person, virtual line, or workspace
         | ``GET /telephony/config/people/{entity_id}/musicOnHold``
    * - :meth:`api.person_settings.numbers.read <wxc_sdk.person_settings.numbers.NumbersApi.read>`
         | Get a person's phone numbers including alternate numbers
@@ -1855,16 +1855,16 @@ description of the operation. The method name is a link to the method documentat
         | Get Call Recording Settings
         | ``GET /telephony/config/callRecording``
    * - :meth:`api.telephony.call_recording.read_location_compliance_announcement <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.read_location_compliance_announcement>`
-        | Get details for the Location Compliance Announcement Setting
+        | Get Details of Call Recording Compliance Announcement for the Location
         | ``GET /telephony/config/locations/{location_id}/callRecording/complianceAnnouncement``
    * - :meth:`api.telephony.call_recording.read_org_call_recording_announcement <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.read_org_call_recording_announcement>`
         | Get Organization Call Recording Announcement Settings
         | ``GET /telephony/config/callRecording/announcements``
    * - :meth:`api.telephony.call_recording.read_org_compliance_announcement <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.read_org_compliance_announcement>`
-        | Get details for the organization Compliance Announcement Setting
+        | Get Details for the Organization Compliance Announcement Setting
         | ``GET /telephony/config/callRecording/complianceAnnouncement``
    * - :meth:`api.telephony.call_recording.read_terms_of_service <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.read_terms_of_service>`
-        | Get Call Recording Terms Of Service Settings
+        | Get Call Recording Terms of Service Settings
         | ``GET /telephony/config/callRecording/vendors/{vendor_id}/termsOfService``
    * - :meth:`api.telephony.call_recording.set_location_vendor <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.set_location_vendor>`
         | Set Call Recording Vendor for a Location
@@ -1876,7 +1876,7 @@ description of the operation. The method name is a link to the method documentat
         | Update Call Recording Settings
         | ``PUT /telephony/config/callRecording``
    * - :meth:`api.telephony.call_recording.update_location_compliance_announcement <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.update_location_compliance_announcement>`
-        | Update the location compliance announcement
+        | Update Call Recording Compliance Announcement for the Location
         | ``PUT /telephony/config/locations/{location_id}/callRecording/complianceAnnouncement``
    * - :meth:`api.telephony.call_recording.update_org_call_recording_announcement <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.update_org_call_recording_announcement>`
         | Update Organization Call Recording Announcement Settings
@@ -1885,7 +1885,7 @@ description of the operation. The method name is a link to the method documentat
         | Update the organization compliance announcement
         | ``PUT /telephony/config/callRecording/complianceAnnouncement``
    * - :meth:`api.telephony.call_recording.update_terms_of_service <wxc_sdk.telephony.call_recording.CallRecordingSettingsApi.update_terms_of_service>`
-        | Update Call Recording Terms Of Service Settings
+        | Update Call Recording Terms of Service Settings
         | ``PUT /telephony/config/callRecording/vendors/{vendor_id}/termsOfService``
    * - :meth:`api.telephony.call_routing.tp.create <wxc_sdk.telephony.call_routing.translation_pattern.TranslationPatternsApi.create>`
         | Create a Translation Pattern
@@ -2239,7 +2239,7 @@ description of the operation. The method name is a link to the method documentat
         | Search Available Members
         | ``GET /telephony/config/devices/availableMembers``
    * - :meth:`api.telephony.dect_devices.base_station_details <wxc_sdk.telephony.dect_devices.DECTDevicesApi.base_station_details>`
-        | Get the details of a specific DECT Network Base Station
+        | Get the Details of a Specific DECT Network Base Station
         | ``GET /telephony/config/locations/{location_id}/dectNetworks/{dect_network_id}/baseStations/{base_station_id}``
    * - :meth:`api.telephony.dect_devices.create_base_stations <wxc_sdk.telephony.dect_devices.DECTDevicesApi.create_base_stations>`
         | Create Multiple Base Stations
@@ -2251,28 +2251,28 @@ description of the operation. The method name is a link to the method documentat
         | Get DECT Network Details
         | ``GET /telephony/config/locations/{location_id}/dectNetworks/{dect_network_id}``
    * - :meth:`api.telephony.dect_devices.dect_networks_associated_with_person <wxc_sdk.telephony.dect_devices.DECTDevicesApi.dect_networks_associated_with_person>`
-        | GET List of DECT networks associated with a Person
+        | GET List of DECT Networks Associated with a Person
         | ``GET /telephony/config/people/{person_id}/dectNetworks``
    * - :meth:`api.telephony.dect_devices.dect_networks_associated_with_virtual_line <wxc_sdk.telephony.dect_devices.DECTDevicesApi.dect_networks_associated_with_virtual_line>`
-        | Get List of Dect Networks Handsets for a Virtual Line
+        | Get List of DECT Networks Handsets for a Virtual Line
         | ``GET /telephony/config/virtualLines/{virtual_line_id}/dectNetworks``
    * - :meth:`api.telephony.dect_devices.dect_networks_associated_with_workspace <wxc_sdk.telephony.dect_devices.DECTDevicesApi.dect_networks_associated_with_workspace>`
-        | GET List of DECT networks associated with a workspace
+        | GET List of DECT Networks Associated with a Workspace
         | ``GET /telephony/config/workspaces/{workspace_id}/dectNetworks``
    * - :meth:`api.telephony.dect_devices.delete_base_station <wxc_sdk.telephony.dect_devices.DECTDevicesApi.delete_base_station>`
-        | Delete a specific DECT Network Base Station
+        | Delete a Specific DECT Network Base Station
         | ``DELETE /telephony/config/locations/{location_id}/dectNetworks/{dect_network_id}/baseStations/{base_station_id}``
    * - :meth:`api.telephony.dect_devices.delete_bulk_base_stations <wxc_sdk.telephony.dect_devices.DECTDevicesApi.delete_bulk_base_stations>`
-        | Delete bulk DECT Network Base Stations
+        | Delete Bulk DECT Network Base Stations
         | ``DELETE /telephony/config/locations/{location_id}/dectNetworks/{dect_network_id}/baseStations``
    * - :meth:`api.telephony.dect_devices.delete_dect_network <wxc_sdk.telephony.dect_devices.DECTDevicesApi.delete_dect_network>`
         | Delete DECT Network
         | ``DELETE /telephony/config/locations/{location_id}/dectNetworks/{dect_network_id}``
    * - :meth:`api.telephony.dect_devices.delete_handset <wxc_sdk.telephony.dect_devices.DECTDevicesApi.delete_handset>`
-        | Delete specific DECT Network Handset Details
+        | Delete Specific DECT Network Handset Details
         | ``DELETE /telephony/config/locations/{location_id}/dectNetworks/{dect_network_id}/handsets/{handset_id}``
    * - :meth:`api.telephony.dect_devices.delete_handsets <wxc_sdk.telephony.dect_devices.DECTDevicesApi.delete_handsets>`
-        | Delete multiple handsets
+        | Delete Multiple Handsets
         | ``DELETE /telephony/config/locations/{location_id}/dectNetworks/{dect_network_id}/handsets``
    * - :meth:`api.telephony.dect_devices.device_type_list <wxc_sdk.telephony.dect_devices.DECTDevicesApi.device_type_list>`
         | Read the DECT device type list
@@ -2281,16 +2281,16 @@ description of the operation. The method name is a link to the method documentat
         | Generate and Enable DECT Serviceability Password
         | ``POST /telephony/config/locations/{location_id}/dectNetworks/{dect_network_id}/serviceabilityPassword/actions/generate/invoke``
    * - :meth:`api.telephony.dect_devices.get_dect_serviceability_password_status <wxc_sdk.telephony.dect_devices.DECTDevicesApi.get_dect_serviceability_password_status>`
-        | Get DECT Serviceability Password status
+        | Get DECT Serviceability Password Status
         | ``GET /telephony/config/locations/{location_id}/dectNetworks/{dect_network_id}/serviceabilityPassword``
    * - :meth:`api.telephony.dect_devices.handset_details <wxc_sdk.telephony.dect_devices.DECTDevicesApi.handset_details>`
         | Get Specific DECT Network Handset Details
         | ``GET /telephony/config/locations/{location_id}/dectNetworks/{dect_network_id}/handsets/{handset_id}``
    * - :meth:`api.telephony.dect_devices.list_base_stations <wxc_sdk.telephony.dect_devices.DECTDevicesApi.list_base_stations>`
-        | Get a list of DECT Network Base Stations
+        | Get a List of DECT Network Base Stations
         | ``GET /telephony/config/locations/{location_id}/dectNetworks/{dect_network_id}/baseStations``
    * - :meth:`api.telephony.dect_devices.list_dect_networks <wxc_sdk.telephony.dect_devices.DECTDevicesApi.list_dect_networks>`
-        | Get the List of DECT Networks for an organization
+        | Get the List of DECT Networks for an Organization
         | ``GET /telephony/config/dectNetworks``
    * - :meth:`api.telephony.dect_devices.list_handsets <wxc_sdk.telephony.dect_devices.DECTDevicesApi.list_handsets>`
         | Get List of Handsets for a DECT Network ID
@@ -2302,7 +2302,7 @@ description of the operation. The method name is a link to the method documentat
         | Update DECT Network from settings
         | ``PUT /telephony/config/locations/{id}/dectNetworks/{id}``
    * - :meth:`api.telephony.dect_devices.update_dect_serviceability_password_status <wxc_sdk.telephony.dect_devices.DECTDevicesApi.update_dect_serviceability_password_status>`
-        | Update DECT Serviceability Password status
+        | Update DECT Serviceability Password Status
         | ``PUT /telephony/config/locations/{location_id}/dectNetworks/{dect_network_id}/serviceabilityPassword``
    * - :meth:`api.telephony.dect_devices.update_handset <wxc_sdk.telephony.dect_devices.DECTDevicesApi.update_handset>`
         | Update DECT Network Handset
@@ -3430,7 +3430,7 @@ description of the operation. The method name is a link to the method documentat
         | Retrieve Agent's Caller ID Information
         | ``GET /telephony/config/virtualLines/{entity_id}/agent/callerId``
    * - :meth:`api.telephony.virtual_lines.assigned_devices <wxc_sdk.telephony.virtual_line.VirtualLinesApi.assigned_devices>`
-        | Get List of Devices assigned for a Virtual Line
+        | Get List of Devices Assigned for a Virtual Line
         | ``GET /telephony/config/virtualLines/{virtual_line_id}/devices``
    * - :meth:`api.telephony.virtual_lines.available_numbers.available <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.available>`
         | Get Available Phone Numbers
@@ -3454,10 +3454,10 @@ description of the operation. The method name is a link to the method documentat
         | Get Person Secondary Available Phone Numbers
         | ``GET /secondary``
    * - :meth:`api.telephony.virtual_lines.barge.configure <wxc_sdk.person_settings.barge.BargeApi.configure>`
-        | Configure Barge In Settings
+        | Configure Barge in Settings
         | ``PUT /telephony/config/virtualLines/{entity_id}/bargeIn``
    * - :meth:`api.telephony.virtual_lines.barge.read <wxc_sdk.person_settings.barge.BargeApi.read>`
-        | Retrieve Barge In Settings
+        | Retrieve Barge in Settings
         | ``GET /telephony/config/virtualLines/{entity_id}/bargeIn``
    * - :meth:`api.telephony.virtual_lines.call_bridge.configure <wxc_sdk.person_settings.callbridge.CallBridgeApi.configure>`
         | Configure Call Bridge Settings
@@ -3487,7 +3487,7 @@ description of the operation. The method name is a link to the method documentat
         | Read Call Waiting Settings for
         | ``GET /telephony/config/virtualLines/{entity_id}/callWaiting``
    * - :meth:`api.telephony.virtual_lines.caller_id.configure <wxc_sdk.person_settings.caller_id.CallerIdApi.configure>`
-        | Configure a Caller ID Settings
+        | Configure Caller ID Settings
         | ``PUT /telephony/config/virtualLines/{entity_id}/callerId``
    * - :meth:`api.telephony.virtual_lines.caller_id.configure_settings <wxc_sdk.person_settings.caller_id.CallerIdApi.configure_settings>`
         | Configure a Caller ID Settings
@@ -3529,16 +3529,16 @@ description of the operation. The method name is a link to the method documentat
         | Retrieve an entity's Call Forwarding Settings
         | ``GET /telephony/config/virtualLines/{entity_id}/callForwarding``
    * - :meth:`api.telephony.virtual_lines.get_phone_number <wxc_sdk.telephony.virtual_line.VirtualLinesApi.get_phone_number>`
-        | Get Phone Number assigned for a Virtual Line
+        | Get Phone Number Assigned for a Virtual Line
         | ``GET /telephony/config/virtualLines/{virtual_line_id}/number``
    * - :meth:`api.telephony.virtual_lines.list <wxc_sdk.telephony.virtual_line.VirtualLinesApi.list>`
         | List all Virtual Lines for the organization
         | ``GET /telephony/config/virtualLines``
    * - :meth:`api.telephony.virtual_lines.music_on_hold.configure <wxc_sdk.person_settings.moh.MusicOnHoldApi.configure>`
-        | Configure Music On Hold Settings for a Personvirtual line, or workspace
+        | Configure Music on Hold Settings for a Personvirtual line, or workspace
         | ``PUT /telephony/config/virtualLines/{entity_id}/musicOnHold``
    * - :meth:`api.telephony.virtual_lines.music_on_hold.read <wxc_sdk.person_settings.moh.MusicOnHoldApi.read>`
-        | Retrieve Music On Hold Settings for a Person, virtual line, or workspace
+        | Retrieve Music on Hold Settings for a Person, virtual line, or workspace
         | ``GET /telephony/config/virtualLines/{entity_id}/musicOnHold``
    * - :meth:`api.telephony.virtual_lines.outbound_billing_plan.read <wxc_sdk.person_settings.outbound_billing_plan.OutboundBillingPlanApi.read>`
         | Retrieve an entity's Outbound Billing Plan
@@ -3613,7 +3613,7 @@ description of the operation. The method name is a link to the method documentat
         | Update a Virtual Line
         | ``PUT /telephony/config/virtualLines/{virtual_line_id}``
    * - :meth:`api.telephony.virtual_lines.update_directory_search <wxc_sdk.telephony.virtual_line.VirtualLinesApi.update_directory_search>`
-        | Update Directory search for a Virtual Line
+        | Update Directory Search for a Virtual Line
         | ``PUT /telephony/config/virtualLines/{virtual_line_id}/directorySearch``
    * - :meth:`api.telephony.virtual_lines.voicemail.configure <wxc_sdk.person_settings.voicemail.VoicemailApi.configure>`
         | Configure Voicemail Settings for an entity
@@ -3760,10 +3760,10 @@ description of the operation. The method name is a link to the method documentat
         | Get Person Secondary Available Phone Numbers
         | ``GET /telephony/config/workspaces/{entity_id}/secondary/availableNumbers``
    * - :meth:`api.workspace_settings.barge.configure <wxc_sdk.person_settings.barge.BargeApi.configure>`
-        | Configure Barge In Settings
+        | Configure Barge in Settings
         | ``PUT /telephony/config/workspaces/{entity_id}/bargeIn``
    * - :meth:`api.workspace_settings.barge.read <wxc_sdk.person_settings.barge.BargeApi.read>`
-        | Retrieve Barge In Settings
+        | Retrieve Barge in Settings
         | ``GET /telephony/config/workspaces/{entity_id}/bargeIn``
    * - :meth:`api.workspace_settings.call_bridge.configure <wxc_sdk.person_settings.callbridge.CallBridgeApi.configure>`
         | Configure Call Bridge Settings
@@ -3793,7 +3793,7 @@ description of the operation. The method name is a link to the method documentat
         | Read Call Waiting Settings for
         | ``GET /workspaces/{entity_id}/features/callWaiting``
    * - :meth:`api.workspace_settings.caller_id.configure <wxc_sdk.person_settings.caller_id.CallerIdApi.configure>`
-        | Configure a Caller ID Settings
+        | Configure Caller ID Settings
         | ``PUT /workspaces/{entity_id}/features/callerId``
    * - :meth:`api.workspace_settings.caller_id.configure_settings <wxc_sdk.person_settings.caller_id.CallerIdApi.configure_settings>`
         | Configure a Caller ID Settings
@@ -3844,10 +3844,10 @@ description of the operation. The method name is a link to the method documentat
         | Retrieve an entity's Monitoring Settings
         | ``GET /workspaces/{entity_id}/features/monitoring``
    * - :meth:`api.workspace_settings.music_on_hold.configure <wxc_sdk.person_settings.moh.MusicOnHoldApi.configure>`
-        | Configure Music On Hold Settings for a Personvirtual line, or workspace
+        | Configure Music on Hold Settings for a Personvirtual line, or workspace
         | ``PUT /telephony/config/workspaces/{entity_id}/musicOnHold``
    * - :meth:`api.workspace_settings.music_on_hold.read <wxc_sdk.person_settings.moh.MusicOnHoldApi.read>`
-        | Retrieve Music On Hold Settings for a Person, virtual line, or workspace
+        | Retrieve Music on Hold Settings for a Person, virtual line, or workspace
         | ``GET /telephony/config/workspaces/{entity_id}/musicOnHold``
    * - :meth:`api.workspace_settings.numbers.read <wxc_sdk.workspace_settings.numbers.WorkspaceNumbersApi.read>`
         | List the PSTN phone numbers associated with a specific workspace, by ID, within the organization

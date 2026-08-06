@@ -2,7 +2,7 @@
 user privacy API
 """
 
-from typing import Optional, Union
+from typing import Optional
 
 from ..base import ApiModel
 from ..common import PersonPlaceAgent
@@ -27,7 +27,7 @@ class Privacy(ApiModel):
     enable_phone_status_pickup_barge_in_privacy: Optional[bool] = None
     #: List of people that are being monitored.
     #: for updates IDs can be used directly instead of :class:`wxc_sdk.common.PersonPlaceAgent` objects
-    monitoring_agents: Optional[list[Union[str, PersonPlaceAgent]]] = None
+    monitoring_agents: Optional[list[str | PersonPlaceAgent]] = None
 
 
 class PrivacyApi(PersonSettingsApiChild):
@@ -46,7 +46,8 @@ class PrivacyApi(PersonSettingsApiChild):
         The privacy feature enables the entity's line to be monitored by others and determine if they can be reached
         by Auto Attendant services.
 
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
+        This API requires a full, user, read-only administrator, or location administrator auth token with a scope of
+        spark-admin:people_read.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -70,7 +71,7 @@ class PrivacyApi(PersonSettingsApiChild):
         The privacy feature enables the entity's line to be monitored by others and determine if they can be reached by
         Auto Attendant services.
 
-        This API requires a full or user administrator or location administrator auth token with
+        This API requires a full, user, or location administrator auth token with
         the spark-admin:people_write scope.
 
         :param entity_id: Unique identifier for the entity.

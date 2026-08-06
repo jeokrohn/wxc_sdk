@@ -28,13 +28,14 @@ class BargeApi(PersonSettingsApiChild):
 
     def read(self, entity_id: str, org_id: str = None) -> BargeSettings:
         """
-        Retrieve Barge In Settings
+        Retrieve Barge in Settings
 
         The Barge In feature enables you to use a Feature Access Code (FAC) to answer a call that was directed to
         another subscriber, or barge-in on the call if it was already answered. Barge In can be used across locations.
 
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read
-        or a user auth token with spark:people_read scope can be used by an entity to read their own settings.
+        This API requires a full, user, read-only administrator, or location administrator auth token with a scope of
+        spark-admin:people_read or a user auth token with spark:people_read scope can be used by an entity to read their
+        own settings.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -50,13 +51,13 @@ class BargeApi(PersonSettingsApiChild):
 
     def configure(self, entity_id: str, barge_settings: BargeSettings, org_id: str = None):
         """
-        Configure Barge In Settings
+        Configure Barge in Settings
 
         The Barge In feature enables you to use a Feature Access Code (FAC) to answer a call that was directed to
         another subscriber, or barge-in on the call if it was already answered. Barge In can be used across locations.
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
-        auth token with spark:people_write scope can be used by an entity to update their own settings.
+        This API requires a full, user, or location administrator auth token with the spark-admin:people_write scope or
+        a user auth token with spark:people_write scope can be used by an entity to update their own settings.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str

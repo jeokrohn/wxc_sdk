@@ -177,7 +177,7 @@ class Members(ApiModel):
     last_name: Optional[str] = None
     #: First name of the member.
     first_name: Optional[str] = None
-    #: Type of member.
+    #: Type of the member.
     type: Optional[MemberType] = None
     #: License type of the member.
     license_type: Optional[UserLicenseType] = None
@@ -423,10 +423,10 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
     Features: Call Recording supports reading and writing of Webex Calling Call Recording settings for a specific
     organization and also a location in an organization.
     
-    Viewing these read-only organization settings requires a full or read-only administrator auth token with a scope of
-    `spark-admin:telephony_config_read`.
+    Viewing these read-only organization settings requires a full, read-only, or location administrator auth token with
+    a scope of `spark-admin:telephony_config_read`.
     
-    Modifying these organization settings requires a full administrator auth token with a scope of
+    Modifying these organization settings requires a full or location administrator auth token with a scope of
     `spark-admin:telephony_config_write`.
     
     A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
@@ -567,7 +567,7 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
     def get_details_for_the_organization_compliance_announcement_setting(self,
                                                                          org_id: str = None) -> GetOrgComplianceAnnouncementObject:
         """
-        Get details for the organization Compliance Announcement Setting
+        Get Details for the Organization Compliance Announcement Setting
 
         Retrieve the organization compliance announcement settings.
 
@@ -657,7 +657,8 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         manage call recordings. An organization is configured with an overall provider, but locations can be
         configured to use a different vendor than the overall organization default.
 
-        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+        Requires a full or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
 
         :param org_id: Retrieve call recording regions for this organization.
         :type org_id: str
@@ -671,8 +672,8 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         r = TypeAdapter(list[Regions]).validate_python(data['regions'])
         return r
 
-    def set_organization_call_recording_vendor(self, vendor_id: str, storage_region: str = None,
-                                               failure_behavior: FailureBehavior = None, org_id: str = None) -> str:
+    def set_organization_call_recording_vendor(self, vendor_id: str, failure_behavior: FailureBehavior = None,
+                                               org_id: str = None) -> str:
         """
         Set Organization Call Recording Vendor
 
@@ -687,9 +688,6 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
 
         :param vendor_id: Unique identifier of the vendor.
         :type vendor_id: str
-        :param storage_region: Call recording storage region. Only applicable for Webex as a vendor and isn't used for
-            other vendors.
-        :type storage_region: str
         :param failure_behavior: Call recording failure behavior.
         :type failure_behavior: FailureBehavior
         :param org_id: Modify call recording settings from this organization.
@@ -701,8 +699,6 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         body: dict[str, Any] = dict()
         body['vendorId'] = vendor_id
-        if storage_region is not None:
-            body['storageRegion'] = storage_region
         if failure_behavior is not None:
             body['failureBehavior'] = enum_str(failure_behavior)
         url = self.ep('callRecording/vendor')
@@ -758,7 +754,8 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         manage call recordings. An organization is configured with an overall provider, but locations can be
         configured to use a different vendor than the overall organization default.
 
-        Requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
+        Requires a full or read-only administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
 
         :param org_id: Retrieve call recording settings from this organization.
         :type org_id: str
@@ -775,7 +772,7 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
     def get_call_recording_terms_of_service_settings(self, vendor_id: str,
                                                      org_id: str = None) -> GetCallRecordingTermsOfServiceObject:
         """
-        Get Call Recording Terms Of Service Settings
+        Get Call Recording Terms of Service Settings
 
         Retrieve call recording terms of service settings for the organization.
 
@@ -802,7 +799,7 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
     def update_call_recording_terms_of_service_settings(self, vendor_id: str, terms_of_service_enabled: bool,
                                                         org_id: str = None) -> None:
         """
-        Update Call Recording Terms Of Service Settings
+        Update Call Recording Terms of Service Settings
 
         Update call recording terms of service settings for the given vendor.
 
@@ -995,7 +992,7 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
     def get_details_of_call_recording_compliance_announcement_for_the_location(self, location_id: str,
                                                                                org_id: str = None) -> GetComplianceAnnouncementObject:
         """
-        Get details for the Location Compliance Announcement Setting
+        Get Details of Call Recording Compliance Announcement for the Location
 
         Retrieve the location compliance announcement settings.
 
@@ -1003,8 +1000,8 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         of the start/stop announcement. When the compliance announcement is played to the PSTN party, and the PSTN
         party is connected to a party with call recording enabled, then the start/stop announcement is inhibited.
 
-        Retrieving location compliance announcement setting requires a full or read-only administrator auth token with
-        a scope of `spark-admin:telephony_config_read`.
+        Retrieving location compliance announcement setting requires a full, read-only, or location administrator auth
+        token with a scope of `spark-admin:telephony_config_read`.
 
         :param location_id: Retrieve compliance announcement settings for this location.
         :type location_id: str
@@ -1030,14 +1027,16 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
                                                                        custom_compliance_announcement: ModifyComplianceAnnouncementObjectCustomComplianceAnnouncement = None,
                                                                        org_id: str = None) -> None:
         """
+        Update Call Recording Compliance Announcement for the Location
+
         Update the location compliance announcement.
 
         The Compliance Announcement feature interacts with the Call Recording feature, specifically with the playback
         of the start/stop announcement. When the compliance announcement is played to the PSTN party, and the PSTN
         party is connected to a party with call recording enabled, then the start/stop announcement is inhibited.
 
-        Updating the location compliance announcement requires a full administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.
+        Updating the location compliance announcement requires a full or location administrator auth token with a scope
+        of `spark-admin:telephony_config_write`.
 
         :param location_id: Update the compliance announcement settings for this location.
         :type location_id: str
@@ -1087,8 +1086,7 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         super().put(url, params=params, json=body)
 
     def set_call_recording_vendor_for_alocation(self, location_id: str, id: str = None,
-                                                org_default_enabled: bool = None, storage_region: str = None,
-                                                org_storage_region_enabled: bool = None,
+                                                org_default_enabled: bool = None,
                                                 failure_behavior: FailureBehavior = None,
                                                 org_failure_behavior_enabled: bool = None, org_id: str = None) -> str:
         """
@@ -1109,10 +1107,6 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
         :type id: str
         :param org_default_enabled: Vendor is enabled by default.
         :type org_default_enabled: bool
-        :param storage_region: Regions where call recordings are stored.
-        :type storage_region: str
-        :param org_storage_region_enabled: Region-based call recording storage is enabled.
-        :type org_storage_region_enabled: bool
         :param failure_behavior: Type of failure behavior.
         :type failure_behavior: FailureBehavior
         :param org_failure_behavior_enabled: Failure behavior is enabled.
@@ -1129,10 +1123,6 @@ class FeaturesCallRecordingApi(ApiChild, base='telephony/config'):
             body['id'] = id
         if org_default_enabled is not None:
             body['orgDefaultEnabled'] = org_default_enabled
-        if storage_region is not None:
-            body['storageRegion'] = storage_region
-        if org_storage_region_enabled is not None:
-            body['orgStorageRegionEnabled'] = org_storage_region_enabled
         if failure_behavior is not None:
             body['failureBehavior'] = enum_str(failure_behavior)
         if org_failure_behavior_enabled is not None:

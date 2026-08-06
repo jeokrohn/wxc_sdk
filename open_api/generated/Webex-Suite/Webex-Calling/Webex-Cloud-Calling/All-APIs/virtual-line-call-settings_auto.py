@@ -1149,14 +1149,14 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
     A virtual line allows administrators to configure multiple lines for Webex Calling users. Virtual Lines Settings
     support reading and writing of Webex Calling Virtual Lines and its configuration for a specific organization.
     
-    Viewing these read-only organization settings requires a full, user, or read-only administrator auth token with a
-    scope of `spark-admin:telephony_config_read`.
+    Viewing these read-only organization settings requires a full, user, read-only administrator, or location
+    administrator auth token with a scope of `spark-admin:telephony_config_read`.
     
-    Modifying these organization settings requires a full or user administrator auth token with a scope of
+    Modifying these organization settings requires a full, user, or location administrator auth token with a scope of
     `spark-admin:telephony_config_write`.
     
-    A partner administrator can retrieve or change settings in a customer's organization using the optional `orgId`
-    query parameter.
+    A partner administrator can retrieve or change settings in an organization using the optional `orgId` query
+    parameter.
     """
 
     def read_the_list_of_virtual_lines(self, location_id: list[str] = None, id: list[str] = None,
@@ -1173,7 +1173,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
 
-        Retrieving this list requires a full or read-only administrator auth token with a scope of
+        Retrieving this list requires a full, user, read-only, or location administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
         :param location_id: Return the list of virtual lines matching these location ids. Example for multiple values -
@@ -1243,7 +1243,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
 
-        Creating a virtual line requires a full or user administrator auth token with a scope of
+        Creating a virtual line requires a full, user, or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
         :param first_name: First name defined for a virtual line. Minimum length is 1. Maximum length is 30.
@@ -1341,7 +1341,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
 
-        Deleting a virtual line requires a full or user administrator auth token with a scope of
+        Deleting a virtual line requires a full, user, or location administrator auth token with a scope of
         `spark-admin:telephony_config_write` and `identity:contacts_rw`.
 
         :param virtual_line_id: Delete the virtual line with the matching ID.
@@ -1365,8 +1365,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
 
-        Retrieving virtual line details requires a full or user or read-only administrator or location administrator
-        auth token with a scope of `spark-admin:telephony_config_read`.
+        Retrieving virtual line details requires a full, user, read-only administrator, or location administrator auth
+        token with a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -1395,7 +1395,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
 
-        Updating a virtual line requires a full or user or location administrator auth token with a scope of
+        Updating a virtual line requires a full, user, or location administrator auth token with a scope of
         `spark-admin:telephony_config_write` and `identity:contacts_rw`.
 
         :param virtual_line_id: Update settings for a virtual line with the matching ID.
@@ -1463,7 +1463,10 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         Get the list of call queues and hunt groups available for caller ID use by this virtual line as an agent.
 
-        This API requires a full, user, or read-only administrator auth token with a scope of
+        When a virtual line is configured as an agent in call queues or hunt groups, they can choose which caller ID to
+        display when making outbound calls. This API returns the available options for the agent to select from.
+
+        This API requires a full, user, read-only administrator, or location administrator auth token with a scope of
         `spark-admin:people_read`.
 
         :param virtual_line_id: Unique identifier for the Virtual Line.
@@ -1482,7 +1485,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         r = TypeAdapter(list[AvailableCallerIdObject]).validate_python(data['availableCallerIds'])
         return r
 
-    def retrieve_agent_s_caller_id_information(self, virtual_line_id: str) -> AvailableCallerIdObject:
+    def retrieve_agent_s_caller_id_information(self, virtual_line_id: str,
+                                               org_id: str = None) -> AvailableCallerIdObject:
         """
         Retrieve Agent's Caller ID Information
 
@@ -1496,44 +1500,61 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         :param virtual_line_id: Unique identifier for the Virtual Line.
         :type virtual_line_id: str
+        :param org_id: ID of the organization in which the virtual line resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
         :rtype: AvailableCallerIdObject
         """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
         url = self.ep(f'{virtual_line_id}/agent/callerId')
-        data = super().get(url)
+        data = super().get(url, params=params)
         r = AvailableCallerIdObject.model_validate(data['selectedCallerId'])
         return r
 
-    def modify_agent_s_caller_id_information(self, virtual_line_id: str, selected_caller_id: str) -> None:
+    def modify_agent_s_caller_id_information(self, virtual_line_id: str, selected_caller_id: str,
+                                             org_id: str = None) -> None:
         """
         Modify Agent's Caller ID Information.
 
         Each Agent is able to set their outgoing Caller ID as either the designated Call Queue's Caller ID or the Hunt
         Group's Caller ID or their own configured Caller ID.
-        This API requires a full or user administrator auth token with the `spark-admin:telephony_config_write` scope.
+
+        This API requires a full, user, or location administrator auth token with the
+        `spark-admin:telephony_config_write` scope.
 
         :param virtual_line_id: Unique identifier for the Virtual Line.
         :type virtual_line_id: str
         :param selected_caller_id: The unique identifier of the call queue or hunt group to use for the agent's caller
             ID. Set to null to use the agent's own caller ID.
         :type selected_caller_id: str
+        :param org_id: ID of the organization in which the virtual line resides. Only admin users of another
+            organization (such as partners) may use this parameter as the default is the same organization as the
+            token used to access API.
+        :type org_id: str
         :rtype: None
         """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
         body: dict[str, Any] = dict()
         body['selectedCallerId'] = selected_caller_id
         url = self.ep(f'{virtual_line_id}/agent/callerId')
-        super().put(url, json=body)
+        super().put(url, params=params, json=body)
 
     def read_barge_in_settings_for_a_virtual_line(self, virtual_line_id: str, org_id: str = None) -> BargeInInfo:
         """
-        Read Barge In Settings for a Virtual Line
+        Read Barge in Settings for a Virtual Line
 
         Retrieve a virtual line's barge in settings.
 
         The Barge In feature enables you to use a Feature Access Code (FAC) to answer a call that was directed to
         another subscriber, or barge-in on the call if it was already answered. Barge In can be used across locations.
 
-        Retrieving the barge in settings for a virtual line requires a full, user, or read-only administrator auth
-        token with a scope of `spark-admin:telephony_config_read`.
+        Retrieving the barge in settings for a virtual line requires a full, user, read-only administrator, or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -1554,15 +1575,15 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
     def configure_barge_in_settings_for_a_virtual_line(self, virtual_line_id: str, enabled: bool = None,
                                                        tone_enabled: bool = None, org_id: str = None) -> None:
         """
-        Configure Barge In Settings for a Virtual Line
+        Configure Barge in Settings for a Virtual Line
 
         Configure a virtual line's barge in settings.
 
         The Barge In feature enables you to use a Feature Access Code (FAC) to answer a call that was directed to
         another subscriber, or barge-in on the call if it was already answered. Barge In can be used across locations.
 
-        Updating the barge in settings for a virtual line requires a full or user administrator auth token with a scope
-        of `spark-admin:telephony_config_write`.
+        Updating the barge in settings for a virtual line requires a full, user, or location administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -1594,8 +1615,11 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         Retrieve a virtual line's call bridge settings.
 
-        Retrieving the call bridge settings for a virtual line requires a full, user, or read-only administrator auth
-        token with a scope of `spark-admin:telephony_config_read`.
+        Call bridge settings allow administrators to configure warning tones that play when a call is bridged or
+        transferred, helping users identify when they are being connected to another party.
+
+        Retrieving the call bridge settings for a virtual line requires a full, user, read-only administrator, or
+        location administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -1621,8 +1645,11 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         Configure a virtual line's call bridge settings.
 
-        Updating the call bridge settings for a virtual line requires a full or user administrator auth token with a
-        scope of `spark-admin:telephony_config_write`.
+        Call bridge settings allow administrators to configure warning tones that play when a call is bridged or
+        transferred, helping users identify when they are being connected to another party.
+
+        Updating the call bridge settings for a virtual line requires a full, user, or location administrator auth
+        token with a scope of `spark-admin:telephony_config_write`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -1664,8 +1691,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         not connected to the network for any reason, such as a power outage, failed Internet connection, or wiring
         problem.
 
-        Retrieving the call forwarding settings for a virtual line requires a full, user, or read-only administrator
-        auth token with a scope of `spark-admin:telephony_config_read`.
+        Retrieving the call forwarding settings for a virtual line requires a full, user, read-only administrator, or
+        location administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -1705,8 +1732,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         not connected to the network for any reason, such as a power outage, failed Internet connection, or wiring
         problem.
 
-        Updating the call forwarding settings for a virtual line requires a full or user administrator auth token with
-        a scope of `spark-admin:telephony_config_write`.
+        Updating the call forwarding settings for a virtual line requires a full, user, or location administrator auth
+        token with a scope of `spark-admin:telephony_config_write`.
 
         :param virtual_line_id: Update settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -1830,7 +1857,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         The Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier
         platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.
 
-        This API requires a full or user administrator auth token with the `spark-admin:telephony_config_read` scope.
+        This API requires a full, user, read-only, or location administrator auth token with the
+        `spark-admin:telephony_config_read` scope.
 
         :param virtual_line_id: Unique identifier for the virtual line.
         :type virtual_line_id: str
@@ -1864,7 +1892,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         The Call Recording feature provides a hosted mechanism to record the calls placed and received on the Carrier
         platform for replay and archival. This feature is helpful for quality assurance, security, training, and more.
 
-        This API requires a full or user administrator auth token with the `spark-admin:telephony_config_write` scope.
+        This API requires a full, user, or location administrator auth token with the
+        `spark-admin:telephony_config_write` scope.
 
         :param virtual_line_id: Unique identifier for the virtual line.
         :type virtual_line_id: str
@@ -1920,8 +1949,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         while you are on an active call, a tone alerts you of an incoming call and you can choose to answer or ignore
         the call.
 
-        Retrieving the call waiting settings for a virtual line requires a full, user, or read-only administrator auth
-        token with a scope of `spark-admin:telephony_config_read`.
+        Retrieving the call waiting settings for a virtual line requires a full, user, read-only administrator, or
+        location administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -1950,8 +1979,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         while you are on an active call, a tone alerts you of an incoming call and you can choose to answer or ignore
         the call.
 
-        Updating the call waiting settings for a virtual line requires a full or user administrator auth token with a
-        scope of `spark-admin:telephony_config_write`.
+        Updating the call waiting settings for a virtual line requires a full, user, or location administrator auth
+        token with a scope of `spark-admin:telephony_config_write`.
 
         :param virtual_line_id: Update settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -1979,8 +2008,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         Caller ID settings control how a virtual line's information is displayed when making outgoing calls.
 
-        Retrieving the caller ID settings for a virtual line requires a full, user, or read-only administrator auth
-        token with a scope of `spark-admin:telephony_config_read`.
+        Retrieving the caller ID settings for a virtual line requires a full, user, read-only administrator, or
+        location administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -2017,8 +2046,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         Caller ID settings control how a virtual line's information is displayed when making outgoing calls.
 
-        Updating the caller ID settings for a virtual line requires a full or user administrator auth token with a
-        scope of `spark-admin:telephony_config_write`.
+        Updating the caller ID settings for a virtual line requires a full, user, or location administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
 
         :param virtual_line_id: Update settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -2119,7 +2148,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
 
-        Retrieving the assigned device detials for a virtual line requires a full or user or read-only administrator
+        Retrieving the assigned device detials for a virtual line requires a full, user, or read-only administrator
         auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
@@ -2139,14 +2168,14 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
     def get_list_of_devices_assigned_for_a_virtual_line(self, virtual_line_id: str,
                                                         org_id: str = None) -> GetVirtualLineDevicesObject:
         """
-        Get List of Devices assigned for a Virtual Line
+        Get List of Devices Assigned for a Virtual Line
 
         Retrieve Device details assigned for a virtual line.
 
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
 
-        Retrieving the assigned device detials for a virtual line requires a full or user or read-only administrator
+        Retrieving the assigned device detials for a virtual line requires a full, user, or read-only administrator
         auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
@@ -2166,15 +2195,15 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
     def update_directory_search_for_a_virtual_line(self, virtual_line_id: str, enabled: bool,
                                                    org_id: str = None) -> None:
         """
-        Update Directory search for a Virtual Line
+        Update Directory Search for a Virtual Line
 
         Update the directory search for a designated Virtual Line.
 
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
 
-        Updating Directory search for a virtual line requires a full or user administrator auth token with a scope of
-        `spark-admin:telephony_config_write` and `identity:contacts_rw`.
+        Updating Directory search for a virtual line requires a full, user, or location administrator auth token with a
+        scope of `spark-admin:telephony_config_write` and `identity:contacts_rw`.
 
         :param virtual_line_id: Update settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -2328,8 +2357,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         You can change the incoming calling permissions for a virtual line if you want them to be different from your
         organization's default.
 
-        Retrieving the incoming permission settings for a virtual line requires a full, user, or read-only
-        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+        Retrieving the incoming permission settings for a virtual line requires a full, user, read-only administrator,
+        or location administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -2360,8 +2389,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         You can change the incoming calling permissions for a virtual line if you want them to be different from your
         organization's default.
 
-        Updating the incoming permission settings for a virtual line requires a full or user administrator auth token
-        with a scope of `spark-admin:telephony_config_write`.
+        Updating the incoming permission settings for a virtual line requires a full, user, or location administrator
+        auth token with a scope of `spark-admin:telephony_config_write`.
 
         :param virtual_line_id: Update settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -2403,8 +2432,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         or all incoming calls to the specified virtual line are intercepted. Also depending on the service
         configuration, outgoing calls are intercepted or rerouted to another location.
 
-        Retrieving the intercept settings for a virtual line requires a full, user, or read-only administrator auth
-        token with a scope of `spark-admin:telephony_config_read`.
+        Retrieving the intercept settings for a virtual line requires a full, user, read-only administrator, or
+        location administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -2436,8 +2465,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         or all incoming calls to the specified virtual line are intercepted. Also depending on the service
         configuration, outgoing calls are intercepted or rerouted to another location.
 
-        Updating the intercept settings for a virtual line requires a full or user administrator auth token with a
-        scope of `spark-admin:telephony_config_write`.
+        Updating the intercept settings for a virtual line requires a full, user, or location administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
 
         :param virtual_line_id: Update settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -2476,8 +2505,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         Your request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav`
         Content-Type.
 
-        Uploading the intercept greeting announcement for a virtual line requires a full or user administrator auth
-        token with a scope of `spark-admin:telephony_config_write`.
+        Uploading the intercept greeting announcement for a virtual line requires a full, user, or location
+        administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
         **WARNING:** This API is not callable using the developer portal web interface due to the lack of support for
         multipart POST. This API can be utilized using other tools that support multipart POST, such as Postman.
@@ -2499,14 +2528,14 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
     def retrieve_music_on_hold_settings_for_a_virtual_line(self, virtual_line_id: str,
                                                            org_id: str = None) -> GetMusicOnHoldObject:
         """
-        Retrieve Music On Hold Settings for a Virtual Line
+        Retrieve Music on Hold Settings for a Virtual Line
 
         Retrieve the virtual line's music on hold settings.
 
         Music on hold is played when a caller is put on hold, or the call is parked.
 
-        Retrieving the music on hold settings for a virtual line requires a full, user, or read-only administrator auth
-        token with a scope of `spark-admin:telephony_config_read`.
+        Retrieving the music on hold settings for a virtual line requires a full, user, read-only administrator, or
+        location administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -2529,7 +2558,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
                                                             audio_announcement_file: AudioAnnouncementFileGetObject = None,
                                                             org_id: str = None) -> None:
         """
-        Configure Music On Hold Settings for a Virtual Line
+        Configure Music on Hold Settings for a Virtual Line
 
         Configure a virtual line's music on hold settings.
 
@@ -2538,8 +2567,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         To configure music on hold settings for a virtual line, music on hold setting must be enabled for this
         location.
 
-        Updating the music on hold settings for a virtual line requires a full or user administrator auth token with a
-        scope of `spark-admin:telephony_config_write`.
+        Updating the music on hold settings for a virtual line requires a full, user, or location administrator auth
+        token with a scope of `spark-admin:telephony_config_write`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -2571,11 +2600,14 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
     def get_phone_number_assigned_for_a_virtual_line(self, virtual_line_id: str,
                                                      org_id: str = None) -> GetVirtualLineNumberObjectPhoneNumber:
         """
-        Get Phone Number assigned for a Virtual Line
+        Get Phone Number Assigned for a Virtual Line
 
         Get details on the assigned phone number and extension for the virtual line.
 
-        Retrieving virtual line phone number details requires a full or user or read-only administrator auth token with
+        Virtual lines can be assigned phone numbers and extensions to enable calling functionality. This information is
+        essential for configuring and managing virtual line communication settings.
+
+        Retrieving virtual line phone number details requires a full, user, or read-only administrator auth token with
         a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
@@ -2670,8 +2702,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         local level settings. You can change the outgoing calling permissions for a virtual line if you want them to
         be different from your organization's default.
 
-        Retrieving the outgoing permission settings for a virtual line requires a full, user, or read-only
-        administrator auth token with a scope of `spark-admin:telephony_config_read`.
+        Retrieving the outgoing permission settings for a virtual line requires a full, user, read-only administrator,
+        or location administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -2701,8 +2733,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         local level settings. You can change the outgoing calling permissions for a virtual line if you want them to
         be different from your organization's default.
 
-        Updating the outgoing permission settings for a virtual line requires a full or user administrator auth token
-        with a scope of `spark-admin:telephony_config_write`.
+        Updating the outgoing permission settings for a virtual line requires a full, user, or location administrator
+        auth token with a scope of `spark-admin:telephony_config_write`.
 
         :param virtual_line_id: Update settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -2740,7 +2772,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         Access codes are used to bypass permissions.
 
-        This API requires a full or user administrator auth token with the `spark-admin:telephony_config_write` scope.
+        This API requires a full, user, or location administrator auth token with the
+        `spark-admin:telephony_config_write` scope.
 
         :param virtual_line_id: Unique identifier for the virtual line.
         :type virtual_line_id: str
@@ -2765,7 +2798,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         Access codes are used to bypass permissions.
 
-        This API requires a full, user or read-only administrator auth token with a scope of
+        This API requires a full, user, or read-only administrator auth token with a scope of
         spark-admin:telephony_config_read
 
         :param virtual_line_id: Unique identifier for the virtual line.
@@ -2793,7 +2826,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         Access codes are used to bypass permissions.
 
-        This API requires a full or user administrator auth token with the `spark-admin:telephony_config_write` scope.
+        This API requires a full, user, or location administrator auth token with the
+        `spark-admin:telephony_config_write` scope.
 
         :param virtual_line_id: Unique identifier for the virtual line.
         :type virtual_line_id: str
@@ -2825,7 +2859,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         Access codes are used to bypass permissions.
 
-        This API requires a full or user administrator auth token with the `spark-admin:telephony_config_write` scope.
+        This API requires a full, user, or location administrator auth token with the
+        `spark-admin:telephony_config_write` scope.
 
         :param virtual_line_id: Unique identifier for the virtual line.
         :type virtual_line_id: str
@@ -2862,7 +2897,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         virtual line assigned to the Auto Transfer Number can then approve the call and send it through or reject the
         call type. You can add up to 3 numbers.
 
-        This API requires a full, user or read-only administrator auth token with a scope of
+        This API requires a full, user, or read-only administrator auth token with a scope of
         spark-admin:telephony_config_read
 
         :param virtual_line_id: Unique identifier for the virtual line.
@@ -2894,7 +2929,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         virtual line assigned the Auto Transfer Number can then approve the call and send it through or reject the
         call type. You can add up to 3 numbers.
 
-        This API requires a full or user administrator auth token with the `spark-admin:telephony_config_write` scope.
+        This API requires a full, user, or location administrator auth token with the
+        `spark-admin:telephony_config_write` scope.
 
         :param virtual_line_id: Unique identifier for the virtual line.
         :type virtual_line_id: str
@@ -2939,7 +2975,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         Digit patterns are used to bypass permissions.
 
-        Deleting the digit patterns requires a full or user or location administrator auth token with a scope of
+        Deleting the digit patterns requires a full, user, or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
         :param virtual_line_id: Unique identifier for the virtual line.
@@ -2965,7 +3001,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         Digit patterns are used to bypass permissions.
 
-        Retrieving this list requires a full, user or read-only administrator auth token with a scope of
+        Retrieving this list requires a full, user, or read-only administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Unique identifier for the virtual line.
@@ -2994,7 +3030,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         Digit patterns are used to bypass permissions.
 
-        Creating the digit pattern requires a full or user or location administrator auth token with a scope of
+        Creating the digit pattern requires a full, user, or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
         :param virtual_line_id: Unique identifier for the virtual line.
@@ -3034,7 +3070,11 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         Modifies whether this virtual profile uses the specified digit patterns when placing outbound calls or not.
 
-        Updating the digit pattern category control settings requires a full or user or location administrator auth
+        Digit patterns allow administrators to create exceptions to outgoing call permissions, enabling or blocking
+        specific number patterns regardless of the broader permission settings. This provides granular control over
+        which numbers a virtual line can dial.
+
+        Updating the digit pattern category control settings requires a full, user, or location administrator auth
         token with a scope of `spark-admin:telephony_config_write`.
 
         :param virtual_line_id: Unique identifier for the virtual line.
@@ -3064,7 +3104,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         Digit patterns are used to bypass permissions.
 
-        Deleting the digit pattern requires a full or user or location administrator auth token with a scope of
+        Deleting the digit pattern requires a full, user, or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
         :param virtual_line_id: Unique identifier for the virtual line.
@@ -3093,8 +3133,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         Digit patterns are used to bypass permissions.
 
-        Retrieving the digit pattern details requires a full, user or read-only administrator auth token with a scope
-        of `spark-admin:telephony_config_read`.
+        Retrieving the digit pattern details requires a full, user, read-only, or location administrator auth token
+        with a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Unique identifier for the virtual line.
         :type virtual_line_id: str
@@ -3125,7 +3165,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         Digit patterns are used to bypass permissions.
 
-        Updating the digit pattern requires a full or user or location administrator auth token with a scope of
+        Updating the digit pattern requires a full, user, or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
         :param virtual_line_id: Unique identifier for the virtual line.
@@ -3170,8 +3210,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         The privacy feature enables the virtual line's line to be monitored by others and determine if they can be
         reached by Auto Attendant services.
 
-        Retrieving the privacy settings for a virtual line requires a full, user, or read-only administrator auth token
-        with a scope of `spark-admin:telephony_config_read`.
+        Retrieving the privacy settings for a virtual line requires a full, user, read-only administrator, or location
+        administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -3203,8 +3243,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         The privacy feature enables the virtual line's line to be monitored by others and determine if they can be
         reached by Auto Attendant services.
 
-        Updating the privacy settings for a virtual line requires a full or user administrator auth token with a scope
-        of `spark-admin:telephony_config_write`.
+        Updating the privacy settings for a virtual line requires a full, user, or location administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -3252,8 +3292,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         Push-to-Talk allows the use of desk phones as either a one-way or two-way intercom that connects people in
         different parts of your organization.
 
-        Retrieving the Push-to-Talk settings for a virtual line requires a full, user, or read-only administrator auth
-        token with a scope of `spark-admin:telephony_config_read`.
+        Retrieving the Push-to-Talk settings for a virtual line requires a full, user, read-only administrator, or
+        location administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -3283,8 +3323,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         Push-to-Talk allows the use of desk phones as either a one-way or two-way intercom that connects people in
         different parts of your organization.
 
-        Updating the Push-to-Talk settings for a virtual line requires a full or user administrator auth token with a
-        scope of `spark-admin:telephony_config_write`.
+        Updating the Push-to-Talk settings for a virtual line requires a full, user, or location administrator auth
+        token with a scope of `spark-admin:telephony_config_write`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -3329,8 +3369,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         Optionally, notifications can be sent to a mobile phone via text or email. These notifications will not include
         the voicemail files.
 
-        Retrieving the voicemail settings for a virtual line requires a full, user, or read-only administrator auth
-        token with a scope of `spark-admin:telephony_config_read`.
+        Retrieving the voicemail settings for a virtual line requires a full, user, read-only administrator, or
+        location administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -3370,8 +3410,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         Optionally, notifications can be sent to a mobile phone via text or email. These notifications will not include
         the voicemail files.
 
-        Updating the voicemail settings for a virtual line requires a full or user administrator auth token with a
-        scope of `spark-admin:telephony_config_write`.
+        Updating the voicemail settings for a virtual line requires a full, user, or location administrator auth token
+        with a scope of `spark-admin:telephony_config_write`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
@@ -3435,8 +3475,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         The voicemail feature transfers callers to voicemail based on your settings. You can then retrieve voice
         messages via Voicemail.  A voicemail PIN is used to retrieve your voicemail messages.
 
-        Updating the voicemail pin for a virtual line requires a full or user administrator auth token with a scope of
-        `spark-admin:telephony_config_write`.
+        Updating the voicemail pin for a virtual line requires a full, user, or location administrator auth token with
+        a scope of `spark-admin:telephony_config_write`.
 
         **NOTE**: This API is expected to have an empty request body and Content-Type header should be set to
         `application/json`.
@@ -3465,8 +3505,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         Your request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav`
         Content-Type.
 
-        Uploading the voicemail busy greeting announcement for a virtual line requires a full or user administrator
-        auth token with a scope of `spark-admin:telephony_config_write`.
+        Uploading the voicemail busy greeting announcement for a virtual line requires a full, user, or location
+        administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
         **WARNING:** This API is not callable using the developer portal web interface due to the lack of support for
         multipart POST. This API can be utilized using other tools that support multipart POST, such as Postman.
@@ -3496,7 +3536,7 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         Your request will need to be a `multipart/form-data` request rather than JSON, using the `audio/wav`
         Content-Type.
 
-        Uploading the voicemail no answer greeting announcement for a virtual line requires a full or user
+        Uploading the voicemail no answer greeting announcement for a virtual line requires a full, user, or location
         administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
         **WARNING:** This API is not callable using the developer portal web interface due to the lack of support for
@@ -3521,7 +3561,10 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         """
         Modify a virtual line's voicemail passcode.
 
-        Modifying a virtual line's voicemail passcode requires a full administrator, user administrator or location
+        The voicemail passcode is used to secure access to the virtual line's voicemail messages. Administrators can
+        update this passcode to maintain security or assist users who have forgotten their passcode.
+
+        Modifying a virtual line's voicemail passcode requires a full administrator, user administrator, or location
         administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
         :param virtual_line_id: Modify voicemail passcode for this virtual line.

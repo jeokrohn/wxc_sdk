@@ -62,7 +62,8 @@ class PushToTalkApi(PersonSettingsApiChild):
         Push-to-Talk allows the use of desk phones as either a one-way or two-way intercom that connects people in
         different parts of your organization.
 
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
+        This API requires a full, user, read-only administrator, or location administrator auth token with a scope of
+        spark-admin:people_read.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -85,7 +86,7 @@ class PushToTalkApi(PersonSettingsApiChild):
         Push-to-Talk allows the use of desk phones as either a one-way or two-way intercom that connects people in
         different parts of your organization.
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope.
+        This API requires a full, user, or location administrator auth token with the spark-admin:people_write scope.
 
         :param entity_id: Unique identifier for the person.
         :type entity_id: str

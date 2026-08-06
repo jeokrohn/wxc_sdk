@@ -171,7 +171,8 @@ class CallInterceptApi(PersonSettingsApiChild):
         some, or all incoming calls to the specified entity are intercepted. Also depending on the service
         configuration, outgoing calls are intercepted or rerouted to another location.
 
-        This API requires a full, user, or read-only administrator auth token with a scope of spark-admin:people_read.
+        This API requires a full, user, read-only administrator, or location administrator auth token with a scope of
+        spark-admin:people_read.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -196,7 +197,7 @@ class CallInterceptApi(PersonSettingsApiChild):
         or all incoming calls to the specified entity are intercepted. Also depending on the service configuration,
         outgoing calls are intercepted or rerouted to another location.
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope.
+        This API requires a full, user, or location administrator auth token with the spark-admin:people_write scope.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str
@@ -220,8 +221,8 @@ class CallInterceptApi(PersonSettingsApiChild):
 
         Your request will need to be a multipart/form-data request rather than JSON, using the audio/wav Content-Type.
 
-        This API requires a full or user administrator auth token with the spark-admin:people_write scope or a user
-        auth token with spark:people_write scope can be used by an entity to update their settings.
+        This API requires a full, user, or location administrator auth token with the spark-admin:people_write scope
+        or a user auth token with spark:people_write scope can be used by an entity to update their settings.
 
         :param entity_id: Unique identifier for the entity.
         :type entity_id: str

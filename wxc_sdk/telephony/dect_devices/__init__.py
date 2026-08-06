@@ -1,5 +1,5 @@
 from collections.abc import Generator
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import Field, TypeAdapter
 
@@ -67,7 +67,7 @@ class DECTNetworkDetail(ApiModel):
     #: Location of the DECT network.
     location: Optional[IdAndName] = None
 
-    def update(self) -> dict:
+    def update(self) -> dict[str, Any]:
         """
 
         :meta private:
@@ -280,7 +280,10 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
 
         Create a multi-cell DECT network for a given location.
 
-        Creating a DECT network requires a full administrator auth token with a scope of
+        DECT networks enable wireless communication for DECT devices within a location, allowing multiple base stations
+        to provide coverage across a larger area.
+
+        Creating a DECT network requires a full or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
         :param location_id: Create a DECT network in this location.
@@ -309,7 +312,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         if display_name is not None:
             body['displayName'] = display_name
@@ -325,7 +328,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         self, name: str = None, location_id: str = None, org_id: str = None
     ) -> list[DECTNetworkDetail]:
         """
-        Get the List of DECT Networks for an organization
+        Get the List of DECT Networks for an Organization
 
         Retrieves the list of DECT networks for an organization.
 
@@ -424,7 +427,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         :rtype: None
         """
         params = org_id and {'orgId': org_id} or None
-        body = dict()
+        body: dict[str, Any] = dict()
         body['name'] = name
         if display_name is not None:
             body['displayName'] = display_name
@@ -491,7 +494,10 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
 
         This API is used to create multiple base stations in a DECT network in an organization.
 
-        Creating base stations in a DECT network requires a full administrator auth token with a scope
+        Base stations provide wireless connectivity for DECT handsets and extend the coverage area of a DECT network.
+        Multiple base stations can be added to ensure seamless coverage across the location.
+
+        Creating base stations in a DECT network requires a full or location administrator auth token with a scope
         of `spark-admin:telephony_config_write`.
 
         :param location_id: Create a base station in this location.
@@ -518,7 +524,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         self, location_id: str, dect_network_id: str, org_id: str = None
     ) -> list[BaseStationsResponse]:
         """
-        Get a list of DECT Network Base Stations
+        Get a List of DECT Network Base Stations
 
         Retrieve a list of base stations in a DECT Network.
 
@@ -549,7 +555,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         self, location_id: str, dect_network_id: str, base_station_id: str, org_id: str = None
     ) -> BaseStationDetail:
         """
-        Get the details of a specific DECT Network Base Station
+        Get the Details of a Specific DECT Network Base Station
 
         Retrieve details of a specific base station in the DECT Network.
 
@@ -557,7 +563,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         A DECT DBS-110 allows up to 30 lines of registration and supports 1 base station only. A DECT DBS-210 can have
         up to 254 base stations and supports up to 1000 lines of registration.
 
-        This API requires a full or read-only administrator auth token with a scope of
+        This API requires a full or read-only administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
         :param location_id: Location containing the DECT network.
@@ -580,7 +586,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
 
     def delete_bulk_base_stations(self, location_id: str, dect_network_id: str, org_id: str = None):
         """
-        Delete bulk DECT Network Base Stations
+        Delete Bulk DECT Network Base Stations
 
         Delete all the base stations in the DECT Network.
 
@@ -588,7 +594,8 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         A DECT DBS-110 allows up to 30 lines of registration and supports 1 base station only. A DECT DBS-210 can have
         up to 254 base stations and supports up to 1000 lines of registration.
 
-        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+        This API requires a full or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         :param location_id: Location containing the DECT network.
         :type location_id: str
@@ -606,7 +613,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
 
     def delete_base_station(self, location_id: str, dect_network_id: str, base_station_id: str, org_id: str = None):
         """
-        Delete a specific DECT Network Base Station
+        Delete a Specific DECT Network Base Station
 
         Delete a specific base station in the DECT Network.
 
@@ -646,7 +653,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
 
         Add a handset to a DECT network in a location in an organization.
 
-        Adding a handset to a DECT network requires a full administrator auth token with a scope
+        Adding a handset to a DECT network requires a full or location administrator auth token with a scope
         of `spark-admin:telephony_config_write`
 
         Adding a DECT handset to a person with a Webex Calling Standard license will
@@ -696,7 +703,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         capable of handling up to two lines. Once the network is created, you can add bases, handsets, and assign
         users or lines as needed.
 
-        Adding a list of handsets to a DECT network requires a full administrator auth token with a scope of
+        Adding a list of handsets to a DECT network requires a full or location administrator auth token with a scope
         `spark-admin:telephony_config_write`.
 
         Adding a DECT handset to a person with a Webex Calling Standard license will
@@ -823,7 +830,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         A member on line1 of a DECT handset can be of type PEOPLE or PLACE while a member on line2 of a DECT handset
         can be of type PEOPLE, PLACE, or VIRTUAL_LINE.
 
-        Updating a DECT Network handset requires a full administrator auth token with a scope
+        Updating a DECT Network handset requires a full or location administrator auth token with a scope
         of `spark-admin:telephony_config_write`.
 
         :param location_id: Location containing the DECT network.
@@ -846,7 +853,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['line1MemberId'] = line1_member_id
         body['line2MemberId'] = line2_member_id
         body['customDisplayName'] = custom_display_name
@@ -855,7 +862,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
 
     def delete_handset(self, location_id: str, dect_network_id: str, handset_id: str, org_id: str = None):
         """
-        Delete specific DECT Network Handset Details
+        Delete Specific DECT Network Handset Details
 
         Delete a specific DECT Network handset.
 
@@ -863,7 +870,8 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         A member on line1 of a DECT handset can be of type PEOPLE or PLACE while a member on line2 of a DECT handset
         can be of type PEOPLE, PLACE, or VIRTUAL_LINE.
 
-        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+        This API requires a full or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         :param location_id: Location containing the DECT network.
         :type location_id: str
@@ -890,7 +898,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         org_id: str = None,
     ):
         """
-        Delete multiple handsets
+        Delete Multiple Handsets
 
         Delete multiple handsets or all of them.
 
@@ -898,7 +906,8 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         A member on line1 of a DECT handset can be of type PEOPLE or PLACE while a member on line2 of a DECT handset
         can be of type PEOPLE, PLACE, or VIRTUAL_LINE.
 
-        This API requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
+        This API requires a full or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         Deleting a DECT handset from a person with a Webex Calling Standard license will
         enable Webex Calling across their Webex mobile, tablet, desktop, and browser applications.
@@ -921,7 +930,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['handsetIds'] = handset_ids
         if delete_all is not None:
             body['deleteAll'] = delete_all
@@ -930,7 +939,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
 
     def dect_networks_associated_with_person(self, person_id: str, org_id: str = None) -> list[AssignedDectNetwork]:
         """
-        GET List of DECT networks associated with a Person
+        GET List of DECT Networks Associated with a Person
 
         Retrieves the list of DECT networks for a person in an organization.
 
@@ -958,14 +967,14 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         self, workspace_id: str, org_id: str = None
     ) -> list[AssignedDectNetwork]:
         """
-        GET List of DECT networks associated with a workspace
+        GET List of DECT Networks Associated with a Workspace
 
         Retrieves the list of DECT networks for a workspace in an organization.
 
         DECT Network provides roaming voice services via base stations and wireless handsets. DECT network can be
         provisioned up to 1000 lines across up to 254 base stations.
 
-        This API requires a full or read-only administrator auth token with a scope of
+        This API requires a full or read-only administrator or location administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
         :param workspace_id: List of DECT networks associated with this workspace.
@@ -986,14 +995,16 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         self, virtual_line_id: str, org_id: str = None
     ) -> list[AssignedDectNetwork]:
         """
-        Get List of Dect Networks Handsets for a Virtual Line
+        Get List of DECT Networks Handsets for a Virtual Line
+
+        Not supported for Webex for Government (FedRAMP)
 
         Retrieve DECT Network details assigned for a virtual line.
 
         Virtual line is a capability in Webex Calling that allows administrators to configure multiple lines to Webex
         Calling users.
 
-        Retrieving the assigned device detials for a virtual line requires a full or user or read-only administrator
+        Retrieving the assigned device detials for a virtual line requires a full, user, or read-only administrator
         auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
@@ -1027,6 +1038,9 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         Search Available Members
 
         List the members that are available to be assigned to DECT handset lines.
+
+        DECT handset lines can be assigned to people, places, or virtual lines within the organization. This API helps
+        administrators identify which members are eligible for assignment to DECT devices.
 
         This requires a full or read-only administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
@@ -1083,8 +1097,9 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         The DECT serviceability password, also known as the admin override password, provides read/write access to DECT
         base stations for performing system serviceability and troubleshooting functions.
 
-        This API requires either a full administrator auth token with the scope `spark-admin:telephony_config_write`,
-        or a device administrator token with the scope of `spark-admin:devices_write`.
+        This API requires a full or location administrator auth token with the scope of
+        `spark-admin:telephony_config_write`, or a device administrator token with the scope of
+        `spark-admin:devices_write`.
 
         :param location_id: Unique identifier for the location.
         :type location_id: str
@@ -1108,7 +1123,7 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         self, location_id: str, dect_network_id: str, org_id: str = None
     ) -> bool:
         """
-        Get DECT Serviceability Password status
+        Get DECT Serviceability Password Status
 
         Retrieves the DECT serviceability password status.
 
@@ -1118,8 +1133,8 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         The DECT serviceability password, also known as the admin override password, provides read/write access to DECT
         base stations for performing system serviceability and troubleshooting functions.
 
-        This API requires an auth token with either a full, read-only token with the scope of
-        `spark-admin:telephony_config_read`, or a device administrator token with the scope of
+        This API requires an auth token with either a full, read-only, or location administrator token with the scope
+        of `spark-admin:telephony_config_read`, or a device administrator token with the scope of
         `spark-admin:devices_read`.
 
         :param location_id: Unique identifier for the location.
@@ -1136,13 +1151,13 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/serviceabilityPassword')
         data = super().get(url, params=params)
         r = data['enabled']
-        return r
+        return r  # type: ignore[return-value]
 
     def update_dect_serviceability_password_status(
         self, location_id: str, dect_network_id: str, enabled: bool, org_id: str = None
     ):
         """
-        Update DECT Serviceability Password status
+        Update DECT Serviceability Password Status
 
         Enables or disables the DECT serviceability password.
 
@@ -1155,8 +1170,9 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         The DECT serviceability password, also known as the admin override password, provides read/write access to DECT
         base stations for performing system serviceability and troubleshooting functions.
 
-        This API requires either a full administrator auth token with the scope `spark-admin:telephony_config_write`,
-        or a device administrator token with the scope of `spark-admin:devices_write`.
+        This API requires a full or location administrator auth token with the scope of
+        `spark-admin:telephony_config_write`, or a device administrator token with the scope of
+        `spark-admin:devices_write`.
 
         :param location_id: Unique identifier for the location.
         :type location_id: str

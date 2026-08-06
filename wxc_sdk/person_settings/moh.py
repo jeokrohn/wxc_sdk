@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Optional
 
 from wxc_sdk.base import ApiModel
 from wxc_sdk.common import AnnAudioFile, Greeting
@@ -20,7 +20,7 @@ class MusicOnHold(ApiModel):
     #: Announcement Audio File details when greeting is selected to be `CUSTOM`.
     audio_announcement_file: Optional[AnnAudioFile] = None
 
-    def update(self) -> dict:
+    def update(self) -> dict[str, Any]:
         """
         Data for update
 
@@ -36,13 +36,13 @@ class MusicOnHoldApi(PersonSettingsApiChild):
 
     def read(self, entity_id: str, org_id: str = None) -> MusicOnHold:
         """
-        Retrieve Music On Hold Settings for a Person, virtual line, or workspace.
+        Retrieve Music on Hold Settings for a Person, virtual line, or workspace.
 
         Retrieve the music on hold settings.
 
         Music on hold is played when a caller is put on hold, or the call is parked.
 
-        Retrieving a person's music on hold settings requires a full, user or read-only administrator or location
+        Retrieving a person's music on hold settings requires a full, user, read-only administrator, or location
         administrator auth token with a scope of `spark-admin:telephony_config_read`.
 
         :param entity_id: Unique identifier for the person, virtual line, or workspace.
@@ -61,7 +61,7 @@ class MusicOnHoldApi(PersonSettingsApiChild):
 
     def configure(self, entity_id: str, settings: MusicOnHold, org_id: str = None):
         """
-        Configure Music On Hold Settings for a Personvirtual line, or workspace.
+        Configure Music on Hold Settings for a Personvirtual line, or workspace.
 
         Configure music on hold settings.
 
@@ -69,8 +69,8 @@ class MusicOnHoldApi(PersonSettingsApiChild):
 
         To configure music on hold settings for a person, music on hold setting must be enabled for this location.
 
-        Updating a person's music on hold settings requires a full or user administrator or location administrator auth
-        token with a scope of `spark-admin:telephony_config_write`.
+        Updating a person's music on hold settings requires a full, user, or location administrator auth token with a
+        scope of `spark-admin:telephony_config_write`.
 
         :param entity_id: Unique identifier for the person, virtual line, or workspace.
         :type entity_id: str
