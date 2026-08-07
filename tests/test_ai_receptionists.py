@@ -15,7 +15,7 @@ from wxc_sdk.rest import RestError
 
 
 class TestAiReceptionists(TestWithLocations):
-    proxy = True
+    proxy = False
 
     @async_test
     async def test_templates(self):
@@ -173,9 +173,14 @@ class TestAiReceptionists(TestWithLocations):
         )
         err = None
         for country_code, response in zip(country_codes, responses, strict=True):
-            if isinstance(response, Exception):
-                print(f'{country_code}: {response}')
-                err = err or response
+            try:
+                if country_code in {'IN', 'ZZ'}:
+                    self.assertTrue(isinstance(response, Exception), f'{country_code} should fail')
+                elif isinstance(response, Exception):
+                    raise response
+            except (RestError, AssertionError) as e:
+                print(f'{country_code}: {e}')
+                err = err or e
         if err:
             raise err
         return
