@@ -173,6 +173,8 @@ class WorkspacePlannedMaintenance(ApiModel):
     start_time: Optional[datetime] = None
     #: The end of the planned maintenance period.
     end_time: Optional[datetime] = None
+    #: A custom message describing the planned maintenance.
+    message: Optional[str] = None
 
 
 class DeviceCapabilities(str, Enum):
