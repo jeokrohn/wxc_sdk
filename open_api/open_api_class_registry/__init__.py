@@ -60,6 +60,26 @@ class _ResolvedPythonType:
         return self.referenced_classes[0] if self.referenced_classes else None
 
 
+@dataclass
+class _ResolvedRequestBody:
+    """Request-body metadata ready for endpoint source generation.
+
+    :param parameters: Generated SDK arguments representing the request body.
+    :type parameters: list[Parameter]
+    :param media_type: Selected request media type, if the operation declares body content.
+    :type media_type: Optional[str]
+    :param body_is_raw: Whether the body is represented by one scalar, array, or free-form argument.
+    :type body_is_raw: bool
+    :param schema: Effective schema after resolving a component reference.
+    :type schema: Optional[OASchemaProperty]
+    """
+
+    parameters: list[Parameter]
+    media_type: Optional[str] = None
+    body_is_raw: bool = False
+    schema: Optional[OASchemaProperty] = None
+
+
 def _strip_model_name(qualified: str) -> str:
     """
     Return a cleaner class name for a consolidated canonical model by:
@@ -562,10 +582,21 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             object_class_name = self.qualified_class_name(object_class_name)  # type: ignore[assignment]
             self._add_object_schema(object_class_name, prop)
             return _ResolvedPythonType(object_class_name, (object_class_name,))
-        elif not prop.model_fields_set:
-            # This is an empty property
-            # for code generation we will use 'Any' as the type
-            log.warning(f'Empty property {prop_name} in {name}')
+        elif not any(
+            (
+                prop.type,
+                prop.ref,
+                prop.enum,
+                prop.items,
+                prop.properties,
+                prop.any_of,
+                prop.all_of,
+                prop.one_of,
+            )
+        ):
+            # Annotation-only Schema Objects do not constrain the JSON value. Preserve
+            # their documentation and examples while representing the value as Any.
+            log.warning(f'Unconstrained property {prop_name} in {name}; using Any')
             return _ResolvedPythonType('Any')
         else:
             raise NotImplementedError(f'Need to handle property {prop_name} in {name}: {prop}')
@@ -781,30 +812,18 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
 
             we probably need to create a dummy for LocationListResponse
         """
-        referenced_class = resolved_type.primary_reference
-        if (
-            referenced_class
-            and (unqualified_ref := referenced_class.split('%')[-1]) != schema_name
-            and unqualified_ref.endswith('Item')
-        ):
-            # this is a list of items, we need to create a dummy class for the list
-            # so that we can use it as a type
+        component_class_name = self.qualified_class_name(class_name_from_schema_name(schema_name))
+        if component_class_name not in self._classes:
+            # Primitive, array, union, reference-only, and free-form components do not
+            # create a named class while resolving their type. Register a private alias
+            # so every component $ref has a normalization target.
             alias_attribute = Attribute(
                 name='alias',
                 python_type=resolved_type.python_type,
-                referenced_class=referenced_class,
+                referenced_class=resolved_type.primary_reference,
                 referenced_classes=resolved_type.referenced_classes,
             )
-            dummy_class_name = self.qualified_class_name(snake_case(schema_name))
-            dummy_class = PythonClass(name=dummy_class_name, alias=alias_attribute)
-            self._add_class(dummy_class)
-        elif schema.type == 'object' and not schema.properties:
-            # References to schema-free object components still name the component. Register
-            # a private alias so normalization can replace those references with ``dict``.
-            alias_attribute = Attribute(name='alias', python_type=resolved_type.python_type)
-            dummy_class_name = self.qualified_class_name(snake_case(schema_name))
-            dummy_class = PythonClass(name=dummy_class_name, alias=alias_attribute)
-            self._add_class(dummy_class)
+            self._add_class(PythonClass(name=component_class_name, alias=alias_attribute))
         return
 
     def _parameter_from_schema_property(
@@ -885,7 +904,12 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             raise ValueError(f'Request body reference {request_body.ref} did not resolve to a request body')
         return dereferenced
 
-    def _raw_body_properties(self, spec: OASpec, operation: OAOperation) -> Optional[dict[str, 'OASchemaProperty']]:
+    def _raw_body_properties(
+        self,
+        spec: OASpec,
+        operation: OAOperation,
+        resolved_body: Optional[_ResolvedRequestBody] = None,
+    ) -> Optional[dict[str, 'OASchemaProperty']]:
         """
         Return the raw OAS property dict for the request body schema, or None if there is no body.
 
@@ -895,24 +919,89 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         :type spec: OASpec
         :param operation: Operation whose request body should be inspected.
         :type operation: OAOperation
+        :param resolved_body: Previously resolved request metadata, when available.
+        :type resolved_body: Optional[_ResolvedRequestBody]
         :return: Raw schema properties from the request body, or ``None`` if no body schema is available.
         :rtype: Optional[dict[str, OASchemaProperty]]
-        :raises ValueError: If the operation's request body reference does not resolve to a request body.
+        :raises ValueError: If resolving the request body encounters an invalid reference or media selection.
         """
-        if not (req_body := self._dereference_request_body(spec, operation.request_body)):
-            return None
-        if not (content := req_body.content):
-            return None
-        content_type = next(iter(content))
-        body_content = content[content_type]
-        if not (body_schema := body_content.schema_):
-            return None
-        if ref := body_schema.ref or body_schema.object_ref:
-            class_spec = spec.get_schema(ref)
-            return class_spec.properties if class_spec else None
-        return body_schema.properties
+        resolved_body = resolved_body or self._body_parameter_from_operation(spec, operation)
+        return resolved_body.schema.properties if resolved_body.schema else None
 
-    def _body_parameter_from_operation(self, spec: OASpec, operation: OAOperation) -> list[Parameter]:
+    @staticmethod
+    def _request_content_signature(content: OAContent) -> Any:
+        """Return the code-generation-relevant structure of request content.
+
+        :param content: OpenAPI Media Type Object to compare.
+        :type content: OAContent
+        :return: Nested dictionaries and lists excluding documentation and examples.
+        :rtype: Any
+        """
+
+        def strip_annotations(value: Any) -> Any:
+            """Recursively remove non-structural documentation fields.
+
+            :param value: Nested value from a serialized OpenAPI model.
+            :return: Value with documentation-only keys removed.
+            """
+            if isinstance(value, dict):
+                ignored = {'description', 'example', 'examples', 'title'}
+                return {key: strip_annotations(item) for key, item in value.items() if key not in ignored}
+            if isinstance(value, list):
+                return [strip_annotations(item) for item in value]
+            return value
+
+        return strip_annotations(content.model_dump(by_alias=True, exclude_none=True))
+
+    def _select_request_body_content(
+        self, spec: OASpec, operation: OAOperation
+    ) -> tuple[Optional[OARequestBody], Optional[str], Optional[OAContent]]:
+        """Resolve a request body and deterministically select a supported media type.
+
+        :param spec: OpenAPI specification that owns the operation.
+        :type spec: OASpec
+        :param operation: Operation whose request body content should be selected.
+        :type operation: OAOperation
+        :return: Resolved request body, selected media type, and selected content object.
+        :rtype: tuple[Optional[OARequestBody], Optional[str], Optional[OAContent]]
+        :raises ValueError: If multiple media variants differ structurally or have no JSON variant.
+        """
+        request_body = self._dereference_request_body(spec, operation.request_body)
+        if request_body is None or not request_body.content:
+            return request_body, None, None
+
+        content = request_body.content
+        if len(content) == 1:
+            media_type = next(iter(content))
+            return request_body, media_type, content[media_type]
+
+        signatures = {media_type: self._request_content_signature(value) for media_type, value in content.items()}
+        first_signature = next(iter(signatures.values()))
+        if any(signature != first_signature for signature in signatures.values()):
+            media_types = ', '.join(sorted(content))
+            raise ValueError(
+                f'Operation {operation.operation_id!r} declares request media types with different schemas or '
+                f'encodings: {media_types}'
+            )
+
+        if 'application/json' in content:
+            media_type = 'application/json'
+        else:
+            json_variants = sorted(
+                candidate
+                for candidate in content
+                if candidate.startswith('application/') and candidate.endswith('+json')
+            )
+            if not json_variants:
+                media_types = ', '.join(sorted(content))
+                raise ValueError(
+                    f'Operation {operation.operation_id!r} has equivalent request media types but no supported JSON '
+                    f'variant: {media_types}'
+                )
+            media_type = json_variants[0]
+        return request_body, media_type, content[media_type]
+
+    def _body_parameter_from_operation(self, spec: OASpec, operation: OAOperation) -> _ResolvedRequestBody:
         """
         Create request body parameters from an OpenAPI operation.
 
@@ -920,41 +1009,90 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         :type spec: OASpec
         :param operation: Operation whose request body should be converted to SDK method parameters.
         :type operation: OAOperation
-        :return: SDK method parameters derived from the operation request body.
-        :rtype: list[Parameter]
-        :raises ValueError: If the request body has multiple content types, lacks a schema, or references an unknown
-            schema or request body component.
+        :return: SDK parameters and serialization metadata derived from the request body.
+        :rtype: _ResolvedRequestBody
+        :raises ValueError: If media types differ, the body lacks a schema, or a component reference is unknown.
         """
-        if not (req_body := self._dereference_request_body(spec, operation.request_body)):
-            return []
-        if not (content := req_body.content):
-            return []
-        if len(content) > 1:
-            raise ValueError('Only one content type supported')
-        content_type = next(iter(content))
-        body_content = content[content_type]
+        req_body, media_type, body_content = self._select_request_body_content(spec, operation)
+        if req_body is None or body_content is None:
+            return _ResolvedRequestBody(parameters=[])
         if not (body_schema := body_content.schema_):
             raise ValueError('No schema in request body')
+
+        component_name = None
         if ref := body_schema.ref or body_schema.object_ref:
-            # reference to a different schema that (hopefully) will be added to the registry as PythonClass later
-            class_name = class_name_from_ref(ref)
-            # find the schema in the registry
-            class_spec = spec.get_schema(ref)
-            if not class_spec:
-                raise ValueError(f'Referenced schema {class_name}/{ref} not found')
-            # now we can create the parameter list from the referenced schema
-            param_properties = class_spec.properties
-            param_required: set[str] = class_spec.required and set(class_spec.required) or {}  # type: ignore[assignment]
+            component_name = class_name_from_ref(ref)
+            try:
+                effective_schema = spec.get_schema(ref)
+            except KeyError as error:
+                raise ValueError(f'Referenced request body schema {component_name}/{ref} not found') from error
         else:
-            # create parameter list from schema properties
-            param_properties = body_schema.properties
-            param_required = body_schema.required and set(body_schema.required) or {}  # type: ignore[assignment]
-        # create parameter list
-        parameters = [
-            self._parameter_from_schema_property(prop_name=prop_name, prop=prop, param_required=param_required)
-            for prop_name, prop in param_properties.items()
-        ]
-        return parameters
+            effective_schema = body_schema
+
+        # Object request bodies retain the historical one-argument-per-property SDK signature.
+        if effective_schema.type == 'object' and effective_schema.properties:
+            param_required: set[str] = set(effective_schema.required or [])
+            parameters = [
+                self._parameter_from_schema_property(prop_name=prop_name, prop=prop, param_required=param_required)
+                for prop_name, prop in effective_schema.properties.items()
+            ]
+            return _ResolvedRequestBody(
+                parameters=parameters,
+                media_type=media_type,
+                body_is_raw=False,
+                schema=effective_schema,
+            )
+
+        # Scalar, array, and free-form object bodies are a single typed JSON value.
+        parameter_name = operation.request_body_name or component_name or 'body'
+        resolved_type = self._add_or_get_type_for_property(
+            effective_schema,
+            sanitize_class_name(operation.operation_id or 'RequestBody'),
+            parameter_name,
+        )
+        parameter = Parameter(
+            name=parameter_name,
+            python_type=resolved_type.python_type,
+            referenced_class=resolved_type.primary_reference,
+            referenced_classes=resolved_type.referenced_classes,
+            docstring=req_body.description or effective_schema.docstring or 'Request body.',
+            sample=body_content.example if body_content.example is not None else effective_schema.example,
+            optional=not bool(req_body.required),
+            url_parameter=False,
+            registry=self,
+        )
+        return _ResolvedRequestBody(
+            parameters=[parameter],
+            media_type=media_type,
+            body_is_raw=True,
+            schema=effective_schema,
+        )
+
+    @staticmethod
+    def _disambiguate_body_parameter_names(href_parameters: list[Parameter], body_parameters: list[Parameter]) -> None:
+        """Give body arguments unique Python names when they collide with other arguments.
+
+        :param href_parameters: Path, query, and header parameters already present on the endpoint.
+        :type href_parameters: list[Parameter]
+        :param body_parameters: Request-body parameters whose wire names must remain unchanged.
+        :type body_parameters: list[Parameter]
+        :return: None.
+
+        Only colliding body arguments receive an override such as ``body_id``. Their OpenAPI
+        names are retained for JSON serialization, so generated request payloads do not change.
+        """
+        used_names = {parameter.python_name for parameter in href_parameters}
+        for parameter in body_parameters:
+            python_name = parameter.python_name
+            if python_name in used_names:
+                candidate = f'body_{python_name}'
+                suffix = 2
+                while candidate in used_names:
+                    candidate = f'body_{python_name}_{suffix}'
+                    suffix += 1
+                parameter.python_name_override = candidate
+                python_name = candidate
+            used_names.add(python_name)
 
     def _dereference_response(self, spec: OASpec, response: Optional[OAResponse]) -> Optional[OAResponse]:
         """
@@ -1010,7 +1148,9 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
 
         href_parameter = [self._parameter_from_oa_parameter(qp) for qp in operation.parameters if not qp.is_auth]
 
-        body_parameter = self._body_parameter_from_operation(spec, operation)
+        resolved_body = self._body_parameter_from_operation(spec, operation)
+        body_parameter = resolved_body.parameters
+        self._disambiguate_body_parameter_names(href_parameter, body_parameter)
 
         body_class_name = None
         body_class_include = None
@@ -1055,7 +1195,7 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
 
                 # Check nested models: if the body schema defines fewer fields for a list/object
                 # attribute than the registered model, register a nested include constraint.
-                raw_props = self._raw_body_properties(spec, operation)
+                raw_props = self._raw_body_properties(spec, operation, resolved_body)
                 if raw_props:
                     nested_include: dict[str, frozenset[str]] = {}
                     attr_by_oas_name = {a.name: a for a in model_class.attributes}
@@ -1149,6 +1289,8 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
             body_class_include=body_class_include,
             body_method_name=body_method_name,
             body_style=self.body_style if body_class_name else 'args',
+            request_media_type=resolved_body.media_type,
+            body_is_raw=resolved_body.body_is_raw,
             response_body=response_body,
             result=result,
             result_referenced_class=result_referenced_class,
@@ -1157,16 +1299,24 @@ class OpenApiPythonClassRegistry(PythonClassRegistry):
         )
         return endpoint
 
-    def add_open_api(self, spec_info: OpenApiSpecInfo):
-        """
-        Add classes from given OpenApiSpecInfo
+    def add_open_api(self, spec_info: OpenApiSpecInfo) -> None:
+        """Add generated classes and endpoints from an OpenAPI specification.
+
+        :param spec_info: Source metadata for the OpenAPI document to load.
+        :type spec_info: OpenApiSpecInfo
+        :return: None.
+        :raises OSError: If the specification file cannot be read.
+        :raises ValueError: If parsed schemas cannot be normalized or generated safely.
+
+        Component composition is normalized in-memory; the upstream specification is not modified.
         """
         with open(spec_info.spec_path) as f:
             data = json.load(f)
         open_api_spec = OASpec.model_validate(data)
         # dereference all parameters defined as $ref
         open_api_spec.deref_parameters()
-        # clean up schemas with one_of definition
+        # Normalize object compositions before classes and endpoints consume their properties.
+        open_api_spec.unify_all_of_schemas()
         open_api_spec.unify_one_of_schemas()
 
         # add PythonAPI instance

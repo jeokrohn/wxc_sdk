@@ -16,11 +16,29 @@ log = logging.getLogger(__name__)
 
 
 class OABaseModel(BaseModel):
-    """
-    Base class for OpenAPI models
-    """
+    """Base class for strict OpenAPI models with vendor-extension support."""
 
     model_config = ConfigDict(alias_generator=to_camel, extra='forbid')
+
+    @model_validator(mode='before')
+    @classmethod
+    def discard_unknown_vendor_extensions(cls, value: Any) -> Any:
+        """Discard undeclared ``x-*`` keys while retaining declared extensions.
+
+        :param value: Raw value passed to Pydantic for model validation.
+        :return: A shallow copy without unknown vendor extensions, or the original non-mapping value.
+
+        OpenAPI permits vendor extensions on every object. Ordinary unknown fields remain
+        forbidden so misspelled standard fields continue to fail validation.
+        """
+        if not isinstance(value, dict):
+            return value
+        declared_aliases = {field.alias for field in cls.model_fields.values() if field.alias}
+        return {
+            key: item
+            for key, item in value.items()
+            if not (isinstance(key, str) and key.startswith('x-') and key not in declared_aliases)
+        }
 
 
 class OANameAndUrl(OABaseModel):
@@ -53,6 +71,7 @@ class OAParameter(OABaseModel):
     description: Optional[str] = None
     required: bool = False
     example: Optional[Any] = None
+    examples: Optional[Any] = None
     schema_: Optional['OASchemaProperty'] = Field(None, alias='schema')
     style: Optional[str] = None
     explode: Optional[bool] = None
@@ -111,6 +130,7 @@ class OASchemaProperty(OABaseModel):
     ref: Optional[str] = Field(alias='$ref', default=None)
     description: Optional[str] = None
     example: Optional[Any] = None
+    examples: Optional[Any] = None
     # ref for array items if type == 'array'
     items: Optional['OASchemaProperty'] = None
     # enum values if type == 'string'
@@ -123,6 +143,7 @@ class OASchemaProperty(OABaseModel):
     any_of: Optional[list['OASchemaProperty']] = None
     all_of: Optional[list['OASchemaProperty']] = None
     one_of: Optional[list['OASchemaProperty']] = None
+    not_: Optional['OASchemaProperty'] = Field(alias='not', default=None)
     format: Optional[str] = None
     max_length: Optional[int] = None
     min_length: Optional[int] = None
@@ -317,6 +338,7 @@ class OAOperation(OABaseModel):
     tags: Optional[list[str]] = Field(default_factory=list)
     deprecated: Optional[bool] = None
     external_docs: Optional[ExternalDocs] = None
+    request_body_name: Optional[str] = Field(alias='x-codegen-request-body-name', default=None)
 
     @property
     def path_parameters(self) -> list[OAParameter]:
@@ -355,9 +377,6 @@ Tag = str | NameAndDescription
 
 
 class OASpec(OABaseModel):
-    class Config:
-        extra = 'ignore'
-
     openapi: str
     info: OAInfo
     servers: Optional[list[OAServer]] = None
@@ -421,6 +440,111 @@ class OASpec(OABaseModel):
             op.parameters = [self.deref(p.ref) if p.ref else p for p in op.parameters]  # type: ignore[misc]
         return
 
+    def unify_all_of_schemas(self) -> None:
+        """Flatten object ``allOf`` compositions in ``components/schemas`` in-place.
+
+        Referenced component compositions and nested inline compositions are resolved recursively.
+        Properties are merged and required fields are unioned. Identical duplicate properties are
+        accepted because several upstream specifications repeat a base definition for documentation.
+
+        :return: None.
+        :raises ValueError: If a reference cannot be resolved, a composition contains a non-object
+            alternative, duplicate properties conflict, or component compositions form a cycle.
+        """
+
+        def component_name(ref: str, context: str) -> str:
+            """Extract a component schema name from a local reference.
+
+            :param ref: Reference to validate and parse.
+            :param context: Human-readable composition context for errors.
+            :return: Referenced schema component name.
+            :raises ValueError: If the reference is not a local component schema reference.
+            """
+            ref_match = re.match(r'^#/components/schemas/(.+)$', ref)
+            if not ref_match:
+                raise ValueError(f'{context}: allOf reference {ref!r} is not a component schema reference')
+            return ref_match.group(1)
+
+        def merge_property(
+            properties: dict[str, OASchemaProperty],
+            name: str,
+            prop: OASchemaProperty,
+            context: str,
+        ) -> None:
+            """Merge one property while rejecting incompatible duplicate definitions.
+
+            :param properties: Accumulated property definitions.
+            :param name: OpenAPI property name being merged.
+            :param prop: Candidate property definition.
+            :param context: Human-readable composition context for errors.
+            :return: None.
+            :raises ValueError: If the property was already defined differently.
+            """
+            existing = properties.get(name)
+            if existing is None:
+                properties[name] = prop.model_copy(deep=True)
+                return
+            if existing.model_dump(by_alias=True, exclude_none=True) != prop.model_dump(
+                by_alias=True, exclude_none=True
+            ):
+                raise ValueError(f'{context}: conflicting allOf definitions for property {name!r}')
+
+        def flatten_object(
+            schema: OASchemaProperty,
+            context: str,
+            component_stack: tuple[str, ...],
+        ) -> tuple[dict[str, OASchemaProperty], set[str]]:
+            """Return merged properties and required names for one object composition.
+
+            :param schema: Schema or reference participating in the composition.
+            :param context: Human-readable composition context for errors.
+            :param component_stack: Component names currently being expanded.
+            :return: Merged properties and required field names.
+            :raises ValueError: If the composition is invalid or cyclic.
+            """
+            if schema.ref:
+                name = component_name(schema.ref, context)
+                if name in component_stack:
+                    cycle = ' -> '.join((*component_stack, name))
+                    raise ValueError(f'{context}: allOf composition cycle detected: {cycle}')
+                try:
+                    referenced = self.components.schemas[name]
+                except KeyError as error:
+                    raise ValueError(f'{context}: allOf reference {schema.ref!r} could not be resolved') from error
+                return flatten_object(referenced, f'{context} -> {name}', (*component_stack, name))
+
+            if schema.type not in {None, 'object'} or (
+                schema.type is None and schema.properties is None and schema.all_of is None
+            ):
+                raise ValueError(f'{context}: allOf alternatives must resolve to object schemas')
+
+            properties: dict[str, OASchemaProperty] = {}
+            required = set(schema.required or [])
+            for prop_name, prop in schema.properties.items() if schema.properties else ():
+                merge_property(properties, prop_name, prop, context)
+
+            for index, alternative in enumerate(schema.all_of or []):
+                alternative_context = f'{context} allOf[{index}]'
+                alternative_properties, alternative_required = flatten_object(
+                    alternative,
+                    alternative_context,
+                    component_stack,
+                )
+                for prop_name, prop in alternative_properties.items():
+                    merge_property(properties, prop_name, prop, context)
+                required.update(alternative_required)
+            return properties, required
+
+        for schema_name, schema in self.components.schemas.items():
+            if schema.all_of is None:
+                continue
+            properties, required = flatten_object(schema, f'Schema {schema_name!r}', (schema_name,))
+            schema.type = 'object'
+            schema.properties = properties
+            schema.required = sorted(required)
+            schema.all_of = None
+        return
+
     def unify_one_of_schemas(self) -> None:
         """
         Unify ``oneOf`` schemas in ``components/schemas`` in-place.
@@ -429,21 +553,22 @@ class OASpec(OABaseModel):
 
         1. Validates that no incompatible schema-defining fields are set. A redundant
            ``type: object`` is accepted.
-        2. Dereferences every ``$ref`` listed in ``one_of``.
-        3. Computes the union of all properties across the referenced schemas.
-        4. Marks a property as *required* only when it is required in **every** referenced schema.
-        5. For enum-typed properties, merges the enum value lists across all referenced schemas
+        2. Dereferences component alternatives and accepts inline object alternatives.
+        3. Computes the union of all properties across the alternatives.
+        4. Marks a property as *required* only when it is required in **every** alternative.
+        5. For enum-typed properties, merges the enum value lists across all alternatives
            that carry that property, preserving original order with duplicates removed.
         6. Replaces ``one_of`` with the unified ``type='object'`` / ``properties`` / ``required``
            representation on the schema object so that downstream codegen sees a normal object.
 
         Nested ``oneOf`` declarations are left intact for the type resolver. Component-level
-        declarations must contain only references to object schemas so this compatibility
-        normalization cannot silently change a primitive or array union into an object.
+        declarations must contain only object schemas so this compatibility normalization cannot
+        silently change a primitive or array union into an object. Parsed ``not`` constraints are
+        intentionally ignored because generated SDK models do not implement JSON Schema logic.
 
         :return: None.
-        :raises ValueError: If a component-level ``oneOf`` is empty, contains inline alternatives,
-            references a non-object schema, or is combined with other schema-defining fields.
+        :raises ValueError: If a component-level ``oneOf`` is empty, contains a non-object
+            alternative, has an unresolved reference, or is combined with other schema-defining fields.
         """
 
         def ref_to_schema_name(ref: str) -> str:
@@ -455,7 +580,19 @@ class OASpec(OABaseModel):
                 continue
 
             # A redundant ``type: object`` is compatible with the object-only flattening.
-            allowed_fields = {'description', 'discriminator', 'one_of', 'title'}
+            allowed_fields = {
+                'default',
+                'deprecated',
+                'description',
+                'discriminator',
+                'example',
+                'examples',
+                'not_',
+                'nullable',
+                'one_of',
+                'read_only',
+                'title',
+            }
             if schema.type == 'object':
                 allowed_fields.add('type')
             disallowed_fields = sorted(schema.model_fields_set - allowed_fields)
@@ -465,31 +602,26 @@ class OASpec(OABaseModel):
                     f'{", ".join(disallowed_fields)}'
                 )
 
-            # --- 1. Dereference ---
-            if not schema.one_of or any(
-                option.ref is None or option.model_fields_set != {'ref'} for option in schema.one_of
-            ):
-                raise ValueError(
-                    f'Schema {schema_name!r}: top-level oneOf alternatives must all be object schema references'
-                )
+            # --- 1. Resolve references and validate inline alternatives ---
+            if not schema.one_of:
+                raise ValueError(f'Schema {schema_name!r}: top-level oneOf must contain alternatives')
             referenced: list[OASchemaProperty] = []
-            for option in schema.one_of:
-                try:
-                    referenced_schema = self.get_schema(option.ref)  # type: ignore[arg-type]
-                except KeyError as e:
-                    raise ValueError(
-                        f'Schema {schema_name!r}: oneOf reference {option.ref!r} could not be resolved'
-                    ) from e
+            one_of_schema_names: list[str] = []
+            for index, option in enumerate(schema.one_of):
+                if option.ref:
+                    try:
+                        referenced_schema = self.get_schema(option.ref)
+                    except KeyError as error:
+                        raise ValueError(
+                            f'Schema {schema_name!r}: oneOf reference {option.ref!r} could not be resolved'
+                        ) from error
+                    one_of_schema_names.append(ref_to_schema_name(option.ref))
+                else:
+                    referenced_schema = option
+                    one_of_schema_names.append(f'<inline:{index}>')
                 if referenced_schema.type != 'object':
-                    raise ValueError(
-                        f'Schema {schema_name!r}: top-level oneOf alternatives must all be object schema references'
-                    )
+                    raise ValueError(f'Schema {schema_name!r}: top-level oneOf alternatives must all be object schemas')
                 referenced.append(referenced_schema)
-
-            # Collect schema names referenced inside oneOf.
-            one_of_schema_names = sorted(
-                {ref_to_schema_name(schema_one_of.ref) for schema_one_of in schema.one_of if schema_one_of.ref}
-            )
 
             # --- 2. Collect all property names ---
             all_names: list[str] = []
@@ -537,7 +669,7 @@ class OASpec(OABaseModel):
             log.info(
                 'unify_one_of_schemas: schema_name=%s one_of_refs=%s merged_properties=%s',
                 schema_name,
-                one_of_schema_names,
+                sorted(one_of_schema_names),
                 list(merged_properties.keys()),
             )
 

@@ -59,7 +59,26 @@ from open_api.open_api_code_generator import OACodeGenerator
 from open_api.open_api_sources import OpenApiSpecInfo
 
 
+def _exception_summary(error: Exception) -> str:
+    """Return one concise, single-line diagnostic for an exception.
+
+    :param error: Exception raised while processing one OpenAPI specification.
+    :return: Exception class and the first non-empty message line.
+    """
+    message = next((line.strip() for line in str(error).splitlines() if line.strip()), '')
+    return f'{type(error).__name__}: {message}' if message else type(error).__name__
+
+
 def main() -> None:
+    """Generate Python SDK sources for all OpenAPI files selected by CLI arguments.
+
+    :return: None.
+    :raises SystemExit: With status one when input selection, output configuration, or one or more
+        specification conversions fail.
+
+    Unless ``--raise`` is supplied, per-spec exceptions are retained so remaining specifications
+    can be processed and a concise aggregate failure summary can be printed at the end.
+    """
     logging.basicConfig(level=logging.INFO)
     env_path = f'{os.path.splitext(__file__)[0]}.env'
     load_dotenv(env_path)
@@ -256,7 +275,7 @@ def main() -> None:
             print(code_gen.source(with_example=with_examples), end='', file=f)
         return
 
-    failed_oas_files = []
+    failed_oas_files: list[tuple[str, str]] = []
     for oas_file in oas_files:
         print(f'Conversion of "{oas_file}"')
         try:
@@ -266,17 +285,17 @@ def main() -> None:
                 print(f'Skipping "{oas_file}" (apiType: {api_type})')
                 continue
             convert_one_oas(spec_info)
-        except Exception:
+        except Exception as error:
             if args.raise_exception:
                 raise
-            failed_oas_files.append(oas_file)
+            failed_oas_files.append((oas_file, _exception_summary(error)))
             print(f'Conversion of "{oas_file}" failed:', file=sys.stderr)
             traceback.print_exc(file=sys.stderr)
     if failed_oas_files:
         print('\n' * 2, file=sys.stderr)
         print(f'Conversion of {len(failed_oas_files)} OAS files failed:', file=sys.stderr)
-        for failed_file in failed_oas_files:
-            print(f'  {failed_file}', file=sys.stderr)
+        for failed_file, summary in failed_oas_files:
+            print(f'  {failed_file}: {summary}', file=sys.stderr)
         exit(1)
     exit(0)
 

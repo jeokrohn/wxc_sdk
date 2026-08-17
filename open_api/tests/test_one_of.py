@@ -562,7 +562,7 @@ def test_top_level_inline_union_has_contextual_error() -> None:
 
     with pytest.raises(
         ValueError,
-        match=r"Schema 'CombinedResponse': top-level oneOf alternatives must all be object schema references",
+        match=r"Schema 'CombinedResponse': top-level oneOf alternatives must all be object schemas",
     ):
         spec.unify_one_of_schemas()
 

@@ -59,6 +59,136 @@ def _minimal_openapi_spec() -> dict[str, object]:
     }
 
 
+def _extended_openapi_spec() -> dict[str, object]:
+    """Return one document combining the newly supported OpenAPI constructs.
+
+    :return: OpenAPI document covering composition, recursion, extensions, and raw bodies.
+    """
+    body_schema = {
+        'type': 'object',
+        'required': ['name'],
+        'properties': {'name': {'type': 'string'}},
+    }
+    return {
+        'openapi': '3.1.0',
+        'info': {
+            'title': 'Extended REST API',
+            'description': 'Regression fixture for previously unsupported constructs.',
+            'version': '1.0.0',
+        },
+        'servers': [{'url': 'https://example.com'}],
+        'paths': {
+            '/nodes': {
+                'post': {
+                    'summary': 'Create a node',
+                    'operationId': 'createNode',
+                    'x-codegen-request-body-name': 'node',
+                    'x-unrelated-extension': True,
+                    'parameters': [
+                        {
+                            'name': 'traceId',
+                            'in': 'query',
+                            'schema': {'type': 'string'},
+                            'examples': {'sample': {'value': 'trace-1'}},
+                        }
+                    ],
+                    'requestBody': {
+                        'required': True,
+                        'content': {
+                            'multipart/form-data': {'schema': body_schema},
+                            'application/json': {'schema': body_schema},
+                        },
+                    },
+                    'responses': {
+                        '200': {
+                            'description': 'Success',
+                            'content': {
+                                'application/json': {
+                                    'schema': {'$ref': '#/components/schemas/Acknowledgement'},
+                                }
+                            },
+                        }
+                    },
+                },
+            },
+            '/patches': {
+                'patch': {
+                    'summary': 'Apply patches',
+                    'operationId': 'applyPatches',
+                    'requestBody': {
+                        'required': True,
+                        'content': {
+                            'application/json-patch+json': {
+                                'schema': {'$ref': '#/components/schemas/PatchRequest'},
+                            }
+                        },
+                    },
+                    'responses': {
+                        '200': {
+                            'description': 'Success',
+                            'content': {
+                                'application/json': {
+                                    'schema': {'$ref': '#/components/schemas/RecursiveNode'},
+                                }
+                            },
+                        }
+                    },
+                }
+            },
+        },
+        'components': {
+            'schemas': {
+                'BaseNode': {
+                    'type': 'object',
+                    'required': ['name'],
+                    'properties': {'name': {'type': 'string'}},
+                },
+                'RecursiveNode': {
+                    'allOf': [
+                        {'$ref': '#/components/schemas/BaseNode'},
+                        {
+                            'type': 'object',
+                            'properties': {
+                                'children': {
+                                    'type': 'array',
+                                    'items': {'$ref': '#/components/schemas/RecursiveNode'},
+                                },
+                                'metadata': {
+                                    'description': 'Intentionally unconstrained metadata.',
+                                    'example': {'source': 'test'},
+                                },
+                            },
+                        },
+                    ],
+                },
+                'PatchRequest': {
+                    'type': 'array',
+                    'items': {'type': 'string'},
+                    'examples': [['replace /name']],
+                },
+                'Selector': {
+                    'type': 'object',
+                    'nullable': True,
+                    'oneOf': [
+                        {
+                            'type': 'object',
+                            'required': ['id'],
+                            'properties': {'id': {'type': 'string'}},
+                        },
+                        {
+                            'type': 'object',
+                            'required': ['fileName'],
+                            'not': {'required': ['id']},
+                            'properties': {'fileName': {'type': 'string'}},
+                        },
+                    ],
+                },
+                'Acknowledgement': {'type': 'string', 'example': 'OK'},
+            }
+        },
+    }
+
+
 def _run_oas2py(openapi_root: Path, output_path: Path) -> subprocess.CompletedProcess[str]:
     """Run the CLI against all synthetic specifications.
 
@@ -132,4 +262,23 @@ def test_cli_still_reports_malformed_rest_spec(tmp_path: Path) -> None:
     assert result.returncode == 1
     assert f'Conversion of "{malformed_path}" failed:' in result.stderr
     assert 'validation errors for OASpec' in result.stderr
+    assert f'{malformed_path}: ValidationError:' in result.stderr
     assert not output_path.exists()
+
+
+def test_cli_generates_extended_openapi_constructs(tmp_path: Path) -> None:
+    """Generate one corpus-style fixture containing all newly supported constructs.
+
+    :param tmp_path: Pytest-provided temporary directory.
+    """
+    openapi_root = tmp_path / 'openapi'
+    spec_path = _write_api(openapi_root, 'extended-rest-api', 'rest', _extended_openapi_spec())
+    output_path = tmp_path / 'generated.py'
+
+    result = _run_oas2py(openapi_root, output_path)
+
+    assert result.returncode == 0, result.stderr
+    assert f'Conversion of "{spec_path}"' in result.stdout
+    assert 'OAS files failed' not in result.stderr
+    source = output_path.read_text(encoding='utf-8')
+    compile(source, str(output_path), 'exec')

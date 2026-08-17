@@ -1,3 +1,4 @@
+import keyword
 import logging
 import re
 from collections import Counter
@@ -126,6 +127,7 @@ class Parameter:
     url_parameter: bool = field(default=False)
     registry: 'PythonClassRegistry' = field(default=None)
     referenced_classes: tuple[str, ...] = field(default_factory=tuple)
+    python_name_override: Optional[str] = field(default=None, repr=False)
 
     @property
     def class_references(self) -> tuple[str, ...]:
@@ -162,13 +164,16 @@ class Parameter:
 
     @property
     def python_name(self) -> str:
+        """Return a Python-compatible endpoint argument name.
+
+        :return: Snake-case name with reserved words and keywords suffixed by an underscore,
+            unless a collision-specific override is present.
+        :rtype: str
         """
-        A Python compatible name. Reserved Python names are suffixed with an underscore
-            from -> from_
-        """
-        if self.name in RESERVED_PARAM_NAMES:
-            return f'{self.name}_'
-        return snake_case(self.name)
+        python_name = self.python_name_override or snake_case(self.name)
+        if keyword.iskeyword(python_name) or python_name in RESERVED_PARAM_NAMES:
+            return f'{python_name}_'
+        return python_name
 
     @property
     def is_enum(self) -> bool:
@@ -300,6 +305,8 @@ class Endpoint:
 
     ``result_referenced_class`` remains the legacy primary response reference.
     ``result_referenced_classes`` carries every class needed by compound result types.
+    ``request_media_type`` and ``body_is_raw`` preserve request serialization choices
+    made while resolving the OpenAPI operation.
     """
 
     # python name for the method
@@ -331,6 +338,10 @@ class Endpoint:
     #   'model'  – single model-instance parameter (body_parameter is ignored)
     #   'hybrid' – optional model instance + individual kwargs; model takes priority if supplied
     body_style: str = field(default='args', repr=False)
+    # selected request content type; non-default JSON variants are emitted explicitly
+    request_media_type: Optional[str] = field(default=None, repr=False)
+    # true when body_parameter contains one complete scalar, array, or free-form request value
+    body_is_raw: bool = field(default=False, repr=False)
     # python type for result
     result: str = field(default=None, repr=False)
     # references class if python result type is a class or references a class, e.g. list[SomeObject]
@@ -501,6 +512,19 @@ class Endpoint:
     def params_required(self) -> bool:
         # do we need to pass 'params'?
         return self.paginated or any(not p.url_parameter for p in self.href_parameters_filtered())
+
+    @property
+    def explicit_request_content_type(self) -> Optional[str]:
+        """Return a JSON media type that must be passed explicitly to the REST layer.
+
+        :return: Selected ``application/*+json`` media type, or ``None`` for ordinary JSON
+            and non-JSON request bodies.
+        :rtype: Optional[str]
+        """
+        media_type = self.request_media_type
+        if media_type and media_type.startswith('application/') and media_type.endswith('+json'):
+            return media_type
+        return None
 
     @property
     def single_result_attribute(self) -> Optional['Attribute']:
@@ -688,9 +712,15 @@ class Endpoint:
 
         return validate
 
-    def source_call_and_return(self, source: SourceIO):
-        """
-        Python source for calling the method and returning the result
+    def source_call_and_return(self, source: SourceIO) -> None:
+        """Write the generated REST call and response conversion.
+
+        :param source: Destination for generated endpoint source.
+        :type source: SourceIO
+        :return: None.
+
+        JSON-compatible request bodies use ``json=``. A selected ``application/*+json``
+        variant is forwarded explicitly so the REST layer emits the required content type.
         """
         if pa := self.paginated:
             # return self.session.follow_pagination(url=ep, model=Person, params=params)
@@ -701,6 +731,8 @@ class Endpoint:
                 call_line = f'{call_line}, params=params'
             if self.body_parameter or self.body_class_name:
                 call_line = f'{call_line}, json=body'
+            if content_type := self.explicit_request_content_type:
+                call_line = f'{call_line}, content_type={content_type!r}'
             call_line = f'{call_line})'
             source.print(call_line)
         else:
@@ -714,6 +746,8 @@ class Endpoint:
                 call_line = f'{call_line}, params=params'
             if self.body_parameter or self.body_class_name:
                 call_line = f'{call_line}, json=body'
+            if content_type := self.explicit_request_content_type:
+                call_line = f'{call_line}, content_type={content_type!r}'
             call_line = f'{call_line})'
             source.print(call_line)
 
@@ -752,6 +786,10 @@ class Endpoint:
 
         :param base: base URL, common URL for all endpoints
         :param class_names: set of names of referenced classes
+        :return: Complete generated Python source for the endpoint method.
+        :rtype: str
+
+        ``class_names`` is updated with generated model references used by the method signature.
         """
         source = SourceIO()
         self.source_def_line(source, class_names=class_names)
@@ -781,6 +819,12 @@ class Endpoint:
             source.print('    body: dict[str, Any] = dict()')
             for p in self.body_parameter:
                 list(map(lambda line: source.print(f'    {line}'), p.source_for_body_init()))
+        elif self.body_is_raw and self.body_parameter:
+            parameter = self.body_parameter[0]
+            source.print(
+                f'body = TypeAdapter({parameter.python_type}).dump_python({parameter.python_name}, '
+                f"mode='json', by_alias=True, exclude_none=True)"
+            )
         elif self.body_parameter:
             source.print('body: dict[str, Any] = dict()')
             for p in self.body_parameter:
@@ -903,6 +947,11 @@ class Attribute:
 
     @property
     def name_for_source(self) -> str:
+        """Return a Python-compatible generated model attribute name.
+
+        :return: Sanitized snake-case name with reserved words and keywords suffixed.
+        :rtype: str
+        """
         name_map = {'*': 'star', '#': 'hash'}
 
         attr_name = self.name.strip('"')
@@ -914,7 +963,7 @@ class Attribute:
         attr_name = snake_case(attr_name)
 
         # reserved Python names are not allowed as attribute names
-        if attr_name in RESERVED_PARAM_NAMES:
+        if keyword.iskeyword(attr_name) or attr_name in RESERVED_PARAM_NAMES:
             attr_name = f'{attr_name}_'
         return attr_name
 

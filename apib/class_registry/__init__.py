@@ -94,9 +94,13 @@ class PythonClassRegistry:
         return pc
 
     def classes(self) -> Generator[PythonClass, None, None]:
-        """
-        Generator for all registered classes
-        :return:
+        """Yield registered classes after the classes referenced by their definitions.
+
+        :return: Registered classes in dependency-safe, cycle-tolerant order.
+        :rtype: Generator[PythonClass, None, None]
+
+        A class is marked as visited before traversing dependencies so recursive model graphs
+        terminate while retaining the first stable traversal order.
         """
         visited = set()
 
@@ -113,14 +117,16 @@ class PythonClassRegistry:
             return
 
         def yield_classes(p_class: PythonClass) -> Generator[PythonClass, None, None]:
+            if p_class.name in visited:
+                return
+            # Mark before descending so self-references and mutual references cannot recurse forever.
+            visited.add(p_class.name)
             yield from yield_from_classname(p_class.baseclass)
-            for attr in p_class.attributes:
+            for attr in p_class.attributes or []:
                 for referenced_class in attr.class_references:
                     yield from yield_from_classname(referenced_class)
 
-            if p_class.name not in visited:
-                visited.add(p_class.name)
-                yield p_class
+            yield p_class
 
         for pc_name in self._classes:
             yield from yield_from_classname(pc_name)

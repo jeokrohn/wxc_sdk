@@ -9,7 +9,9 @@ from apib.class_registry import PythonClassRegistry
 from apib.python_class import Endpoint
 from apib.tools import break_line
 
-PREAMBLE = """import builtins
+PREAMBLE = """from __future__ import annotations
+
+import builtins
 from collections.abc import Generator
 from datetime import datetime
 from json import loads
