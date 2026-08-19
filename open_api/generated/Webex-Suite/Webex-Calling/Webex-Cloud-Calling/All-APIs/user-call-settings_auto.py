@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import builtins
 from collections.abc import Generator
 from datetime import datetime
@@ -2944,7 +2946,7 @@ class UserCallSettings13Api(ApiChild, base=''):
         url = self.ep(f'people/{person_id}/features/voicemail')
         super().put(url, params=params, json=body)
 
-    def reset_voicemail_pin(self, person_id: str, org_id: str = None) -> None:
+    def reset_voicemail_pin(self, person_id: str, body: dict = None, org_id: str = None) -> None:
         """
         Reset Voicemail PIN
 
@@ -2961,6 +2963,8 @@ class UserCallSettings13Api(ApiChild, base=''):
 
         :param person_id: Unique identifier for the person.
         :type person_id: str
+        :param body: Request body.
+        :type body: dict
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
@@ -2970,8 +2974,9 @@ class UserCallSettings13Api(ApiChild, base=''):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
+        body = TypeAdapter(dict).dump_python(body, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'people/{person_id}/features/voicemail/actions/resetPin/invoke')
-        super().post(url, params=params)
+        super().post(url, params=params, json=body)
 
     def configure_busy_voicemail_greeting_for_a_person(self, person_id: str, org_id: str = None) -> None:
         """

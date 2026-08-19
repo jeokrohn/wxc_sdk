@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import builtins
 from collections.abc import Generator
 from datetime import datetime
@@ -3466,7 +3468,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         url = self.ep(f'{virtual_line_id}/voicemail')
         super().put(url, params=params, json=body)
 
-    def reset_voicemail_pin_for_a_virtual_line(self, virtual_line_id: str, org_id: str = None) -> None:
+    def reset_voicemail_pin_for_a_virtual_line(self, virtual_line_id: str, body: dict = None,
+                                               org_id: str = None) -> None:
         """
         Reset Voicemail PIN for a Virtual Line
 
@@ -3483,6 +3486,8 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
 
         :param virtual_line_id: Retrieve settings for a virtual line with the matching ID.
         :type virtual_line_id: str
+        :param body: Request body.
+        :type body: dict
         :param org_id: ID of the organization in which the virtual line resides. Only admin users of another
             organization (such as partners) may use this parameter as the default is the same organization as the
             token used to access API.
@@ -3492,8 +3497,9 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
+        body = TypeAdapter(dict).dump_python(body, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'{virtual_line_id}/voicemail/actions/resetPin/invoke')
-        super().post(url, params=params)
+        super().post(url, params=params, json=body)
 
     def configure_busy_voicemail_greeting_for_a_virtual_line(self, virtual_line_id: str, org_id: str = None) -> None:
         """

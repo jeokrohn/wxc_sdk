@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import builtins
 from collections.abc import Generator
 from datetime import datetime
@@ -1079,7 +1081,8 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding')
         super().put(url, params=params, json=body)
 
-    def switch_hunt_group_call_forwarding_mode(self, location_id: str, hunt_group_id: str, org_id: str = None) -> None:
+    def switch_hunt_group_call_forwarding_mode(self, location_id: str, hunt_group_id: str, body: dict = None,
+                                               org_id: str = None) -> None:
         """
         Switch Mode for Call Forwarding Settings for a Hunt Group
 
@@ -1095,6 +1098,8 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         :type location_id: str
         :param hunt_group_id: Switch operating mode to normal operations for this `hunt group`.
         :type hunt_group_id: str
+        :param body: Request body.
+        :type body: dict
         :param org_id: Switch operating mode as per normal operations for the `hunt group` from this organization.
         :type org_id: str
         :rtype: None
@@ -1102,8 +1107,9 @@ class FeaturesHuntGroupApi(ApiChild, base='telephony/config'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
+        body = TypeAdapter(dict).dump_python(body, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/huntGroups/{hunt_group_id}/callForwarding/actions/switchMode/invoke')
-        super().post(url, params=params)
+        super().post(url, params=params, json=body)
 
     def create_hunt_group_selective_call_forwarding_rule(self, location_id: str, hunt_group_id: str, name: str,
                                                          calls_from: CreateForwardingRuleObjectCallsFrom,

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import builtins
 from collections.abc import Generator
 from datetime import datetime
@@ -5474,7 +5476,7 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep(f'telephony/config/people/{person_id}/settings/permissions')
         super().put(url, json=body)
 
-    def reset_person_feature_access_config_to_org_default(self, person_id: str) -> None:
+    def reset_person_feature_access_config_to_org_default(self, person_id: str, body: dict = None) -> None:
         """
         Reset a Person’s Feature Access Configuration to the Organization’s Default Settings
 
@@ -5499,10 +5501,13 @@ class UserCallSettings22Api(ApiChild, base=''):
 
         :param person_id: User ID of the Organization.
         :type person_id: str
+        :param body: Request body.
+        :type body: dict
         :rtype: None
         """
+        body = TypeAdapter(dict).dump_python(body, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'telephony/config/people/{person_id}/settings/permissions/actions/reset/invoke')
-        super().post(url)
+        super().post(url, json=body)
 
     def modify_person_voicemail_passcode(self, person_id: str, passcode: str, org_id: str = None) -> None:
         """
