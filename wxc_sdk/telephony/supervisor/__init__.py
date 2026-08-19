@@ -78,7 +78,7 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         **params,
     ) -> Generator[AgentOrSupervisor, None, None]:
         """
-        Get List of Supervisors with Customer Assist
+        Get List of Supervisors for Call Queue or Customer Assist
 
         Get list of supervisors for an organization.
 
@@ -116,7 +116,7 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
 
     def create(self, id: str, agents: builtins.list[str], has_cx_essentials: bool = None, org_id: str = None):
         """
-        Create a Supervisor with Customer Assist
+        Create a Supervisor for Call Queue or Customer Assist
 
         Create a new supervisor. The supervisor must be created with at least one agent.
 
@@ -178,7 +178,7 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         org_id: str = None,
     ) -> None:
         """
-        Delete the Call Queue or Customer Assist Supervisors
+        Delete Call Queue or Customer Assist Supervisors
 
         Delete the Call Queue or Customer Assist supervisors for an organization. Once you remove the supervisor,
         assigned agents will lose their supervisor assignments.
@@ -221,7 +221,7 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         **params,
     ) -> Generator[AgentOrSupervisor, None, None]:
         """
-        List Available Supervisors with Customer Assist
+        List Available Supervisors for Call Queue or Customer Assist
 
         Get list of available supervisors for an organization.
 
@@ -269,7 +269,7 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         **additional_params,
     ) -> Generator[AgentOrSupervisor, None, None]:
         """
-        GET Supervisor Details
+        Get Supervisor Details for Call Queue or Customer Assist
 
         Get details of a specific supervisor, which includes the agents associated agents with the supervisor, in an
         organization.
@@ -314,7 +314,7 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         self, supervisor_id: str, agents: builtins.list[IdAndAction], has_cx_essentials: bool = None, org_id: str = None
     ) -> Optional[builtins.list[SupervisorAgentStatus]]:
         """
-        Assign or Unassign Agents to Supervisor
+        Assign or Unassign Agents to Supervisor for Call Queue or Customer Assist
 
         Assign or unassign agents to the supervisor for an organization.
 
@@ -358,7 +358,7 @@ class SupervisorApi(ApiChild, base='telephony/config/supervisors'):
         **params,
     ) -> Generator[AgentOrSupervisor, None, None]:
         """
-        List Available Agents with Customer Assist
+        List Available Agents for Call Queue or Customer Assist
 
         Get list of available agents for an organization.
 

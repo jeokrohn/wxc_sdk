@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import builtins
 from collections.abc import Generator
 from datetime import datetime
@@ -1542,7 +1544,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                           direct_line_caller_id_name: DirectLineCallerIdNameObject = None, dial_by_name: str = None,
                           digital_inbox_enabled: bool = None, org_id: str = None) -> str:
         """
-        Create a Call Queue with Customer Assist
+        Create Call Queue or Customer Assist Queue
 
         Create new Call Queues for the given location.
 
@@ -1819,7 +1821,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
     def get_call_queue_with_customer_assist(self, location_id: str, queue_id: str, has_cx_essentials: bool = None,
                                             org_id: str = None) -> GetCallQueueEssentialsObject:
         """
-        Get Details for a Call Queue with Customer Assist
+        Get Details for a Call Queue or Customer Assist Queue
 
         Retrieve Call Queue details.
 
@@ -2117,7 +2119,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding')
         super().put(url, params=params, json=body)
 
-    def switch_call_queue_call_forwarding_mode(self, location_id: str, queue_id: str, org_id: str = None) -> None:
+    def switch_call_queue_call_forwarding_mode(self, location_id: str, queue_id: str, body: dict = None,
+                                               org_id: str = None) -> None:
         """
         Switch Mode for Call Forwarding Settings for a Call Queue
 
@@ -2133,6 +2136,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :type location_id: str
         :param queue_id: Switch operating mode to normal operations for this `call queue`.
         :type queue_id: str
+        :param body: Request body.
+        :type body: dict
         :param org_id: Switch operating mode as per normal operations for the `call queue` from this organization.
         :type org_id: str
         :rtype: None
@@ -2140,8 +2145,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
+        body = TypeAdapter(dict).dump_python(body, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/callForwarding/actions/switchMode/invoke')
-        super().post(url, params=params)
+        super().post(url, params=params, json=body)
 
     def create_call_queue_selective_call_forwarding_rule(self, location_id: str, queue_id: str, name: str,
                                                          calls_from: CreateForwardingRuleObjectCallsFrom,
@@ -3094,7 +3100,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                          digital_inbox_enabled: bool = None, org_id: str = None,
                          **params: Any) -> Generator[ListCallQueueEssentialsObject, None, None]:
         """
-        Read the List of Call Queues with Customer Assist
+        Read the List of Call Queue or Customer Assist Queues
 
         List all Call Queues for the organization.
 
@@ -3152,7 +3158,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                                order: str = None, org_id: str = None,
                                **params: Any) -> Generator[ListCallQueueAgentObject, None, None]:
         """
-        Read the List of Call Queue Agents with Customer Assist
+        Read the List of Agents for Call Queue or Customer Assist
 
         List all Call Queues Agents for the organization.
 
@@ -3251,7 +3257,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
     def get_call_queue_agent(self, id: str, max_: int, start: int, has_cx_essentials: bool = None,
                              org_id: str = None) -> GetCallQueueAgentObject:
         """
-        Get Details for a Call Queue Agent with Customer Assist
+        Get Details for an Agent for Call Queue or Customer Assist
 
         Retrieve details of a particular Call queue agent based on the agent ID.
 
@@ -3294,7 +3300,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
     def update_agent_call_queue_settings(self, id: str, settings: list[ModifyAgentsForCallQueueObjectSettingsItem],
                                          has_cx_essentials: bool = None, org_id: str = None) -> None:
         """
-        Update an Agent's Settings of One or More Call Queues with Customer Assist
+        Update an Agent's Settings for One or More Call Queue or Customer Assist Queues
 
         Modify an agent's call queue settings for an organization.
 
@@ -3408,7 +3414,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
     def delete_bulk_call_queue_supervisors(self, supervisor_ids: list[str], has_cx_essentials: bool = None,
                                            delete_all: bool = None, org_id: str = None) -> None:
         """
-        Delete the Call Queue or Customer Assist Supervisors
+        Delete Call Queue or Customer Assist Supervisors
 
         Delete the Call Queue or Customer Assist supervisors for an organization. Once you remove the supervisor,
         assigned agents will lose their supervisor assignments.
@@ -3445,7 +3451,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                                     has_cx_essentials: bool = None, org_id: str = None,
                                     **params: Any) -> Generator[ListSupervisorObject, None, None]:
         """
-        Get List of Supervisors with Customer Assist
+        Get List of Supervisors for Call Queue or Customer Assist
 
         Get list of supervisors for an organization.
 
@@ -3484,7 +3490,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
     def create_call_queue_supervisor(self, id: str, agents: list[PostPersonPlaceVirtualLineSupervisorObject],
                                      has_cx_essentials: bool = None, org_id: str = None) -> None:
         """
-        Create a Supervisor with Customer Assist
+        Create a Supervisor for Call Queue or Customer Assist
 
         Create a new supervisor. The supervisor must be created with at least one agent.
 
@@ -3520,7 +3526,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                                          has_cx_essentials: bool = None, org_id: str = None,
                                          **params: Any) -> Generator[AvailableAgentListObject, None, None]:
         """
-        List Available Agents with Customer Assist
+        List Available Agents for Call Queue or Customer Assist
 
         Get list of available agents for an organization.
 
@@ -3561,7 +3567,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                                               has_cx_essentials: bool = None, org_id: str = None,
                                               **params: Any) -> Generator[AvailableSupervisorsListObject, None, None]:
         """
-        List Available Supervisors with Customer Assist
+        List Available Supervisors for Call Queue or Customer Assist
 
         Get list of available supervisors for an organization.
 
@@ -3624,7 +3630,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                                   phone_number: str = None, order: str = None, has_cx_essentials: bool = None,
                                   org_id: str = None) -> GetCallQueueSupervisorResponse:
         """
-        Get Supervisor Detail with Customer Assist
+        Get Supervisor Details for Call Queue or Customer Assist
 
         Get details of a specific supervisor, which includes the agents associated agents with the supervisor, in an
         organization.
@@ -3678,7 +3684,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
                                             agents: list[PutPersonPlaceVirtualLineAgentObject],
                                             has_cx_essentials: bool = None, org_id: str = None) -> None:
         """
-        Assign or Unassign Agents to Supervisor with Customer Assist
+        Assign or Unassign Agents to Supervisor for Call Queue or Customer Assist
 
         Assign or unassign agents to the supervisor for an organization.
 

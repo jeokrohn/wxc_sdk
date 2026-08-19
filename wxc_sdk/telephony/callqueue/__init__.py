@@ -487,7 +487,7 @@ class CallQueueApi(ApiChild, base=''):
         **params,
     ) -> Generator[CallQueue, None, None]:
         """
-        Read the List of Call Queues with Customer Assist
+        Read the List of Call Queue or Customer Assist Queues
 
         List all Call Queues for the organization.
 
@@ -566,7 +566,7 @@ class CallQueueApi(ApiChild, base=''):
 
     def create(self, location_id: str, settings: CallQueue, has_cx_essentials: bool = None, org_id: str = None) -> str:
         """
-        Create a Call Queue
+        Create Call Queue or Customer Assist Queue
 
         Create new Call Queues for the given location.
 
@@ -648,7 +648,7 @@ class CallQueueApi(ApiChild, base=''):
 
     def details(self, location_id: str, queue_id: str, has_cx_essentials: bool = None, org_id: str = None) -> CallQueue:
         """
-        Get Details for a Call Queue with Customer Assist
+        Get Details for a Call Queue or Customer Assist Queue
 
         Retrieve Call Queue details.
 

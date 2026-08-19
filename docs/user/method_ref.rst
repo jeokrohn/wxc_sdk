@@ -1972,13 +1972,13 @@ description of the operation. The method name is a link to the method documentat
         | Update a Call Park Extension
         | ``PUT /telephony/config/locations/{location_id}/callParkExtensions/{cpe_id}``
    * - :meth:`api.telephony.callqueue.agents.details <wxc_sdk.telephony.callqueue.agents.CallQueueAgentsApi.details>`
-        | Get Details for a Call Queue Agent with Customer Assist
+        | Get Details for an Agent for Call Queue or Customer Assist
         | ``GET /telephony/config/queues/agents/{id}``
    * - :meth:`api.telephony.callqueue.agents.list <wxc_sdk.telephony.callqueue.agents.CallQueueAgentsApi.list>`
-        | Read the List of Call Queue Agents with Customer Assist
+        | Read the List of Agents for Call Queue or Customer Assist
         | ``GET /telephony/config/queues/agents``
    * - :meth:`api.telephony.callqueue.agents.update_call_queue_settings <wxc_sdk.telephony.callqueue.agents.CallQueueAgentsApi.update_call_queue_settings>`
-        | Update an Agent's Settings of One or More Call Queues with Customer Assist
+        | Update an Agent's Settings for One or More Call Queue or Customer Assist Queues
         | ``PUT /telephony/config/queues/agents/{id}/settings``
    * - :meth:`api.telephony.callqueue.alternate_available_phone_numbers <wxc_sdk.telephony.callqueue.CallQueueApi.alternate_available_phone_numbers>`
         | Get Call Queue Alternate Available Phone Numbers
@@ -1990,13 +1990,13 @@ description of the operation. The method name is a link to the method documentat
         | Get Call Queue Call Forward Available Phone Numbers
         | ``GET /telephony/config/locations/{location_id}/queues/callForwarding/availableNumbers``
    * - :meth:`api.telephony.callqueue.create <wxc_sdk.telephony.callqueue.CallQueueApi.create>`
-        | Create a Call Queue
+        | Create Call Queue or Customer Assist Queue
         | ``POST /telephony/config/locations/{location_id}/queues``
    * - :meth:`api.telephony.callqueue.delete_queue <wxc_sdk.telephony.callqueue.CallQueueApi.delete_queue>`
         | Delete a Call Queue
         | ``DELETE /telephony/config/locations/{location_id}/queues/{queue_id}``
    * - :meth:`api.telephony.callqueue.details <wxc_sdk.telephony.callqueue.CallQueueApi.details>`
-        | Get Details for a Call Queue with Customer Assist
+        | Get Details for a Call Queue or Customer Assist Queue
         | ``GET /telephony/config/locations/{location_id}/queues/{queue_id}``
    * - :meth:`api.telephony.callqueue.dnis.available_phone_numbers <wxc_sdk.telephony.callqueue.dnis.CallQueueDnisApi.available_phone_numbers>`
         | Get Available Phone Numbers for DNIS
@@ -2056,7 +2056,7 @@ description of the operation. The method name is a link to the method documentat
         | Get Call Queue Settings
         | ``GET /telephony/config/queues/settings``
    * - :meth:`api.telephony.callqueue.list <wxc_sdk.telephony.callqueue.CallQueueApi.list>`
-        | Read the List of Call Queues with Customer Assist
+        | Read the List of Call Queue or Customer Assist Queues
         | ``GET /telephony/config/queues``
    * - :meth:`api.telephony.callqueue.policy.forced_forward_details <wxc_sdk.telephony.callqueue.policies.CQPolicyApi.forced_forward_details>`
         | Get Details for a Call Queue Forced Forward
@@ -3334,28 +3334,28 @@ description of the operation. The method name is a link to the method documentat
         | Update a schedule
         | ``PUT /telephony/config/locations/{obj_id}/schedules/{schedule_type}/{schedule_id}``
    * - :meth:`api.telephony.supervisors.assign_unassign_agents <wxc_sdk.telephony.supervisor.SupervisorApi.assign_unassign_agents>`
-        | Assign or Unassign Agents to Supervisor
+        | Assign or Unassign Agents to Supervisor for Call Queue or Customer Assist
         | ``PUT /telephony/config/supervisors/{supervisor_id}``
    * - :meth:`api.telephony.supervisors.available_agents <wxc_sdk.telephony.supervisor.SupervisorApi.available_agents>`
-        | List Available Agents with Customer Assist
+        | List Available Agents for Call Queue or Customer Assist
         | ``GET /telephony/config/supervisors/availableAgents``
    * - :meth:`api.telephony.supervisors.available_supervisors <wxc_sdk.telephony.supervisor.SupervisorApi.available_supervisors>`
-        | List Available Supervisors with Customer Assist
+        | List Available Supervisors for Call Queue or Customer Assist
         | ``GET /telephony/config/supervisors/availableSupervisors``
    * - :meth:`api.telephony.supervisors.create <wxc_sdk.telephony.supervisor.SupervisorApi.create>`
-        | Create a Supervisor with Customer Assist
+        | Create a Supervisor for Call Queue or Customer Assist
         | ``POST /telephony/config/supervisors``
    * - :meth:`api.telephony.supervisors.delete <wxc_sdk.telephony.supervisor.SupervisorApi.delete>`
         | Delete a Supervisor
         | ``DELETE /telephony/config/supervisors/{supervisor_id}``
    * - :meth:`api.telephony.supervisors.delete_bulk <wxc_sdk.telephony.supervisor.SupervisorApi.delete_bulk>`
-        | Delete the Call Queue or Customer Assist Supervisors
+        | Delete Call Queue or Customer Assist Supervisors
         | ``DELETE /telephony/config/supervisors``
    * - :meth:`api.telephony.supervisors.details <wxc_sdk.telephony.supervisor.SupervisorApi.details>`
-        | GET Supervisor Details
+        | Get Supervisor Details for Call Queue or Customer Assist
         | ``GET /telephony/config/supervisors/{supervisor_id}``
    * - :meth:`api.telephony.supervisors.list <wxc_sdk.telephony.supervisor.SupervisorApi.list>`
-        | Get List of Supervisors with Customer Assist
+        | Get List of Supervisors for Call Queue or Customer Assist
         | ``GET /telephony/config/supervisors``
    * - :meth:`api.telephony.supported_devices <wxc_sdk.telephony.TelephonyApi.supported_devices>`
         | Read the List of Supported Devices

@@ -25152,7 +25152,7 @@ class AsCallQueueAgentsApi(AsApiChild, base='telephony/config/queues/agents'):
         **params,
     ) -> AsyncGenerator[CallQueueAgent, None]:
         """
-        Read the List of Call Queue Agents with Customer Assist
+        Read the List of Agents for Call Queue or Customer Assist
 
         List all Call Queues Agents for the organization.
 
@@ -25217,7 +25217,7 @@ class AsCallQueueAgentsApi(AsApiChild, base='telephony/config/queues/agents'):
         **params,
     ) -> builtins.list[CallQueueAgent]:
         """
-        Read the List of Call Queue Agents with Customer Assist
+        Read the List of Agents for Call Queue or Customer Assist
 
         List all Call Queues Agents for the organization.
 
@@ -25273,7 +25273,7 @@ class AsCallQueueAgentsApi(AsApiChild, base='telephony/config/queues/agents'):
         self, id: str, has_cx_essentials: bool = None, max_: int = 50, start: int = 0, org_id: str = None
     ) -> CallQueueAgentDetail:
         """
-        Get Details for a Call Queue Agent with Customer Assist
+        Get Details for an Agent for Call Queue or Customer Assist
 
         Retrieve details of a particular Call queue agent based on the agent ID.
 
@@ -25321,7 +25321,7 @@ class AsCallQueueAgentsApi(AsApiChild, base='telephony/config/queues/agents'):
         org_id: str = None,
     ) -> None:
         """
-        Update an Agent's Settings of One or More Call Queues with Customer Assist
+        Update an Agent's Settings for One or More Call Queue or Customer Assist Queues
 
         Modify an agent's call queue settings for an organization.
 
@@ -25787,7 +25787,7 @@ class AsCallQueueApi(AsApiChild, base=''):
         **params,
     ) -> AsyncGenerator[CallQueue, None]:
         """
-        Read the List of Call Queues with Customer Assist
+        Read the List of Call Queue or Customer Assist Queues
 
         List all Call Queues for the organization.
 
@@ -25854,7 +25854,7 @@ class AsCallQueueApi(AsApiChild, base=''):
         **params,
     ) -> builtins.list[CallQueue]:
         """
-        Read the List of Call Queues with Customer Assist
+        Read the List of Call Queue or Customer Assist Queues
 
         List all Call Queues for the organization.
 
@@ -25933,7 +25933,7 @@ class AsCallQueueApi(AsApiChild, base=''):
 
     async def create(self, location_id: str, settings: CallQueue, has_cx_essentials: bool = None, org_id: str = None) -> str:
         """
-        Create a Call Queue
+        Create Call Queue or Customer Assist Queue
 
         Create new Call Queues for the given location.
 
@@ -26015,7 +26015,7 @@ class AsCallQueueApi(AsApiChild, base=''):
 
     async def details(self, location_id: str, queue_id: str, has_cx_essentials: bool = None, org_id: str = None) -> CallQueue:
         """
-        Get Details for a Call Queue with Customer Assist
+        Get Details for a Call Queue or Customer Assist Queue
 
         Retrieve Call Queue details.
 
@@ -34919,7 +34919,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         **params,
     ) -> AsyncGenerator[AgentOrSupervisor, None]:
         """
-        Get List of Supervisors with Customer Assist
+        Get List of Supervisors for Call Queue or Customer Assist
 
         Get list of supervisors for an organization.
 
@@ -34965,7 +34965,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         **params,
     ) -> builtins.list[AgentOrSupervisor]:
         """
-        Get List of Supervisors with Customer Assist
+        Get List of Supervisors for Call Queue or Customer Assist
 
         Get list of supervisors for an organization.
 
@@ -35003,7 +35003,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
 
     async def create(self, id: str, agents: builtins.list[str], has_cx_essentials: bool = None, org_id: str = None):
         """
-        Create a Supervisor with Customer Assist
+        Create a Supervisor for Call Queue or Customer Assist
 
         Create a new supervisor. The supervisor must be created with at least one agent.
 
@@ -35065,7 +35065,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         org_id: str = None,
     ) -> None:
         """
-        Delete the Call Queue or Customer Assist Supervisors
+        Delete Call Queue or Customer Assist Supervisors
 
         Delete the Call Queue or Customer Assist supervisors for an organization. Once you remove the supervisor,
         assigned agents will lose their supervisor assignments.
@@ -35108,7 +35108,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         **params,
     ) -> AsyncGenerator[AgentOrSupervisor, None]:
         """
-        List Available Supervisors with Customer Assist
+        List Available Supervisors for Call Queue or Customer Assist
 
         Get list of available supervisors for an organization.
 
@@ -35155,7 +35155,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         **params,
     ) -> builtins.list[AgentOrSupervisor]:
         """
-        List Available Supervisors with Customer Assist
+        List Available Supervisors for Call Queue or Customer Assist
 
         Get list of available supervisors for an organization.
 
@@ -35203,7 +35203,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         **additional_params,
     ) -> AsyncGenerator[AgentOrSupervisor, None]:
         """
-        GET Supervisor Details
+        Get Supervisor Details for Call Queue or Customer Assist
 
         Get details of a specific supervisor, which includes the agents associated agents with the supervisor, in an
         organization.
@@ -35255,7 +35255,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         **additional_params,
     ) -> builtins.list[AgentOrSupervisor]:
         """
-        GET Supervisor Details
+        Get Supervisor Details for Call Queue or Customer Assist
 
         Get details of a specific supervisor, which includes the agents associated agents with the supervisor, in an
         organization.
@@ -35300,7 +35300,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         self, supervisor_id: str, agents: builtins.list[IdAndAction], has_cx_essentials: bool = None, org_id: str = None
     ) -> Optional[builtins.list[SupervisorAgentStatus]]:
         """
-        Assign or Unassign Agents to Supervisor
+        Assign or Unassign Agents to Supervisor for Call Queue or Customer Assist
 
         Assign or unassign agents to the supervisor for an organization.
 
@@ -35344,7 +35344,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         **params,
     ) -> AsyncGenerator[AgentOrSupervisor, None]:
         """
-        List Available Agents with Customer Assist
+        List Available Agents for Call Queue or Customer Assist
 
         Get list of available agents for an organization.
 
@@ -35391,7 +35391,7 @@ class AsSupervisorApi(AsApiChild, base='telephony/config/supervisors'):
         **params,
     ) -> builtins.list[AgentOrSupervisor]:
         """
-        List Available Agents with Customer Assist
+        List Available Agents for Call Queue or Customer Assist
 
         Get list of available agents for an organization.
 

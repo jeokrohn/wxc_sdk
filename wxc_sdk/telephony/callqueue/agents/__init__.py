@@ -98,7 +98,7 @@ class CallQueueAgentsApi(ApiChild, base='telephony/config/queues/agents'):
         **params,
     ) -> Generator[CallQueueAgent, None, None]:
         """
-        Read the List of Call Queue Agents with Customer Assist
+        Read the List of Agents for Call Queue or Customer Assist
 
         List all Call Queues Agents for the organization.
 
@@ -154,7 +154,7 @@ class CallQueueAgentsApi(ApiChild, base='telephony/config/queues/agents'):
         self, id: str, has_cx_essentials: bool = None, max_: int = 50, start: int = 0, org_id: str = None
     ) -> CallQueueAgentDetail:
         """
-        Get Details for a Call Queue Agent with Customer Assist
+        Get Details for an Agent for Call Queue or Customer Assist
 
         Retrieve details of a particular Call queue agent based on the agent ID.
 
@@ -202,7 +202,7 @@ class CallQueueAgentsApi(ApiChild, base='telephony/config/queues/agents'):
         org_id: str = None,
     ) -> None:
         """
-        Update an Agent's Settings of One or More Call Queues with Customer Assist
+        Update an Agent's Settings for One or More Call Queue or Customer Assist Queues
 
         Modify an agent's call queue settings for an organization.
 
