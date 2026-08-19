@@ -147,6 +147,17 @@ class TestPeople(TestCaseWithLog):
         )
         print(f'Got details for {len(details_list)} users')
 
+    @async_test
+    async def test_008_get_all_details(self):
+        """
+        Get details for all users
+        """
+        users = list(self.api.people.list())
+        details_list = await asyncio.gather(
+            *[self.async_api.people.details(person_id=user.person_id) for user in users]
+        )
+        print(f'Got details for {len(details_list)} users')
+
 
 class TestPeoplePhoneNumbers(TestCaseWithLog):
     """
