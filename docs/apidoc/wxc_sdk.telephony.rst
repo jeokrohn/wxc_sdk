@@ -21,6 +21,7 @@ Subpackages
    wxc_sdk.telephony.callqueue
    wxc_sdk.telephony.conference
    wxc_sdk.telephony.cx_essentials
+   wxc_sdk.telephony.data_policies
    wxc_sdk.telephony.dect_devices
    wxc_sdk.telephony.devices
    wxc_sdk.telephony.emergency_address

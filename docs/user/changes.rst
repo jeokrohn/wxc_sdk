@@ -1,6 +1,7 @@
 Release history
 ===============
 
+- feat: new API api.telephony.data_policies
 - feat: new attribute WorkspacePlannedMaintenance.message
 - feat: adding methods api.telephony.announcements_repo.generate_upload_url, get_announcement_file_uri, get_media_download_url
 - feat: Support for multiple TTS languages

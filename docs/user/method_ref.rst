@@ -2241,6 +2241,21 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.telephony.cx_essentials.wrapup_reasons.validate <wxc_sdk.telephony.cx_essentials.wrapup_reasons.WrapupReasonApi.validate>`
         | Validate Wrap Up Reason
         | ``POST /telephony/config/cxEssentials/wrapup/reasons/actions/validateName/invoke``
+   * - :meth:`api.telephony.data_policies.get_available_data_policy_regions <wxc_sdk.telephony.data_policies.DataPoliciesApi.get_available_data_policy_regions>`
+        | Get All the Storage Regions Available for Configuring as Data Policy Region
+        | ``GET /telephony/config/dataPolicies/regions``
+   * - :meth:`api.telephony.data_policies.get_location_data_policy_settings <wxc_sdk.telephony.data_policies.DataPoliciesApi.get_location_data_policy_settings>`
+        | Get the Data (Storage) Policy Settings for the Organization's Location
+        | ``GET /telephony/config/locations/{location_id}/dataPolicies``
+   * - :meth:`api.telephony.data_policies.modify_data_policy_settings <wxc_sdk.telephony.data_policies.DataPoliciesApi.modify_data_policy_settings>`
+        | Update the Data (Storage) Policy Settings for the Organization
+        | ``PUT /telephony/config/dataPolicies``
+   * - :meth:`api.telephony.data_policies.modify_location_data_policy_settings <wxc_sdk.telephony.data_policies.DataPoliciesApi.modify_location_data_policy_settings>`
+        | Update the Data (Storage) Policy Settings for the Organization's Location
+        | ``PUT /telephony/config/locations/{location_id}/dataPolicies``
+   * - :meth:`api.telephony.data_policies.read_data_policy_settings <wxc_sdk.telephony.data_policies.DataPoliciesApi.read_data_policy_settings>`
+        | Get the Data (Storage) Policy Settings for the Organization
+        | ``GET /telephony/config/dataPolicies``
    * - :meth:`api.telephony.dect_devices.add_a_handset <wxc_sdk.telephony.dect_devices.DECTDevicesApi.add_a_handset>`
         | Add a Handset to a DECT Network
         | ``POST /telephony/config/locations/{location_id}/dectNetworks/{dect_network_id}/handsets``

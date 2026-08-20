@@ -45,6 +45,7 @@ from .callqueue import CallQueueApi
 from .calls import CallsApi
 from .conference import ConferenceControlsApi
 from .cx_essentials import CustomerExperienceEssentialsApi
+from .data_policies import DataPoliciesApi
 from .dect_devices import DECTDevicesApi
 from .devices import SupportedDevices, TelephonyDevicesApi
 from .emergency_services import OrgEmergencyServicesApi
@@ -649,6 +650,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     call_recording: CallRecordingSettingsApi
     conference: ConferenceControlsApi
     cx_essentials: CustomerExperienceEssentialsApi
+    data_policies: DataPoliciesApi
     dect_devices: DECTDevicesApi
     #: WxC device operations
     devices: TelephonyDevicesApi
@@ -705,6 +707,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         self.callqueue = CallQueueApi(session=session)
         self.conference = ConferenceControlsApi(session=session)
         self.cx_essentials = CustomerExperienceEssentialsApi(session=session)
+        self.data_policies = DataPoliciesApi(session=session)
         self.dect_devices = DECTDevicesApi(session=session)
         self.devices = TelephonyDevicesApi(session=session)
         self.emergency_address = EmergencyAddressApi(session=session)

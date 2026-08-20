@@ -40,9 +40,9 @@ __all__ = ['AsAIReceptionistApi', 'AsAccessCodesApi', 'AsAdminAuditEventsApi', '
            'AsCallRecordingJobsApi', 'AsCallRecordingSettingsApi', 'AsCallRoutingApi', 'AsCallWaitingApi',
            'AsCallerIdApi', 'AsCallerReputationProviderApi', 'AsCallingBehaviorApi', 'AsCallparkExtensionApi',
            'AsCallsApi', 'AsConferenceControlsApi', 'AsConvergedRecordingsApi', 'AsCustomerExperienceEssentialsApi',
-           'AsDECTDevicesApi', 'AsDetailedCDRApi', 'AsDeviceConfigurationsApi', 'AsDeviceSettingsJobsApi',
-           'AsDevicesApi', 'AsDevicesDynamicSettingsApi', 'AsDialPlanApi', 'AsDigitPatternsApi',
-           'AsDisableCallingLocationJobsApi', 'AsDndApi', 'AsDomainManagementApi', 'AsECBNApi',
+           'AsDECTDevicesApi', 'AsDataPoliciesApi', 'AsDetailedCDRApi', 'AsDeviceConfigurationsApi',
+           'AsDeviceSettingsJobsApi', 'AsDevicesApi', 'AsDevicesDynamicSettingsApi', 'AsDialPlanApi',
+           'AsDigitPatternsApi', 'AsDisableCallingLocationJobsApi', 'AsDndApi', 'AsDomainManagementApi', 'AsECBNApi',
            'AsEmergencyAddressApi', 'AsEventsApi', 'AsExecAssistantApi', 'AsExecutiveSettingsApi',
            'AsFeatureAccessApi', 'AsFeatureSelector', 'AsForwardingApi', 'AsGoOverrideApi', 'AsGroupsApi',
            'AsGuestCallingApi', 'AsGuestManagementApi', 'AsHotDeskApi', 'AsHotDeskingApi',
@@ -30271,6 +30271,162 @@ class AsDECTDevicesApi(AsApiChild, base='telephony/config'):
         await super().put(url, params=params, json=body)
 
 
+class AsDataPoliciesApi(AsApiChild, base='telephony/config'):
+    """
+    Features Data Policies
+
+    The APIs allow a person to read or modify settings related to data (storage) policy region for an organization or
+    organization's location.
+
+    Viewing settings requires a user auth token with a scope of `spark-admin:telephony_config_read`.
+
+    Configuring settings requires a user auth token with a scope of `spark-admin:telephony_config_write`.
+    """
+
+    async def read_data_policy_settings(self, org_id: str = None) -> CustomerDataPolicies:
+        """
+        Get the Data (Storage) Policy Settings for the Organization
+
+        Retrieve the settings for data (storage) policy region of the organization.
+
+        Data policies allow administrators to configure the storage region for organization data at the organization or
+        location level.
+
+        Retrieving data policy settings requires a user auth token with a scope of `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve data policy settings from this organization.
+        :type org_id: str
+        :rtype: :class:`CustomerDataPolicies`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('dataPolicies')
+        data = await super().get(url, params=params)
+        r = CustomerDataPolicies.model_validate(data)
+        return r
+
+    async def modify_data_policy_settings(self, org_data_region: str = None, org_id: str = None) -> None:
+        """
+        Update the Data (Storage) Policy Settings for the Organization
+
+        Modify the configurations for data (storage) policy region of the organization.
+
+        Data policies allow administrators to configure the storage region for organization data at the organization or
+        location level.
+
+        Configuring data policy settings requires a user auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param org_data_region: (ISO 3166-1 alpha-2) Country Code to be configured as the storage region for the data
+            policy of the Organization.
+        :type org_data_region: str
+        :param org_id: Modify data policy settings for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        if org_data_region is not None:
+            body['orgDataRegion'] = org_data_region
+        url = self.ep('dataPolicies')
+        await super().put(url, params=params, json=body)
+
+    async def get_available_data_policy_regions(self, org_id: str = None) -> builtins.list[DataPolicyRegion]:
+        """
+        Get All the Storage Regions Available for Configuring as Data Policy Region
+
+        Retrieve all the storage regions available for configuring data (storage) policy of an organization or
+        organization's location.
+
+        Data policies allow administrators to configure the storage region for organization data at the organization or
+        location level.
+
+        Retrieving available data policy regions requires a user auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param org_id: Retrieve available data policy regions for this organization.
+        :type org_id: str
+        :rtype: list[DataPolicyRegion]
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep('dataPolicies/regions')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[DataPolicyRegion]).validate_python(data['regions'])
+        return r
+
+    async def get_location_data_policy_settings(self, location_id: str, org_id: str = None) -> LocationDataPolicies:
+        """
+        Get the Data (Storage) Policy Settings for the Organization's Location
+
+        Retrieve the settings for data (storage) policy region of the organization's location.
+
+        Data policies allow administrators to configure the storage region for organization data at the organization or
+        location level.
+
+        Retrieving location data policy settings requires a user auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: Fetch the data policy for this location.
+        :type location_id: str
+        :param org_id: Retrieve location data policy settings from this organization.
+        :type org_id: str
+        :rtype: :class:`LocationDataPolicies`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/dataPolicies')
+        data = await super().get(url, params=params)
+        r = LocationDataPolicies.model_validate(data)
+        return r
+
+    async def modify_location_data_policy_settings(
+        self,
+        location_id: str,
+        location_data_region: str = None,
+        use_org_data_region_enabled: bool = None,
+        org_id: str = None,
+    ) -> None:
+        """
+        Update the Data (Storage) Policy Settings for the Organization's Location
+
+        Modify the configurations for data (storage) policy region of the organization's location.
+
+        Data policies allow administrators to configure the storage region for organization data at the organization or
+        location level.
+
+        Configuring location data policy settings requires a user auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Modify the data policy for this location.
+        :type location_id: str
+        :param location_data_region: (ISO 3166-1 alpha-2) Country Code to be configured as the data policy region for
+            the location.
+        :type location_data_region: str
+        :param use_org_data_region_enabled: Whether location's data (storage) policy region to be used same as the one
+            configured at the Organization's level.
+        :type use_org_data_region_enabled: bool
+        :param org_id: Modify location data policy settings for this organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        if location_data_region is not None:
+            body['locationDataRegion'] = location_data_region
+        if use_org_data_region_enabled is not None:
+            body['useOrgDataRegionEnabled'] = use_org_data_region_enabled
+        url = self.ep(f'locations/{location_id}/dataPolicies')
+        await super().put(url, params=params, json=body)
+
+
 class AsEmergencyAddressApi(AsApiChild, base='telephony/pstn'):
     """
     API to handle emergency address settings for a location
@@ -40392,6 +40548,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     call_recording: AsCallRecordingSettingsApi
     conference: AsConferenceControlsApi
     cx_essentials: AsCustomerExperienceEssentialsApi
+    data_policies: AsDataPoliciesApi
     dect_devices: AsDECTDevicesApi
     #: WxC device operations
     devices: AsTelephonyDevicesApi
@@ -40448,6 +40605,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         self.callqueue = AsCallQueueApi(session=session)
         self.conference = AsConferenceControlsApi(session=session)
         self.cx_essentials = AsCustomerExperienceEssentialsApi(session=session)
+        self.data_policies = AsDataPoliciesApi(session=session)
         self.dect_devices = AsDECTDevicesApi(session=session)
         self.devices = AsTelephonyDevicesApi(session=session)
         self.emergency_address = AsEmergencyAddressApi(session=session)
