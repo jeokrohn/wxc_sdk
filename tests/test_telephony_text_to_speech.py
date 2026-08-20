@@ -30,6 +30,23 @@ class TestTTS(TestCaseWithLog):
             )
         )
 
+    def test_get_all_voices(self):
+        """
+        Get all voices for all announcement languages
+        :return:
+        """
+        # get all announcement languages
+        ann_languages = self.api.telephony.read_list_of_announcement_languages(tts_language=True)
+        # for each langauge get all voices
+        for ann_language in ann_languages:
+            with self.subTest(language=ann_language.code):
+                voices = self.api.telephony.text_to_speech.voices(language_code=ann_language.code)
+                print(f'Language: {ann_language.code} ({ann_language.name}) - {len(voices)} voices')
+                for voice in voices:
+                    voice: TtsVoice
+                    print(f'  {voice.id} - {voice.language_code} - {voice.label}')
+        return
+
     def test_generate(self):
         """
         Generate a TTS prompt, poll for completion, download the encrypted prompt, decrypt it, and write to a WAV file.
