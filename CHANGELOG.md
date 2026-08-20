@@ -1,3 +1,30 @@
+## 1.38.0 (2026-08-20)
+
+### Feat
+
+- new API api.telephony.data_policies
+- new attribute WorkspacePlannedMaintenance.message
+- adding methods api.telephony.announcements_repo.generate_upload_url, get_announcement_file_uri, get_media_download_url. Support for multiple TTS languages
+- domain management API
+- selective call recording settings for users, workspaces, virtual lines and me api
+- new API: api.telephony.ai_receptionists
+- **oas**: support oneOf schemas in generated models
+- new endpoints MeSettingsApi.large_org_status/org_locations. new API MeSettingsApi.speed_dials
+- outbound billing plan settings API for users, workspaces and virtual lines
+- new attribute CallQueue.business_texting_enabled
+- support Customer Assist supervisor bulk delete
+
+### Fix
+
+- **openapi**: support failing spec patterns
+- **oas**: skip gRPC descriptors during generation
+- **oas**: support nested anyOf unions
+- **oas**: assume 204 for DELETE operations without 2xx responses
+- **openapi**: support multipleOf schema constraints
+- correct return type annotation for LocationAccessCodesApi.create and delete_codes
+- fix endpoint url for AppSharedLineApi.members_count()
+- **openapi**: resolve component refs for generated return and body params
+
 ## 1.37.0 (2026-06-29)
 
 ### Feat
