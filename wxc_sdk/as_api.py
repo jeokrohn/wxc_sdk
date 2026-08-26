@@ -295,8 +295,11 @@ class AsAdminAuditEventsApi(AsApiChild, base='adminAudit'):
 
 class AsAttachmentActionsApi(AsApiChild, base='attachment/actions'):
     """
+    Attachment Actions
+
     Users create attachment actions by interacting with message attachments such as clicking on a submit button in a
-    card.
+    `card
+    <https://developer.webex.com/docs/buttons-and-cards>`_.
     """
 
     async def details(self, action_id: str) -> AttachmentAction:

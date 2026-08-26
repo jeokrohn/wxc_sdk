@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import builtins
 from collections.abc import Generator
 from datetime import datetime
@@ -49,7 +51,7 @@ class AttachmentActionsApi(ApiChild, base='attachment/actions'):
     
     Users create attachment actions by interacting with message attachments such as clicking on a submit button in a
     `card
-    <https://developer.webex.com/docs/api/guides/cards>`_.
+    <https://developer.webex.com/docs/buttons-and-cards>`_.
     """
 
     def create_an_attachment_action(self, type: SubmitCardActionType, message_id: str,
