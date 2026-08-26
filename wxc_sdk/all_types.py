@@ -204,7 +204,7 @@ from wxc_sdk.telephony.callqueue.announcement import Announcement
 from wxc_sdk.telephony.callqueue.dnis import Dnis, DnisAnnouncements, DnisSettings
 from wxc_sdk.telephony.callqueue.policies import AnnouncementMode, CPActionType, CQHolidaySchedule, ForcedForward, \
     HolidayService, NightService, StrandedCalls, StrandedCallsAction
-from wxc_sdk.telephony.calls import CallHistoryRecord, CallInfo, CallState, CallType, DialResponse, \
+from wxc_sdk.telephony.calls import CallHistoryRecord, CallInfo, CallQueueCall, CallState, CallType, DialResponse, \
     ExternalVoicemailMwiAction, HistoryType, Personality, Recall, RecallType, RecordingState, RedirectReason, \
     Redirection, RejectAction, TelephonyCall, TelephonyEvent, TelephonyEventData, TelephonyParty
 from wxc_sdk.telephony.conference import ConferenceDetails, ConferenceParticipant, ConferenceState, \
@@ -334,10 +334,10 @@ __all__ = ['AIRDirectLineCallerIdName', 'AIRIntent', 'AIRSessionState', 'AIRSess
            'CallHistoryMethod', 'CallHistoryRecord', 'CallInNumber', 'CallInNumbers', 'CallInfo',
            'CallInterceptDetails', 'CallInterceptDetailsPermission', 'CallNotify', 'CallNotifyCriteria', 'CallPark',
            'CallParkExtension', 'CallParkRecall', 'CallParkSettings', 'CallPickup', 'CallQueue', 'CallQueueAgent',
-           'CallQueueAgentDetail', 'CallQueueAgentQueue', 'CallQueueCallPolicies', 'CallQueueNumberUsageType',
-           'CallQueueSettings', 'CallRecordingAccessSettings', 'CallRecordingAnnouncement',
-           'CallRecordingAnnouncements', 'CallRecordingInfo', 'CallRecordingJobCounts', 'CallRecordingJobStatus',
-           'CallRecordingLocationVendors', 'CallRecordingRegion', 'CallRecordingSetting',
+           'CallQueueAgentDetail', 'CallQueueAgentQueue', 'CallQueueCall', 'CallQueueCallPolicies',
+           'CallQueueNumberUsageType', 'CallQueueSettings', 'CallRecordingAccessSettings',
+           'CallRecordingAnnouncement', 'CallRecordingAnnouncements', 'CallRecordingInfo', 'CallRecordingJobCounts',
+           'CallRecordingJobStatus', 'CallRecordingLocationVendors', 'CallRecordingRegion', 'CallRecordingSetting',
            'CallRecordingTermsOfService', 'CallRecordingVendors', 'CallSourceInfo', 'CallSourceType', 'CallState',
            'CallTreatment', 'CallTreatmentRetry', 'CallType', 'CallTypePermission', 'CallerId',
            'CallerIdSelectedType', 'CallerReputationProviderProvider', 'CallingBehavior', 'CallingCDR',
