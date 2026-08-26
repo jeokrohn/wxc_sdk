@@ -75,10 +75,10 @@ __all__ = ['AsAIReceptionistApi', 'AsAccessCodesApi', 'AsAdminAuditEventsApi', '
            'AsTelephonyLocationApi', 'AsTextToSpeechApi', 'AsTransferNumbersApi', 'AsTranslationPatternsApi',
            'AsTrunkApi', 'AsUpdateDynamicDeviceSettingsJobsApi', 'AsUpdateRoutingPrefixJobsApi',
            'AsVirtualExtensionsApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi',
-           'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWorkspaceDevicesApi',
-           'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
-           'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi', 'AsWrapupReasonApi',
-           'AsXApi']
+           'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi',
+           'AsWebhookInterestRegistrationsApi', 'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi',
+           'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi', 'AsWorkspacePersonalizationApi',
+           'AsWorkspaceSettingsApi', 'AsWorkspacesApi', 'AsWrapupReasonApi', 'AsXApi']
 
 
 @dataclass(init=False, repr=False)
@@ -40543,6 +40543,103 @@ class AsVoicemailRulesApi(AsApiChild, base='telephony/config/voicemail/rules'):
         await self.put(url, params=params, data=data)
 
 
+class AsWebhookInterestRegistrationsApi(AsApiChild, base='telephony/webhookInterestRegistrations'):
+    """
+    Webhook Interest Registrations
+
+    Webhook interests enable the emission of Webex Calling webhook events that are not emitted by default, even when a
+    webhook is registered for an applicable resource. Clients manage webhook interests through registrations. Once a
+    client registers an interest, that interest applies to all applicable webhooks for the organization, not only
+    webhooks created by that client. Webhook interests are therefore not intended to filter unwanted events.
+
+    Webhook interest registrations expire and should be refreshed periodically. The default expiration period is 60
+    days.
+
+    There are two types of webhook interests: actor interests and resource interests. Webhook events for actor and
+    resource categories without a corresponding interest type do not require an interest registration and are always
+    emitted.
+
+    **Notes:**
+
+    - These APIs are reserved for administrators. Although the `POST` and `DELETE` operations are technically "write"
+    operations, they are exceptionally associated with the `spark-admin:calls_read` scope because they are used
+    alongside the read-only Webhook APIs.
+
+    - The client associated with a registration is derived from the access token and is not supplied by the caller.
+    """
+
+    # noinspection method-overriding
+    async def delete(self) -> None:  # type: ignore[override]
+        """
+        Delete Webhook Interest Registration
+
+        Deletes the webhook interest registration associated with the authenticated user and the client derived from
+        the access token. The client identifier is not supplied by the caller.
+
+        Registrations are managed for a specific user and client, but registered interests apply to all applicable
+        webhooks in the organization.
+
+        This API is reserved for administrators and requires the `spark-admin:calls_read` scope.
+
+        :rtype: None
+        """
+        url = self.ep()
+        await super().delete(url)
+
+    # noinspection method-overriding
+
+    async def get(self) -> WebhookInterestRegistration:  # type: ignore[override]
+        """
+        Get Webhook Interest Registration
+
+        Returns the webhook interest registration associated with the authenticated user and the client derived from
+        the access token, including the list of interests and the date/time at which the registration expires. The
+        client identifier is not supplied by the caller.
+
+        Registrations are managed for a specific user and client, but registered interests apply to all applicable
+        webhooks in the organization.
+
+        This API is reserved for administrators and requires the `spark-admin:calls_read` scope.
+
+        :rtype: :class:`WebhookInterestRegistration`
+        """
+        url = self.ep()
+        data = await super().get(url)
+        r = WebhookInterestRegistration.model_validate(data)
+        return r
+
+    async def create(self, interests: list[Interest], duration: int = None) -> None:
+        """
+        Create a Webhook Interest Registration
+
+        Adds or updates a webhook interest registration associated with the authenticated user and the client derived
+        from the access token. At least one item in `interests` is required and `duration` is optional. The client
+        identifier is not supplied in the request. If a registration does not already exist for the authenticated user
+        and client, it is created; otherwise, it is updated with the incoming registration information.
+
+        Registrations are managed for a specific user and client, but registered interests apply to all applicable
+        webhooks in the organization.
+
+        This API is reserved for administrators and requires the `spark-admin:calls_read` scope.
+
+        :param interests: The collection of webhook interests for this registration. At least one interest is required.
+            Each interest is either resource-based or actor-based (exactly one of `resource` or `actor` is set).
+        :type interests: list[Interest]
+        :param duration: Optional time, in days, after which the registration expires. When omitted, the registration
+            defaults to expire after 60 days.
+        :type duration: int
+        :rtype: None
+        """
+        body: dict[str, Any] = dict()
+        body['interests'] = TypeAdapter(list[Interest]).dump_python(
+            interests, mode='json', by_alias=True, exclude_none=True
+        )
+        if duration is not None:
+            body['duration'] = duration
+        url = self.ep()
+        await super().post(url, json=body)
+
+
 class AsTelephonyApi(AsApiChild, base='telephony/config'):
     """
     The telephony settings (features) API.
@@ -40604,6 +40701,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
     voicemail_rules: AsVoicemailRulesApi
     voice_messaging: AsVoiceMessagingApi
     voiceportal: AsVoicePortalApi
+    webhook_interest_registrations: AsWebhookInterestRegistrationsApi
 
     def __init__(self, session: AsRestSession):
         super().__init__(session=session)
@@ -40654,6 +40752,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         self.voicemail_rules = AsVoicemailRulesApi(session=session)
         self.voice_messaging = AsVoiceMessagingApi(session=session)
         self.voiceportal = AsVoicePortalApi(session=session)
+        self.webhook_interest_registrations = AsWebhookInterestRegistrationsApi(session=session)
 
     def phone_numbers_gen(
         self,

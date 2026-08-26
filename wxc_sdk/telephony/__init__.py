@@ -72,6 +72,7 @@ from .vm_rules import VoicemailRulesApi
 from .voice_messaging import VoiceMessagingApi
 from .voicemail_groups import VoicemailGroupsApi
 from .voiceportal import VoicePortalApi
+from .webhook_interest_registrations import WebhookInterestRegistrationsApi
 
 __all__ = [
     'NumberListPhoneNumberType',
@@ -689,6 +690,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
     voicemail_rules: VoicemailRulesApi
     voice_messaging: VoiceMessagingApi
     voiceportal: VoicePortalApi
+    webhook_interest_registrations: WebhookInterestRegistrationsApi
 
     def __init__(self, session: RestSession):
         super().__init__(session=session)
@@ -739,6 +741,7 @@ class TelephonyApi(ApiChild, base='telephony/config'):
         self.voicemail_rules = VoicemailRulesApi(session=session)
         self.voice_messaging = VoiceMessagingApi(session=session)
         self.voiceportal = VoicePortalApi(session=session)
+        self.webhook_interest_registrations = WebhookInterestRegistrationsApi(session=session)
 
     def phone_numbers(
         self,

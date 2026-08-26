@@ -3711,6 +3711,15 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.telephony.voiceportal.update <wxc_sdk.telephony.voiceportal.VoicePortalApi.update>`
         | Update VoicePortal
         | ``PUT /telephony/config/locations/{location_id}/voicePortal``
+   * - :meth:`api.telephony.webhook_interest_registrations.create <wxc_sdk.telephony.webhook_interest_registrations.WebhookInterestRegistrationsApi.create>`
+        | Create a Webhook Interest Registration
+        | ``POST /telephony/webhookInterestRegistrations``
+   * - :meth:`api.telephony.webhook_interest_registrations.delete <wxc_sdk.telephony.webhook_interest_registrations.WebhookInterestRegistrationsApi.delete>`
+        | Delete Webhook Interest Registration
+        | ``DELETE /telephony/webhookInterestRegistrations``
+   * - :meth:`api.telephony.webhook_interest_registrations.get <wxc_sdk.telephony.webhook_interest_registrations.WebhookInterestRegistrationsApi.get>`
+        | Get Webhook Interest Registration
+        | ``GET /telephony/webhookInterestRegistrations``
    * - :meth:`api.webhook.create <wxc_sdk.webhook.WebhookApi.create>`
         | Creates a webhook
         | ``POST /webhooks``

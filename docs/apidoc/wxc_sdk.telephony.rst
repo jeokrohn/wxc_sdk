@@ -40,6 +40,7 @@ Subpackages
    wxc_sdk.telephony.text_to_speech
    wxc_sdk.telephony.virtual_extensions
    wxc_sdk.telephony.virtual_line
+   wxc_sdk.telephony.webhook_interest_registrations
 
 Submodules
 ----------
