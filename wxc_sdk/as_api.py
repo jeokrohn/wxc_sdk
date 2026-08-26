@@ -40759,6 +40759,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         location_id: str = None,
         phone_number: str = None,
         available: bool = None,
+        assigned: bool = None,
         order: str = None,
         owner_name: str = None,
         owner_id: str = None,
@@ -40773,6 +40774,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         included_telephony_type: TelephonyType = None,
         service_number: bool = None,
         reserved_number: bool = None,
+        elin_enabled: bool = None,
         org_id: str = None,
         **params,
     ) -> AsyncGenerator[NumberListPhoneNumber, None]:
@@ -40795,9 +40797,13 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         :type location_id: str
         :param phone_number: Search for this phone number.
         :type phone_number: str
-        :param available: Search among the available phone numbers. This parameter cannot be used along with owner_type
-            parameter when set to true.
+        :param available: Search among the available phone numbers. This parameter cannot be used along with the
+            `numberType` parameter when set to `EXTENSION`.
         :type available: bool
+        :param assigned: Return the list of phone numbers that are assigned to an owner when set to `true`. When set to
+            `false`, returns the list of phone numbers that are unassigned. This parameter cannot be used along with
+            the `numberType` parameter when set to `EXTENSION`.
+        :type assigned: bool
         :param order: Sort the list of phone numbers based on the following:lastName,dn,extension. Default sort will
             be based on number and extension in an Ascending order
         :type order: str
@@ -40810,8 +40816,9 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         :type owner_type: OwnerType
         :param extension: Returns the list of PSTN phone numbers with given extension.
         :type extension: str
-        :param number_type: Returns the filtered list of phone numbers that contain a given type of number. `available`
-            or `state` query parameters cannot be used when `numberType=EXTENSION`.
+        :param number_type: Returns the filtered list of phone numbers that contain a given type of number.
+            `numberType` set to `EXTENSION` cannot be used along with the `available`, `assigned`, or `state` query
+            parameters. Possible input values:
         :type number_type: NumberType
         :param phone_number_type: Returns the filtered list of PSTN phone numbers that are of given phoneNumberType.
         :type phone_number_type: NumberListPhoneNumberType
@@ -40837,6 +40844,10 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
             numbers or `false` for assigned numbers; using both returns a `400` error. This parameter also cannot be
             used along with the `assigned` filter; using both returns a `400` error.
         :type reserved_number: bool
+        :param elin_enabled: When true, returns the list of phone numbers that are used as an Emergency Location
+            Identification Number (ELIN) in an emergency call scenario. When `false`, returns the list of phone
+            numbers that are not used as an ELIN.
+        :type elin_enabled: bool
         :param org_id: List numbers for this organization.
         :type org_id: str
         :return: yields :class:`NumberListPhoneNumber` instances
@@ -40865,6 +40876,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         location_id: str = None,
         phone_number: str = None,
         available: bool = None,
+        assigned: bool = None,
         order: str = None,
         owner_name: str = None,
         owner_id: str = None,
@@ -40879,6 +40891,7 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         included_telephony_type: TelephonyType = None,
         service_number: bool = None,
         reserved_number: bool = None,
+        elin_enabled: bool = None,
         org_id: str = None,
         **params,
     ) -> builtins.list[NumberListPhoneNumber]:
@@ -40901,9 +40914,13 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         :type location_id: str
         :param phone_number: Search for this phone number.
         :type phone_number: str
-        :param available: Search among the available phone numbers. This parameter cannot be used along with owner_type
-            parameter when set to true.
+        :param available: Search among the available phone numbers. This parameter cannot be used along with the
+            `numberType` parameter when set to `EXTENSION`.
         :type available: bool
+        :param assigned: Return the list of phone numbers that are assigned to an owner when set to `true`. When set to
+            `false`, returns the list of phone numbers that are unassigned. This parameter cannot be used along with
+            the `numberType` parameter when set to `EXTENSION`.
+        :type assigned: bool
         :param order: Sort the list of phone numbers based on the following:lastName,dn,extension. Default sort will
             be based on number and extension in an Ascending order
         :type order: str
@@ -40916,8 +40933,9 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
         :type owner_type: OwnerType
         :param extension: Returns the list of PSTN phone numbers with given extension.
         :type extension: str
-        :param number_type: Returns the filtered list of phone numbers that contain a given type of number. `available`
-            or `state` query parameters cannot be used when `numberType=EXTENSION`.
+        :param number_type: Returns the filtered list of phone numbers that contain a given type of number.
+            `numberType` set to `EXTENSION` cannot be used along with the `available`, `assigned`, or `state` query
+            parameters. Possible input values:
         :type number_type: NumberType
         :param phone_number_type: Returns the filtered list of PSTN phone numbers that are of given phoneNumberType.
         :type phone_number_type: NumberListPhoneNumberType
@@ -40943,6 +40961,10 @@ class AsTelephonyApi(AsApiChild, base='telephony/config'):
             numbers or `false` for assigned numbers; using both returns a `400` error. This parameter also cannot be
             used along with the `assigned` filter; using both returns a `400` error.
         :type reserved_number: bool
+        :param elin_enabled: When true, returns the list of phone numbers that are used as an Emergency Location
+            Identification Number (ELIN) in an emergency call scenario. When `false`, returns the list of phone
+            numbers that are not used as an ELIN.
+        :type elin_enabled: bool
         :param org_id: List numbers for this organization.
         :type org_id: str
         :return: yields :class:`NumberListPhoneNumber` instances

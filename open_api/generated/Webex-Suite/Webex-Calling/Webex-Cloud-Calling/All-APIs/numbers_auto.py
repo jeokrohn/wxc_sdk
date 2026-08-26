@@ -278,6 +278,9 @@ class NumberObjectOwner(ApiModel):
     first_name: Optional[str] = None
     #: Last name of the phone number's owner.
     last_name: Optional[str] = None
+    #: UTC Timestamp indicating the date and time of expiration of the temporary Emergency Location Identification
+    #: Number (ELIN) assignment set to this owner when an emergency call is made.
+    elin_expiry_time: Optional[datetime] = None
 
 
 class NumberObject(ApiModel):
@@ -306,6 +309,9 @@ class NumberObject(ApiModel):
     toll_free_number: Optional[bool] = None
     #: If `true`, the phone number is a service number; otherwise, it is a standard number.
     is_service_number: Optional[bool] = None
+    #: If `true`, the phone number is used as an Emergency Location Identification Number (ELIN) for callback purposes
+    #: when an emergency call is made.
+    elin_enabled: Optional[bool] = None
     #: Flag to indicate if the number is a reserved number. Reserved numbers cannot be assigned to people, features, or
     #: services.
     is_reserved_number: Optional[bool] = None
@@ -839,9 +845,9 @@ class NumbersApi(ApiChild, base='telephony/config'):
 
     def get_phone_numbers_for_an_organization_with_given_criteria(self, location_id: str = None,
                                                                   phone_number: str = None, available: bool = None,
-                                                                  order: str = None, owner_name: str = None,
-                                                                  owner_id: str = None, owner_type: OwnerType = None,
-                                                                  extension: str = None,
+                                                                  assigned: bool = None, order: str = None,
+                                                                  owner_name: str = None, owner_id: str = None,
+                                                                  owner_type: OwnerType = None, extension: str = None,
                                                                   number_type: NumberType = None,
                                                                   phone_number_type: NumberObjectPhoneNumberType = None,
                                                                   state: NumberStateOptions = None,
@@ -850,7 +856,8 @@ class NumbersApi(ApiChild, base='telephony/config'):
                                                                   restricted_non_geo_numbers: bool = None,
                                                                   included_telephony_types: str = None,
                                                                   service_number: bool = None,
-                                                                  reserved_number: bool = None, org_id: str = None,
+                                                                  reserved_number: bool = None,
+                                                                  elin_enabled: bool = None, org_id: str = None,
                                                                   **params: Any) -> Generator[NumberObject, None, None]:
         """
         Get Phone Numbers for an Organization with Given Criteria
@@ -872,9 +879,13 @@ class NumbersApi(ApiChild, base='telephony/config'):
         :type location_id: str
         :param phone_number: Search for this `phoneNumber`.
         :type phone_number: str
-        :param available: Search among the available phone numbers. This parameter cannot be used along with
-            `ownerType` parameter when set to `true`.
+        :param available: Search among the available phone numbers. This parameter cannot be used along with the
+            `numberType` parameter when set to `EXTENSION`.
         :type available: bool
+        :param assigned: Return the list of phone numbers that are assigned to an owner when set to `true`. When set to
+            `false`, returns the list of phone numbers that are unassigned. This parameter cannot be used along with
+            the `numberType` parameter when set to `EXTENSION`.
+        :type assigned: bool
         :param order: Sort the list of phone numbers based on the following:`lastName`,`dn`,`extension`. Sorted by
             number and extension in ascending order.
         :type order: str
@@ -888,8 +899,9 @@ class NumbersApi(ApiChild, base='telephony/config'):
         :type owner_type: OwnerType
         :param extension: Returns the list of phone numbers with the given extension.
         :type extension: str
-        :param number_type: Returns the filtered list of phone numbers that contain a given type of number. `available`
-            or `state` query parameters cannot be used when `numberType=EXTENSION`. Possible input values:
+        :param number_type: Returns the filtered list of phone numbers that contain a given type of number.
+            `numberType` set to `EXTENSION` cannot be used along with the `available`, `assigned`, or `state` query
+            parameters. Possible input values:
         :type number_type: NumberType
         :param phone_number_type: Returns the filtered list of phone numbers of the given `phoneNumberType`. Response
             excludes any extensions without numbers. Possible input values:
@@ -917,6 +929,10 @@ class NumbersApi(ApiChild, base='telephony/config'):
             numbers or `false` for assigned numbers; using both returns a `400` error. This parameter also cannot be
             used along with the `assigned` filter; using both returns a `400` error.
         :type reserved_number: bool
+        :param elin_enabled: When true, returns the list of phone numbers that are used as an Emergency Location
+            Identification Number (ELIN) in an emergency call scenario. When `false`, returns the list of phone
+            numbers that are not used as an ELIN.
+        :type elin_enabled: bool
         :param org_id: List numbers for this organization.
         :type org_id: str
         :return: Generator yielding :class:`NumberObject` instances
@@ -929,6 +945,8 @@ class NumbersApi(ApiChild, base='telephony/config'):
             params['phoneNumber'] = phone_number
         if available is not None:
             params['available'] = str(available).lower()
+        if assigned is not None:
+            params['assigned'] = str(assigned).lower()
         if order is not None:
             params['order'] = order
         if owner_name is not None:
@@ -957,5 +975,7 @@ class NumbersApi(ApiChild, base='telephony/config'):
             params['serviceNumber'] = str(service_number).lower()
         if reserved_number is not None:
             params['reservedNumber'] = str(reserved_number).lower()
+        if elin_enabled is not None:
+            params['elinEnabled'] = str(elin_enabled).lower()
         url = self.ep('numbers')
         return self.session.follow_pagination(url=url, model=NumberObject, item_key='phoneNumbers', params=params)

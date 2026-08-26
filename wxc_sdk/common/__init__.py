@@ -1373,22 +1373,19 @@ class OwnerType(str, Enum):
 
 
 class NumberOwner(ApiModel):
-    """
-    Owner of a phone number
-    """
-
     #: Unique identifier of the owner to which the number is assigned.
     owner_id: Optional[str] = Field(alias='id', default=None)
     #: Type of the number's owner.
     owner_type: Optional[OwnerType] = Field(alias='type', default=None)
-    #: Last name of the number's owner. This field will be present only when the owner `type` is `PEOPLE` or
-    #: `VIRTUAL_LINE`.
-    last_name: Optional[str] = None
-    #: First name of the number's owner. This field will be present only when the owner `type` is `PEOPLE` or
-    #: `VIRTUAL_LINE`.
+    #: First name of the phone number's owner.
     first_name: Optional[str] = None
+    #: Last name of the phone number's owner.
+    last_name: Optional[str] = None
     #: Display name of the number's owner.
     display_name: Optional[str] = None
+    #: UTC Timestamp indicating the date and time of expiration of the temporary Emergency Location Identification
+    #: Number (ELIN) assignment set to this owner when an emergency call is made.
+    elin_expiry_time: Optional[datetime] = None
 
 
 class ApplyLineKeyTemplateAction(str, Enum):
