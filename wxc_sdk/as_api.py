@@ -28478,6 +28478,23 @@ class AsCallsApi(AsApiChild, base='telephony/calls'):
         url = self.session.ep('telephony/externalVoicemail/mwi')
         await super().post(url, params=params, json=body)
 
+    async def list_callqueue_calls(self, queue_id: str) -> builtins.list[CallQueueCall]:
+        """
+        List Call Queue Calls
+
+        List the calls currently in the specified Call Queue. The returned calls follow the same format as the Call
+        Queue events emitted by Webex Calling and include the caller details, position information (priority), and
+        queue timing for each call currently waiting in the queue.
+
+        :param queue_id: The unique identifier of the Call Queue whose calls are to be listed.
+        :type queue_id: str
+        :rtype: list[CallQueueCall]
+        """
+        url = self.ep(f'queues/{queue_id}/calls')
+        data = await super().get(url)
+        r = TypeAdapter(list[CallQueueCall]).validate_python(data['items'])
+        return r
+
 
 class AsConferenceControlsApi(AsApiChild, base='telephony/conference'):
     """

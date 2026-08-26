@@ -1,6 +1,8 @@
 Release history
 ===============
 
+- feat: new endpoint :meth:`api.telephony.calls.list_callqueue_calls <wxc_sdk.telephony.calls.CallsApi.list_callqueue_calls>`
+
 1.38.0
 ------
 - feat: new API api.telephony.data_policies

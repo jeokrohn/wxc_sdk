@@ -15,9 +15,10 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __all__ = ['BargeinResponse', 'Call', 'CallControlsApi', 'CallHistoryRecord', 'CallHistoryRecordTypeEnum',
-           'CallPersonalityEnum', 'CallStateEnum', 'CallTypeEnum', 'ExternalVoicemailMwiRequestAction',
-           'PartyInformation', 'RecallInformation', 'RecallTypeEnum', 'RecordingStateEnum', 'RedirectionInformation',
-           'RedirectionReasonEnum', 'RejectActionEnum']
+           'CallPersonalityEnum', 'CallQueueCall', 'CallQueueCallPriority', 'CallStateEnum', 'CallTypeEnum',
+           'ExternalVoicemailMwiRequestAction', 'PartyInformation', 'PartyInformationIdType', 'RecallInformation',
+           'RecallTypeEnum', 'RecordingStateEnum', 'RedirectionInformation', 'RedirectionReasonEnum',
+           'RejectActionEnum']
 
 
 class RejectActionEnum(str, Enum):
@@ -54,6 +55,12 @@ class CallStateEnum(str, Enum):
     disconnected = 'disconnected'
 
 
+class PartyInformationIdType(str, Enum):
+    people = 'PEOPLE'
+    place = 'PLACE'
+    virtual_line = 'VIRTUAL_LINE'
+
+
 class CallTypeEnum(str, Enum):
     #: The party is within the same location.
     location = 'location'
@@ -81,7 +88,16 @@ class PartyInformation(ApiModel):
     person_id: Optional[str] = None
     #: The party's place ID. Only present when the place ID is available and privacy is not enabled.
     place_id: Optional[str] = None
-    #: Indicates whether privacy is enabled for the name, number and personId/placeId.
+    #: The party's virtual line ID. Only present when the virtual line ID is available and privacy is not enabled.
+    virtual_line_id: Optional[str] = None
+    #: The party's unified identifier - the value of whichever of `personId`, `placeId`, or `virtualLineId` is present.
+    #: The resource type of this ID is indicated by `idType`. Only present when an identifier is available and privacy
+    #: is not enabled.
+    id: Optional[str] = None
+    #: The type of identifier in `id`: `PEOPLE` for a person, `PLACE` for a workspace, and `VIRTUAL_LINE` for a virtual
+    #: line.
+    id_type: Optional[PartyInformationIdType] = None
+    #: Indicates whether privacy is enabled for the party's identifying information.
     privacy_enabled: Optional[bool] = None
     #: The call type for the party.
     call_type: Optional[CallTypeEnum] = None
@@ -212,6 +228,59 @@ class CallHistoryRecord(ApiModel):
 class ExternalVoicemailMwiRequestAction(str, Enum):
     set = 'SET'
     clear = 'CLEAR'
+
+
+class CallQueueCallPriority(str, Enum):
+    highest = 'highest'
+    high = 'high'
+    medium = 'medium'
+    low = 'low'
+
+
+class CallQueueCall(ApiModel):
+    #: The call identifier of the call currently in the queue.
+    call_id: Optional[str] = None
+    #: The call identifier of the original call that entered the queue. This differs from `callId` when the call
+    #: currently in the queue is a new call leg derived from the original call - for example, a Call Queue callback,
+    #: where `callId` is the new callback call and `origCallId` is the original call that entered the queue. Only
+    #: present when it differs from the call's `callId`.
+    orig_call_id: Optional[str] = None
+    #: A unique identifier for the call session the call belongs to. This can be used to correlate multiple calls that
+    #: are part of the same call session.
+    call_session_id: Optional[str] = None
+    #: The remote party's details for the call waiting in the queue.
+    remote_party: Optional[PartyInformation] = None
+    #: The date and time the call was added to the queue.
+    add_time: Optional[datetime] = None
+    #: The date and time the call was removed from the queue. Only present when the call has been removed from the
+    #: queue.
+    remove_time: Optional[datetime] = None
+    #: Indicates whether the call entered the queue as a mandatory entrance.
+    mandatory_entrance: Optional[bool] = None
+    #: Indicates whether the call has been bounced from an agent back to the queue.
+    bounced: Optional[bool] = None
+    #: Indicates whether the call has been reordered within the queue.
+    reordered: Optional[bool] = None
+    #: The wait time, in milliseconds, preserved for the call when it was moved between queues.
+    preserved_wait_time: Optional[int] = None
+    #: The phone number of the Call Queue the call is waiting in.
+    queue_number: Optional[str] = None
+    #: The name of the Call Queue the call is waiting in.
+    queue_name: Optional[str] = None
+    #: The priority of the call within the queue. Only present for premium Call Queues that assign a priority.
+    priority: Optional[CallQueueCallPriority] = None
+    #: The identifier of the agent (person, workspace, or virtual line) who is answering, or has answered, the call.
+    #: The resource type of this identifier is indicated by `answeringAgentType`. Only present when the call is being
+    #: answered.
+    answering_agent_id: Optional[str] = None
+    #: The type of agent identified by `answeringAgentId`: `PEOPLE` for a user, `PLACE` for a workspace, and
+    #: `VIRTUAL_LINE` for a virtual line. Only present when the call is being answered.
+    answering_agent_type: Optional[PartyInformationIdType] = None
+    #: The call identifier of the answering agent's terminating call. Use this value to correlate the queue call with
+    #: other call events associated with the agent. Only present when the call is being answered.
+    answering_call_id: Optional[str] = None
+    #: The SIP Call-ID of the answering call. Only present when the call is being answered.
+    answering_network_call_id: Optional[str] = None
 
 
 class BargeinResponse(ApiModel):
@@ -943,3 +1012,20 @@ class CallControlsApi(ApiChild, base='telephony'):
         body['action'] = enum_str(action)
         url = self.ep('externalVoicemail/mwi')
         super().post(url, params=params, json=body)
+
+    def listcallqueuecalls(self, queue_id: str) -> builtins.list[CallQueueCall]:
+        """
+        List Call Queue Calls
+
+        List the calls currently in the specified Call Queue. The returned calls follow the same format as the Call
+        Queue events emitted by Webex Calling and include the caller details, position information (priority), and
+        queue timing for each call currently waiting in the queue.
+
+        :param queue_id: The unique identifier of the Call Queue whose calls are to be listed.
+        :type queue_id: str
+        :rtype: list[CallQueueCall]
+        """
+        url = self.ep(f'queues/{queue_id}/calls')
+        data = super().get(url)
+        r = TypeAdapter(list[CallQueueCall]).validate_python(data['items'])
+        return r

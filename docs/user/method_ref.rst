@@ -2115,6 +2115,9 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.telephony.calls.hold <wxc_sdk.telephony.calls.CallsApi.hold>`
         | Hold
         | ``POST /telephony/calls/hold``
+   * - :meth:`api.telephony.calls.list_callqueue_calls <wxc_sdk.telephony.calls.CallsApi.list_callqueue_calls>`
+        | List Call Queue Calls
+        | ``GET /telephony/calls/queues/{queue_id}/calls``
    * - :meth:`api.telephony.calls.list_calls <wxc_sdk.telephony.calls.CallsApi.list_calls>`
         | List Calls
         | ``GET /telephony/calls``
