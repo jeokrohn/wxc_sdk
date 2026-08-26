@@ -2275,8 +2275,8 @@ class AsEventsApi(AsApiChild, base='events'):
         resource: EventResource = None,
         type_: EventType = None,
         actor_id: str = None,
-        from_: Union[str, datetime] = None,
-        to_: Union[str, datetime] = None,
+        from_: str | datetime | None = None,
+        to_: str | datetime | None = None,
         **params,
     ) -> AsyncGenerator[ComplianceEvent, None]:
         """
@@ -2321,8 +2321,8 @@ class AsEventsApi(AsApiChild, base='events'):
         resource: EventResource = None,
         type_: EventType = None,
         actor_id: str = None,
-        from_: Union[str, datetime] = None,
-        to_: Union[str, datetime] = None,
+        from_: str | datetime | None = None,
+        to_: str | datetime | None = None,
         **params,
     ) -> builtins.list[ComplianceEvent]:
         """

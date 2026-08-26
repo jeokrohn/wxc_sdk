@@ -1,6 +1,6 @@
 from collections.abc import Generator
 from datetime import datetime
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
 from dateutil.parser import isoparse
 
@@ -12,30 +12,32 @@ __all__ = ['EventData', 'ComplianceEvent', 'EventResource', 'EventType', 'Recipi
 
 
 class EventResource(str, Enum):
-    #: State changed on a messages resource
-    messages = 'messages'
-    #: State changed on a memberships resource
-    memberships = 'memberships'
-    #: State change on a meeting ( here combined with type = 'ended' )
-    meetings = 'meetings'
-    #: State change on a automatic transcript resource for Webex Assistant
-    meeting_transcripts = 'meetingTranscripts'
-    #: State changed on a meeting message, i.e. message exchanged as part of a meeting
-    meeting_messages = 'meetingMessages'
-    #: State changed on a room tabs in a space
-    tabs = 'tabs'
-    #: State changed on a space classification
-    rooms = 'rooms'
     #: State changed on a card attachment
     attachment_actions = 'attachmentActions'
-    #: State changed on a file download
-    files = 'files'
-    #: State change on a file preview
-    file_transcodings = 'file_transcodings'
     #: A user sent or received a SMS message
     business_texts = 'businessTexts'
     #: A Webex call was made to/from a user
     call_records = 'call_records'
+    #: A Webex call was recorded for a user
+    converged_recordings = 'convergedRecordings'
+    #: State change on a file preview
+    file_transcodings = 'file_transcodings'
+    #: State changed on a file download
+    files = 'files'
+    #: State changed on a meeting message, i.e. message exchanged as part of a meeting
+    meeting_messages = 'meetingMessages'
+    #: State change on a meeting ( here combined with type = 'ended' )
+    meetings = 'meetings'
+    #: State change on a automatic transcript resource for Webex Assistant
+    meeting_transcripts = 'meetingTranscripts'
+    #: State changed on a memberships resource
+    memberships = 'memberships'
+    #: State changed on a messages resource
+    messages = 'messages'
+    #: State changed on a space classification
+    rooms = 'rooms'
+    #: State changed on a room tabs in a space
+    tabs = 'tabs'
 
 
 class EventType(str, Enum):
@@ -68,7 +70,6 @@ class Recipient(ApiModel):
 
 class EventData(ApiModel):
     title: Optional[str] = None
-    type: Optional[str] = None
     is_room_hidden: Optional[bool] = None
     files: Optional[list[str]] = None
     person_org_id: Optional[str] = None
@@ -201,8 +202,8 @@ class EventsApi(ApiChild, base='events'):
         resource: EventResource = None,
         type_: EventType = None,
         actor_id: str = None,
-        from_: Union[str, datetime] = None,
-        to_: Union[str, datetime] = None,
+        from_: str | datetime | None = None,
+        to_: str | datetime | None = None,
         **params,
     ) -> Generator[ComplianceEvent, None, None]:
         """
