@@ -18,6 +18,8 @@ wxc_sdk/as_api.py: wxc_sdk/all_types.py
 	@echo "==> Creating as_api.py"
 	script/async_gen.py
 async: wxc_sdk/as_api.py
+	@echo "==> Validating as_api.py"
+	uv run python -c "from wxc_sdk.as_api import AsWebexSimpleApi"
 
 docs/user/method_ref.rst: $(WXC_SDK_PY_FILES)
 	@echo "==> Creating method_ref.rst"
