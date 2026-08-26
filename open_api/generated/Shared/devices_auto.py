@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import builtins
 from collections.abc import Generator
 from datetime import datetime
@@ -503,6 +505,6 @@ class DevicesApi(ApiChild, base='devices'):
         if value is not None:
             body['value'] = value
         url = self.ep(f'{device_id}')
-        data = super().patch(url, params=params, json=body)
+        data = super().patch(url, params=params, json=body, content_type='application/json-patch+json')
         r = Device.model_validate(data)
         return r

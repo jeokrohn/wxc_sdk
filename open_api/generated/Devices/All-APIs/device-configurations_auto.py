@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import builtins
 from collections.abc import Generator
 from datetime import datetime
@@ -161,6 +163,6 @@ class DeviceConfigurationsApi(ApiChild, base='deviceConfigurations'):
         if path is not None:
             body['path'] = path
         url = self.ep()
-        data = super().patch(url, params=params, json=body)
+        data = super().patch(url, params=params, json=body, content_type='application/json-patch+json')
         r = DeviceConfigurationCollectionResponse.model_validate(data)
         return r
