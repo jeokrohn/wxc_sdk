@@ -2080,7 +2080,7 @@ description of the operation. The method name is a link to the method documentat
         | Get Details for a Call Queue Stranded Calls
         | ``GET /telephony/config/locations/{location_id}/queues/{queue_id}/strandedCalls``
    * - :meth:`api.telephony.callqueue.policy.stranded_calls_update <wxc_sdk.telephony.callqueue.policies.CQPolicyApi.stranded_calls_update>`
-        | Update a Call Queue Stranded Calls service
+        | Update a Call Queue Stranded Calls Service
         | ``PUT /telephony/config/locations/{location_id}/queues/{queue_id}/strandedCalls``
    * - :meth:`api.telephony.callqueue.primary_available_phone_numbers <wxc_sdk.telephony.callqueue.CallQueueApi.primary_available_phone_numbers>`
         | Get Call Queue Primary Available Phone Numbers

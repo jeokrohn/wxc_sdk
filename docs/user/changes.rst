@@ -1,6 +1,8 @@
 Release history
 ===============
 
+
+- feat: new attribute CallQueueAgent.agent_acdstate
 - feat: new parameters for api.telephony.phone_numbers: assigned, elin_enabled
 - feat: new API api.telephony.webhook_interest_registrations
 - feat: new endpoint :meth:`api.telephony.calls.list_callqueue_calls <wxc_sdk.telephony.calls.CallsApi.list_callqueue_calls>`

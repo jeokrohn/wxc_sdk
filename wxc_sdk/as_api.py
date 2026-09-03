@@ -24973,7 +24973,7 @@ class AsCQPolicyApi(AsApiChild, base=''):
         :type location_id: str
         :param queue_id: Update setting for the call queue with the matching ID.
         :type queue_id: str
-        :param update: holiday service settings.
+        :param update: Holiday service settings, including the :class:`Greeting` audio message selection.
         :type update: HolidayService
         :param org_id: Update call queue settings from this organisation.
         :type org_id: str
@@ -25023,7 +25023,7 @@ class AsCQPolicyApi(AsApiChild, base=''):
         :type location_id: str
         :param queue_id: Update settings for the call queue night service with this identifier.
         :type queue_id: str
-        :param update: new night service settings
+        :param update: New night service settings, including the :class:`Greeting` audio message selections.
         :type update: NightService
         :param org_id: update call queue night service settings from this organisation.
         :type org_id: str
@@ -25062,7 +25062,7 @@ class AsCQPolicyApi(AsApiChild, base=''):
 
     async def stranded_calls_update(self, location_id: str, queue_id: str, update: StrandedCalls, org_id: str = None):
         """
-        Update a Call Queue Stranded Calls service
+        Update a Call Queue Stranded Calls Service
 
         Update the designated Call Stranded Calls Service.
 
@@ -25076,7 +25076,7 @@ class AsCQPolicyApi(AsApiChild, base=''):
         :type location_id: str
         :param queue_id: Update setting for the call queue with the matching ID.
         :type queue_id: str
-        :param update: Call Stranded Calls settings
+        :param update: Call Stranded Calls settings, including the :class:`Greeting` audio message selection.
         :type update: StrandedCalls
         :param org_id: Update call queue settings from this organisation.
         :type org_id: str
@@ -25127,7 +25127,7 @@ class AsCQPolicyApi(AsApiChild, base=''):
         :type location_id: str
         :param queue_id: Update setting for the call queue with the matching ID.
         :type queue_id: str
-        :param update: new call queue Forced Forward settings
+        :param update: New call queue Forced Forward settings, including the :class:`Greeting` audio message selection.
         :type update: ForcedForward
         :param org_id: Update call queue settings from this organisation.
         :type org_id: str
@@ -25710,7 +25710,7 @@ class AsCallQueueDnisApi(AsApiChild, base='telephony/config'):
         :param dnis_id: The DNIS ID.
         :type dnis_id: str
         :param settings: Announcement settings for the DNIS.
-        :type settings: :class:`DnisAnnouncements`
+        :type settings: :class:`DnisAnnouncements`, with :attr:`wait_message` using :class:`WaitMessageSetting`
         :param org_id: The organization ID of the customer.
         :type org_id: str
         :rtype: None
@@ -25934,7 +25934,13 @@ class AsCallQueueApi(AsApiChild, base=''):
             None,
         )
 
-    async def create(self, location_id: str, settings: CallQueue, has_cx_essentials: bool = None, org_id: str = None) -> str:
+    async def create(
+        self,
+        location_id: str,
+        settings: CallQueue,
+        has_cx_essentials: bool = None,
+        org_id: str = None,
+    ) -> str:
         """
         Create Call Queue or Customer Assist Queue
 
@@ -26069,8 +26075,8 @@ class AsCallQueueApi(AsApiChild, base=''):
         to reach users assigned to the call queue. Call queues are also assigned an internal extension, which can be
         dialed internally to reach users assigned to the call queue.
 
-        Updating a call queue requires a full administrator auth token with a scope
-        of `spark-admin:telephony_config_write`.
+        Updating a call queue requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         :param location_id: Location in which this call queue exists.
         :type location_id: str

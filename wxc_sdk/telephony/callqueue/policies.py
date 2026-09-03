@@ -265,7 +265,7 @@ class CQPolicyApi(ApiChild, base=''):
         :type location_id: str
         :param queue_id: Update setting for the call queue with the matching ID.
         :type queue_id: str
-        :param update: holiday service settings.
+        :param update: Holiday service settings, including the :class:`Greeting` audio message selection.
         :type update: HolidayService
         :param org_id: Update call queue settings from this organisation.
         :type org_id: str
@@ -315,7 +315,7 @@ class CQPolicyApi(ApiChild, base=''):
         :type location_id: str
         :param queue_id: Update settings for the call queue night service with this identifier.
         :type queue_id: str
-        :param update: new night service settings
+        :param update: New night service settings, including the :class:`Greeting` audio message selections.
         :type update: NightService
         :param org_id: update call queue night service settings from this organisation.
         :type org_id: str
@@ -354,7 +354,7 @@ class CQPolicyApi(ApiChild, base=''):
 
     def stranded_calls_update(self, location_id: str, queue_id: str, update: StrandedCalls, org_id: str = None):
         """
-        Update a Call Queue Stranded Calls service
+        Update a Call Queue Stranded Calls Service
 
         Update the designated Call Stranded Calls Service.
 
@@ -368,7 +368,7 @@ class CQPolicyApi(ApiChild, base=''):
         :type location_id: str
         :param queue_id: Update setting for the call queue with the matching ID.
         :type queue_id: str
-        :param update: Call Stranded Calls settings
+        :param update: Call Stranded Calls settings, including the :class:`Greeting` audio message selection.
         :type update: StrandedCalls
         :param org_id: Update call queue settings from this organisation.
         :type org_id: str
@@ -419,7 +419,7 @@ class CQPolicyApi(ApiChild, base=''):
         :type location_id: str
         :param queue_id: Update setting for the call queue with the matching ID.
         :type queue_id: str
-        :param update: new call queue Forced Forward settings
+        :param update: New call queue Forced Forward settings, including the :class:`Greeting` audio message selection.
         :type update: ForcedForward
         :param org_id: Update call queue settings from this organisation.
         :type org_id: str

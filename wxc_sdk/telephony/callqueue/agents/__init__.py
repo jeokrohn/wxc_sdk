@@ -2,11 +2,11 @@ import builtins
 from collections.abc import Generator
 from typing import Optional
 
-from pydantic import TypeAdapter
+from pydantic import Field, TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
-from wxc_sdk.common import IdAndName
+from wxc_sdk.common import AgentACDState, IdAndName
 
 __all__ = [
     'CallQueueAgent',
@@ -30,6 +30,7 @@ class CallQueueAgent(ApiModel):
     phone_number: Optional[str] = None
     #: Primary phone extension of the call queue agent.
     extension: Optional[str] = None
+    #: Routing prefix of the location of the call queue agent.
     routing_prefix: Optional[str] = None
     #: Routing prefix + extension of a agent.
     esn: Optional[str] = None
@@ -45,6 +46,8 @@ class CallQueueAgent(ApiModel):
     location: Optional[IdAndName] = None
     #: Specifies the type of the call queue agent.
     type: Optional[str] = None
+    #: The Automatic Call Distribution (ACD) state of the call queue agent.
+    agent_acdstate: Optional[AgentACDState] = Field(alias='agentACDState', default=None)
 
 
 class CallQueueAgentQueue(ApiModel):
@@ -54,7 +57,7 @@ class CallQueueAgentQueue(ApiModel):
     name: Optional[str] = None
     #: Primary phone number of the call queue.
     phone_number: Optional[str] = None
-    #: The extension number for this call queue.
+    #: Primary phone extension of the call queue.
     extension: Optional[str] = None
     #: Specifies the routing prefix of the call queue.
     routing_prefix: Optional[str] = None

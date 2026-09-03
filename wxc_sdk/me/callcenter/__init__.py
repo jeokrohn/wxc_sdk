@@ -1,25 +1,12 @@
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import Field
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
-from wxc_sdk.base import SafeEnum as Enum
+from wxc_sdk.common import AgentACDState
 
-__all__ = ['MeCallCenterApi', 'MeCallCenterSettings', 'MeCallQueue', 'AgentACDState']
-
-
-class AgentACDState(str, Enum):
-    #: Agent has signed in.
-    sign_in = 'SIGN_IN'
-    #: Agent has signed out.
-    sign_out = 'SIGN_OUT'
-    #: Agent is available.
-    available = 'AVAILABLE'
-    #: Agent is unavailable.
-    unavailable = 'UNAVAILABLE'
-    #: Agent has wrapped up.
-    wrap_up = 'WRAP_UP'
+__all__ = ['MeCallCenterApi', 'MeCallCenterSettings', 'MeCallQueue']
 
 
 class MeCallQueue(ApiModel):
@@ -44,7 +31,7 @@ class MeCallCenterSettings(ApiModel):
     #: Indicates a list of call centers the agent has joined or may join.
     queues: Optional[list[MeCallQueue]] = None
 
-    def update(self) -> dict:
+    def update(self) -> dict[str, Any]:
         """
         Prepare the object for an update operation by converting it to a dictionary.
 

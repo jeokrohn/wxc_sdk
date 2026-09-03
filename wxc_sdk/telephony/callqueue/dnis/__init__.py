@@ -445,7 +445,7 @@ class CallQueueDnisApi(ApiChild, base='telephony/config'):
         :param dnis_id: The DNIS ID.
         :type dnis_id: str
         :param settings: Announcement settings for the DNIS.
-        :type settings: :class:`DnisAnnouncements`
+        :type settings: :class:`DnisAnnouncements`, with :attr:`wait_message` using :class:`WaitMessageSetting`
         :param org_id: The organization ID of the customer.
         :type org_id: str
         :rtype: None

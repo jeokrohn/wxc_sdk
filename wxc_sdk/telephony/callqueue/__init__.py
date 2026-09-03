@@ -281,7 +281,7 @@ class CallQueue(HGandCQ):
     call_policies: Optional[CallQueueCallPolicies] = None
     #: Overall call queue settings.
     queue_settings: Optional[QueueSettings] = None
-    #: whether ot not call waiting for agents is enabled
+    #: Flag to indicate whether call waiting is enabled for agents.
     allow_call_waiting_for_agents_enabled: Optional[bool] = None
     #: Whether or not to allow agents to join or unjoin a queue
     allow_agent_join_enabled: Optional[bool] = None
@@ -564,7 +564,13 @@ class CallQueueApi(ApiChild, base=''):
             None,
         )
 
-    def create(self, location_id: str, settings: CallQueue, has_cx_essentials: bool = None, org_id: str = None) -> str:
+    def create(
+        self,
+        location_id: str,
+        settings: CallQueue,
+        has_cx_essentials: bool = None,
+        org_id: str = None,
+    ) -> str:
         """
         Create Call Queue or Customer Assist Queue
 
@@ -699,8 +705,8 @@ class CallQueueApi(ApiChild, base=''):
         to reach users assigned to the call queue. Call queues are also assigned an internal extension, which can be
         dialed internally to reach users assigned to the call queue.
 
-        Updating a call queue requires a full administrator auth token with a scope
-        of `spark-admin:telephony_config_write`.
+        Updating a call queue requires a full administrator or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
 
         :param location_id: Location in which this call queue exists.
         :type location_id: str

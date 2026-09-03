@@ -5,7 +5,7 @@ from wxc_sdk.base import ApiModel, ApiModelType, ApiModelWithErrors, CodeAndReas
     RETRY_429_MAX_WAIT, SafeEnum, StrOrDict, dt_iso_str, enum_str, plus1, to_camel, webex_id_to_uuid
 from wxc_sdk.cdr import CDR, CDRCallType, CDRClientType, CDRDirection, CDROriginalReason, CDRRedirectReason, \
     CDRRelatedReason, CDRUserType
-from wxc_sdk.common import AcdCustomization, AlternateNumber, AnnAudioFile, AnnouncementLevel, \
+from wxc_sdk.common import AcdCustomization, AgentACDState, AlternateNumber, AnnAudioFile, AnnouncementLevel, \
     ApplyLineKeyTemplateAction, AssignedDectNetwork, AtaCustomization, AtaDtmfMethod, AtaDtmfMode, \
     AudioCodecPriority, AudioSource, AuthCode, AuthCodeLevel, Background, BackgroundImageColor, \
     BackgroundSelection, BacklightTimer, BacklightTimer68XX78XX, BluetoothMode, BluetoothSetting, \
@@ -50,7 +50,7 @@ from wxc_sdk.me import CCExtensions, CountryTelephonyConfigRequirements, Endpoin
     ServicesEnum, UserEndpoint, UserEndpointType, UserExtension
 from wxc_sdk.me.call_notify import CallNotify, CallNotifyCriteria
 from wxc_sdk.me.callblock import CallBlockNumber
-from wxc_sdk.me.callcenter import AgentACDState, MeCallCenterSettings, MeCallQueue
+from wxc_sdk.me.callcenter import MeCallCenterSettings, MeCallQueue
 from wxc_sdk.me.callerid import MeCallerIdSettings, MeSelectedCallerId
 from wxc_sdk.me.endpoints import EndpointType, MeEndpoint, MeHost, MeMobility, MeSecondaryLine
 from wxc_sdk.me.executive import AssignedAssistants

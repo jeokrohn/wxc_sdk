@@ -116,6 +116,7 @@ __all__ = [
     'WaitMessageSetting',
     'WelcomeMessageSetting',
     'WaitMode',
+    'AgentACDState',
 ]
 
 
@@ -1487,3 +1488,16 @@ class CodeAndName(ApiModel):
     code: Optional[str] = None
     #: Full name of the state or province.
     name: Optional[str] = None
+
+
+class AgentACDState(str, Enum):
+    #: Agent has signed in.
+    sign_in = 'SIGN_IN'
+    #: Agent has signed out.
+    sign_out = 'SIGN_OUT'
+    #: Agent is available.
+    available = 'AVAILABLE'
+    #: Agent is unavailable.
+    unavailable = 'UNAVAILABLE'
+    #: Agent has wrapped up.
+    wrap_up = 'WRAP_UP'
