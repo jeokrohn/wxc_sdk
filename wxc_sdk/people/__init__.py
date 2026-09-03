@@ -231,6 +231,7 @@ class Person(ApiModelWithErrors):
     person_type: Optional[PersonType] = Field(alias='type', default=None)
     user_name: Optional[str] = None
     avatar_provided: Optional[bool] = None
+    licenses_provided: Optional[bool] = None
 
     @property
     def person_id_uuid(self) -> str:

@@ -1,7 +1,7 @@
 Release history
 ===============
 
-
+- feat: new attribute Person.licenses_provided
 - feat: new attribute CallQueueAgent.agent_acdstate
 - feat: new parameters for api.telephony.phone_numbers: assigned, elin_enabled
 - feat: new API api.telephony.webhook_interest_registrations
