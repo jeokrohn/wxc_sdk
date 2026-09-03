@@ -1,6 +1,7 @@
 Release history
 ===============
 
+- feat: new endpoint :meth:`api.telephony.cx_essentials.get_available_agents <wxc_sdk.telephony.cx_essentials.CustomerExperienceEssentialsApi.get_available_agents>`
 - feat: new attribute Person.licenses_provided
 - feat: new attribute CallQueueAgent.agent_acdstate
 - feat: new parameters for api.telephony.phone_numbers: assigned, elin_enabled

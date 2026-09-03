@@ -2211,6 +2211,9 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.telephony.cx_essentials.callqueue_recording.read <wxc_sdk.telephony.cx_essentials.callqueue_recording.QueueCallRecordingSettingsApi.read>`
         | Read Queue Call Recording Settings for a Queue
         | ``GET /telephony/config/locations/{location_id}/queues/{queue_id}/cxEssentials/callRecordings``
+   * - :meth:`api.telephony.cx_essentials.get_available_agents <wxc_sdk.telephony.cx_essentials.CustomerExperienceEssentialsApi.get_available_agents>`
+        | Get Available Agents
+        | ``GET /telephony/config/cxEssentials/agents/availableAgents``
    * - :meth:`api.telephony.cx_essentials.get_screen_pop_configuration <wxc_sdk.telephony.cx_essentials.CustomerExperienceEssentialsApi.get_screen_pop_configuration>`
         | Get Screen Pop configuration for a Call Queue in a Location
         | ``GET /telephony/config/locations/{location_id}/queues/{queue_id}/cxEssentials/screenPop``

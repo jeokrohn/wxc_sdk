@@ -14,10 +14,11 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['FeaturesCustomerAssistApi', 'GetAvailableAgentsCallQueueObject',
-           'GetAvailableAgentsCallQueueObjectPhoneNumbers', 'GetScreenPopConfigurationObject', 'QueryParamsObject',
-           'QueueObject', 'QueueObjectWithDefaultEnabled', 'QueueWrapUpReasonObject',
-           'ReadWrapUpReasonSettingsResponse', 'UserType', 'WrapUpReasonDetailsObject', 'WrapUpReasonObject']
+__all__ = ['AvailableAgentObject', 'AvailableAgentObjectType', 'FeaturesCustomerAssistApi',
+           'GetAvailableAgentsCallQueueObject', 'GetAvailableAgentsCallQueueObjectPhoneNumbers',
+           'GetScreenPopConfigurationObject', 'QueryParamsObject', 'QueueObject', 'QueueObjectWithDefaultEnabled',
+           'QueueWrapUpReasonObject', 'ReadWrapUpReasonSettingsResponse', 'UserType', 'WrapUpReasonDetailsObject',
+           'WrapUpReasonObject']
 
 
 class QueryParamsObject(ApiModel):
@@ -141,6 +142,30 @@ class QueueWrapUpReasonObject(ApiModel):
     is_default_enabled: Optional[bool] = None
 
 
+class AvailableAgentObjectType(str, Enum):
+    #: Object is a user.
+    people = 'PEOPLE'
+
+
+class AvailableAgentObject(ApiModel):
+    #: ID of a person.
+    id: Optional[str] = None
+    #: Last name of a person.
+    last_name: Optional[str] = None
+    #: First name of a person.
+    first_name: Optional[str] = None
+    #: Display name of a person.
+    display_name: Optional[str] = None
+    #: Type of the person.
+    type: Optional[AvailableAgentObjectType] = None
+    #: Email of a person.
+    email: Optional[str] = None
+    #: Person has the CX Essentials license.
+    has_cx_essentials: Optional[bool] = None
+    #: List of phone numbers of a person.
+    phone_numbers: Optional[list[GetAvailableAgentsCallQueueObjectPhoneNumbers]] = None
+
+
 class ReadWrapUpReasonSettingsResponse(ApiModel):
     #: Denotes whether the wrap-up timer is enabled.
     wrapup_timer_enabled: Optional[bool] = None
@@ -192,6 +217,59 @@ class FeaturesCustomerAssistApi(ApiChild, base='telephony/config'):
     `Learn more about the customer Experience Basic suite
     <https://help.webex.com/en-us/article/nzkg083/Webex-Customer-Experience-Basic>`_
     """
+
+    def get_available_agents(self, location_id: str, has_cx_essentials: bool = None, name: list[str] = None,
+                             phone_numbers: list[str] = None, order: str = None, org_id: str = None,
+                             **params: Any) -> Generator[AvailableAgentObject, None, None]:
+        """
+        Get Available Agents
+
+        List eligible people who can be assigned as Customer Assist agents.
+
+        Returns people with a Webex Calling Professional license across all locations visible to the caller's
+        authorization. Workspaces and virtual lines are not included.
+
+        Calls from call queues are routed to assigned agents based on configuration. An agent can be assigned to one or
+        more call queues and can be managed by supervisors.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: The location ID of the call queue. Temporary mandatory query parameter, used for
+            performance reasons only and not a filter.
+        :type location_id: str
+        :param has_cx_essentials: Filter agents by Customer Assist license status. When `true`, returns only agents
+            with Customer Assist license. When `false`, returns only agents with Customer Experience Basic license.
+            When omitted, returns all eligible agents regardless of license type.
+        :type has_cx_essentials: bool
+        :param name: Filter agents by name. Supports partial matching. Multiple values can be provided to search for
+            agents matching any of the specified names.
+        :type name: list[str]
+        :param phone_numbers: Filter agents by phone number. Supports partial matching. Multiple values can be provided
+            to search for agents matching any of the specified phone numbers.
+        :type phone_numbers: list[str]
+        :param order: Sort order for the results. Supported fields are `firstName`, `lastName`, `displayName`, and
+            `extension`. Use `asc` or `desc` suffix to specify direction (e.g., `lastName asc`). Default is `lastName
+            asc`.
+        :type order: str
+        :param org_id: List available agents for this organization. If omitted, uses the organization associated with
+            the OAuth token.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableAgentObject` instances
+        """
+        params['locationId'] = location_id
+        if org_id is not None:
+            params['orgId'] = org_id
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        if name is not None:
+            params['name'] = ','.join(name)
+        if phone_numbers is not None:
+            params['phoneNumbers'] = ','.join(phone_numbers)
+        if order is not None:
+            params['order'] = order
+        url = self.ep('cxEssentials/agents/availableAgents')
+        return self.session.follow_pagination(url=url, model=AvailableAgentObject, item_key='agents', params=params)
 
     def read_wrap_up_reason_settings(self, location_id: str, queue_id: str) -> ReadWrapUpReasonSettingsResponse:
         """

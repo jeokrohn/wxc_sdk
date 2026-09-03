@@ -128,6 +128,66 @@ class CustomerExperienceEssentialsApi(ApiChild, base='telephony/config'):
         url = self.ep(f'locations/{location_id}/queues/{queue_id}/cxEssentials/screenPop')
         super().put(url, params=params, json=body)
 
+    def get_available_agents(
+        self,
+        location_id: str,
+        has_cx_essentials: bool = None,
+        name: list[str] = None,
+        phone_numbers: list[str] = None,
+        order: str = None,
+        org_id: str = None,
+        **params: Any,
+    ) -> Generator[AvailableAgent, None, None]:
+        """
+        Get Available Agents
+
+        List eligible people who can be assigned as Customer Assist agents.
+
+        Returns people with a Webex Calling Professional license across all locations visible to the caller's
+        authorization. Workspaces and virtual lines are not included.
+
+        Calls from call queues are routed to assigned agents based on configuration. An agent can be assigned to one or
+        more call queues and can be managed by supervisors.
+
+        Retrieving this list requires a full, read-only or location administrator auth token with a scope of
+        `spark-admin:telephony_config_read`.
+
+        :param location_id: The location ID of the call queue. Temporary mandatory query parameter, used for
+            performance reasons only and not a filter.
+        :type location_id: str
+        :param has_cx_essentials: Filter agents by Customer Assist license status. When `true`, returns only agents
+            with Customer Assist license. When `false`, returns only agents with Customer Experience Basic license.
+            When omitted, returns all eligible agents regardless of license type.
+        :type has_cx_essentials: bool
+        :param name: Filter agents by name. Supports partial matching. Multiple values can be provided to search for
+            agents matching any of the specified names.
+        :type name: list[str]
+        :param phone_numbers: Filter agents by phone number. Supports partial matching. Multiple values can be provided
+            to search for agents matching any of the specified phone numbers.
+        :type phone_numbers: list[str]
+        :param order: Sort order for the results. Supported fields are `firstName`, `lastName`, `displayName`, and
+            `extension`. Use `asc` or `desc` suffix to specify direction (e.g., `lastName asc`). Default is `lastName
+            asc`.
+        :type order: str
+        :param org_id: List available agents for this organization. If omitted, uses the organization associated with
+            the OAuth token.
+        :type org_id: str
+        :return: Generator yielding :class:`AvailableAgent` instances
+        """
+        params['locationId'] = location_id
+        if org_id is not None:
+            params['orgId'] = org_id
+        if has_cx_essentials is not None:
+            params['hasCxEssentials'] = str(has_cx_essentials).lower()
+        if name is not None:
+            params['name'] = ','.join(name)
+        if phone_numbers is not None:
+            params['phoneNumbers'] = ','.join(phone_numbers)
+        if order is not None:
+            params['order'] = order
+        url = self.ep('cxEssentials/agents/availableAgents')
+        return self.session.follow_pagination(url=url, model=AvailableAgent, item_key='agents', params=params)
+
     def available_agents(
         self, location_id: str, has_cx_essentials: bool = None, org_id: str = None
     ) -> Generator[AvailableAgent, None, None]:
