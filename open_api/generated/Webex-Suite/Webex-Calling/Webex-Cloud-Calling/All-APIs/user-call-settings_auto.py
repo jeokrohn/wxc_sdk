@@ -1348,6 +1348,7 @@ class UserCallSettings13Api(ApiChild, base=''):
                                                        repeat: CallRecordingInfoRepeat = None,
                                                        start_stop_announcement: CallRecordingInfoStartStopAnnouncement = None,
                                                        selective_call_recording_settings: CallRecordingInfoSelectiveCallRecordingSettings = None,
+                                                       call_recording_access_settings: CallRecordingInfoCallRecordingAccessSettings = None,
                                                        org_id: str = None) -> None:
         """
         Configure Call Recording Settings for a Person
@@ -1383,6 +1384,8 @@ class UserCallSettings13Api(ApiChild, base=''):
         :param selective_call_recording_settings: Settings for selective call recording based on call direction and
             type. These settings only apply when `record` is set to `Always` or `Always with Pause/Resume`.
         :type selective_call_recording_settings: CallRecordingInfoSelectiveCallRecordingSettings
+        :param call_recording_access_settings: Settings related to call recording access.
+        :type call_recording_access_settings: CallRecordingInfoCallRecordingAccessSettings
         :param org_id: ID of the organization in which the person resides. Only admin users of another organization
             (such as partners) may use this parameter as the default is the same organization as the token used to
             access API.
@@ -1409,6 +1412,8 @@ class UserCallSettings13Api(ApiChild, base=''):
             body['startStopAnnouncement'] = start_stop_announcement.model_dump(mode='json', by_alias=True, exclude_none=True)
         if selective_call_recording_settings is not None:
             body['selectiveCallRecordingSettings'] = selective_call_recording_settings.model_dump(mode='json', by_alias=True, exclude_none=True)
+        if call_recording_access_settings is not None:
+            body['callRecordingAccessSettings'] = call_recording_access_settings.model_dump(mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'people/{person_id}/features/callRecording')
         super().put(url, params=params, json=body)
 
