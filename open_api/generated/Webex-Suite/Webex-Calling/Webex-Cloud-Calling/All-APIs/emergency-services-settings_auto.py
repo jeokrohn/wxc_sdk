@@ -700,7 +700,8 @@ class EmergencyServicesSettingsApi(ApiChild, base='telephony/config'):
         """
         Update a RedSky Building Address for a Location
 
-        Update a RedSky building address for a specified location.
+        Update a RedSky building address for a specified location. This endpoint is intended for use by online
+        customers who have a single location setup.
 
         The Enhanced Emergency (E911) Service for Webex Calling provides dynamic location support and a network that
         routes emergency calls to Public Safety Answering Points (PSAP) around the US, its territories, and Canada.

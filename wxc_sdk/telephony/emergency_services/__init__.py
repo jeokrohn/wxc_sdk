@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Optional
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel, enum_str
@@ -32,7 +32,7 @@ class OrgEmergencyCallNotification(ApiModel):
     #: address.
     email_address: Optional[str] = None
 
-    def update(self) -> dict:
+    def update(self) -> dict[str, Any]:
         """
 
         :meta private:
@@ -336,7 +336,7 @@ class OrgEmergencyServicesApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         if emergency_call_notification_enabled is not None:
             body['emergencyCallNotificationEnabled'] = emergency_call_notification_enabled
         if email_address is not None:
@@ -399,7 +399,7 @@ class OrgEmergencyServicesApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['alertingEmail'] = alerting_email
         if address is not None:
             body['address'] = address.model_dump(mode='json', by_alias=True, exclude_none=True)
@@ -410,7 +410,8 @@ class OrgEmergencyServicesApi(ApiChild, base='telephony/config'):
         """
         Update a RedSky Building Address for a Location
 
-        Update a RedSky building address for a specified location.
+        Update a RedSky building address for a specified location. This endpoint is intended for use by online
+        customers who have a single location setup.
 
         The Enhanced Emergency (E911) Service for Webex Calling provides dynamic location support and a network that
         routes emergency calls to Public Safety Answering Points (PSAP) around the US, its territories, and Canada.
@@ -619,7 +620,7 @@ class OrgEmergencyServicesApi(ApiChild, base='telephony/config'):
         :type org_id: str
         :rtype: :class:`RedSkyComplianceStatus`
         """
-        params = {}
+        params: dict[str, Any] = {}
         if org_id is not None:
             params['orgId'] = org_id
         if start is not None:
@@ -675,7 +676,7 @@ class OrgEmergencyServicesApi(ApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = dict()
+        body: dict[str, Any] = dict()
         body['enabled'] = enabled
         if company_id is not None:
             body['companyId'] = company_id
