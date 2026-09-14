@@ -3312,9 +3312,15 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.telephony.pstn.configure <wxc_sdk.telephony.pstn.PSTNApi.configure>`
         | Setup PSTN Connection for a Location
         | ``PUT /telephony/pstn/locations/{location_id}/connection``
+   * - :meth:`api.telephony.pstn.get_modifiable_numbers <wxc_sdk.telephony.pstn.PSTNApi.get_modifiable_numbers>`
+        | Get Modifiable Numbers
+        | ``GET /telephony/pstn/locations/{location_id}/numbers/availableNumbers``
    * - :meth:`api.telephony.pstn.list <wxc_sdk.telephony.pstn.PSTNApi.list>`
         | Retrieve PSTN Connection Options for a Location
         | ``GET /telephony/pstn/locations/{location_id}/connectionOptions``
+   * - :meth:`api.telephony.pstn.perform_numbers_action <wxc_sdk.telephony.pstn.PSTNApi.perform_numbers_action>`
+        | Perform Numbers Action
+        | ``POST /telephony/pstn/locations/{location_id}/numbers``
    * - :meth:`api.telephony.pstn.read <wxc_sdk.telephony.pstn.PSTNApi.read>`
         | Retrieve PSTN Connection for a Location
         | ``GET /telephony/pstn/locations/{location_id}/connection``

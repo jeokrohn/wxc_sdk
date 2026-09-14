@@ -18,8 +18,8 @@ from wxc_sdk.common import AcdCustomization, AgentACDState, AlternateNumber, Ann
     MeGroupSettings, MediaFile, MediaFileType, MohMessageSetting, MonitoredMember, MppCustomization, Multicast, \
     NoiseCancellation, NumberOwner, NumberState, OwnerType, PatternAction, PersonPlaceAgent, PhoneLanguage, \
     PrimaryOrSecondary, PrimaryOrShared, PskObject, RingPattern, RoomType, RouteIdentity, RouteType, SetOrClear, \
-    SoftKeyLayout, SoftKeyMenu, StorageType, UsageType, UsbPortsObject, UserBase, UserLicenseType, UserNumber, \
-    UserType, ValidateExtensionStatus, ValidateExtensionStatusState, ValidateExtensionsResponse, \
+    SoftKeyLayout, SoftKeyMenu, StorageType, TelephonyType, UsageType, UsbPortsObject, UserBase, UserLicenseType, \
+    UserNumber, UserType, ValidateExtensionStatus, ValidateExtensionStatusState, ValidateExtensionsResponse, \
     ValidatePhoneNumberStatus, ValidatePhoneNumberStatusState, ValidatePhoneNumbersResponse, ValidationStatus, \
     VlanSetting, VoicemailCopyOfMessage, VoicemailEnabled, VoicemailFax, VoicemailMessageStorage, \
     VoicemailNotifications, VoicemailTransferToNumber, VolumeSettings, WaitMessageSetting, WaitMode, \
@@ -172,9 +172,8 @@ from wxc_sdk.telephony import AnnouncementLanguage, AppliedService, AppliedServi
     HostedFeatureDestination, HostedUserDestination, LargeOrgStatus, LocationAndNumbers, MoHConfig, MoHTheme, \
     NameAndCode, NumberDetails, NumberListPhoneNumber, NumberListPhoneNumberType, NumberType, OrgCallCaptions, \
     OriginatorType, OutgoingCallingPlanPermissionsByDigitPattern, OutgoingCallingPlanPermissionsByType, \
-    PbxUserDestination, PstnNumberDestination, RouteListDestination, ServiceType, TelephonyType, \
-    TestCallRoutingResult, TranslationPatternConfigurationLevel, TrunkDestination, UCMProfile, \
-    VirtualExtensionDestination
+    PbxUserDestination, PstnNumberDestination, RouteListDestination, ServiceType, TestCallRoutingResult, \
+    TranslationPatternConfigurationLevel, TrunkDestination, UCMProfile, VirtualExtensionDestination
 from wxc_sdk.telephony.ai_receptionists import AIRDirectLineCallerIdName, AIRIntent, AIRSessionState, AIRSessions, \
     AIRSessionsMeta, AIRTemplate, AiAgent, AiEngine, AiEngineName, AiGuidelines, AiReceptionist, AiVoice, \
     DefaultAction, DefaultActionType, IntentTransferTo, KnowledgeBase, KnowledgeBaseDocument, \
@@ -273,7 +272,10 @@ from wxc_sdk.telephony.prem_pstn.route_list import NumberAndAction, RouteList, R
 from wxc_sdk.telephony.prem_pstn.trunk import CnameRecord, DeviceStatus, OutboundProxy, PChargeInfoSupportPolicy, \
     ResponseStatus, ResponseStatusType, Trunk, TrunkDetail, TrunkDeviceType, TrunkType, TrunkTypeWithDeviceType, \
     TrunkUsage
-from wxc_sdk.telephony.pstn import PSTNConnectionOption, PSTNServiceType, PSTNType
+from wxc_sdk.telephony.pstn import ModifiableNumber, ModifyNumberAction, ModifyNumbersActionError, \
+    ModifyNumbersActionOrder, ModifyNumbersActionOrderNumber, ModifyNumbersActionOrderNumberStatus, \
+    ModifyNumbersActionOrderNumberUsage, ModifyNumbersActionOrderStatus, PSTNConnectionOption, PSTNServiceType, \
+    PSTNType
 from wxc_sdk.telephony.supervisor import AgentOrSupervisor, IdAndAction, SupervisorAgentStatus
 from wxc_sdk.telephony.text_to_speech import TtsStatusResponse, TtsStatusResponseStatus, TtsUsageResponse, \
     TtsVoice
@@ -419,11 +421,14 @@ __all__ = ['AIRDirectLineCallerIdName', 'AIRIntent', 'AIRSessionState', 'AIRSess
            'MembershipsData', 'MenuKey', 'Message', 'MessageAttachment', 'MessageMetadata', 'MessageSummary',
            'MessageText', 'MessagesData', 'Meta', 'MetaObjectResourceType', 'MoHConfig', 'MoHTheme',
            'ModeDefaultForwardToSelection', 'ModeForward', 'ModeForwardTo', 'ModeManagementFeature',
-           'MohMessageSetting', 'MonitoredElementCPE', 'MonitoredElementMember', 'MonitoredElementSpeedDial',
-           'MonitoredElementType', 'MonitoredLineType', 'MonitoredMember', 'Monitoring', 'MonitoringMember', 'Month',
-           'MoveCounts', 'MoveNumberCounts', 'MoveUser', 'MoveUserJobDetails', 'MoveUsersList', 'MppCustomization',
-           'Multicast', 'MusicOnHold', 'NameAndCode', 'NameObject', 'NetworkConnectionType', 'NetworkType',
-           'NightService', 'NoAnswer', 'NoiseCancellation', 'NonBlockingDisableCalling', 'NoteType', 'Notification',
+           'ModifiableNumber', 'ModifyNumberAction', 'ModifyNumbersActionError', 'ModifyNumbersActionOrder',
+           'ModifyNumbersActionOrderNumber', 'ModifyNumbersActionOrderNumberStatus',
+           'ModifyNumbersActionOrderNumberUsage', 'ModifyNumbersActionOrderStatus', 'MohMessageSetting',
+           'MonitoredElementCPE', 'MonitoredElementMember', 'MonitoredElementSpeedDial', 'MonitoredElementType',
+           'MonitoredLineType', 'MonitoredMember', 'Monitoring', 'MonitoringMember', 'Month', 'MoveCounts',
+           'MoveNumberCounts', 'MoveUser', 'MoveUserJobDetails', 'MoveUsersList', 'MppCustomization', 'Multicast',
+           'MusicOnHold', 'NameAndCode', 'NameObject', 'NetworkConnectionType', 'NetworkType', 'NightService',
+           'NoAnswer', 'NoiseCancellation', 'NonBlockingDisableCalling', 'NoteType', 'Notification',
            'NotificationRepeat', 'NotificationType', 'NumberAddError', 'NumberAddResponse', 'NumberAndAction',
            'NumberDetails', 'NumberItem', 'NumberJob', 'NumberListPhoneNumber', 'NumberListPhoneNumberType',
            'NumberOwner', 'NumberState', 'NumberType', 'NumberUsageType', 'NumbersRequestAction', 'OfficeNumber',

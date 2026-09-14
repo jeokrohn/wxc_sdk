@@ -117,6 +117,7 @@ __all__ = [
     'WelcomeMessageSetting',
     'WaitMode',
     'AgentACDState',
+    'TelephonyType',
 ]
 
 
@@ -1501,3 +1502,10 @@ class AgentACDState(str, Enum):
     unavailable = 'UNAVAILABLE'
     #: Agent has wrapped up.
     wrap_up = 'WRAP_UP'
+
+
+class TelephonyType(str, Enum):
+    #: The number is a PSTN number.
+    pstn_number = 'PSTN_NUMBER'
+    #: The number is a mobile number.
+    mobile_number = 'MOBILE_NUMBER'

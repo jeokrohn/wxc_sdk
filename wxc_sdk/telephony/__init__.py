@@ -21,6 +21,7 @@ from ..common import (
     NumberState,
     OwnerType,
     RouteIdentity,
+    TelephonyType,
     UserType,
     ValidateExtensionsResponse,
     ValidatePhoneNumbersResponse,
@@ -76,7 +77,6 @@ from .webhook_interest_registrations import WebhookInterestRegistrationsApi
 
 __all__ = [
     'NumberListPhoneNumberType',
-    'TelephonyType',
     'NumberListPhoneNumber',
     'NumberType',
     'NumberDetails',
@@ -123,13 +123,6 @@ class NumberListPhoneNumberType(str, Enum):
     fax = 'FAX'
     dnis = 'DNIS'
     default = 'Default'
-
-
-class TelephonyType(str, Enum):
-    #: The number is a PSTN number.
-    pstn_number = 'PSTN_NUMBER'
-    #: The number is a mobile number.
-    mobile_number = 'MOBILE_NUMBER'
 
 
 class NumberListPhoneNumber(ApiModel):

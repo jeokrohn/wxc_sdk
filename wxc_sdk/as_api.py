@@ -32969,7 +32969,7 @@ class AsOrganisationVoicemailSettingsAPI(AsApiChild, base='telephony/config/voic
         await self.put(url, data=data, params=params)
 
 
-class AsPSTNApi(AsApiChild, base='telephony/pstn/locations'):
+class AsPSTNApi(AsApiChild, base='telephony/pstn'):
     """
     PSTN
 
@@ -32987,7 +32987,7 @@ class AsPSTNApi(AsApiChild, base='telephony/pstn/locations'):
     """
 
     async def list(
-        self, location_id: str, service_types: list[PSTNServiceType] = None, org_id: str = None
+        self, location_id: str, service_types: builtins.list[PSTNServiceType] = None, org_id: str = None
     ) -> list[PSTNConnectionOption]:
         """
         Retrieve PSTN Connection Options for a Location
@@ -33009,12 +33009,12 @@ class AsPSTNApi(AsApiChild, base='telephony/pstn/locations'):
         :type org_id: str
         :rtype: list[PSTNConnectionOption]
         """
-        params = {}
+        params: dict[str, Any] = {}
         if org_id is not None:
             params['orgId'] = org_id
         if service_types is not None:
             params['serviceTypes'] = [enum_str(st) for st in service_types]
-        url = self.ep(f'{location_id}/connectionOptions')
+        url = self.ep(f'locations/{location_id}/connectionOptions')
         data = await super().get(url, params=params)
         r = TypeAdapter(list[PSTNConnectionOption]).validate_python(data['items'])
         return r
@@ -33061,7 +33061,7 @@ class AsPSTNApi(AsApiChild, base='telephony/pstn/locations'):
             body['premiseRouteType'] = premise_route_type
         if premise_route_id is not None:
             body['premiseRouteId'] = premise_route_id
-        url = self.ep(f'{location_id}/connection')
+        url = self.ep(f'locations/{location_id}/connection')
         await super().put(url, params=params, json=body)
 
     async def read(self, location_id: str, org_id: str = None) -> PSTNConnectionOption:
@@ -33084,9 +33084,91 @@ class AsPSTNApi(AsApiChild, base='telephony/pstn/locations'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{location_id}/connection')
+        url = self.ep(f'locations/{location_id}/connection')
         data = await super().get(url, params=params)
         r = PSTNConnectionOption.model_validate(data)
+        return r
+
+    async def perform_numbers_action(
+        self, location_id: str, action: ModifyNumberAction, numbers: builtins.list[str], org_id: str = None
+    ) -> builtins.list[ModifyNumbersActionOrder]:
+        """
+        Perform Numbers Action
+
+        Perform number usage action for the specified list of numbers. The required `action` query parameter specifies
+        the operation to apply to the numbers in the request body. The API supports modifying number usage between
+        STANDARD/SERVICE/ELIN.
+
+        A phone number's usage type determines how it is used within a Webex Calling location. `STANDARD` numbers
+        support regular calling and can be assigned to people, workspaces, or features. `SERVICE` numbers support
+        services such as Auto Attendant, Call Queue, Hunt Groups, and Webex Contact Center. `ELIN` (Emergency Location
+        Identification Number) numbers provide emergency services with accurate caller information and support
+        callbacks to the person or workspace that initiated the emergency call, including people with extension-only
+        lines.
+
+        Executing number actions requires an administrator auth token with a scope of
+        `spark-admin:telephony_pstn_write`.
+
+        :param location_id: Location identifier in Webex format.
+        :type location_id: str
+        :param action: Action to execute.
+        :type action: ModifyNumberAction
+        :param numbers: Phone numbers to process.
+        :type numbers: list[str]
+        :param org_id: Organization ID. If not specified, uses the organization from the OAuth token.
+        :type org_id: str
+        :rtype: list[ModifyNumbersActionOrder]
+        """
+        params: dict[str, Any] = dict()
+        params['action'] = enum_str(action)
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        body['numbers'] = numbers
+        url = self.ep(f'locations/{location_id}/numbers')
+        data = await super().post(url, params=params, json=body)
+        r = TypeAdapter(list[ModifyNumbersActionOrder]).validate_python(data['orders'])
+        return r
+
+    async def get_modifiable_numbers(
+        self, location_id: str, action: ModifyNumberAction, org_id: str = None
+    ) -> builtins.list[ModifiableNumber]:
+        """
+        Get Modifiable Numbers
+
+        Retrieve modifiable numbers for a location based on action type.
+
+        The required `action` query parameter specifies the operation used to identify eligible numbers.
+
+        This endpoint does not support pagination. Up to a configurable server-side maximum of candidate numbers
+        (default 2000) are retrieved and filtered for eligibility, and all eligible numbers within that candidate
+        window are returned in a single response.
+
+        A phone number's usage type determines how it is used within a Webex Calling location. `STANDARD` numbers
+        support regular calling and can be assigned to people, workspaces, or features. `SERVICE` numbers support
+        services such as Auto Attendant, Call Queue, Hunt Groups, and Webex Contact Center. `ELIN` (Emergency Location
+        Identification Number) numbers provide emergency services with accurate caller information and support
+        callbacks to the person or workspace that initiated the emergency call, including people with extension-only
+        lines.
+
+        Viewing number availability requires an administrator auth token with a scope of
+        `spark-admin:telephony_pstn_read`.
+
+        :param location_id: Location identifier in Webex format.
+        :type location_id: str
+        :param action: Action type for modifiable numbers.
+        :type action: ModifyNumberAction
+        :param org_id: Organization ID. If not specified, uses the organization from the OAuth token.
+        :type org_id: str
+        :rtype: list[ModifiableNumber]
+        """
+        params: dict[str, Any] = dict()
+        params['action'] = enum_str(action)
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'locations/{location_id}/numbers/availableNumbers')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[ModifiableNumber]).validate_python(data['phoneNumbers'])
         return r
 
 
