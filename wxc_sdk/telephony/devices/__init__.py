@@ -1,12 +1,13 @@
 """
 Telephony devices
 """
+# mypy: disable-error-code="assignment,return-value,arg-type"
 
 import os
 from collections.abc import Generator
 from dataclasses import dataclass
 from io import BufferedReader
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
 from pydantic import Field, TypeAdapter, field_serializer, field_validator
 from requests_toolbelt import MultipartEncoder
@@ -104,6 +105,27 @@ class SupportsLogCollection(str, Enum):
     cisco_roomos = 'CISCO_ROOMOS'
 
 
+class LineKeyType(str, Enum):
+    #: PRIMARY_LINE is the user's primary extension. This is the default assignment for Line Key Index 1 and cannot be
+    #: modified.
+    primary_line = 'PRIMARY_LINE'
+    #: Shows the appearance of other users on the owner's phone.
+    shared_line = 'SHARED_LINE'
+    #: Enables User and Call Park monitoring.
+    monitor = 'MONITOR'
+    #: Enables the configure layout feature in Control Hub to set call park extension implicitly.
+    call_park_extension = 'CALL_PARK_EXTENSION'
+    #: Allows users to reach a telephone number, extension or a SIP URI.
+    speed_dial = 'SPEED_DIAL'
+    #: An open key will automatically take the configuration of a monitor button starting with the first open key.
+    #: These buttons are also usable by the user to configure speed dial numbers on these keys.
+    open = 'OPEN'
+    #: Button not usable but reserved for future features.
+    closed = 'CLOSED'
+    #: Allows users to manage call forwarding for features via schedule-based routing.
+    mode_management = 'MODE_MANAGEMENT'
+
+
 class SupportedDevice(ApiModel):
     #: Model name of the device.
     model: str
@@ -178,7 +200,12 @@ class SupportedDevice(ApiModel):
     supports_hotline_enabled: Optional[bool] = None
     #: Supports hot desk only.
     supports_hot_desk_only: Optional[bool] = None
+    #: Maximum number of line appearances available on the device.
     max_number_of_line_appearances: Optional[int] = None
+    #: List of `lineKeyType` values not supported by the device layout and templates.
+    line_key_type_exclude_list: Optional[list[LineKeyType]] = None
+    #: Number of columns in the device's line key layout. If not specified, it defaults to 2.
+    number_of_line_key_button_columns: Optional[int] = None
 
 
 class SupportedDevices(ApiModel):
@@ -350,27 +377,6 @@ class MACValidationResponse(ApiModel):
     mac_status: Optional[list[MACStatus]] = None
 
 
-class LineKeyType(str, Enum):
-    #: PRIMARY_LINE is the user's primary extension. This is the default assignment for Line Key Index 1 and cannot be
-    #: modified.
-    primary_line = 'PRIMARY_LINE'
-    #: Shows the appearance of other users on the owner's phone.
-    shared_line = 'SHARED_LINE'
-    #: Enables User and Call Park monitoring.
-    monitor = 'MONITOR'
-    #: Enables the configure layout feature in Control Hub to set call park extension implicitly.
-    call_park_extension = 'CALL_PARK_EXTENSION'
-    #: Allows users to reach a telephone number, extension or a SIP URI.
-    speed_dial = 'SPEED_DIAL'
-    #: An open key will automatically take the configuration of a monitor button starting with the first open key.
-    #: These buttons are also usable by the user to configure speed dial numbers on these keys.
-    open = 'OPEN'
-    #: Button not usable but reserved for future features.
-    closed = 'CLOSED'
-    #: Allows users to manage call forwarding for features via schedule-based routing.
-    mode_management = 'MODE_MANAGEMENT'
-
-
 class ProgrammableLineKey(ApiModel):
     #: An index representing a Line Key. Index starts from 1 representing the first key on the left side of the phone.
     line_key_index: Optional[int] = None
@@ -478,7 +484,7 @@ class DeviceLayout(ApiModel):
     #: Contains a mapping of KEM Keys and their corresponding actions.
     kem_keys: Optional[list[KemKey]] = None
 
-    def update(self) -> dict:
+    def update(self) -> dict[str, Any]:
         """
         get data for update
         :meta private:
@@ -680,9 +686,7 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         data = self.get(url=url, params=params)
         return DeviceMembersResponse.model_validate(data)
 
-    def update_members(
-        self, device_id: str, members: list[Union[DeviceMember, AvailableMember]] = None, org_id: str = None
-    ):
+    def update_members(self, device_id: str, members: list[DeviceMember | AvailableMember] = None, org_id: str = None):
         """
         Modify member details on the device.
 
@@ -1413,7 +1417,7 @@ class TelephonyDevicesApi(ApiChild, base='telephony/config'):
         return r
 
     def upload_background_image(
-        self, device_id: str, file: Union[BufferedReader, str], file_name: str = None, org_id: str = None
+        self, device_id: str, file: BufferedReader | str, file_name: str = None, org_id: str = None
     ) -> BackgroundImage:
         """
         Upload a Device Background Image

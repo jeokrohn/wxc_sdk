@@ -36063,9 +36063,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         data = await self.get(url=url, params=params)
         return DeviceMembersResponse.model_validate(data)
 
-    async def update_members(
-        self, device_id: str, members: list[Union[DeviceMember, AvailableMember]] = None, org_id: str = None
-    ):
+    async def update_members(self, device_id: str, members: list[DeviceMember | AvailableMember] = None, org_id: str = None):
         """
         Modify member details on the device.
 
@@ -36842,7 +36840,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         return r
 
     async def upload_background_image(
-        self, device_id: str, file: Union[BufferedReader, str], file_name: str = None, org_id: str = None
+        self, device_id: str, file: BufferedReader | str, file_name: str = None, org_id: str = None
     ) -> BackgroundImage:
         """
         Upload a Device Background Image

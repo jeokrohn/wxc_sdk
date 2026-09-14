@@ -1993,6 +1993,10 @@ class DeviceObject(ApiModel):
     supports_hotline_enabled: Optional[bool] = None
     #: Maximum number of line appearances available on the device.
     max_number_of_line_appearances: Optional[int] = None
+    #: List of `lineKeyType` values not supported by the device layout and templates.
+    line_key_type_exclude_list: Optional[list[LineKeyType]] = None
+    #: Number of columns in the device's line key layout. If not specified, it defaults to 2.
+    number_of_line_key_button_columns: Optional[int] = None
 
 
 class SupportedDevicesObject(ApiModel):
