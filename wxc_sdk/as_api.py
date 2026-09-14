@@ -21653,6 +21653,9 @@ class AsAIReceptionistApi(AsApiChild, base=''):
 
     A partner administrator can retrieve or change settings in another organization using the optional `orgId` query
     parameter.
+
+     Note: AI Receptionist Session Transcripts APIs requires a full administrator auth token with a CI role of
+    `id_full_admin`.
     """
 
     async def sessions(
