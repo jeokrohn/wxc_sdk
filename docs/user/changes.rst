@@ -1,6 +1,7 @@
 Release history
 ===============
 
+- feat: new endpoint: :meth:`api.telephony.prem_pstn.trunk.validate_a_trunk <wxc_sdk.telephony.prem_pstn.trunk.TrunkApi.validate_a_trunk>`, new attribute TrunkDetail.peer_identity
 - feat: new endpoints: :meth:`api.telephony.pstn.get_modifiable_numbers <wxc_sdk.telephony.pstn.PSTNApi.get_modifiable_numbers>`, :meth:`api.telephony.pstn.perform_numbers_action <wxc_sdk.telephony.pstn.PSTNApi.perform_numbers_action>`
 - feat: new attributes SupportedDevice.line_key_type_exclude_list and number_of_line_key_button_columns
 - feat: new endpoint :meth:`api.telephony.cx_essentials.get_available_agents <wxc_sdk.telephony.cx_essentials.CustomerExperienceEssentialsApi.get_available_agents>`

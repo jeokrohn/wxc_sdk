@@ -806,6 +806,8 @@ class TrunkGet(ApiModel):
     max_concurrent_calls: Optional[int] = None
     #: Flag to indicate if the trunk is restricted to a dedicated instance.
     is_restricted_to_dedicated_instance: Optional[bool] = None
+    #: Peer identity for certificate-based trunks. Used for TLS peer verification.
+    peer_identity: Optional[str] = None
     p_charge_info_support_policy: Optional[PChargeInfoSupportPolicyType] = None
 
 
@@ -2019,7 +2021,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
     def create_a_trunk(self, name: str, location_id: str, password: str, trunk_type: TrunkType,
                        dual_identity_support_enabled: bool = None, device_type: str = None, address: str = None,
                        domain: str = None, port: int = None, max_concurrent_calls: int = None,
-                       p_charge_info_support_policy: PChargeInfoSupportPolicyType = None, org_id: str = None) -> str:
+                       peer_identity: str = None, p_charge_info_support_policy: PChargeInfoSupportPolicyType = None,
+                       org_id: str = None) -> str:
         """
         Create a Trunk
 
@@ -2053,6 +2056,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         :type port: int
         :param max_concurrent_calls: Max Concurrent call. Required to create a static certificate based trunk.
         :type max_concurrent_calls: int
+        :param peer_identity: Peer identity for certificate-based trunks. Used for TLS peer verification.
+        :type peer_identity: str
         :param p_charge_info_support_policy: -
         :type p_charge_info_support_policy: PChargeInfoSupportPolicyType
         :param org_id: Organization to which the trunk belongs.
@@ -2079,6 +2084,8 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
             body['port'] = port
         if max_concurrent_calls is not None:
             body['maxConcurrentCalls'] = max_concurrent_calls
+        if peer_identity is not None:
+            body['peerIdentity'] = peer_identity
         if p_charge_info_support_policy is not None:
             body['pChargeInfoSupportPolicy'] = enum_str(p_charge_info_support_policy)
         url = self.ep('premisePstn/trunks')
@@ -2090,6 +2097,9 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
                                                            port: int = None, org_id: str = None) -> None:
         """
         Validate Local Gateway FQDN and Domain for a Trunk
+
+        **Deprecated**: Use `Validate a Trunk
+        <#/Call%20Routing/Validate%20a%20Trunk>`_ instead.
 
         Validate Local Gateway FQDN and Domain for the organization trunks.
 
@@ -2122,6 +2132,59 @@ class CallRoutingApi(ApiChild, base='telephony/config'):
         if port is not None:
             body['port'] = port
         url = self.ep('premisePstn/trunks/actions/fqdnValidation/invoke')
+        super().post(url, params=params, json=body)
+
+    def validate_a_trunk(self, fqdn_address: str = None, fqdn_domain: str = None, fqdn_port: int = None,
+                         trunk_type: TrunkType = None, is_restricted_to_dedicated_instance: bool = None,
+                         peer_identity: str = None, org_id: str = None) -> None:
+        """
+        Validate a Trunk
+
+        Validate Local Gateway trunk settings for the organization before creation.
+
+        Local Gateway trunks connect Webex Calling to on-premises PSTN infrastructure, terminating on a local gateway
+        or other supported device. Trunks can be assigned to Route Groups to distribute calls across multiple trunks
+        or to provide redundancy.
+
+        This endpoint validates FQDN, domain, peer identity, and trunk type settings prior to trunk creation.
+
+        Validating a trunk requires a full administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param fqdn_address: FQDN or SRV address of the trunk.
+        :type fqdn_address: str
+        :param fqdn_domain: Domain name of the trunk.
+        :type fqdn_domain: str
+        :param fqdn_port: FQDN port of the trunk.
+        :type fqdn_port: int
+        :param trunk_type: Trunk Type associated with the trunk.
+        :type trunk_type: TrunkType
+        :param is_restricted_to_dedicated_instance: Flag to indicate if the trunk is restricted to a dedicated
+            instance.
+        :type is_restricted_to_dedicated_instance: bool
+        :param peer_identity: Peer identity for certificate-based trunks. Used for TLS peer verification.
+        :type peer_identity: str
+        :param org_id: Organization to which the trunk belongs.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        if fqdn_address is not None:
+            body['fqdnAddress'] = fqdn_address
+        if fqdn_domain is not None:
+            body['fqdnDomain'] = fqdn_domain
+        if fqdn_port is not None:
+            body['fqdnPort'] = fqdn_port
+        if trunk_type is not None:
+            body['trunkType'] = enum_str(trunk_type)
+        if is_restricted_to_dedicated_instance is not None:
+            body['isRestrictedToDedicatedInstance'] = is_restricted_to_dedicated_instance
+        if peer_identity is not None:
+            body['peerIdentity'] = peer_identity
+        url = self.ep('premisePstn/trunks/actions/validate/invoke')
         super().post(url, params=params, json=body)
 
     def read_the_list_of_trunk_types(self, org_id: str = None) -> builtins.list[TrunkTypeWithDeviceType]:

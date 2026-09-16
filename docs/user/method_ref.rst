@@ -3283,7 +3283,7 @@ description of the operation. The method name is a link to the method documentat
         | List all Trunks for the organization
         | ``GET /telephony/config/premisePstn/trunks``
    * - :meth:`api.telephony.prem_pstn.trunk.trunk_types <wxc_sdk.telephony.prem_pstn.trunk.TrunkApi.trunk_types>`
-        | List all TrunkTypes with DeviceTypes for the organization
+        | Read the List of Trunk Types
         | ``GET /telephony/config/premisePstn/trunks/trunkTypes``
    * - :meth:`api.telephony.prem_pstn.trunk.update <wxc_sdk.telephony.prem_pstn.trunk.TrunkApi.update>`
         | Modify a Trunk for the organization
@@ -3303,8 +3303,11 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.telephony.prem_pstn.trunk.usage_route_group <wxc_sdk.telephony.prem_pstn.trunk.TrunkApi.usage_route_group>`
         | Get Local Gateway Dial Plan Usage for a Trunk
         | ``GET /telephony/config/premisePstn/trunks/{trunk_id}/usageRouteGroup``
+   * - :meth:`api.telephony.prem_pstn.trunk.validate_a_trunk <wxc_sdk.telephony.prem_pstn.trunk.TrunkApi.validate_a_trunk>`
+        | Validate a Trunk
+        | ``POST /telephony/config/premisePstn/trunks/actions/validate/invoke``
    * - :meth:`api.telephony.prem_pstn.trunk.validate_fqdn_and_domain <wxc_sdk.telephony.prem_pstn.trunk.TrunkApi.validate_fqdn_and_domain>`
-        | Validate Local Gateway FQDN and Domain for the organization trunks
+        | **Deprecated**: Use `Validate a Trunk` instead
         | ``POST /telephony/config/premisePstn/trunks/actions/fqdnValidation/invoke``
    * - :meth:`api.telephony.prem_pstn.validate_pattern <wxc_sdk.telephony.prem_pstn.PremisePstnApi.validate_pattern>`
         | Validate a Dial Pattern
