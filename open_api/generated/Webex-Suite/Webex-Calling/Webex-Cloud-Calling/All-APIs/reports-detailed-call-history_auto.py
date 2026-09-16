@@ -651,6 +651,9 @@ class CDR(ApiModel):
     #: 
     #: - "for Occupational Therapy"
     transfer_type_context: Optional[str] = Field(alias='Transfer type context', default=None)
+    #: Specifies how the call was answered. This field displays Auto Answer when the Auto-Answer feature handles the
+    #: call. For manually answered calls, the value is N/A.
+    answer_reason: Optional[str] = Field(alias='Answer reason', default=None)
 
 
 class ReportsDetailedCallHistoryApi(ApiChild, base='cdr_feed'):
