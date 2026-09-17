@@ -3411,7 +3411,7 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         url = self.ep('queues/agents/availableAgents')
         return self.session.follow_pagination(url=url, model=AvailableAgentObject, item_key='agents', params=params)
 
-    def get_call_queue_agent(self, id: str, max_: int, start: int, has_cx_essentials: bool = None,
+    def get_call_queue_agent(self, id: str, has_cx_essentials: bool = None, max_: int = None, start: int = None,
                              org_id: str = None) -> GetCallQueueAgentObject:
         """
         Get Details for an Agent for Call Queue or Customer Assist
@@ -3431,13 +3431,13 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
 
         :param id: Retrieve call queue agents with this identifier.
         :type id: str
+        :param has_cx_essentials: Must be set to `true` to view the details of an agent with Customer Assist license.
+            This can otherwise be ommited or set to `false`.
+        :type has_cx_essentials: bool
         :param max_: Limit the number of objects returned to this maximum count.
         :type max_: int
         :param start: Start at the zero-based offset in the list of matching objects.
         :type start: int
-        :param has_cx_essentials: Must be set to `true` to view the details of an agent with Customer Assist license.
-            This can otherwise be ommited or set to `false`.
-        :type has_cx_essentials: bool
         :param org_id: Retrieve call queue agents from this organization.
         :type org_id: str
         :rtype: :class:`GetCallQueueAgentObject`
@@ -3447,8 +3447,10 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
             params['orgId'] = org_id
         if has_cx_essentials is not None:
             params['hasCxEssentials'] = str(has_cx_essentials).lower()
-        params['max'] = max_
-        params['start'] = start
+        if max_ is not None:
+            params['max'] = max_
+        if start is not None:
+            params['start'] = start
         url = self.ep(f'queues/agents/{id}')
         data = super().get(url, params=params)
         r = GetCallQueueAgentObject.model_validate(data)
