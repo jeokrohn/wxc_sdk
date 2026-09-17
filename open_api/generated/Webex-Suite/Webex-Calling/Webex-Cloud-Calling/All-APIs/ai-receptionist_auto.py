@@ -677,7 +677,10 @@ class AIReceptionistApi(ApiChild, base=''):
         sessions by `interaction_id` (which corresponds to the call correlation ID retrievable from the Webex Control
         Hub troubleshooting page) to locate the session associated with a specific call.
 
-        This API requires a full administrator auth token with a CI role of `id_full_admin`.
+        **Authentication:** Only a full administrator auth token with the CI role `id_full_admin` is supported.
+        Integration and service app tokens are not supported.
+
+        **Transcript availability:** Transcripts are available for troubleshooting for up to 90 days.
 
         :param ai_receptionist_id: Unique identifier of the AI Receptionist. AI Receptionist ID from the response of
             List AI Receptionists API.
@@ -714,7 +717,10 @@ class AIReceptionistApi(ApiChild, base=''):
         message is an array of text objects; for human messages, it is a plain string. Additional metadata may include
         tool invocations, knowledge-base lookups, and latency information useful for debugging.
 
-        This API requires a full administrator auth token with a CI role of `id_full_admin`.
+        **Authentication:** Only a full administrator auth token with the CI role `id_full_admin` is supported.
+        Integration and service app tokens are not supported.
+
+        **Transcript availability:** Transcripts are available for troubleshooting for up to 90 days.
 
         :param ai_receptionist_id: Unique identifier of the AI Receptionist. AI Receptionist ID from the response of
             List AI Receptionists API.
