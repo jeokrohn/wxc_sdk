@@ -673,8 +673,18 @@ class ReportsDetailedCallHistoryApi(ApiChild, base='cdr_feed'):
     
     To retrieve Detailed Call History information, your request must include a token with the
     `spark-admin:calling_cdr_read` `scope
-    <https://developer.webex.com/docs/integrations#scopes>`_. Additionally, the authenticating user must have the administrator role
-    "Webex Calling Detailed Call History API access" enabled.
+    <https://developer.webex.com/docs/integrations#scopes>`_.
+    
+    The recommended way to authorize this access is to create a custom role under **Administration roles**, select the
+    **Webex Calling Detailed Call History API access** permission, and assign the custom role to the users who need
+    CDR API access. This permission grants access to the Webex Calling Detailed Call History API only; it does not
+    change access to the Control Hub Detailed Call History report UI. Refer
+    `Webex Calling Detailed Call History API access role
+    <https://help.webex.com/fs78p5#wbxc_t_calling-access-api>`_ for more details.
+    
+    The earlier functional role with the same display name is marked **Obsolete** in Control Hub but remains
+    operational until **December 31, 2026**, as indicated beside the role. Administrators should migrate users and
+    integrations to the equivalent custom permission before that date.
     
     The CDR Feed API can query any 12-hour period between 5 minutes ago and 30 days prior to the current UTC time. Only
     12 hours of records can be retrieved per request (i.e., the time between the selected start and end times in a

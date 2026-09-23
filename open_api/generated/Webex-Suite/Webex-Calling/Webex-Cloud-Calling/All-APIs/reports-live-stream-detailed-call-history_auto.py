@@ -679,7 +679,17 @@ class ReportsLiveStreamDetailedCallHistoryApi(ApiChild, base='cdr_stream'):
     
     To retrieve Detailed Call History information, you must use a token with the `spark-admin:calling_cdr_read` `scope
     <https://developer.webex.com/docs/integrations#scopes>`_.
-    The authenticating user must have the administrator role "Webex Calling Detailed Call History API access" enabled.
+    
+    To use the Live Stream Detailed Call History API, the recommended way to authorize this access is to create or use
+    a custom admin role that includes the **Webex Calling Detailed Call History API access** permission under
+    **Administration roles** in Control Hub. This permission grants access to the Webex Calling Detailed Call History
+    API only; it does not change access to the Control Hub Detailed Call History report UI. API behavior is unchanged.
+    Refer `Webex Calling Detailed Call History API access role
+    <https://help.webex.com/fs78p5#wbxc_t_calling-access-api>`_ for more details.
+    
+    The earlier functional role with the same display name is marked **Obsolete** in Control Hub but remains
+    operational until **December 31, 2026**, as indicated beside the role. Administrators should migrate users and
+    integrations to the equivalent custom permission before that date.
     
     Detailed Call History information is available 1 minute after the call ends and the data reaches Webex Calling
     cloud. Records may be retrieved for up to 12 hours from the time they are stored. For example: if a call's data
