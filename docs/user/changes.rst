@@ -1,6 +1,8 @@
 Release history
 ===============
 
+1.39.0
+------
 - feat: new attribute OrganisationVoicemailSettings.voice_portal_access_vmdeposit_enabled
 - feat: new attribute CDR.answer_reason
 - feat: new endpoint: :meth:`api.telephony.prem_pstn.trunk.validate_a_trunk <wxc_sdk.telephony.prem_pstn.trunk.TrunkApi.validate_a_trunk>`, new attribute TrunkDetail.peer_identity

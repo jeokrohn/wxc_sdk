@@ -1,3 +1,18 @@
+## 1.39.0 (2026-09-23)
+
+### Feat
+
+- new attribute OrganisationVoicemailSettings.voice_portal_access_vmdeposit_enabled
+- new attribute CDR.answer_reason
+- new endpoint: :meth:`api.telephony.prem_pstn.trunk.validate_a_trunk <wxc_sdk.telephony.prem_pstn.trunk.TrunkApi.validate_a_trunk>`, new attribute TrunkDetail.peer_identity
+- new endpoint api.telephony.cx_essentials.get_available_agents
+- new attribute Person.licenses_provided
+- new attribute CallQueueAgent.agent_acdstate
+- new parameters for api.telephony.phone_numbers: assigned, elin_enabled
+- new API api.telephony.webhook_interest_registrations
+- new endpoint api.telephony.calls.list_callqueue_calls
+- new endpoint api.telephony.calls.list_callqueue_calls
+
 ## 1.38.0 (2026-08-20)
 
 ### Feat
