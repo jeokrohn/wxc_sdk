@@ -36835,6 +36835,10 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         Device layout customizes a user’s programmable line keys (PLK) on the phone and any attached Key Expansion
         Modules (KEM) with the existing configured line members and the user’s monitoring list.
 
+        **Note:** When `layoutMode` is DEFAULT, the response includes only `layoutMode` and `userReorderEnabled`. The
+        `lineKeys` field is omitted as the device uses system-assigned default line-key assignments. When `layoutMode`
+        is CUSTOM, the response includes the `lineKeys` array with the custom line-key configuration.
+
         This API requires a full or location administrator auth token with a scope
         of `spark-admin:telephony_config_read`.
 
@@ -36852,7 +36856,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         r = DeviceLayout.model_validate(data)
         return r
 
-    async def modify_device_layout(self, device_id: str, layout: DeviceLayout, org_id: str = None):
+    async def modify_device_layout(self, device_id: str, layout: DeviceLayout = None, org_id: str = None):
         """
         Modify Device Layout by Device ID
 
@@ -36860,6 +36864,10 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
 
         Device layout customizes a user’s programmable line keys (PLK) on the phone and any attached Key Expansion
         Modules (KEM) with the existing configured line members and the user’s monitoring list.
+
+        **Note:** When setting `layoutMode` to DEFAULT, do not include the `lineKeys` field in the request body. The
+        device will use system-assigned default line-key assignments. When setting `layoutMode` to CUSTOM, you must
+        include the `lineKeys` array to specify the custom line-key configuration.
 
         This API requires a full or location administrator auth token with a scope
         of `spark-admin:telephony_config_write`.
@@ -36874,7 +36882,7 @@ class AsTelephonyDevicesApi(AsApiChild, base='telephony/config'):
         params = {}
         if org_id is not None:
             params['orgId'] = org_id
-        body = layout.update()
+        body = layout.update() if layout is not None else {}
         url = self.ep(f'devices/{device_id}/layout')
         await super().put(url, params=params, json=body)
 

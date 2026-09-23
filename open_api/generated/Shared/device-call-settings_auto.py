@@ -1561,7 +1561,9 @@ class DeviceLayout(ApiModel):
     layout_mode: Optional[LayoutMode] = None
     #: If `true`, user customization is enabled.
     user_reorder_enabled: Optional[bool] = None
-    #: Contains a mapping of Line Keys and their corresponding actions.
+    #: Contains a mapping of Line Keys and their corresponding actions. This field is required when `layoutMode` is
+    #: CUSTOM. When `layoutMode` is DEFAULT, this field is not returned in GET responses and should not be included in
+    #: PUT requests, as the system uses the default line-key assignments.
     line_keys: Optional[list[ProgrammableLineKeys]] = None
     #: Type of KEM module.
     kem_module_type: Optional[KemModuleType] = None
@@ -2801,6 +2803,10 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         Device layout customizes a user’s programmable line keys (PLK) on the phone and any attached Key Expansion
         Modules (KEM) with the existing configured line members and the user’s monitoring list.
 
+        **Note:** When `layoutMode` is DEFAULT, the response includes only `layoutMode` and `userReorderEnabled`. The
+        `lineKeys` field is omitted as the device uses system-assigned default line-key assignments. When `layoutMode`
+        is CUSTOM, the response includes the `lineKeys` array with the custom line-key configuration.
+
         This API requires a full or location administrator auth token with a scope of
         `spark-admin:telephony_config_read`.
 
@@ -2819,7 +2825,8 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         return r
 
     def modify_device_layout_by_device_id(self, device_id: str, layout_mode: LayoutMode,
-                                          line_keys: list[ProgrammableLineKeys], user_reorder_enabled: bool = None,
+                                          user_reorder_enabled: bool = None,
+                                          line_keys: list[ProgrammableLineKeys] = None,
                                           kem_module_type: KemModuleType = None, kem_keys: list[KEMKeys] = None,
                                           org_id: str = None) -> None:
         """
@@ -2830,6 +2837,10 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         Device layout customizes a user’s programmable line keys (PLK) on the phone and any attached Key Expansion
         Modules (KEM) with the existing configured line members and the user’s monitoring list.
 
+        **Note:** When setting `layoutMode` to DEFAULT, do not include the `lineKeys` field in the request body. The
+        device will use system-assigned default line-key assignments. When setting `layoutMode` to CUSTOM, you must
+        include the `lineKeys` array to specify the custom line-key configuration.
+
         This API requires a full or location administrator auth token with a scope of
         `spark-admin:telephony_config_write`.
 
@@ -2837,10 +2848,12 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         :type device_id: str
         :param layout_mode: Defines the layout mode of the device, i.e. DEFAULT or CUSTOM.
         :type layout_mode: LayoutMode
-        :param line_keys: Contains a mapping of Line Keys and their corresponding actions.
-        :type line_keys: list[ProgrammableLineKeys]
         :param user_reorder_enabled: If `true`, user customization is enabled.
         :type user_reorder_enabled: bool
+        :param line_keys: Contains a mapping of Line Keys and their corresponding actions. This field is required when
+            `layoutMode` is CUSTOM. When `layoutMode` is DEFAULT, this field is not returned in GET responses and
+            should not be included in PUT requests, as the system uses the default line-key assignments.
+        :type line_keys: list[ProgrammableLineKeys]
         :param kem_module_type: Type of KEM module.
         :type kem_module_type: KemModuleType
         :param kem_keys: Contains a mapping of KEM Keys and their corresponding actions. For KEM keys not included in
@@ -2857,7 +2870,8 @@ class DeviceCallSettingsApi(ApiChild, base='telephony/config'):
         body['layoutMode'] = enum_str(layout_mode)
         if user_reorder_enabled is not None:
             body['userReorderEnabled'] = user_reorder_enabled
-        body['lineKeys'] = TypeAdapter(list[ProgrammableLineKeys]).dump_python(line_keys, mode='json', by_alias=True, exclude_none=True)
+        if line_keys is not None:
+            body['lineKeys'] = TypeAdapter(list[ProgrammableLineKeys]).dump_python(line_keys, mode='json', by_alias=True, exclude_none=True)
         if kem_module_type is not None:
             body['kemModuleType'] = enum_str(kem_module_type)
         if kem_keys is not None:
