@@ -98,6 +98,9 @@ class GetVoicemailSettingsObject(ApiModel):
     strict_deletion_enabled: Optional[bool] = None
     #: When enabled, people in the organization can configure the email forwarding of voicemails.
     voice_message_forwarding_enabled: Optional[bool] = None
+    #: This field allows the callers to access the voice portal by pressing the * key during the voicemail deposit or
+    #: after sending a message.
+    voice_portal_access_vmdeposit_enabled: Optional[bool] = Field(alias='voicePortalAccessVMDepositEnabled', default=None)
 
 
 class Language(ApiModel):
@@ -381,7 +384,7 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
 
     def update_voicemail_settings(self, message_expiry_enabled: bool, number_of_days_for_message_expiry: int,
                                   strict_deletion_enabled: bool = None, voice_message_forwarding_enabled: bool = None,
-                                  org_id: str = None) -> None:
+                                  voice_portal_access_vmdeposit_enabled: bool = None, org_id: str = None) -> None:
         """
         Update Voicemail Settings
 
@@ -404,6 +407,9 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
         :param voice_message_forwarding_enabled: Set to `true` to allow people to configure the email forwarding of
             voicemails.
         :type voice_message_forwarding_enabled: bool
+        :param voice_portal_access_vmdeposit_enabled: This field allows the callers to access the voice portal by
+            pressing the * key during the voicemail deposit or after sending a message.
+        :type voice_portal_access_vmdeposit_enabled: bool
         :param org_id: Update voicemail settings for this organization.
         :type org_id: str
         :rtype: None
@@ -418,5 +424,7 @@ class CallingServiceSettingsApi(ApiChild, base='telephony/config'):
             body['strictDeletionEnabled'] = strict_deletion_enabled
         if voice_message_forwarding_enabled is not None:
             body['voiceMessageForwardingEnabled'] = voice_message_forwarding_enabled
+        if voice_portal_access_vmdeposit_enabled is not None:
+            body['voicePortalAccessVMDepositEnabled'] = voice_portal_access_vmdeposit_enabled
         url = self.ep('voicemail/settings')
         super().put(url, params=params, json=body)

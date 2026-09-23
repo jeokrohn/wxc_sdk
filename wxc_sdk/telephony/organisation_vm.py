@@ -4,6 +4,8 @@ Organisation voicemail settings
 
 from typing import Optional
 
+from pydantic import Field
+
 from ..api_child import ApiChild
 from ..base import ApiModel
 
@@ -24,14 +26,18 @@ class OrganisationVoicemailSettings(ApiModel):
     strict_deletion_enabled: Optional[bool] = None
     #: When enabled, people in the organization can configure the email forwarding of voicemails.
     voice_message_forwarding_enabled: Optional[bool] = None
+    #: This field allows the callers to access the voice portal by pressing the * key during the voicemail deposit or
+    #: after sending a message.
+    voice_portal_access_vmdeposit_enabled: Optional[bool] = Field(None, alias='voicePortalAccessVMDepositEnabled')
 
     @staticmethod
     def default() -> 'OrganisationVoicemailSettings':
-        return OrganisationVoicemailSettings(
+        return OrganisationVoicemailSettings(  # type: ignore[call-arg]
             message_expiry_enabled=False,
             number_of_days_for_message_expiry=15,
             strict_deletion_enabled=False,
             voice_message_forwarding_enabled=False,
+            voice_portal_access_vmdeposit_enabled=False,
         )
 
 
@@ -78,5 +84,5 @@ class OrganisationVoicemailSettingsAPI(ApiChild, base='telephony/config/voicemai
         """
         params = org_id and {'orgId': org_id} or None
         url = self.ep()
-        data = settings.model_dump_json()
-        self.put(url, data=data, params=params)
+        data = settings.model_dump(by_alias=True, exclude_none=True, mode='json')
+        self.put(url, body=data, params=params)

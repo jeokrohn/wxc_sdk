@@ -32981,8 +32981,8 @@ class AsOrganisationVoicemailSettingsAPI(AsApiChild, base='telephony/config/voic
         """
         params = org_id and {'orgId': org_id} or None
         url = self.ep()
-        data = settings.model_dump_json()
-        await self.put(url, data=data, params=params)
+        data = settings.model_dump(by_alias=True, exclude_none=True, mode='json')
+        await self.put(url, body=data, params=params)
 
 
 class AsPSTNApi(AsApiChild, base='telephony/pstn'):
