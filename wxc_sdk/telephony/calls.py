@@ -253,11 +253,11 @@ class CallHistoryRecord(ApiModel):
     #: user@company.domain
     number: Optional[str] = None
     #: Indicates whether privacy is enabled for the name and number.
-    privacy_enabled: bool
+    privacy_enabled: Optional[bool] = None
     #: The date and time the call history record was created. For a placed call history record, this is when the call
     #: was placed. For a missed call history record, this is when the call was disconnected. For a received call
     #: history record, this is when the call was answered.
-    time: datetime.datetime
+    time: Optional[datetime.datetime] = None
 
 
 class CallInfo(ApiModel):

@@ -1,6 +1,7 @@
 Release history
 ===============
 
+- feat: addtl. CallControlsMembersApi and MeCallControlApi methods
 - feat: new endpoint: :meth:`api.telephony.voice_messaging.memberships <wxc_sdk.telephony.voice_messaging.VoiceMessagingApi.memberships>`
 - feat: new parameter: line_owner_id for VoiceMessagingApi.summary/delete. Update docstrings
 
