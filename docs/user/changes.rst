@@ -1,6 +1,8 @@
 Release history
 ===============
 
+- feat new parameter: line_owner_id for VoiceMessagingApi.summary/delete. Update docstrings
+
 1.39.0
 ------
 - feat: new attribute OrganisationVoicemailSettings.voice_portal_access_vmdeposit_enabled

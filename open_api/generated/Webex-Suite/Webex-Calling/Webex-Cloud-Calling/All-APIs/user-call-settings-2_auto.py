@@ -5539,8 +5539,9 @@ class UserCallSettings22Api(ApiChild, base=''):
 
         Get the list of all voicemail messages for the user.
 
-        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
-            device owned by the user invoking the API.
+        :param line_owner_id: The ID of a user, workspace, virtual line, auto attendant, hunt group, or call queue for
+            which there is a secondary line on a device owned by the user invoking the API, or that was shared with
+            the user invoking the API.
         :type line_owner_id: str
         :rtype: list[VoiceMessageDetails]
         """
@@ -5564,8 +5565,9 @@ class UserCallSettings22Api(ApiChild, base=''):
         :param message_id: The voicemail message identifier of the message to mark as read.  If the `messageId` is not
             provided, then all voicemail messages for the user are marked as read.
         :type message_id: str
-        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
-            device owned by the user invoking the API.
+        :param line_owner_id: The ID of a user, workspace, virtual line, auto attendant, hunt group, or call queue for
+            which there is a secondary line on a device owned by the user invoking the API, or that was shared with
+            the user invoking the API.
         :type line_owner_id: str
         :rtype: None
         """
@@ -5589,8 +5591,9 @@ class UserCallSettings22Api(ApiChild, base=''):
         :param message_id: The voicemail message identifier of the message to mark as unread.  If the `messageId` is
             not provided, then all voicemail messages for the user are marked as unread.
         :type message_id: str
-        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
-            device owned by the user invoking the API.
+        :param line_owner_id: The ID of a user, workspace, virtual line, auto attendant, hunt group, or call queue for
+            which there is a secondary line on a device owned by the user invoking the API, or that was shared with
+            the user invoking the API.
         :type line_owner_id: str
         :rtype: None
         """
@@ -5602,20 +5605,27 @@ class UserCallSettings22Api(ApiChild, base=''):
         url = self.ep('telephony/voiceMessages/markAsUnread')
         super().post(url, json=body)
 
-    def get_message_summary(self) -> GetMessageSummaryResponse:
+    def get_message_summary(self, line_owner_id: str = None) -> GetMessageSummaryResponse:
         """
         Get Message Summary
 
         Get a summary of the voicemail messages for the user.
 
+        :param line_owner_id: The ID of a user, workspace, virtual line, auto attendant, hunt group, or call queue for
+            which there is a secondary line on a device owned by the user invoking the API, or that was shared with
+            the user invoking the API.
+        :type line_owner_id: str
         :rtype: :class:`GetMessageSummaryResponse`
         """
+        params: dict[str, Any] = dict()
+        if line_owner_id is not None:
+            params['lineOwnerId'] = line_owner_id
         url = self.ep('telephony/voiceMessages/summary')
-        data = super().get(url)
+        data = super().get(url, params=params)
         r = GetMessageSummaryResponse.model_validate(data)
         return r
 
-    def delete_message(self, message_id: str) -> None:
+    def delete_message(self, message_id: str, line_owner_id: str = None) -> None:
         """
         Delete Message
 
@@ -5623,7 +5633,14 @@ class UserCallSettings22Api(ApiChild, base=''):
 
         :param message_id: The message identifer of the voicemail message to delete
         :type message_id: str
+        :param line_owner_id: The ID of a user, workspace, virtual line, auto attendant, hunt group, or call queue for
+            which there is a secondary line on a device owned by the user invoking the API, or that was shared with
+            the user invoking the API.
+        :type line_owner_id: str
         :rtype: None
         """
+        params: dict[str, Any] = dict()
+        if line_owner_id is not None:
+            params['lineOwnerId'] = line_owner_id
         url = self.ep(f'telephony/voiceMessages/{message_id}')
-        super().delete(url)
+        super().delete(url, params=params)

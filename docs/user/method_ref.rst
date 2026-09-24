@@ -3670,7 +3670,7 @@ description of the operation. The method name is a link to the method documentat
         | Reset Voicemail PIN
         | ``POST /telephony/config/virtualLines/{entity_id}/voicemail/actions/resetPin/invoke``
    * - :meth:`api.telephony.voice_messaging.delete <wxc_sdk.telephony.voice_messaging.VoiceMessagingApi.delete>`
-        | Delete a specific voicemail message for the user
+        | Delete a specfic voicemail message for the user
         | ``DELETE /telephony/voiceMessages/{message_id}``
    * - :meth:`api.telephony.voice_messaging.list <wxc_sdk.telephony.voice_messaging.VoiceMessagingApi.list>`
         | Get the list of all voicemail messages for the user

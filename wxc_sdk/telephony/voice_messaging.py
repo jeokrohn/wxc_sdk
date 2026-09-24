@@ -68,20 +68,29 @@ class VoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
     the other commands require the spark:calls_write scope.
     """
 
-    def summary(self) -> MessageSummary:
+    def summary(self, line_owner_id: str = None) -> MessageSummary:
         """
         Get a summary of the voicemail messages for the user.
+
+        :param line_owner_id: The ID of a user, workspace, virtual line, auto attendant, hunt group, or call queue for
+            which there is a secondary line on a device owned by the user invoking the API, or that was shared with
+            the user invoking the API.
+        :type line_owner_id: str
         """
+        params = {}
+        if line_owner_id is not None:
+            params['lineOwnerId'] = line_owner_id
         url = self.ep('summary')
-        data = super().get(url=url)
+        data = super().get(url=url, params=params)
         return MessageSummary.model_validate(data)
 
     def list(self, line_owner_id: str = None, **params) -> Generator[VoiceMessageDetails, None, None]:
         """
         Get the list of all voicemail messages for the user.
 
-        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
-            device owned by the user invoking the API.
+        :param line_owner_id: The ID of a user, workspace, virtual line, auto attendant, hunt group, or call queue for
+            which there is a secondary line on a device owned by the user invoking the API, or that was shared with
+            the user invoking the API.
         :type line_owner_id: str
         """
         if line_owner_id is not None:
@@ -89,15 +98,22 @@ class VoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
         url = self.ep()
         return self.session.follow_pagination(url=url, model=VoiceMessageDetails, params=params)
 
-    def delete(self, message_id: str):
+    def delete(self, message_id: str, line_owner_id: str = None):
         """
-        Delete a specific voicemail message for the user.
+        Delete a specfic voicemail message for the user.
 
         :param message_id: The message identifier of the voicemail message to delete
         :type message_id: str
+        :param line_owner_id: The ID of a user, workspace, virtual line, auto attendant, hunt group, or call queue for
+            which there is a secondary line on a device owned by the user invoking the API, or that was shared with
+            the user invoking the API.
+        :type line_owner_id: str
         """
+        params = {}
+        if line_owner_id is not None:
+            params['lineOwnerId'] = line_owner_id
         url = self.ep(f'{message_id}')
-        super().delete(url=url)
+        super().delete(url=url, params=params)
         return
 
     def mark_as_read(self, message_id: str, line_owner_id: str = None):
@@ -109,8 +125,9 @@ class VoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
         :param message_id: The voicemail message identifier of the message to mark as read.  If the messageId is not
             provided, then all voicemail messages for the user are marked as read.
         :type message_id: str
-        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
-            device owned by the user invoking the API.
+        :param line_owner_id: The ID of a user, workspace, virtual line, auto attendant, hunt group, or call queue for
+            which there is a secondary line on a device owned by the user invoking the API, or that was shared with
+            the user invoking the API.
         :type line_owner_id: str
         """
         body = {'messageId': message_id}
@@ -128,8 +145,9 @@ class VoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
 
         :param message_id: The voicemail message identifier of the message to mark as unread.  If the messageId is not
             provided, then all voicemail messages for the user are marked as unread.
-        :param line_owner_id: The ID of a user, workspace, or virtual line for which there is a secondary line on a
-            device owned by the user invoking the API.
+        :param line_owner_id: The ID of a user, workspace, virtual line, auto attendant, hunt group, or call queue for
+            which there is a secondary line on a device owned by the user invoking the API, or that was shared with
+            the user invoking the API.
         :type line_owner_id: str
         :type message_id: str
         """
