@@ -287,7 +287,8 @@ from wxc_sdk.telephony.virtual_line import VirtualLine, VirtualLineDevices, Virt
     VirtualLineNumberPhoneNumber
 from wxc_sdk.telephony.vm_rules import BlockContiguousSequences, BlockPreviousPasscodes, BlockRepeatedDigits, \
     DefaultVoicemailPinRules, EnabledAndNumberOfDays, PinLength, UserVoicemailPINRules, VoiceMailRules
-from wxc_sdk.telephony.voice_messaging import MessageSummary, VoiceMailPartyInformation, VoiceMessageDetails
+from wxc_sdk.telephony.voice_messaging import MessageSummary, VoiceMailPartyInformation, VoiceMessageDetails, \
+    VoiceMessageMembership
 from wxc_sdk.telephony.voicemail_groups import VoicemailGroup, VoicemailGroupDetail
 from wxc_sdk.telephony.voiceportal import ExpirePasscode, FailedAttempts, PasscodeRules, VoicePortalSettings
 from wxc_sdk.telephony.webhook_interest_registrations import Interest, InterestActor, InterestResource, \
@@ -507,16 +508,16 @@ __all__ = ['AIRDirectLineCallerIdName', 'AIRIntent', 'AIRSessionState', 'AIRSess
            'VirtualExtensionLevel', 'VirtualExtensionMode', 'VirtualExtensionRange', 'VirtualExtensionRangeAction',
            'VirtualExtensionRangeValidationResult', 'VirtualExtensionValidationStatus', 'VirtualLine',
            'VirtualLineDevices', 'VirtualLineLocation', 'VirtualLineNumberPhoneNumber', 'VlanSetting', 'Voice',
-           'VoiceGender', 'VoiceMailPartyInformation', 'VoiceMailRules', 'VoiceMessageDetails', 'VoicePortalSettings',
-           'VoicemailCopyOfMessage', 'VoicemailEnabled', 'VoicemailEnabledWithGreeting', 'VoicemailFax',
-           'VoicemailGroup', 'VoicemailGroupDetail', 'VoicemailMessageStorage', 'VoicemailNotifications',
-           'VoicemailSettings', 'VoicemailTransferToNumber', 'VolumeSettings', 'WaitMessageSetting', 'WaitMode',
-           'WebexGroup', 'WebexGroupMeta', 'WebexGroupOwner', 'WebexStatus', 'WebexUser', 'WebexUserMeta', 'Webhook',
-           'WebhookCreate', 'WebhookEvent', 'WebhookEventData', 'WebhookEventType', 'WebhookInterestRegistration',
-           'WebhookResource', 'WebhookStatus', 'Week', 'WelcomeMessageSetting', 'WifiAuthenticationMethod',
-           'WifiCustomization', 'WifiNetwork', 'WorkSpaceType', 'Workspace', 'WorkspaceCalling',
-           'WorkspaceCallingHybridCalling', 'WorkspaceEmail', 'WorkspaceHealth', 'WorkspaceHealthIssue',
-           'WorkspaceHealthLevel', 'WorkspaceIndoorNavigation', 'WorkspaceLocation', 'WorkspaceLocationFloor',
-           'WorkspaceNumbers', 'WorkspacePersonalizationTaskResponse', 'WorkspaceSupportedDevices',
-           'WorkspaceWebexCalling', 'WrapUpReason', 'WrapUpReasonDetails', 'WrapupReasonQueue', '_Helper',
-           'dt_iso_str', 'enum_str', 'plus1', 'to_camel', 'webex_id_to_uuid']
+           'VoiceGender', 'VoiceMailPartyInformation', 'VoiceMailRules', 'VoiceMessageDetails',
+           'VoiceMessageMembership', 'VoicePortalSettings', 'VoicemailCopyOfMessage', 'VoicemailEnabled',
+           'VoicemailEnabledWithGreeting', 'VoicemailFax', 'VoicemailGroup', 'VoicemailGroupDetail',
+           'VoicemailMessageStorage', 'VoicemailNotifications', 'VoicemailSettings', 'VoicemailTransferToNumber',
+           'VolumeSettings', 'WaitMessageSetting', 'WaitMode', 'WebexGroup', 'WebexGroupMeta', 'WebexGroupOwner',
+           'WebexStatus', 'WebexUser', 'WebexUserMeta', 'Webhook', 'WebhookCreate', 'WebhookEvent',
+           'WebhookEventData', 'WebhookEventType', 'WebhookInterestRegistration', 'WebhookResource', 'WebhookStatus',
+           'Week', 'WelcomeMessageSetting', 'WifiAuthenticationMethod', 'WifiCustomization', 'WifiNetwork',
+           'WorkSpaceType', 'Workspace', 'WorkspaceCalling', 'WorkspaceCallingHybridCalling', 'WorkspaceEmail',
+           'WorkspaceHealth', 'WorkspaceHealthIssue', 'WorkspaceHealthLevel', 'WorkspaceIndoorNavigation',
+           'WorkspaceLocation', 'WorkspaceLocationFloor', 'WorkspaceNumbers', 'WorkspacePersonalizationTaskResponse',
+           'WorkspaceSupportedDevices', 'WorkspaceWebexCalling', 'WrapUpReason', 'WrapUpReasonDetails',
+           'WrapupReasonQueue', '_Helper', 'dt_iso_str', 'enum_str', 'plus1', 'to_camel', 'webex_id_to_uuid']

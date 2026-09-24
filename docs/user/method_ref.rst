@@ -3681,6 +3681,9 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.telephony.voice_messaging.mark_as_unread <wxc_sdk.telephony.voice_messaging.VoiceMessagingApi.mark_as_unread>`
         | Update the voicemail message(s) as unread for the user
         | ``POST /telephony/voiceMessages/markAsUnread``
+   * - :meth:`api.telephony.voice_messaging.memberships <wxc_sdk.telephony.voice_messaging.VoiceMessagingApi.memberships>`
+        | List Voice Message Memberships
+        | ``GET /telephony/voiceMessages/memberships``
    * - :meth:`api.telephony.voice_messaging.summary <wxc_sdk.telephony.voice_messaging.VoiceMessagingApi.summary>`
         | Get a summary of the voicemail messages for the user
         | ``GET /telephony/voiceMessages/summary``

@@ -40349,6 +40349,27 @@ class AsVoiceMessagingApi(AsApiChild, base='telephony/voiceMessages'):
         await super().post(url=url, json=body)
         return
 
+    async def memberships(self) -> builtins.list[VoiceMessageMembership]:
+        """
+        List Voice Message Memberships
+
+        Retrieves the list of shared voicemail memberships for the authenticated user. Each membership represents a
+        group calling feature (Call Queue, Hunt Group, or Auto Attendant) whose shared voicemail box the user has
+        access to.
+
+        A service may have a phoneNumber, an extension, both, or neither, so any of these optional fields may be absent
+        from a given entry. These can be used as values for the `lineOwnerId` parameter in other voicemail APIs.
+
+        This API requires a full, user, or read-only administrator auth token with a scope of `spark-admin:people_read`
+        or a user auth token with `spark:people_read` scope.
+
+        :rtype: list[VoiceMessageMembership]
+        """
+        url = self.ep('memberships')
+        data = await super().get(url)
+        r = TypeAdapter(list[VoiceMessageMembership]).validate_python(data['memberOf'])
+        return r
+
 
 class AsVoicePortalApi(AsApiChild, base='telephony/config/locations'):
     """

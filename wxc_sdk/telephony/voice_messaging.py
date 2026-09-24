@@ -6,13 +6,22 @@ APIs are limited to user access (no admin access), and all GET commands require 
 while the other commands require the spark:calls_write scope
 """
 
+import builtins
 from collections.abc import Generator
 from typing import Optional
+
+from pydantic import TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
 
-__all__ = ['MessageSummary', 'VoiceMailPartyInformation', 'VoiceMessageDetails', 'VoiceMessagingApi']
+__all__ = [
+    'MessageSummary',
+    'VoiceMailPartyInformation',
+    'VoiceMessageDetails',
+    'VoiceMessageMembership',
+    'VoiceMessagingApi',
+]
 
 
 # noinspection DuplicatedCode
@@ -59,6 +68,23 @@ class MessageSummary(ApiModel):
     new_urgent_messages: Optional[int] = None
     #: The number of old (read) urgent voicemail messages.
     old_urgent_messages: Optional[int] = None
+
+
+class VoiceMessageMembership(ApiModel):
+    #: Unique identifier for the membership.
+    id: Optional[str] = None
+    #: Type of the membership. One of CALL_QUEUE, HUNT_GROUP, or AUTO_ATTENDANT.
+    type: Optional[str] = None
+    #: Display name of the call queue, hunt group, or auto attendant.
+    name: Optional[str] = None
+    #: Phone number in E.164 format. Omitted when the service has no phone number.
+    phone_number: Optional[str] = None
+    #: Extension number. Omitted when the service has no extension.
+    extension: Optional[str] = None
+    #: Location dialing code (routing prefix). Omitted when not set.
+    routing_prefix: Optional[str] = None
+    #: Enterprise Significant Number, the concatenation of routingPrefix and extension. Omitted when not set.
+    esn: Optional[str] = None
 
 
 class VoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
@@ -157,3 +183,24 @@ class VoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
         url = self.ep('markAsUnread')
         super().post(url=url, json=body)
         return
+
+    def memberships(self) -> builtins.list[VoiceMessageMembership]:
+        """
+        List Voice Message Memberships
+
+        Retrieves the list of shared voicemail memberships for the authenticated user. Each membership represents a
+        group calling feature (Call Queue, Hunt Group, or Auto Attendant) whose shared voicemail box the user has
+        access to.
+
+        A service may have a phoneNumber, an extension, both, or neither, so any of these optional fields may be absent
+        from a given entry. These can be used as values for the `lineOwnerId` parameter in other voicemail APIs.
+
+        This API requires a full, user, or read-only administrator auth token with a scope of `spark-admin:people_read`
+        or a user auth token with `spark:people_read` scope.
+
+        :rtype: list[VoiceMessageMembership]
+        """
+        url = self.ep('memberships')
+        data = super().get(url)
+        r = TypeAdapter(list[VoiceMessageMembership]).validate_python(data['memberOf'])
+        return r

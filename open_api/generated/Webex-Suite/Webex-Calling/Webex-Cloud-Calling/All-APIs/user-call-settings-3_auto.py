@@ -15,10 +15,11 @@ from wxc_sdk.base import SafeEnum as Enum
 
 
 __all__ = ['HotDeskingAvailableMember', 'HotDeskingLineType', 'HotDeskingMember', 'HotDeskingMembers',
-           'HotDeskingPutMember', 'HotDeskingPutMemberType', 'HotDeskingResponseMemberType', 'Location',
-           'PersonCallsFromType', 'PersonScheduleLevel', 'PersonScheduleType', 'PersonSimultaneousRingCriteriaGet',
-           'PersonSimultaneousRingCriteriaSummary', 'PersonSimultaneousRingGet', 'PersonSimultaneousRingNumber',
-           'PersonSimultaneousRingSource', 'UserCallSettings33Api']
+           'HotDeskingPutMember', 'HotDeskingPutMemberType', 'HotDeskingResponseMemberType',
+           'ListVoiceMessageMembershipsResponseMemberOfItem', 'ListVoiceMessageMembershipsResponseMemberOfItemType',
+           'Location', 'PersonCallsFromType', 'PersonScheduleLevel', 'PersonScheduleType',
+           'PersonSimultaneousRingCriteriaGet', 'PersonSimultaneousRingCriteriaSummary', 'PersonSimultaneousRingGet',
+           'PersonSimultaneousRingNumber', 'PersonSimultaneousRingSource', 'UserCallSettings33Api']
 
 
 class PersonSimultaneousRingNumber(ApiModel):
@@ -225,7 +226,30 @@ class HotDeskingPutMember(ApiModel):
     member_type: Optional[HotDeskingPutMemberType] = None
 
 
-class UserCallSettings33Api(ApiChild, base='telephony/config/people'):
+class ListVoiceMessageMembershipsResponseMemberOfItemType(str, Enum):
+    call_queue = 'CALL_QUEUE'
+    hunt_group = 'HUNT_GROUP'
+    auto_attendant = 'AUTO_ATTENDANT'
+
+
+class ListVoiceMessageMembershipsResponseMemberOfItem(ApiModel):
+    #: Unique identifier for the membership.
+    id: Optional[str] = None
+    #: Type of the membership. One of CALL_QUEUE, HUNT_GROUP, or AUTO_ATTENDANT.
+    type: Optional[ListVoiceMessageMembershipsResponseMemberOfItemType] = None
+    #: Display name of the call queue, hunt group, or auto attendant.
+    name: Optional[str] = None
+    #: Phone number in E.164 format. Omitted when the service has no phone number.
+    phone_number: Optional[str] = None
+    #: Extension number. Omitted when the service has no extension.
+    extension: Optional[str] = None
+    #: Location dialing code (routing prefix). Omitted when not set.
+    routing_prefix: Optional[str] = None
+    #: Enterprise Significant Number, the concatenation of routingPrefix and extension. Omitted when not set.
+    esn: Optional[str] = None
+
+
+class UserCallSettings33Api(ApiChild, base='telephony'):
     """
     User Call Settings (3/3)
     
@@ -265,7 +289,7 @@ class UserCallSettings33Api(ApiChild, base='telephony/config/people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/anonymousCallReject')
+        url = self.ep(f'config/people/{person_id}/anonymousCallReject')
         data = super().get(url, params=params)
         r = data['enabled']
         return r
@@ -294,7 +318,7 @@ class UserCallSettings33Api(ApiChild, base='telephony/config/people'):
             params['orgId'] = org_id
         body: dict[str, Any] = dict()
         body['enabled'] = enabled
-        url = self.ep(f'{person_id}/anonymousCallReject')
+        url = self.ep(f'config/people/{person_id}/anonymousCallReject')
         super().put(url, params=params, json=body)
 
     def search_available_hot_desking_members(self, person_id: str, location_id: str = None, member_name: str = None,
@@ -341,7 +365,7 @@ class UserCallSettings33Api(ApiChild, base='telephony/config/people'):
             params['extension'] = extension
         if order is not None:
             params['order'] = ','.join(order)
-        url = self.ep(f'{person_id}/features/hotDesking/availableMembers')
+        url = self.ep(f'config/people/{person_id}/features/hotDesking/availableMembers')
         return self.session.follow_pagination(url=url, model=HotDeskingAvailableMember, item_key='members', params=params)
 
     def get_hot_desking_members(self, person_id: str, org_id: str = None) -> HotDeskingMembers:
@@ -363,7 +387,7 @@ class UserCallSettings33Api(ApiChild, base='telephony/config/people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/features/hotDesking/members')
+        url = self.ep(f'config/people/{person_id}/features/hotDesking/members')
         data = super().get(url, params=params)
         r = HotDeskingMembers.model_validate(data)
         return r
@@ -394,7 +418,7 @@ class UserCallSettings33Api(ApiChild, base='telephony/config/people'):
             params['orgId'] = org_id
         body: dict[str, Any] = dict()
         body['members'] = TypeAdapter(list[HotDeskingPutMember]).dump_python(members, mode='json', by_alias=True, exclude_none=True)
-        url = self.ep(f'{person_id}/features/hotDesking/members')
+        url = self.ep(f'config/people/{person_id}/features/hotDesking/members')
         super().put(url, params=params, json=body)
 
     def get_person_outbound_billing_plan(self, person_id: str, org_id: str = None) -> bool:
@@ -424,7 +448,7 @@ class UserCallSettings33Api(ApiChild, base='telephony/config/people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/outboundBillingPlan')
+        url = self.ep(f'config/people/{person_id}/outboundBillingPlan')
         data = super().get(url, params=params)
         r = data['enabled']
         return r
@@ -460,7 +484,7 @@ class UserCallSettings33Api(ApiChild, base='telephony/config/people'):
             params['orgId'] = org_id
         body: dict[str, Any] = dict()
         body['enabled'] = enabled
-        url = self.ep(f'{person_id}/outboundBillingPlan')
+        url = self.ep(f'config/people/{person_id}/outboundBillingPlan')
         super().put(url, params=params, json=body)
 
     def get_person_calling_services(self, person_id: str, org_id: str = None) -> builtins.list[str]:
@@ -484,7 +508,7 @@ class UserCallSettings33Api(ApiChild, base='telephony/config/people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/services')
+        url = self.ep(f'config/people/{person_id}/services')
         data = super().get(url, params=params)
         r = data['services']
         return r
@@ -509,7 +533,7 @@ class UserCallSettings33Api(ApiChild, base='telephony/config/people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/simultaneousRing')
+        url = self.ep(f'config/people/{person_id}/simultaneousRing')
         data = super().get(url, params=params)
         r = PersonSimultaneousRingGet.model_validate(data)
         return r
@@ -558,7 +582,7 @@ class UserCallSettings33Api(ApiChild, base='telephony/config/people'):
             body['criteriasEnabled'] = criterias_enabled
         if phone_numbers is not None:
             body['phoneNumbers'] = TypeAdapter(list[PersonSimultaneousRingNumber]).dump_python(phone_numbers, mode='json', by_alias=True, exclude_none=True)
-        url = self.ep(f'{person_id}/simultaneousRing')
+        url = self.ep(f'config/people/{person_id}/simultaneousRing')
         super().put(url, params=params, json=body)
 
     def create_person_simultaneous_ring_criteria(self, person_id: str, calls_from: PersonCallsFromType,
@@ -624,7 +648,7 @@ class UserCallSettings33Api(ApiChild, base='telephony/config/people'):
         if phone_numbers is not None:
             body['phoneNumbers'] = phone_numbers
         body['ringEnabled'] = ring_enabled
-        url = self.ep(f'{person_id}/simultaneousRing/criteria')
+        url = self.ep(f'config/people/{person_id}/simultaneousRing/criteria')
         data = super().post(url, params=params, json=body)
         r = data['id']
         return r
@@ -653,7 +677,7 @@ class UserCallSettings33Api(ApiChild, base='telephony/config/people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/simultaneousRing/criteria/{id}')
+        url = self.ep(f'config/people/{person_id}/simultaneousRing/criteria/{id}')
         super().delete(url, params=params)
 
     def get_person_simultaneous_ring_criteria(self, person_id: str, id: str,
@@ -681,7 +705,7 @@ class UserCallSettings33Api(ApiChild, base='telephony/config/people'):
         params: dict[str, Any] = dict()
         if org_id is not None:
             params['orgId'] = org_id
-        url = self.ep(f'{person_id}/simultaneousRing/criteria/{id}')
+        url = self.ep(f'config/people/{person_id}/simultaneousRing/criteria/{id}')
         data = super().get(url, params=params)
         r = PersonSimultaneousRingCriteriaGet.model_validate(data)
         return r
@@ -754,5 +778,26 @@ class UserCallSettings33Api(ApiChild, base='telephony/config/people'):
             body['phoneNumbers'] = phone_numbers
         if ring_enabled is not None:
             body['ringEnabled'] = ring_enabled
-        url = self.ep(f'{person_id}/simultaneousRing/criteria/{id}')
+        url = self.ep(f'config/people/{person_id}/simultaneousRing/criteria/{id}')
         super().put(url, params=params, json=body)
+
+    def list_voice_message_memberships(self) -> builtins.list[ListVoiceMessageMembershipsResponseMemberOfItem]:
+        """
+        List Voice Message Memberships
+
+        Retrieves the list of shared voicemail memberships for the authenticated user. Each membership represents a
+        group calling feature (Call Queue, Hunt Group, or Auto Attendant) whose shared voicemail box the user has
+        access to.
+
+        A service may have a phoneNumber, an extension, both, or neither, so any of these optional fields may be absent
+        from a given entry. These can be used as values for the `lineOwnerId` parameter in other voicemail APIs.
+
+        This API requires a full, user, or read-only administrator auth token with a scope of `spark-admin:people_read`
+        or a user auth token with `spark:people_read` scope.
+
+        :rtype: list[ListVoiceMessageMembershipsResponseMemberOfItem]
+        """
+        url = self.ep('voiceMessages/memberships')
+        data = super().get(url)
+        r = TypeAdapter(list[ListVoiceMessageMembershipsResponseMemberOfItem]).validate_python(data['memberOf'])
+        return r
