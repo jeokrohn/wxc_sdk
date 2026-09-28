@@ -35,7 +35,7 @@ from .access_codes import LocationAccessCodesApi
 from .ai_receptionists import AIReceptionistApi
 from .announcements_repo import AnnouncementsRepositoryApi
 from .autoattendant import AutoAttendantApi
-from .call_contols_members import CallControlsMembersApi
+from .call_controls_members import CallControlsMembersApi
 from .call_recording import CallRecordingSettingsApi
 from .call_routing import CallRoutingApi
 from .caller_reputation import CallerReputationProviderApi

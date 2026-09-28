@@ -1887,82 +1887,82 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.telephony.auto_attendant.update <wxc_sdk.telephony.autoattendant.AutoAttendantApi.update>`
         | Update an Auto Attendant
         | ``PUT /telephony/config/locations/{location_id}/autoAttendants/{auto_attendant_id}``
-   * - :meth:`api.telephony.call_controls_members.answer <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.answer>`
+   * - :meth:`api.telephony.call_controls_members.answer <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.answer>`
         | Answer by Member ID
         | ``POST /telephony/calls/members/{member_id}/answer``
-   * - :meth:`api.telephony.call_controls_members.barge_in <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.barge_in>`
+   * - :meth:`api.telephony.call_controls_members.barge_in <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.barge_in>`
         | Barge In by Member ID
         | ``POST /telephony/calls/members/{member_id}/bargeIn``
-   * - :meth:`api.telephony.call_controls_members.call_history <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.call_history>`
+   * - :meth:`api.telephony.call_controls_members.call_history <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.call_history>`
         | List Call History by Member ID
         | ``GET /telephony/calls/members/{member_id}/history``
-   * - :meth:`api.telephony.call_controls_members.dial <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.dial>`
+   * - :meth:`api.telephony.call_controls_members.dial <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.dial>`
         | Dial by Member ID
         | ``POST /telephony/calls/members/{member_id}/dial``
-   * - :meth:`api.telephony.call_controls_members.divert <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.divert>`
+   * - :meth:`api.telephony.call_controls_members.divert <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.divert>`
         | Divert by Member ID
         | ``POST /telephony/calls/members/{member_id}/divert``
-   * - :meth:`api.telephony.call_controls_members.get_call_details <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.get_call_details>`
+   * - :meth:`api.telephony.call_controls_members.get_call_details <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.get_call_details>`
         | Get Call Details by Member ID
         | ``GET /telephony/calls/members/{member_id}/calls/{call_id}``
-   * - :meth:`api.telephony.call_controls_members.hangup <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.hangup>`
+   * - :meth:`api.telephony.call_controls_members.hangup <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.hangup>`
         | Hangup by Member ID
         | ``POST /telephony/calls/members/{member_id}/hangup``
-   * - :meth:`api.telephony.call_controls_members.hold <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.hold>`
+   * - :meth:`api.telephony.call_controls_members.hold <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.hold>`
         | Hold by Member ID
         | ``POST /telephony/calls/members/{member_id}/hold``
-   * - :meth:`api.telephony.call_controls_members.list_calls <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.list_calls>`
+   * - :meth:`api.telephony.call_controls_members.list_calls <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.list_calls>`
         | List Calls by Member ID
         | ``GET /telephony/calls/members/{member_id}/calls``
-   * - :meth:`api.telephony.call_controls_members.mute <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.mute>`
+   * - :meth:`api.telephony.call_controls_members.mute <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.mute>`
         | Mute by Member ID
         | ``POST /telephony/calls/members/{member_id}/mute``
-   * - :meth:`api.telephony.call_controls_members.park <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.park>`
+   * - :meth:`api.telephony.call_controls_members.park <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.park>`
         | Park by Member ID
         | ``POST /telephony/calls/members/{member_id}/park``
-   * - :meth:`api.telephony.call_controls_members.pause_recording <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.pause_recording>`
+   * - :meth:`api.telephony.call_controls_members.pause_recording <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.pause_recording>`
         | Pause Recording by Member ID
         | ``POST /telephony/calls/members/{member_id}/pauseRecording``
-   * - :meth:`api.telephony.call_controls_members.pickup <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.pickup>`
+   * - :meth:`api.telephony.call_controls_members.pickup <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.pickup>`
         | Pickup by Member ID
         | ``POST /telephony/calls/members/{member_id}/pickup``
-   * - :meth:`api.telephony.call_controls_members.pull <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.pull>`
+   * - :meth:`api.telephony.call_controls_members.pull <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.pull>`
         | Pull by Member ID
         | ``POST /telephony/calls/members/{member_id}/pull``
-   * - :meth:`api.telephony.call_controls_members.push <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.push>`
+   * - :meth:`api.telephony.call_controls_members.push <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.push>`
         | Push by Member ID
         | ``POST /telephony/calls/members/{member_id}/push``
-   * - :meth:`api.telephony.call_controls_members.reject <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.reject>`
+   * - :meth:`api.telephony.call_controls_members.reject <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.reject>`
         | Reject by Member ID
         | ``POST /telephony/calls/members/{member_id}/reject``
-   * - :meth:`api.telephony.call_controls_members.resume <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.resume>`
+   * - :meth:`api.telephony.call_controls_members.resume <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.resume>`
         | Resume by Member ID
         | ``POST /telephony/calls/members/{member_id}/resume``
-   * - :meth:`api.telephony.call_controls_members.resume_recording <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.resume_recording>`
+   * - :meth:`api.telephony.call_controls_members.resume_recording <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.resume_recording>`
         | Resume Recording by Member ID
         | ``POST /telephony/calls/members/{member_id}/resumeRecording``
-   * - :meth:`api.telephony.call_controls_members.retrieve <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.retrieve>`
+   * - :meth:`api.telephony.call_controls_members.retrieve <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.retrieve>`
         | Retrieve by Member ID
         | ``POST /telephony/calls/members/{member_id}/retrieve``
-   * - :meth:`api.telephony.call_controls_members.set_wrapup_reasons <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.set_wrapup_reasons>`
+   * - :meth:`api.telephony.call_controls_members.set_wrapup_reasons <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.set_wrapup_reasons>`
         | Set Wrap-up Reasons by Member ID
         | ``POST /telephony/calls/members/{member_id}/wrapupreasons``
-   * - :meth:`api.telephony.call_controls_members.start_recording <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.start_recording>`
+   * - :meth:`api.telephony.call_controls_members.start_recording <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.start_recording>`
         | Start Recording by Member ID
         | ``POST /telephony/calls/members/{member_id}/startRecording``
-   * - :meth:`api.telephony.call_controls_members.stop_recording <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.stop_recording>`
+   * - :meth:`api.telephony.call_controls_members.stop_recording <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.stop_recording>`
         | Stop Recording by Member ID
         | ``POST /telephony/calls/members/{member_id}/stopRecording``
-   * - :meth:`api.telephony.call_controls_members.transfer <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.transfer>`
+   * - :meth:`api.telephony.call_controls_members.transfer <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.transfer>`
         | Transfer by Member ID
         | ``POST /telephony/calls/members/{member_id}/transfer``
-   * - :meth:`api.telephony.call_controls_members.transmit_dtmf <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.transmit_dtmf>`
+   * - :meth:`api.telephony.call_controls_members.transmit_dtmf <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.transmit_dtmf>`
         | Transmit DTMF by Member ID
         | ``POST /telephony/calls/members/{member_id}/transmitDtmf``
-   * - :meth:`api.telephony.call_controls_members.unmute <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.unmute>`
+   * - :meth:`api.telephony.call_controls_members.unmute <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.unmute>`
         | Unmute by Member ID
         | ``POST /telephony/calls/members/{member_id}/unmute``
-   * - :meth:`api.telephony.call_controls_members.update_external_voicemail_mwi <wxc_sdk.telephony.call_contols_members.CallControlsMembersApi.update_external_voicemail_mwi>`
+   * - :meth:`api.telephony.call_controls_members.update_external_voicemail_mwi <wxc_sdk.telephony.call_controls_members.CallControlsMembersApi.update_external_voicemail_mwi>`
         | Set or Clear Message Waiting Indicator (MWI) Status by Member ID
         | ``POST /telephony/externalVoicemail/members/{member_id}/mwi``
    * - :meth:`api.telephony.call_intercept.configure <wxc_sdk.telephony.location.intercept.LocationInterceptApi.configure>`

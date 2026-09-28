@@ -14,7 +14,7 @@ Subpackages
 
    wxc_sdk.telephony.ai_receptionists
    wxc_sdk.telephony.announcements_repo
-   wxc_sdk.telephony.call_contols_members
+   wxc_sdk.telephony.call_controls_members
    wxc_sdk.telephony.call_recording
    wxc_sdk.telephony.call_routing
    wxc_sdk.telephony.caller_reputation
