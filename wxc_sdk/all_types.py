@@ -287,8 +287,8 @@ from wxc_sdk.telephony.virtual_line import VirtualLine, VirtualLineDevices, Virt
     VirtualLineNumberPhoneNumber
 from wxc_sdk.telephony.vm_rules import BlockContiguousSequences, BlockPreviousPasscodes, BlockRepeatedDigits, \
     DefaultVoicemailPinRules, EnabledAndNumberOfDays, PinLength, UserVoicemailPINRules, VoiceMailRules
-from wxc_sdk.telephony.voice_messaging import MessageSummary, VoiceMailPartyInformation, VoiceMessageDetails, \
-    VoiceMessageMembership
+from wxc_sdk.telephony.voice_messaging.members import MessageSummary, VoiceMailPartyInformation, \
+    VoiceMessageDetails, VoiceMessageMembership
 from wxc_sdk.telephony.voicemail_groups import VoicemailGroup, VoicemailGroupDetail
 from wxc_sdk.telephony.voiceportal import ExpirePasscode, FailedAttempts, PasscodeRules, VoicePortalSettings
 from wxc_sdk.telephony.webhook_interest_registrations import Interest, InterestActor, InterestResource, \

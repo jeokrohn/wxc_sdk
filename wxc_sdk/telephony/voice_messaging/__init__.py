@@ -8,91 +8,41 @@ while the other commands require the spark:calls_write scope
 
 import builtins
 from collections.abc import Generator
-from typing import Optional
+from dataclasses import dataclass
 
 from pydantic import TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
-from wxc_sdk.base import ApiModel
+from wxc_sdk.rest import RestSession
+from wxc_sdk.telephony.voice_messaging.members import (
+    MessageSummary,
+    UserVoiceMessagingMembersApi,
+    VoiceMessageDetails,
+    VoiceMessageMembership,
+)
+from wxc_sdk.telephony.voice_messaging.members_me import UserVoiceMessagingMembersMeApi
 
 __all__ = [
-    'MessageSummary',
-    'VoiceMailPartyInformation',
-    'VoiceMessageDetails',
-    'VoiceMessageMembership',
     'VoiceMessagingApi',
 ]
 
 
-# noinspection DuplicatedCode
-class VoiceMailPartyInformation(ApiModel):
-    #: The party's name. Only present when the name is available and privacy is not enabled.
-    name: Optional[str] = None
-    #: The party's number. Only present when the number is available and privacy is not enabled. The number can be
-    #: digits or a URI. Some examples for number include: 1234, 2223334444, +12223334444, and user@company.domain.
-    number: Optional[str] = None
-    #: The party's person ID. Only present when the person ID is available and privacy is not enabled.
-    person_id: Optional[str] = None
-    #: The party's place ID. Only present when the place ID is available and privacy is not enabled.
-    place_id: Optional[str] = None
-    #: Indicates whether privacy is enabled for the name, number and personId/placeId.
-    privacy_enabled: Optional[bool] = None
-
-
-class VoiceMessageDetails(ApiModel):
-    #: The message identifier of the voicemail message.
-    id: Optional[str] = None
-    #:  The duration (in seconds) of the voicemail message.  Duration is not present for a FAX message.
-    duration: Optional[int] = None
-    #: The calling party's details. For example, if user A calls user B and leaves a voicemail message, then A is the
-    #: calling party.
-    calling_party: Optional[VoiceMailPartyInformation] = None
-    #: true if the voicemail message is urgent.
-    urgent: Optional[bool] = None
-    #: true if the voicemail message is confidential.
-    confidential: Optional[bool] = None
-    #: true if the voicemail message has been read.
-    read: Optional[bool] = None
-    #: Number of pages for the FAX.  Only set for a FAX.
-    fax_page_count: Optional[int] = None
-    #: The date and time the voicemail message was created.
-    created: Optional[str] = None
-
-
-class MessageSummary(ApiModel):
-    #: The number of new (unread) voicemail messages.
-    new_messages: Optional[int] = None
-    #: The number of old (read) voicemail messages.
-    old_messages: Optional[int] = None
-    #: The number of new (unread) urgent voicemail messages.
-    new_urgent_messages: Optional[int] = None
-    #: The number of old (read) urgent voicemail messages.
-    old_urgent_messages: Optional[int] = None
-
-
-class VoiceMessageMembership(ApiModel):
-    #: Unique identifier for the membership.
-    id: Optional[str] = None
-    #: Type of the membership. One of CALL_QUEUE, HUNT_GROUP, or AUTO_ATTENDANT.
-    type: Optional[str] = None
-    #: Display name of the call queue, hunt group, or auto attendant.
-    name: Optional[str] = None
-    #: Phone number in E.164 format. Omitted when the service has no phone number.
-    phone_number: Optional[str] = None
-    #: Extension number. Omitted when the service has no extension.
-    extension: Optional[str] = None
-    #: Location dialing code (routing prefix). Omitted when not set.
-    routing_prefix: Optional[str] = None
-    #: Enterprise Significant Number, the concatenation of routingPrefix and extension. Omitted when not set.
-    esn: Optional[str] = None
-
-
+@dataclass(init=False, repr=False)
 class VoiceMessagingApi(ApiChild, base='telephony/voiceMessages'):
     """
     Voice Messaging APIs provide support for handling voicemail and message waiting indicators in Webex Calling.  The
     APIs are limited to user access (no admin access), and all GET commands require the spark:calls_read scope, while
     the other commands require the spark:calls_write scope.
     """
+
+    #: voice messaging members API
+    members: UserVoiceMessagingMembersApi
+    members_me: UserVoiceMessagingMembersMeApi
+
+    def __init__(self, *, session: RestSession):
+        super().__init__(session=session)
+        self.members = UserVoiceMessagingMembersApi(session=session)
+        self.members_me = UserVoiceMessagingMembersMeApi(session=session)
 
     def summary(self, line_owner_id: str = None) -> MessageSummary:
         """

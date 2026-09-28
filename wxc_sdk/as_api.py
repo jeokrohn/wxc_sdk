@@ -74,11 +74,12 @@ __all__ = ['AsAIReceptionistApi', 'AsAccessCodesApi', 'AsAdminAuditEventsApi', '
            'AsSupervisorApi', 'AsTeamMembershipsApi', 'AsTeamsApi', 'AsTelephonyApi', 'AsTelephonyDevicesApi',
            'AsTelephonyLocationApi', 'AsTextToSpeechApi', 'AsTransferNumbersApi', 'AsTranslationPatternsApi',
            'AsTrunkApi', 'AsUpdateDynamicDeviceSettingsJobsApi', 'AsUpdateRoutingPrefixJobsApi',
-           'AsVirtualExtensionsApi', 'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi',
-           'AsVoicemailGroupsApi', 'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi',
-           'AsWebhookInterestRegistrationsApi', 'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi',
-           'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi', 'AsWorkspacePersonalizationApi',
-           'AsWorkspaceSettingsApi', 'AsWorkspacesApi', 'AsWrapupReasonApi', 'AsXApi']
+           'AsUserVoiceMessagingMembersApi', 'AsUserVoiceMessagingMembersMeApi', 'AsVirtualExtensionsApi',
+           'AsVirtualLinesApi', 'AsVoiceMessagingApi', 'AsVoicePortalApi', 'AsVoicemailApi', 'AsVoicemailGroupsApi',
+           'AsVoicemailRulesApi', 'AsWebexSimpleApi', 'AsWebhookApi', 'AsWebhookInterestRegistrationsApi',
+           'AsWorkspaceDevicesApi', 'AsWorkspaceLocationApi', 'AsWorkspaceLocationFloorApi', 'AsWorkspaceNumbersApi',
+           'AsWorkspacePersonalizationApi', 'AsWorkspaceSettingsApi', 'AsWorkspacesApi', 'AsWrapupReasonApi',
+           'AsXApi']
 
 
 @dataclass(init=False, repr=False)
@@ -41531,12 +41532,335 @@ class AsVirtualLinesApi(AsApiChild, base='telephony/config/virtualLines'):
         return [o async for o in self.session.follow_pagination(url=url, model=VirtualLine, params=params, item_key='virtualLines')]
 
 
+class AsUserVoiceMessagingMembersApi(AsApiChild, base='telephony/voiceMessages/members'):
+    """
+    User Call Settings Members
+
+    Voice Messages APIs for members (person, workspace, virtual line, hunt group, call queue, or auto attendant) in
+    support of Webex Calling. All `GET` commands require the `spark-admin:calls_read` scope while all other commands
+    require the `spark-admin:calls_write` scope.
+    """
+
+    async def mark_as_read(self, member_id: str, message_id: str = None, org_id: str = None) -> None:
+        """
+        Mark As Read by Member ID
+
+        Update the voicemail message(s) as read for the user.
+
+        If the `messageId` is provided, then only mark that message as read.  Otherwise, all messages for the user are
+        marked as read.
+
+        :param member_id: Unique identifier for the member. Member ID can be one of the following: person, workspace,
+            virtual line, hunt group, call queue, or auto attendant
+        :type member_id: str
+        :param message_id: The voicemail message identifier of the message to mark as read.  If the `messageId` is not
+            provided, then all voicemail messages for the user are marked as read.
+        :type message_id: str
+        :param org_id: Id of the organization to which the member belongs. If not provided, the orgId of the Service
+            App is used. If provided, the organization must be the same as or managed by the Service App's
+            organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        if message_id is not None:
+            body['messageId'] = message_id
+        url = self.ep(f'{member_id}/markAsRead')
+        await super().post(url, params=params, json=body)
+
+    async def mark_as_unread(self, member_id: str, message_id: str = None, org_id: str = None) -> None:
+        """
+        Mark As Unread by Member ID
+
+        Update the voicemail message(s) as unread for the user.
+
+        If the `messageId` is provided, then only mark that message as unread.  Otherwise, all messages for the user
+        are marked as unread.
+
+        :param member_id: Unique identifier for the member. Member ID can be one of the following: person, workspace,
+            virtual line, hunt group, call queue, or auto attendant
+        :type member_id: str
+        :param message_id: The voicemail message identifier of the message to mark as unread.  If the `messageId` is
+            not provided, then all voicemail messages for the user are marked as unread.
+        :type message_id: str
+        :param org_id: Id of the organization to which the member belongs. If not provided, the orgId of the Service
+            App is used. If provided, the organization must be the same as or managed by the Service App's
+            organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        if message_id is not None:
+            body['messageId'] = message_id
+        url = self.ep(f'{member_id}/markAsUnread')
+        await super().post(url, params=params, json=body)
+
+    async def memberships(self, member_id: str, org_id: str = None) -> builtins.list[VoiceMessageMembership]:
+        """
+        List Voice Message Memberships
+
+        Retrieves the list of shared voicemail memberships for the specified member. Each membership represents a group
+        calling feature (Call Queue, Hunt Group, or Auto Attendant) whose shared voicemail box the member has access
+        to.
+
+        A service may have a phoneNumber, an extension, both, or neither, so any of these optional fields may be absent
+        from a given entry.
+
+        This API requires the `spark-admin:calls_read` or `spark-admin:calls_write` scope.
+
+        :param member_id: Unique identifier for the member. Member ID can be one of the following: person, workspace,
+            virtual line, hunt group, call queue, or auto attendant
+        :type member_id: str
+        :param org_id: Id of the organization to which the member belongs. If not provided, the orgId of the Service
+            App is used. If provided, the organization must be the same as or managed by the Service App's
+            organization.
+        :type org_id: str
+        :rtype: list[VoiceMessageMembership]
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{member_id}/memberships')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[VoiceMessageMembership]).validate_python(data['memberOf'])
+        return r
+
+    async def summary(self, member_id: str, org_id: str = None) -> MessageSummary:
+        """
+        Get Message Summary by Member ID
+
+        Get a summary of the voicemail messages for the user.
+
+        :param member_id: Unique identifier for the member. Member ID can be one of the following: person, workspace,
+            virtual line, hunt group, call queue, or auto attendant
+        :type member_id: str
+        :param org_id: Id of the organization to which the member belongs. If not provided, the orgId of the Service
+            App is used. If provided, the organization must be the same as or managed by the Service App's
+            organization.
+        :type org_id: str
+        :rtype: :class:`MessageSummary`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{member_id}/summary')
+        data = await super().get(url, params=params)
+        r = MessageSummary.model_validate(data)
+        return r
+
+    async def list(self, member_id: str, org_id: str = None) -> builtins.list[VoiceMessageDetails]:
+        """
+        List Messages by Member ID
+
+        Get the list of all voicemail messages for the user.
+
+        :param member_id: Unique identifier for the member. Member ID can be one of the following: person, workspace,
+            virtual line, hunt group, call queue, or auto attendant
+        :type member_id: str
+        :param org_id: Id of the organization to which the member belongs. If not provided, the orgId of the Service
+            App is used. If provided, the organization must be the same as or managed by the Service App's
+            organization.
+        :type org_id: str
+        :rtype: list[VoiceMessageDetails]
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{member_id}/voiceMessages')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[VoiceMessageDetails]).validate_python(data['items'])
+        return r
+
+    async def delete(self, member_id: str, message_id: str, org_id: str = None) -> None:  # type: ignore[override]
+        """
+        Delete Message by Member ID
+
+        Delete a specfic voicemail message for the user.
+
+        :param member_id: Unique identifier for the member. Member ID can be one of the following: person, workspace,
+            virtual line, hunt group, call queue, or auto attendant
+        :type member_id: str
+        :param message_id: The message identifer of the voicemail message to delete
+        :type message_id: str
+        :param org_id: Id of the organization to which the member belongs. If not provided, the orgId of the Service
+            App is used. If provided, the organization must be the same as or managed by the Service App's
+            organization.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{member_id}/voiceMessages/{message_id}')
+        await super().delete(url, params=params)
+
+
+class AsUserVoiceMessagingMembersMeApi(AsApiChild, base='telephony/voiceMessages/members/me'):
+    """
+    User Call Settings Members Me
+
+    Voice Messages APIs for the authenticated user in support of Webex Calling. All commands require the
+    `spark:calls_read` or `spark:calls_write` scope.
+
+    These APIs support the optional `lineOwnerId` parameter, which allows users to access voicemail for shared lines on
+    their devices or for hunt groups, call queues, and auto attendants explicitly shared with them.
+    """
+
+    async def mark_as_read(self, message_id: str = None, line_owner_id: str = None) -> None:
+        """
+        Mark As Read
+
+        Update the voicemail message(s) as read for the user.
+
+        If the `messageId` is provided, then only mark that message as read.  Otherwise, all messages for the user are
+        marked as read.
+
+        :param message_id: The voicemail message identifier of the message to mark as read.  If the `messageId` is not
+            provided, then all voicemail messages for the user are marked as read.
+        :type message_id: str
+        :param line_owner_id: The ID of a user, workspace, virtual line, auto attendant, hunt group, or call queue for
+            which there is a secondary line on a device owned by the authenticated user, or that was shared with the
+            authenticated user.
+        :type line_owner_id: str
+        :rtype: None
+        """
+        body: dict[str, Any] = dict()
+        if message_id is not None:
+            body['messageId'] = message_id
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
+        url = self.ep('markAsRead')
+        await super().post(url, json=body)
+
+    async def mark_as_unread(self, message_id: str = None, line_owner_id: str = None) -> None:
+        """
+        Mark As Unread
+
+        Update the voicemail message(s) as unread for the user.
+
+        If the `messageId` is provided, then only mark that message as unread.  Otherwise, all messages for the user
+        are marked as unread.
+
+        :param message_id: The voicemail message identifier of the message to mark as unread.  If the `messageId` is
+            not provided, then all voicemail messages for the user are marked as unread.
+        :type message_id: str
+        :param line_owner_id: The ID of a user, workspace, virtual line, auto attendant, hunt group, or call queue for
+            which there is a secondary line on a device owned by the authenticated user, or that was shared with the
+            authenticated user.
+        :type line_owner_id: str
+        :rtype: None
+        """
+        body: dict[str, Any] = dict()
+        if message_id is not None:
+            body['messageId'] = message_id
+        if line_owner_id is not None:
+            body['lineOwnerId'] = line_owner_id
+        url = self.ep('markAsUnread')
+        await super().post(url, json=body)
+
+    async def list_voice_message_memberships(self) -> builtins.list[VoiceMessageMembership]:
+        """
+        List Voice Message Memberships
+
+        Retrieves the list of shared voicemail memberships for the authenticated user. Each membership represents a
+        group calling feature (Call Queue, Hunt Group, or Auto Attendant) whose shared voicemail box the user has
+        access to.
+
+        A service may have a phoneNumber, an extension, both, or neither, so any of these optional fields may be absent
+        from a given entry. These can be used as values for the `lineOwnerId` parameter in other voicemail APIs.
+
+        This API requires the `spark:calls_read` or `spark:calls_write` scope.
+
+        :rtype: list[VoiceMessageMembership]
+        """
+        url = self.ep('memberships')
+        data = await super().get(url)
+        r = TypeAdapter(list[VoiceMessageMembership]).validate_python(data['memberOf'])
+        return r
+
+    async def get_message_summary(self, line_owner_id: str = None) -> MessageSummary:
+        """
+        Get Message Summary
+
+        Get a summary of the voicemail messages for the user.
+
+        :param line_owner_id: The ID of a user, workspace, virtual line, auto attendant, hunt group, or call queue for
+            which there is a secondary line on a device owned by the authenticated user, or that was shared with the
+            authenticated user.
+        :type line_owner_id: str
+        :rtype: :class:`MessageSummary`
+        """
+        params: dict[str, Any] = dict()
+        if line_owner_id is not None:
+            params['lineOwnerId'] = line_owner_id
+        url = self.ep('summary')
+        data = await super().get(url, params=params)
+        r = MessageSummary.model_validate(data)
+        return r
+
+    async def list_messages(self, line_owner_id: str = None) -> builtins.list[VoiceMessageDetails]:
+        """
+        List Messages
+
+        Get the list of all voicemail messages for the user.
+
+        :param line_owner_id: The ID of a user, workspace, virtual line, auto attendant, hunt group, or call queue for
+            which there is a secondary line on a device owned by the authenticated user, or that was shared with the
+            authenticated user.
+        :type line_owner_id: str
+        :rtype: list[VoiceMessageDetails]
+        """
+        params: dict[str, Any] = dict()
+        if line_owner_id is not None:
+            params['lineOwnerId'] = line_owner_id
+        url = self.ep('voiceMessages')
+        data = await super().get(url, params=params)
+        r = TypeAdapter(list[VoiceMessageDetails]).validate_python(data['items'])
+        return r
+
+    async def delete_message(self, message_id: str, line_owner_id: str = None) -> None:
+        """
+        Delete Message
+
+        Delete a specfic voicemail message for the user.
+
+        :param message_id: The message identifer of the voicemail message to delete
+        :type message_id: str
+        :param line_owner_id: The ID of a user, workspace, virtual line, auto attendant, hunt group, or call queue for
+            which there is a secondary line on a device owned by the authenticated user, or that was shared with the
+            authenticated user.
+        :type line_owner_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if line_owner_id is not None:
+            params['lineOwnerId'] = line_owner_id
+        url = self.ep(f'voiceMessages/{message_id}')
+        await super().delete(url, params=params)
+
+
+@dataclass(init=False, repr=False)
 class AsVoiceMessagingApi(AsApiChild, base='telephony/voiceMessages'):
     """
     Voice Messaging APIs provide support for handling voicemail and message waiting indicators in Webex Calling.  The
     APIs are limited to user access (no admin access), and all GET commands require the spark:calls_read scope, while
     the other commands require the spark:calls_write scope.
     """
+
+    #: voice messaging members API
+    members: AsUserVoiceMessagingMembersApi
+    members_me: AsUserVoiceMessagingMembersMeApi
+
+    def __init__(self, *, session: AsRestSession):
+        super().__init__(session=session)
+        self.members = AsUserVoiceMessagingMembersApi(session=session)
+        self.members_me = AsUserVoiceMessagingMembersMeApi(session=session)
 
     async def summary(self, line_owner_id: str = None) -> MessageSummary:
         """

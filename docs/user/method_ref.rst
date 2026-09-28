@@ -3804,6 +3804,42 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.telephony.voice_messaging.mark_as_unread <wxc_sdk.telephony.voice_messaging.VoiceMessagingApi.mark_as_unread>`
         | Update the voicemail message(s) as unread for the user
         | ``POST /telephony/voiceMessages/markAsUnread``
+   * - :meth:`api.telephony.voice_messaging.members.delete <wxc_sdk.telephony.voice_messaging.members.UserVoiceMessagingMembersApi.delete>`
+        | Delete Message by Member ID
+        | ``DELETE /telephony/voiceMessages/members/{member_id}/voiceMessages/{message_id}``
+   * - :meth:`api.telephony.voice_messaging.members.list <wxc_sdk.telephony.voice_messaging.members.UserVoiceMessagingMembersApi.list>`
+        | List Messages by Member ID
+        | ``GET /telephony/voiceMessages/members/{member_id}/voiceMessages``
+   * - :meth:`api.telephony.voice_messaging.members.mark_as_read <wxc_sdk.telephony.voice_messaging.members.UserVoiceMessagingMembersApi.mark_as_read>`
+        | Mark As Read by Member ID
+        | ``POST /telephony/voiceMessages/members/{member_id}/markAsRead``
+   * - :meth:`api.telephony.voice_messaging.members.mark_as_unread <wxc_sdk.telephony.voice_messaging.members.UserVoiceMessagingMembersApi.mark_as_unread>`
+        | Mark As Unread by Member ID
+        | ``POST /telephony/voiceMessages/members/{member_id}/markAsUnread``
+   * - :meth:`api.telephony.voice_messaging.members.memberships <wxc_sdk.telephony.voice_messaging.members.UserVoiceMessagingMembersApi.memberships>`
+        | List Voice Message Memberships
+        | ``GET /telephony/voiceMessages/members/{member_id}/memberships``
+   * - :meth:`api.telephony.voice_messaging.members.summary <wxc_sdk.telephony.voice_messaging.members.UserVoiceMessagingMembersApi.summary>`
+        | Get Message Summary by Member ID
+        | ``GET /telephony/voiceMessages/members/{member_id}/summary``
+   * - :meth:`api.telephony.voice_messaging.members_me.delete_message <wxc_sdk.telephony.voice_messaging.members_me.UserVoiceMessagingMembersMeApi.delete_message>`
+        | Delete Message
+        | ``DELETE /telephony/voiceMessages/members/me/voiceMessages/{message_id}``
+   * - :meth:`api.telephony.voice_messaging.members_me.get_message_summary <wxc_sdk.telephony.voice_messaging.members_me.UserVoiceMessagingMembersMeApi.get_message_summary>`
+        | Get Message Summary
+        | ``GET /telephony/voiceMessages/members/me/summary``
+   * - :meth:`api.telephony.voice_messaging.members_me.list_messages <wxc_sdk.telephony.voice_messaging.members_me.UserVoiceMessagingMembersMeApi.list_messages>`
+        | List Messages
+        | ``GET /telephony/voiceMessages/members/me/voiceMessages``
+   * - :meth:`api.telephony.voice_messaging.members_me.list_voice_message_memberships <wxc_sdk.telephony.voice_messaging.members_me.UserVoiceMessagingMembersMeApi.list_voice_message_memberships>`
+        | List Voice Message Memberships
+        | ``GET /telephony/voiceMessages/members/me/memberships``
+   * - :meth:`api.telephony.voice_messaging.members_me.mark_as_read <wxc_sdk.telephony.voice_messaging.members_me.UserVoiceMessagingMembersMeApi.mark_as_read>`
+        | Mark As Read
+        | ``POST /telephony/voiceMessages/members/me/markAsRead``
+   * - :meth:`api.telephony.voice_messaging.members_me.mark_as_unread <wxc_sdk.telephony.voice_messaging.members_me.UserVoiceMessagingMembersMeApi.mark_as_unread>`
+        | Mark As Unread
+        | ``POST /telephony/voiceMessages/members/me/markAsUnread``
    * - :meth:`api.telephony.voice_messaging.memberships <wxc_sdk.telephony.voice_messaging.VoiceMessagingApi.memberships>`
         | List Voice Message Memberships
         | ``GET /telephony/voiceMessages/memberships``
