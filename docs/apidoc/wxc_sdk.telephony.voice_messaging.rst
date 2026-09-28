@@ -1,5 +1,5 @@
-wxc\_sdk.telephony.voice\_messaging module
-==========================================
+wxc\_sdk.telephony.voice\_messaging package
+===========================================
 
 .. automodule:: wxc_sdk.telephony.voice_messaging
    :members:
