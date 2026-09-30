@@ -1,3 +1,13 @@
+## 1.40.0 (2026-09-30)
+
+### Feat
+
+- new APIs api.person_settings.answer, api.telephony.virtual_lines.answer, api.workspace_settings.answer
+- new attribute SupportedDevice.supports_virtual_line_enabled
+- new API api.telephony.voice_messaging.members, api.telephony.voice_messaging.members_me
+- addtl. CallControlsMembersApi and MeCallControlApi methods
+- new endpoint: api.telephony.voice_messaging.memberships
+
 ## 1.39.0 (2026-09-23)
 
 ### Feat
