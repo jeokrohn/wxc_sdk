@@ -1,6 +1,10 @@
 Release history
 ===============
 
+1.40.0
+------
+- feat: new APIs api.person_settings.answer, api.telephony.virtual_lines.answer, api.workspace_settings.answer
+- feat: new attribute SupportedDevice.supports_virtual_line_enabled
 - feat: new API api.telephony.voice_messaging.members, api.telephony.voice_messaging.members_me
 - feat: addtl. CallControlsMembersApi and MeCallControlApi methods
 - feat: new endpoint: :meth:`api.telephony.voice_messaging.memberships <wxc_sdk.telephony.voice_messaging.VoiceMessagingApi.memberships>`
