@@ -198,6 +198,8 @@ class SupportedDevice(ApiModel):
     allow_configure_phone_settings_enabled: Optional[bool] = None
     #: Enables / disables hotline support.
     supports_hotline_enabled: Optional[bool] = None
+    #: Indicates whether the device supports virtual line configuration.
+    supports_virtual_line_enabled: Optional[bool] = None
     #: Supports hot desk only.
     supports_hot_desk_only: Optional[bool] = None
     #: Maximum number of line appearances available on the device.
