@@ -29,13 +29,14 @@ __all__ = ['AgentCallerIdType', 'AudioAnnouncementFileGetObject', 'AudioAnnounce
            'CallRecordingPutNotification', 'CallRecordingPutNotificationType', 'CallerIdInfo', 'CallerIdInfoSelected',
            'DectNetwork', 'DeviceActivationStates', 'DeviceObject', 'DeviceOwner', 'DevicesObject',
            'DirectLineCallerIdNameObject', 'DirectorySearchObject', 'GetMusicOnHoldObject',
-           'GetVirtualLineDevicesObject', 'GetVirtualLineNumberObjectPhoneNumber', 'GetVirtualLineObject',
-           'GetVirtualLineObjectLocation', 'GetVirtualLineObjectLocationAddress', 'GetVirtualLineObjectNumber',
-           'IncomingPermissionSetting', 'IncomingPermissionSettingExternalTransfer', 'LineType',
-           'ListVirtualLineObject', 'ListVirtualLineObjectExternalCallerIdNamePolicy',
-           'ListVirtualLineObjectLocation', 'ListVirtualLineObjectNumber', 'MemberType', 'MonitoredPersonObject',
-           'NumberOwnerType', 'OutgoingCallingPermissionsSettingGet',
-           'OutgoingCallingPermissionsSettingGetCallingPermissionsItem',
+           'GetVirtualLineAnswerSettingsObject', 'GetVirtualLineAnswerSettingsObjectPreferredAnswerEndpointIdType',
+           'GetVirtualLineAnswerSettingsObjectPreferredAnswerEndpointType', 'GetVirtualLineDevicesObject',
+           'GetVirtualLineNumberObjectPhoneNumber', 'GetVirtualLineObject', 'GetVirtualLineObjectLocation',
+           'GetVirtualLineObjectLocationAddress', 'GetVirtualLineObjectNumber', 'IncomingPermissionSetting',
+           'IncomingPermissionSettingExternalTransfer', 'LineType', 'ListVirtualLineObject',
+           'ListVirtualLineObjectExternalCallerIdNamePolicy', 'ListVirtualLineObjectLocation',
+           'ListVirtualLineObjectNumber', 'MemberType', 'MonitoredPersonObject', 'NumberOwnerType',
+           'OutgoingCallingPermissionsSettingGet', 'OutgoingCallingPermissionsSettingGetCallingPermissionsItem',
            'OutgoingCallingPermissionsSettingGetCallingPermissionsItemAction',
            'OutgoingCallingPermissionsSettingGetCallingPermissionsItemCallType',
            'OutgoingCallingPermissionsSettingPutCallingPermissionsItem', 'PeopleOrPlaceOrVirtualLineType',
@@ -46,6 +47,7 @@ __all__ = ['AgentCallerIdType', 'AudioAnnouncementFileGetObject', 'AudioAnnounce
            'VirtualLineCallForwardAvailableNumberObjectOwner', 'VirtualLineCallSettingsApi',
            'VirtualLineDoNotDisturbGet', 'VirtualLineECBNAvailableNumberObject',
            'VirtualLineECBNAvailableNumberObjectOwner', 'VirtualLineECBNAvailableNumberObjectOwnerType',
+           'VirtualLineEndpointObject', 'VirtualLineEndpointObjectOwner',
            'VirtualLineFaxMessageAvailableNumberObject', 'VoicemailInfo', 'VoicemailInfoEmailCopyOfMessage',
            'VoicemailInfoFaxMessage', 'VoicemailInfoMessageStorage', 'VoicemailInfoMessageStorageStorageType',
            'VoicemailInfoNotifications', 'VoicemailInfoSendBusyCalls', 'VoicemailInfoSendUnansweredCalls',
@@ -1144,6 +1146,73 @@ class VirtualLineDoNotDisturbGet(ApiModel):
     ring_splash_enabled: Optional[bool] = None
 
 
+class GetVirtualLineAnswerSettingsObjectPreferredAnswerEndpointType(str, Enum):
+    #: The Webex desktop application answers the call.
+    webex_app_desktop = 'WEBEX_APP_DESKTOP'
+    #: The virtual line's primary physical device answers the call.
+    primary_device = 'PRIMARY_DEVICE'
+    #: A physical device other than the virtual line's primary device answers the call.
+    non_primary_device = 'NON_PRIMARY_DEVICE'
+    #: The device hosting the virtual line for a hot desking guest answers the call.
+    hotdesk_device = 'HOTDESK_DEVICE'
+    #: No preferred answer endpoint is selected.
+    none_ = 'NONE'
+
+
+class GetVirtualLineAnswerSettingsObjectPreferredAnswerEndpointIdType(str, Enum):
+    #: The identifier represents a Webex application.
+    application = 'APPLICATION'
+    #: The identifier represents a Webex Calling device.
+    calling_device = 'CALLING_DEVICE'
+    #: The identifier represents a hot desking guest session.
+    hotdesking_guest = 'HOTDESKING_GUEST'
+
+
+class GetVirtualLineAnswerSettingsObject(ApiModel):
+    #: The unique identifier for the preferred answer endpoint. The companion `preferredAnswerEndpointIdType`
+    #: identifies the encoded resource type as `APPLICATION`, `CALLING_DEVICE`, or `HOTDESKING_GUEST`.
+    preferred_answer_endpoint_id: Optional[str] = None
+    #: The preferred endpoint's behavior category.
+    preferred_answer_endpoint_type: Optional[GetVirtualLineAnswerSettingsObjectPreferredAnswerEndpointType] = None
+    #: The resource type encoded by `preferredAnswerEndpointId`.
+    preferred_answer_endpoint_id_type: Optional[GetVirtualLineAnswerSettingsObjectPreferredAnswerEndpointIdType] = None
+    #: Indicates whether the virtual line must have a preferred answer endpoint selected in order for a call to be
+    #: auto-answered.
+    preferred_answer_endpoint_required: Optional[bool] = None
+    #: Indicates whether auto answer is enabled for the virtual line.
+    auto_answer_enabled: Optional[bool] = None
+    #: Indicates whether the person can clear the preferred endpoint setting by selecting None to disable auto-answer.
+    is_preferred_endpoint_clearable_by_person: Optional[bool] = None
+
+
+class VirtualLineEndpointObjectOwner(ApiModel):
+    #: Unique identifier of the owner to which the endpoint is assigned. The companion `type` field identifies the
+    #: encoded owner resource type as `PEOPLE` or `PLACE`.
+    id: Optional[str] = None
+    type: Optional[MemberType] = None
+    #: First name of the endpoint's owner when the owner `type` is `PEOPLE`.
+    first_name: Optional[str] = None
+    #: Last name of the endpoint's owner when the owner `type` is `PEOPLE`.
+    last_name: Optional[str] = None
+    #: Display name of the endpoint's owner.
+    display_name: Optional[str] = None
+
+
+class VirtualLineEndpointObject(ApiModel):
+    #: Unique identifier for the endpoint. The companion `type` identifies the endpoint category; the opaque identifier
+    #: represents a `CALLING_DEVICE`, `APPLICATION`, or `HOTDESKING_GUEST` resource.
+    id: Optional[str] = None
+    type: Optional[GetVirtualLineAnswerSettingsObjectPreferredAnswerEndpointIdType] = None
+    #: Name of the endpoint. For a device endpoint, the name can include the value of a configured `name=<value>`
+    #: device tag.
+    name: Optional[str] = None
+    #: Indicates whether this endpoint is currently selected as the preferred answer endpoint.
+    is_preferred_answer_endpoint: Optional[bool] = None
+    #: Owner of the endpoint associated with the virtual line. The owner can be a person or a workspace and is returned
+    #: only when both the owner identifier and type are available.
+    owner: Optional[VirtualLineEndpointObjectOwner] = None
+
+
 class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines'):
     """
     Virtual Line Call Settings
@@ -1545,6 +1614,108 @@ class VirtualLineCallSettingsApi(ApiChild, base='telephony/config/virtualLines')
         body['selectedCallerId'] = selected_caller_id
         url = self.ep(f'{virtual_line_id}/agent/callerId')
         super().put(url, params=params, json=body)
+
+    def get_virtual_line_answer_settings(self, virtual_line_id: str,
+                                         org_id: str = None) -> GetVirtualLineAnswerSettingsObject:
+        """
+        Get Answer Settings for a Virtual Line
+
+        Get the answer settings for a specific virtual line.
+
+        Answer settings allow administrators to configure automatic call answering behavior for a virtual line,
+        including preferred answer endpoint and whether auto answer is enabled.
+
+        This API requires a full administrator, read-only administrator, delegated full administrator, user
+        administrator, or location administrator auth token with the `spark-admin:telephony_config_read` scope.
+
+        :param virtual_line_id: Unique identifier for the virtual line.
+        :type virtual_line_id: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: :class:`GetVirtualLineAnswerSettingsObject`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{virtual_line_id}/answerSettings')
+        data = super().get(url, params=params)
+        r = GetVirtualLineAnswerSettingsObject.model_validate(data)
+        return r
+
+    def update_virtual_line_answer_settings(self, virtual_line_id: str, preferred_answer_endpoint_id: str = None,
+                                            auto_answer_enabled: bool = None,
+                                            is_preferred_endpoint_clearable_by_person: bool = None,
+                                            org_id: str = None) -> None:
+        """
+        Update Answer Settings for a Virtual Line
+
+        Modify the answer settings for a specific virtual line.
+
+        Answer settings allow administrators to configure automatic call answering behavior for a virtual line,
+        including preferred answer endpoint and whether auto answer is enabled. To clear the preferred answer
+        endpoint, the `preferredAnswerEndpointId` must be set to null.
+
+        This API requires a full administrator, delegated full administrator, user administrator, or location
+        administrator auth token with the `spark-admin:telephony_config_write` scope.
+
+        :param virtual_line_id: Unique identifier for the virtual line.
+        :type virtual_line_id: str
+        :param preferred_answer_endpoint_id: The unique identifier for the preferred answer endpoint. This may be a
+            device, application, or hot desking guest endpoint. Set to null to clear the preferred answer endpoint;
+            omit to leave unchanged.
+        :type preferred_answer_endpoint_id: str
+        :param auto_answer_enabled: Indicates whether auto answer is enabled for the virtual line.
+        :type auto_answer_enabled: bool
+        :param is_preferred_endpoint_clearable_by_person: Indicates whether the person can clear the preferred endpoint
+            setting by selecting None to disable auto-answer.
+        :type is_preferred_endpoint_clearable_by_person: bool
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        if preferred_answer_endpoint_id is not None:
+            body['preferredAnswerEndpointId'] = preferred_answer_endpoint_id
+        if auto_answer_enabled is not None:
+            body['autoAnswerEnabled'] = auto_answer_enabled
+        if is_preferred_endpoint_clearable_by_person is not None:
+            body['isPreferredEndpointClearableByPerson'] = is_preferred_endpoint_clearable_by_person
+        url = self.ep(f'{virtual_line_id}/answerSettings')
+        super().put(url, params=params, json=body)
+
+    def get_virtual_line_available_preferred_answer_endpoints(self, virtual_line_id: str,
+                                                              org_id: str = None) -> builtins.list[VirtualLineEndpointObject]:
+        """
+        Get Available Preferred Answer Endpoints for a Virtual Line
+
+        Get the list of available preferred answer endpoints for a specific virtual line. This API returns all
+        available endpoints in a single response.
+
+        A virtual line may be associated with multiple endpoints such as Webex App (desktop or mobile), Cisco desk IP
+        phone, Webex Calling-supported analog devices, or third-party endpoints. Preferred answering endpoints allow
+        administrators to specify which of these devices should be prioritized for answering calls when a virtual line
+        rings on multiple devices. This helps ensure that calls are answered on the most convenient or appropriate
+        device.
+
+        This API requires a full administrator, read-only administrator, delegated full administrator, user
+        administrator, or location administrator auth token with the `spark-admin:telephony_config_read` scope.
+
+        :param virtual_line_id: Unique identifier for the virtual line.
+        :type virtual_line_id: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: list[VirtualLineEndpointObject]
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{virtual_line_id}/availablePreferredAnswerEndpoints')
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[VirtualLineEndpointObject]).validate_python(data['endpoints'])
+        return r
 
     def read_barge_in_settings_for_a_virtual_line(self, virtual_line_id: str, org_id: str = None) -> BargeInInfo:
         """

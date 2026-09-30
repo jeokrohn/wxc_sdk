@@ -7,6 +7,7 @@ from dataclasses import dataclass
 
 from ..api_child import ApiChild
 from ..person_settings.anon_calls import AnonCallsApi
+from ..person_settings.answer import AnswerApi
 from ..person_settings.available_numbers import AvailableNumbersApi
 from ..person_settings.barge import BargeApi
 from ..person_settings.call_intercept import CallInterceptApi
@@ -50,6 +51,7 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
     """
 
     anon_calls: AnonCallsApi
+    answer: AnswerApi
     available_numbers: AvailableNumbersApi
     barge: BargeApi
     call_bridge: CallBridgeApi
@@ -80,6 +82,7 @@ class WorkspaceSettingsApi(ApiChild, base='workspaces'):
     def __init__(self, session: RestSession):
         super().__init__(session=session)
         self.anon_calls = AnonCallsApi(session=session, selector=ApiSelector.workspace)
+        self.answer = AnswerApi(session=session, selector=ApiSelector.workspace)
         self.available_numbers = AvailableNumbersApi(session=session, selector=ApiSelector.workspace)
         self.barge = BargeApi(session=session, selector=ApiSelector.workspace)
         self.call_bridge = CallBridgeApi(session=session, selector=ApiSelector.workspace)

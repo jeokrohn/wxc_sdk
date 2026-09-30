@@ -14,10 +14,12 @@ from wxc_sdk.base import ApiModel, dt_iso_str, enum_str
 from wxc_sdk.base import SafeEnum as Enum
 
 
-__all__ = ['HotDeskingAvailableMember', 'HotDeskingLineType', 'HotDeskingMember', 'HotDeskingMembers',
-           'HotDeskingPutMember', 'HotDeskingPutMemberType', 'HotDeskingResponseMemberType',
+__all__ = ['GetPersonAnswerSettingsObject', 'GetPersonAnswerSettingsObjectPreferredAnswerEndpointIdType',
+           'GetPersonAnswerSettingsObjectPreferredAnswerEndpointType', 'HotDeskingAvailableMember',
+           'HotDeskingLineType', 'HotDeskingMember', 'HotDeskingMembers', 'HotDeskingPutMember',
+           'HotDeskingPutMemberType', 'HotDeskingResponseMemberType',
            'ListVoiceMessageMembershipsResponseMemberOfItem', 'ListVoiceMessageMembershipsResponseMemberOfItemType',
-           'Location', 'PersonCallsFromType', 'PersonScheduleLevel', 'PersonScheduleType',
+           'Location', 'PersonCallsFromType', 'PersonEndpointObject', 'PersonScheduleLevel', 'PersonScheduleType',
            'PersonSimultaneousRingCriteriaGet', 'PersonSimultaneousRingCriteriaSummary', 'PersonSimultaneousRingGet',
            'PersonSimultaneousRingNumber', 'PersonSimultaneousRingSource', 'UserCallSettings33Api']
 
@@ -226,6 +228,57 @@ class HotDeskingPutMember(ApiModel):
     member_type: Optional[HotDeskingPutMemberType] = None
 
 
+class GetPersonAnswerSettingsObjectPreferredAnswerEndpointType(str, Enum):
+    #: The Webex desktop application answers the call.
+    webex_app_desktop = 'WEBEX_APP_DESKTOP'
+    #: The person's primary physical device answers the call.
+    primary_device = 'PRIMARY_DEVICE'
+    #: A physical device other than the person's primary device answers the call.
+    non_primary_device = 'NON_PRIMARY_DEVICE'
+    #: The device on which the person is signed in as a hot desking guest answers the call.
+    hotdesk_device = 'HOTDESK_DEVICE'
+    #: No preferred answer endpoint is selected.
+    none_ = 'NONE'
+
+
+class GetPersonAnswerSettingsObjectPreferredAnswerEndpointIdType(str, Enum):
+    #: The identifier represents a Webex application.
+    application = 'APPLICATION'
+    #: The identifier represents a Webex Calling device.
+    calling_device = 'CALLING_DEVICE'
+    #: The identifier represents a hot desking guest session.
+    hotdesking_guest = 'HOTDESKING_GUEST'
+
+
+class GetPersonAnswerSettingsObject(ApiModel):
+    #: The unique identifier for the preferred answer endpoint. The companion `preferredAnswerEndpointIdType`
+    #: identifies the encoded resource type as `APPLICATION`, `CALLING_DEVICE`, or `HOTDESKING_GUEST`.
+    preferred_answer_endpoint_id: Optional[str] = None
+    #: The preferred endpoint's behavior category.
+    preferred_answer_endpoint_type: Optional[GetPersonAnswerSettingsObjectPreferredAnswerEndpointType] = None
+    #: The resource type encoded by `preferredAnswerEndpointId`.
+    preferred_answer_endpoint_id_type: Optional[GetPersonAnswerSettingsObjectPreferredAnswerEndpointIdType] = None
+    #: Indicates whether the person must have a preferred answer endpoint selected in order for a call to be
+    #: auto-answered.
+    preferred_answer_endpoint_required: Optional[bool] = None
+    #: Indicates whether auto answer is enabled for the person.
+    auto_answer_enabled: Optional[bool] = None
+    #: Indicates whether the person can clear the preferred endpoint setting.
+    is_preferred_endpoint_clearable_by_person: Optional[bool] = None
+
+
+class PersonEndpointObject(ApiModel):
+    #: Unique identifier for the endpoint. The companion `type` identifies the endpoint category; the opaque identifier
+    #: represents a `CALLING_DEVICE`, `APPLICATION`, or `HOTDESKING_GUEST` resource.
+    id: Optional[str] = None
+    type: Optional[GetPersonAnswerSettingsObjectPreferredAnswerEndpointIdType] = None
+    #: Name of the endpoint. For a device endpoint, the name can include the value of a configured `name=<value>`
+    #: device tag.
+    name: Optional[str] = None
+    #: Indicates whether this endpoint is currently selected as the preferred answer endpoint.
+    is_preferred_answer_endpoint: Optional[bool] = None
+
+
 class ListVoiceMessageMembershipsResponseMemberOfItemType(str, Enum):
     call_queue = 'CALL_QUEUE'
     hunt_group = 'HUNT_GROUP'
@@ -320,6 +373,107 @@ class UserCallSettings33Api(ApiChild, base='telephony'):
         body['enabled'] = enabled
         url = self.ep(f'config/people/{person_id}/anonymousCallReject')
         super().put(url, params=params, json=body)
+
+    def get_person_answer_settings(self, person_id: str, org_id: str = None) -> GetPersonAnswerSettingsObject:
+        """
+        Get Answer Settings for a Person
+
+        Get the answer settings for a specific person.
+
+        Answer settings allow administrators to configure automatic call answering behavior for a person, including
+        preferred answer endpoint and whether auto answer is enabled.
+
+        This API requires a full administrator, read-only administrator, delegated full administrator, user
+        administrator, or location administrator auth token with the `spark-admin:telephony_config_read` scope.
+
+        :param person_id: The unique identifier for the person.
+        :type person_id: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: :class:`GetPersonAnswerSettingsObject`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'config/people/{person_id}/answerSettings')
+        data = super().get(url, params=params)
+        r = GetPersonAnswerSettingsObject.model_validate(data)
+        return r
+
+    def update_person_answer_settings(self, person_id: str, preferred_answer_endpoint_id: str = None,
+                                      auto_answer_enabled: bool = None,
+                                      is_preferred_endpoint_clearable_by_person: bool = None,
+                                      org_id: str = None) -> None:
+        """
+        Update Answer Settings for a Person
+
+        Modify the answer settings for a specific person.
+
+        Answer settings allow administrators to configure automatic call answering behavior for a person, including
+        preferred answer endpoint and whether auto answer is enabled. To clear the preferred answer endpoint, the
+        `preferredAnswerEndpointId` must be set to null.
+
+        This API requires a full administrator, delegated full administrator, user administrator, or location
+        administrator auth token with the `spark-admin:telephony_config_write` scope.
+
+        :param person_id: The unique identifier for the person.
+        :type person_id: str
+        :param preferred_answer_endpoint_id: The unique identifier for the preferred answer endpoint. This may be a
+            device, application, or hot desking guest endpoint. Set to null to clear the preferred answer endpoint;
+            omit to leave unchanged.
+        :type preferred_answer_endpoint_id: str
+        :param auto_answer_enabled: Indicates whether auto answer is enabled for the person.
+        :type auto_answer_enabled: bool
+        :param is_preferred_endpoint_clearable_by_person: Indicates whether the person can clear the preferred endpoint
+            setting.
+        :type is_preferred_endpoint_clearable_by_person: bool
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        if preferred_answer_endpoint_id is not None:
+            body['preferredAnswerEndpointId'] = preferred_answer_endpoint_id
+        if auto_answer_enabled is not None:
+            body['autoAnswerEnabled'] = auto_answer_enabled
+        if is_preferred_endpoint_clearable_by_person is not None:
+            body['isPreferredEndpointClearableByPerson'] = is_preferred_endpoint_clearable_by_person
+        url = self.ep(f'config/people/{person_id}/answerSettings')
+        super().put(url, params=params, json=body)
+
+    def get_person_available_preferred_answer_endpoints(self, person_id: str,
+                                                        org_id: str = None) -> builtins.list[PersonEndpointObject]:
+        """
+        Get Available Preferred Answer Endpoints for a Person
+
+        Get the list of available preferred answer endpoints for a specific person. This API returns all available
+        endpoints in a single response.
+
+        A Webex Calling person may be associated with multiple endpoints such as Webex App (desktop or mobile), Cisco
+        desk IP phone, Webex Calling-supported analog devices, or third-party endpoints. Preferred answering endpoints
+        allow administrators to specify which of these devices should be prioritized for answering calls, particularly
+        when a person's extension (or a virtual line assigned to them) rings on multiple devices. This helps ensure
+        that calls are answered on the most convenient or appropriate device for the person.
+
+        This API requires a full administrator, read-only administrator, delegated full administrator, user
+        administrator, or location administrator auth token with the `spark-admin:telephony_config_read` scope.
+
+        :param person_id: The unique identifier for the person.
+        :type person_id: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: list[PersonEndpointObject]
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'config/people/{person_id}/availablePreferredAnswerEndpoints')
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[PersonEndpointObject]).validate_python(data['endpoints'])
+        return r
 
     def search_available_hot_desking_members(self, person_id: str, location_id: str = None, member_name: str = None,
                                              phone_number: str = None, extension: str = None, order: list[str] = None,

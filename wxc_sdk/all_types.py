@@ -13,17 +13,18 @@ from wxc_sdk.common import AcdCustomization, AgentACDState, AlternateNumber, Ann
     ComfortMessageSetting, CommonDeviceCustomization, Customer, DectCustomization, DeviceCustomization, \
     DeviceCustomizations, DevicePlatform, DeviceType, DialPatternStatus, DialPatternValidate, \
     DirectLineCallerIdName, DirectLineCallerIdNameSelection, DirectoryMethod, DisplayCallqueueAgentSoftkey, \
-    DisplayNameSelection, EnabledAndValue, EnhancedMulticast, Greeting, HttpProxy, HttpProxyMode, IdAndName, \
-    IdOnly, LineKeyLabelSelection, LineKeyLedPattern, LinkRelation, LoggingLevel, MaintenanceMode, MeGroupMember, \
-    MeGroupSettings, MediaFile, MediaFileType, MohMessageSetting, MonitoredMember, MppCustomization, Multicast, \
-    NoiseCancellation, NumberOwner, NumberState, OwnerType, PatternAction, PersonPlaceAgent, PhoneLanguage, \
-    PrimaryOrSecondary, PrimaryOrShared, PskObject, RingPattern, RoomType, RouteIdentity, RouteType, SetOrClear, \
-    SoftKeyLayout, SoftKeyMenu, StorageType, TelephonyType, UsageType, UsbPortsObject, UserBase, UserLicenseType, \
-    UserNumber, UserType, ValidateExtensionStatus, ValidateExtensionStatusState, ValidateExtensionsResponse, \
-    ValidatePhoneNumberStatus, ValidatePhoneNumberStatusState, ValidatePhoneNumbersResponse, ValidationStatus, \
-    VlanSetting, VoicemailCopyOfMessage, VoicemailEnabled, VoicemailFax, VoicemailMessageStorage, \
-    VoicemailNotifications, VoicemailTransferToNumber, VolumeSettings, WaitMessageSetting, WaitMode, \
-    WelcomeMessageSetting, WifiAuthenticationMethod, WifiCustomization, WifiNetwork
+    DisplayNameSelection, EnabledAndValue, EndpointType, EnhancedMulticast, Greeting, HttpProxy, HttpProxyMode, \
+    IdAndName, IdOnly, LineKeyLabelSelection, LineKeyLedPattern, LinkRelation, LoggingLevel, MaintenanceMode, \
+    MeGroupMember, MeGroupSettings, MediaFile, MediaFileType, MohMessageSetting, MonitoredMember, \
+    MppCustomization, Multicast, NoiseCancellation, NumberOwner, NumberState, OwnerType, PatternAction, \
+    PersonPlaceAgent, PhoneLanguage, PrimaryOrSecondary, PrimaryOrShared, PskObject, RingPattern, RoomType, \
+    RouteIdentity, RouteType, SetOrClear, SoftKeyLayout, SoftKeyMenu, StorageType, TelephonyType, UsageType, \
+    UsbPortsObject, UserBase, UserLicenseType, UserNumber, UserType, ValidateExtensionStatus, \
+    ValidateExtensionStatusState, ValidateExtensionsResponse, ValidatePhoneNumberStatus, \
+    ValidatePhoneNumberStatusState, ValidatePhoneNumbersResponse, ValidationStatus, VlanSetting, \
+    VoicemailCopyOfMessage, VoicemailEnabled, VoicemailFax, VoicemailMessageStorage, VoicemailNotifications, \
+    VoicemailTransferToNumber, VolumeSettings, WaitMessageSetting, WaitMode, WelcomeMessageSetting, \
+    WifiAuthenticationMethod, WifiCustomization, WifiNetwork
 from wxc_sdk.common.schedules import Event, RecurWeekly, RecurYearlyByDate, RecurYearlyByDay, Recurrence, \
     Schedule, ScheduleApiBase, ScheduleDay, ScheduleLevel, ScheduleMonth, ScheduleType, ScheduleTypeOrStr, \
     ScheduleWeek
@@ -52,7 +53,7 @@ from wxc_sdk.me.call_notify import CallNotify, CallNotifyCriteria
 from wxc_sdk.me.callblock import CallBlockNumber
 from wxc_sdk.me.callcenter import MeCallCenterSettings, MeCallQueue
 from wxc_sdk.me.callerid import MeCallerIdSettings, MeSelectedCallerId
-from wxc_sdk.me.endpoints import EndpointType, MeEndpoint, MeHost, MeMobility, MeSecondaryLine
+from wxc_sdk.me.endpoints import MeEndpoint, MeHost, MeMobility, MeSecondaryLine
 from wxc_sdk.me.executive import AssignedAssistants
 from wxc_sdk.me.hoteling import AvailableHotelingHost, HotelingGuestSettings
 from wxc_sdk.me.mode_management import FeatureDetail, FeatureMode, FeatureModeForwardTo, OperatingModeDetail, \

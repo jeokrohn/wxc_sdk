@@ -20,12 +20,14 @@ __all__ = ['Action', 'AnonymousCallRejectionGet', 'AudioAnnouncementFileGetObjec
            'CallRecordingInfoRepeat', 'CallRecordingInfoSelectiveCallRecordingSettings',
            'CallRecordingInfoStartStopAnnouncement', 'CallRecordingPutNotification',
            'CallRecordingPutNotificationType', 'CallsFromTypeForSelectiveForward', 'GetMusicOnHoldObject',
-           'GetMusicOnHoldObjectGreeting', 'MonitoredPersonObject', 'NumberOwnerObject', 'NumberOwnerType',
-           'PeopleOrPlaceOrVirtualLineType', 'PhoneNumber', 'PlaceDoNotDisturbGet', 'PlacePriorityAlertCriteriaGet',
-           'PlaceSelectiveAcceptCallCriteriaGet', 'PlaceSelectiveForwardCallCriteriaGet',
-           'PlaceSelectiveRejectCallCriteriaGet', 'PriorityAlertCriteria', 'PriorityAlertGet', 'PrivacyGet',
-           'PushToTalkAccessType', 'PushToTalkConnectionType', 'PushToTalkInfo', 'PushToTalkNumberObject',
-           'RingPattern', 'STATE', 'SelectiveAcceptCallCriteria', 'SelectiveAcceptCallGet',
+           'GetMusicOnHoldObjectGreeting', 'GetWorkspaceAnswerSettingsObject',
+           'GetWorkspaceAnswerSettingsObjectPreferredAnswerEndpointIdType',
+           'GetWorkspaceAnswerSettingsObjectPreferredAnswerEndpointType', 'MonitoredPersonObject',
+           'NumberOwnerObject', 'NumberOwnerType', 'PeopleOrPlaceOrVirtualLineType', 'PhoneNumber',
+           'PlaceDoNotDisturbGet', 'PlacePriorityAlertCriteriaGet', 'PlaceSelectiveAcceptCallCriteriaGet',
+           'PlaceSelectiveForwardCallCriteriaGet', 'PlaceSelectiveRejectCallCriteriaGet', 'PriorityAlertCriteria',
+           'PriorityAlertGet', 'PrivacyGet', 'PushToTalkAccessType', 'PushToTalkConnectionType', 'PushToTalkInfo',
+           'PushToTalkNumberObject', 'RingPattern', 'STATE', 'SelectiveAcceptCallCriteria', 'SelectiveAcceptCallGet',
            'SelectiveForwardCallCriteria', 'SelectiveForwardCallGet', 'SelectiveRejectCallCallsFromType',
            'SelectiveRejectCallGet', 'SelectiveRejectCallSource', 'SelectiveRejectCriteria', 'SequentialRingCriteria',
            'SequentialRingCriteriaGet', 'SequentialRingCriteriaGetCallsFrom',
@@ -39,7 +41,8 @@ __all__ = ['Action', 'AnonymousCallRejectionGet', 'AudioAnnouncementFileGetObjec
            'VoicemailPutSendUnansweredCalls', 'WorkspaceAvailableNumberObject',
            'WorkspaceCallForwardAvailableNumberObject', 'WorkspaceCallSettings22Api', 'WorkspaceDigitPatternObject',
            'WorkspaceECBNAvailableNumberObject', 'WorkspaceECBNAvailableNumberObjectOwner',
-           'WorkspaceECBNAvailableNumberObjectOwnerType', 'WorkspaceOutgoingPermissionDigitPatternGetListObject',
+           'WorkspaceECBNAvailableNumberObjectOwnerType', 'WorkspaceEndpointObject',
+           'WorkspaceOutgoingPermissionDigitPatternGetListObject',
            'WorkspaceOutgoingPermissionDigitPatternPostObjectAction']
 
 
@@ -934,6 +937,55 @@ class CallRecordingPutNotification(ApiModel):
     enabled: Optional[bool] = None
 
 
+class GetWorkspaceAnswerSettingsObjectPreferredAnswerEndpointType(str, Enum):
+    #: The Webex desktop application associated with the workspace answers the call.
+    webex_app_desktop = 'WEBEX_APP_DESKTOP'
+    #: The workspace's primary physical device answers the call.
+    primary_device = 'PRIMARY_DEVICE'
+    #: A physical device other than the workspace's primary device answers the call.
+    non_primary_device = 'NON_PRIMARY_DEVICE'
+    #: The workspace device used for a hot desking guest answers the call.
+    hotdesk_device = 'HOTDESK_DEVICE'
+    #: No preferred answer endpoint is selected.
+    none_ = 'NONE'
+
+
+class GetWorkspaceAnswerSettingsObjectPreferredAnswerEndpointIdType(str, Enum):
+    #: The identifier represents a Webex application.
+    application = 'APPLICATION'
+    #: The identifier represents a Webex Calling device.
+    calling_device = 'CALLING_DEVICE'
+    #: The identifier represents a hot desking guest session.
+    hotdesking_guest = 'HOTDESKING_GUEST'
+
+
+class GetWorkspaceAnswerSettingsObject(ApiModel):
+    #: The unique identifier for the preferred answer endpoint. The companion `preferredAnswerEndpointIdType`
+    #: identifies the encoded resource type as `APPLICATION`, `CALLING_DEVICE`, or `HOTDESKING_GUEST`.
+    preferred_answer_endpoint_id: Optional[str] = None
+    #: The preferred endpoint's behavior category.
+    preferred_answer_endpoint_type: Optional[GetWorkspaceAnswerSettingsObjectPreferredAnswerEndpointType] = None
+    #: The resource type encoded by `preferredAnswerEndpointId`.
+    preferred_answer_endpoint_id_type: Optional[GetWorkspaceAnswerSettingsObjectPreferredAnswerEndpointIdType] = None
+    #: Indicates whether the workspace must have a preferred answer endpoint selected in order for a call to be
+    #: auto-answered.
+    preferred_answer_endpoint_required: Optional[bool] = None
+    #: Indicates whether auto answer is enabled for the workspace.
+    auto_answer_enabled: Optional[bool] = None
+
+
+class WorkspaceEndpointObject(ApiModel):
+    #: Unique identifier for the endpoint. The companion `type` identifies the endpoint category; the opaque identifier
+    #: represents a `CALLING_DEVICE`, `APPLICATION`, or `HOTDESKING_GUEST` resource.
+    id: Optional[str] = None
+    type: Optional[GetWorkspaceAnswerSettingsObjectPreferredAnswerEndpointIdType] = None
+    #: Name of the endpoint. For a device endpoint, the name can include the value of a configured `name=<value>`
+    #: device tag.
+    name: Optional[str] = None
+    #: Indicates whether this endpoint is currently selected as the preferred answer endpoint.
+    is_preferred_answer_endpoint: Optional[bool] = None
+
+
 class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
     """
     Workspace Call Settings (2/2)
@@ -1073,6 +1125,101 @@ class WorkspaceCallSettings22Api(ApiChild, base='telephony/config/workspaces'):
         body['enabled'] = enabled
         url = self.ep(f'{workspace_id}/anonymousCallReject')
         super().put(url, params=params, json=body)
+
+    def get_workspace_answer_settings(self, workspace_id: str, org_id: str = None) -> GetWorkspaceAnswerSettingsObject:
+        """
+        Get Answer Settings for a Workspace
+
+        Get the answer settings for a specific workspace.
+
+        Answer settings allow administrators to configure automatic call answering behavior for a workspace, including
+        preferred answer endpoint and whether auto answer is enabled.
+
+        This API requires a full administrator, read-only administrator, delegated full administrator, device
+        administrator, user administrator, or location administrator auth token with the
+        `spark-admin:telephony_config_read` scope.
+
+        :param workspace_id: Unique identifier for the workspace.
+        :type workspace_id: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: :class:`GetWorkspaceAnswerSettingsObject`
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{workspace_id}/answerSettings')
+        data = super().get(url, params=params)
+        r = GetWorkspaceAnswerSettingsObject.model_validate(data)
+        return r
+
+    def update_workspace_answer_settings(self, workspace_id: str, preferred_answer_endpoint_id: str = None,
+                                         auto_answer_enabled: bool = None, org_id: str = None) -> None:
+        """
+        Update Answer Settings for a Workspace
+
+        Modify the answer settings for a specific workspace.
+
+        Answer settings allow administrators to configure automatic call answering behavior for a workspace, including
+        preferred answer endpoint and whether auto answer is enabled. To clear the preferred answer endpoint, the
+        `preferredAnswerEndpointId` must be set to null.
+
+        This API requires a full administrator, delegated full administrator, device administrator, user administrator,
+        or location administrator auth token with the `spark-admin:telephony_config_write` scope.
+
+        :param workspace_id: Unique identifier for the workspace.
+        :type workspace_id: str
+        :param preferred_answer_endpoint_id: The unique identifier for the preferred answer endpoint. This may be a
+            device, application, or hot desking guest endpoint. Set to null to clear the preferred answer endpoint;
+            omit to leave unchanged.
+        :type preferred_answer_endpoint_id: str
+        :param auto_answer_enabled: Indicates whether auto answer is enabled for the workspace.
+        :type auto_answer_enabled: bool
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        if preferred_answer_endpoint_id is not None:
+            body['preferredAnswerEndpointId'] = preferred_answer_endpoint_id
+        if auto_answer_enabled is not None:
+            body['autoAnswerEnabled'] = auto_answer_enabled
+        url = self.ep(f'{workspace_id}/answerSettings')
+        super().put(url, params=params, json=body)
+
+    def get_workspace_available_preferred_answer_endpoints(self, workspace_id: str,
+                                                           org_id: str = None) -> builtins.list[WorkspaceEndpointObject]:
+        """
+        Get Available Preferred Answer Endpoints for a Workspace
+
+        Get the list of available preferred answer endpoints for a specific workspace. This API returns all available
+        endpoints in a single response.
+
+        A workspace may be associated with multiple endpoints such as Cisco desk IP phone, Webex Calling-supported
+        analog devices, or third-party endpoints. Preferred answering endpoints allow administrators to specify which
+        of these devices should be prioritized for answering calls. This helps ensure that calls are answered on the
+        most convenient or appropriate device for the workspace.
+
+        This API requires a full administrator, read-only administrator, delegated full administrator, device
+        administrator, user administrator, or location administrator auth token with the
+        `spark-admin:telephony_config_read` scope.
+
+        :param workspace_id: Unique identifier for the workspace.
+        :type workspace_id: str
+        :param org_id: Optional target organization identifier. Defaults to token's organization if not provided.
+        :type org_id: str
+        :rtype: list[WorkspaceEndpointObject]
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        url = self.ep(f'{workspace_id}/availablePreferredAnswerEndpoints')
+        data = super().get(url, params=params)
+        r = TypeAdapter(list[WorkspaceEndpointObject]).validate_python(data['endpoints'])
+        return r
 
     def retrieve_barge_in_call_settings_for_a_workspace(self, workspace_id: str, org_id: str = None) -> UserBargeInGet:
         """

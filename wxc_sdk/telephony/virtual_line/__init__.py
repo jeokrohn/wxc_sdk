@@ -10,6 +10,7 @@ from ...common import AssignedDectNetwork, PrimaryOrShared, UserNumber
 from ...locations import LocationAddress
 from ...person_settings import TelephonyDevice
 from ...person_settings.agent_caller_id import AgentCallerIdApi
+from ...person_settings.answer import AnswerApi
 from ...person_settings.available_numbers import AvailableNumbersApi
 from ...person_settings.barge import BargeApi
 from ...person_settings.call_intercept import CallInterceptApi
@@ -108,6 +109,8 @@ class VirtualLineDevices(ApiModel):
 class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
     #: agent caller id Api
     agent_caller_id: AgentCallerIdApi
+    #: answer settings
+    answer: AnswerApi
     #: Available numbers for a virtual line
     available_numbers: AvailableNumbersApi
     #: barge settings
@@ -146,6 +149,7 @@ class VirtualLinesApi(ApiChild, base='telephony/config/virtualLines'):
     def __init__(self, session: RestSession) -> None:
         super().__init__(session=session)
         self.agent_caller_id = AgentCallerIdApi(session=session, selector=ApiSelector.virtual_line)
+        self.answer = AnswerApi(session=session, selector=ApiSelector.virtual_line)
         self.available_numbers = AvailableNumbersApi(session=session, selector=ApiSelector.virtual_line)
         self.barge = BargeApi(session=session, selector=ApiSelector.virtual_line)
         self.call_bridge = CallBridgeApi(session=session, selector=ApiSelector.virtual_line)

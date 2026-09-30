@@ -118,6 +118,7 @@ __all__ = [
     'WaitMode',
     'AgentACDState',
     'TelephonyType',
+    'EndpointType',
 ]
 
 
@@ -1509,3 +1510,12 @@ class TelephonyType(str, Enum):
     pstn_number = 'PSTN_NUMBER'
     #: The number is a mobile number.
     mobile_number = 'MOBILE_NUMBER'
+
+
+class EndpointType(str, Enum):
+    #: Endpoint is a calling device.
+    calling_device = 'CALLING_DEVICE'
+    #: Endpoint is an application.
+    application = 'APPLICATION'
+    #: Endpoint is a hotdesking guest.
+    hotdesking_guest = 'HOTDESKING_GUEST'

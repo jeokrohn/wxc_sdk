@@ -16,6 +16,7 @@ from ..common.schedules import ScheduleApi, ScheduleApiBase
 from ..rest import RestSession
 from .agent_caller_id import AgentCallerIdApi
 from .anon_calls import AnonCallsApi
+from .answer import AnswerApi
 from .app_shared_line import AppSharedLineApi
 from .appservices import AppServicesApi
 from .available_numbers import AvailableNumbersApi
@@ -191,6 +192,7 @@ class PersonSettingsApi(ApiChild, base='people'):
     #: agent caller id Api
     agent_caller_id: AgentCallerIdApi
     anon_calls: AnonCallsApi
+    answer: AnswerApi
     app_shared_line: AppSharedLineApi
     #: Person's Application Services Settings
     appservices: AppServicesApi
@@ -274,6 +276,7 @@ class PersonSettingsApi(ApiChild, base='people'):
         super().__init__(session=session)
         self.agent_caller_id = AgentCallerIdApi(session=session)
         self.anon_calls = AnonCallsApi(session=session)
+        self.answer = AnswerApi(session=session, selector=ApiSelector.person)
         self.app_shared_line = AppSharedLineApi(session=session)
         self.appservices = AppServicesApi(session=session)
         self.available_numbers = AvailableNumbersApi(session=session)

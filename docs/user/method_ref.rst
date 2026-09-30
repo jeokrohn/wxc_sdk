@@ -1074,6 +1074,15 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.person_settings.anon_calls.read <wxc_sdk.person_settings.anon_calls.AnonCallsApi.read>`
         | Retrieve Anonymous Call Settings for an entity
         | ``GET /telephony/config/people/{entity_id}/anonymousCallReject``
+   * - :meth:`api.person_settings.answer.available_preferred_answer_endpoints <wxc_sdk.person_settings.answer.AnswerApi.available_preferred_answer_endpoints>`
+        | Get Available Preferred Answer Endpoints for an Entity
+        | ``GET /telephony/config/people/{entity_id}/availablePreferredAnswerEndpoints``
+   * - :meth:`api.person_settings.answer.read <wxc_sdk.person_settings.answer.AnswerApi.read>`
+        | Get Answer Settings for an Entity
+        | ``GET /telephony/config/people/{entity_id}/answerSettings``
+   * - :meth:`api.person_settings.answer.update <wxc_sdk.person_settings.answer.AnswerApi.update>`
+        | Update Answer Settings for an Entity
+        | ``PUT /telephony/config/people/{entity_id}/answerSettings``
    * - :meth:`api.person_settings.app_shared_line.get_members <wxc_sdk.person_settings.app_shared_line.AppSharedLineApi.get_members>`
         | Get Shared-Line Appearance Members
         | ``GET /telephony/config/people/{person_id}/applications/members``
@@ -3594,6 +3603,15 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.telephony.virtual_lines.agent_caller_id.read <wxc_sdk.person_settings.agent_caller_id.AgentCallerIdApi.read>`
         | Retrieve Agent's Caller ID Information
         | ``GET /telephony/config/virtualLines/{entity_id}/agent/callerId``
+   * - :meth:`api.telephony.virtual_lines.answer.available_preferred_answer_endpoints <wxc_sdk.person_settings.answer.AnswerApi.available_preferred_answer_endpoints>`
+        | Get Available Preferred Answer Endpoints for an Entity
+        | ``GET /telephony/config/virtualLines/{entity_id}/availablePreferredAnswerEndpoints``
+   * - :meth:`api.telephony.virtual_lines.answer.read <wxc_sdk.person_settings.answer.AnswerApi.read>`
+        | Get Answer Settings for an Entity
+        | ``GET /telephony/config/virtualLines/{entity_id}/answerSettings``
+   * - :meth:`api.telephony.virtual_lines.answer.update <wxc_sdk.person_settings.answer.AnswerApi.update>`
+        | Update Answer Settings for an Entity
+        | ``PUT /telephony/config/virtualLines/{entity_id}/answerSettings``
    * - :meth:`api.telephony.virtual_lines.assigned_devices <wxc_sdk.telephony.virtual_line.VirtualLinesApi.assigned_devices>`
         | Get List of Devices Assigned for a Virtual Line
         | ``GET /telephony/config/virtualLines/{virtual_line_id}/devices``
@@ -3951,6 +3969,15 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.workspace_settings.anon_calls.read <wxc_sdk.person_settings.anon_calls.AnonCallsApi.read>`
         | Retrieve Anonymous Call Settings for an entity
         | ``GET /telephony/config/workspaces/{entity_id}/anonymousCallReject``
+   * - :meth:`api.workspace_settings.answer.available_preferred_answer_endpoints <wxc_sdk.person_settings.answer.AnswerApi.available_preferred_answer_endpoints>`
+        | Get Available Preferred Answer Endpoints for an Entity
+        | ``GET /workspaces/{entity_id}/availablePreferredAnswerEndpoints``
+   * - :meth:`api.workspace_settings.answer.read <wxc_sdk.person_settings.answer.AnswerApi.read>`
+        | Get Answer Settings for an Entity
+        | ``GET /workspaces/{entity_id}/answerSettings``
+   * - :meth:`api.workspace_settings.answer.update <wxc_sdk.person_settings.answer.AnswerApi.update>`
+        | Update Answer Settings for an Entity
+        | ``PUT /workspaces/{entity_id}/answerSettings``
    * - :meth:`api.workspace_settings.available_numbers.available <wxc_sdk.person_settings.available_numbers.AvailableNumbersApi.available>`
         | Get Available Phone Numbers
         | ``GET /telephony/config/workspaces/availableNumbers``

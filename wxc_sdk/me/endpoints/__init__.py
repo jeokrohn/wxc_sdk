@@ -9,19 +9,9 @@ from pydantic import TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
-from wxc_sdk.base import SafeEnum as Enum
-from wxc_sdk.common import UserType
+from wxc_sdk.common import EndpointType, UserType
 
-__all__ = ['MeEndpointsApi', 'MeEndpoint', 'MeSecondaryLine', 'MeMobility', 'EndpointType', 'MeHost']
-
-
-class EndpointType(str, Enum):
-    #: Endpoint is a calling device.
-    calling_device = 'CALLING_DEVICE'
-    #: Endpoint is an application.
-    application = 'APPLICATION'
-    #: Endpoint is a hotdesking guest.
-    hotdesking_guest = 'HOTDESKING_GUEST'
+__all__ = ['MeEndpointsApi', 'MeEndpoint', 'MeSecondaryLine', 'MeMobility', 'MeHost']
 
 
 class MeSecondaryLine(ApiModel):
