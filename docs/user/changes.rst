@@ -1,6 +1,10 @@
 Release history
 ===============
 
+1.40.1
+------
+- fix: publish AnswerApi, AnswerSettings, AnswerEndpoint, AnswerSettingsEndpointType
+
 1.40.0
 ------
 - feat: new APIs api.person_settings.answer, api.telephony.virtual_lines.answer, api.workspace_settings.answer
