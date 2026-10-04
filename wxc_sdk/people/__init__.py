@@ -209,7 +209,7 @@ class Person(ApiModelWithErrors):
     last_modified: Optional[datetime.datetime] = None
     #: The time zone of the person if configured. If no timezone is configured on the account, this field will not be
     #: present
-    timezone: Optional[str] = None
+    time_zone: Optional[str] = None
     #: The date and time of the person's last activity within Webex. This will only be returned for people within your
     #: organization or an organization you manage. Presence information will not be shown if the authenticated user
     #: has `disabled status sharing
@@ -272,7 +272,7 @@ class Person(ApiModelWithErrors):
                 'person_id': True,
                 'created': True,
                 'last_modified': True,
-                'timezone': True,
+                'time_zone': True,
                 'last_activity': True,
                 'sip_addresses': True,
                 'status': True,
