@@ -217,6 +217,18 @@ class QueueSettings(ApiModel):
     reset_call_statistics_enabled: Optional[bool] = None
     #: Settings for incoming calls exceed queue_size.
     overflow: Optional[OverflowSetting] = None
+    #: "When `true`, calls routed from a Customer Assist call queue to an available agent are answered automatically.
+    #: This field applies only to Customer Assist call queues; setting it on regular call queues is rejected and it
+    #: is absent from GET responses for regular call queues.
+    auto_answer_enabled: Optional[bool] = None
+    #: number of seconds to wait before automatically answering an offered call. The minimum value is `0`; the maximum
+    #: value is `10`. This field applies only to Customer Assist call queues; setting it on regular call queues is
+    #: rejected and it is absent from GET responses for regular call queues.
+    auto_answer_delay_seconds: Optional[int] = None
+    #: When `true`, agents assigned to the Customer Assist call queue can clear their preferred answer endpoint. This
+    #: field applies only to Customer Assist call queues; setting it on regular call queues is rejected and it is
+    #: absent from GET responses for regular call queues.
+    allow_agent_to_clear_preferred_answer_endpoint_enabled: Optional[bool] = None
     #: Play a message when callers first reach the queue. For example, “Thank you for calling. An agent will be with
     #: you shortly.” It can be set as mandatory. If the mandatory option is not selected and a caller reaches the
     #: call queue while there is an available agent, the caller will not hear this announcement and is transferred to
