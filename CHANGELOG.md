@@ -1,3 +1,9 @@
+## 1.40.1 (2026-10-04)
+
+### Fix
+
+- publish AnswerApi, AnswerSettings, AnswerEndpoint, AnswerSettingsEndpointType
+
 ## 1.40.0 (2026-09-30)
 
 ### Feat
