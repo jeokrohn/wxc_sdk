@@ -1,7 +1,7 @@
 import builtins
 from collections.abc import Generator
 from datetime import datetime
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
 from dateutil.parser import isoparse
 from pydantic import Field
@@ -54,7 +54,7 @@ class RecordingPartyActor(ApiModel):
 
 
 class RecordingParty(ApiModel):
-    actor: Optional[RecordingPartyActor]
+    actor: Optional[RecordingPartyActor] = None
     name: Optional[str] = None
     number: Optional[str] = None
 
@@ -136,6 +136,9 @@ class ConvergedRecording(ApiModel):
     owner_type: Optional[RecordingOwnerType] = None
     #: Storage location for recording within Webex datacenters.
     storage_region: Optional[str] = None
+    #: The language of the recording's transcript. This attribute is only present when a transcript is available for
+    #: the recording.
+    transcript_language: Optional[str] = None
     #: Fields relevant to each service Type.
     service_data: Optional[RecordingServiceData] = None
 
@@ -245,8 +248,8 @@ class ConvergedRecordingsApi(ApiChild, base=''):
 
     def list_for_admin_or_compliance_officer(
         self,
-        from_: Union[str, datetime] = None,
-        to_: Union[str, datetime] = None,
+        from_: str | datetime | None = None,
+        to_: str | datetime | None = None,
         status: RecordingStatus = None,
         service_type: RecordingServiceType = None,
         format_: str = None,
@@ -343,8 +346,8 @@ class ConvergedRecordingsApi(ApiChild, base=''):
 
     def list(
         self,
-        from_: Union[str, datetime] = None,
-        to_: Union[str, datetime] = None,
+        from_: str | datetime | None = None,
+        to_: str | datetime | None = None,
         status: RecordingStatus = None,
         service_type: RecordingServiceType = None,
         format_: str = None,

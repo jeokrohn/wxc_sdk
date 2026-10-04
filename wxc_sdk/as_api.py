@@ -480,8 +480,8 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
 
     def list_for_admin_or_compliance_officer_gen(
         self,
-        from_: str | datetime = None,
-        to_: str | datetime = None,
+        from_: str | datetime | None = None,
+        to_: str | datetime | None = None,
         status: RecordingStatus = None,
         service_type: RecordingServiceType = None,
         format_: str = None,
@@ -578,8 +578,8 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
 
     async def list_for_admin_or_compliance_officer(
         self,
-        from_: str | datetime = None,
-        to_: str | datetime = None,
+        from_: str | datetime | None = None,
+        to_: str | datetime | None = None,
         status: RecordingStatus = None,
         service_type: RecordingServiceType = None,
         format_: str = None,
@@ -676,8 +676,8 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
 
     def list_gen(
         self,
-        from_: str | datetime = None,
-        to_: str | datetime = None,
+        from_: str | datetime | None = None,
+        to_: str | datetime | None = None,
         status: RecordingStatus = None,
         service_type: RecordingServiceType = None,
         format_: str = None,
@@ -772,8 +772,8 @@ class AsConvergedRecordingsApi(AsApiChild, base=''):
 
     async def list(
         self,
-        from_: str | datetime = None,
-        to_: str | datetime = None,
+        from_: str | datetime | None = None,
+        to_: str | datetime | None = None,
         status: RecordingStatus = None,
         service_type: RecordingServiceType = None,
         format_: str = None,
