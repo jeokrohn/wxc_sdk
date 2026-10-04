@@ -12,6 +12,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   wxc_sdk.person_settings.answer
    wxc_sdk.person_settings.executive
    wxc_sdk.person_settings.feature_access
    wxc_sdk.person_settings.hotdesking

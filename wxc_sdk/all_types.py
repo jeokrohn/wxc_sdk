@@ -98,6 +98,7 @@ from wxc_sdk.people import PeopleStatus, Person, PersonAddress, PersonType, Phon
 from wxc_sdk.person_settings import DeviceActivationState, DeviceList, DeviceOwner, Hoteling, PersonSettings, \
     TelephonyDevice, UserCallCaptions
 from wxc_sdk.person_settings.agent_caller_id import AgentCallerId, AvailableCallerIdType
+from wxc_sdk.person_settings.answer import AnswerEndpoint, AnswerSettings, AnswerSettingsEndpointType
 from wxc_sdk.person_settings.appservices import AppServicesSettings
 from wxc_sdk.person_settings.available_numbers import AvailableNumber, AvailablePhoneNumberLicenseType
 from wxc_sdk.person_settings.barge import BargeSettings
@@ -314,20 +315,21 @@ __all__ = ['AIRDirectLineCallerIdName', 'AIRIntent', 'AIRSessionState', 'AIRSess
            'AffectComponent', 'Agent', 'AgentACDState', 'AgentCallQueueSetting', 'AgentCallerId', 'AgentOrSupervisor',
            'AiAgent', 'AiEngine', 'AiEngineName', 'AiGuidelines', 'AiReceptionist', 'AiVoice', 'AlternateNumber',
            'AlternateNumberSettings', 'AnnAudioFile', 'Announcement', 'AnnouncementLanguage', 'AnnouncementLevel',
-           'AnnouncementMode', 'AnswerCondition', 'AnswerObject', 'Answers', 'ApiModel', 'ApiModelType',
-           'ApiModelWithErrors', 'ApiSelector', 'AppServicesSettings', 'AppliedService',
-           'AppliedServiceTranslationPattern', 'ApplyLineKeyTemplateAction', 'ApplyLineKeyTemplateJobDetails',
-           'ApprovalQuestion', 'ApprovalRule', 'AssignedAssistants', 'AssignedDectNetwork', 'AssistantSettings',
-           'AtaCustomization', 'AtaDtmfMethod', 'AtaDtmfMode', 'AttachmentAction', 'AttachmentActionData',
-           'AttendeePrivileges', 'Audio', 'AudioCodecPriority', 'AudioConnectionOptions', 'AudioConnectionType',
-           'AudioSource', 'AudioType', 'AuditEvent', 'AuditEventData', 'AuthCode', 'AuthCodeLevel', 'AuthCodes',
-           'Authorization', 'AuthorizationType', 'AutoAttendant', 'AutoAttendantAction',
-           'AutoAttendantKeyConfiguration', 'AutoAttendantMenu', 'AutoRegistrationResult', 'AutoTransferNumbers',
-           'AvailableAgent', 'AvailableCallerIdType', 'AvailableFeature', 'AvailableHotelingHost', 'AvailableMember',
-           'AvailableNumber', 'AvailablePhoneNumberLicenseType', 'AvailableQueue', 'AvailableRecallHuntGroup',
-           'Background', 'BackgroundImage', 'BackgroundImageColor', 'BackgroundImages', 'BackgroundSelection',
-           'BacklightTimer', 'BacklightTimer68XX78XX', 'BargeSettings', 'BaseCallRecordingAnnouncement',
-           'BaseStationDetail', 'BaseStationResponse', 'BaseStationResult', 'BaseStationsResponse', 'BehaviorType',
+           'AnnouncementMode', 'AnswerCondition', 'AnswerEndpoint', 'AnswerObject', 'AnswerSettings',
+           'AnswerSettingsEndpointType', 'Answers', 'ApiModel', 'ApiModelType', 'ApiModelWithErrors', 'ApiSelector',
+           'AppServicesSettings', 'AppliedService', 'AppliedServiceTranslationPattern', 'ApplyLineKeyTemplateAction',
+           'ApplyLineKeyTemplateJobDetails', 'ApprovalQuestion', 'ApprovalRule', 'AssignedAssistants',
+           'AssignedDectNetwork', 'AssistantSettings', 'AtaCustomization', 'AtaDtmfMethod', 'AtaDtmfMode',
+           'AttachmentAction', 'AttachmentActionData', 'AttendeePrivileges', 'Audio', 'AudioCodecPriority',
+           'AudioConnectionOptions', 'AudioConnectionType', 'AudioSource', 'AudioType', 'AuditEvent',
+           'AuditEventData', 'AuthCode', 'AuthCodeLevel', 'AuthCodes', 'Authorization', 'AuthorizationType',
+           'AutoAttendant', 'AutoAttendantAction', 'AutoAttendantKeyConfiguration', 'AutoAttendantMenu',
+           'AutoRegistrationResult', 'AutoTransferNumbers', 'AvailableAgent', 'AvailableCallerIdType',
+           'AvailableFeature', 'AvailableHotelingHost', 'AvailableMember', 'AvailableNumber',
+           'AvailablePhoneNumberLicenseType', 'AvailableQueue', 'AvailableRecallHuntGroup', 'Background',
+           'BackgroundImage', 'BackgroundImageColor', 'BackgroundImages', 'BackgroundSelection', 'BacklightTimer',
+           'BacklightTimer68XX78XX', 'BargeSettings', 'BaseCallRecordingAnnouncement', 'BaseStationDetail',
+           'BaseStationResponse', 'BaseStationResult', 'BaseStationsResponse', 'BehaviorType',
            'BlockContiguousSequences', 'BlockPreviousPasscodes', 'BlockRepeatedDigits', 'BlockingDisableCalling',
            'BlockingUnlessForced', 'BluetoothMode', 'BluetoothSetting', 'BreakoutSession', 'BulkErrorResponse',
            'BulkMethod', 'BulkOperation', 'BulkResponse', 'BulkResponseOperation', 'BusinessContinuity',

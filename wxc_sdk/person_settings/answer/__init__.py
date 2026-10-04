@@ -10,6 +10,8 @@ from wxc_sdk.common import EndpointType
 from wxc_sdk.person_settings.common import ApiSelector
 from wxc_sdk.rest import RestSession
 
+__all__ = ['AnswerApi', 'AnswerSettings', 'AnswerEndpoint', 'AnswerSettingsEndpointType']
+
 
 class AnswerSettingsEndpointType(str, Enum):
     #: The Webex desktop application answers the call.
