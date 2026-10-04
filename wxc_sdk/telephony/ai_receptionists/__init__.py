@@ -354,10 +354,10 @@ class KnowledgeBaseDocumentKnowledgeType(str, Enum):
 
 
 class KnowledgeBaseDocumentStatus(str, Enum):
-    pending = 'pending'
-    processing = 'processing'
-    success = 'success'
-    failed = 'failed'
+    pending = 'Pending'
+    processing = 'Processing'
+    success = 'Success'
+    failed = 'Failed'
 
 
 class KnowledgeBaseDocumentDetails(ApiModel):
