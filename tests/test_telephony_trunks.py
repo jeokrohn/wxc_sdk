@@ -3,6 +3,7 @@ import re
 from collections import namedtuple
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
+from operator import attrgetter
 from random import choice
 from typing import ClassVar
 from unittest import skip
@@ -24,6 +25,50 @@ class TestListTrunks(TestCaseWithLog):
         """
         trunks = list(self.api.telephony.prem_pstn.trunk.list())
         print(f'Got {len(trunks)} trunks')
+
+    @skip
+    def test_set_password_on_all_trunks(self):
+        """
+        set a new password on all trunks
+        """
+        trunk_api = self.api.telephony.prem_pstn.trunk
+        # list all trunks
+        trunks = list(trunk_api.list())
+        trunks.sort(key=attrgetter('name'))
+        print(', '.join(f'lgw_{trunk.name.replace(" ", "_")}' for trunk in trunks))
+        # update password on all trunks
+        # and print the trunk name, username and new password
+        trunk_pass = 'TrunkPass'
+        for trunk in trunks:
+            trunk_api.update(trunk_id=trunk.trunk_id, name=trunk.name, password=trunk_pass)
+            trunk_detail = trunk_api.details(trunk_id=trunk.trunk_id)
+            """
+            Create outpout like:
+              - name: lgw_darmstadt
+                kind: local_gateway
+                registrar_domain: "90236926.us10.bcld.webex.com"
+                trunk_group: "darmstadt0906895623_lgu"
+                line_port: "Darmstadt1000654249_LGU@90236926.us10.bcld.webex.com"
+                outbound_proxy: "fr07.sipconnect-eun.bcld.webex.com"
+                username_env: WX_LGW_DARMSTADT_AUTH_USER
+                password_env: WX_LGW_DARMSTADT_AUTH_PASSWORD
+                transport: tls
+            """
+            trunk_name = f'lgw_{trunk.name.replace(" ", "_")}'
+            print(f'  - name: {trunk_name}')
+            print('    kind: local_gateway')
+            print(f'    registrar_domain: "{trunk_detail.line_port.split("@")[-1]}"')
+            print(f'    trunk_group: "{trunk_detail.otg_dtg_id}"')
+            print(f'    line_port: "{trunk_detail.line_port}"')
+            print(f'    outbound_proxy: "{trunk_detail.outbound_proxy["outboundProxy"]}"')
+            print(f'    username_env: WX_{trunk_detail.name.upper().replace(" ", "_")}_AUTH_USER')
+            print('    password_env: WX_LGW_AUTH_PASSWORD')
+            print('    transport: tls')
+            print(f'      WX_{trunk_name.upper()}_AUTH_USER="{trunk_detail.sip_authentication_user_name}"')
+            print(f'      WX_LGW_AUTH_PASSWORD="{trunk_pass}"')
+
+        print(f'Updated password on {len(trunks)} trunks')
+        return
 
 
 class TestCreate(TestWithLocations):
@@ -70,7 +115,7 @@ class TestDetails(TestCaseWithLog):
             *[api.details(trunk_id=trunk.trunk_id) for trunk in trunks], return_exceptions=True
         )
         err = None
-        for trunk, detail in zip(trunks, details):
+        for trunk, detail in zip(trunks, details, strict=True):
             trunk: Trunk
             if isinstance(detail, Exception):
                 err = err or detail
