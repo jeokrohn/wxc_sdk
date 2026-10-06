@@ -1,3 +1,15 @@
+## 1.41.0 (2026-10-05)
+
+### Feat
+
+- new attributes QueueSettings.auto_answer_enabled, auto_answer_delay_seconds, allow_agent_to_clear_preferred_answer_endpoint_enabled
+
+### Fix
+
+- set start parameter for CallQueueAgentsApi.details to 0 again. Was 10.
+- capitalization for KnowledgeBaseDocumentStatus values
+- add default None for RecordingParty.actor; new attribute ConvergedRecording.transcript_language
+
 ## 1.40.1 (2026-10-04)
 
 ### Fix
