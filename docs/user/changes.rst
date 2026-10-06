@@ -1,6 +1,15 @@
 Release history
 ===============
 
+
+1.41.0
+------
+
+- feat: new attributes QueueSettings.auto_answer_enabled, auto_answer_delay_seconds, allow_agent_to_clear_preferred_answer_endpoint_enabled
+- fix: set start parameter for CallQueueAgentsApi.details to 0 again. Was 10.
+- fix: capitalization for KnowledgeBaseDocumentStatus values
+- fix: add default None for RecordingParty.actor; new attribute ConvergedRecording.transcript_language
+
 1.40.1
 ------
 - fix: publish AnswerApi, AnswerSettings, AnswerEndpoint, AnswerSettingsEndpointType
