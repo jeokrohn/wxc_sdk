@@ -154,7 +154,7 @@ class CallQueueAgentsApi(ApiChild, base='telephony/config/queues/agents'):
         return self.session.follow_pagination(url=url, model=CallQueueAgent, item_key='agents', params=params)
 
     def details(
-        self, id: str, has_cx_essentials: bool = None, max_: int = 50, start: int = 10, org_id: str = None
+        self, id: str, has_cx_essentials: bool = None, max_: int = 50, start: int = 0, org_id: str = None
     ) -> CallQueueAgentDetail:
         """
         Get Details for an Agent for Call Queue or Customer Assist
