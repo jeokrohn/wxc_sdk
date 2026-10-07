@@ -198,16 +198,17 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
                 raise ValueError('upload_as is required')
 
         if file_uri is None:
-            data = MultipartEncoder(
-                {'name': name, 'file': (upload_as, file, 'audio/wav'),
-                 'is_text_to_speech': str(is_text_to_speech).lower()}
-            )
+            dt = {'name': name, 'file': (upload_as, file, 'audio/wav')}
+            if is_text_to_speech is not None:
+                dt['isTextToSpeech'] = str(is_text_to_speech).lower()
+            data = MultipartEncoder(dt)
             ct = data.content_type
             json = None
         else:
             json = {'name': name, 'fileUri': file_uri,
-                    'fileName': upload_as,
-                    'is_text_to_speech': str(is_text_to_speech).lower()}
+                    'fileName': upload_as}
+            if is_text_to_speech is not None:
+                json['isTextToSpeech'] = str(is_text_to_speech).lower()
             data = None
             ct = 'application/json'
         try:
@@ -232,13 +233,10 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
                 raise ValueError('upload_as is required')
 
         if file_uri is None:
-            data = MultipartEncoder(
-                {
-                    'name': name,
-                    'file': (upload_as, file, 'audio/wav'),
-                    'is_text_to_speech': str(is_text_to_speech).lower(),
-                }
-            )
+            dt = {'name': name, 'file': (upload_as, file, 'audio/wav')}
+            if is_text_to_speech is not None:
+                dt['isTextToSpeech'] = str(is_text_to_speech).lower()
+            data = MultipartEncoder(dt)
             ct = data.content_type
             json = None
         else:
@@ -246,8 +244,9 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
                 'name': name,
                 'fileUri': file_uri,
                 'fileName': upload_as,
-                'is_text_to_speech': str(is_text_to_speech).lower(),
             }
+            if is_text_to_speech is not None:
+                json['isTextToSpeech'] = str(is_text_to_speech).lower()
             data = None
             ct = 'application/json'
         try:
@@ -262,7 +261,7 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
         name: str,
         file_uri: str = None,
         file: BufferedReader | str | None = None,
-        is_text_to_speech: bool = False,
+        is_text_to_speech: bool = None,
         upload_as: str = None,
         location_id: str = None,
         org_id: str = None,
@@ -288,7 +287,9 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
         :param upload_as: filename for the content. Only required if content is a reader or if using file_uri;
             has to be a .wav file name.
         :type upload_as: str
-        :param is_text_to_speech: Indicates whether the announcement is text-to-speech.
+        :param is_text_to_speech: Indicates whether the announcement is text-to-speech. If omitted or set to null or
+            false, the announcement is stored as non-text-to-speech and text-to-speech metadata, such as the text,
+            voice, and language, is not retained.
         :type is_text_to_speech: bool
         :param location_id: Unique identifier of a location where an announcement is being created.
         :type location_id: str
@@ -480,7 +481,7 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
         file_uri: str = None,
         file: BufferedReader | str | None = None,
         upload_as: str = None,
-        is_text_to_speech: bool = False,
+        is_text_to_speech: bool = None,
         location_id: str = None,
         org_id: str = None,
     ):
@@ -510,7 +511,9 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
         :param upload_as: filename for the content. Only required if content is a reader or if using file_uri;
             has to be a .wav file name.
         :type upload_as: str
-        :param is_text_to_speech: Indicates whether the announcement is text-to-speech.
+        :param is_text_to_speech: Indicates whether the announcement is text-to-speech. If omitted or set to null or
+            false, the announcement is stored as non-text-to-speech and text-to-speech metadata, such as the text,
+            voice, and language, is not retained.
         :type is_text_to_speech: bool
         :param location_id: Unique identifier of a location where announcement is being deleted.
         :type location_id: str
@@ -521,7 +524,7 @@ class AnnouncementsRepositoryApi(ApiChild, base='telephony/config'):
         """async
     async def modify(self, announcement_id: str, name: str, file_uri: str = None,
                 file: Union[BufferedReader, str] = None,
-               upload_as: str = None, is_text_to_speech: bool = False, location_id: str = None, org_id: str = None):
+               upload_as: str = None, is_text_to_speech: bool = None, location_id: str = None, org_id: str = None):
         params = org_id and {'orgId': org_id} or None
         if location_id is None:
             url = self.ep(f'announcements/{announcement_id}')

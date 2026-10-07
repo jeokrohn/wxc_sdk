@@ -274,7 +274,7 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         return self.session.follow_pagination(url=url, model=AnnouncementsListResponse, item_key='announcements', params=params)
 
     def upload_a_binary_announcement_greeting_at_organization_level(self, name: str, file_uri: str, file_name: str,
-                                                                    is_text_to_speech: bool,
+                                                                    is_text_to_speech: bool = None,
                                                                     org_id: str = None) -> str:
         """
         Upload a binary announcement greeting at organization level
@@ -294,7 +294,9 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type file_uri: str
         :param file_name: File name of the announcement.
         :type file_name: str
-        :param is_text_to_speech: Indicates whether the announcement is text-to-speech.
+        :param is_text_to_speech: Indicates whether the announcement is text-to-speech. If omitted or set to null or
+            false, the announcement is stored as non-text-to-speech and text-to-speech metadata, such as the text,
+            voice, and language, is not retained.
         :type is_text_to_speech: bool
         :param org_id: Create an announcement in this organization.
         :type org_id: str
@@ -307,7 +309,8 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         body['name'] = name
         body['fileUri'] = file_uri
         body['fileName'] = file_name
-        body['isTextToSpeech'] = is_text_to_speech
+        if is_text_to_speech is not None:
+            body['isTextToSpeech'] = is_text_to_speech
         url = self.ep('announcements')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -423,7 +426,7 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
 
     def modify_a_binary_announcement_greeting_at_organization_level(self, announcement_id: str, name: str,
                                                                     file_uri: str, file_name: str,
-                                                                    is_text_to_speech: bool,
+                                                                    is_text_to_speech: bool = None,
                                                                     org_id: str = None) -> None:
         """
         Modify a binary announcement greeting at organization level
@@ -446,7 +449,9 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type file_uri: str
         :param file_name: File name of the announcement.
         :type file_name: str
-        :param is_text_to_speech: Indicates whether the announcement is text-to-speech.
+        :param is_text_to_speech: Indicates whether the announcement is text-to-speech. If omitted or set to null or
+            false, the announcement is stored as non-text-to-speech and text-to-speech metadata, such as the text,
+            voice, and language, is not retained.
         :type is_text_to_speech: bool
         :param org_id: Modify an announcement in this organization.
         :type org_id: str
@@ -459,7 +464,8 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         body['name'] = name
         body['fileUri'] = file_uri
         body['fileName'] = file_name
-        body['isTextToSpeech'] = is_text_to_speech
+        if is_text_to_speech is not None:
+            body['isTextToSpeech'] = is_text_to_speech
         url = self.ep(f'announcements/{announcement_id}')
         super().put(url, params=params, json=body)
 
@@ -491,7 +497,7 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         return r
 
     def upload_a_binary_announcement_greeting_at_the_location_level(self, location_id: str, name: str, file_uri: str,
-                                                                    file_name: str, is_text_to_speech: bool,
+                                                                    file_name: str, is_text_to_speech: bool = None,
                                                                     org_id: str = None) -> str:
         """
         Upload a binary announcement greeting at the location level
@@ -514,7 +520,9 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type file_uri: str
         :param file_name: File name of the announcement.
         :type file_name: str
-        :param is_text_to_speech: Indicates whether the announcement is text-to-speech.
+        :param is_text_to_speech: Indicates whether the announcement is text-to-speech. If omitted or set to null or
+            false, the announcement is stored as non-text-to-speech and text-to-speech metadata, such as the text,
+            voice, and language, is not retained.
         :type is_text_to_speech: bool
         :param org_id: Create an announcement for location in this organization.
         :type org_id: str
@@ -527,7 +535,8 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         body['name'] = name
         body['fileUri'] = file_uri
         body['fileName'] = file_name
-        body['isTextToSpeech'] = is_text_to_speech
+        if is_text_to_speech is not None:
+            body['isTextToSpeech'] = is_text_to_speech
         url = self.ep(f'locations/{location_id}/announcements')
         data = super().post(url, params=params, json=body)
         r = data['id']
@@ -609,7 +618,8 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
 
     def modify_a_binary_announcement_greeting_at_location_level(self, location_id: str, announcement_id: str,
                                                                 name: str, file_uri: str, file_name: str,
-                                                                is_text_to_speech: bool, org_id: str = None) -> None:
+                                                                is_text_to_speech: bool = None,
+                                                                org_id: str = None) -> None:
         """
         Modify a binary announcement greeting at location level
 
@@ -633,7 +643,9 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         :type file_uri: str
         :param file_name: File name of the announcement.
         :type file_name: str
-        :param is_text_to_speech: Indicates whether the announcement is text-to-speech.
+        :param is_text_to_speech: Indicates whether the announcement is text-to-speech. If omitted or set to null or
+            false, the announcement is stored as non-text-to-speech and text-to-speech metadata, such as the text,
+            voice, and language, is not retained.
         :type is_text_to_speech: bool
         :param org_id: Modify an announcement for location in this organization.
         :type org_id: str
@@ -646,7 +658,8 @@ class FeaturesAnnouncementRepositoryApi(ApiChild, base='telephony/config'):
         body['name'] = name
         body['fileUri'] = file_uri
         body['fileName'] = file_name
-        body['isTextToSpeech'] = is_text_to_speech
+        if is_text_to_speech is not None:
+            body['isTextToSpeech'] = is_text_to_speech
         url = self.ep(f'locations/{location_id}/announcements/{announcement_id}')
         super().put(url, params=params, json=body)
 
