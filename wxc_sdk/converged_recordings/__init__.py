@@ -189,6 +189,9 @@ class ConvergedRecordingWithDirectDownloadLinks(ApiModel):
     owner_type: Optional[RecordingOwnerType] = None
     #: Storage location for recording within Webex datacenters.
     storage_region: Optional[str] = None
+    #: The language of the recording's transcript. This attribute is only present when a transcript is available for
+    #: the recording.
+    transcript_language: Optional[str] = None
     #: Fields relevant to each service Type.
     service_data: Optional[RecordingServiceData] = None
 
