@@ -1078,6 +1078,8 @@ class ListSupervisorAgentObject(ApiModel):
     esn: Optional[str] = None
     #: Primary phone number of the agent.
     phone_number: Optional[str] = None
+    #: Location of the agent.
+    location: Optional[LocationObject] = None
 
 
 class AgentAction(str, Enum):

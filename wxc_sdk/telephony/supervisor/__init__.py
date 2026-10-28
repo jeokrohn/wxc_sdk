@@ -6,7 +6,7 @@ from pydantic import TypeAdapter
 
 from wxc_sdk.api_child import ApiChild
 from wxc_sdk.base import ApiModel
-from wxc_sdk.common import PatternAction, UserType
+from wxc_sdk.common import IdAndName, PatternAction, UserType
 
 __all__ = ['SupervisorApi', 'IdAndAction', 'SupervisorAgentStatus', 'AgentOrSupervisor']
 
@@ -35,6 +35,8 @@ class AgentOrSupervisor(ApiModel):
     has_cx_essentials: Optional[bool] = None
     #: Number of agents managed by supervisor. A supervisor must manage at least one agent.
     agent_count: Optional[int] = None
+    #: Location of the agent.
+    location: Optional[IdAndName] = None
 
 
 class SupervisorAgentStatus(ApiModel):
