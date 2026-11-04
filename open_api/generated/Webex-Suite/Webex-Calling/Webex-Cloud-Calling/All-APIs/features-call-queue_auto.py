@@ -3459,7 +3459,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         return r
 
     def update_agent_call_queue_settings(self, id: str, settings: list[ModifyAgentsForCallQueueObjectSettingsItem],
-                                         has_cx_essentials: bool = None, org_id: str = None) -> None:
+                                         has_cx_essentials: bool = None,
+                                         agent_acdstate: GetCallQueueAgentObjectAgentAgentACDState = None,
+                                         org_id: str = None) -> None:
         """
         Update an Agent's Settings for One or More Call Queue or Customer Assist Queues
 
@@ -3470,6 +3472,9 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
 
         This operation requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
+        The `agentACDState` request property is available when the `wxc_customerassist_webex_server_server_CALL-217518`
+        feature toggle is enabled.
+
         :param id: Identifier of the agent to be updated.
         :type id: str
         :param settings: -
@@ -3477,6 +3482,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         :param has_cx_essentials: Must be set to `true` to modify an agent that has Customer Assist license. This can
             otherwise be ommited or set to `false`.
         :type has_cx_essentials: bool
+        :param agent_acdstate: -
+        :type agent_acdstate: GetCallQueueAgentObjectAgentAgentACDState
         :param org_id: Update the settings of an agent in this organization.
         :type org_id: str
         :rtype: None
@@ -3487,6 +3494,8 @@ class FeaturesCallQueueApi(ApiChild, base='telephony/config'):
         if has_cx_essentials is not None:
             params['hasCxEssentials'] = str(has_cx_essentials).lower()
         body: dict[str, Any] = dict()
+        if agent_acdstate is not None:
+            body['agentACDState'] = enum_str(agent_acdstate)
         body['settings'] = TypeAdapter(list[ModifyAgentsForCallQueueObjectSettingsItem]).dump_python(settings, mode='json', by_alias=True, exclude_none=True)
         url = self.ep(f'queues/agents/{id}/settings')
         super().put(url, params=params, json=body)

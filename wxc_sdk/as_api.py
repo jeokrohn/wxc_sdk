@@ -26759,6 +26759,7 @@ class AsCallQueueAgentsApi(AsApiChild, base='telephony/config/queues/agents'):
         id: str,
         settings: builtins.list[AgentCallQueueSetting],
         has_cx_essentials: bool = None,
+        agent_acd_state: AgentACDState = None,
         org_id: str = None,
     ) -> None:
         """
@@ -26771,13 +26772,18 @@ class AsCallQueueAgentsApi(AsApiChild, base='telephony/config/queues/agents'):
 
         This operation requires a full administrator auth token with a scope of `spark-admin:telephony_config_write`.
 
+        The `agentACDState` request property is available when the `wxc_customerassist_webex_server_server_CALL-217518`
+        feature toggle is enabled.
+
         :param id: Identifier of the agent to be updated.
         :type id: str
         :param settings: -
         :type settings: list[ModifyAgentsForCallQueueObjectSettingsItem]
         :param has_cx_essentials: Must be set to `true` to modify an agent that has Customer Assist license. This can
-            otherwise be ommited or set to `false`.
+            otherwise be omitted or set to `false`.
         :type has_cx_essentials: bool
+        :param agent_acd_state: The Automatic Call Distribution (ACD) state of the call queue agent.
+        :type agent_acd_state: AgentACDState
         :param org_id: Update the settings of an agent in this organization.
         :type org_id: str
         :rtype: None
@@ -26791,6 +26797,8 @@ class AsCallQueueAgentsApi(AsApiChild, base='telephony/config/queues/agents'):
         body['settings'] = TypeAdapter(list[AgentCallQueueSetting]).dump_python(
             settings, mode='json', by_alias=True, exclude_none=True
         )
+        if agent_acd_state is not None:
+            body['agentACDState'] = agent_acd_state
         url = self.ep(f'{id}/settings')
         await super().put(url, params=params, json=body)
 
