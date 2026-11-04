@@ -2463,6 +2463,9 @@ description of the operation. The method name is a link to the method documentat
    * - :meth:`api.telephony.dect_devices.update_dect_network <wxc_sdk.telephony.dect_devices.DECTDevicesApi.update_dect_network>`
         | Update DECT Network
         | ``PUT /telephony/config/locations/{location_id}/dectNetworks/{dect_network_id}``
+   * - :meth:`api.telephony.dect_devices.update_dect_network_debug_level <wxc_sdk.telephony.dect_devices.DECTDevicesApi.update_dect_network_debug_level>`
+        | Update DECT Network Debug Level
+        | ``PUT /telephony/config/locations/{location_id}/dectNetworks/{dect_network_id}/debugLevel``
    * - :meth:`api.telephony.dect_devices.update_dect_network_settings <wxc_sdk.telephony.dect_devices.DECTDevicesApi.update_dect_network_settings>`
         | Update DECT Network from settings
         | ``PUT /telephony/config/locations/{id}/dectNetworks/{id}``

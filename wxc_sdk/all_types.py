@@ -216,7 +216,8 @@ from wxc_sdk.telephony.cx_essentials.wrapup_reasons import AvailableQueue, Queue
 from wxc_sdk.telephony.data_policies import CustomerDataPolicies, DataPolicyRegion, LocationDataPolicies
 from wxc_sdk.telephony.dect_devices import AddDECTHandset, AddDECTHandsetBulkError, AddDECTHandsetBulkResponse, \
     AddDECTHandsetBulkResult, BaseStationDetail, BaseStationResponse, BaseStationResult, BaseStationsResponse, \
-    DECTHandsetItem, DECTHandsetLine, DECTHandsetList, DECTNetworkDetail, DECTNetworkModel, DectDevice, Handset
+    DECTHandsetItem, DECTHandsetLine, DECTHandsetList, DECTNetworkDetail, DECTNetworkModel, DebugLevel, \
+    DectDevice, Handset
 from wxc_sdk.telephony.devices import ActivationState, AvailableMember, BackgroundImage, BackgroundImages, \
     DeleteDeviceBackgroundImagesResponse, DeleteImageRequestObject, DeleteImageResponseSuccessObject, \
     DeleteImageResponseSuccessObjectResult, DeviceLayout, DeviceManagedBy, DeviceManufacturer, DeviceMember, \
@@ -361,23 +362,23 @@ __all__ = ['AIRDirectLineCallerIdName', 'AIRIntent', 'AIRSessionState', 'AIRSess
            'CreateMeetingInviteeBody', 'CreateMeetingInviteesBody', 'CreateResponse', 'CustomNumbers', 'Customer',
            'CustomerDataPolicies', 'CustomizedQuestionForCreateMeeting', 'DECTHandsetItem', 'DECTHandsetLine',
            'DECTHandsetList', 'DECTNetworkDetail', 'DECTNetworkModel', 'DND', 'DataPolicyRegion', 'Day',
-           'DaySchedule', 'DectCustomization', 'DectDevice', 'DefaultAction', 'DefaultActionType', 'DefaultAudioType',
-           'DefaultVoicemailPinRules', 'DeleteDeviceBackgroundImagesResponse', 'DeleteImageRequestObject',
-           'DeleteImageResponseSuccessObject', 'DeleteImageResponseSuccessObjectResult', 'DeleteTranscriptBody',
-           'DestinationMember', 'DestinationType', 'Device', 'DeviceActivationState', 'DeviceConfiguration',
-           'DeviceConfigurationOperation', 'DeviceConfigurationResponse', 'DeviceConfigurationSource',
-           'DeviceConfigurationSourceEditability', 'DeviceConfigurationSources', 'DeviceCustomization',
-           'DeviceCustomizations', 'DeviceDynamicSettings', 'DeviceDynamicTag', 'DeviceHostedMeetings',
-           'DeviceLayout', 'DeviceList', 'DeviceManagedBy', 'DeviceManufacturer', 'DeviceMember',
-           'DeviceMembersResponse', 'DeviceOwner', 'DevicePlatform', 'DevicePutItem', 'DeviceSettings',
-           'DeviceSettingsConfiguration', 'DeviceSettingsGroupTag', 'DeviceStatus', 'DeviceTag', 'DeviceType',
-           'DialPatternStatus', 'DialPatternValidate', 'DialPatternValidationResult', 'DialPlan', 'DialResponse',
-           'Dialing', 'DifferentHoursDaily', 'DigitPattern', 'DigitPatterns', 'DirectLineCallerIdName',
-           'DirectLineCallerIdNameSelection', 'DirectoryMethod', 'DisableCallingLocationCounts',
-           'DisableCallingLocationJobStatus', 'DisplayCallqueueAgentSoftkey', 'DisplayNameSelection',
-           'DistinctiveRing', 'Dnis', 'DnisAnnouncements', 'DnisSettings', 'DomainVerification',
-           'DomainVerificationToken', 'DynamicSettingsGroups', 'DynamicSettingsUpdateJobItem', 'E164Number',
-           'ECBNDefault', 'ECBNDependencies', 'ECBNEffectiveLevel', 'ECBNLocationEffectiveLevel',
+           'DaySchedule', 'DebugLevel', 'DectCustomization', 'DectDevice', 'DefaultAction', 'DefaultActionType',
+           'DefaultAudioType', 'DefaultVoicemailPinRules', 'DeleteDeviceBackgroundImagesResponse',
+           'DeleteImageRequestObject', 'DeleteImageResponseSuccessObject', 'DeleteImageResponseSuccessObjectResult',
+           'DeleteTranscriptBody', 'DestinationMember', 'DestinationType', 'Device', 'DeviceActivationState',
+           'DeviceConfiguration', 'DeviceConfigurationOperation', 'DeviceConfigurationResponse',
+           'DeviceConfigurationSource', 'DeviceConfigurationSourceEditability', 'DeviceConfigurationSources',
+           'DeviceCustomization', 'DeviceCustomizations', 'DeviceDynamicSettings', 'DeviceDynamicTag',
+           'DeviceHostedMeetings', 'DeviceLayout', 'DeviceList', 'DeviceManagedBy', 'DeviceManufacturer',
+           'DeviceMember', 'DeviceMembersResponse', 'DeviceOwner', 'DevicePlatform', 'DevicePutItem',
+           'DeviceSettings', 'DeviceSettingsConfiguration', 'DeviceSettingsGroupTag', 'DeviceStatus', 'DeviceTag',
+           'DeviceType', 'DialPatternStatus', 'DialPatternValidate', 'DialPatternValidationResult', 'DialPlan',
+           'DialResponse', 'Dialing', 'DifferentHoursDaily', 'DigitPattern', 'DigitPatterns',
+           'DirectLineCallerIdName', 'DirectLineCallerIdNameSelection', 'DirectoryMethod',
+           'DisableCallingLocationCounts', 'DisableCallingLocationJobStatus', 'DisplayCallqueueAgentSoftkey',
+           'DisplayNameSelection', 'DistinctiveRing', 'Dnis', 'DnisAnnouncements', 'DnisSettings',
+           'DomainVerification', 'DomainVerificationToken', 'DynamicSettingsGroups', 'DynamicSettingsUpdateJobItem',
+           'E164Number', 'ECBNDefault', 'ECBNDependencies', 'ECBNEffectiveLevel', 'ECBNLocationEffectiveLevel',
            'ECBNLocationMember', 'ECBNQuality', 'ECBNSelection', 'EmailObject', 'EmailObjectType', 'EmailType',
            'EmergencyAddress', 'EmergencyDestination', 'EnabledAndNumberOfDays', 'EnabledAndValue', 'EndpointStatus',
            'EndpointType', 'EnhancedMulticast', 'EnterpriseUser', 'EntryAndExitTone', 'Event', 'EventData',

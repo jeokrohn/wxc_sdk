@@ -10,6 +10,7 @@ from wxc_sdk.common import AssignedDectNetwork, IdAndName, UsageType, UserType
 from wxc_sdk.telephony.devices import AvailableMember
 
 __all__ = [
+    'DebugLevel',
     'DECTNetworkModel',
     'DECTNetworkDetail',
     'BaseStationResult',
@@ -40,6 +41,13 @@ class DECTNetworkModel(str, Enum):
     cisco_dect_210_base = 'Cisco DECT 210 Base'
 
 
+class DebugLevel(str, Enum):
+    #: Standard logging level for normal operations.
+    standard = 'STANDARD'
+    #: Debug logging level for detailed diagnostic information.
+    debug = 'DEBUG'
+
+
 class DECTNetworkDetail(ApiModel):
     #: Unique identifier for the DECT network.
     id: Optional[str] = None
@@ -64,6 +72,11 @@ class DECTNetworkDetail(ApiModel):
     number_of_handsets_assigned: Optional[int] = None
     #: Number of lines in the DECT network.
     number_of_lines: Optional[int] = None
+    #: Debug level for the DECT network. Controls the verbosity of logging.
+    debug_level: Optional[DebugLevel] = None
+    #: Indicates whether serviceability password is enabled for the DECT network. When enabled, allows access to
+    #: advanced diagnostic and troubleshooting features on DECT base stations.
+    serviceability_password_enabled: Optional[bool] = None
     #: Location of the DECT network.
     location: Optional[IdAndName] = None
 
@@ -399,7 +412,8 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         """
         Update DECT Network
 
-        Update the details of a DECT network.
+        Update the details of a DECT network. `debugLevel` will not be supported in this API; use Update DECT Network
+        Debug Level API for changing the debug level.
 
         DECT Networks provide roaming voice services via base stations and wireless handsets. A DECT network can be
         provisioned up to 1000 lines across up to 254 base stations.
@@ -583,6 +597,39 @@ class DECTDevicesApi(ApiChild, base='telephony/config'):
         data = super().get(url, params=params)
         r = BaseStationDetail.model_validate(data)
         return r
+
+    def update_dect_network_debug_level(
+        self, location_id: str, dect_network_id: str, debug_level: DebugLevel, org_id: str = None
+    ) -> None:
+        """
+        Update DECT Network Debug Level
+
+        Update the debug level for a DECT network.
+
+        The debug level controls the verbosity of logging for the DECT network. Setting it to `DEBUG` enables detailed
+        diagnostic logging, while `STANDARD` provides normal operational logging.
+
+        This API requires a full or location administrator auth token with a scope of
+        `spark-admin:telephony_config_write`.
+
+        :param location_id: Location containing the DECT network.
+        :type location_id: str
+        :param dect_network_id: Update debug level for the specified DECT network.
+        :type dect_network_id: str
+        :param debug_level: Debug level for the DECT network. Set to `STANDARD` for normal operational logging or
+            `DEBUG` for detailed diagnostic logging.
+        :type debug_level: DebugLevel
+        :param org_id: Organization containing the DECT network.
+        :type org_id: str
+        :rtype: None
+        """
+        params: dict[str, Any] = dict()
+        if org_id is not None:
+            params['orgId'] = org_id
+        body: dict[str, Any] = dict()
+        body['debugLevel'] = enum_str(debug_level)
+        url = self.ep(f'locations/{location_id}/dectNetworks/{dect_network_id}/debugLevel')
+        super().put(url, params=params, json=body)
 
     def delete_bulk_base_stations(self, location_id: str, dect_network_id: str, org_id: str = None):
         """
