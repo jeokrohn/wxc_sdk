@@ -1384,7 +1384,8 @@ class AIReceptionistApi(ApiChild, base=''):
         :type location_id: str
         :param ai_receptionist_id: Unique identifier for the AI Receptionist.
         :type ai_receptionist_id: str
-        :param name: Name of the intent.
+        :param name: Name of the intent. 1–64 characters; can only contain alphanumeric characters, hyphens (-), and
+            underscores (_).
         :type name: str
         :param description: Description of the intent (Action).
         :type description: str
